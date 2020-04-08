@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Basic Inventory / Item system - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Basic Inventory / Item system
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Foward">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Foward
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Overview">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Item">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Item
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Header">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Header
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#CPP">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             CPP
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Character">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Character
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Header_2">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             Header
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#CPP_2">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             CPP
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#End_Result">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           End Result
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Foward">
+        Foward
+       </span>
+      </h1>
+      <p>
+       This tutorial was made by
+       <a class="external text" href="https://forums.unrealengine.com/member.php?2225-alvarofer0020" rel="nofollow">
+        alvarofer0020
+       </a>
+       on the Unreal forums and adapted to the Wiki by myself. If you have any questions you can post in the thread
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?3289-Tutorial-Basic-Inventory-Item-System" rel="nofollow">
+        here
+       </a>
+       and I'll update this page with any new or important information as it comes to light .
+      </p>
+      <p>
+       Also note that currently this tutorial is for First-Person camera only - I'm planning on making a version that works with other cameras, but those require a mouse/pointer of some kind.
+-
+     (
+     ) 21:11, 21 April 2014 (UTC)
+      </p>
+      <h1>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h1>
+      <p>
+       This tutorial covers how to make a basic inventory system and items for that system complete with events for when the item is used and dropped in Blueprints.
+      </p>
+      <h1>
+       <span class="mw-headline" id="Item">
+        Item
+       </span>
+      </h1>
+      <p>
+       For the item we use a simple actor class and add a couple of things:
+      </p>
+      <ul>
+       <li>
+        Used() is called when the item is used by another actor
+       </li>
+       <li>
+        Dropped() is called when another actor drops the item
+       </li>
+       <li>
+        Mesh sets what mesh the item uses when its dropped.
+       </li>
+      </ul>
+      <p>
+       Both the Used and Dropped functions use BlueprintImplementableEvent so they can be overridden from blueprint, since the items are blueprints themselves, and this saves us from having to create a new C++ function for each item when instead we just declare it on the items blueprint.
+      </p>
+      <p>
+       Note however that for now this tutorial doesn't have a method for using or dropping an item - A basic form of these features will be added at a later date, but they won't cover displaying these items in a UI.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Header">
+        Header
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">AProojectItem</span> <span class="o">:</span> <span class="k">public</span> <span class="n">AActor</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadOnly</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Item</span><span class="p">)</span>
+	<span class="n">FString</span> <span class="n">ItemName</span><span class="p">;</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadOnly</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Item</span><span class="p">)</span>
+	<span class="n">int32</span> <span class="n">Value</span><span class="p">;</span>
+
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintImplementableEvent</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">FriendlyName</span> <span class="o">=</span> <span class="s">"Item: Used"</span><span class="p">))</span>
+		<span class="k">virtual</span> <span class="kt">void</span> <span class="n">Used</span><span class="p">();</span>
+
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintImplementableEvent</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">FriendlyName</span> <span class="o">=</span> <span class="s">"Item: Dropped"</span><span class="p">))</span>
+		<span class="k">virtual</span> <span class="kt">void</span> <span class="n">Dropped</span><span class="p">();</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">VisibleAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadOnly</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Item</span><span class="p">)</span>
+		<span class="n">TSubobjectPtr</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">UStaticMeshComponent</span><span class="o">&gt;</span> <span class="n">Mesh</span><span class="p">;</span>
+
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">BeginPlay</span><span class="p">()</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+	<span class="kt">void</span> <span class="nf">PickedUp</span><span class="p">();</span>	
+<span class="p">};</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="CPP">
+        CPP
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">AProojectItem</span><span class="o">::</span><span class="n">AProojectItem</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Mesh</span> <span class="o">=</span> <span class="n">PCIP</span><span class="p">.</span><span class="n">CreateDefaultSubobject</span><span class="o">&lt;</span><span class="n">UStaticMeshComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Mesh"</span><span class="p">));</span>
+	<span class="n">RootComponent</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AProojectItem</span><span class="o">::</span><span class="n">BeginPlay</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">BeginPlay</span><span class="p">();</span>
+	<span class="n">Mesh</span><span class="o">-&gt;</span><span class="n">SetSimulatePhysics</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+	<span class="n">Mesh</span><span class="o">-&gt;</span><span class="n">WakeRigidBody</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AProojectItem</span><span class="o">::</span><span class="n">PickedUp</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">Mesh</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">Mesh</span><span class="o">-&gt;</span><span class="n">DestroyComponent</span><span class="p">();</span> <span class="c1">// physical item has been picked up, destroy its visible component</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Character">
+        Character
+       </span>
+      </h1>
+      <p>
+       In order to store our items we need an array of some kind in the Character class.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Header_2">
+        Header
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UCLASS</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">Game</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">AProojectCharacter</span> <span class="o">:</span> <span class="k">public</span> <span class="n">ACharacter</span>
+<span class="p">{</span>
+<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Inventory</span><span class="p">)</span>
+		<span class="n">TArray</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">AProojectItem</span><span class="o">*&gt;</span> <span class="n">ItemInventory</span><span class="p">;</span> <span class="c1">// Our Inventory</span>
+
+<span class="kt">bool</span> <span class="n">bDrawDebugViewTrace</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">Tick</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaSeconds</span><span class="p">)</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="nf">PickUpItem</span><span class="p">(</span><span class="n">AProojectItem</span><span class="o">*</span> <span class="n">Item</span><span class="p">);</span>
+
+<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintPure</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">FriendlyName</span> <span class="o">=</span> <span class="s">"Get Inv"</span><span class="p">,</span> <span class="n">CompactNodeTitle</span> <span class="o">=</span> <span class="s">"GetInv"</span><span class="p">,</span> <span class="n">Keywords</span> <span class="o">=</span> <span class="s">"Get Player Inventory"</span><span class="p">),</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Inv</span><span class="p">)</span>
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">AProojectItem</span><span class="o">*&gt;</span> <span class="n">GetCurrentInventory</span><span class="p">();</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="CPP_2">
+        CPP
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"ProojectItem.h" //Put this with your classes includes</span><span class="cp"></span>
+
+<span class="kt">void</span> <span class="n">AProojectCharacter</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaSeconds</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span><span class="n">DeltaSeconds</span><span class="p">);</span>
+
+	<span class="n">FVector</span> <span class="n">CamLoc</span><span class="p">;</span>
+	<span class="n">FRotator</span> <span class="n">CamRot</span><span class="p">;</span>
+
+	<span class="n">Controller</span><span class="o">-&gt;</span><span class="n">GetPlayerViewPoint</span><span class="p">(</span><span class="n">CamLoc</span><span class="p">,</span> <span class="n">CamRot</span><span class="p">);</span> <span class="c1">// Get the camera position and rotation</span>
+	<span class="k">const</span> <span class="n">FVector</span> <span class="n">StartTrace</span> <span class="o">=</span> <span class="n">CamLoc</span><span class="p">;</span> <span class="c1">// trace start is the camera location</span>
+	<span class="k">const</span> <span class="n">FVector</span> <span class="n">Direction</span> <span class="o">=</span> <span class="n">CamRot</span><span class="p">.</span><span class="n">Vector</span><span class="p">();</span>
+	<span class="k">const</span> <span class="n">FVector</span> <span class="n">EndTrace</span> <span class="o">=</span> <span class="n">StartTrace</span> <span class="o">+</span> <span class="n">Direction</span> <span class="o">*</span> <span class="mi">200</span><span class="p">;</span> 
+
+	<span class="c1">// Perform trace to retrieve hit info</span>
+	<span class="n">FCollisionQueryParams</span> <span class="nf">TraceParams</span><span class="p">(</span><span class="n">FName</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"WeaponTrace"</span><span class="p">)),</span> <span class="nb">true</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
+	<span class="n">TraceParams</span><span class="p">.</span><span class="n">bTraceAsyncScene</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+	<span class="n">TraceParams</span><span class="p">.</span><span class="n">bReturnPhysicalMaterial</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+
+	<span class="n">FHitResult</span> <span class="nf">Hit</span><span class="p">(</span><span class="n">ForceInit</span><span class="p">);</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">GetWorld</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">LineTraceSingle</span><span class="p">(</span><span class="n">Hit</span><span class="p">,</span> <span class="n">StartTrace</span><span class="p">,</span> <span class="n">EndTrace</span><span class="p">,</span> <span class="n">ECC_WorldStatic</span><span class="p">,</span> <span class="n">TraceParams</span><span class="p">))</span>
+	<span class="p">{</span>
+		<span class="n">AProojectItem</span><span class="o">*</span> <span class="n">NewItem</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">AProojectItem</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Hit</span><span class="p">.</span><span class="n">GetActor</span><span class="p">());</span> <span class="c1">// typecast to the item class to the hit actor</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">bDrawDebugViewTrace</span><span class="p">)</span>
+		<span class="p">{</span>
+	      <span class="n">DrawDebugLine</span><span class="p">(</span>
+			<span class="n">GetWorld</span><span class="p">(),</span>
+			<span class="n">StartTrace</span><span class="p">,</span>
+			<span class="n">EndTrace</span><span class="p">,</span>
+			<span class="n">FColor</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+			<span class="nb">false</span><span class="p">,</span>
+			<span class="mi">3</span><span class="p">,</span>
+			<span class="mi">0</span><span class="p">,</span>
+			<span class="mi">1</span>
+			<span class="p">);</span>
+		<span class="p">}</span>
+	
+		<span class="k">if</span> <span class="p">(</span><span class="n">NewItem</span><span class="p">)</span> <span class="c1">// if we hit an item with the trace</span>
+		<span class="p">{</span>
+			<span class="k">this</span><span class="o">-&gt;</span><span class="n">PickUpItem</span><span class="p">(</span><span class="n">NewItem</span><span class="p">);</span> <span class="c1">// pick it up</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	
+<span class="p">}</span>
+
+
+
+<span class="kt">void</span> <span class="n">AProojectCharacter</span><span class="o">::</span><span class="n">PickUpItem</span><span class="p">(</span><span class="n">AProojectItem</span><span class="o">*</span> <span class="n">Item</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">Item</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">ItemInventory</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">Item</span><span class="p">);</span> <span class="c1">// add it to the array</span>
+		<span class="n">Item</span><span class="o">-&gt;</span><span class="n">PickedUp</span><span class="p">();</span> <span class="c1">// hide mesh </span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">TArray</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">ABasicItem</span><span class="o">*&gt;</span> <span class="n">AProojectCharacter</span><span class="o">::</span><span class="n">GetCurrentInventory</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">ItemInventory</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h1>
+       <span class="mw-headline" id="End_Result">
+        End Result
+       </span>
+      </h1>
+      <p>
+       <img alt="BasicInvSystem E1.png" class="" height="731" src="../assets/basic-inventory-item-system/0.png" width="1113"/>
+       <br clear="all"/>
+      </p>
+      <p>
+       Note you can print the inventory of a player character by using the GetInv node in this setup:
+      </p>
+      <p>
+       <img alt="BasicInvSystem PrintInv E1.jpg" class="" height="228" src="../assets/basic-inventory-item-system/1.jpg" width="823"/>
+       <br clear="all"/>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

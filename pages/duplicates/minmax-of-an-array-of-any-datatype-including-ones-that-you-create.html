@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Min/Max of An Array of Any DataType, Including Ones That You Create - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Min/Max of An Array of Any DataType, Including Ones That You Create
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#GenericPlatformMath.h">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           GenericPlatformMath.h
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Sample_Usage">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Sample Usage
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Your_Data_Type_Only_Needs_the_.3C_Operator">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Your Data Type Only Needs the &lt; Operator
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Author:
+       </i>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       In 4.3 you now have available two C++ functions from me, which I gave to Epic!
+      </p>
+      <p>
+       These are template functions for the min and max of
+       <b>
+        an array
+       </b>
+       of any datatype for which the &lt; operator is defined!
+      </p>
+      <p>
+       You can use my Min/Max of Array with literally any existing UE4 datatype or any datatype that you create, as long as you define
+       <b>
+        operator&lt;
+       </b>
+       for your data type!
+      </p>
+      <p>
+       <br/>
+       <b>
+        Here is my wiki on custom operators / operator overloads in UE4 C++
+       </b>
+      </p>
+      <p>
+      </p>
+      <p>
+       <br/>
+       My functions will
+       <b>
+        optionally
+       </b>
+       return the index of the min/max value if you supply a pointer!
+      </p>
+      <p>
+       This makes using my Min/Max of Array very flexible for you to use in code, because you dont have to supply the var by reference and so you dont have to supply it at all if you dont want to know the index of the min/max value!
+      </p>
+      <p>
+       Here's what Max looks like:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/**</span>
+<span class="cm">* Max of Array</span>
+<span class="cm">* @param	Array of templated type</span>
+<span class="cm">* @param	Optional pointer for returning the index of the maximum element, if multiple maximum elements the first index is returned</span>
+<span class="cm">* @return	The max value found in the array or default value if the array was empty</span>
+<span class="cm">*/</span>
+<span class="k">template</span><span class="o">&lt;</span> <span class="k">class</span> <span class="nc">T</span> <span class="o">&gt;</span>
+<span class="k">static</span> <span class="n">FORCEINLINE</span> <span class="n">T</span> <span class="n">Max</span><span class="p">(</span><span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">Values</span><span class="p">,</span> <span class="n">int32</span><span class="o">*</span> <span class="n">MaxIndex</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">Values</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">MaxIndex</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="o">*</span><span class="n">MaxIndex</span> <span class="o">=</span> <span class="n">INDEX_NONE</span><span class="p">;</span>
+		<span class="p">}</span>
+		<span class="k">return</span> <span class="n">T</span><span class="p">();</span>
+	<span class="p">}</span>
+
+	<span class="n">T</span> <span class="n">CurMax</span> <span class="o">=</span> <span class="n">Values</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+	<span class="n">int32</span> <span class="n">CurMaxIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="k">for</span> <span class="p">(</span><span class="n">int32</span> <span class="n">v</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="n">Values</span><span class="p">.</span><span class="n">Num</span><span class="p">();</span> <span class="o">++</span><span class="n">v</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">const</span> <span class="n">T</span> <span class="n">Value</span> <span class="o">=</span> <span class="n">Values</span><span class="p">[</span><span class="n">v</span><span class="p">];</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">CurMax</span> <span class="o">&lt;</span> <span class="n">Value</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">CurMax</span> <span class="o">=</span> <span class="n">Value</span><span class="p">;</span>
+			<span class="n">CurMaxIndex</span> <span class="o">=</span> <span class="n">v</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">MaxIndex</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="o">*</span><span class="n">MaxIndex</span> <span class="o">=</span> <span class="n">CurMaxIndex</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="n">CurMax</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="GenericPlatformMath.h">
+        GenericPlatformMath.h
+       </span>
+      </h2>
+      <p>
+       You can find my functions in:
+      </p>
+      <pre> Public\GenericPlatform\GenericPlatformMath.h 
+</pre>
+      <h2>
+       <span class="mw-headline" id="Sample_Usage">
+        Sample Usage
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">TArray</span><span class="o">&lt;</span><span class="n">YourVarType</span><span class="o">&gt;</span> <span class="n">MyVars</span><span class="p">;</span>
+<span class="n">TArraY</span><span class="o">&lt;</span><span class="n">int32</span><span class="o">&gt;</span> <span class="n">MyInts</span><span class="p">;</span>
+
+<span class="n">YourVarType</span> <span class="n">MaxValue</span> <span class="o">=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Max</span><span class="o">&lt;</span><span class="n">YourVarType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">MyVars</span><span class="p">);</span> <span class="c1">//dont need to know the index of the max value</span>
+
+<span class="n">int32</span> <span class="n">MaxIndex</span><span class="p">;</span>
+
+<span class="k">const</span> <span class="n">int32</span> <span class="n">MaxValue</span> <span class="o">=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Max</span><span class="o">&lt;</span><span class="n">int32</span><span class="o">&gt;</span><span class="p">(</span><span class="n">MyInts</span><span class="p">,</span><span class="o">&amp;</span><span class="n">MaxIndex</span><span class="p">);</span>
+
+<span class="n">UE_LOG</span><span class="p">(</span><span class="n">YourLog</span><span class="p">,</span><span class="n">Log</span><span class="p">,</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"index of the max value is is %d"</span><span class="p">),</span> <span class="n">MaxIndex</span><span class="p">);</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Your_Data_Type_Only_Needs_the_.3C_Operator">
+        Your Data Type Only Needs the &lt; Operator
+       </span>
+      </h2>
+      <p>
+       Please note how I wrote the test for the Max of Array function!
+      </p>
+      <pre> if (CurMax &lt; Value)
+</pre>
+      <p>
+       I wrote it this way so you truly only need to define the
+       <b>
+        operator&lt;
+       </b>
+       for your data type to use it with my template Min/Max array functions!
+      </p>
+      <p>
+       ♥
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Texture Merging With UCanvasRenderTarget2D - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Texture Merging With UCanvasRenderTarget2D
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Motivation">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Motivation
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#UCanvasRenderTarget2D">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           UCanvasRenderTarget2D
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Getting_Started">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Getting Started
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Texture_Merge_Code">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Texture Merge Code
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Code">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Code
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Usage">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             Usage
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Plugin">
+            <span class="tocnumber">
+             3.3
+            </span>
+            <span class="toctext">
+             Plugin
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Motivation">
+        Motivation
+       </span>
+      </h2>
+      <p>
+       In multiplayer games, it's quite common to have customizable characters and support changing out different costumes and gear. A common way of doing so is with the
+       approach. Possibly combined with
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/FSkeletalMeshMerge/index.html" rel="nofollow">
+        FSkeletalMeshMerge
+       </a>
+       . For certain types of costume pieces though, using modular pawns is somewhat overkill. Gloves or tight fitting pats for example would be simple to create as a texture. Tattoos/war paint/scars also cannot be easily made as meshes. It would be nice if we were able to make textures in layers and then combine them into a single texture. Blending two textures inside a material could be used for this purpose, but that comes with the cost of extra texture samples and blending.
+      </p>
+      <h2>
+       <span class="mw-headline" id="UCanvasRenderTarget2D">
+        UCanvasRenderTarget2D
+       </span>
+      </h2>
+      <p>
+       The
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Engine/UCanvasRenderTarget2D/index.html" rel="nofollow">
+        UCanvasRenderTarget2D
+       </a>
+       class is an incredibly useful tool for creating textures at runtime. Not much documentation seems to exist for it, but it's incredibly powerful in that
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Engine/UCanvas/index.html" rel="nofollow">
+        UCanvas
+       </a>
+       methods can be used to draw into textures. The following section will demonstrate the use of the
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Engine/UCanvasRenderTarget2D/index.html" rel="nofollow">
+        UCanvasRenderTarget2D
+       </a>
+       class. If you just want to copy the texture merging code into your project, then skip towards the end.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Getting_Started">
+        Getting Started
+       </span>
+      </h3>
+      <p>
+       First of all you'll need to create an instance of the canvas render target. It's a texture, so it can be used anywhere that a regular texture could.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UCanvasRenderTarget2D</span><span class="o">*</span> <span class="n">CanvasRenderTarget</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">UCanvasRenderTarget2D</span><span class="o">&gt;</span><span class="p">(</span><span class="n">UCanvasRenderTarget2D</span><span class="o">::</span><span class="n">CreateCanvasRenderTarget2D</span><span class="p">(</span><span class="n">WorldContextObject</span><span class="p">,</span> <span class="n">UCanvasRenderTarget2D</span><span class="o">::</span><span class="n">StaticClass</span><span class="p">(),</span> <span class="n">Width</span><span class="p">,</span> <span class="n">Height</span><span class="p">));</span>
+</pre>
+      </div>
+      <p>
+       The next step is to write a callback method to hook into the canvas render target's drawing delegate. This method is where you actually do the drawing. You can use any of the drawing methods
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Engine/UCanvas/index.html" rel="nofollow">
+        UCanvas
+       </a>
+       provides to create your texture.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">UWhatever</span><span class="o">::</span><span class="n">DrawToCanvasRenderTarget</span><span class="p">(</span><span class="n">UCanvas</span><span class="o">*</span> <span class="n">Canvas</span><span class="p">,</span> <span class="n">int32</span> <span class="n">Width</span><span class="p">,</span> <span class="n">int32</span> <span class="n">Height</span><span class="p">)</span>
+<span class="p">{</span>
+     <span class="c1">//Drawing code with UCanvas goes here...</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Simply register this with the canvas render target's OnCanvasRenderTargetUpdate delegate:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">CanvasRenderTarget</span><span class="o">-&gt;</span><span class="n">OnCanvasRenderTargetUpdate</span><span class="p">.</span><span class="n">AddDynamic</span><span class="p">(</span><span class="n">InstanceOfUWhatever</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">UWhatever</span><span class="o">::</span><span class="n">DrawToCanvasRenderTarget</span><span class="p">);</span>
+</pre>
+      </div>
+      How often the canvas render target redraws is up to you. You could call it once to generate a texture and slap it on a material instance, or you could call it every frame to make an animated material. To redraw the texture just call
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">CanvasRenderTarget</span> <span class="o">-&gt;</span><span class="n">UpdateResource</span><span class="p">();</span>
+</pre>
+      </div>
+      and your DrawToCanvasRenderTarget method will be called when it's ready to redraw the texture.
+      <h2>
+       <span class="mw-headline" id="Texture_Merge_Code">
+        Texture Merge Code
+       </span>
+      </h2>
+      <p>
+       This is the full code for the class I'm currently using to do texture merging on my game's characters. It's derived from
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Engine/UCanvasRenderTarget2D/index.html" rel="nofollow">
+        UCanvasRenderTarget2D
+       </a>
+       and is very simple to use.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Code">
+        Code
+       </span>
+      </h3>
+      <p>
+       <b>
+        CompositeTexture.h
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"Engine/CanvasRenderTarget2D.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"CompositeTexture.generated.h"</span><span class="cp"></span>
+
+<span class="c1">///@brief Class for merging multiple textures into one to reduce texture samples and simplify shaders.</span>
+<span class="c1">///Layers can be changed at any time, however after changing them UpdateResource must be called to finalize the changes.</span>
+<span class="n">UCLASS</span><span class="p">(</span><span class="n">Blueprintable</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">UCompositeTexture</span> <span class="o">:</span> <span class="k">public</span> <span class="n">UCanvasRenderTarget2D</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+
+	<span class="n">UCompositeTexture</span><span class="p">();</span>
+
+	<span class="n">UFUNCTION</span><span class="p">()</span>
+	<span class="kt">void</span> <span class="n">PerformMerge</span><span class="p">(</span><span class="n">UCanvas</span><span class="o">*</span> <span class="n">Canvas</span><span class="p">,</span> <span class="n">int32</span> <span class="n">Width</span><span class="p">,</span> <span class="n">int32</span> <span class="n">Height</span><span class="p">);</span>
+
+<span class="k">public</span><span class="o">:</span>
+
+	<span class="c1">///@brief Texture layers</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Layers"</span><span class="p">)</span>
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">UTexture2D</span><span class="o">*&gt;</span> <span class="n">Layers</span><span class="p">;</span>
+	<span class="c1">///@brief Tint applied to texture layers</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Layers"</span><span class="p">)</span>
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FColor</span><span class="o">&gt;</span> <span class="n">LayerTints</span><span class="p">;</span>
+
+	<span class="c1">///@brief Creates a layered texture and updates it based on the passed in layers.</span>
+	<span class="k">static</span> <span class="n">UCompositeTexture</span><span class="o">*</span> <span class="nf">Create</span><span class="p">(</span><span class="n">UObject</span><span class="o">*</span> <span class="n">WorldContextObject</span><span class="p">,</span> <span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">UTexture2D</span><span class="o">*&gt;&amp;</span> <span class="n">Layers</span><span class="p">);</span>
+	<span class="c1">///@brief Creates a layered texture and updates it like the other version. Also applies tint to layers.</span>
+	<span class="k">static</span> <span class="n">UCompositeTexture</span><span class="o">*</span> <span class="nf">Create</span><span class="p">(</span><span class="n">UObject</span><span class="o">*</span> <span class="n">WorldContextObject</span><span class="p">,</span> <span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">UTexture2D</span><span class="o">*&gt;&amp;</span> <span class="n">Layers</span><span class="p">,</span> <span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FColor</span><span class="o">&gt;&amp;</span> <span class="n">LayerTints</span><span class="p">);</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <b>
+        CompositeTexture.cpp
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"Runtime/Engine/Classes/Engine/Canvas.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"CompositeTexture.h"</span><span class="cp"></span>
+
+<span class="n">UCompositeTexture</span><span class="o">::</span><span class="n">UCompositeTexture</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">OnCanvasRenderTargetUpdate</span><span class="p">.</span><span class="n">AddDynamic</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">UCompositeTexture</span><span class="o">::</span><span class="n">PerformMerge</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">UCompositeTexture</span><span class="o">::</span><span class="n">PerformMerge</span><span class="p">(</span><span class="n">UCanvas</span><span class="o">*</span> <span class="n">Canvas</span><span class="p">,</span> <span class="n">int32</span> <span class="n">Width</span><span class="p">,</span> <span class="n">int32</span> <span class="n">Height</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">for</span> <span class="p">(</span><span class="n">int32</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">Layers</span><span class="p">.</span><span class="n">Num</span><span class="p">();</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">UTexture</span><span class="o">*</span> <span class="n">LayerTex</span> <span class="o">=</span> <span class="n">Layers</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">LayerTex</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">FColor</span> <span class="n">TintColor</span> <span class="o">=</span> <span class="n">FColor</span><span class="o">::</span><span class="n">White</span><span class="p">;</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">LayerTints</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">i</span><span class="p">)</span>
+			<span class="p">{</span>
+				<span class="n">TintColor</span> <span class="o">=</span> <span class="n">LayerTints</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+			<span class="p">}</span>
+
+			<span class="n">Canvas</span><span class="o">-&gt;</span><span class="n">SetDrawColor</span><span class="p">(</span><span class="n">TintColor</span><span class="p">);</span>
+			<span class="n">Canvas</span><span class="o">-&gt;</span><span class="n">DrawTile</span><span class="p">(</span><span class="n">LayerTex</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">Width</span><span class="p">,</span> <span class="n">Height</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">Width</span><span class="p">,</span> <span class="n">Height</span><span class="p">);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">UCompositeTexture</span><span class="o">*</span> <span class="n">UCompositeTexture</span><span class="o">::</span><span class="n">Create</span><span class="p">(</span><span class="n">UObject</span><span class="o">*</span> <span class="n">WorldContextObject</span><span class="p">,</span> <span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">UTexture2D</span><span class="o">*&gt;&amp;</span> <span class="n">Layers</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FColor</span><span class="o">&gt;</span> <span class="n">Colors</span><span class="p">;</span>
+	<span class="k">return</span> <span class="n">UCompositeTexture</span><span class="o">::</span><span class="n">Create</span><span class="p">(</span><span class="n">WorldContextObject</span><span class="p">,</span> <span class="n">Layers</span><span class="p">,</span> <span class="n">Colors</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">UCompositeTexture</span><span class="o">*</span> <span class="n">UCompositeTexture</span><span class="o">::</span><span class="n">Create</span><span class="p">(</span><span class="n">UObject</span><span class="o">*</span> <span class="n">WorldContextObject</span><span class="p">,</span> <span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">UTexture2D</span><span class="o">*&gt;&amp;</span> <span class="n">Layers</span><span class="p">,</span> <span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FColor</span><span class="o">&gt;&amp;</span> <span class="n">LayerTints</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">Layers</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="n">UTexture2D</span><span class="o">*</span> <span class="n">BaseTexture</span> <span class="o">=</span> <span class="n">Layers</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+
+	<span class="n">UCompositeTexture</span><span class="o">*</span> <span class="n">RenderTarget</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">UCompositeTexture</span><span class="o">&gt;</span><span class="p">(</span><span class="n">UCanvasRenderTarget2D</span><span class="o">::</span><span class="n">CreateCanvasRenderTarget2D</span><span class="p">(</span><span class="n">WorldContextObject</span><span class="p">,</span> <span class="n">UCompositeTexture</span><span class="o">::</span><span class="n">StaticClass</span><span class="p">(),</span> <span class="n">BaseTexture</span><span class="o">-&gt;</span><span class="n">GetSizeX</span><span class="p">(),</span> <span class="n">BaseTexture</span><span class="o">-&gt;</span><span class="n">GetSizeY</span><span class="p">()));</span>
+	
+	<span class="n">RenderTarget</span><span class="o">-&gt;</span><span class="n">Layers</span><span class="p">.</span><span class="n">Append</span><span class="p">(</span><span class="n">Layers</span><span class="p">);</span>
+	<span class="n">RenderTarget</span><span class="o">-&gt;</span><span class="n">LayerTints</span><span class="p">.</span><span class="n">Append</span><span class="p">(</span><span class="n">LayerTints</span><span class="p">);</span>
+	
+	<span class="n">RenderTarget</span><span class="o">-&gt;</span><span class="n">UpdateResource</span><span class="p">();</span>
+	<span class="k">return</span> <span class="n">RenderTarget</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Usage">
+        Usage
+       </span>
+      </h3>
+      <p>
+       To use the composite texture class just use one of the static methods to create it and pass in the texture layers to be merged. They will be drawn in the order they appear, so the first texture will be the base, and so on.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UCompositeTexture</span><span class="o">*</span> <span class="n">MergedTexture</span> <span class="o">=</span> <span class="n">UCompositeTexture</span><span class="o">::</span><span class="n">Create</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">MergeTextures</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       You can also optionally pass in an array of tints that will be applied to the layers. The indices correspond 1:1 to the array of textures to merge, and white will draw a layer as if no tint was applied.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UCompositeTexture</span><span class="o">*</span> <span class="n">MergedTexture</span> <span class="o">=</span> <span class="n">UCompositeTexture</span><span class="o">::</span><span class="n">Create</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">MergeTextures</span><span class="p">,</span> <span class="n">MergeTints</span><span class="p">);</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Plugin">
+        Plugin
+       </span>
+      </h3>
+      <p>
+       Here is a plugin with a blueprint library based on the above code:
+       <a class="external text" href="https://github.com/Cyx69/TextureMergePlugin/releases" rel="nofollow">
+        Texture Merge Plugin
+       </a>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

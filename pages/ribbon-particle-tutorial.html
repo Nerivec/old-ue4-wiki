@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Ribbon Particle (Tutorial) - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Ribbon Particle (Tutorial)
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       Adding the Ribbon TypeData module will cause your particles to be connected together by a polygon ribbon. The ribbon connects particles in the order of their birth.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Setup">
+        Setup
+       </span>
+      </h2>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:202px;">
+        <img alt="" class="thumbimage" height="200" src="../assets/ribbon-particle-tutorial/0.jpg" width="200"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Example Ribbon particle
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       The first step in creating ribbon particles is to add a Ribbon TypeData module to the particle system from the right-click contextual menu.
+      </p>
+      <p>
+       In this example, a Ribbon particle system is being used to simulate wisping smoke, such as the kind that trails off the end of a cigarette. Granted, this example takes some artistic license.
+      </p>
+      <p>
+       The overall setup is fairly simple. An additive unlit material is applied with a black-to-white gradient running from left to right.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="" class="thumbimage" height="167" src="../assets/ribbon-particle-tutorial/1.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Example material for the ribbon
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       The particle system will apply this material such that the youngest parts of the ribbon will receive the leftmost data while the oldest receive the right. Or, more directly, the ribbon becomes more opaquely white is it ages.
+      </p>
+      <p>
+       For the particle setup, the modules are set up in the following manner:
+      </p>
+      <table class="wikitable">
+       <caption>
+        Module Properties
+       </caption>
+       <tbody>
+        <tr>
+         <th scope="col">
+          Property
+         </th>
+         <th scope="col">
+          Value
+         </th>
+         <th scope="col">
+          Reason
+         </th>
+        </tr>
+        <tr>
+         <th scope="col">
+          Ribbon Data Module
+         </th>
+        </tr>
+        <tr>
+         <td>
+          Sheets Per Trail
+         </td>
+         <td>
+          2
+         </td>
+         <td>
+          Adds a few more polygons to the ribbon, smoothing it out a bit.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Max Particle in Trail Count
+         </td>
+         <td>
+          500
+         </td>
+         <td>
+          Makes a very long trail.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Tangent Recalculation on Every Frame
+         </td>
+         <td>
+          Checked
+         </td>
+         <td>
+          Smoothes out the overall trail as the particles accelerate.
+         </td>
+        </tr>
+        <tr>
+         <th scope="col">
+          Spawn Module
+         </th>
+        </tr>
+        <tr>
+         <td>
+          Rate
+         </td>
+         <td>
+          20
+         </td>
+         <td>
+          Provides adequately dense wisps of smoke.
+         </td>
+        </tr>
+        <tr>
+         <th scope="col">
+          Lifetime Module
+         </th>
+        </tr>
+        <tr>
+         <td>
+          Lifetime
+         </td>
+         <td>
+          4
+         </td>
+         <td>
+          Causes the smoke to last for 4 seconds.
+         </td>
+        </tr>
+        <tr>
+         <th scope="col">
+          Initial Size Module
+         </th>
+        </tr>
+        <tr>
+         <td>
+          Start Size
+         </td>
+         <td>
+          Vector Constant: (10, 5, 0)
+         </td>
+         <td>
+          Applies a good initial size to the smoke ribbon. Mileage may vary.
+         </td>
+        </tr>
+        <tr>
+         <th scope="col">
+          Initial Velocity Module
+         </th>
+        </tr>
+        <tr>
+         <td>
+          Velocity
+         </td>
+         <td>
+          Vector Uniform: Min(-5, -5, 10) Max(15, 5, 10)
+         </td>
+         <td>
+          Gives the particles upward movement, a little bit of lateral randomness.
+         </td>
+        </tr>
+        <tr>
+         <th scope="col">
+          Color Over Life Module
+         </th>
+        </tr>
+        <tr>
+         <td>
+          Color Over Life
+         </td>
+         <td>
+          Vector Constant Curve: Alpha from 1 to 0 over life
+         </td>
+         <td>
+          Causes the particles to fade as they die.
+         </td>
+        </tr>
+        <tr>
+         <th scope="col">
+          Acceleration Module
+         </th>
+        </tr>
+        <tr>
+         <td>
+          Acceleration
+         </td>
+         <td>
+          Vector Uniform: Min(0, -2, 20) Max(10, 2, 35)
+         </td>
+         <td>
+          Applies a little wind and upward acceleration to the particles.
+         </td>
+        </tr>
+        <tr>
+         <th scope="col">
+          Size By Life Module
+         </th>
+        </tr>
+        <tr>
+         <td>
+          Life Multiplier
+         </td>
+         <td>
+          Vector Constant Curve: From 0.1 to 3 over the life of the particle
+         </td>
+         <td>
+          Causes the smoke to expand as it moves upward.
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

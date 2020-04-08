@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Video Scanline Post Process Effects (Tutorial) - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Video Scanline Post Process Effects (Tutorial)
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <br/>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Creating_a_Material_for_Post_Process_Effects">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Creating a Material for Post Process Effects
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Material_Setup">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Material Setup
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Assembly_Overview">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Assembly Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Assigning_to_a_Post_Process_Volume">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Assigning to a Post Process Volume
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Creating_a_Material_for_Post_Process_Effects">
+        Creating a Material for Post Process Effects
+       </span>
+      </h2>
+      <p>
+       Below are some basic instructions on how to set up a simple Post Process Material:
+      </p>
+      <p>
+       1. Create a new Level by choosing
+       <b>
+        File &gt; New Level
+       </b>
+       from the main menubar.
+      </p>
+      <p>
+       2. Create a new Material by clicking the
+       <b>
+        New Asset
+       </b>
+       button in the Content Browser and choosing
+       <b>
+        Material
+       </b>
+       . Provide a name for the Material.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:400px;">
+        <img alt="CreateNewMaterial SLT.png" class="thumbimage" height="367" src="../assets/video-scanline-post-process-effects-tutorial/0.png" width="398"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+       Below are some basic instructions on how to set up a simple Post Process Material:
+      </p>
+      <p>
+       3. Double-click this new Material to open it up in the Material Editor.
+      </p>
+      <p>
+       4. In the Material Properties panel, look under the Material category and set the Material Domain property to
+       <i>
+        Post Process
+       </i>
+       . This will require you to also set the Lighting Model property to
+       <i>
+        Unlit
+       </i>
+       .
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:375px;">
+        <img alt="PostMaterialProperties.png" class="thumbimage" height="479" src="../assets/video-scanline-post-process-effects-tutorial/1.png" width="373"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+       5. In the
+       <b>
+        Post Process Material
+       </b>
+       category, be sure to set the
+       <b>
+        Blendable Location
+       </b>
+       property to
+       <i>
+        Before Tonemapping
+       </i>
+       . This makes for more of a performance hit, but prevents ghosting of the scanlines while the view is in motion.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:567px;">
+        <img alt="PostProcessMaterialsCategory.png" class="thumbimage" height="76" src="../assets/video-scanline-post-process-effects-tutorial/2.png" width="565"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+       6. At this point, you would create some Material expression network that defined the look of your post process. As a test for this example, we will create a video scanline overlay effect. You can really make just about anything you like, however.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="VideoScanlineEffectNetwork.png" class="thumbimage" height="403" src="../assets/video-scanline-post-process-effects-tutorial/3.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Material_Setup">
+        Material Setup
+       </span>
+      </h2>
+      <p>
+       This document is an overview and breakdown of simple video scanline Post Process Material.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="VideoScanlineEffect.png" class="thumbimage" height="687" src="../assets/video-scanline-post-process-effects-tutorial/4.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+       First, here are the textures used in the effect. You can right-click and save each one if you like or create variations of you're own. They're all pretty simple.
+      </p>
+      <ul class="gallery mw-gallery-traditional">
+       <li class="gallerybox" style="width: 155px">
+        <div style="width: 155px">
+         <div class="thumb" style="width: 150px;">
+          <div style="margin:15px auto;">
+           <img alt="" class="" height="120" src="../assets/video-scanline-post-process-effects-tutorial/5.png" width="1"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Scan Distort
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 155px">
+        <div style="width: 155px">
+         <div class="thumb" style="width: 150px;">
+          <div style="margin:15px auto;">
+           <img alt="" class="" height="120" src="../assets/video-scanline-post-process-effects-tutorial/6.png" width="120"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Noise
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 155px">
+        <div style="width: 155px">
+         <div class="thumb" style="width: 150px;">
+          <div style="margin:15px auto;">
+           <img alt="" class="" height="120" src="../assets/video-scanline-post-process-effects-tutorial/7.png" width="120"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Scanlines
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       It should be noted that the images seen here in this document are slightly misleading in that they've been scaled for visual clarity. When you download them
+       <b>
+        (right-click &gt; Save As)
+       </b>
+       they will come through at their original sizes, which are noted in the table.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Assembly_Overview">
+        Assembly Overview
+       </span>
+      </h2>
+      <p>
+       To facilitate putting this Material together, we've broken the key elements into separate numbered Comment boxes. You can go through each one and simply recreate each node network and connect them together and shown in the network image. Please be aware that the image of the network is rather large; it would be best to save it separately and view it on your computer.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="VideoScanlineEffectNetwork.png" class="thumbimage" height="403" src="../assets/video-scanline-post-process-effects-tutorial/8.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+       <b>
+        The numbered steps below overview what's going on in the numbered Comment Boxes in the image. By using the two in tandem, you should be able to recreate this effect if you desire.
+       </b>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <dl>
+       <dd>
+        1.We start with the Scene Texture expression, which is set to bring in the Scene Color. This is how we will manipulate the scene via post process.
+       </dd>
+       <dd>
+        2.We perturb the UVs of the Scene Color using a simple panning texture (ScanDistort.png). This is done by multiplying the result of the texture by 0.03 and then combining it only with the red channel of       :the texture coordinates, effectively sliding the pixels across the screen. This creates a distortion effect.
+       </dd>
+       <dd>
+        3.We bring in our 4x4 pixel scanline texture and tile it very heavily in the vertical direction (v:128). We also pan it downward very slowly.
+       </dd>
+       <dd>
+        4.We reuse the same scanline texture, this time tiling it only by 1.28 and panning it upward, but a little more quickly. We also clamp it between 0.1 and 0.5. This will be used to create some variation    :in the scanlines.
+       </dd>
+       <dd>
+        5.Create a time-driven sine wave that runs between 0.6 and 1.0, at a frequency of 10 Hz. This will be used to flicker the scanlines.
+       </dd>
+       <dd>
+        6.Take the noise texture and tile and pan it at 2 different amounts and speeds for variation.
+       </dd>
+       <dd>
+        7.Make an average of the two noises, then multiply it by the ScanDistort texture. Multiply that by 40 and add it into the result to create white static.
+       </dd>
+       <dd>
+        8.We take the panning ScanDistort texture, raise it to a power of 4 (this boosts contrast), multiply it by 40 to make it very bright, but then subtract that from the final result to push it to full black. :This creates the black bar effect often seen when tracking an old-school VCR.
+       </dd>
+      </dl>
+      <h2>
+       <span class="mw-headline" id="Assigning_to_a_Post_Process_Volume">
+        Assigning to a Post Process Volume
+       </span>
+      </h2>
+      <dl>
+       <dd>
+        1. We now need to associate the Material with a post process volume. In our case, we'll use the Global Post Process. In the Scene Outliner, click
+        <i>
+         Global PostProcess
+        </i>
+        .
+       </dd>
+      </dl>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:333px;">
+        <img alt="SceneOutlinerGlobalPost.png" class="thumbimage" height="233" src="../assets/video-scanline-post-process-effects-tutorial/9.png" width="331"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <dl>
+       <dd>
+        2.In the Details panel, locate the
+        <b>
+         Blendables
+        </b>
+        property, found under the
+        <b>
+         Misc
+        </b>
+        category. Click the
+        <b>
+         Plus
+        </b>
+        button next to the property to add a new element.
+       </dd>
+      </dl>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:670px;">
+        <img alt="BlendablesProperty.png" class="thumbimage" height="165" src="../assets/video-scanline-post-process-effects-tutorial/10.png" width="668"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <dl>
+       <dd>
+        3.Select your new Material in the Content Browser and click the Arrow button to apply the Material into the element. Your effect is now applied.
+       </dd>
+      </dl>
+      <ul class="gallery mw-gallery-traditional">
+       <li class="gallerybox" style="width: 155px">
+        <div style="width: 155px">
+         <div class="thumb" style="width: 150px;">
+          <div style="margin:37px auto;">
+           <img alt="" class="" height="76" src="../assets/video-scanline-post-process-effects-tutorial/11.png" width="120"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Before Post Process Effect
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 155px">
+        <div style="width: 155px">
+         <div class="thumb" style="width: 150px;">
+          <div style="margin:37px auto;">
+           <img alt="" class="" height="76" src="../assets/video-scanline-post-process-effects-tutorial/12.png" width="120"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           After Post Process Effect
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <p>
+       Now you can add in some of the property-based post process settings that are a part of the Post Process Volume. In this case, we did the following:
+      </p>
+      <dl>
+       <dd>
+        •Pull
+        <b>
+         Saturation
+        </b>
+        to very near zero.
+       </dd>
+       <dd>
+        •Use
+        <b>
+         Tint
+        </b>
+        to put a pale green cast over the result.
+       </dd>
+       <dd>
+        •Boost '
+        <i>
+         Contrast
+        </i>
+        to about 0.65.
+       </dd>
+       <dd>
+        •Tweak
+        <b>
+         Crush Shadows
+        </b>
+        and
+        <b>
+         Crush Highlights
+        </b>
+        to increase contrast even further.
+       </dd>
+       <dd>
+        •Set
+        <b>
+         Vignette Intensity
+        </b>
+        to about 0.9 for a really strong vignette.
+       </dd>
+       <dd>
+        •Kick
+        <b>
+         Bloom
+        </b>
+        intensity up to about 3.0.
+       </dd>
+      </dl>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

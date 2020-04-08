@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   How to add a shared library (.so) in android project - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    How to add a shared library (.so) in android project
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <p>
+       Author
+       <a class="external text" href="https://forums.unrealengine.com/member.php?31661-Syntopia" rel="nofollow">
+        Syntopia
+       </a>
+       . Thanks to Chris Babcock for the info.
+      </p>
+      <p>
+       For example, to add support for OpenSSL.
+      </p>
+      <p>
+       The latest compiled version of the library you can find in github (or compiled by hand), take this for example:
+      </p>
+      <p>
+       <a class="external free" href="https://github.com/ph4r05/android-openssl" rel="nofollow">
+        https://github.com/ph4r05/android-openssl
+       </a>
+      </p>
+      <p>
+       openssl-1.0.2j
+      </p>
+      <p>
+       Select the desired architecture, for this example we will take "arch-armeabi-v7a".
+After downloading, create a folder "/armv7" in the source folder "C:\Users\Vadim\Documents\Unreal Projects\AndroidOpenSSL\Source\AndroidOpenSSL" in my case.
+And move the "libcrypto.so" there in "armv7". Next open the file .Build.cs it should look something like this, here I just add the library to work with OpenSSL in the Windows.
+      </p>
+      <p>
+       Headers are in "AndroidOpenSSL/ThirdParty/OpenSSL/Includes" connect them like this:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">string</span> <span class="n">IncludesPath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">ThirdPartyPath</span><span class="p">,</span> <span class="s">"OpenSSL"</span><span class="p">,</span> <span class="s">"Includes"</span><span class="p">);</span>
+<span class="n">PublicIncludePaths</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">IncludesPath</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       For android target set the path to the library and APL (AndroidPluginLanguage).
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">using</span> <span class="n">UnrealBuildTool</span><span class="p">;</span>
+<span class="k">using</span> <span class="n">System</span><span class="p">.</span><span class="n">IO</span><span class="p">;</span>
+<span class="k">using</span> <span class="n">System</span><span class="p">;</span>  <span class="c1">//Console.WriteLine("");</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">AndroidOpenSSL</span> <span class="o">:</span> <span class="n">ModuleRules</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="n">string</span> <span class="n">ModulePath</span>
+    <span class="p">{</span>
+        <span class="n">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ModuleDirectory</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="n">string</span> <span class="n">ThirdPartyPath</span>
+    <span class="p">{</span>
+        <span class="n">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">Path</span><span class="p">.</span><span class="n">GetFullPath</span><span class="p">(</span><span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">ModulePath</span><span class="p">,</span> <span class="s">"../../ThirdParty/"</span><span class="p">));</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="n">AndroidOpenSSL</span><span class="p">(</span><span class="n">TargetInfo</span> <span class="n">Target</span><span class="p">)</span>
+    <span class="p">{</span>
+	<span class="n">PublicDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"Core"</span><span class="p">,</span> <span class="s">"CoreUObject"</span><span class="p">,</span> <span class="s">"Engine"</span><span class="p">,</span> <span class="s">"InputCore"</span> <span class="p">});</span>
+
+	<span class="n">PrivateDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">[]</span> <span class="p">{</span>  <span class="p">});</span>
+
+        <span class="n">string</span> <span class="n">IncludesPath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">ThirdPartyPath</span><span class="p">,</span> <span class="s">"OpenSSL"</span><span class="p">,</span> <span class="s">"Includes"</span><span class="p">);</span>
+        <span class="n">PublicIncludePaths</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">IncludesPath</span><span class="p">);</span>
+
+        <span class="k">if</span> <span class="p">((</span><span class="n">Target</span><span class="p">.</span><span class="n">Platform</span> <span class="o">==</span> <span class="n">UnrealTargetPlatform</span><span class="p">.</span><span class="n">Win64</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">Target</span><span class="p">.</span><span class="n">Platform</span> <span class="o">==</span> <span class="n">UnrealTargetPlatform</span><span class="p">.</span><span class="n">Win32</span><span class="p">))</span>
+        <span class="p">{</span>
+            <span class="n">string</span> <span class="n">LibrariesPath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">ThirdPartyPath</span><span class="p">,</span> <span class="s">"OpenSSL"</span><span class="p">,</span> <span class="s">"Libraries"</span><span class="p">);</span>
+
+            <span class="n">PublicAdditionalLibraries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">LibrariesPath</span><span class="p">,</span> <span class="s">"libeay32.lib"</span><span class="p">));</span>
+            <span class="n">PublicAdditionalLibraries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">LibrariesPath</span><span class="p">,</span> <span class="s">"ssleay32.lib"</span><span class="p">));</span>
+
+
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">Target</span><span class="p">.</span><span class="n">Platform</span> <span class="o">==</span> <span class="n">UnrealTargetPlatform</span><span class="p">.</span><span class="n">Android</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">string</span> <span class="n">BuildPath</span> <span class="o">=</span> <span class="n">Utils</span><span class="p">.</span><span class="n">MakePathRelativeTo</span><span class="p">(</span><span class="n">ModuleDirectory</span><span class="p">,</span> <span class="n">BuildConfiguration</span><span class="p">.</span><span class="n">RelativeEnginePath</span><span class="p">);</span>
+
+            <span class="n">AdditionalPropertiesForReceipt</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">ReceiptProperty</span><span class="p">(</span><span class="s">"AndroidPlugin"</span><span class="p">,</span> <span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">BuildPath</span><span class="p">,</span> <span class="s">"My_APL_armv7.xml"</span><span class="p">)));</span>
+
+            <span class="n">PublicAdditionalLibraries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">BuildPath</span> <span class="o">+</span> <span class="s">"/armv7/libcrypto.so"</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Create in the same place file "My_APL_armv7.xml".
+A great example can be found here:
+      </p>
+      <p>
+       <a class="external free" href="https://github.com/EpicGames/UnrealEngine/blob/4.10/Engine/Source/Programs/UnrealBuildTool/Android/AndroidPluginLanguage.cs" rel="nofollow">
+        https://github.com/EpicGames/UnrealEngine/blob/4.10/Engine/Source/Programs/UnrealBuildTool/Android/AndroidPluginLanguage.cs
+       </a>
+      </p>
+      <p>
+       The contents will look like this:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="o">&lt;?</span><span class="n">xml</span> <span class="n">version</span><span class="o">=</span><span class="s">"1.0"</span> <span class="n">encoding</span><span class="o">=</span><span class="s">"utf-8"</span><span class="o">?&gt;</span>
+<span class="o">&lt;!--</span> <span class="n">steps</span> <span class="n">to</span> <span class="n">add</span> <span class="n">to</span> <span class="n">build</span> <span class="n">additions</span> <span class="o">--&gt;</span>
+<span class="o">&lt;</span><span class="n">root</span> <span class="nl">xmlns</span><span class="p">:</span><span class="n">android</span><span class="o">=</span><span class="s">"http://schemas.android.com/apk/res/android"</span><span class="o">&gt;</span>
+	<span class="o">&lt;!--</span> <span class="n">init</span> <span class="n">section</span> <span class="n">is</span> <span class="n">always</span> <span class="n">evaluated</span> <span class="n">once</span> <span class="n">per</span> <span class="n">architecture</span> <span class="o">--&gt;</span>
+	<span class="o">&lt;</span><span class="n">init</span><span class="o">&gt;</span>
+	    <span class="o">&lt;</span><span class="n">setBool</span> <span class="n">result</span><span class="o">=</span><span class="s">"bSupported"</span> <span class="n">value</span><span class="o">=</span><span class="s">"false"</span><span class="o">/&gt;</span>
+	        <span class="o">&lt;</span><span class="n">isArch</span> <span class="n">arch</span><span class="o">=</span><span class="s">"armeabi-v7a"</span><span class="o">&gt;</span>
+	            <span class="o">&lt;</span><span class="n">setBool</span> <span class="n">result</span><span class="o">=</span><span class="s">"bSupported"</span> <span class="n">value</span><span class="o">=</span><span class="s">"true"</span><span class="o">/&gt;</span>
+	        <span class="o">&lt;/</span><span class="n">isArch</span><span class="o">&gt;</span>
+	<span class="o">&lt;/</span><span class="n">init</span><span class="o">&gt;</span>
+
+	<span class="o">&lt;!--</span> <span class="n">optional</span> <span class="n">files</span> <span class="n">or</span> <span class="n">directories</span> <span class="n">to</span> <span class="n">copy</span> <span class="n">to</span> <span class="n">Intermediate</span><span class="o">/</span><span class="n">Android</span><span class="o">/</span><span class="n">APK</span> <span class="o">--&gt;</span>
+	<span class="o">&lt;</span><span class="n">resourceCopies</span><span class="o">&gt;</span>
+	    <span class="o">&lt;</span><span class="n">isArch</span> <span class="n">arch</span><span class="o">=</span><span class="s">"armeabi-v7a"</span><span class="o">&gt;</span>
+	        <span class="o">&lt;</span><span class="n">copyFile</span> <span class="n">src</span><span class="o">=</span><span class="s">"$S(PluginDir)/armv7/libcrypto.so"</span>
+	                  <span class="n">dst</span><span class="o">=</span><span class="s">"$S(BuildDir)/libs/armeabi-v7a/libcrypto.so"</span> <span class="o">/&gt;</span>
+		<span class="o">&lt;/</span><span class="n">isArch</span><span class="o">&gt;</span>
+	<span class="o">&lt;/</span><span class="n">resourceCopies</span><span class="o">&gt;</span>
+
+	<span class="o">&lt;!--</span> <span class="n">optional</span> <span class="n">libraries</span> <span class="n">to</span> <span class="n">load</span> <span class="n">in</span> <span class="n">GameActivity</span><span class="p">.</span><span class="n">java</span> <span class="n">before</span> <span class="n">libUE4</span><span class="p">.</span><span class="n">so</span> <span class="o">--&gt;</span>
+	<span class="o">&lt;</span><span class="n">soLoadLibrary</span><span class="o">&gt;</span>
+	    <span class="o">&lt;</span><span class="k">if</span> <span class="n">condition</span><span class="o">=</span><span class="s">"bSupported"</span><span class="o">&gt;</span>
+	        <span class="o">&lt;</span><span class="nb">true</span><span class="o">&gt;</span>
+		    <span class="o">&lt;</span><span class="n">loadLibrary</span> <span class="n">name</span><span class="o">=</span><span class="s">"myso"</span> <span class="n">failmsg</span><span class="o">=</span><span class="s">"Failed to load myso library"</span> <span class="o">/&gt;</span>
+		<span class="o">&lt;/</span><span class="nb">true</span><span class="o">&gt;</span>
+	    <span class="o">&lt;/</span><span class="k">if</span><span class="o">&gt;</span>
+	<span class="o">&lt;/</span><span class="n">soLoadLibrary</span><span class="o">&gt;</span>
+<span class="o">&lt;/</span><span class="n">root</span><span class="o">&gt;</span>
+</pre>
+      </div>
+      <p>
+       That's all you can packing. If everything is fine, we'll see it in the log:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="nl">UATHelper</span><span class="p">:</span> <span class="n">Packaging</span> <span class="p">(</span><span class="n">Android</span> <span class="p">(</span><span class="n">ETC2</span><span class="p">))</span><span class="o">:</span> <span class="nl">UnrealBuildTool</span><span class="p">:</span> <span class="n">File</span> <span class="nl">C</span><span class="p">:</span><span class="err">\</span><span class="n">Users</span><span class="err">\</span><span class="n">Vadim</span><span class="err">\</span><span class="n">Documents</span><span class="err">\</span><span class="n">Unreal</span> <span class="n">Projects</span><span class="err">\</span><span class="n">AndroidOpenSSL</span><span class="err">\</span><span class="n">Source</span><span class="err">\</span><span class="n">AndroidOpenSSL</span><span class="o">/</span><span class="n">armv7</span><span class="o">/</span><span class="n">libcrypto</span><span class="p">.</span><span class="n">so</span> <span class="n">copied</span> <span class="n">to</span> <span class="nl">C</span><span class="p">:</span><span class="err">\</span><span class="n">Users</span><span class="err">\</span><span class="n">Vadim</span><span class="err">\</span><span class="n">Documents</span><span class="err">\</span><span class="n">Unreal</span> <span class="n">Projects</span><span class="err">\</span><span class="n">AndroidOpenSSL</span><span class="err">\</span><span class="n">Intermediate</span><span class="o">/</span><span class="n">Android</span><span class="o">/</span><span class="n">APK</span><span class="o">/</span><span class="n">libs</span><span class="o">/</span><span class="n">armeabi</span><span class="o">-</span><span class="n">v7a</span><span class="o">/</span><span class="n">libcrypto</span><span class="p">.</span><span class="n">so</span>
+</pre>
+      </div>
+      <p>
+       Possible errors (for OpenSSL):
+      </p>
+      <p>
+       After installing the application on androyd I can not run it, looked into the logcat, there was such an error:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">E</span><span class="o">/</span><span class="n">AndroidRuntime</span><span class="p">(</span> <span class="mi">1574</span><span class="p">)</span><span class="o">:</span> <span class="n">java</span><span class="p">.</span><span class="n">lang</span><span class="p">.</span><span class="nl">UnsatisfiedLinkError</span><span class="p">:</span> <span class="n">dlopen</span> <span class="nl">failed</span><span class="p">:</span> <span class="n">could</span> <span class="n">not</span> <span class="n">load</span> <span class="n">library</span> <span class="s">"libcrypto.so.1.0.0"</span> <span class="n">needed</span> <span class="n">by</span> <span class="s">"libUE4.so"</span><span class="p">;</span> <span class="n">caused</span> <span class="n">by</span> <span class="n">library</span> <span class="s">"libcrypto.so.1.0.0"</span> <span class="n">not</span> <span class="n">found</span>
+</pre>
+      </div>
+      <p>
+       If you rename the .apk to .zip open and go to the "\lib" you will see that there is not "libcrypto.so.1.0.0" only "libcrypto.so".
+Version number sewn somewhere in .so, a simple rename will not help. We need to recompile OpenSSL with the required flag, or change something in .so using rpl:
+      </p>
+      <p>
+       rpl -R -e .so.1.0.0 "_1_0_0.so" /path/to/libcrypto.so
+      </p>
+      <p>
+       More details in the answer:
+       <a class="external free" href="http://stackoverflow.com/questions/33103867/unsatisfiedlinkerror-libcrypto-so-1-0-0-not-found" rel="nofollow">
+        http://stackoverflow.com/questions/33103867/unsatisfiedlinkerror-libcrypto-so-1-0-0-not-found
+       </a>
+      </p>
+      <p>
+       An example of calculating the hash SHA256.
+      </p>
+      <p>
+       I created the HUD for this:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// OpenSSL tests</span>
+<span class="cp">#include</span> <span class="cpf">&lt;openssl/evp.h&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;sstream&gt;</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iomanip&gt;</span><span class="cp"></span>
+
+<span class="kt">void</span> <span class="n">ADebugHUD</span><span class="o">::</span><span class="n">DrawHUD</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">DrawHUD</span><span class="p">();</span>
+
+	<span class="n">FString</span> <span class="n">hashTest</span> <span class="o">=</span> <span class="s">"Hash test (sha256): "</span> <span class="o">+</span> <span class="n">GetSHA256_s</span><span class="p">(</span><span class="s">"Baron"</span><span class="p">,</span> <span class="n">strlen</span><span class="p">(</span><span class="s">"Baron"</span><span class="p">));</span>
+
+	<span class="n">DrawText</span><span class="p">(</span><span class="n">hashTest</span><span class="p">,</span> <span class="n">FColor</span><span class="o">::</span><span class="n">White</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">HUDFont</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">FString</span> <span class="n">ADebugHUD</span><span class="o">::</span><span class="n">GetSHA256_s</span><span class="p">(</span><span class="k">const</span> <span class="kt">void</span> <span class="o">*</span> <span class="n">data</span><span class="p">,</span> <span class="kt">size_t</span> <span class="n">data_len</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">EVP_MD_CTX</span> <span class="n">mdctx</span><span class="p">;</span>
+	<span class="kt">unsigned</span> <span class="kt">char</span> <span class="n">md_value</span><span class="p">[</span><span class="n">EVP_MAX_MD_SIZE</span><span class="p">];</span>
+	<span class="kt">unsigned</span> <span class="kt">int</span> <span class="n">md_len</span><span class="p">;</span>
+
+	<span class="n">EVP_DigestInit</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mdctx</span><span class="p">,</span> <span class="n">EVP_sha256</span><span class="p">());</span>
+	<span class="n">EVP_DigestUpdate</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mdctx</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="kt">size_t</span><span class="p">)</span><span class="n">data_len</span><span class="p">);</span>
+	<span class="n">EVP_DigestFinal_ex</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mdctx</span><span class="p">,</span> <span class="n">md_value</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">md_len</span><span class="p">);</span>
+	<span class="n">EVP_MD_CTX_cleanup</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mdctx</span><span class="p">);</span>
+
+	<span class="n">std</span><span class="o">::</span><span class="n">stringstream</span> <span class="n">s</span><span class="p">;</span>
+	<span class="n">s</span><span class="p">.</span><span class="n">fill</span><span class="p">(</span><span class="sc">'0'</span><span class="p">);</span>
+
+	<span class="k">for</span> <span class="p">(</span><span class="kt">size_t</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">md_len</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span><span class="p">)</span>
+		<span class="n">s</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">setw</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">hex</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="kt">unsigned</span> <span class="kt">short</span><span class="p">)</span><span class="n">md_value</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+
+	<span class="k">return</span> <span class="n">s</span><span class="p">.</span><span class="n">str</span><span class="p">().</span><span class="n">c_str</span><span class="p">();</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Output:
+      </p>
+      <p>
+       <img alt="45476.JPG" class="" height="477" src="../assets/how-to-add-a-shared-library-so-in-android-project/0.JPG" width="852"/>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Using Steamworks with UE4 - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Using Steamworks with UE4
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Session_system">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Session system
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Downloading_the_pull_request">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Downloading the pull request
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Let.27s_start">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Let's start
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Enabling_Steam_Authentication">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Enabling Steam Authentication
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Setting_your_product_name">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             Setting your product name
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Registering_the_server_on_the_Steam_master_server">
+            <span class="tocnumber">
+             3.3
+            </span>
+            <span class="toctext">
+             Registering the server on the Steam master server
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Custom_server_name">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Custom server name
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Author_Link">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Author Link
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Session_system">
+        Session system
+       </span>
+      </h1>
+      <p>
+       In order to successfully set your game servers, you'll need to follow eXi's wiki page (
+       ) to set a basic session system in C++.
+      </p>
+      <p>
+      </p>
+      <h1>
+       <span class="mw-headline" id="Downloading_the_pull_request">
+        Downloading the pull request
+       </span>
+      </h1>
+      <p>
+       I made a pull request on GitHub with some fixes to the engine Steam integration. You can download it here:
+       <a class="external free" href="https://github.com/EpicGames/UnrealEngine/pull/2135" rel="nofollow">
+        https://github.com/EpicGames/UnrealEngine/pull/2135
+       </a>
+      </p>
+      <p>
+      </p>
+      <h1>
+       <span class="mw-headline" id="Let.27s_start">
+        Let's start
+       </span>
+      </h1>
+      <h2>
+       <span class="mw-headline" id="Enabling_Steam_Authentication">
+        Enabling Steam Authentication
+       </span>
+      </h2>
+      <p>
+       Once you have my pull request and you followed the eXi's tutorial, you can start using this system.
+First you need to enable the Steam authentication. To do that, go into your gamemode class and add this in the constructor:
+       <code>
+       </code>
+      </p>
+      <code>
+       <pre>#if !UE_EDITOR
+bUseAuthentication = true;
+#endif
+</pre>
+      </code>
+      <p>
+       <code>
+       </code>
+       Now you should have enabled the Steam authentication into the engine code.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Setting_your_product_name">
+        Setting your product name
+       </span>
+      </h2>
+      <p>
+       Now you need to set the Product Name that Steam will use in the game filters. If you have a Steamworks account with an app ID, go to Edit Steamworks Settings -&gt; Application -&gt; Dedicated Servers and then edit the Dedicated Game Servers Information section. You can use the same value for Product Name and for Server Browser Name. When you set these parameters, click on Save, and then go to the Publish tab to publish these informations.
+Now on Steamworks all should be OK. 
+Now you have to inform the Engine about the new settings.
+To do this, open OnlineSessionAsyncServerSteam.cpp inside Engine\Source\Runtime\Online\OnlineSubsystemSteam\Private into your UnrealEngine repository folder, then set STEAMPRODUCTNAME and STEAMGAMEDIR with the same value you entered in Steamworks, inside STEAMGAMEDESC you can enter whatever you want.
+Now your product name should be set. Let's go to the next step.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Registering_the_server_on_the_Steam_master_server">
+        Registering the server on the Steam master server
+       </span>
+      </h2>
+      <p>
+       To register your dedicated server on Steam, you'll need to create a session at the server launch, to do this you'll need a custom GameSession class.
+Create a custom GameSession class, and then override the RegisterServer() function writing this in the header file:
+       <code>
+       </code>
+      </p>
+      <code>
+       <pre>virtual void RegisterServer() override;
+</pre>
+      </code>
+      <p>
+       <code>
+       </code>
+       This is an example use of the RegisterServer() function to set your server visible on Steam master server:
+       <code>
+       </code>
+      </p>
+      <code>
+       <pre>void AMyGameSession::RegisterServer()
+{
+    IOnlineSubsystem* const OnlineSub = IOnlineSubsystem::Get();
+    if (OnlineSub)
+    {
+        IOnlineSessionPtr Sessions = OnlineSub-&gt;GetSessionInterface();
+        if (Sessions.IsValid())
+        {
+            AMyGameMode* MyGM = Cast&lt;AMyGameMode&gt;(GetWorld()-&gt;GetAuthGameMode());
+            if (MyGM)
+            {
+                HostSettings = MakeShareable(new FOnlineSessionSettings(false, false, MaxPlayers));
+                HostSettings-&gt;Set(SETTING_GAMEMODE, FString(*MyGM-&gt;GetName()), EOnlineDataAdvertisementType::ViaOnlineService);
+                HostSettings-&gt;Set(SETTING_MAPNAME, GetWorld()-&gt;GetMapName(), EOnlineDataAdvertisementType::ViaOnlineService);
+                HostSettings-&gt;Set(SETTING_MATCHING_HOPPER, FString("Deathmatch"), EOnlineDataAdvertisementType::DontAdvertise);
+                HostSettings-&gt;Set(SETTING_MATCHING_TIMEOUT, 120.0f, EOnlineDataAdvertisementType::ViaOnlineService);
+                HostSettings-&gt;Set(SETTING_SESSION_TEMPLATE_NAME, FString("GameSession"), EOnlineDataAdvertisementType::DontAdvertise);
+                HostSettings-&gt;bUsesPresence = false;
+                HostSettings-&gt;bIsLANMatch = false;
+                HostSettings-&gt;bIsDedicated = true;
+                HostSettings-&gt;bShouldAdvertise = true;
+                HostSettings-&gt;bAllowJoinInProgress = MyGM-&gt;bAllowJoinInProgress;
+                HostSettings-&gt;NumPublicConnections = MaxPlayers;
+                Sessions-&gt;CreateSession(0, GameSessionName, *HostSettings);
+            }
+        }
+    }
+}
+</pre>
+      </code>
+      <p>
+       <code>
+       </code>
+      </p>
+      <p>
+       In this RegisterServer function, I'm getting some parameters such as GameMode or Map name from the GameMode class or from the GetWorld() function, but you can set fake parameters just to see if it works.
+Ok, now your server should be listed on the Steam master server, and you should be able to connect using the eXi's session system.
+      </p>
+      <p>
+      </p>
+      <h1>
+       <span class="mw-headline" id="Custom_server_name">
+        Custom server name
+       </span>
+      </h1>
+      <p>
+       If you want a custom server name, simply set the GameServerName variable of the OnlineSubsystemSteam session interface, before creating the session.
+For example:
+       <code>
+       </code>
+      </p>
+      <code>
+       <pre>Sessions-&gt;GameServerName = FString("My Server!");
+</pre>
+      </code>
+      <p>
+       <code>
+       </code>
+      </p>
+      <h1>
+       <span class="mw-headline" id="Author_Link">
+        Author Link
+       </span>
+      </h1>
+      <p>
+       (
+     )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

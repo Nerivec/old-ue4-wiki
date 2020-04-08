@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   UMG, Create Scrollable List of Clickable Buttons From Dynamic Array - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    UMG, Create Scrollable List of Clickable Buttons From Dynamic Array
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Main_Widget">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Main Widget
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Create_Widget_BP">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Create Widget BP
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Add_Variable_Enabled_Scroll_Box">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             Add Variable Enabled Scroll Box
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Secondary_List_Item_Widget">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Secondary List Item Widget
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Create_Bind_Event">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Create Bind Event
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#My_Character_BP">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           My Character BP
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Create_Joy_UI">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Create Joy UI
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Add_List_Items">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Add List Items
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-10">
+         <a href="#Create_Button_And_Set_Text">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Create Button And Set Text
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-11">
+         <a href="#Significant_Improvements_in_UE4_4.5">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Significant Improvements in UE4 4.5
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-12">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           9
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-13">
+         <a href="#FAQ">
+          <span class="tocnumber">
+           10
+          </span>
+          <span class="toctext">
+           FAQ
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-14">
+           <a href="#How_do_I_return_the_Button_as_type_Object.3F">
+            <span class="tocnumber">
+             10.1
+            </span>
+            <span class="toctext">
+             How do I return the Button as type Object?
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-15">
+         <a href="#Related_Tutorials">
+          <span class="tocnumber">
+           11
+          </span>
+          <span class="toctext">
+           Related Tutorials
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <img alt="RamaUMGTitle.jpg" class="" height="525" src="../assets/umg-create-scrollable-list-of-clickable-buttons-from-dynamic-array/0.jpg" width="700"/>
+      </p>
+      <p>
+       <i>
+        Author:
+       </i>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       In this tutorial I show you, mostly through pictures, how to make a UMG widget that is a scrollable list of clickable buttons, created during game time from a dynamic array!
+      </p>
+      <p>
+       In other words, you can use this tutorial to fill a scrolling list with any text items you want, from a simple String Array!
+      </p>
+      <p>
+       And each of the buttons you create from the dynamic array can perform any BP actions you want!
+      </p>
+      <p>
+       The setup for this is actually quite simple, compared to the result of being able to add as many clickable buttons as you want to a scrolling list, by just adding entries to a BP String Array!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Main_Widget">
+        Main Widget
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Create_Widget_BP">
+        Create Widget BP
+       </span>
+      </h3>
+      <p>
+       After enabling UMG via Editor Preferences -&gt; Experimental,
+      </p>
+      <p>
+       Restart the editor and right click to add a UMG widget!
+      </p>
+      <p>
+       <img alt="UMGStep1.jpg" class="" height="409" src="../assets/umg-create-scrollable-list-of-clickable-buttons-from-dynamic-array/1.jpg" width="700"/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Add_Variable_Enabled_Scroll_Box">
+        Add Variable Enabled Scroll Box
+       </span>
+      </h3>
+      <p>
+       Add a Panel-&gt; scroll box and make sure it is a variable, and give it a name of your choosing!
+      </p>
+      <p>
+       <img alt="MainWidget.jpg" class="" height="525" src="../assets/umg-create-scrollable-list-of-clickable-buttons-from-dynamic-array/2.jpg" width="700"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Secondary_List_Item_Widget">
+        Secondary List Item Widget
+       </span>
+      </h2>
+      <p>
+       Create a second widget that is simply a TextBlock wrapped around by a Button.
+      </p>
+      <p>
+       Make sure both are set to be variables!
+      </p>
+      <p>
+       <img alt="SecondWidget.jpg" class="" height="525" src="../assets/umg-create-scrollable-list-of-clickable-buttons-from-dynamic-array/3.jpg" width="700"/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Create_Bind_Event">
+        Create Bind Event
+       </span>
+      </h3>
+      <p>
+       Create the bind BP function after clicking on "bind" for the buttons On Click event!
+      </p>
+      <p>
+       <img alt="BindEvent.jpg" class="" height="525" src="../assets/umg-create-scrollable-list-of-clickable-buttons-from-dynamic-array/4.jpg" width="700"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="My_Character_BP">
+        My Character BP
+       </span>
+      </h2>
+      <p>
+       Open up your my character BP and create this setup!
+      </p>
+      <p>
+       <img alt="UMG Mycharacter1.jpg" class="" height="525" src="../assets/umg-create-scrollable-list-of-clickable-buttons-from-dynamic-array/5.jpg" width="700"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Create_Joy_UI">
+        Create Joy UI
+       </span>
+      </h2>
+      <p>
+       <img alt="CreateJoyUI.jpg" class="" height="525" src="../assets/umg-create-scrollable-list-of-clickable-buttons-from-dynamic-array/6.jpg" width="700"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Add_List_Items">
+        Add List Items
+       </span>
+      </h2>
+      <p>
+       The String Array called ListItems is a global variable for the My Character BP !
+      </p>
+      <p>
+       You could edit this variable from anywhere in any other BP to change how the UMG widget creates itself!
+      </p>
+      <p>
+       Please note that I am retrieving the variable-enabled Scroll Box, called JoyList, from the main widget variable we saved off when creating the main widget.
+      </p>
+      <p>
+       So I am adding the new buttons directly to the scroll box JoyList!
+      </p>
+      <p>
+       <img alt="UMG MyCharacter2.jpg" class="" height="525" src="../assets/umg-create-scrollable-list-of-clickable-buttons-from-dynamic-array/7.jpg" width="700"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Create_Button_And_Set_Text">
+        Create Button And Set Text
+       </span>
+      </h2>
+      <p>
+       The return type of this function is UObject!
+      </p>
+      <p>
+       Please very carefully note, you cannot return the created widget itself, if you try to add that to the Scroll Box it wont show up, you instead add the button that wraps around the Text Block!
+      </p>
+      <p>
+       <img alt="UMG MyCharacter3.jpg" class="" height="525" src="../assets/umg-create-scrollable-list-of-clickable-buttons-from-dynamic-array/8.jpg" width="700"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Significant_Improvements_in_UE4_4.5">
+        Significant Improvements in UE4 4.5
+       </span>
+      </h2>
+      <p>
+       As of 4.5
+      </p>
+      <p>
+       1. You dont have to cast the widget after you create it, you can use the special create widget node that returns the widget already casted
+      </p>
+      <p>
+       2. Add to Viewport and user input are now separated, so you can specify exactly how you want your menu to work. The menu can work with game viewport input or can take away control from the game viewport.
+      </p>
+      <p>
+       3. Show mouse cursor is done via the Player Controller.
+      </p>
+      <p>
+       <img alt="UMG Tutorial Update Rama.jpg" class="" height="567" src="../assets/umg-create-scrollable-list-of-clickable-buttons-from-dynamic-array/9.jpg" width="900"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       By adding the button of the secondary widget to the scroll box of the first widget, I have enabled you to create an easy-to-use dynamic list of scrollable buttons that can perform any BP actions when clicked!
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+      <h2>
+       <span class="mw-headline" id="FAQ">
+        FAQ
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="How_do_I_return_the_Button_as_type_Object.3F">
+        How do I return the Button as type Object?
+       </span>
+      </h3>
+      <p>
+       If you are having trouble setting the return type of the function to be Object, please note you can use the search filter to find it more easily! Here's a pic!
+      </p>
+      <p>
+       <img alt="ObjectInSearchFilter.jpg" class="" height="497" src="../assets/umg-create-scrollable-list-of-clickable-buttons-from-dynamic-array/10.jpg" width="700"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Related_Tutorials">
+        Related Tutorials
+       </span>
+      </h2>
+      <p>
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/UMG/index.html" rel="nofollow">
+        Epic's UMG Documentation
+       </a>
+      </p>
+      <p>
+      </p>
+      <p>
+       <br/>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

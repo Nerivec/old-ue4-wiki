@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Expose an interface to blueprint - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Expose an interface to blueprint
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="BlueprintInterface.png" class="thumbimage" height="88" src="../assets/expose-an-interface-to-blueprint/0.png" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+      </p>
+      <p>
+       <br/>
+       <b>
+        NOTE: This tutorial is largely out of date, recommend reading this instead
+       </b>
+       <a class="external free" href="./interfaces-in-c.html" rel="nofollow">
+        Interfaces in C++
+       </a>
+      </p>
+      <p>
+       <br/>
+       We will create a simple interface that you can use in your blueprints. As you can see in the picture above we will create a simple event called
+       <i>
+        On Interact
+       </i>
+       which exposes your interface "clicked" with argument type
+       <b>
+        ITargetInterface
+       </b>
+       . Note that this argument is only needed in this specific example. If you make your own class with your own event, you can make events with an optional number of arguments. With this interface in place we will be able to call it's functions like
+       <i>
+        GetHealth
+       </i>
+       .
+      </p>
+      <p>
+       Header file:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+<span class="cp">#include</span> <span class="cpf">"TargetInterface.generated.h"</span><span class="cp"></span>
+<span class="n">UINTERFACE</span><span class="p">(</span><span class="n">MinimalAPI</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">UTargetInterface</span> <span class="o">:</span>
+	<span class="k">public</span> <span class="n">UInterface</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UINTERFACE_BODY</span><span class="p">()</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">ITargetInterface</span><span class="p">{</span>
+	<span class="n">GENERATED_IINTERFACE_BODY</span><span class="p">()</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintImplementableEvent</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="p">(</span><span class="n">FriendlyName</span> <span class="o">=</span> <span class="s">"On Interact"</span><span class="p">))</span>
+	<span class="kt">void</span> <span class="n">OnInteract</span><span class="p">(</span><span class="k">const</span> <span class="n">TScriptInterface</span><span class="o">&lt;</span><span class="n">ITargetInterface</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">clicked</span><span class="p">);</span>
+	<span class="k">virtual</span> <span class="kt">float</span> <span class="nf">GetHealth</span><span class="p">();</span>
+	
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       .cpp file:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"YourProject.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"TargetInterface.h"</span><span class="cp"></span>
+
+<span class="n">UTargetInterface</span><span class="o">::</span><span class="n">UTargetInterface</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span> <span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">){</span>
+
+<span class="p">}</span>
+<span class="c1">// Give GetHealth a default implementation</span>
+<span class="kt">float</span> <span class="n">ITargetInterface</span><span class="o">::</span><span class="n">GetHealth</span><span class="p">(){</span>
+	<span class="k">return</span> <span class="mf">0.0f</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       The important part here is
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintImplementableEvent</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="p">(</span><span class="n">FriendlyName</span> <span class="o">=</span> <span class="s">"On Interact"</span><span class="p">))</span>
+	<span class="kt">void</span> <span class="n">OnInteract</span><span class="p">(</span><span class="k">const</span> <span class="n">TScriptInterface</span><span class="o">&lt;</span><span class="n">ITargetInterface</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">clicked</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       1.) BlueprintImplementableEvent turns your function into a blueprint event. This event will be called in blueprint when ever you call it in c++.
+      </p>
+      <p>
+       2.)
+       <i>
+        void OnInteract(const TScriptInterface&lt;ITargetInterface&gt; &amp;clicked);
+       </i>
+       . Sometimes simple events are not enough for example in this case we want to know who has started the OnInteract event.
+      </p>
+      <p>
+       3.) The most important part is "
+       <i>
+        const TScriptInterface&lt;ITargetInterface&gt; &amp;clicked
+       </i>
+       ". We have to wrap our interface inside of an TScriptInterface to expose it to blueprint.
+      </p>
+      <p>
+       To trigger the event you can from within your C++ code call the function Execute_OnInteract. It always takes the instance of your class as an argument + the optional arguments you defined. In our case this is a TScriptInterface&lt;ITargetInterface&gt; object. Below is the example code, where we have created an instance named actor. We will generate the necessary argument "s" and then call the Execute_OnInteract function.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">auto</span> <span class="n">t</span> <span class="o">=</span> <span class="n">InterfaceCast</span><span class="o">&lt;</span><span class="n">ITargetInterface</span><span class="o">&gt;</span><span class="p">(</span><span class="n">actor</span><span class="p">);</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">t</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">){</span>		
+	<span class="n">TScriptInterface</span><span class="o">&lt;</span><span class="n">ITargetInterface</span><span class="o">&gt;</span> <span class="n">s</span> <span class="o">=</span> <span class="n">TScriptInterface</span><span class="o">&lt;</span><span class="n">ITargetInterface</span><span class="o">&gt;</span><span class="p">();</span>
+	<span class="n">s</span><span class="p">.</span><span class="n">SetObject</span><span class="p">(</span><span class="n">actor</span><span class="p">);</span>
+        <span class="n">s</span><span class="p">.</span><span class="n">SetInterface</span><span class="p">(</span><span class="n">t</span><span class="p">);</span>
+	<span class="n">t</span><span class="o">-&gt;</span><span class="n">Execute_OnInteract</span><span class="p">(</span><span class="n">actor</span><span class="p">,</span><span class="n">s</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       InterfaceCast tries to convert your actor to an ITargetInterface. In this case the variable "t" will be null if the cast has failed. 
+The next step is to wrap our actor who implements our ITargetInterface in an TScriptInterface. You do this by creating an TScriptInterface with the default consturctor and use the
+       <i>
+        SetObject
+       </i>
+       method.
+      </p>
+      <p>
+       Now the most important part here is that you should not call the method
+       <i>
+        OnInteract
+       </i>
+       because this will result in an runtime error. Instead you need to call the generated utility function which is called
+       <i>
+        Execute_YourFunctionName
+       </i>
+       in this case it is called
+       <i>
+        Execute_OnInteract
+       </i>
+       . The first argument is always the UObject and the following argument are the arguments of your function.
+      </p>
+      <p>
+       In our case we defined
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">OnInteract</span><span class="p">(</span><span class="k">const</span> <span class="n">TScriptInterface</span><span class="o">&lt;</span><span class="n">ITargetInterface</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">clicked</span><span class="p">)</span>
+</pre>
+      </div>
+      <p>
+       So the type signature will look like this
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">Execute_OnInteract</span><span class="p">(</span><span class="n">UObject</span> <span class="o">*</span><span class="n">object</span><span class="p">,</span> <span class="k">const</span> <span class="n">TScriptInterface</span><span class="o">&lt;</span><span class="n">ITargetInterface</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">clicked</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       At this point you can already use your event in your blueprints. The problem is that you have no functions that are working with your newly created interface. Let's fix this.
+      </p>
+      <p>
+       Header code:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"GameFramework/Actor.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"TargetInterface.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"TargetInterfaceBPFunctionLibrary.generated.h"</span><span class="cp"></span>
+
+<span class="cm">/**</span>
+<span class="cm"> * </span>
+<span class="cm"> */</span>
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">UTargetInterfaceBPFunctionLibrary</span> <span class="o">:</span> <span class="k">public</span> <span class="n">UBlueprintFunctionLibrary</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="s">"TargetInterface"</span><span class="p">)</span>
+	<span class="k">static</span> <span class="kt">float</span> <span class="n">GetHealth</span><span class="p">(</span><span class="k">const</span> <span class="n">TScriptInterface</span><span class="o">&lt;</span><span class="n">ITargetInterface</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">target</span><span class="p">);</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       .cpp code:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"project.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"TargetInterfaceBPFunctionLibrary.h"</span><span class="cp"></span>
+
+
+<span class="n">UTargetInterfaceBPFunctionLibrary</span><span class="o">::</span><span class="n">UTargetInterfaceBPFunctionLibrary</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="p">{</span>
+
+<span class="p">}</span>
+
+<span class="kt">float</span> <span class="n">UTargetInterfaceBPFunctionLibrary</span><span class="o">::</span><span class="n">GetHealth</span><span class="p">(</span><span class="k">const</span> <span class="n">TScriptInterface</span><span class="o">&lt;</span><span class="n">ITargetInterface</span><span class="o">&gt;</span> <span class="o">&amp;</span><span class="n">target</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">target</span><span class="o">-&gt;</span><span class="n">GetHealth</span><span class="p">();</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       That's it. Now you can access your interface inside of your blueprints.
+      </p>
+      <p>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   中文 Launcher 启动器的故障排除 - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    中文 Launcher 启动器的故障排除
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#.E5.90.AF.E5.8A.A8.E7.A8.8B.E5.BA.8F.E9.97.AE.E9.A2.98.E6.95.85.E9.9A.9C.E6.8E.92.E9.99.A4">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           启动程序问题故障排除
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#.E5.90.AF.E5.8A.A8.E7.A8.8B.E5.BA.8F.E5.BB.BA.E8.AE.AE.E7.9A.84.E8.A7.84.E6.A0.BC">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             启动程序建议的规格
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#.E6.88.91.E6.97.A0.E6.B3.95.E4.BD.BF.E7.94.A8.E6.88.91.E7.9A.84.E5.B8.90.E6.88.B7.E7.99.BB.E5.BD.95.E5.90.AF.E5.8A.A8.E7.A8.8B.E5.BA.8F">
+            <span class="tocnumber">
+             1.2
+            </span>
+            <span class="toctext">
+             我无法使用我的帐户登录启动程序
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#.E6.88.91.E6.97.A0.E6.B3.95.E5.AE.89.E8.A3.85_Windows_.E7.89.88.E7.9A.84.E5.90.AF.E5.8A.A8.E7.A8.8B.E5.BA.8F">
+            <span class="tocnumber">
+             1.3
+            </span>
+            <span class="toctext">
+             我无法安装 Windows 版的启动程序
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#.E6.88.91.E5.B0.9D.E8.AF.95.E8.BF.90.E8.A1.8C.E6.97.B6.EF.BC.8C.E5.90.AF.E5.8A.A8.E7.A8.8B.E5.BA.8F.E5.9C.A8.E2.80.9C.E8.AF.B7.E7.A8.8D.E5.80.99.E2.80.9D.E7.95.8C.E9.9D.A2.E6.8C.82.E8.B5.B7.E3.80.82">
+            <span class="tocnumber">
+             1.4
+            </span>
+            <span class="toctext">
+             我尝试运行时，启动程序在“请稍候”界面挂起。
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#.E5.90.AF.E5.8A.A8.E7.A8.8B.E5.BA.8F.E5.8A.A0.E8.BD.BD.E5.A4.B1.E8.B4.A5.E6.88.96.E5.8A.A0.E8.BD.BD.E6.97.B6.E5.B4.A9.E6.BA.83">
+            <span class="tocnumber">
+             1.5
+            </span>
+            <span class="toctext">
+             启动程序加载失败或加载时崩溃
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#.E5.90.AF.E5.8A.A8.E7.A8.8B.E5.BA.8F.E6.97.A0.E6.B3.95.E4.B8.8B.E8.BD.BD.E5.86.85.E5.AE.B9">
+            <span class="tocnumber">
+             1.6
+            </span>
+            <span class="toctext">
+             启动程序无法下载内容
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#.E4.B8.8A.E8.BF.B0.E6.96.B9.E6.B3.95.E5.9D.87.E6.97.A0.E6.95.88.E6.9E.9C_-_.E8.8E.B7.E5.8F.96.E8.B0.83.E8.AF.95.E6.97.A5.E5.BF.97">
+            <span class="tocnumber">
+             1.7
+            </span>
+            <span class="toctext">
+             上述方法均无效果 - 获取调试日志
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#.E6.8F.90.E7.A4.BA.E5.92.8C.E6.8A.80.E5.B7.A7">
+            <span class="tocnumber">
+             1.8
+            </span>
+            <span class="toctext">
+             提示和技巧
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id=".E5.90.AF.E5.8A.A8.E7.A8.8B.E5.BA.8F.E9.97.AE.E9.A2.98.E6.95.85.E9.9A.9C.E6.8E.92.E9.99.A4">
+        启动程序问题故障排除
+       </span>
+      </h2>
+      <p>
+       虚幻引擎启动程序用于下载和启动虚幻引擎 4 的二进制版本（相对于从 GitHub 下载引擎源代码），并用作下载其他内容以及查看新闻和博客帖子的位置。
+      </p>
+      <p>
+       如果遇到启动程序问题，请阅读故障排除指南，确认是否有适合您问题的现成解决方案。如果没有找到解决方案，请访问
+       <a class="external free" href="http://help.epicgames.com/" rel="nofollow">
+        http://help.epicgames.com/
+       </a>
+       并使用“联系我们”部分中的“向我们发送电子邮件”按钮，确保提供尽可能详细的问题信息。
+      </p>
+      <h3>
+       <span class="mw-headline" id=".E5.90.AF.E5.8A.A8.E7.A8.8B.E5.BA.8F.E5.BB.BA.E8.AE.AE.E7.9A.84.E8.A7.84.E6.A0.BC">
+        启动程序建议的规格
+       </span>
+      </h3>
+      <p>
+       操作系统：x64 位版本的 Windows 7、8、8.1、10 或 Mac OS X 10.9.2 或更高版本。
+      </p>
+      <p>
+       硬盘空间：建议 1GB 左右，仅用于安装启动程序。如果想要从市场下载并安装游戏、编辑器和项目或内容，则需要更多硬盘空间。
+      </p>
+      <p>
+       显卡：任何兼容 DX11、DX12 的显卡
+      </p>
+      <p>
+       处理器：四核英特尔或 AMD 处理器
+      </p>
+      <h3>
+       <span class="mw-headline" id=".E6.88.91.E6.97.A0.E6.B3.95.E4.BD.BF.E7.94.A8.E6.88.91.E7.9A.84.E5.B8.90.E6.88.B7.E7.99.BB.E5.BD.95.E5.90.AF.E5.8A.A8.E7.A8.8B.E5.BA.8F">
+        我无法使用我的帐户登录启动程序
+       </span>
+      </h3>
+      <p>
+       可能是您使用自己的帐户在多台机器上登录。一个帐户的最大有效机器数量为 5。如果在多次尝试登录帐户后，甚至可能会降低至 1 台机器。
+      </p>
+      <p>
+       请注意，访问虚幻引擎论坛也会计入有效机器数量中。
+      </p>
+      <h3>
+       <span class="mw-headline" id=".E6.88.91.E6.97.A0.E6.B3.95.E5.AE.89.E8.A3.85_Windows_.E7.89.88.E7.9A.84.E5.90.AF.E5.8A.A8.E7.A8.8B.E5.BA.8F">
+        我无法安装 Windows 版的启动程序
+       </span>
+      </h3>
+      <p>
+       如果无法下载并启动安装程序，请尝试以下所列的步骤：
+      </p>
+      <ul>
+       <li>
+        确保以计算机上的管理员身份运行。
+       </li>
+       <li>
+        确保您具有对所选安装路径的读/写访问权。
+       </li>
+       <li>
+        确保计算机为最新状态，并安装了最新的 Service Pack 和驱动程序。
+       </li>
+      </ul>
+      <p>
+       如果上述建议均未解决您的问题，需要获取安装程序日志。要获取安装程序日志，请执行以下步骤：
+      </p>
+      <ul>
+       <li>
+        将 msi 放置在 C 盘根目录下
+       </li>
+       <li>
+        按 Windows 键 + R 并输入：
+       </li>
+       <li>
+        msiexec /i C:\EpicGamesLauncherInstaller.msi /L*V C:\EpicGamesInstallerLog.txt（确保使用准确的安装程序 msi 文件名来替换“EpicGamesLauncherInstaller.msi”）
+       </li>
+      </ul>
+      <p>
+       获得日志后，在 AnswerHub 上报告问题并将日志附加到帖子中。
+      </p>
+      <h3>
+       <span class="mw-headline" id=".E6.88.91.E5.B0.9D.E8.AF.95.E8.BF.90.E8.A1.8C.E6.97.B6.EF.BC.8C.E5.90.AF.E5.8A.A8.E7.A8.8B.E5.BA.8F.E5.9C.A8.E2.80.9C.E8.AF.B7.E7.A8.8D.E5.80.99.E2.80.9D.E7.95.8C.E9.9D.A2.E6.8C.82.E8.B5.B7.E3.80.82">
+        我尝试运行时，启动程序在“请稍候”界面挂起。
+       </span>
+      </h3>
+      <p>
+       如果在登录时收到此通知，请尝试以下所列步骤：
+      </p>
+      <ul>
+       <li>
+        确保没有使用代理（可以
+        <a class="external text" href="http://amibehindaproxy.com/" rel="nofollow">
+         在此
+        </a>
+        确认是否使用了代理），没有将 epicgames.com 过滤掉。如果使用了代理，添加通配符例外
+        <b>
+         *.epicgames.com
+        </b>
+        （或请 IT 部门执行此操作）。如果您的 IT 部门更倾向于直接将子域添加到白名单中，本节末尾提供了一个名单。
+       </li>
+       <li>
+        还需要确保端口
+        <b>
+         80
+        </b>
+        (http)、
+        <b>
+         443
+        </b>
+        (https) 和
+        <b>
+         5222
+        </b>
+        未被阻止。
+       </li>
+       <li>
+        尝试切换 DNS 服务器（OpenDNS 或 GoogleDNS）
+       </li>
+      </ul>
+      <div class="toccolours mw-collapsible mw-collapsed" style="width:800px">
+       子域列表
+       <div class="mw-collapsible-content">
+        <p>
+         unrealengine.com
+         <br/>
+         unrealtournament.com
+         <br/>
+         fortnite.com
+         <br/>
+         <br/>
+         account-public-service-prod03.ol.epicgames.com
+         <br/>
+         catalog-public-service-prod06.ol.epicgames.com
+         <br/>
+         eulatracking-public-service-prod06.ol.epicgames.com
+         <br/>
+         entitlement-public-service-prod08.ol.epicgames.com
+         <br/>
+         orderprocessor-public-service-ecomprod01.ol.epicgames.com
+         <br/>
+         friends-public-service-prod06.ol.epicgames.com
+         <br/>
+         persona-public-service-prod06.ol.epicgames.com
+         <br/>
+         lightswitch-public-service-prod06.ol.epicgames.com
+         <br/>
+         ut-public-service-prod10.ol.epicgames.com
+         <br/>
+         launcher-public-service-prod06.ol.epicgames.com
+         <br/>
+         xmpp-service-prod.ol.epicgames.com
+         <br/>
+         <a class="external free" href="https://download.epicgames.com/" rel="nofollow">
+          https://download.epicgames.com
+         </a>
+         <br/>
+         <a class="external free" href="https://cdn1.epicgames.com/" rel="nofollow">
+          https://cdn1.epicgames.com
+         </a>
+         <br/>
+         <a class="external free" href="http://et2.epicgames.com/" rel="nofollow">
+          http://et2.epicgames.com
+         </a>
+         <br/>
+         <a class="external free" href="https://launcher-website-prod07.ol.epicgames.com/" rel="nofollow">
+          https://launcher-website-prod07.ol.epicgames.com
+         </a>
+         <br/>
+        </p>
+       </div>
+      </div>
+      <h3>
+       <span class="mw-headline" id=".E5.90.AF.E5.8A.A8.E7.A8.8B.E5.BA.8F.E5.8A.A0.E8.BD.BD.E5.A4.B1.E8.B4.A5.E6.88.96.E5.8A.A0.E8.BD.BD.E6.97.B6.E5.B4.A9.E6.BA.83">
+        启动程序加载失败或加载时崩溃
+       </span>
+      </h3>
+      <p>
+       如果尝试打开或加载启动程序时似乎没有进展，请尝试以下步骤：
+      </p>
+      <ul>
+       <li>
+        确保之前没有打开启动程序。
+       </li>
+       <li>
+        查看“任务管理器”，核实上次会话后是否没有关闭启动程序进程。
+       </li>
+       <li>
+        确保显卡驱动程序更新到最新版本。
+       </li>
+      </ul>
+      <h3>
+       <span class="mw-headline" id=".E5.90.AF.E5.8A.A8.E7.A8.8B.E5.BA.8F.E6.97.A0.E6.B3.95.E4.B8.8B.E8.BD.BD.E5.86.85.E5.AE.B9">
+        启动程序无法下载内容
+       </span>
+      </h3>
+      <p>
+       如果下载或查看内容时遇到问题，请尝试以下步骤：
+      </p>
+      <ul>
+       <li>
+        关闭并重启启动程序和/或计算机，等待几分钟后再重启。（这是最常用的解决方案！）
+       </li>
+       <li>
+        确保没有使用代理（可以
+        <a class="external text" href="http://amibehindaproxy.com/" rel="nofollow">
+         在此
+        </a>
+        确认是否使用了代理），没有将 epicgames.com 及其子域过滤掉。如果使用了代理，为 epicgames.com 及其子域添加例外（或请 IT 部门执行此操作）。
+       </li>
+       <li>
+        如果使用了防火墙，确保为 epicgames.com 及其子域添加例外（或请 IT 部门执行此操作）。
+       </li>
+       <li>
+        尝试切换 DNS 服务器（
+        <a class="external text" href="https://www.opendns.com/" rel="nofollow">
+         OpenDNS
+        </a>
+        或
+        <a class="external text" href="https://developers.google.com/speed/public-dns" rel="nofollow">
+         GoogleDNS
+        </a>
+        ）
+       </li>
+       <li>
+        如果市场内容在同步时停滞不前，请在市场论坛上告知我们。
+       </li>
+      </ul>
+      <h3>
+       <span class="mw-headline" id=".E4.B8.8A.E8.BF.B0.E6.96.B9.E6.B3.95.E5.9D.87.E6.97.A0.E6.95.88.E6.9E.9C_-_.E8.8E.B7.E5.8F.96.E8.B0.83.E8.AF.95.E6.97.A5.E5.BF.97">
+        上述方法均无效果 - 获取调试日志
+       </span>
+      </h3>
+      <p>
+       如果上述方法都未能解决您的问题，或者这里没有提及您遇到的问题，请访问 UE4 AnswerHub，确认是否有其他用户已经报告该问题。如果没有，可以发布新帖子，但务必附加 DxDiag 和调试日志！
+      </p>
+      <dl>
+       <dd>
+        <b>
+         获取 DxDiag：
+        </b>
+       </dd>
+       <dd>
+        <i>
+         对于 Windows：
+        </i>
+        <ul>
+         <li>
+          选择“开始”按钮，在搜索字段中输入“cmd”。
+         </li>
+         <li>
+          打开命令提示符后，输入“dxdiag”并按 Enter 键。
+         </li>
+         <li>
+          此时应打开 directX 诊断工具窗口，并且右下角会显示一个正在变化的进度条。
+         </li>
+         <li>
+          完成后单击“保存所有信息”按钮。
+         </li>
+         <li>
+          将该文本文件保存到桌面，或者能够轻易访问的位置
+         </li>
+        </ul>
+       </dd>
+       <dd>
+        <i>
+         对于 Mac：
+        </i>
+        <ul>
+         <li>
+          转至并单击苹果菜单
+         </li>
+         <li>
+          选择“关于本机”选项
+         </li>
+         <li>
+          复制包含操作系统和操作系统版本在内的信息。
+         </li>
+        </ul>
+       </dd>
+      </dl>
+      <p>
+       在 AnswerHub 上发布问题时，直接从这里附加 DxDiag 或者包含 Mac 系统信息！
+      </p>
+      <dl>
+       <dd>
+        <b>
+         获取调试日志：
+        </b>
+       </dd>
+       <dd>
+        <i>
+         从启动程序内部：
+        </i>
+        <ul>
+         <li>
+          在启动程序右上角，单击“齿轮”图标。
+         </li>
+         <li>
+          选择“启用调试日志记录”，然后选择“立即启用”。如果您的问题是在启动或登录时发生的，请选择“启用调试日志记录”，然后选择“重启”
+         </li>
+         <li>
+          在启用调试日志记录的情况下，重现您所遇到的问题。
+         </li>
+         <li>
+          在重现问题后，返回到“齿轮”图标，并选择“显示启动程序日志”
+         </li>
+         <li>
+          将此文件夹中的所有日志压缩成 zip 文件，并附加到 AnswerHub 报告中。
+         </li>
+         <li>
+          返回到启动程序，再次选择“设置”图标，选择“禁用调试日志记录”或关闭启动程序。
+         </li>
+        </ul>
+       </dd>
+      </dl>
+      <p>
+       如果无法登录或开启调试日志记录，也可以尝试使用以下命令行获取调试日志。
+      </p>
+      <dl>
+       <dd>
+        <i>
+         从启动程序外部：
+        </i>
+        <ul>
+         <li>
+          右键单击 Epic Games 启动程序桌面快捷方式
+         </li>
+         <li>
+          选择“属性”并转至“快捷方式”选项卡
+         </li>
+         <li>
+          在目标字段中的文件路径末尾处添加“-debuglogging”
+         </li>
+         <li>
+          请勿添加引号，并确保文件路径和短划线之间有空格。应该类似于以下内容：
+         </li>
+        </ul>
+       </dd>
+      </dl>
+      <p>
+       <img alt="DebugLoggingCommand.JPG" class="" height="497" src="../assets/launcher/0.JPG" width="362"/>
+      </p>
+      <dl>
+       <dd>
+        <ul>
+         <li>
+          在获得调试日志之后，从目标字段移除命令
+         </li>
+        </ul>
+       </dd>
+      </dl>
+      <dl>
+       <dd>
+        <i>
+         查找并压缩日志文件夹：
+        </i>
+       </dd>
+       <dd>
+        您可以在以下位置找到日志：
+       </dd>
+       <dd>
+        WIN：“C:\Users\"Username"\AppData\Local\EpicGamesLauncher\Saved\Logs”
+       </dd>
+       <dd>
+        MAC：“~/Library/Logs/Unreal Engine/EpicGamesLauncher/”
+       </dd>
+      </dl>
+      <p>
+       最好前往该位置并压缩整个日志文件夹，然后将其附加到您在 AnswerHub 上的问题中。
+      </p>
+      <h3>
+       <span class="mw-headline" id=".E6.8F.90.E7.A4.BA.E5.92.8C.E6.8A.80.E5.B7.A7">
+        提示和技巧
+       </span>
+      </h3>
+      <p>
+       <b>
+        如何创建符号链接
+       </b>
+      </p>
+      <p>
+       <b>
+        Windows：
+       </b>
+      </p>
+      <p>
+       如果遇到磁盘空间问题，Windows NTFS 具有符号链接功能。从重定向目录，使用“mklink /D link target”。
+      </p>
+      <p>
+       两个常见的问题是当前可用的示例内容达到 30GB+，以及升级版本时复制了引擎（4.7 占用 16GB+，不包含 DerivedDataCache）。
+      </p>
+      <p>
+       在以管理员权限打开的命令提示符中。 
+[ Windows 8.1，右键单击左下角，单击“命令提示符（管理员）”]
+      </p>
+      <ul>
+       <li>
+        cd "\Program Files\Epic Games\Launcher"
+       </li>
+       <li>
+        explorer .（这是一个空格后跟一个据点，将在当前位置打开 Windows 资源管理器）
+       </li>
+       <li>
+        （用户 GUI 将 PatchStaging 和 VaultCache 移到新位置，启动程序不应在运行...例如，E: 盘根目录）
+       </li>
+       <li>
+        mklink /d VaultCache E:\VaultCache
+       </li>
+       <li>
+        mklink /d PatchStaging E:\PatchStaging
+       </li>
+      </ul>
+      <p>
+       您应看到类似以下输出：
+      </p>
+      <pre>Directory of C:\Program Files\Epic Games\Launcher    
+02/02/2015  07:24 PM    &lt;DIR&gt;          Backup
+12/11/2014  01:19 AM    &lt;DIR&gt;          Engine
+02/12/2015  07:28 PM    &lt;SYMLINKD&gt;     PatchStaging [E:\PatchStaging]
+01/07/2015  02:31 AM    &lt;SYMLINKD&gt;     VaultCache [E:\VaultCache]
+</pre>
+      <p>
+       注意 SYMLINKD 末尾的 D。
+      </p>
+      <p>
+       您还可以使用“mklink”移动各个引擎目录或虚幻项目目录。或者 Android SDK 安装目录...
+      </p>
+      <p>
+       这里顺带一句，“Documents”文件夹本身就很特殊，如果右键单击该文件夹并选择“属性”，会显示“位置”选项卡，您可以在该选项卡中重新选择它的位置。就此而言，某些目录在 Windows 中十分特殊，不应随意改动。
+      </p>
+      <p>
+       <b>
+        MAC：
+       </b>
+      </p>
+      <p>
+       使用符号链接 (SymLink) 可以将 Mac 上的安装位置移动到外部驱动上。这种方法要求将 /Users/Shared/UnrealEngine 文件夹移到外部驱动，并在旧文件夹中创建指向新位置的符号链接。要在 Mac 上设置符号链接，请执行以下步骤：
+      </p>
+      <ul>
+       <li>
+        备份 /Users/Shared 中的 UnrealEngine 文件夹
+       </li>
+       <li>
+        将 UnrealEngine 文件夹移到将要安装引擎的驱动中。可以使用以下终端命令进行此操作（不带引号）：“Sudo mv /Users/Shared/UnrealEngine /Destination/Location/”（注：要移动的文件夹路径和要移动到的目标位置之间有一个空格）
+       </li>
+       <li>
+        提示时输入管理员密码
+       </li>
+       <li>
+        在原 UnrealEngine 文件夹位置中创建符号链接，并使其指向新的 UnrealEngine 位置：“ln -s /Destination/Location/ /Users/Shared/UnrealEngine”
+       </li>
+      </ul>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

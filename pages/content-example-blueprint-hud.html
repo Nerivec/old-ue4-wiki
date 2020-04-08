@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Content example blueprint HUD - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Content example blueprint HUD
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <h3>
+       <span class="mw-headline" id="HUD_and_Menu_in_Blueprint">
+        HUD and Menu in Blueprint
+       </span>
+      </h3>
+      <p>
+       The UE4 Marketplace (at least 4.1 upwards)include Content Example that includes "Blueprint_HUD".
+Specifically to find the Content Examples you need to look under the Learn tab and not the Marketplace tab In the Unreal Launcher.
+      </p>
+      <p>
+       This examples demonstrates a very simple BP implementation of a Menu which is invokved by pressing 'M'. It shows pausing on the game and displaying a menu, acting on click events and then resuming the game.
+      </p>
+      <p>
+       Unreal staff member Steve Allison stated this about the example in an AnswerHUB response (
+       <a class="external free" href="https://answers.unrealengine.com/questions/16558/hud-create-a-basic-menu.html" rel="nofollow">
+        https://answers.unrealengine.com/questions/16558/hud-create-a-basic-menu.html
+       </a>
+       ):
+      </p>
+      <p>
+      </p>
+      <dl>
+       <dd>
+        The high level outline would be that your map needs a GameMode blueprint (see here) which will allow you to specify blueprints that will likely control your HUD--PlayerController Class and HUD Class.
+       </dd>
+       <dd>
+       </dd>
+       <dd>
+        Your PlayerController Class would ideally be where you want to handle any keyboard inputs for your map/game/HUD. For example, in Blueprint_HUD map, the BP_PlayerController_HUD blueprint is where we have our Input M to open the menu.
+       </dd>
+       <dd>
+       </dd>
+       <dd>
+        Your HUD Class is where all the magic happens with drawing your HUD. Event Receive Draw HUD is a Tick event, meaning it will fire off every frame of your game to draw your HUD given the instructions you connect to it. In the Blueprint_HUD map, our BP_HUD_Example has a branch early on that is toggled based on if the Menu should be drawn or not. If not, the main gameplay HUD is drawn, if yes, the Menu HUD is drawn (and gameplay HUD is not).
+       </dd>
+       <dd>
+       </dd>
+       <dd>
+        The HUD Class also contains the events for when you click the Hitboxes that are drawn by the Receive Draw HUD event.
+       </dd>
+       <dd>
+       </dd>
+       <dd>
+        Hopefully this enough to keep you going on working with Blueprint HUD. We're working hard to get more official documentation for both Blueprint HUD and C++ HUD and hope to be able to provide it soon!
+       </dd>
+      </dl>
+      <p>
+       Relevant UE4 Video Tutorial:
+       <a class="external free" href="https://www.youtube.com/watch?v=7gwgU0UPENA&amp;feature=youtu.be" rel="nofollow">
+        https://www.youtube.com/watch?v=7gwgU0UPENA&amp;feature=youtu.be
+       </a>
+      </p>
+      <p>
+       <a class="external free" href="https://www.youtube.com/watch?v=s423ydn3t_E" rel="nofollow">
+        https://www.youtube.com/watch?v=s423ydn3t_E
+       </a>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

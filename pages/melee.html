@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Melee - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Melee
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <br/>
+       Melee is simply doing damage to characters if they reside within a certain distance to the melee damage dealer.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Different_Methods:">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Different Methods:
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Capsule_Overlapping_Outline">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Capsule Overlapping Outline
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Make_a_Capsule_in_your_PlayerCharacter_Class">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Make a Capsule in your PlayerCharacter Class
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#In_the_Player_Character_Graph.2C_Damage_Overlapping_Characters">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             In the Player Character Graph, Damage Overlapping Characters
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Finally_Process_the_Damage_inside_the_EnemyCharacters_Class">
+            <span class="tocnumber">
+             2.3
+            </span>
+            <span class="toctext">
+             Finally Process the Damage inside the EnemyCharacters Class
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Animation_based_melee_system">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Animation based melee system
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Different_Methods:">
+        Different Methods:
+       </span>
+      </h2>
+      <ul>
+       <li>
+        Weapon Collision with Components
+       </li>
+       <li>
+        Capsule Overlapping Actors
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="Capsule_Overlapping_Outline">
+        Capsule Overlapping Outline
+       </span>
+      </h2>
+      <p>
+       in PlayerCharacter class
+      </p>
+      <ul>
+       <li>
+        With in PlayerCharacter class making character class with a Capsule component that is wide enough to "overlap" potential melee recipients.
+       </li>
+       <li>
+        triggering the start of our damage method via an input
+       </li>
+       <li>
+        getting overlapped actors and applying damage
+       </li>
+      </ul>
+      <p>
+       <br/>
+       in the EnemyCharacter class
+      </p>
+      <ul>
+       <li>
+        processing incoming damage, decrementing health, and checking for death
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Make_a_Capsule_in_your_PlayerCharacter_Class">
+        Make a Capsule in your PlayerCharacter Class
+       </span>
+      </h3>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1336px;">
+        <img alt="Melee Capsule.jpg" class="thumbimage" height="918" src="../assets/melee/0.jpg" width="1334"/>
+        <div class="thumbcaption">
+        </div>
+       </div>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="In_the_Player_Character_Graph.2C_Damage_Overlapping_Characters">
+        In the Player Character Graph, Damage Overlapping Characters
+       </span>
+      </h3>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1038px;">
+        <img alt="Melee OverlapDamage.jpg" class="thumbimage" height="513" src="../assets/melee/1.jpg" width="1036"/>
+        <div class="thumbcaption">
+        </div>
+       </div>
+      </div>
+      <p>
+       Ignore the branch and its condition, setting IsAttacking will be used in the animblueprint, the delay i used so that damage was dealt mid way through my swinging animation.
+      </p>
+      <p>
+       Then using the MeleeCapsule shown before is used to get all overlapping actors, but i changed the purple pin to class filter so it would only hit "myEnemyChar" class.
+      </p>
+      <p>
+       Then simply pushing that thru a for loop, it will do damage to all Enemies. MeleeDamage is simply a float that i set elsewhere. (default is 45)
+      </p>
+      <p>
+       <br/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Finally_Process_the_Damage_inside_the_EnemyCharacters_Class">
+        Finally Process the Damage inside the EnemyCharacters Class
+       </span>
+      </h3>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1100px;">
+        <img alt="Melee EnemyRecieveDamage.jpg" class="thumbimage" height="422" src="../assets/melee/2.jpg" width="1098"/>
+        <div class="thumbcaption">
+        </div>
+       </div>
+      </div>
+      <p>
+       Here is just converting the float to an int for subtracting from current health, checking if health is too low and kill the actor.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Animation_based_melee_system">
+        Animation based melee system
+       </span>
+      </h2>
+      <p>
+       Here's a bit of info about how fortnite uses montages and anim notifies to do a animation-based melee combo system:
+       <a class="external free" href="https://answers.unrealengine.com/questions/43365/fortnite-melee-combat-system.html" rel="nofollow">
+        https://answers.unrealengine.com/questions/43365/fortnite-melee-combat-system.html
+       </a>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

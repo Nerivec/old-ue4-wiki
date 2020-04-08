@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Use std::cout with Unreal Engine Editor - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Use std::cout with Unreal Engine Editor
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <br/>
+       If you are more like traditional C++ programmer rather than fancy Blueprint script user, you will be debugging a lot. Also you will need some basic communication with user, at least to know if programmed functions are returning good outputs. Here comes Output Log Window.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:962px;">
+        <img alt="UE02.png" class="thumbimage" height="517" src="../assets/use-stdcout-with-unreal-engine-editor/0.png" width="960"/>
+        <div class="thumbcaption">
+        </div>
+       </div>
+      </div>
+      <p>
+       <br/>
+       To write anything into Output Log, you need a proper function - most used by me is
+       <b>
+        UE_LOG
+       </b>
+       , better described
+       It works most like standard
+       <b>
+        printf
+       </b>
+       function from
+       <b>
+        stdio
+       </b>
+       library: if I want to get standard 'Hello world' text, I type:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogTemp</span><span class="p">,</span><span class="n">Log</span><span class="p">,</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"Hello world!"</span><span class="p">));</span>
+</pre>
+      </div>
+      <p>
+       If we want include any numbers, strings etc, I need to use standard
+       <b>
+        printf
+       </b>
+       syntax: %s for strings, %d for decimals etc. God knows it's not very comfortable, especially when you want to use some more complex functions produced to work with
+       <b>
+        std::cout
+       </b>
+       syntax, like complex numbers or vectors. Also, sometimes we have external functions which don't have access to Unreal libraries, but still give us useful informations to output stream. If we stick to standard UE_LOG syntax, we loose that information.
+      </p>
+      <p>
+       The solution is to grab the stream from
+       <b>
+        std::cout
+       </b>
+       into custom, user-defined buffer. We will need a
+       <b>
+        sstream
+       </b>
+       library, which contains
+       <b>
+        std::stringbuf
+       </b>
+       class. Now we derive a child class from it - here I called it LStream:
+      </p>
+      <p>
+       <br/>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;sstream&gt;</span><span class="cp"></span>
+
+<span class="c1">//...standard class body</span>
+
+<span class="k">class</span> <span class="nc">LStream</span> <span class="o">:</span> <span class="k">public</span> <span class="n">std</span><span class="o">::</span><span class="n">stringbuf</span><span class="p">{</span>
+<span class="k">protected</span><span class="o">:</span>
+	<span class="kt">int</span> <span class="n">sync</span><span class="p">()</span> <span class="p">{</span>
+		<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogTemp</span><span class="p">,</span> <span class="n">Log</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"%s"</span><span class="p">),</span> <span class="o">*</span><span class="n">FString</span><span class="p">(</span><span class="n">str</span><span class="p">().</span><span class="n">c_str</span><span class="p">()));</span>
+		<span class="n">str</span><span class="p">(</span><span class="s">""</span><span class="p">);</span>
+		<span class="k">return</span> <span class="n">std</span><span class="o">::</span><span class="n">stringbuf</span><span class="o">::</span><span class="n">sync</span><span class="p">();</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       Now some explanation - the method
+       <b>
+        int sync()
+       </b>
+       is called every time when program needs to synchronize it's buffer - something we can use, because we would want to get information to output log every time program has something interesting to say. Luckily the original
+       <b>
+        sync()
+       </b>
+       method is virtual, which means it will be overshadowed every time when we make a child class with same method - even if program will treat out buffer as standard stringbuf (or streambuf) - the used method will be written by us. The
+       <b>
+        str("");
+       </b>
+       function cleans buffer into empty string.
+      </p>
+      <p>
+       After this operation we can simply redirect the cout stream into our custom made buffer. The method is following - we create simple
+       <b>
+        LString
+       </b>
+       variable and tell the std::cout object to read from our buffer:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">LStream</span> <span class="n">Stream</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span><span class="p">.</span><span class="n">rdbuf</span><span class="p">(</span><span class="o">&amp;</span><span class="n">Stream</span><span class="p">);</span> 
+<span class="n">std</span><span class="o">::</span><span class="n">cout</span> <span class="o">&lt;&lt;</span> <span class="s">"some message"</span> <span class="o">&lt;&lt;</span> <span class="n">std</span><span class="o">::</span><span class="n">endl</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       And
+       <i>
+        voila
+       </i>
+       ! Now we have full access to modern iostream output from the level of Unreal Engine editor.
+      </p>
+      <p>
+       Note - UE_LOG is only a macro for
+       <b>
+        GLog-&gt;Log
+       </b>
+       function. You can as well replace all UE_LOG calls with
+       <b>
+        GLog-&gt;Log(FString str)
+       </b>
+       calls. Also you can add on-screen debug messages, which is even more usefull during gameplay debugging. For further ideas I send to
+       page.
+      </p>
+      <p>
+       (
+     )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

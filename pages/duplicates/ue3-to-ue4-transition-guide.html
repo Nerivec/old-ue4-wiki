@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   UE3 to UE4 Transition Guide - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    UE3 to UE4 Transition Guide
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#General_Editor_.26_Terminology">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           General Editor &amp; Terminology
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Editor">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Editor
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Kismet_.3E_Blueprints.28Matinee_included.29">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Kismet &gt; Blueprints(Matinee included)
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Lighting">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Lighting
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Materials">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Materials
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Coding">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Coding
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       Here you can find a list of procedure and terminology differences between UDK and Unreal Engine 4 gathered by the community. Keep in mind that some of those may be subject to change in time with newer UE4 releases.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="General_Editor_.26_Terminology">
+        General Editor &amp; Terminology
+       </span>
+      </h2>
+      <p>
+       <b>
+        Scene Scale(Units)
+       </b>
+      </p>
+      <p>
+       <b>
+        UE3:
+       </b>
+       1uu == 2cm
+      </p>
+      <p>
+       <b>
+        UE4:
+       </b>
+       1uu == 1cm
+      </p>
+      <p>
+       <b>
+        UE3:
+       </b>
+       World size = 10.48km x 10.48km
+      </p>
+      <p>
+       <b>
+        UE4:
+       </b>
+       World size = 20km x 20km
+      </p>
+      <p>
+       <br/>
+       <b>
+        Assets and Packages
+       </b>
+      </p>
+      <p>
+       <b>
+        UE3:
+       </b>
+       Packages are used to store a collection of assets. Package format
+       <i>
+        .upk
+       </i>
+       - Map format
+       <i>
+        .udk
+       </i>
+      </p>
+      <p>
+       <b>
+        UE4:
+       </b>
+       Each asset is stored in its own file. Maps are still packages as they need to store a collection of assets. Asset format
+       <i>
+        .uasset
+       </i>
+       - Map format
+       <i>
+        .umap
+       </i>
+      </p>
+      <p>
+       <br/>
+       <b>
+        Mesh/Skeletal Mesh &amp; Animation Import Formats
+       </b>
+      </p>
+      <p>
+       <b>
+        UE3:
+       </b>
+       .psk &amp; .psa  /  .FBX
+       <br/>
+       Collision naming : MyMesh, UCX_MyCollision
+      </p>
+      <p>
+       <b>
+        UE4:
+       </b>
+       .FBX(same Export procedure - Mesh and Skeleton split into 2 separate asset after import)
+       <br/>
+       Collision naming : MyMesh, UCX_MyMesh_## (_## is a number in case you have several UCX in there)
+      </p>
+      <p>
+       <br/>
+       <b>
+        Disabling Decal Render on Skeletal/Static Meshes:
+       </b>
+      </p>
+      <p>
+       <b>
+        UE3:
+       </b>
+       Go to decal properties (F4) and disable bProjectOn.
+      </p>
+      <p>
+       <b>
+        UE4:
+       </b>
+       Select your Mesh in Viewport.
+      </p>
+      <ol>
+       <li>
+        In details panel search for Decal
+       </li>
+       <li>
+        Uncheck Receives Decals.
+       </li>
+      </ol>
+      <p>
+       <br/>
+       <b>
+        Spline Loft Actor
+       </b>
+      </p>
+      <p>
+       <b>
+        UE3:
+       </b>
+       Created by dragging and dropping from Actor Classes tab. Continue drawing a path by holding Alt and dragging the icon.
+      </p>
+      <p>
+       <b>
+        UE4:
+       </b>
+       It appears in the landscape editor as Spline Tools when you create a landscape. Click Manage &gt; Edit Splines &gt; Ctrl+click to place one then continue drawing by placing control points with Ctrl+click, finally hit Apply Settings button in the landscape editor.
+      </p>
+      <p>
+       <br/>
+       <b>
+        Collision Terminology
+       </b>
+      </p>
+      <p>
+       <b>
+        UE3:
+       </b>
+       Touch and Block
+      </p>
+      <p>
+       <b>
+        UE4:
+       </b>
+       Overlap and Block
+      </p>
+      <h2>
+       <span class="mw-headline" id="Editor">
+        Editor
+       </span>
+      </h2>
+      <p>
+       <b>
+        Navigation, Maya Style
+       </b>
+      </p>
+      <p>
+       <i>
+        considering UDK &lt;=&gt; UE3
+       </i>
+      </p>
+      <p>
+       <b>
+        UE3:
+       </b>
+       L + left or right mouse button
+      </p>
+      <p>
+       <b>
+        UE4:
+       </b>
+       Alt + left or right mouse button
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Kismet_.3E_Blueprints.28Matinee_included.29">
+        Kismet &gt; Blueprints(Matinee included)
+       </span>
+      </h2>
+      <p>
+       <b>
+        Creating a Matinee
+       </b>
+      </p>
+      <p>
+       <b>
+        UE3:
+       </b>
+       Open Kismet, right-click the canvas and select New Matinee.
+      </p>
+      <p>
+       <b>
+        UE4:
+       </b>
+       Search for MatineeActor in Modes tab &gt; All Classes, and drag it into your level.
+      </p>
+      <p>
+       <br/>
+       <b>
+        Attaching Actors to Specific Groups inside Matinee
+       </b>
+      </p>
+      <p>
+       <b>
+        UE3:
+       </b>
+       Create a variable for the object inside Kismet and attach it to Matinee.
+      </p>
+      <p>
+       <b>
+        UE4:
+       </b>
+       Select the object in the map, open up Matinee, right click on the group you want to attach &gt; Actors &gt; Add(or replace) selected actors.
+      </p>
+      <p>
+       <br/>
+       <b>
+        Sequential or random activation of multiple outputs
+       </b>
+      </p>
+      <p>
+       <b>
+        UDK:
+       </b>
+       Switch node in Kismet.
+      </p>
+      <p>
+       <b>
+        UE4:
+       </b>
+       MultiGate node in Blueprints.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Lighting">
+        Lighting
+       </span>
+      </h2>
+      <p>
+       <b>
+        Adding a SkyLight
+       </b>
+      </p>
+      <p>
+       <b>
+        UE3=
+       </b>
+       Actor Classes - Lights - Sky Lights
+      </p>
+      <p>
+       <b>
+        UE4=
+       </b>
+       Modes Tab &gt; Lights &gt; Sky Light
+      </p>
+      <p>
+       <br/>
+       <b>
+        Adding a dynamic light
+       </b>
+      </p>
+      <p>
+       <b>
+        UE3=
+       </b>
+       Actor Classes &gt; Lights &gt; AnyLightMoveable.
+      </p>
+      <p>
+       <b>
+        UE4=
+       </b>
+       Add a normal light into your level - in the settings you can find Transform &gt; Mobility &gt; Moveable.
+      </p>
+      <p>
+       <br/>
+       <b>
+        Lightmaps and photons
+       </b>
+      </p>
+      <p>
+       <b>
+        UE3=
+       </b>
+       Emissive material enabled in object in the level, photons will fire from any shape: material based.
+       <br/>
+      </p>
+      <p>
+       <b>
+        UE4=
+       </b>
+       For dynamic emissive lighting, needs to be enabled in advanced material properties(for LPV.) For static emissive lighting, enable
+       <i>
+        Use Emissive for Static Lighting
+       </i>
+       in the object's details panel.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Materials">
+        Materials
+       </span>
+      </h2>
+      <p>
+       <b>
+        Subsurface Scattering
+       </b>
+      </p>
+      <p>
+       <b>
+        UE3:
+       </b>
+       Achieved with transmission mask
+      </p>
+      <p>
+       <b>
+        UE4:
+       </b>
+       Achieved with SubsurfaceColor - choose MLM_Subsurface in the Lighting Mode
+      </p>
+      <p>
+       <br/>
+       <b>
+        Adjusting a Particle's Color in Cascade
+       </b>
+      </p>
+      <p>
+       <b>
+        UE3:
+       </b>
+       By multiplying the texture with a
+       <i>
+        Vertex Color
+       </i>
+       node in the material.
+      </p>
+      <p>
+       <b>
+        UE4:
+       </b>
+       By multiplying the texture with a
+       <i>
+        Particle Color
+       </i>
+       node in the material.
+      </p>
+      <p>
+       <br/>
+       <b>
+        Soft Edge for Particles and Translucent Materials
+       </b>
+      </p>
+      <p>
+       <b>
+        UE3:
+       </b>
+       Attach the opacity mask to Alpha input of
+       <i>
+        DepthBiasedAlpha
+       </i>
+       and set Bias scale for fade distance.
+      </p>
+      <p>
+       <b>
+        UE4:
+       </b>
+       Attach the opacity mask to Opacity input of
+       <i>
+        DepthFade
+       </i>
+       and set Fade Distance.
+      </p>
+      <p>
+       <br/>
+       <b>
+        Colored Speculars
+       </b>
+      </p>
+      <p>
+       <b>
+        UE3:
+       </b>
+       By pluging the colored specular texture to Specular input.
+      </p>
+      <p>
+       <b>
+        UE4:
+       </b>
+       By giving metallic value(Constant - 1) to the material
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Coding">
+        Coding
+       </span>
+      </h2>
+      <p>
+       <b>
+        Spawning Actors
+       </b>
+      </p>
+      <p>
+       <b>
+        UE3:
+       </b>
+      </p>
+      <pre>var Actor MyActor;
+
+MyActor = Spawn(class'ActorToSpawn',Location,Rotation);</pre>
+      <p>
+       <b>
+        UE4:
+       </b>
+      </p>
+      <pre>FActorSpawnParameters SpawnInfo;
+SpawnInfo.bNoCollisionFail = true;
+
+ASoulHunterWeapon* NewWeapon = GetWorld()-&gt;SpawnActor&lt;ASoulHunterWeapon&gt;(Weapon, SpawnInfo);</pre>
+      <p>
+       There are several versions of Spawn one with and without templates.
+      </p>
+      <p>
+       If you want to use location and rotation make sure you make variables that are const.
+      </p>
+      <pre>const FVector* SLocation;
+const FRotator* SRotation;
+
+GetWorld()-&gt;SpawnActor&lt;ASoulHunterWeapon&gt;(Weapon, SLocation, SRotation, SpawnInfo);</pre>
+      <p>
+       <br/>
+       <b>
+        Spawning Objects
+       </b>
+      </p>
+      <p>
+       This can be used to create instances (or more accurately, pointers to instances of) classes derived from Object.
+      </p>
+      <p>
+       <b>
+        UE3:
+       </b>
+      </p>
+      <pre>var MyObject MyObjectRef;
+
+MyObject = new class'MyObject';
+</pre>
+      <p>
+       <b>
+        UE4:
+       </b>
+      </p>
+      <p>
+       In YourClass.h:
+      </p>
+      <pre>UPROPERTY()
+MyObject *MyObjectRef;
+</pre>
+      <p>
+       In YourClass.cpp:
+      </p>
+      <pre>MyObjectRef = NewObject&lt;UMyObject&gt;(this, UMyObject::StaticClass());
+</pre>
+      <p>
+       Also see
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Programming/UnrealArchitecture/Objects/index.html#objectcreation" rel="nofollow">
+        Documentation - Objects
+       </a>
+       for a detailed description.
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

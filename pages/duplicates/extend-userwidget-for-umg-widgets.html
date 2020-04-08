@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Extend UserWidget for UMG Widgets - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Extend UserWidget for UMG Widgets
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#1:_We_start_of_by_creating_a_new_Blank_Project_from_the_launcher.">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           1: We start of by creating a new Blank Project from the launcher.
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#2:_After_compiling">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           2: After compiling
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#3:_In_your_new_project">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           3: In your new project
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#4:_Add_new_class">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           4: Add new class
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#5:_Add_the_Dependency_Module">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           5: Add the Dependency Module
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#6:_Extending_the_User_Widget">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           6: Extending the User Widget
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#7:_Re-compile_your_project">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           7: Re-compile your project
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#8:_Set_Parent_Class">
+          <span class="tocnumber">
+           9
+          </span>
+          <span class="toctext">
+           8: Set Parent Class
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-10">
+         <a href="#9:_Compiling_Widget_and_Notes">
+          <span class="tocnumber">
+           10
+          </span>
+          <span class="toctext">
+           9: Compiling Widget and Notes
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-11">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           11
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-12">
+         <a href="#Project_Download">
+          <span class="tocnumber">
+           12
+          </span>
+          <span class="toctext">
+           Project Download
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-13">
+         <a href="#Related_Tutorials">
+          <span class="tocnumber">
+           13
+          </span>
+          <span class="toctext">
+           Related Tutorials
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Author:
+       </i>
+       (
+     )
+      </p>
+      <p>
+       Some months back i did a tutorial on how to extend a User Widget for UMG Widgets.
+Now that UMG is more mature and have gotten scientifically better.
+I realize that the process of extending the User Widget class is much simpler.
+      </p>
+      <h2>
+       <span class="mw-headline" id="1:_We_start_of_by_creating_a_new_Blank_Project_from_the_launcher.">
+        1: We start of by creating a new Blank Project from the launcher.
+       </span>
+      </h2>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="UMGExtedUserWidget 1a.png" class="thumbimage" height="205" src="../assets/extend-userwidget-for-umg-widgets/0.png" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="2:_After_compiling">
+        2: After compiling
+       </span>
+      </h2>
+      <p>
+       After compiling the new project and launching your new project you should have something like this in your new project folder.
+      </p>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="UMGExtedUserWidget 2a.png" class="thumbimage" height="206" src="../assets/extend-userwidget-for-umg-widgets/1.png" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="3:_In_your_new_project">
+        3: In your new project
+       </span>
+      </h2>
+      <p>
+       In your new project in the top left corner Press on the Option «File»
+File &gt;Add Code to Project
+      </p>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:213px;">
+        <img alt="UMGExtedUserWidget 3a.png" class="thumbimage" height="561" src="../assets/extend-userwidget-for-umg-widgets/2.png" width="211"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="4:_Add_new_class">
+        4: Add new class
+       </span>
+      </h2>
+      <p>
+       In the new Window that opens up check «Show All Classes» in the top right corner.
+And enter UserWidget in the search field at the top of the class list.
+And Select UserWidget.
+      </p>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="UMGExtedUserWidget 4a.png" class="thumbimage" height="106" src="../assets/extend-userwidget-for-umg-widgets/3.png" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <b>
+        Note:
+       </b>
+       I got a «Error» when making this tutorial related to the editor was unable to hot-reload. Closing the Editor and compiling manualy was the solution.
+      </p>
+      <h2>
+       <span class="mw-headline" id="5:_Add_the_Dependency_Module">
+        5: Add the Dependency Module
+       </span>
+      </h2>
+      <p>
+       Now in you IDE (I am using MS Visual Studio) you need to edit your Build file for your project. You need to add the Dependency Module «UMG»  to the project.
+      </p>
+      <p>
+       The edited line in you ProjectName.Build.cs file should be.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">PublicDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"Core"</span><span class="p">,</span> <span class="s">"CoreUObject"</span><span class="p">,</span> <span class="s">"Engine"</span><span class="p">,</span> <span class="s">"InputCore"</span><span class="p">,</span> <span class="s">"UMG"</span> <span class="p">});</span>
+</pre>
+      </div>
+      <p>
+       Also you need to uncomment the modules for Slate as shown.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Uncomment if you are using Slate UI</span>
+<span class="n">PrivateDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"Slate"</span><span class="p">,</span> <span class="s">"SlateCore"</span> <span class="p">});</span>
+</pre>
+      </div>
+      <p>
+       Here is a image showing the edited Build file.
+      </p>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="UMGExtedUserWidget 5a.png" class="thumbimage" height="107" src="../assets/extend-userwidget-for-umg-widgets/4.png" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="6:_Extending_the_User_Widget">
+        6: Extending the User Widget
+       </span>
+      </h2>
+      <p>
+       In order to see the difference and for the sake of this tutorial we now open the MyUserWidget.h file in your IDE.
+And we add the following member to our new UserWidget class.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">public</span><span class="o">:</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"My New User Widget"</span><span class="p">)</span>
+		<span class="n">FString</span> <span class="n">MyNewWidgetName</span><span class="p">;</span>
+</pre>
+      </div>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="UMGExtedUserWidget 6a.png" class="thumbimage" height="178" src="../assets/extend-userwidget-for-umg-widgets/5.png" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="7:_Re-compile_your_project">
+        7: Re-compile your project
+       </span>
+      </h2>
+      <p>
+       Now re-compile your project and open up your project in the editor.
+And create a new Widget Blueprint.
+      </p>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="UMGExtedUserWidget 7a.png" class="thumbimage" height="619" src="../assets/extend-userwidget-for-umg-widgets/6.png" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="8:_Set_Parent_Class">
+        8: Set Parent Class
+       </span>
+      </h2>
+      <p>
+       Open up the new Widget Blueprint and select the Graph in the top right corner.
+And press on the Class Settings button at the top left. (To the right of the compile button.)
+In the Details panel (To the bottom left in my Editor) find the category «Class Options»
+Press on the dropdown menu for Parent Class and select your new User Widget class. (MyUserWidget in this case).
+      </p>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="UMGExtedUserWidget 8a.png" class="thumbimage" height="165" src="../assets/extend-userwidget-for-umg-widgets/7.png" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="9:_Compiling_Widget_and_Notes">
+        9: Compiling Widget and Notes
+       </span>
+      </h2>
+      <p>
+       Compile the Widget and you are done.
+If you can not see the new member we added earlier make sure you have checked.
+«Show Inherited Variabels»
+      </p>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:179px;">
+        <img alt="UMGExtedUserWidget 9a.png" class="thumbimage" height="75" src="../assets/extend-userwidget-for-umg-widgets/8.png" width="177"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       And you will see the new member in your Blueprint Tab.
+      </p>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="UMGExtedUserWidget 9b.png" class="thumbimage" height="288" src="../assets/extend-userwidget-for-umg-widgets/9.png" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <b>
+        Notes:
+       </b>
+       That is it this is got alot simpler then before.
+But i like to list some headers that may come in handy down the road.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>	<span class="s">"Runtime/UMG/Public/UMG.h"</span>
+	<span class="s">"Runtime/UMG/Public/UMGStyle.h"</span>
+	<span class="s">"Runtime/UMG/Public/Slate/SObjectWidget.h"</span>
+	<span class="s">"Runtime/UMG/Public/IUMGModule.h"</span>
+	<span class="s">"Runtime/UMG/Public/Blueprint/UserWidget.h"</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       You are done, now you have a simple and fast way to extend the user widget.
+From everything from Data Storage to picking up "events" delegates and so on.
+      </p>
+      <p>
+       Hope this was helpfull.
+       <br/>
+      </p>
+      <p>
+       WCode
+      </p>
+      <h2>
+       <span class="mw-headline" id="Project_Download">
+        Project Download
+       </span>
+      </h2>
+      <p>
+       Here is a link to a Project Download it contains all the information displayed here.
+       <br/>
+       As well as a copy of the finished tutorial.
+       <br/>
+       <a class="external free" href="https://drive.google.com/file/d/0B7MMiQc2raPVZmxBYVFqWGpoOGs/view?usp=sharing" rel="nofollow">
+        https://drive.google.com/file/d/0B7MMiQc2raPVZmxBYVFqWGpoOGs/view?usp=sharing
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Related_Tutorials">
+        Related Tutorials
+       </span>
+      </h2>
+      <p>
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/UMG/index.html" rel="nofollow">
+        Epic's UMG Documentation
+       </a>
+      </p>
+      <p>
+      </p>
+      <p>
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?52773-Tutorial-Snippet-Creating-a-UMG-Widget-in-C-and-delegate-example" rel="nofollow">
+        [Tutorial/ Snippet] Creating a UMG Widget in C++, and delegate example by WCode.
+       </a>
+      </p>
+      <p>
+       <a class="external text" href="./umg-how-to-extend-a-uuserwidget-for-umg-in-c.html" rel="nofollow">
+        [Tutorial] UMG, How to extend a UUserWidget:: for UMG in C++.
+       </a>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

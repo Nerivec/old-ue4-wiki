@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Rebinding Keys At Runtime in Packaged Game - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Rebinding Keys At Runtime in Packaged Game
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Full_Project_Release_For_You">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Full Project Release For You
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#BP_Node_Overview">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           BP Node Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Victory_BP_Library">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Victory BP Library
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Pic">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Pic
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#My_C.2B.2B_Code">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           My C++ Code
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Author
+       </i>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <h2>
+       <span class="mw-headline" id="Full_Project_Release_For_You">
+        Full Project Release For You
+       </span>
+      </h2>
+      <p>
+       I have composed a full sample project that uses my Victory BP Library plugin nodes to create a fully rebindable keys menu in UE4!
+      </p>
+      <p>
+       With this menu you can simply click on the names of keys next to their related actions, and then press a key to rebind!
+      </p>
+      <p>
+       My input system tracks Ctrl Alt Shift and Command as well.
+      </p>
+      <p>
+       So you can simply click, then hold CTRL and press R to bind any action to Ctrl R !
+      </p>
+      <p>
+       And it saves to disk immediately and rebinds the input so that the keybind is instantly updated during runtime!
+      </p>
+      <p>
+       <b>
+        Rama's Re-Bindable Keys Complete Sample Project For You
+       </b>
+      </p>
+      <p>
+      </p>
+      <p>
+       <br/>
+       <img alt="ReBindableKeysTitle.jpg" class="" height="675" src="../assets/rebinding-keys-at-runtime-in-packaged-game/0.jpg" width="900"/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="BP_Node_Overview">
+        BP Node Overview
+       </span>
+      </h2>
+      <p>
+       I have succeeded in rebinding keys at runtime in a packaged game for use with a UMG Key Rebinding menu!
+      </p>
+      <p>
+       I have provided you with the Blueprint nodes in my Victory BP Library!
+      </p>
+      <p>
+       <img alt="VictoryRebindableKeys.jpg" class="" height="675" src="../assets/rebinding-keys-at-runtime-in-packaged-game/1.jpg" width="900"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Victory_BP_Library">
+        Victory BP Library
+       </span>
+      </h2>
+      <p>
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?3851-(39)-Rama-s-Extra-Blueprint-Nodes-for-You-as-a-Plugin-No-C-Required!&amp;p=175549&amp;viewfull=1#post175549" rel="nofollow">
+        Victory BP Library Download
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Pic">
+        Pic
+       </span>
+      </h2>
+      <h2>
+       <span class="mw-headline" id="My_C.2B.2B_Code">
+        My C++ Code
+       </span>
+      </h2>
+      <p>
+       I spent several hours to research how to do this in the UE4 code base.
+      </p>
+      <p>
+       Here's the core C++ code I wrote!
+      </p>
+      <p>
+       The whole source code is in my Victory BP Library download!
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">bool</span> <span class="n">UVictoryBPFunctionLibrary</span><span class="o">::</span><span class="n">VictoryReBindKey</span><span class="p">(</span><span class="n">FVictoryInput</span> <span class="n">Action</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">UInputSettings</span><span class="o">*</span> <span class="n">Settings</span> <span class="o">=</span> <span class="k">const_cast</span><span class="o">&lt;</span><span class="n">UInputSettings</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">GetDefault</span><span class="o">&lt;</span><span class="n">UInputSettings</span><span class="o">&gt;</span><span class="p">());</span>
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">Settings</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FInputActionKeyMapping</span><span class="o">&gt;&amp;</span> <span class="n">Actions</span> <span class="o">=</span> <span class="n">Settings</span><span class="o">-&gt;</span><span class="n">ActionMappings</span><span class="p">;</span>
+	
+	<span class="c1">//~~~</span>
+	
+	<span class="kt">bool</span> <span class="n">Found</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="k">for</span><span class="p">(</span><span class="n">FInputActionKeyMapping</span><span class="o">&amp;</span> <span class="nl">Each</span> <span class="p">:</span> <span class="n">Actions</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">Each</span><span class="p">.</span><span class="n">ActionName</span><span class="p">.</span><span class="n">ToString</span><span class="p">()</span> <span class="o">==</span> <span class="n">Action</span><span class="p">.</span><span class="n">ActionName</span><span class="p">)</span>
+		<span class="p">{</span>  
+			<span class="n">UVictoryBPFunctionLibrary</span><span class="o">::</span><span class="n">UpdateActionMapping</span><span class="p">(</span><span class="n">Each</span><span class="p">,</span><span class="n">Action</span><span class="p">);</span>
+			<span class="n">Found</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+			<span class="k">break</span><span class="p">;</span>
+		<span class="p">}</span>  
+	<span class="p">}</span>
+	
+	<span class="k">if</span><span class="p">(</span><span class="n">Found</span><span class="p">)</span> 
+	<span class="p">{</span>
+		<span class="c1">//SAVES TO DISK</span>
+		<span class="k">const_cast</span><span class="o">&lt;</span><span class="n">UInputSettings</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">Settings</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">SaveKeyMappings</span><span class="p">();</span>
+		   
+		<span class="c1">//REBUILDS INPUT, creates modified config in Saved/Config/Windows/Input.ini</span>
+		<span class="k">for</span> <span class="p">(</span><span class="n">TObjectIterator</span><span class="o">&lt;</span><span class="n">UPlayerInput</span><span class="o">&gt;</span> <span class="n">It</span><span class="p">;</span> <span class="n">It</span><span class="p">;</span> <span class="o">++</span><span class="n">It</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">It</span><span class="o">-&gt;</span><span class="n">ForceRebuildingKeyMaps</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="n">Found</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       ♥
+      </p>
+      <p>
+       Rama
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

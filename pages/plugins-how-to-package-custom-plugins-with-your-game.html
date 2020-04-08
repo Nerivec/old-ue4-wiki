@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Plugins, How To Package Custom Plugins With Your Game - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Plugins, How To Package Custom Plugins With Your Game
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#1._Must_Be_Engine_Plugin">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           1. Must Be Engine Plugin
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#2._Must_Pre-Compile_For_All_Destination_Platforms">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           2. Must Pre-Compile For All Destination Platforms
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#3._Must_Be_Listed_as_Installed_in_.uplugin">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           3. Must Be Listed as Installed in .uplugin
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Troubleshooting_for_Buyers_of_Plugins">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Troubleshooting for Buyers of Plugins
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Author:
+       </i>
+       (
+       )
+      </p>
+      <p>
+       Hi there!
+      </p>
+      <p>
+       After upgrading my
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?3851-(39)-Rama-s-Extra-Blueprint-Nodes-for-You-as-a-Plugin-No-C-Required!" rel="nofollow">
+        Victory Plugin
+       </a>
+       to 4.11 I realized the rules have changed regarding how to package a custom plugin with any project.
+      </p>
+      <p>
+       Here are the rules as I now understand them!
+      </p>
+      <h2>
+       <span class="mw-headline" id="1._Must_Be_Engine_Plugin">
+        1. Must Be Engine Plugin
+       </span>
+      </h2>
+      <p>
+       You can develop your plugin at the project level, but for people without C++ access to be able to package it, you must move it to the Engine/Plugins directory for the appropriate engine version.
+      </p>
+      <p>
+       Make sure you put runtime plugins in
+       <b>
+        Engine/Plugins/Runtime
+       </b>
+      </p>
+      <h2>
+       <span class="mw-headline" id="2._Must_Pre-Compile_For_All_Destination_Platforms">
+        2. Must Pre-Compile For All Destination Platforms
+       </span>
+      </h2>
+      <p>
+       Via the .sln file in Visual Studio you must do a full rebuild for all destination platforms that you want to support, generating the appropriate files under Binaries for your plugin.
+      </p>
+      <p>
+       So if you want to package for Development (Game) x64 you must compile in Visual Studio, prior to packaging in the Editor.
+      </p>
+      <h2>
+       <span class="mw-headline" id="3._Must_Be_Listed_as_Installed_in_.uplugin">
+        3. Must Be Listed as Installed in .uplugin
+       </span>
+      </h2>
+      <p>
+       Open your .uplugin in a text editor and make sure that Installed is set to be true!
+      </p>
+      <pre> "Installed": true,	
+</pre>
+      <p>
+       <b>
+        Your plugin will not package unless this is set to true! -Rama
+       </b>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Troubleshooting_for_Buyers_of_Plugins">
+        Troubleshooting for Buyers of Plugins
+       </span>
+      </h2>
+      <p>
+       If you bought a plugin that is not packaging, you can do Step 1 and Step 3 yourself!
+      </p>
+      <p>
+       Make sure your plugin is moved to the engine folder as mentioned above, and make sure that Installed is set to true in the .uplugin.
+      </p>
+      <p>
+       If the plugin provider did not precompile the .lib files you should ask them to do so.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       I hope you found this wiki very helpful for your plugin development and packaging process!
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

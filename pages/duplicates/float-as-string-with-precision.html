@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Float as String With Precision - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Float as String With Precision
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Thank_You_Epic">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Thank You Epic
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Static">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Static
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Code_For_You">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Code For You
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Include_Leading_Zero">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Include Leading Zero
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Example_Usage">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Example Usage
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Output">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Output
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#More_Info_on_C.2B.2B_Static_Function_Libraries">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           More Info on C++ Static Function Libraries
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Summary">
+          <span class="tocnumber">
+           9
+          </span>
+          <span class="toctext">
+           Summary
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Author:
+       </i>
+       (
+       )
+      </p>
+      <p>
+       Here is my function for obtaining a float as a string, but limiting the number of decimal places.
+      </p>
+      <pre> And including appropriate rounding!
+</pre>
+      <h2>
+       <span class="mw-headline" id="Thank_You_Epic">
+        Thank You Epic
+       </span>
+      </h2>
+      <p>
+       Please note I am leveraging all the hard work of Epic Engineers by using the conversion functions provided with the FText class.
+      </p>
+      <p>
+       Thank You Epic!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Static">
+        Static
+       </span>
+      </h2>
+      <p>
+       I recommend making your own static library of functions to use anywhere in your code, if you are just wanting to test stuff just remove the word static and put this in any .h file of your choosing
+      </p>
+      <h2>
+       <span class="mw-headline" id="Code_For_You">
+        Code For You
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//In YourFunctionLibrary.h</span>
+
+<span class="c1">//Float as String With Precision!</span>
+<span class="k">static</span> <span class="n">FORCEINLINE</span> <span class="n">FString</span> <span class="nf">GetFloatAsStringWithPrecision</span><span class="p">(</span><span class="kt">float</span> <span class="n">TheFloat</span><span class="p">,</span> <span class="n">int32</span> <span class="n">Precision</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">IncludeLeadingZero</span><span class="o">=</span><span class="nb">true</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="c1">//Round to integral if have something like 1.9999 within precision</span>
+	<span class="kt">float</span> <span class="n">Rounded</span> <span class="o">=</span> <span class="n">roundf</span><span class="p">(</span><span class="n">TheFloat</span><span class="p">);</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">FMath</span><span class="o">::</span><span class="n">Abs</span><span class="p">(</span><span class="n">TheFloat</span> <span class="o">-</span> <span class="n">Rounded</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">Precision</span><span class="p">))</span>
+	<span class="p">{</span>       
+		<span class="n">TheFloat</span> <span class="o">=</span> <span class="n">Rounded</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="n">FNumberFormattingOptions</span> <span class="n">NumberFormat</span><span class="p">;</span>					<span class="c1">//Text.h</span>
+	<span class="n">NumberFormat</span><span class="p">.</span><span class="n">MinimumIntegralDigits</span> <span class="o">=</span> <span class="p">(</span><span class="n">IncludeLeadingZero</span><span class="p">)</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="n">NumberFormat</span><span class="p">.</span><span class="n">MaximumIntegralDigits</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">;</span>
+	<span class="n">NumberFormat</span><span class="p">.</span><span class="n">MinimumFractionalDigits</span> <span class="o">=</span> <span class="n">Precision</span><span class="p">;</span>
+	<span class="n">NumberFormat</span><span class="p">.</span><span class="n">MaximumFractionalDigits</span> <span class="o">=</span> <span class="n">Precision</span><span class="p">;</span>
+	<span class="k">return</span> <span class="n">FText</span><span class="o">::</span><span class="n">AsNumber</span><span class="p">(</span><span class="n">TheFloat</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">NumberFormat</span><span class="p">).</span><span class="n">ToString</span><span class="p">();</span> 
+<span class="p">}</span>
+
+<span class="c1">//Float as FText With Precision!</span>
+<span class="k">static</span> <span class="n">FORCEINLINE</span> <span class="n">FText</span> <span class="nf">GetFloatAsTextWithPrecision</span><span class="p">(</span><span class="kt">float</span> <span class="n">TheFloat</span><span class="p">,</span> <span class="n">int32</span> <span class="n">Precision</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">IncludeLeadingZero</span><span class="o">=</span><span class="nb">true</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="c1">//Round to integral if have something like 1.9999 within precision</span>
+	<span class="kt">float</span> <span class="n">Rounded</span> <span class="o">=</span> <span class="n">roundf</span><span class="p">(</span><span class="n">TheFloat</span><span class="p">);</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">FMath</span><span class="o">::</span><span class="n">Abs</span><span class="p">(</span><span class="n">TheFloat</span> <span class="o">-</span> <span class="n">Rounded</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Pow</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span> <span class="o">*</span> <span class="n">Precision</span><span class="p">))</span>
+	<span class="p">{</span>       
+		<span class="n">TheFloat</span> <span class="o">=</span> <span class="n">Rounded</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="n">FNumberFormattingOptions</span> <span class="n">NumberFormat</span><span class="p">;</span>					<span class="c1">//Text.h</span>
+	<span class="n">NumberFormat</span><span class="p">.</span><span class="n">MinimumIntegralDigits</span> <span class="o">=</span> <span class="p">(</span><span class="n">IncludeLeadingZero</span><span class="p">)</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="n">NumberFormat</span><span class="p">.</span><span class="n">MaximumIntegralDigits</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">;</span>
+	<span class="n">NumberFormat</span><span class="p">.</span><span class="n">MinimumFractionalDigits</span> <span class="o">=</span> <span class="n">Precision</span><span class="p">;</span>
+	<span class="n">NumberFormat</span><span class="p">.</span><span class="n">MaximumFractionalDigits</span> <span class="o">=</span> <span class="n">Precision</span><span class="p">;</span>
+	<span class="k">return</span> <span class="n">FText</span><span class="o">::</span><span class="n">AsNumber</span><span class="p">(</span><span class="n">TheFloat</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">NumberFormat</span><span class="p">);</span> 
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Include_Leading_Zero">
+        Include Leading Zero
+       </span>
+      </h2>
+      <p>
+       Please note in my function you can opt to have a value of 0.5 display as
+      </p>
+      <pre> .5
+</pre>
+      <p>
+       or
+      </p>
+      <pre> 0.5
+</pre>
+      <p>
+       Based on whether you want that leading zero or not!
+      </p>
+      <p>
+       Yay!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Example_Usage">
+        Example Usage
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">const</span> <span class="kt">float</span> <span class="n">MyFloat</span> <span class="o">=</span> <span class="mf">16.16621111111111111111</span><span class="p">;</span>
+
+<span class="n">FString</span> <span class="n">Str</span> <span class="o">=</span> <span class="s">"My Float is "</span><span class="p">;</span>
+<span class="n">Str</span> <span class="o">+=</span> <span class="n">UYourFunctionLibrary</span><span class="o">::</span><span class="n">GetFloatAsStringWithPrecision</span><span class="p">(</span><span class="n">MyFloat</span><span class="p">,</span><span class="mi">2</span><span class="p">);</span>
+<span class="n">ClientMessage</span><span class="p">(</span><span class="n">Str</span><span class="p">);</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Output">
+        Output
+       </span>
+      </h2>
+      <pre> My Float is 16.17
+</pre>
+      <h2>
+       <span class="mw-headline" id="More_Info_on_C.2B.2B_Static_Function_Libraries">
+        More Info on C++ Static Function Libraries
+       </span>
+      </h2>
+      <p>
+       <b>
+        My Wiki On Static Function Libraries
+       </b>
+       <a class="external free" href="./static-function-libraries-your-own-version-of-ue4-c-no-engine-compile-times.html" rel="nofollow">
+        Static Function Libraries, Your Own Version of UE4 C++, No Engine Compile Times
+       </a>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Summary">
+        Summary
+       </span>
+      </h2>
+      <p>
+       I hope you enjoy this function!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

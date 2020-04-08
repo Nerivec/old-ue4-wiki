@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Draw 3D Debug Points, Lines, and Spheres: Visualize Your Algorithm in Action - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Draw 3D Debug Points, Lines, and Spheres: Visualize Your Algorithm in Action
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Draw_Point">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Draw Point
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Definition">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Definition
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Code_Sample">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             Code Sample
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Draw_Line">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Draw Line
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Definition_2">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Definition
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Code_Sample_2">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             Code Sample
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Draw_3D_Sphere">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Draw 3D Sphere
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#Definition_3">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             Definition
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#Code_Sample_3">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             Code Sample
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-11">
+         <a href="#LifeTime">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           LifeTime
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-12">
+         <a href="#bPersistentLines">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           bPersistentLines
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-13">
+         <a href="#Video">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Video
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-14">
+         <a href="#All_Draw_Debug_Functions">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           All Draw Debug Functions
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-15">
+         <a href="#Summary">
+          <span class="tocnumber">
+           9
+          </span>
+          <span class="toctext">
+           Summary
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       UE4 comes with awesome 3D Drawing features for drawing anywhere in the world!
+      </p>
+      <p>
+       I consider these tools essential for debugging any algorithm or custom game feature that you are creating.
+      </p>
+      <p>
+       Draw Debug tools are how you can easily visualize what your code is doing.
+      </p>
+      <p>
+       Draw Debug helps you see the transition from 2d words to 3D shapes and movement through 3D space
+      </p>
+      <p>
+       First of all,  we need to include "DrawDebugHelpers.h" to use these utilities.
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Draw_Point">
+        Draw Point
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Definition">
+        Definition
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">ENGINE_API</span> <span class="kt">void</span> <span class="nf">DrawDebugPoint</span><span class="p">(</span>
+	<span class="k">const</span> <span class="n">UWorld</span><span class="o">*</span> <span class="n">InWorld</span><span class="p">,</span> 
+	<span class="n">FVector</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">Position</span><span class="p">,</span> 
+	<span class="kt">float</span> <span class="n">Size</span><span class="p">,</span> 
+	<span class="n">FColor</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">PointColor</span><span class="p">,</span> 
+	<span class="kt">bool</span> <span class="n">bPersistentLines</span> <span class="o">=</span> <span class="nb">false</span><span class="p">,</span> 
+	<span class="kt">float</span> <span class="n">LifeTime</span><span class="o">=-</span><span class="mf">1.f</span><span class="p">,</span> 
+	<span class="n">uint8</span> <span class="n">DepthPriority</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="p">);</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Code_Sample">
+        Code Sample
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">DrawDebugPoint</span><span class="p">(</span>
+	<span class="n">GetWorld</span><span class="p">(),</span> 
+	<span class="n">Location</span><span class="p">,</span>
+	<span class="mi">20</span><span class="p">,</span>  					<span class="c1">//size</span>
+	<span class="n">FColor</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">),</span>  <span class="c1">//pink</span>
+	<span class="nb">false</span><span class="p">,</span>  				<span class="c1">//persistent (never goes away)</span>
+	<span class="mf">0.03</span> 					<span class="c1">//point leaves a trail on moving object</span>
+<span class="p">);</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Draw_Line">
+        Draw Line
+       </span>
+      </h2>
+      <p>
+       You can choose how thick the line should be, Thank You Epic!
+      </p>
+      <h3>
+       <span class="mw-headline" id="Definition_2">
+        Definition
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">ENGINE_API</span> <span class="kt">void</span> <span class="nf">DrawDebugLine</span><span class="p">(</span>
+	<span class="k">const</span> <span class="n">UWorld</span><span class="o">*</span> <span class="n">InWorld</span><span class="p">,</span> 
+	<span class="n">FVector</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">LineStart</span><span class="p">,</span> 
+	<span class="n">FVector</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">LineEnd</span><span class="p">,</span> 
+	<span class="n">FColor</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">Color</span><span class="p">,</span> 
+	<span class="kt">bool</span> <span class="n">bPersistentLines</span> <span class="o">=</span> <span class="nb">false</span><span class="p">,</span> 
+	<span class="kt">float</span> <span class="n">LifeTime</span><span class="o">=-</span><span class="mf">1.f</span><span class="p">,</span> 
+	<span class="n">uint8</span> <span class="n">DepthPriority</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> 
+	<span class="kt">float</span> <span class="n">Thickness</span> <span class="o">=</span> <span class="mf">0.f</span>
+<span class="p">);</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Code_Sample_2">
+        Code Sample
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//in a non-Static class</span>
+<span class="c1">//Draw the Line!</span>
+<span class="n">DrawDebugLine</span><span class="p">(</span>
+	<span class="n">GetWorld</span><span class="p">(),</span> 
+	<span class="n">LinkStart</span><span class="p">,</span> 
+	<span class="n">LinkEnd</span><span class="p">,</span> 
+	<span class="n">FColor</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> 
+	<span class="nb">false</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> 
+	<span class="mf">12.333</span>
+<span class="p">);</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Draw_3D_Sphere">
+        Draw 3D Sphere
+       </span>
+      </h2>
+      <p>
+       You can choose how detailed the sphere is!
+      </p>
+      <h3>
+       <span class="mw-headline" id="Definition_3">
+        Definition
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">ENGINE_API</span> <span class="kt">void</span> <span class="nf">DrawDebugSphere</span><span class="p">(</span>
+	<span class="k">const</span> <span class="n">UWorld</span><span class="o">*</span> <span class="n">InWorld</span><span class="p">,</span> 
+	<span class="n">FVector</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">Center</span><span class="p">,</span> 
+	<span class="kt">float</span> <span class="n">Radius</span><span class="p">,</span> 
+	<span class="n">int32</span> <span class="n">Segments</span><span class="p">,</span> 
+	<span class="n">FColor</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">Color</span><span class="p">,</span> 
+	<span class="kt">bool</span> <span class="n">bPersistentLines</span> <span class="o">=</span> <span class="nb">false</span><span class="p">,</span> 
+	<span class="kt">float</span> <span class="n">LifeTime</span><span class="o">=-</span><span class="mf">1.f</span><span class="p">,</span> 
+	<span class="n">uint8</span> <span class="n">DepthPriority</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="p">);</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Code_Sample_3">
+        Code Sample
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//in a non-Static class</span>
+
+<span class="c1">//Start Point</span>
+<span class="n">DrawDebugSphere</span><span class="p">(</span>
+	<span class="n">GetWorld</span><span class="p">(),</span>
+	<span class="n">SphereCenter</span><span class="p">,</span> 
+	<span class="mi">24</span><span class="p">,</span> 
+	<span class="mi">32</span><span class="p">,</span> 
+	<span class="n">FColor</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="p">);</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="LifeTime">
+        LifeTime
+       </span>
+      </h2>
+      <p>
+       You can set the lifetime in seconds,
+      </p>
+      <pre> float LifeTime=-1.f,
+</pre>
+      <p>
+       but if you are
+       <b>
+        drawing every tick
+       </b>
+       make sure you do NOT do this,
+      </p>
+      <p>
+       or you are creating way more lines than you need to be :)
+      </p>
+      <h2>
+       <span class="mw-headline" id="bPersistentLines">
+        bPersistentLines
+       </span>
+      </h2>
+      <pre> bool bPersistentLines = false
+</pre>
+      <p>
+       if you set this parameter to
+       <b>
+        true
+       </b>
+       , debug object stay in world permanently until you call somewhere:
+      </p>
+      <pre> FlushPersistentDebugLines(GetWorld());
+</pre>
+      <p>
+       Using this combination you can achieve that lines persist even when simulation is paused and your draw-debug-lines functions in Tick() stops to calling, so you can quietly study your lines.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Video">
+        Video
+       </span>
+      </h2>
+      <p>
+       In this video, toward the middle (
+       <a class="external text" href="http://youtu.be/IJXcuOA8POo?t=3m5s" rel="nofollow">
+        3:05
+       </a>
+       ), I show my in-game 3D Kismet system,
+      </p>
+      <p>
+       and I am using draw debug sphere and draw debug line for the links between the 3D objects :)
+      </p>
+      <p>
+       &lt;youtube&gt;
+       <a class="external free" href="https://www.youtube.com/watch?v=IJXcuOA8POo" rel="nofollow">
+        https://www.youtube.com/watch?v=IJXcuOA8POo
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="All_Draw_Debug_Functions">
+        All Draw Debug Functions
+       </span>
+      </h2>
+      <p>
+       See
+       <b>
+        DrawDebugHelpers.h
+       </b>
+       for all the available 3D Debug drawing helpers!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Summary">
+        Summary
+       </span>
+      </h2>
+      <p>
+       Enjoy these Draw tools, some of my favorite functions!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

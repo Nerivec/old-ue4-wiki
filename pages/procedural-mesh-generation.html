@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Procedural Mesh Generation - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Procedural Mesh Generation
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <p>
+       This is a very simple demonstration on how to generate procedural meshes and spawn them in game. It is not to be taken as an example of proper programming technique, but only as an indication to help you generate your own meshes.
+      </p>
+      <p>
+       You can
+       <b>
+        <a class="external text" href="https://github.com/SRombauts/UE4ProceduralMesh/" rel="nofollow">
+         get this up-to-date demo code in a working UE 4.7 project on GitHub
+        </a>
+       </b>
+       .
+      </p>
+      <p>
+       Please note that
+       <b>
+        this no longer works in 4.8
+       </b>
+       because Epic added an
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/BlueprintAPI/Components/ProceduralMesh/index.html" rel="nofollow">
+        official component with the same name (UProceduralMeshComponent) and similar functionality
+       </a>
+       . Check this Wiki page to find a tutorial for it:
+       .
+      </p>
+      <p>
+       The following assumes you already have a project created. However, you will need to add RHI, RenderCore and ShaderCore modules in your build file.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">PublicDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"Core"</span><span class="p">,</span> <span class="s">"CoreUObject"</span><span class="p">,</span> <span class="s">"Engine"</span><span class="p">,</span> <span class="s">"InputCore"</span><span class="p">,</span> <span class="s">"RHI"</span><span class="p">,</span> <span class="s">"RenderCore"</span><span class="p">,</span> <span class="s">"ShaderCore"</span> <span class="p">});</span>
+</pre>
+      </div>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Creating_a_Generated_Mesh_class">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Creating a Generated Mesh class
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#GeneratedMeshComponent.h">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             GeneratedMeshComponent.h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#GeneratedMeshComponent.cpp">
+            <span class="tocnumber">
+             1.2
+            </span>
+            <span class="toctext">
+             GeneratedMeshComponent.cpp
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Creating_a_Generated_Actor_Class">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Creating a Generated Actor Class
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#GameGeneratedActor.h">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             GameGeneratedActor.h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#GameGeneratedActor.cpp">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             GameGeneratedActor.cpp
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Spawning_the_Actor">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Spawning the Actor
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Connecting_standard_UCustomMeshComponent">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Connecting standard UCustomMeshComponent
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Blueprint_implementation">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Blueprint implementation
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-10">
+         <a href="#Changelog">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Changelog
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#Update_1">
+            <span class="tocnumber">
+             6.1
+            </span>
+            <span class="toctext">
+             Update 1
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-12">
+           <a href="#Update_2">
+            <span class="tocnumber">
+             6.2
+            </span>
+            <span class="toctext">
+             Update 2
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-13">
+           <a href="#Update_3">
+            <span class="tocnumber">
+             6.3
+            </span>
+            <span class="toctext">
+             Update 3
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-14">
+           <a href="#Update_4">
+            <span class="tocnumber">
+             6.4
+            </span>
+            <span class="toctext">
+             Update 4
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-15">
+           <a href="#Update_5">
+            <span class="tocnumber">
+             6.5
+            </span>
+            <span class="toctext">
+             Update 5
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-16">
+           <a href="#Update_6">
+            <span class="tocnumber">
+             6.6
+            </span>
+            <span class="toctext">
+             Update 6
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-17">
+           <a href="#Update_7">
+            <span class="tocnumber">
+             6.7
+            </span>
+            <span class="toctext">
+             Update 7
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-18">
+           <a href="#Update_8">
+            <span class="tocnumber">
+             6.8
+            </span>
+            <span class="toctext">
+             Update 8
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-19">
+           <a href="#Update_9">
+            <span class="tocnumber">
+             6.9
+            </span>
+            <span class="toctext">
+             Update 9
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-20">
+         <a href="#External_link">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           External link
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Creating_a_Generated_Mesh_class">
+        Creating a Generated Mesh class
+       </span>
+      </h2>
+      <p>
+       The Unreal Engine 4 sources come with a CustomMeshComponent under Engine\Plugins\Runtime\CustomMeshComponent. I had trouble with using it as a plugin (link error), so I have reimplemented it. Essentially, copy the files to your project and rename them GeneratedMeshComponent (.h/.cpp). Replace all occurences of "Custom" to "Generated". You will need to add your project header to the cpp file. Otherwise, the code as I have use it is untouched.
+      </p>
+      <p>
+       This step may not be required, see Update 7 below.
+      </p>
+      <p>
+       Here they are as they appear in my test project:
+      </p>
+      <h3>
+       <span class="mw-headline" id="GeneratedMeshComponent.h">
+        GeneratedMeshComponent.h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2014 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"GeneratedMeshComponent.generated.h"</span><span class="cp"></span>
+
+<span class="n">USTRUCT</span><span class="p">(</span><span class="n">BlueprintType</span><span class="p">)</span>
+<span class="k">struct</span> <span class="n">FGeneratedMeshTriangle</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_USTRUCT_BODY</span><span class="p">()</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">Triangle</span><span class="p">)</span>
+	<span class="n">FVector</span> <span class="n">Vertex0</span><span class="p">;</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">Triangle</span><span class="p">)</span>
+	<span class="n">FVector</span> <span class="n">Vertex1</span><span class="p">;</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">Triangle</span><span class="p">)</span>
+	<span class="n">FVector</span> <span class="n">Vertex2</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="cm">/** Component that allows you to specify custom triangle mesh geometry */</span>
+<span class="n">UCLASS</span><span class="p">(</span><span class="n">editinlinenew</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="p">(</span><span class="n">BlueprintSpawnableComponent</span><span class="p">),</span> <span class="n">ClassGroup</span><span class="o">=</span><span class="n">Rendering</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">UGeneratedMeshComponent</span> <span class="o">:</span> <span class="k">public</span> <span class="n">UMeshComponent</span><span class="p">,</span> <span class="k">public</span> <span class="n">IInterface_CollisionDataProvider</span> 
+<span class="p">{</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+
+<span class="k">public</span><span class="o">:</span>
+	<span class="cm">/** Set the geometry to use on this triangle mesh */</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="s">"Components|GeneratedMesh"</span><span class="p">)</span>
+	<span class="kt">bool</span> <span class="n">SetGeneratedMeshTriangles</span><span class="p">(</span><span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FGeneratedMeshTriangle</span><span class="o">&gt;&amp;</span> <span class="n">Triangles</span><span class="p">);</span>
+
+	<span class="cm">/** Description of collision */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintReadOnly</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="s">"Collision"</span><span class="p">)</span>
+	<span class="k">class</span> <span class="nc">UBodySetup</span><span class="o">*</span> <span class="n">ModelBodySetup</span><span class="p">;</span>
+
+	<span class="c1">// Begin UMeshComponent interface.</span>
+	<span class="k">virtual</span> <span class="n">int32</span> <span class="nf">GetNumMaterials</span><span class="p">()</span> <span class="k">const</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+	<span class="c1">// End UMeshComponent interface.</span>
+
+	<span class="c1">// Begin Interface_CollisionDataProvider Interface</span>
+	<span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">GetPhysicsTriMeshData</span><span class="p">(</span><span class="k">struct</span> <span class="n">FTriMeshCollisionData</span><span class="o">*</span> <span class="n">CollisionData</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">InUseAllTriData</span><span class="p">)</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">ContainsPhysicsTriMeshData</span><span class="p">(</span><span class="kt">bool</span> <span class="n">InUseAllTriData</span><span class="p">)</span> <span class="k">const</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">WantsNegXTriMesh</span><span class="p">()</span> <span class="n">OVERRIDE</span> <span class="p">{</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span> <span class="p">}</span>
+	<span class="c1">// End Interface_CollisionDataProvider Interface</span>
+
+	<span class="c1">// Begin UPrimitiveComponent interface.</span>
+	<span class="k">virtual</span> <span class="n">FPrimitiveSceneProxy</span><span class="o">*</span> <span class="nf">CreateSceneProxy</span><span class="p">()</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="k">class</span> <span class="nc">UBodySetup</span><span class="o">*</span> <span class="nf">GetBodySetup</span><span class="p">()</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+	<span class="c1">// End UPrimitiveComponent interface.</span>
+
+	<span class="kt">void</span> <span class="nf">UpdateBodySetup</span><span class="p">();</span>
+	<span class="kt">void</span> <span class="nf">UpdateCollision</span><span class="p">();</span>
+<span class="k">private</span><span class="o">:</span>
+
+
+
+	<span class="c1">// Begin USceneComponent interface.</span>
+	<span class="k">virtual</span> <span class="n">FBoxSphereBounds</span> <span class="n">CalcBounds</span><span class="p">(</span><span class="k">const</span> <span class="n">FTransform</span> <span class="o">&amp;</span> <span class="n">LocalToWorld</span><span class="p">)</span> <span class="k">const</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+	<span class="c1">// Begin USceneComponent interface.</span>
+
+	<span class="cm">/** */</span>
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FGeneratedMeshTriangle</span><span class="o">&gt;</span> <span class="n">GeneratedMeshTris</span><span class="p">;</span>
+
+	<span class="k">friend</span> <span class="k">class</span> <span class="nc">FGeneratedMeshSceneProxy</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="GeneratedMeshComponent.cpp">
+        GeneratedMeshComponent.cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2014 Epic Games, Inc. All Rights Reserved. </span>
+<span class="cp">#include</span> <span class="cpf">"MyProject5.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"DynamicMeshBuilder.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"GeneratedMeshComponent.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Runtime/Launch/Resources/Version.h" // for ENGINE_xxx_VERSION</span><span class="cp"></span>
+
+<span class="cm">/** Vertex Buffer */</span>
+<span class="k">class</span> <span class="nc">FGeneratedMeshVertexBuffer</span> <span class="o">:</span> <span class="k">public</span> <span class="n">FVertexBuffer</span> 
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FDynamicMeshVertex</span><span class="o">&gt;</span> <span class="n">Vertices</span><span class="p">;</span>
+
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">InitRHI</span><span class="p">()</span>
+	<span class="p">{</span>
+<span class="cp">#if ENGINE_MAJOR_VERSION &gt;= 4 &amp;&amp; ENGINE_MINOR_VERSION &gt;= 3</span>
+                <span class="n">FRHIResourceCreateInfo</span> <span class="n">CreateInfo</span><span class="p">;</span>
+		<span class="n">VertexBufferRHI</span> <span class="o">=</span> <span class="n">RHICreateVertexBuffer</span><span class="p">(</span><span class="n">Vertices</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">FDynamicMeshVertex</span><span class="p">),</span><span class="n">BUF_Static</span><span class="p">,</span><span class="n">CreateInfo</span><span class="p">);</span>
+<span class="cp">#else</span>
+		<span class="n">VertexBufferRHI</span> <span class="o">=</span> <span class="n">RHICreateVertexBuffer</span><span class="p">(</span><span class="n">Vertices</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">FDynamicMeshVertex</span><span class="p">),</span><span class="nb">NULL</span><span class="p">,</span><span class="n">BUF_Static</span><span class="p">);</span>
+<span class="cp">#endif</span>
+		<span class="c1">// Copy the vertex data into the vertex buffer.</span>
+		<span class="kt">void</span><span class="o">*</span> <span class="n">VertexBufferData</span> <span class="o">=</span> <span class="n">RHILockVertexBuffer</span><span class="p">(</span><span class="n">VertexBufferRHI</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">Vertices</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">FDynamicMeshVertex</span><span class="p">),</span> <span class="n">RLM_WriteOnly</span><span class="p">);</span>
+		<span class="n">FMemory</span><span class="o">::</span><span class="n">Memcpy</span><span class="p">(</span><span class="n">VertexBufferData</span><span class="p">,</span><span class="n">Vertices</span><span class="p">.</span><span class="n">GetTypedData</span><span class="p">(),</span><span class="n">Vertices</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">FDynamicMeshVertex</span><span class="p">));</span>
+		<span class="n">RHIUnlockVertexBuffer</span><span class="p">(</span><span class="n">VertexBufferRHI</span><span class="p">);</span>
+
+	<span class="p">}</span>
+
+<span class="p">};</span>
+
+<span class="cm">/** Index Buffer */</span>
+<span class="k">class</span> <span class="nc">FGeneratedMeshIndexBuffer</span> <span class="o">:</span> <span class="k">public</span> <span class="n">FIndexBuffer</span> 
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">int32</span><span class="o">&gt;</span> <span class="n">Indices</span><span class="p">;</span>
+
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">InitRHI</span><span class="p">()</span>
+	<span class="p">{</span>
+<span class="cp">#if ENGINE_MAJOR_VERSION &gt;= 4 &amp;&amp; ENGINE_MINOR_VERSION &gt;= 3</span>
+                <span class="n">FRHIResourceCreateInfo</span> <span class="n">CreateInfo</span><span class="p">;</span>
+		<span class="n">IndexBufferRHI</span> <span class="o">=</span> <span class="n">RHICreateIndexBuffer</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">int32</span><span class="p">),</span><span class="n">Indices</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">int32</span><span class="p">),</span><span class="n">BUF_Static</span><span class="p">,</span><span class="n">CreateInfo</span><span class="p">);</span>
+<span class="cp">#else</span>
+		<span class="n">IndexBufferRHI</span> <span class="o">=</span> <span class="n">RHICreateIndexBuffer</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">int32</span><span class="p">),</span><span class="n">Indices</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">int32</span><span class="p">),</span><span class="nb">NULL</span><span class="p">,</span><span class="n">BUF_Static</span><span class="p">);</span>
+<span class="cp">#endif</span>
+		<span class="c1">// Write the indices to the index buffer.</span>
+		<span class="kt">void</span><span class="o">*</span> <span class="n">Buffer</span> <span class="o">=</span> <span class="n">RHILockIndexBuffer</span><span class="p">(</span><span class="n">IndexBufferRHI</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">Indices</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">int32</span><span class="p">),</span><span class="n">RLM_WriteOnly</span><span class="p">);</span>
+		<span class="n">FMemory</span><span class="o">::</span><span class="n">Memcpy</span><span class="p">(</span><span class="n">Buffer</span><span class="p">,</span><span class="n">Indices</span><span class="p">.</span><span class="n">GetTypedData</span><span class="p">(),</span><span class="n">Indices</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">*</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">int32</span><span class="p">));</span>
+		<span class="n">RHIUnlockIndexBuffer</span><span class="p">(</span><span class="n">IndexBufferRHI</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+
+<span class="cm">/** Vertex Factory */</span>
+<span class="k">class</span> <span class="nc">FGeneratedMeshVertexFactory</span> <span class="o">:</span> <span class="k">public</span> <span class="n">FLocalVertexFactory</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+
+	<span class="n">FGeneratedMeshVertexFactory</span><span class="p">()</span>
+	<span class="p">{}</span>
+
+
+	<span class="cm">/** Initialization */</span>
+	<span class="kt">void</span> <span class="n">Init</span><span class="p">(</span><span class="k">const</span> <span class="n">FGeneratedMeshVertexBuffer</span><span class="o">*</span> <span class="n">VertexBuffer</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">check</span><span class="p">(</span><span class="o">!</span><span class="n">IsInRenderingThread</span><span class="p">());</span>
+
+		<span class="n">ENQUEUE_UNIQUE_RENDER_COMMAND_TWOPARAMETER</span><span class="p">(</span>
+			<span class="n">InitGeneratedMeshVertexFactory</span><span class="p">,</span>
+			<span class="n">FGeneratedMeshVertexFactory</span><span class="o">*</span><span class="p">,</span><span class="n">VertexFactory</span><span class="p">,</span><span class="k">this</span><span class="p">,</span>
+			<span class="k">const</span> <span class="n">FGeneratedMeshVertexBuffer</span><span class="o">*</span><span class="p">,</span><span class="n">VertexBuffer</span><span class="p">,</span><span class="n">VertexBuffer</span><span class="p">,</span>
+		<span class="p">{</span>
+			<span class="c1">// Initialize the vertex factory's stream components.</span>
+			<span class="n">DataType</span> <span class="n">NewData</span><span class="p">;</span>
+			<span class="n">NewData</span><span class="p">.</span><span class="n">PositionComponent</span> <span class="o">=</span> <span class="n">STRUCTMEMBER_VERTEXSTREAMCOMPONENT</span><span class="p">(</span><span class="n">VertexBuffer</span><span class="p">,</span><span class="n">FDynamicMeshVertex</span><span class="p">,</span><span class="n">Position</span><span class="p">,</span><span class="n">VET_Float3</span><span class="p">);</span>
+			<span class="n">NewData</span><span class="p">.</span><span class="n">TextureCoordinates</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span>
+				<span class="n">FVertexStreamComponent</span><span class="p">(</span><span class="n">VertexBuffer</span><span class="p">,</span><span class="n">STRUCT_OFFSET</span><span class="p">(</span><span class="n">FDynamicMeshVertex</span><span class="p">,</span><span class="n">TextureCoordinate</span><span class="p">),</span><span class="k">sizeof</span><span class="p">(</span><span class="n">FDynamicMeshVertex</span><span class="p">),</span><span class="n">VET_Float2</span><span class="p">)</span>
+				<span class="p">);</span>
+			<span class="n">NewData</span><span class="p">.</span><span class="n">TangentBasisComponents</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">STRUCTMEMBER_VERTEXSTREAMCOMPONENT</span><span class="p">(</span><span class="n">VertexBuffer</span><span class="p">,</span><span class="n">FDynamicMeshVertex</span><span class="p">,</span><span class="n">TangentX</span><span class="p">,</span><span class="n">VET_PackedNormal</span><span class="p">);</span>
+			<span class="n">NewData</span><span class="p">.</span><span class="n">TangentBasisComponents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">STRUCTMEMBER_VERTEXSTREAMCOMPONENT</span><span class="p">(</span><span class="n">VertexBuffer</span><span class="p">,</span><span class="n">FDynamicMeshVertex</span><span class="p">,</span><span class="n">TangentZ</span><span class="p">,</span><span class="n">VET_PackedNormal</span><span class="p">);</span>
+			<span class="n">NewData</span><span class="p">.</span><span class="n">ColorComponent</span> <span class="o">=</span> <span class="n">STRUCTMEMBER_VERTEXSTREAMCOMPONENT</span><span class="p">(</span><span class="n">VertexBuffer</span><span class="p">,</span> <span class="n">FDynamicMeshVertex</span><span class="p">,</span> <span class="n">Color</span><span class="p">,</span> <span class="n">VET_Color</span><span class="p">);</span>
+			<span class="n">VertexFactory</span><span class="o">-&gt;</span><span class="n">SetData</span><span class="p">(</span><span class="n">NewData</span><span class="p">);</span>
+		<span class="p">});</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+
+
+
+<span class="c1">//////////////////////////////////////////////////////////////////////////</span>
+
+<span class="n">UGeneratedMeshComponent</span><span class="o">::</span><span class="n">UGeneratedMeshComponent</span><span class="p">(</span> <span class="k">const</span> <span class="n">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span> <span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span> <span class="n">PCIP</span> <span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">PrimaryComponentTick</span><span class="p">.</span><span class="n">bCanEverTick</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">UGeneratedMeshComponent</span><span class="o">::</span><span class="n">SetGeneratedMeshTriangles</span><span class="p">(</span><span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FGeneratedMeshTriangle</span><span class="o">&gt;&amp;</span> <span class="n">Triangles</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">GeneratedMeshTris</span> <span class="o">=</span> <span class="n">Triangles</span><span class="p">;</span>
+
+	<span class="n">UpdateCollision</span><span class="p">();</span>
+
+	<span class="c1">// Need to recreate scene proxy to send it over</span>
+	<span class="n">MarkRenderStateDirty</span><span class="p">();</span>
+
+	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="n">FPrimitiveSceneProxy</span><span class="o">*</span> <span class="n">UGeneratedMeshComponent</span><span class="o">::</span><span class="n">CreateSceneProxy</span><span class="p">()</span>
+<span class="p">{</span>
+	
+	<span class="cm">/** Scene proxy defined only inside the scope of this one function */</span>
+	<span class="k">class</span> <span class="nc">FGeneratedMeshSceneProxy</span> <span class="o">:</span> <span class="k">public</span> <span class="n">FPrimitiveSceneProxy</span>
+	<span class="p">{</span>
+	<span class="k">public</span><span class="o">:</span>
+
+		<span class="n">FGeneratedMeshSceneProxy</span><span class="p">(</span><span class="n">UGeneratedMeshComponent</span><span class="o">*</span> <span class="n">Component</span><span class="p">)</span>
+			<span class="o">:</span> <span class="n">FPrimitiveSceneProxy</span><span class="p">(</span><span class="n">Component</span><span class="p">)</span>
+<span class="cp">#if ENGINE_MAJOR_VERSION &gt;= 4 &amp;&amp; ENGINE_MINOR_VERSION &gt;= 5</span>
+			<span class="p">,</span> <span class="n">MaterialRelevance</span><span class="p">(</span><span class="n">Component</span><span class="o">-&gt;</span><span class="n">GetMaterialRelevance</span><span class="p">(</span><span class="n">ERHIFeatureLevel</span><span class="o">::</span><span class="n">SM4</span><span class="p">))</span> <span class="c1">// Feature level defined by the capabilities of DX10 Shader Model 4.</span>
+<span class="cp">#else</span>
+			<span class="p">,</span> <span class="n">MaterialRelevance</span><span class="p">(</span><span class="n">Component</span><span class="o">-&gt;</span><span class="n">GetMaterialRelevance</span><span class="p">())</span>
+<span class="cp">#endif</span>
+		<span class="p">{</span>
+			<span class="k">const</span> <span class="n">FColor</span> <span class="n">VertexColor</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">);</span>
+
+			<span class="c1">// Add each triangle to the vertex/index buffer</span>
+			<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">TriIdx</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span> <span class="n">TriIdx</span><span class="o">&lt;</span><span class="n">Component</span><span class="o">-&gt;</span><span class="n">GeneratedMeshTris</span><span class="p">.</span><span class="n">Num</span><span class="p">();</span> <span class="n">TriIdx</span><span class="o">++</span><span class="p">)</span>
+			<span class="p">{</span>
+				<span class="n">FGeneratedMeshTriangle</span><span class="o">&amp;</span> <span class="n">Tri</span> <span class="o">=</span> <span class="n">Component</span><span class="o">-&gt;</span><span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">];</span>
+
+				<span class="k">const</span> <span class="n">FVector</span> <span class="n">Edge01</span> <span class="o">=</span> <span class="p">(</span><span class="n">Tri</span><span class="p">.</span><span class="n">Vertex1</span> <span class="o">-</span> <span class="n">Tri</span><span class="p">.</span><span class="n">Vertex0</span><span class="p">);</span>
+				<span class="k">const</span> <span class="n">FVector</span> <span class="n">Edge02</span> <span class="o">=</span> <span class="p">(</span><span class="n">Tri</span><span class="p">.</span><span class="n">Vertex2</span> <span class="o">-</span> <span class="n">Tri</span><span class="p">.</span><span class="n">Vertex0</span><span class="p">);</span>
+
+				<span class="k">const</span> <span class="n">FVector</span> <span class="n">TangentX</span> <span class="o">=</span> <span class="n">Edge01</span><span class="p">.</span><span class="n">SafeNormal</span><span class="p">();</span>
+				<span class="k">const</span> <span class="n">FVector</span> <span class="n">TangentZ</span> <span class="o">=</span> <span class="p">(</span><span class="n">Edge02</span> <span class="o">^</span> <span class="n">Edge01</span><span class="p">).</span><span class="n">SafeNormal</span><span class="p">();</span>
+				<span class="k">const</span> <span class="n">FVector</span> <span class="n">TangentY</span> <span class="o">=</span> <span class="p">(</span><span class="n">TangentX</span> <span class="o">^</span> <span class="n">TangentZ</span><span class="p">).</span><span class="n">SafeNormal</span><span class="p">();</span>
+
+				<span class="n">FDynamicMeshVertex</span> <span class="n">Vert0</span><span class="p">;</span>
+				<span class="n">Vert0</span><span class="p">.</span><span class="n">Position</span> <span class="o">=</span> <span class="n">Tri</span><span class="p">.</span><span class="n">Vertex0</span><span class="p">;</span>
+				<span class="n">Vert0</span><span class="p">.</span><span class="n">Color</span> <span class="o">=</span> <span class="n">VertexColor</span><span class="p">;</span>
+				<span class="n">Vert0</span><span class="p">.</span><span class="n">SetTangents</span><span class="p">(</span><span class="n">TangentX</span><span class="p">,</span> <span class="n">TangentY</span><span class="p">,</span> <span class="n">TangentZ</span><span class="p">);</span>
+				<span class="n">int32</span> <span class="n">VIndex</span> <span class="o">=</span> <span class="n">VertexBuffer</span><span class="p">.</span><span class="n">Vertices</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">Vert0</span><span class="p">);</span>
+				<span class="n">IndexBuffer</span><span class="p">.</span><span class="n">Indices</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">VIndex</span><span class="p">);</span>
+
+				<span class="n">FDynamicMeshVertex</span> <span class="n">Vert1</span><span class="p">;</span>
+				<span class="n">Vert1</span><span class="p">.</span><span class="n">Position</span> <span class="o">=</span> <span class="n">Tri</span><span class="p">.</span><span class="n">Vertex1</span><span class="p">;</span>
+				<span class="n">Vert1</span><span class="p">.</span><span class="n">Color</span> <span class="o">=</span> <span class="n">VertexColor</span><span class="p">;</span>
+				<span class="n">Vert1</span><span class="p">.</span><span class="n">SetTangents</span><span class="p">(</span><span class="n">TangentX</span><span class="p">,</span> <span class="n">TangentY</span><span class="p">,</span> <span class="n">TangentZ</span><span class="p">);</span>
+				<span class="n">VIndex</span> <span class="o">=</span> <span class="n">VertexBuffer</span><span class="p">.</span><span class="n">Vertices</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">Vert1</span><span class="p">);</span>
+				<span class="n">IndexBuffer</span><span class="p">.</span><span class="n">Indices</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">VIndex</span><span class="p">);</span>
+
+				<span class="n">FDynamicMeshVertex</span> <span class="n">Vert2</span><span class="p">;</span>
+				<span class="n">Vert2</span><span class="p">.</span><span class="n">Position</span> <span class="o">=</span> <span class="n">Tri</span><span class="p">.</span><span class="n">Vertex2</span><span class="p">;</span>
+				<span class="n">Vert2</span><span class="p">.</span><span class="n">Color</span> <span class="o">=</span> <span class="n">VertexColor</span><span class="p">;</span>
+				<span class="n">Vert2</span><span class="p">.</span><span class="n">SetTangents</span><span class="p">(</span><span class="n">TangentX</span><span class="p">,</span> <span class="n">TangentY</span><span class="p">,</span> <span class="n">TangentZ</span><span class="p">);</span>
+				<span class="n">VIndex</span> <span class="o">=</span> <span class="n">VertexBuffer</span><span class="p">.</span><span class="n">Vertices</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">Vert2</span><span class="p">);</span>
+				<span class="n">IndexBuffer</span><span class="p">.</span><span class="n">Indices</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">VIndex</span><span class="p">);</span>
+			<span class="p">}</span>
+
+			<span class="c1">// Init vertex factory</span>
+			<span class="n">VertexFactory</span><span class="p">.</span><span class="n">Init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">VertexBuffer</span><span class="p">);</span>
+
+			<span class="c1">// Enqueue initialization of render resource</span>
+			<span class="n">BeginInitResource</span><span class="p">(</span><span class="o">&amp;</span><span class="n">VertexBuffer</span><span class="p">);</span>
+			<span class="n">BeginInitResource</span><span class="p">(</span><span class="o">&amp;</span><span class="n">IndexBuffer</span><span class="p">);</span>
+			<span class="n">BeginInitResource</span><span class="p">(</span><span class="o">&amp;</span><span class="n">VertexFactory</span><span class="p">);</span>
+
+			<span class="c1">// Grab material</span>
+			<span class="n">Material</span> <span class="o">=</span> <span class="n">Component</span><span class="o">-&gt;</span><span class="n">GetMaterial</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+			<span class="k">if</span><span class="p">(</span><span class="n">Material</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+			<span class="p">{</span>
+				<span class="n">Material</span> <span class="o">=</span> <span class="n">UMaterial</span><span class="o">::</span><span class="n">GetDefaultMaterial</span><span class="p">(</span><span class="n">MD_Surface</span><span class="p">);</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+
+		<span class="k">virtual</span> <span class="o">~</span><span class="n">FGeneratedMeshSceneProxy</span><span class="p">()</span>
+		<span class="p">{</span>
+			<span class="n">VertexBuffer</span><span class="p">.</span><span class="n">ReleaseResource</span><span class="p">();</span>
+			<span class="n">IndexBuffer</span><span class="p">.</span><span class="n">ReleaseResource</span><span class="p">();</span>
+			<span class="n">VertexFactory</span><span class="p">.</span><span class="n">ReleaseResource</span><span class="p">();</span>
+		<span class="p">}</span>
+
+		<span class="k">virtual</span> <span class="kt">void</span> <span class="n">DrawDynamicElements</span><span class="p">(</span><span class="n">FPrimitiveDrawInterface</span><span class="o">*</span> <span class="n">PDI</span><span class="p">,</span><span class="k">const</span> <span class="n">FSceneView</span><span class="o">*</span> <span class="n">View</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">QUICK_SCOPE_CYCLE_COUNTER</span><span class="p">(</span> <span class="n">STAT_GeneratedMeshSceneProxy_DrawDynamicElements</span> <span class="p">);</span>
+
+			<span class="k">const</span> <span class="kt">bool</span> <span class="n">bWireframe</span> <span class="o">=</span> <span class="n">View</span><span class="o">-&gt;</span><span class="n">Family</span><span class="o">-&gt;</span><span class="n">EngineShowFlags</span><span class="p">.</span><span class="n">Wireframe</span><span class="p">;</span>
+
+			<span class="k">auto</span> <span class="n">WireframeMaterialInstance</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FColoredMaterialRenderProxy</span><span class="p">(</span>
+				<span class="n">GEngine</span><span class="o">-&gt;</span><span class="n">WireframeMaterial</span> <span class="o">?</span> <span class="n">GEngine</span><span class="o">-&gt;</span><span class="n">WireframeMaterial</span><span class="o">-&gt;</span><span class="n">GetRenderProxy</span><span class="p">(</span><span class="n">IsSelected</span><span class="p">())</span> <span class="o">:</span> <span class="nb">NULL</span><span class="p">,</span>
+				<span class="n">FLinearColor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.5f</span><span class="p">,</span> <span class="mf">1.f</span><span class="p">)</span>
+				<span class="p">);</span>
+
+			<span class="n">FMaterialRenderProxy</span><span class="o">*</span> <span class="n">MaterialProxy</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+			<span class="k">if</span><span class="p">(</span><span class="n">bWireframe</span><span class="p">)</span>
+			<span class="p">{</span>
+				<span class="n">MaterialProxy</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">WireframeMaterialInstance</span><span class="p">;</span>
+			<span class="p">}</span>
+			<span class="k">else</span>
+			<span class="p">{</span>
+				<span class="n">MaterialProxy</span> <span class="o">=</span> <span class="n">Material</span><span class="o">-&gt;</span><span class="n">GetRenderProxy</span><span class="p">(</span><span class="n">IsSelected</span><span class="p">());</span>
+			<span class="p">}</span>
+
+			<span class="c1">// Draw the mesh.</span>
+			<span class="n">FMeshBatch</span> <span class="n">Mesh</span><span class="p">;</span>
+			<span class="n">FMeshBatchElement</span><span class="o">&amp;</span> <span class="n">BatchElement</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">.</span><span class="n">Elements</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+			<span class="n">BatchElement</span><span class="p">.</span><span class="n">IndexBuffer</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">IndexBuffer</span><span class="p">;</span>
+			<span class="n">Mesh</span><span class="p">.</span><span class="n">bWireframe</span> <span class="o">=</span> <span class="n">bWireframe</span><span class="p">;</span>
+			<span class="n">Mesh</span><span class="p">.</span><span class="n">VertexFactory</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">VertexFactory</span><span class="p">;</span>
+			<span class="n">Mesh</span><span class="p">.</span><span class="n">MaterialRenderProxy</span> <span class="o">=</span> <span class="n">MaterialProxy</span><span class="p">;</span>
+<span class="cp">#if ENGINE_MAJOR_VERSION &gt;= 4 &amp;&amp; ENGINE_MINOR_VERSION &gt;= 5</span>
+			<span class="n">BatchElement</span><span class="p">.</span><span class="n">PrimitiveUniformBuffer</span> <span class="o">=</span> <span class="n">CreatePrimitiveUniformBufferImmediate</span><span class="p">(</span><span class="n">GetLocalToWorld</span><span class="p">(),</span> <span class="n">GetBounds</span><span class="p">(),</span> <span class="n">GetLocalBounds</span><span class="p">(),</span> <span class="nb">true</span><span class="p">,</span> <span class="n">UseEditorDepthTest</span><span class="p">());</span>
+<span class="cp">#else</span>
+			<span class="n">BatchElement</span><span class="p">.</span><span class="n">PrimitiveUniformBuffer</span> <span class="o">=</span> <span class="n">CreatePrimitiveUniformBufferImmediate</span><span class="p">(</span><span class="n">GetLocalToWorld</span><span class="p">(),</span> <span class="n">GetBounds</span><span class="p">(),</span> <span class="n">GetLocalBounds</span><span class="p">(),</span> <span class="nb">true</span><span class="p">);</span>
+<span class="cp">#endif</span>
+			<span class="n">BatchElement</span><span class="p">.</span><span class="n">FirstIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+			<span class="n">BatchElement</span><span class="p">.</span><span class="n">NumPrimitives</span> <span class="o">=</span> <span class="n">IndexBuffer</span><span class="p">.</span><span class="n">Indices</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">/</span> <span class="mi">3</span><span class="p">;</span>
+			<span class="n">BatchElement</span><span class="p">.</span><span class="n">MinVertexIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+			<span class="n">BatchElement</span><span class="p">.</span><span class="n">MaxVertexIndex</span> <span class="o">=</span> <span class="n">VertexBuffer</span><span class="p">.</span><span class="n">Vertices</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+			<span class="n">Mesh</span><span class="p">.</span><span class="n">ReverseCulling</span> <span class="o">=</span> <span class="n">IsLocalToWorldDeterminantNegative</span><span class="p">();</span>
+			<span class="n">Mesh</span><span class="p">.</span><span class="n">Type</span> <span class="o">=</span> <span class="n">PT_TriangleList</span><span class="p">;</span>
+			<span class="n">Mesh</span><span class="p">.</span><span class="n">DepthPriorityGroup</span> <span class="o">=</span> <span class="n">SDPG_World</span><span class="p">;</span>
+			<span class="n">PDI</span><span class="o">-&gt;</span><span class="n">DrawMesh</span><span class="p">(</span><span class="n">Mesh</span><span class="p">);</span>
+		<span class="p">}</span>
+
+		<span class="k">virtual</span> <span class="n">FPrimitiveViewRelevance</span> <span class="n">GetViewRelevance</span><span class="p">(</span><span class="k">const</span> <span class="n">FSceneView</span><span class="o">*</span> <span class="n">View</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">FPrimitiveViewRelevance</span> <span class="n">Result</span><span class="p">;</span>
+			<span class="n">Result</span><span class="p">.</span><span class="n">bDrawRelevance</span> <span class="o">=</span> <span class="n">IsShown</span><span class="p">(</span><span class="n">View</span><span class="p">);</span>
+			<span class="n">Result</span><span class="p">.</span><span class="n">bShadowRelevance</span> <span class="o">=</span> <span class="n">IsShadowCast</span><span class="p">(</span><span class="n">View</span><span class="p">);</span>
+			<span class="n">Result</span><span class="p">.</span><span class="n">bDynamicRelevance</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+			<span class="n">MaterialRelevance</span><span class="p">.</span><span class="n">SetPrimitiveViewRelevance</span><span class="p">(</span><span class="n">Result</span><span class="p">);</span>
+			<span class="k">return</span> <span class="n">Result</span><span class="p">;</span>
+		<span class="p">}</span>
+
+		<span class="k">virtual</span> <span class="kt">bool</span> <span class="n">CanBeOccluded</span><span class="p">()</span> <span class="k">const</span> <span class="n">OVERRIDE</span>
+		<span class="p">{</span>
+			<span class="k">return</span> <span class="o">!</span><span class="n">MaterialRelevance</span><span class="p">.</span><span class="n">bDisableDepthTest</span><span class="p">;</span>
+		<span class="p">}</span>
+
+		<span class="k">virtual</span> <span class="n">uint32</span> <span class="n">GetMemoryFootprint</span><span class="p">(</span> <span class="kt">void</span> <span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span><span class="p">(</span> <span class="k">sizeof</span><span class="p">(</span> <span class="o">*</span><span class="k">this</span> <span class="p">)</span> <span class="o">+</span> <span class="n">GetAllocatedSize</span><span class="p">()</span> <span class="p">);</span> <span class="p">}</span>
+
+		<span class="n">uint32</span> <span class="n">GetAllocatedSize</span><span class="p">(</span> <span class="kt">void</span> <span class="p">)</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span><span class="p">(</span> <span class="n">FPrimitiveSceneProxy</span><span class="o">::</span><span class="n">GetAllocatedSize</span><span class="p">()</span> <span class="p">);</span> <span class="p">}</span>
+
+	<span class="k">private</span><span class="o">:</span>
+
+		<span class="n">UMaterialInterface</span><span class="o">*</span> <span class="n">Material</span><span class="p">;</span>
+		<span class="n">FGeneratedMeshVertexBuffer</span> <span class="n">VertexBuffer</span><span class="p">;</span>
+		<span class="n">FGeneratedMeshIndexBuffer</span> <span class="n">IndexBuffer</span><span class="p">;</span>
+		<span class="n">FGeneratedMeshVertexFactory</span> <span class="n">VertexFactory</span><span class="p">;</span>
+
+		<span class="n">FMaterialRelevance</span> <span class="n">MaterialRelevance</span><span class="p">;</span>
+	<span class="p">};</span>
+	
+	
+	<span class="c1">//Only create if have enough tris</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">GeneratedMeshTris</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="k">new</span> <span class="n">FGeneratedMeshSceneProxy</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">else</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="k">nullptr</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">int32</span> <span class="n">UGeneratedMeshComponent</span><span class="o">::</span><span class="n">GetNumMaterials</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="n">FBoxSphereBounds</span> <span class="n">UGeneratedMeshComponent</span><span class="o">::</span><span class="n">CalcBounds</span><span class="p">(</span><span class="k">const</span> <span class="n">FTransform</span> <span class="o">&amp;</span> <span class="n">LocalToWorld</span><span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="c1">// Minimum Vector: It's set to the first vertex's position initially (NULL == FVector::ZeroVector might be required and a known vertex vector has intrinsically valid values)</span>
+	<span class="n">FVector</span> <span class="n">vecMin</span> <span class="o">=</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">Vertex0</span><span class="p">;</span>
+
+	<span class="c1">// Maximum Vector: It's set to the first vertex's position initially (NULL == FVector::ZeroVector might be required and a known vertex vector has intrinsically valid values)</span>
+	<span class="n">FVector</span> <span class="n">vecMax</span> <span class="o">=</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">Vertex0</span><span class="p">;</span>
+
+	<span class="c1">// Get maximum and minimum X, Y and Z positions of vectors</span>
+	<span class="k">for</span> <span class="p">(</span><span class="n">int32</span> <span class="n">TriIdx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">TriIdx</span> <span class="o">&lt;</span> <span class="n">GeneratedMeshTris</span><span class="p">.</span><span class="n">Num</span><span class="p">();</span> <span class="n">TriIdx</span><span class="o">++</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">vecMin</span><span class="p">.</span><span class="n">X</span> <span class="o">=</span> <span class="p">(</span><span class="n">vecMin</span><span class="p">.</span><span class="n">X</span> <span class="o">&gt;</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex0</span><span class="p">.</span><span class="n">X</span><span class="p">)</span> <span class="o">?</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex0</span><span class="p">.</span><span class="nl">X</span> <span class="p">:</span> <span class="n">vecMin</span><span class="p">.</span><span class="n">X</span><span class="p">;</span>
+		<span class="n">vecMin</span><span class="p">.</span><span class="n">X</span> <span class="o">=</span> <span class="p">(</span><span class="n">vecMin</span><span class="p">.</span><span class="n">X</span> <span class="o">&gt;</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex1</span><span class="p">.</span><span class="n">X</span><span class="p">)</span> <span class="o">?</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex1</span><span class="p">.</span><span class="nl">X</span> <span class="p">:</span> <span class="n">vecMin</span><span class="p">.</span><span class="n">X</span><span class="p">;</span>
+		<span class="n">vecMin</span><span class="p">.</span><span class="n">X</span> <span class="o">=</span> <span class="p">(</span><span class="n">vecMin</span><span class="p">.</span><span class="n">X</span> <span class="o">&gt;</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex2</span><span class="p">.</span><span class="n">X</span><span class="p">)</span> <span class="o">?</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex2</span><span class="p">.</span><span class="nl">X</span> <span class="p">:</span> <span class="n">vecMin</span><span class="p">.</span><span class="n">X</span><span class="p">;</span>
+
+		<span class="n">vecMin</span><span class="p">.</span><span class="n">Y</span> <span class="o">=</span> <span class="p">(</span><span class="n">vecMin</span><span class="p">.</span><span class="n">Y</span> <span class="o">&gt;</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex0</span><span class="p">.</span><span class="n">Y</span><span class="p">)</span> <span class="o">?</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex0</span><span class="p">.</span><span class="nl">Y</span> <span class="p">:</span> <span class="n">vecMin</span><span class="p">.</span><span class="n">Y</span><span class="p">;</span>
+		<span class="n">vecMin</span><span class="p">.</span><span class="n">Y</span> <span class="o">=</span> <span class="p">(</span><span class="n">vecMin</span><span class="p">.</span><span class="n">Y</span> <span class="o">&gt;</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex1</span><span class="p">.</span><span class="n">Y</span><span class="p">)</span> <span class="o">?</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex1</span><span class="p">.</span><span class="nl">Y</span> <span class="p">:</span> <span class="n">vecMin</span><span class="p">.</span><span class="n">Y</span><span class="p">;</span>
+		<span class="n">vecMin</span><span class="p">.</span><span class="n">Y</span> <span class="o">=</span> <span class="p">(</span><span class="n">vecMin</span><span class="p">.</span><span class="n">Y</span> <span class="o">&gt;</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex2</span><span class="p">.</span><span class="n">Y</span><span class="p">)</span> <span class="o">?</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex2</span><span class="p">.</span><span class="nl">Y</span> <span class="p">:</span> <span class="n">vecMin</span><span class="p">.</span><span class="n">Y</span><span class="p">;</span>
+
+		<span class="n">vecMin</span><span class="p">.</span><span class="n">Z</span> <span class="o">=</span> <span class="p">(</span><span class="n">vecMin</span><span class="p">.</span><span class="n">Z</span> <span class="o">&gt;</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex0</span><span class="p">.</span><span class="n">Z</span><span class="p">)</span> <span class="o">?</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex0</span><span class="p">.</span><span class="nl">Z</span> <span class="p">:</span> <span class="n">vecMin</span><span class="p">.</span><span class="n">Z</span><span class="p">;</span>
+		<span class="n">vecMin</span><span class="p">.</span><span class="n">Z</span> <span class="o">=</span> <span class="p">(</span><span class="n">vecMin</span><span class="p">.</span><span class="n">Z</span> <span class="o">&gt;</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex1</span><span class="p">.</span><span class="n">Z</span><span class="p">)</span> <span class="o">?</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex1</span><span class="p">.</span><span class="nl">Z</span> <span class="p">:</span> <span class="n">vecMin</span><span class="p">.</span><span class="n">Z</span><span class="p">;</span>
+		<span class="n">vecMin</span><span class="p">.</span><span class="n">Z</span> <span class="o">=</span> <span class="p">(</span><span class="n">vecMin</span><span class="p">.</span><span class="n">Z</span> <span class="o">&gt;</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex2</span><span class="p">.</span><span class="n">Z</span><span class="p">)</span> <span class="o">?</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex2</span><span class="p">.</span><span class="nl">Z</span> <span class="p">:</span> <span class="n">vecMin</span><span class="p">.</span><span class="n">Z</span><span class="p">;</span>
+
+		<span class="n">vecMax</span><span class="p">.</span><span class="n">X</span> <span class="o">=</span> <span class="p">(</span><span class="n">vecMax</span><span class="p">.</span><span class="n">X</span> <span class="o">&lt;</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex0</span><span class="p">.</span><span class="n">X</span><span class="p">)</span> <span class="o">?</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex0</span><span class="p">.</span><span class="nl">X</span> <span class="p">:</span> <span class="n">vecMax</span><span class="p">.</span><span class="n">X</span><span class="p">;</span>
+		<span class="n">vecMax</span><span class="p">.</span><span class="n">X</span> <span class="o">=</span> <span class="p">(</span><span class="n">vecMax</span><span class="p">.</span><span class="n">X</span> <span class="o">&lt;</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex1</span><span class="p">.</span><span class="n">X</span><span class="p">)</span> <span class="o">?</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex1</span><span class="p">.</span><span class="nl">X</span> <span class="p">:</span> <span class="n">vecMax</span><span class="p">.</span><span class="n">X</span><span class="p">;</span>
+		<span class="n">vecMax</span><span class="p">.</span><span class="n">X</span> <span class="o">=</span> <span class="p">(</span><span class="n">vecMax</span><span class="p">.</span><span class="n">X</span> <span class="o">&lt;</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex2</span><span class="p">.</span><span class="n">X</span><span class="p">)</span> <span class="o">?</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex2</span><span class="p">.</span><span class="nl">X</span> <span class="p">:</span> <span class="n">vecMax</span><span class="p">.</span><span class="n">X</span><span class="p">;</span>
+
+		<span class="n">vecMax</span><span class="p">.</span><span class="n">Y</span> <span class="o">=</span> <span class="p">(</span><span class="n">vecMax</span><span class="p">.</span><span class="n">Y</span> <span class="o">&lt;</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex0</span><span class="p">.</span><span class="n">Y</span><span class="p">)</span> <span class="o">?</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex0</span><span class="p">.</span><span class="nl">Y</span> <span class="p">:</span> <span class="n">vecMax</span><span class="p">.</span><span class="n">Y</span><span class="p">;</span>
+		<span class="n">vecMax</span><span class="p">.</span><span class="n">Y</span> <span class="o">=</span> <span class="p">(</span><span class="n">vecMax</span><span class="p">.</span><span class="n">Y</span> <span class="o">&lt;</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex1</span><span class="p">.</span><span class="n">Y</span><span class="p">)</span> <span class="o">?</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex1</span><span class="p">.</span><span class="nl">Y</span> <span class="p">:</span> <span class="n">vecMax</span><span class="p">.</span><span class="n">Y</span><span class="p">;</span>
+		<span class="n">vecMax</span><span class="p">.</span><span class="n">Y</span> <span class="o">=</span> <span class="p">(</span><span class="n">vecMax</span><span class="p">.</span><span class="n">Y</span> <span class="o">&lt;</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex2</span><span class="p">.</span><span class="n">Y</span><span class="p">)</span> <span class="o">?</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex2</span><span class="p">.</span><span class="nl">Y</span> <span class="p">:</span> <span class="n">vecMax</span><span class="p">.</span><span class="n">Y</span><span class="p">;</span>
+
+		<span class="n">vecMax</span><span class="p">.</span><span class="n">Z</span> <span class="o">=</span> <span class="p">(</span><span class="n">vecMax</span><span class="p">.</span><span class="n">Z</span> <span class="o">&lt;</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex0</span><span class="p">.</span><span class="n">Z</span><span class="p">)</span> <span class="o">?</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex0</span><span class="p">.</span><span class="nl">Z</span> <span class="p">:</span> <span class="n">vecMax</span><span class="p">.</span><span class="n">Z</span><span class="p">;</span>
+		<span class="n">vecMax</span><span class="p">.</span><span class="n">Z</span> <span class="o">=</span> <span class="p">(</span><span class="n">vecMax</span><span class="p">.</span><span class="n">Z</span> <span class="o">&lt;</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex1</span><span class="p">.</span><span class="n">Z</span><span class="p">)</span> <span class="o">?</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex1</span><span class="p">.</span><span class="nl">Z</span> <span class="p">:</span> <span class="n">vecMax</span><span class="p">.</span><span class="n">Z</span><span class="p">;</span>
+		<span class="n">vecMax</span><span class="p">.</span><span class="n">Z</span> <span class="o">=</span> <span class="p">(</span><span class="n">vecMax</span><span class="p">.</span><span class="n">Z</span> <span class="o">&lt;</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex2</span><span class="p">.</span><span class="n">Z</span><span class="p">)</span> <span class="o">?</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">TriIdx</span><span class="p">].</span><span class="n">Vertex2</span><span class="p">.</span><span class="nl">Z</span> <span class="p">:</span> <span class="n">vecMax</span><span class="p">.</span><span class="n">Z</span><span class="p">;</span>
+	<span class="p">}</span>
+	
+	<span class="n">FVector</span> <span class="n">vecOrigin</span> <span class="o">=</span> <span class="p">((</span><span class="n">vecMax</span> <span class="o">-</span> <span class="n">vecMin</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">vecMin</span><span class="p">;</span>	<span class="cm">/* Origin = ((Max Vertex's Vector - Min Vertex's Vector) / 2 ) + Min Vertex's Vector */</span>
+	<span class="n">FVector</span> <span class="n">BoxPoint</span> <span class="o">=</span> <span class="n">vecMax</span> <span class="o">-</span> <span class="n">vecMin</span><span class="p">;</span>			<span class="cm">/* The difference between the "Maximum Vertex" and the "Minimum Vertex" is our actual Bounds Box */</span>
+	<span class="k">return</span> <span class="nf">FBoxSphereBounds</span><span class="p">(</span><span class="n">vecOrigin</span><span class="p">,</span> <span class="n">BoxPoint</span><span class="p">,</span> <span class="n">BoxPoint</span><span class="p">.</span><span class="n">Size</span><span class="p">()).</span><span class="n">TransformBy</span><span class="p">(</span><span class="n">LocalToWorld</span><span class="p">);</span>
+<span class="p">}</span>
+
+
+<span class="kt">bool</span> <span class="n">UGeneratedMeshComponent</span><span class="o">::</span><span class="n">GetPhysicsTriMeshData</span><span class="p">(</span><span class="k">struct</span> <span class="n">FTriMeshCollisionData</span><span class="o">*</span> <span class="n">CollisionData</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">InUseAllTriData</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">FTriIndices</span> <span class="n">Triangle</span><span class="p">;</span>
+
+	<span class="k">for</span><span class="p">(</span><span class="n">int32</span> <span class="n">i</span><span class="o">=</span><span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">GeneratedMeshTris</span><span class="p">.</span><span class="n">Num</span><span class="p">();</span><span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+		<span class="k">const</span> <span class="n">FGeneratedMeshTriangle</span><span class="o">&amp;</span> <span class="n">tri</span> <span class="o">=</span> <span class="n">GeneratedMeshTris</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+
+		<span class="n">Triangle</span><span class="p">.</span><span class="n">v0</span> <span class="o">=</span> <span class="n">CollisionData</span><span class="o">-&gt;</span><span class="n">Vertices</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">tri</span><span class="p">.</span><span class="n">Vertex0</span><span class="p">);</span>
+		<span class="n">Triangle</span><span class="p">.</span><span class="n">v1</span> <span class="o">=</span> <span class="n">CollisionData</span><span class="o">-&gt;</span><span class="n">Vertices</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">tri</span><span class="p">.</span><span class="n">Vertex1</span><span class="p">);</span>
+		<span class="n">Triangle</span><span class="p">.</span><span class="n">v2</span> <span class="o">=</span> <span class="n">CollisionData</span><span class="o">-&gt;</span><span class="n">Vertices</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">tri</span><span class="p">.</span><span class="n">Vertex2</span><span class="p">);</span>
+		
+		<span class="n">CollisionData</span><span class="o">-&gt;</span><span class="n">Indices</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">Triangle</span><span class="p">);</span>
+		<span class="n">CollisionData</span><span class="o">-&gt;</span><span class="n">MaterialIndices</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>
+	<span class="p">}</span>
+
+	<span class="n">CollisionData</span><span class="o">-&gt;</span><span class="n">bFlipNormals</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+	
+	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">UGeneratedMeshComponent</span><span class="o">::</span><span class="n">ContainsPhysicsTriMeshData</span><span class="p">(</span><span class="kt">bool</span> <span class="n">InUseAllTriData</span><span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="p">(</span><span class="n">GeneratedMeshTris</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">UGeneratedMeshComponent</span><span class="o">::</span><span class="n">UpdateBodySetup</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">ModelBodySetup</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>	<span class="p">{</span>
+		<span class="n">ModelBodySetup</span> <span class="o">=</span> <span class="n">ConstructObject</span><span class="o">&lt;</span><span class="n">UBodySetup</span><span class="o">&gt;</span><span class="p">(</span><span class="n">UBodySetup</span><span class="o">::</span><span class="n">StaticClass</span><span class="p">(),</span> <span class="k">this</span><span class="p">);</span>
+		<span class="n">ModelBodySetup</span><span class="o">-&gt;</span><span class="n">CollisionTraceFlag</span> <span class="o">=</span> <span class="n">CTF_UseComplexAsSimple</span><span class="p">;</span>
+		<span class="n">ModelBodySetup</span><span class="o">-&gt;</span><span class="n">bMeshCollideAll</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">UGeneratedMeshComponent</span><span class="o">::</span><span class="n">UpdateCollision</span><span class="p">()</span> <span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">bPhysicsStateCreated</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">DestroyPhysicsState</span><span class="p">();</span>
+		<span class="n">UpdateBodySetup</span><span class="p">();</span>
+		<span class="n">CreatePhysicsState</span><span class="p">();</span>
+
+                <span class="n">ModelBodySetup</span><span class="o">-&gt;</span><span class="n">InvalidatePhysicsData</span><span class="p">();</span> <span class="c1">//Will not work in Packaged build</span>
+                                                         <span class="c1">//Epic needs to add support for this</span>
+		<span class="n">ModelBodySetup</span><span class="o">-&gt;</span><span class="n">CreatePhysicsMeshes</span><span class="p">();</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">UBodySetup</span><span class="o">*</span> <span class="n">UGeneratedMeshComponent</span><span class="o">::</span><span class="n">GetBodySetup</span><span class="p">()</span> <span class="p">{</span>
+	<span class="n">UpdateBodySetup</span><span class="p">();</span>
+	<span class="k">return</span> <span class="n">ModelBodySetup</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Creating_a_Generated_Actor_Class">
+        Creating a Generated Actor Class
+       </span>
+      </h2>
+      <p>
+       Next you need to create an Actor-derived class so you can attach the UGeneratedMeshComponent to it and spawn it. Also, to make it accessible to blueprints. Note that this example class should have a TArray&lt;FVector&gt;&amp; input parameter to describe the polyline we are going to rotate, but for our purposes the polyline has been hardcoded.
+      </p>
+      <p>
+       Create a new class called GameGeneratedActor (i.e. AGameGeneratedActor). There is also a Lathe function that I am including which is very simple, just for the purposes of this exercise. Here's the source for it:
+      </p>
+      <h3>
+       <span class="mw-headline" id="GameGeneratedActor.h">
+        GameGeneratedActor.h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2014 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"GameFramework/Actor.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"GeneratedMeshComponent.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"GameGeneratedActor.generated.h"</span><span class="cp"></span>
+
+<span class="cm">/**</span>
+<span class="cm"> * </span>
+<span class="cm"> */</span>
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">AGameGeneratedActor</span> <span class="o">:</span> <span class="k">public</span> <span class="n">AActor</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+
+	<span class="kt">void</span> <span class="n">Lathe</span><span class="p">(</span><span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FVector</span><span class="o">&gt;&amp;</span> <span class="n">points</span><span class="p">,</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FGeneratedMeshTriangle</span><span class="o">&gt;&amp;</span> <span class="n">triangles</span><span class="p">,</span> <span class="kt">int</span> <span class="n">segments</span> <span class="o">=</span> <span class="mi">64</span><span class="p">);</span>
+	
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="GameGeneratedActor.cpp">
+        GameGeneratedActor.cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2014 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#include</span> <span class="cpf">"MyProject5.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"GameGeneratedActor.h"</span><span class="cp"></span>
+
+<span class="n">AGameGeneratedActor</span><span class="o">::</span><span class="n">AGameGeneratedActor</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="p">{</span>
+	
+	<span class="n">UGeneratedMeshComponent</span><span class="o">*</span> <span class="n">mesh</span> <span class="o">=</span> <span class="n">PCIP</span><span class="p">.</span><span class="n">CreateDefaultSubobject</span><span class="o">&lt;</span><span class="n">UGeneratedMeshComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"GeneratedMesh"</span><span class="p">));</span>
+
+	<span class="c1">//Contains the points describing the polyline we are going to rotate</span>
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FVector</span><span class="o">&gt;</span> <span class="n">points</span><span class="p">;</span>
+
+	<span class="n">points</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">FVector</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+	<span class="n">points</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">FVector</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+	<span class="n">points</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">FVector</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+	<span class="n">points</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">FVector</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+	<span class="n">points</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">FVector</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+	<span class="n">points</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">FVector</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+	<span class="n">points</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">FVector</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+	<span class="n">points</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">FVector</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+	<span class="n">points</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">FVector</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+	<span class="n">points</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">FVector</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FGeneratedMeshTriangle</span><span class="o">&gt;</span> <span class="n">triangles</span><span class="p">;</span>
+	<span class="n">Lathe</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">triangles</span><span class="p">,</span><span class="mi">128</span><span class="p">);</span>
+	<span class="n">mesh</span><span class="o">-&gt;</span><span class="n">SetGeneratedMeshTriangles</span><span class="p">(</span><span class="n">triangles</span><span class="p">);</span>
+	
+	<span class="n">RootComponent</span> <span class="o">=</span> <span class="n">mesh</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AGameGeneratedActor</span><span class="o">::</span><span class="n">Lathe</span><span class="p">(</span><span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FVector</span><span class="o">&gt;&amp;</span> <span class="n">points</span><span class="p">,</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FGeneratedMeshTriangle</span><span class="o">&gt;&amp;</span> <span class="n">triangles</span><span class="p">,</span> <span class="kt">int</span> <span class="n">segments</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogClass</span><span class="p">,</span> <span class="n">Log</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"AGameGeneratedActor::Lathe POINTS %d"</span><span class="p">),</span> <span class="n">points</span><span class="p">.</span><span class="n">Num</span><span class="p">());</span>
+
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FVector</span><span class="o">&gt;</span> <span class="n">verts</span><span class="p">;</span>
+
+	<span class="c1">// precompute some trig</span>
+	<span class="kt">float</span> <span class="n">angle</span> <span class="o">=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">DegreesToRadians</span><span class="p">(</span><span class="mf">360.0f</span> <span class="o">/</span> <span class="n">segments</span><span class="p">);</span>
+	<span class="kt">float</span> <span class="n">sinA</span> <span class="o">=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Sin</span><span class="p">(</span><span class="n">angle</span><span class="p">);</span>
+	<span class="kt">float</span> <span class="n">cosA</span> <span class="o">=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Cos</span><span class="p">(</span><span class="n">angle</span><span class="p">);</span>
+
+	<span class="cm">/*</span>
+<span class="cm">	This implementation is rotation around the X Axis, other formulas below</span>
+<span class="cm">	</span>
+<span class="cm">	Z Axis Rotation</span>
+<span class="cm">	x' = x*cos q - y*sin q</span>
+<span class="cm">	y' = x*sin q + y*cos q</span>
+<span class="cm">	z' = z</span>
+
+<span class="cm">	X Axis Rotation</span>
+<span class="cm">	y' = y*cos q - z*sin q</span>
+<span class="cm">	z' = y*sin q + z*cos q</span>
+<span class="cm">	x' = x</span>
+
+<span class="cm">	Y Axis Rotation</span>
+<span class="cm">	z' = z*cos q - x*sin q</span>
+<span class="cm">	x' = z*sin q + x*cos q</span>
+<span class="cm">	y' = y</span>
+<span class="cm">	*/</span>
+
+	<span class="c1">//Working point array, in which we keep the rotated line we draw with</span>
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FVector</span><span class="o">&gt;</span> <span class="n">wp</span><span class="p">;</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">points</span><span class="p">.</span><span class="n">Num</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">wp</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">points</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+	<span class="p">}</span>
+
+	<span class="c1">// Add a first and last point on the axis to complete the triangles</span>
+	<span class="n">FVector</span> <span class="n">p0</span><span class="p">(</span><span class="n">wp</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">X</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+	<span class="n">FVector</span> <span class="nf">pLast</span><span class="p">(</span><span class="n">wp</span><span class="p">[</span><span class="n">wp</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">].</span><span class="n">X</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+
+	<span class="n">FGeneratedMeshTriangle</span> <span class="n">tri</span><span class="p">;</span>
+	<span class="c1">//for each segment draw the triangles clockwise for normals pointing out or counterclockwise for the opposite (this here does CW)</span>
+	<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">segment</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">segment</span><span class="o">&lt;</span><span class="n">segments</span><span class="p">;</span> <span class="n">segment</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+
+		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">points</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+			<span class="n">FVector</span> <span class="n">p1</span> <span class="o">=</span> <span class="n">wp</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+			<span class="n">FVector</span> <span class="n">p2</span> <span class="o">=</span> <span class="n">wp</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
+			<span class="n">FVector</span> <span class="nf">p1r</span><span class="p">(</span><span class="n">p1</span><span class="p">.</span><span class="n">X</span><span class="p">,</span> <span class="n">p1</span><span class="p">.</span><span class="n">Y</span><span class="o">*</span><span class="n">cosA</span> <span class="o">-</span> <span class="n">p1</span><span class="p">.</span><span class="n">Z</span><span class="o">*</span><span class="n">sinA</span><span class="p">,</span> <span class="n">p1</span><span class="p">.</span><span class="n">Y</span><span class="o">*</span><span class="n">sinA</span> <span class="o">+</span> <span class="n">p1</span><span class="p">.</span><span class="n">Z</span><span class="o">*</span><span class="n">cosA</span><span class="p">);</span>
+			<span class="n">FVector</span> <span class="nf">p2r</span><span class="p">(</span><span class="n">p2</span><span class="p">.</span><span class="n">X</span><span class="p">,</span> <span class="n">p2</span><span class="p">.</span><span class="n">Y</span><span class="o">*</span><span class="n">cosA</span> <span class="o">-</span> <span class="n">p2</span><span class="p">.</span><span class="n">Z</span><span class="o">*</span><span class="n">sinA</span><span class="p">,</span> <span class="n">p2</span><span class="p">.</span><span class="n">Y</span><span class="o">*</span><span class="n">sinA</span> <span class="o">+</span> <span class="n">p2</span><span class="p">.</span><span class="n">Z</span><span class="o">*</span><span class="n">cosA</span><span class="p">);</span>
+
+			<span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+				<span class="n">tri</span><span class="p">.</span><span class="n">Vertex0</span> <span class="o">=</span> <span class="n">p1</span><span class="p">;</span>
+				<span class="n">tri</span><span class="p">.</span><span class="n">Vertex1</span> <span class="o">=</span> <span class="n">p0</span><span class="p">;</span>
+				<span class="n">tri</span><span class="p">.</span><span class="n">Vertex2</span> <span class="o">=</span> <span class="n">p1r</span><span class="p">;</span>
+				<span class="n">triangles</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">tri</span><span class="p">);</span>
+			<span class="p">}</span>
+
+			<span class="n">tri</span><span class="p">.</span><span class="n">Vertex0</span> <span class="o">=</span> <span class="n">p1</span><span class="p">;</span>
+			<span class="n">tri</span><span class="p">.</span><span class="n">Vertex1</span> <span class="o">=</span> <span class="n">p1r</span><span class="p">;</span>
+			<span class="n">tri</span><span class="p">.</span><span class="n">Vertex2</span> <span class="o">=</span> <span class="n">p2</span><span class="p">;</span>
+			<span class="n">triangles</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">tri</span><span class="p">);</span>
+
+			<span class="n">tri</span><span class="p">.</span><span class="n">Vertex0</span> <span class="o">=</span> <span class="n">p2</span><span class="p">;</span>
+			<span class="n">tri</span><span class="p">.</span><span class="n">Vertex1</span> <span class="o">=</span> <span class="n">p1r</span><span class="p">;</span>
+			<span class="n">tri</span><span class="p">.</span><span class="n">Vertex2</span> <span class="o">=</span> <span class="n">p2r</span><span class="p">;</span>
+			<span class="n">triangles</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">tri</span><span class="p">);</span>
+
+			<span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">points</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+				<span class="n">tri</span><span class="p">.</span><span class="n">Vertex0</span> <span class="o">=</span> <span class="n">p2</span><span class="p">;</span>
+				<span class="n">tri</span><span class="p">.</span><span class="n">Vertex1</span> <span class="o">=</span> <span class="n">p2r</span><span class="p">;</span>
+				<span class="n">tri</span><span class="p">.</span><span class="n">Vertex2</span> <span class="o">=</span> <span class="n">pLast</span><span class="p">;</span>
+				<span class="n">triangles</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">tri</span><span class="p">);</span>
+				<span class="n">wp</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">p2r</span><span class="p">;</span>
+			<span class="p">}</span>
+
+			<span class="n">wp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">p1r</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Spawning_the_Actor">
+        Spawning the Actor
+       </span>
+      </h2>
+      <p>
+       Once the project has been compiled, the new classes are accessible by Blueprints. So you will need to hook up a SpawnActor in some blueprint and set its class to GameGeneratedActor(I used a PlayerController, and its hooked to a HUD event), and it should look like this (note: I use the transform before and after as it seems to not consider scale on the spawn. In this example I suggest a scale of 10, otherwise the object will be too small)
+      </p>
+      <p>
+       <img alt="SpawnActorBlueprintExample.png" class="" height="410" src="../assets/procedural-mesh-generation/0.png" width="1071"/>
+      </p>
+      <p>
+       Once you run the game and trigger the spawn, it should look like this:
+      </p>
+      <p>
+       <img alt="GeneratedMeshExample.png" class="" height="518" src="../assets/procedural-mesh-generation/1.png" width="655"/>
+      </p>
+      <p>
+       For more info, see this thread:
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?1552-Generate-Procedural-Mesh" rel="nofollow">
+        Generate Procedural Mesh
+       </a>
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Connecting_standard_UCustomMeshComponent">
+        Connecting standard UCustomMeshComponent
+       </span>
+      </h2>
+      <p>
+       UPDATE: Since commit
+       <a class="external text" href="https://github.com/EpicGames/UnrealEngine/commit/7c7b6146b8b7f41ca5397fedb873a39e989c3c2f" rel="nofollow">
+        7c7b614
+       </a>
+       (Nov. 4th, 2014) the API export macro has been implemented in the native engine code.
+      </p>
+      <p>
+       If you want to avoid code duplication and standard functionality of UCustomMeshComponent is more than enough for you, you can try to connect CustomMeshPlugin. To avoid link error you should add import/export macro directly to the class header and recompile the engine from source:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2014 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#pragma once</span>
+
+<span class="p">...</span>
+
+<span class="cm">/** Component that allows you to specify custom triangle mesh geometry */</span>
+<span class="n">UCLASS</span><span class="p">(</span><span class="n">hidecategories</span><span class="o">=</span><span class="p">(</span><span class="n">Object</span><span class="p">,</span><span class="n">LOD</span><span class="p">,</span> <span class="n">Physics</span><span class="p">,</span> <span class="n">Collision</span><span class="p">),</span> <span class="n">editinlinenew</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="p">(</span><span class="n">BlueprintSpawnableComponent</span><span class="p">),</span> <span class="n">ClassGroup</span><span class="o">=</span><span class="n">Rendering</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">CUSTOMMESHCOMPONENT_API</span> <span class="nl">UCustomMeshComponent</span> <span class="p">:</span> <span class="k">public</span> <span class="n">UMeshComponent</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Blueprint_implementation">
+        Blueprint implementation
+       </span>
+      </h2>
+      <p>
+       If you want to be able to generate a mesh from blueprints you can do this:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"GameFramework/Actor.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"ProceduralMeshComponent.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"CustomMeshBridge.generated.h"</span><span class="cp"></span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> *  code by Frederic Artus Nieto</span>
+<span class="cm"> */</span>
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">SSS2_API</span> <span class="nl">ACustomMeshBridge</span> <span class="p">:</span> <span class="k">public</span> <span class="n">AActor</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+<span class="k">public</span><span class="o">:</span>
+
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintPure</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">FriendlyName</span> <span class="o">=</span> <span class="s">"Make Triangle"</span><span class="p">,</span> <span class="n">Keywords</span> <span class="o">=</span> <span class="s">"New Triangle"</span><span class="p">),</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">ProceduralMesh</span><span class="p">)</span>
+		<span class="k">static</span> <span class="n">FGeneratedMeshTriangle</span> <span class="n">CreateTriangle</span><span class="p">(</span><span class="n">FVector</span> <span class="n">vertex0</span><span class="p">,</span> <span class="n">FVector</span> <span class="n">vertex1</span><span class="p">,</span> <span class="n">FVector</span> <span class="n">vertex2</span><span class="p">);</span>
+
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">FriendlyName</span> <span class="o">=</span> <span class="s">"Set Mesh Material"</span><span class="p">,</span> <span class="n">Keywords</span> <span class="o">=</span> <span class="s">"Set Mesh Material"</span><span class="p">),</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">ProceduralMesh</span><span class="p">)</span>
+		<span class="k">static</span> <span class="kt">void</span> <span class="n">SetMeshMaterial</span><span class="p">(</span><span class="n">UProceduralMeshComponent</span><span class="o">*</span> <span class="n">component</span><span class="p">,</span> <span class="n">UMaterialInterface</span><span class="o">*</span> <span class="n">Material</span><span class="p">);</span>
+
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">FriendlyName</span> <span class="o">=</span> <span class="s">"Set Mesh Triangles"</span><span class="p">,</span> <span class="n">Keywords</span> <span class="o">=</span> <span class="s">"Set Mesh Triangles"</span><span class="p">),</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">ProceduralMesh</span><span class="p">)</span>
+		<span class="k">static</span> <span class="kt">void</span> <span class="n">SetMeshTriangles</span><span class="p">(</span><span class="n">UProceduralMeshComponent</span><span class="o">*</span> <span class="n">component</span><span class="p">,</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FGeneratedMeshTriangle</span><span class="o">&gt;</span> <span class="n">Triangles</span><span class="p">);</span>
+
+<span class="p">};</span>
+</pre>
+      </div>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// code by Frederic Artus Nieto</span>
+<span class="cp">#include</span> <span class="cpf">"SSS2.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"DynamicMeshBuilder.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"CustomMeshBridge.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"ConstructorHelpers.h"</span><span class="cp"></span>
+
+<span class="n">ACustomMeshBridge</span><span class="o">::</span><span class="n">ACustomMeshBridge</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="p">}</span>
+
+<span class="n">FGeneratedMeshTriangle</span> <span class="n">ACustomMeshBridge</span><span class="o">::</span><span class="n">CreateTriangle</span><span class="p">(</span><span class="n">FVector</span> <span class="n">vertex0</span><span class="p">,</span> <span class="n">FVector</span> <span class="n">vertex1</span><span class="p">,</span> <span class="n">FVector</span> <span class="n">vertex2</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">FGeneratedMeshTriangle</span> <span class="n">tri</span><span class="p">;</span>
+	<span class="n">tri</span><span class="p">.</span><span class="n">Vertex0</span> <span class="o">=</span> <span class="n">vertex0</span><span class="p">;</span>
+	<span class="n">tri</span><span class="p">.</span><span class="n">Vertex1</span> <span class="o">=</span> <span class="n">vertex1</span><span class="p">;</span>
+	<span class="n">tri</span><span class="p">.</span><span class="n">Vertex2</span> <span class="o">=</span> <span class="n">vertex2</span><span class="p">;</span>
+	<span class="k">return</span> <span class="n">tri</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">ACustomMeshBridge</span><span class="o">::</span><span class="n">SetMeshMaterial</span><span class="p">(</span><span class="n">GameGeneratedActor</span> <span class="o">*</span> <span class="n">component</span><span class="p">,</span> <span class="n">UMaterialInterface</span><span class="o">*</span> <span class="n">Material</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">component</span><span class="o">-&gt;</span><span class="n">SetMaterial</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">Material</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">ACustomMeshBridge</span><span class="o">::</span><span class="n">SetMeshTriangles</span><span class="p">(</span><span class="n">GameGeneratedActor</span> <span class="o">*</span> <span class="n">component</span><span class="p">,</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FGeneratedMeshTriangle</span><span class="o">&gt;</span> <span class="n">Triangles</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">component</span><span class="o">-&gt;</span><span class="n">SetProceduralMeshTriangles</span><span class="p">(</span><span class="n">Triangles</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Once you made this class, you will see some new nodes in the ProceduralMesh tab when you select a new node in the blueprint editor (you have to untick "Context Sensitive").
+Note that you do need to have a GameGeneratedActor component in your actor to do that.
+      </p>
+      <p>
+       You then have to use the SetMeshTriangles node to apply the new triangles to the GameGeneratedActor.
+You can do it during runtime to make animated meshes (I had some laggy experience when updating too many vertices). 
+You can apply a material to the mesh with the SetMeshMaterial node if you want. Note that there are no UVs.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Changelog">
+        Changelog
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Update_1">
+        Update 1
+       </span>
+      </h3>
+      <p>
+       The UGeneratedMeshComponent class has been updated to include collisions. However, this is currently only available within the Editor, as it is related to cooking physics at runtime (which is not supported outside the Editor at this time). Epic will include the capability for version 4.2 or 4.3. See
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?2695-Implement-Runtime-Collision-Detection-for-Procedural-Generated-Meshes" rel="nofollow">
+        this thread
+       </a>
+       and
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?2078-How-to-create-collision-information-for-procedural-geometry" rel="nofollow">
+        this thread
+       </a>
+       . Thanks to all who participated in those threads for pointers, credit goes to them. Remember to set SetActorCollisionsEnabled(true) in your Actor!
+     (
+     ) 18:04, 11 April 2014 (UTC)
+      </p>
+      <h3>
+       <span class="mw-headline" id="Update_2">
+        Update 2
+       </span>
+      </h3>
+      <p>
+       Added vertex color fix from Ryvar as per
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?1552-Generate-Procedural-Mesh&amp;p=50833&amp;viewfull=1#post50833" rel="nofollow">
+        this post
+       </a>
+       .
+      </p>
+      <h3>
+       <span class="mw-headline" id="Update_3">
+        Update 3
+       </span>
+      </h3>
+      <p>
+       RHICreateXXXBuffer function signature changed for 4.3.  Put in macro code to make code work both for 4.2 and 4.3
+      </p>
+      <h3>
+       <span class="mw-headline" id="Update_4">
+        Update 4
+       </span>
+      </h3>
+      <p>
+       Code updated for UE4.5 : #include Version.h for ENGINE_MINOR_VERSION macro, GetMaterialRelevance(::SM5) , CreatePrimitiveUniformBufferImmediate() with UseEditorDepthTest() and comments on mesh collision in cooked game.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Update_5">
+        Update 5
+       </span>
+      </h3>
+      <p>
+       Add information about solving link problem.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Update_6">
+        Update 6
+       </span>
+      </h3>
+      <p>
+       Added an example of blueprint implementation.
+If you made a little build please post a screen of the bluprint if none is there.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Update_7">
+        Update 7
+       </span>
+      </h3>
+      <p>
+       It is posible to compile without copying the CustomMeshComponent files by including the CustomMeshPlugin as a private module in the &lt;Project&gt;.Build.cs file (original solution found at
+       <a class="external free" href="https://answers.unrealengine.com/questions/13691/using-a-plugin-in-c-code.html" rel="nofollow">
+        https://answers.unrealengine.com/questions/13691/using-a-plugin-in-c-code.html
+       </a>
+       ).  This is working on version 4.10, make sure the plugin is enabled in the editor Edit-&gt;Plugins and by adding it as a private dependency it's no longer really a plugin as it's not optional!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span> <span class="n">PrivateDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"CustomMeshComponent"</span> <span class="p">});</span>
+ <span class="n">PrivateIncludePathModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"CustomMeshComponent"</span> <span class="p">});</span>
+</pre>
+      </div>
+      <p>
+       And then the headers can be included with
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span> <span class="cp">#include</span> <span class="cpf">"CustomMeshComponent.h"</span><span class="cp"></span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Update_8">
+        Update 8
+       </span>
+      </h3>
+      <p>
+       GetTypeData not available anymore. Use GetData
+      </p>
+      <h3>
+       <span class="mw-headline" id="Update_9">
+        Update 9
+       </span>
+      </h3>
+      <p>
+       DrawDynamicElements not available anymore. Use GetDynamicMeshElements
+      </p>
+      <h2>
+       <span class="mw-headline" id="External_link">
+        External link
+       </span>
+      </h2>
+      <ul>
+       <li>
+        <a class="external text" href="https://github.com/SRombauts/UE4ProceduralMesh/" rel="nofollow">
+         Get this demo code in a working UE 4.7 project on GitHub
+        </a>
+        .
+       </li>
+      </ul>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

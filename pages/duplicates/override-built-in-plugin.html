@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Override Built In Plugin - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Override Built In Plugin
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <h1>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h1>
+      <p>
+       The goal of this tutorial is to explain how to override the functionality of a
+       <i>
+        Built In
+       </i>
+       plugin, such as SimpleHMD, without changing the original plugin source. This is useful for instance, when you want to change an existing plugin behavior but the changes should only be applied to a specific project.
+      </p>
+      <p>
+       We will override the SimpleHMD plugin as an example.
+      </p>
+      <p>
+       The tutorial was only tested on Windows, although the general logic should be similar in OSX.
+      </p>
+      <p>
+       We assume the reader is familiar with plugins in UE4 (
+       <a class="external free" href="https://docs.unrealengine.com/latest/INT/Programming/Plugins/index.html" rel="nofollow">
+        https://docs.unrealengine.com/latest/INT/Programming/Plugins/index.html
+       </a>
+       ).
+      </p>
+      <h1>
+       <span class="mw-headline" id="Instructions">
+        Instructions
+       </span>
+      </h1>
+      <ul>
+       <li>
+        Create a
+        <i>
+         Plugins
+        </i>
+        folder inside your project directory if it does not exist already.
+       </li>
+       <li>
+        Copy the folder of the plugin you want to override from the Unreal Engine installation folder to your project's
+        <i>
+         Plugins
+        </i>
+        folder (e.g. C:\Program Files\Epic Games\4.9\Engine\Plugins\Experimental\SimpleHMD -&gt; C:\Users\pgomes\Documents\Unreal Projects\plugin_override\Plugins\SimpleHMD). All further modifications will be in your project's local
+        <i>
+         Plugins
+        </i>
+        folder.
+       </li>
+       <li>
+        Rename the plugin folder (...\Plugins\SimpleHMD -&gt; ...\Plugins\SimpleHMDX).
+       </li>
+       <li>
+        Change the uplugin file name to match the new plugin name (...\Plugins\SimpleHMD\SimpleHMD.uplugin -&gt; ...\Plugins\SimpleHMDX.uplugin).
+       </li>
+       <li>
+        Edit the
+        <i>
+         *.uplugin
+        </i>
+        file with a text editor. Modify the
+        <i>
+         FriendlyName
+        </i>
+        and the
+        <i>
+         Module&gt;Name
+        </i>
+        property ("SimpleHMD" -&gt; "SimpleHMDX").
+       </li>
+       <li>
+        Rename the *.Build.cs file (SimpleHMD.Build.cs -&gt; SimpleHMDX.Build.cs).
+       </li>
+       <li>
+        In the public header (...\Public\ISimpleHMDPlugin.h) change the FModuleManager related function calls arguments to match your new plugin name. In our SimpleHMD example:
+       </li>
+      </ul>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FModuleManager</span><span class="o">::</span><span class="n">LoadModuleChecked</span><span class="o">&lt;</span> <span class="n">ISimpleHMDPlugin</span> <span class="o">&gt;</span><span class="p">(</span> <span class="s">"SimpleHMD"</span> <span class="p">);</span>
+<span class="c1">//-&gt;</span>
+<span class="n">FModuleManager</span><span class="o">::</span><span class="n">LoadModuleChecked</span><span class="o">&lt;</span> <span class="n">ISimpleHMDPlugin</span> <span class="o">&gt;</span><span class="p">(</span> <span class="s">"SimpleHMDX"</span> <span class="p">);</span>
+<span class="c1">//</span>
+<span class="c1">// and</span>
+<span class="c1">//</span>
+<span class="k">return</span> <span class="n">FModuleManager</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">IsModuleLoaded</span><span class="p">(</span> <span class="s">"SimpleHMD"</span> <span class="p">);</span>
+<span class="c1">//-&gt;</span>
+<span class="k">return</span> <span class="n">FModuleManager</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">IsModuleLoaded</span><span class="p">(</span> <span class="s">"SimpleHMDX"</span> <span class="p">);</span>
+</pre>
+      </div>
+      <ul>
+       <li>
+        Edit the *.Build.cs and modify the PrivateIncludePaths engine adds to be relative to the engine folder and not the local directory. In our example:
+       </li>
+      </ul>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// add to the top</span>
+<span class="k">using</span> <span class="n">System</span><span class="p">.</span><span class="n">IO</span><span class="p">;</span>
+<span class="c1">//</span>
+<span class="c1">// and</span>
+<span class="c1">//</span>
+<span class="s">"../../../../Source/Runtime/Renderer/Private"</span><span class="p">,</span>
+<span class="c1">//-&gt;</span>
+<span class="n">Path</span><span class="p">.</span><span class="n">GetDirectoryName</span><span class="p">(</span> <span class="n">RulesCompiler</span><span class="p">.</span><span class="n">GetModuleFilename</span><span class="p">(</span><span class="s">"Renderer"</span><span class="p">))</span><span class="o">+</span><span class="s">"/Private"</span><span class="p">,</span>
+</pre>
+      </div>
+      <ul>
+       <li>
+        Still in *.Build.cs, change the name of the class, and constructor, to match your new plugin name (SimpleHMD -&gt; SimpleHMDX).
+       </li>
+       <li>
+        Change the macro calls to IMPLEMENT_MODULE to reference your new plugin name. In our example edit ..\Private\SimpleHMD.cpp
+       </li>
+      </ul>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">IMPLEMENT_MODULE</span><span class="p">(</span> <span class="n">FSimpleHMDPlugin</span><span class="p">,</span> <span class="n">SimpleHMD</span> <span class="p">)</span>
+<span class="c1">//-&gt;</span>
+<span class="n">IMPLEMENT_MODULE</span><span class="p">(</span> <span class="n">FSimpleHMDPlugin</span><span class="p">,</span> <span class="n">SimpleHMDX</span> <span class="p">)</span>
+</pre>
+      </div>
+      <ul>
+       <li>
+        Open your unreal project. You will be prompted to build the new added plugin.
+       </li>
+       <li>
+        Navigate to Window&gt;Plugins. There should be a new plugin available. Tick the checkbox for your new plugin and make sure that the old plugin is unticked.
+       </li>
+      </ul>
+      <p>
+       You should now be ready to modify the plugin so that the changes you make only affect your local project.
+      </p>
+      <h1>
+       <span class="mw-headline" id="FAQ">
+        FAQ
+       </span>
+      </h1>
+      <p>
+       Q: Why don't you rename more elements inside the plugin in your instructions?
+      </p>
+      <p>
+       R: While it's certainly possible to rename more things in the plugin, namely class names, further changes need to be made consistently. What I propose are a small set of consistent modifications that allow the Unreal editor to recognize the plugin as being different.
+      </p>
+      <p>
+       <br/>
+       Q: Whenever I tick the new plugin, the old plugin also gets ticked. What is happening?
+      </p>
+      <p>
+       R: Your probably forgot to do one of the name changes I suggest above. Most likely the module name in the *.uplugin file. Remember to change both the friendly name and the module name.
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

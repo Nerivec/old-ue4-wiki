@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Get Available Screen Resolutions in Blueprints - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Get Available Screen Resolutions in Blueprints
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Code">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Code
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Header_File">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Header File
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Cpp_File">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             Cpp File
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h1>
+      <p>
+       The following Blueprint Node is based on the function provided by Rama, see
+       .
+The provided function has the limitation that you cannot use it in your own Blueprint Library. The reason is because the
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/API/Runtime/RHI/FScreenResolutionRHI/index.html" rel="nofollow">
+        FScreenResolutionRHI
+       </a>
+       Type is not a BlueprintType. As I required such a function for my options UMG widget I wrote it, tested it and decided to share it.
+      </p>
+      <h1>
+       <span class="mw-headline" id="Code">
+        Code
+       </span>
+      </h1>
+      <p>
+       The following code is meant to be included in your own Blueprint Library. If you do not know how to make a Blueprint Library I recommend you read
+      </p>
+      <h2>
+       <span class="mw-headline" id="Header_File">
+        Header File
+       </span>
+      </h2>
+      <p>
+       First you declare the new FScreenResolutionRHI type. As mentioned in the comments it is not an exact duplicate of FScreenResolutionRHI. The reason is that when I used uint32 I was not able to use break or make nodes. My guess is that the Blueprint's Integer Type is defined as int32 in c++ and thus is not compatible with uint32. If someone can confirm this feel free to do.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/**</span>
+<span class="cm"> * Screen Resolution</span>
+<span class="cm"> * @remark Engine type is not meant for blueprints so we replicate the type.</span>
+<span class="cm"> * @remark The Engine type uses uint32 but we need to use int32. Otherwise it won't be possible to break/make this type.</span>
+<span class="cm"> */</span>
+<span class="n">USTRUCT</span><span class="p">(</span><span class="n">BlueprintType</span><span class="p">)</span>
+<span class="k">struct</span> <span class="n">FScreenResolutionRHIBP</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_USTRUCT_BODY</span><span class="p">()</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">ScreenResolution</span><span class="p">)</span>
+	<span class="n">int32</span> <span class="n">Width</span><span class="p">;</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">ScreenResolution</span><span class="p">)</span>
+	<span class="n">int32</span> <span class="n">Height</span><span class="p">;</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">ScreenResolution</span><span class="p">)</span>
+	<span class="n">int32</span> <span class="n">RefreshRate</span><span class="p">;</span>
+
+	<span class="n">FScreenResolutionRHIBP</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="n">Width</span> <span class="o">=</span> <span class="n">Height</span> <span class="o">=</span> <span class="n">RefreshRate</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Retrieve a sorted list of all screen resolutions supported by the player's display adapter.</span>
+<span class="cm"> *</span>
+<span class="cm"> * @returns the array of all supported screen resolutions.</span>
+<span class="cm"> */</span>
+<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintPure</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Utility</span><span class="p">)</span>
+<span class="k">static</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="k">struct</span> <span class="n">FScreenResolutionRHIBP</span><span class="o">&gt;</span> <span class="n">GetDisplayAdapterScreenResolutions</span><span class="p">();</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Cpp_File">
+        Cpp File
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"RHI.h"</span><span class="cp"></span>
+
+<span class="p">...</span>
+
+<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FScreenResolutionRHIBP</span><span class="o">&gt;</span> <span class="n">YourBlueprintLibrary</span><span class="o">::</span><span class="n">GetDisplayAdapterScreenResolutions</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FScreenResolutionRHIBP</span><span class="o">&gt;</span> <span class="n">ResolutionsToReturn</span><span class="p">;</span>
+	<span class="n">FScreenResolutionArray</span> <span class="n">Resolutions</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">RHIGetAvailableResolutions</span><span class="p">(</span><span class="n">Resolutions</span><span class="p">,</span> <span class="nb">false</span><span class="p">))</span>
+	<span class="p">{</span>
+		<span class="c1">// Preallocate just enough memory to store all elements</span>
+		<span class="n">ResolutionsToReturn</span><span class="p">.</span><span class="n">Reserve</span><span class="p">(</span><span class="n">Resolutions</span><span class="p">.</span><span class="n">Num</span><span class="p">());</span>
+
+		<span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="n">FScreenResolutionRHI</span><span class="o">&amp;</span> <span class="nl">EachResolution</span> <span class="p">:</span> <span class="n">Resolutions</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">FScreenResolutionRHIBP</span> <span class="n">resolution</span><span class="p">;</span>
+			<span class="n">resolution</span><span class="p">.</span><span class="n">Width</span> <span class="o">=</span> <span class="n">EachResolution</span><span class="p">.</span><span class="n">Width</span><span class="p">;</span>
+			<span class="n">resolution</span><span class="p">.</span><span class="n">Height</span> <span class="o">=</span> <span class="n">EachResolution</span><span class="p">.</span><span class="n">Height</span><span class="p">;</span>
+			<span class="n">resolution</span><span class="p">.</span><span class="n">RefreshRate</span> <span class="o">=</span> <span class="n">EachResolution</span><span class="p">.</span><span class="n">RefreshRate</span><span class="p">;</span>
+
+			<span class="n">ResolutionsToReturn</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">resolution</span><span class="p">);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="n">ResolutionsToReturn</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       --
+     (
+     ) 13:27, 18 January 2015 (UTC)
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

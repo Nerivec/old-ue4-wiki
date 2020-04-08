@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Global Data Access, Data Storage Class Accessible From Any CPP or BP Class During Runtime - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Global Data Access, Data Storage Class Accessible From Any CPP or BP Class During Runtime
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Important_Design_Consideration">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Important Design Consideration
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Easy_to_Set_Defaults_in_Editor">
+            <span class="tocnumber">
+             1.2
+            </span>
+            <span class="toctext">
+             Easy to Set Defaults in Editor
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#The_CPP_Base_Class">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           The CPP Base Class
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#SolusDataSingleton.h">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             SolusDataSingleton.h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#SolusDataSingleton.cpp">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             SolusDataSingleton.cpp
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#The_BP_of_the_CPP_Class">
+            <span class="tocnumber">
+             2.3
+            </span>
+            <span class="toctext">
+             The BP of the CPP Class
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Easily_Set_Default_Values_Any_Time.21">
+            <span class="tocnumber">
+             2.4
+            </span>
+            <span class="toctext">
+             Easily Set Default Values Any Time!
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#Project_Settings-.3EEngine-.3EGeneral">
+            <span class="tocnumber">
+             2.5
+            </span>
+            <span class="toctext">
+             Project Settings-&gt;Engine-&gt;General
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-10">
+         <a href="#Function_Library_To_Access_Anywhere_in_BP">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Function Library To Access Anywhere in BP
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#SolusDataSingletonLibrary.h">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             SolusDataSingletonLibrary.h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-12">
+           <a href="#SolusDataSingletonLibrary.cpp">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             SolusDataSingletonLibrary.cpp
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-13">
+         <a href="#Help_My_Project_Wont_Load_Any_More.2C_Editor_Just_Crashes">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Help My Project Wont Load Any More, Editor Just Crashes
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-14">
+         <a href="#Accessing_the_Global_Data_Storage_in_Blueprints.21">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Accessing the Global Data Storage in Blueprints!
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-15">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Author:
+       </i>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       Here is a way that Epic recommend to store data you need in a globally accessible way!
+      </p>
+      <p>
+       Let's say you have an array of classes, item classes, tree classes, whatever, and you need to access this array or add to it from many different CPP or BP classes!
+      </p>
+      <p>
+       With the help of the Epic-supplied Engine singleton class you can add to a globally accessible data storage during runtime, as well as set default properties to access during runtime.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Important_Design_Consideration">
+        Important Design Consideration
+       </span>
+      </h3>
+      <p>
+       I caution you not to use this class for doing calculations of any kind!
+      </p>
+      <p>
+       Remember any class could be accessing this data at any time and overwriting the contents!
+      </p>
+      <p>
+       Use this class simply to store data like lists of common textures, common materials, common projectile blueprints, creature BP classes you want to access anytime so you can spawn them, etc.
+      </p>
+      <p>
+       This is globally accessible data so its contents cannot be relied on for precise or time-sensitive calculations :)
+      </p>
+      <p>
+       This global storage is ideal however for storing lists/arrays of classes or data
+       <b>
+        that do not change during runtime.
+       </b>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Easy_to_Set_Defaults_in_Editor">
+        Easy to Set Defaults in Editor
+       </span>
+      </h3>
+      <p>
+       Additinally, via the setup I am showing you below, you can easily edit this global default data inside the editor!
+      </p>
+      <p>
+       <b>
+        This makes creating a set of references to various project assets very easy to do!
+       </b>
+      </p>
+      <h2>
+       <span class="mw-headline" id="The_CPP_Base_Class">
+        The CPP Base Class
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="SolusDataSingleton.h">
+        SolusDataSingleton.h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/*</span>
+
+<span class="cm">	By Rama</span>
+
+<span class="cm">*/</span>
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"SolusDataSingleton.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">(</span><span class="n">Blueprintable</span><span class="p">,</span> <span class="n">BlueprintType</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">USolusDataSingleton</span> <span class="o">:</span> <span class="k">public</span> <span class="n">UObject</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+<span class="k">public</span><span class="o">:</span>
+        <span class="n">USolusDataSingleton</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">);</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="s">"Solus Data Singleton"</span><span class="p">)</span>
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">UClass</span><span class="o">*&gt;</span> <span class="n">SolusTreeBlueprints</span><span class="p">;</span>
+	
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="s">"Solus Data Singleton"</span><span class="p">)</span>
+	<span class="n">UTexture2D</span><span class="o">*</span> <span class="n">SolusT2D</span><span class="p">;</span>
+	
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="s">"Solus Data Singleton"</span><span class="p">)</span>
+	<span class="n">FVector</span> <span class="n">SolusEssentialVector</span><span class="p">;</span>
+	
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="s">"Solus Data Singleton"</span><span class="p">)</span>
+	<span class="n">FString</span> <span class="n">SolusCoreFilePath</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="SolusDataSingleton.cpp">
+        SolusDataSingleton.cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/*</span>
+
+<span class="cm">	By Rama</span>
+
+<span class="cm">*/</span>
+<span class="cp">#include</span> <span class="cpf">"Solus.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"SolusDataSingleton.h"</span><span class="cp"></span>
+<span class="n">USolusDataSingleton</span><span class="o">::</span><span class="n">USolusDataSingleton</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">ObjectInitializer</span><span class="p">)</span>
+<span class="p">{</span> 
+	<span class="n">SolusCoreFilePath</span> <span class="o">=</span> <span class="s">"E:/Solus"</span><span class="p">;</span>
+	
+	<span class="n">SolusEssentialVector</span> <span class="o">=</span> <span class="n">FVector</span><span class="p">(</span><span class="mi">9000</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="The_BP_of_the_CPP_Class">
+        The BP of the CPP Class
+       </span>
+      </h3>
+      <p>
+       <img alt="NewBPDataSingleton.jpg" class="" height="456" src="../assets/global-data-access-data-storage-class-accessible-from-any-cpp-or-bp-class-during-runtime/0.jpg" width="529"/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Easily_Set_Default_Values_Any_Time.21">
+        Easily Set Default Values Any Time!
+       </span>
+      </h3>
+      <p>
+       <img alt="DataSingleton setdefaultseasily.jpg" class="" height="401" src="../assets/global-data-access-data-storage-class-accessible-from-any-cpp-or-bp-class-during-runtime/1.jpg" width="900"/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Project_Settings-.3EEngine-.3EGeneral">
+        Project Settings-&gt;Engine-&gt;General
+       </span>
+      </h3>
+      <p>
+       Make sure to use your BP of the CPP base class!
+      </p>
+      <p>
+       Then you change the values / add to dynamic arrays, any time in your defaults, and the changes will be up to date when you use the instance during game time!
+      </p>
+      <p>
+       (4.9 update: This is hidden, use the eye icon -&gt; show advanced settings to see it!)
+       <img alt="DataSingleton projectsettings.jpg" class="" height="549" src="../assets/global-data-access-data-storage-class-accessible-from-any-cpp-or-bp-class-during-runtime/2.jpg" width="1006"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Function_Library_To_Access_Anywhere_in_BP">
+        Function Library To Access Anywhere in BP
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="SolusDataSingletonLibrary.h">
+        SolusDataSingletonLibrary.h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/*</span>
+<span class="cm">	Solus Data Singleton Library</span>
+<span class="cm">	</span>
+<span class="cm">	by Rama</span>
+
+<span class="cm">*/</span>
+
+<span class="cp">#pragma once</span>
+
+<span class="c1">//Data Singleton Class</span>
+<span class="cp">#include</span> <span class="cpf">"SolusDataSingleton.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"SolusDataSingletonLibrary.generated.h"</span><span class="cp"></span>
+
+<span class="c1">//note about UBlueprintFunctionLibrary</span>
+<span class="c1">// This class is a base class for any function libraries exposed to blueprints.</span>
+<span class="c1">// Methods in subclasses are expected to be static, and no methods should be added to the base class.</span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">SOLUS_API</span> <span class="nl">USolusDataSingletonLibrary</span> <span class="p">:</span> <span class="k">public</span> <span class="n">UBlueprintFunctionLibrary</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">USolusDataSingletonLibrary</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">);</span>
+
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintPure</span><span class="p">,</span>   <span class="n">Category</span><span class="o">=</span><span class="s">"Solus Data Singleton"</span><span class="p">)</span>
+	<span class="k">static</span> <span class="n">USolusDataSingleton</span><span class="o">*</span> <span class="n">GetSolusData</span><span class="p">(</span><span class="kt">bool</span><span class="o">&amp;</span> <span class="n">IsValid</span><span class="p">);</span>
+	
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="SolusDataSingletonLibrary.cpp">
+        SolusDataSingletonLibrary.cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/*</span>
+<span class="cm">	Solus Data Singleton Library</span>
+<span class="cm">	</span>
+<span class="cm">	by Rama</span>
+
+<span class="cm">*/</span>
+<span class="cp">#include</span> <span class="cpf">"Solus.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"SolusDataSingletonLibrary.h"</span><span class="cp"></span>
+<span class="c1">//////////////////////////////////////////////////////////////////////////</span>
+<span class="c1">// USolusDataSingletonLibrary</span>
+
+<span class="n">USolusDataSingletonLibrary</span><span class="o">::</span><span class="n">USolusDataSingletonLibrary</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">ObjectInitializer</span><span class="p">)</span>
+<span class="p">{</span> 
+	
+<span class="p">}</span>
+
+<span class="n">USolusDataSingleton</span><span class="o">*</span> <span class="n">USolusDataSingletonLibrary</span><span class="o">::</span><span class="n">GetSolusData</span><span class="p">(</span><span class="kt">bool</span><span class="o">&amp;</span> <span class="n">IsValid</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">IsValid</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="n">USolusDataSingleton</span><span class="o">*</span> <span class="n">DataInstance</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">USolusDataSingleton</span><span class="o">&gt;</span><span class="p">(</span><span class="n">GEngine</span><span class="o">-&gt;</span><span class="n">GameSingleton</span><span class="p">);</span>
+	
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">DataInstance</span><span class="p">)</span> <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">DataInstance</span><span class="o">-&gt;</span><span class="n">IsValidLowLevel</span><span class="p">())</span> <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+	
+	<span class="n">IsValid</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+	<span class="k">return</span> <span class="n">DataInstance</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Help_My_Project_Wont_Load_Any_More.2C_Editor_Just_Crashes">
+        Help My Project Wont Load Any More, Editor Just Crashes
+       </span>
+      </h2>
+      <p>
+       If your Data Singleton class gets deleted misplaced or renamed in some unusual fashion, you can end up in situation where your project simply will not load!
+      </p>
+      <p>
+       There's an easy fix!
+      </p>
+      <p>
+       Just navigate to your
+       <b>
+        Config/DefaultEngine.ini
+       </b>
+       and remove the line related to your singleton class which is now missing
+      </p>
+      <pre> [/Script/Engine.Engine]
+ GameViewportClientClassName=/Script/Engine.GameViewportClient
+ GameViewportClientClassName=/Script/Solus.SolusViewportClient
+ LevelScriptActorClassName=/Script/Engine.LevelScriptActor
+ LevelScriptActorClassName=/Script/Solus.SolusLevelScriptActor
+ GameSingletonClassName=/Game/Rama/SolusDataSingletonBP.SolusDataSingletonBP_C  ;&lt;-----
+</pre>
+      <h2>
+       <span class="mw-headline" id="Accessing_the_Global_Data_Storage_in_Blueprints.21">
+        Accessing the Global Data Storage in Blueprints!
+       </span>
+      </h2>
+      <p>
+       <img alt="DataSingleTon accessingviaBPlibrary.jpg" class="" height="522" src="../assets/global-data-access-data-storage-class-accessible-from-any-cpp-or-bp-class-during-runtime/3.jpg" width="840"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       Now you know a place you can store data that can then be accessed from any BP or CPP class during game time!
+      </p>
+      <p>
+       Again I recommend you use it primarily for data that doesn't change during runtime, because any class could be editing the global data at any time during gametime :)
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

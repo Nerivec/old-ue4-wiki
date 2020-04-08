@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Access Functions &amp; Variables From a TSubclassOf Variable in C++ - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Access Functions &amp; Variables From a TSubclassOf Variable in C++
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Why">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Why
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#The_Problem">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           The Problem
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Example">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Example
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       In this tutorial I'll show you how to access the variables and functions of a specific class that you have specified, inside a &lt;TSubclassOf&gt; container.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Why">
+        Why
+       </span>
+      </h2>
+      <p>
+       TSubclassOf is a special template of UClass which only accepts specific subclasses of some base class. So it's still a UClass which is just a class specifier which you can spawn things from, but it does not have the variables or functions of the declared class. however, you can GetDefaultObject&lt;T&gt;() which is a master copy of the defined class object and contains the default variables which you can use before spawning that object.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="The_Problem">
+        The Problem
+       </span>
+      </h2>
+      <p>
+       In my example; I want to know how much ammunition a certain type of projectile will cost me in order to subtract it from my available ammunition, and to ensure I'm allowed to spawn it.
+      </p>
+      <p>
+       The Ordnance.h class allows me to return the (protected variable) cost of the ordnance object (usually a Blueprinted Sub-class) using the float GetAmmoCost(); function:
+      </p>
+      <p>
+       <br/>
+      </p>
+      <p>
+       <b>
+        Ordnance.cpp
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">float</span> <span class="n">AOrdnance</span><span class="o">::</span><span class="n">GetAmmoCost</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">AmmoCost</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       If you have a specific actor of sub-class, you can access this function with any issues. However, if you want to have a weapon that can specify any sub-class of ordnance, you'll have to first get that specified class in order to call the function.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Example">
+        Example
+       </span>
+      </h2>
+      <p>
+       The following code in 'Weapon.h' declares a variable using the &lt;TSubclassOf&gt; container. When Blueprinted, it allows the developer to select a specific sub-class of ordnance that we can fire from it. You'll also notice that this is part of a struct (this is not neccesary, but for the purposes of the tutorial shows that the code works with UStructs):
+      </p>
+      <p>
+       <br/>
+       <b>
+        Weapon.h
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">USTRUCT</span><span class="p">()</span>
+<span class="k">struct</span> <span class="n">FWeaponData</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_USTRUCT_BODY</span><span class="p">()</span>
+
+	<span class="cm">/* Actual Ordnance To Fire */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditDefaultsOnly</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Ordnance"</span><span class="p">)</span>
+	<span class="n">TSubclassOf</span><span class="o">&lt;</span><span class="n">AOrdnance</span><span class="o">&gt;</span> <span class="n">OrdnanceClass</span><span class="p">;</span>
+
+	<span class="n">FWeaponData</span><span class="p">()</span>
+		<span class="o">:</span> <span class="n">OrdnanceClass</span><span class="p">(</span><span class="nb">NULL</span><span class="p">)</span>
+	<span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       The following code in 'Weapon.cpp', allows me to access and cast to the specific class defined by that variable, and call functions on it. Traditionally you might think to try and perform a regular 'Cast', but doing so will result in a difficult-to-debug Breakpoint, and stop your code from executing properly.
+      </p>
+      <p>
+       The key difference is the use of the 'GetDefaultObject()' function provided by Unreal, which will actually perform a safe cast and a check to the specific sub-class, enabling you to call functions on it and return values!
+      </p>
+      <p>
+       <br/>
+       <b>
+        Weapon.cpp
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">AWeapon</span><span class="o">::</span><span class="n">HandleFiring</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="cm">/* Check if we have Enough Ammo To Fire */</span>
+	<span class="kt">float</span> <span class="n">OrdnanceCost</span> <span class="o">=</span> <span class="n">WeaponConfig</span><span class="p">.</span><span class="n">OrdnanceClass</span><span class="o">-&gt;</span><span class="n">GetDefaultObject</span><span class="o">&lt;</span><span class="n">AOrdnance</span><span class="o">&gt;</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetAmmoCost</span><span class="p">();</span>
+	<span class="kt">bool</span> <span class="n">bEnoughAmmo</span> <span class="o">=</span> <span class="n">GetCurrentAmmo</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="n">OrdnanceCost</span><span class="p">;</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">bEnoughAmmo</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">FireWeapon</span><span class="p">(</span><span class="n">OrdnanceCost</span><span class="p">);</span> <span class="c1">// Tab-Out Pure-Virtual For Now!</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <b>
+        Note:
+       </b>
+       You have to do this for ANY type of variable that you want to return from an object specified inside a &lt;TSubclassOf&gt; variable!
+      </p>
+      <p>
+       Hope this helps!
+      </p>
+      <p>
+       (
+     )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

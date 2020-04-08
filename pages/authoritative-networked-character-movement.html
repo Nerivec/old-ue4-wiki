@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Authoritative Networked Character Movement - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Authoritative Networked Character Movement
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <p>
+       Original Author:
+     (
+     )
+      </p>
+      <p>
+       Implementing proper authoritative character movement is a very complex, yet under documented task. This tutorial serves as an introduction to implementing networked movement features in Unreal 4 by extending the
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/GameFramework/UCharacterMovementComponent/index.html" rel="nofollow">
+        UCharacterMovementComponent
+       </a>
+       . This will be an intermediate to advanced tutorial, and will require using C++ since saved moves do not appear to be supported in Blueprint. Most of my knowledge of the character movement system comes from the Unreal Tournament 4 source code, so some similarities will be apparent.
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Initial_Setup">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Initial Setup
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Implementing_Movement_Abilities">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Implementing Movement Abilities
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Sprint">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Sprint
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-4">
+             <a href="#Unlimited_Sprint">
+              <span class="tocnumber">
+               2.1.1
+              </span>
+              <span class="toctext">
+               Unlimited Sprint
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-5">
+             <a href="#Only_Sprint_Forward">
+              <span class="tocnumber">
+               2.1.2
+              </span>
+              <span class="toctext">
+               Only Sprint Forward
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Boost_Dodge">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             Boost Dodge
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Double_Jump">
+            <span class="tocnumber">
+             2.3
+            </span>
+            <span class="toctext">
+             Double Jump
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Cooldown_Timers">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Cooldown Timers
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-10">
+         <a href="#Other_Resources">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Other Resources
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Initial_Setup">
+        Initial Setup
+       </span>
+      </h2>
+      <p>
+       To implement custom networked character movement, you must extend the
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/GameFramework/UCharacterMovementComponent/index.html" rel="nofollow">
+        UCharacterMovementComponent
+       </a>
+       and saved move classes. For starters let's get a class setup with all the boilerplate code out of the way. (thanks to antsonthetree for providing the code to fix this for the latest Unreal 4 version)
+       <img alt="Create-character-movement-class.jpg" class="" height="574" src="../assets/authoritative-networked-character-movement/0.jpg" width="950"/>
+      </p>
+      <p>
+       <i>
+        MyCharacterMovement.h
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"GameFramework/CharacterMovementComponent.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"MyCharacterMovement.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">UMyCharacterMovement</span> <span class="o">:</span> <span class="k">public</span> <span class="n">UCharacterMovementComponent</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+
+	<span class="c1">//============================================================================================</span>
+	<span class="c1">//Replication</span>
+	<span class="c1">//============================================================================================</span>
+
+<span class="k">public</span><span class="o">:</span>
+
+	<span class="k">friend</span> <span class="k">class</span> <span class="nc">FSavedMove_ExtendedMyMovement</span><span class="p">;</span>
+
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">UpdateFromCompressedFlags</span><span class="p">(</span><span class="n">uint8</span> <span class="n">Flags</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+
+	<span class="k">virtual</span> <span class="k">class</span> <span class="nc">FNetworkPredictionData_Client</span><span class="o">*</span> <span class="nf">GetPredictionData_Client</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">FSavedMove_MyMovement</span> <span class="o">:</span> <span class="k">public</span> <span class="n">FSavedMove_Character</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+
+	<span class="k">typedef</span> <span class="n">FSavedMove_Character</span> <span class="n">Super</span><span class="p">;</span>
+
+	<span class="c1">///@brief Resets all saved variables.</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">Clear</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+
+	<span class="c1">///@brief Store input commands in the compressed flags.</span>
+	<span class="k">virtual</span> <span class="n">uint8</span> <span class="nf">GetCompressedFlags</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+
+	<span class="c1">///@brief This is used to check whether or not two moves can be combined into one.</span>
+	<span class="c1">///Basically you just check to make sure that the saved variables are the same.</span>
+	<span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">CanCombineWith</span><span class="p">(</span><span class="k">const</span> <span class="n">FSavedMovePtr</span><span class="o">&amp;</span> <span class="n">NewMove</span><span class="p">,</span> <span class="n">ACharacter</span><span class="o">*</span> <span class="n">Character</span><span class="p">,</span> <span class="kt">float</span> <span class="n">MaxDelta</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+
+	<span class="c1">///@brief Sets up the move before sending it to the server. </span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">SetMoveFor</span><span class="p">(</span><span class="n">ACharacter</span><span class="o">*</span> <span class="n">Character</span><span class="p">,</span> <span class="kt">float</span> <span class="n">InDeltaTime</span><span class="p">,</span> <span class="n">FVector</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">NewAccel</span><span class="p">,</span> <span class="k">class</span> <span class="nc">FNetworkPredictionData_Client_Character</span> <span class="o">&amp;</span> <span class="n">ClientData</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+	<span class="c1">///@brief Sets variables on character movement component before making a predictive correction.</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">PrepMoveFor</span><span class="p">(</span><span class="k">class</span> <span class="nc">ACharacter</span><span class="o">*</span> <span class="n">Character</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">FNetworkPredictionData_Client_MyMovement</span> <span class="o">:</span> <span class="k">public</span> <span class="n">FNetworkPredictionData_Client_Character</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+        <span class="n">FNetworkPredictionData_Client_MyMovement</span><span class="p">(</span><span class="k">const</span> <span class="n">UCharacterMovementComponent</span><span class="o">&amp;</span> <span class="n">ClientMovement</span><span class="p">);</span>
+
+	<span class="k">typedef</span> <span class="n">FNetworkPredictionData_Client_Character</span> <span class="n">Super</span><span class="p">;</span>
+
+	<span class="c1">///@brief Allocates a new copy of our custom saved move</span>
+	<span class="k">virtual</span> <span class="n">FSavedMovePtr</span> <span class="nf">AllocateNewMove</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <i>
+        MyCharacterMovement.cpp
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"MyCharacterMovement.h"</span><span class="cp"></span>
+
+<span class="n">UMyCharacterMovement</span><span class="o">::</span><span class="n">UMyCharacterMovement</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">)</span>
+	<span class="o">:</span><span class="n">Super</span><span class="p">(</span><span class="n">ObjectInitializer</span><span class="p">)</span>
+<span class="p">{</span>
+	
+<span class="p">}</span>
+
+<span class="c1">//============================================================================================</span>
+<span class="c1">//Replication</span>
+<span class="c1">//============================================================================================</span>
+
+<span class="c1">//Set input flags on character from saved inputs</span>
+<span class="kt">void</span> <span class="n">UMyCharacterMovement</span><span class="o">::</span><span class="n">UpdateFromCompressedFlags</span><span class="p">(</span><span class="n">uint8</span> <span class="n">Flags</span><span class="p">)</span><span class="c1">//Client only</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">UpdateFromCompressedFlags</span><span class="p">(</span><span class="n">Flags</span><span class="p">);</span>
+
+	
+<span class="p">}</span>
+
+<span class="k">class</span> <span class="nc">FNetworkPredictionData_Client</span><span class="o">*</span> <span class="n">UMyCharacterMovement</span><span class="o">::</span><span class="n">GetPredictionData_Client</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="n">check</span><span class="p">(</span><span class="n">PawnOwner</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">);</span>
+	<span class="n">check</span><span class="p">(</span><span class="n">PawnOwner</span><span class="o">-&gt;</span><span class="n">Role</span> <span class="o">&lt;</span> <span class="n">ROLE_Authority</span><span class="p">);</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">ClientPredictionData</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">UMyCharacterMovement</span><span class="o">*</span> <span class="n">MutableThis</span> <span class="o">=</span> <span class="k">const_cast</span><span class="o">&lt;</span><span class="n">UMyCharacterMovement</span><span class="o">*&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+
+		<span class="n">MutableThis</span><span class="o">-&gt;</span><span class="n">ClientPredictionData</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FNetworkPredictionData_Client_MyMovement</span><span class="p">(</span><span class="o">*</span><span class="k">this</span><span class="p">);</span>
+		<span class="n">MutableThis</span><span class="o">-&gt;</span><span class="n">ClientPredictionData</span><span class="o">-&gt;</span><span class="n">MaxSmoothNetUpdateDist</span> <span class="o">=</span> <span class="mf">92.f</span><span class="p">;</span>
+		<span class="n">MutableThis</span><span class="o">-&gt;</span><span class="n">ClientPredictionData</span><span class="o">-&gt;</span><span class="n">NoSmoothNetUpdateDist</span> <span class="o">=</span> <span class="mf">140.f</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="n">ClientPredictionData</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">FSavedMove_MyMovement</span><span class="o">::</span><span class="n">Clear</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">Clear</span><span class="p">();</span>
+
+	
+<span class="p">}</span>
+
+<span class="n">uint8</span> <span class="n">FSavedMove_MyMovement</span><span class="o">::</span><span class="n">GetCompressedFlags</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="n">uint8</span> <span class="n">Result</span> <span class="o">=</span> <span class="n">Super</span><span class="o">::</span><span class="n">GetCompressedFlags</span><span class="p">();</span>
+
+
+	<span class="k">return</span> <span class="n">Result</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">FSavedMove_MyMovement</span><span class="o">::</span><span class="n">CanCombineWith</span><span class="p">(</span><span class="k">const</span> <span class="n">FSavedMovePtr</span><span class="o">&amp;</span> <span class="n">NewMove</span><span class="p">,</span> <span class="n">ACharacter</span><span class="o">*</span> <span class="n">Character</span><span class="p">,</span> <span class="kt">float</span> <span class="n">MaxDelta</span><span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+
+	<span class="k">return</span> <span class="n">Super</span><span class="o">::</span><span class="n">CanCombineWith</span><span class="p">(</span><span class="n">NewMove</span><span class="p">,</span> <span class="n">Character</span><span class="p">,</span> <span class="n">MaxDelta</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">FSavedMove_MyMovement</span><span class="o">::</span><span class="n">SetMoveFor</span><span class="p">(</span><span class="n">ACharacter</span><span class="o">*</span> <span class="n">Character</span><span class="p">,</span> <span class="kt">float</span> <span class="n">InDeltaTime</span><span class="p">,</span> <span class="n">FVector</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">NewAccel</span><span class="p">,</span> <span class="k">class</span> <span class="nc">FNetworkPredictionData_Client_Character</span> <span class="o">&amp;</span> <span class="n">ClientData</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">SetMoveFor</span><span class="p">(</span><span class="n">Character</span><span class="p">,</span> <span class="n">InDeltaTime</span><span class="p">,</span> <span class="n">NewAccel</span><span class="p">,</span> <span class="n">ClientData</span><span class="p">);</span>
+
+	<span class="n">UMyCharacterMovement</span><span class="o">*</span> <span class="n">CharMov</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">UMyCharacterMovement</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Character</span><span class="o">-&gt;</span><span class="n">GetCharacterMovement</span><span class="p">());</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">CharMov</span><span class="p">)</span>
+	<span class="p">{</span>
+		
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">FSavedMove_MyMovement</span><span class="o">::</span><span class="n">PrepMoveFor</span><span class="p">(</span><span class="k">class</span> <span class="nc">ACharacter</span><span class="o">*</span> <span class="n">Character</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">PrepMoveFor</span><span class="p">(</span><span class="n">Character</span><span class="p">);</span>
+
+	<span class="n">UMyCharacterMovement</span><span class="o">*</span> <span class="n">CharMov</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">UMyCharacterMovement</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Character</span><span class="o">-&gt;</span><span class="n">GetCharacterMovement</span><span class="p">());</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">CharMov</span><span class="p">)</span>
+	<span class="p">{</span>
+		
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">FNetworkPredictionData_Client_MyMovement</span><span class="o">::</span><span class="n">FNetworkPredictionData_Client_MyMovement</span><span class="p">(</span><span class="k">const</span> <span class="n">UCharacterMovementComponent</span><span class="o">&amp;</span> <span class="n">ClientMovement</span><span class="p">)</span>
+<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">ClientMovement</span><span class="p">)</span>
+<span class="p">{</span>
+
+<span class="p">}</span>
+
+<span class="n">FSavedMovePtr</span> <span class="n">FNetworkPredictionData_Client_MyMovement</span><span class="o">::</span><span class="n">AllocateNewMove</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">FSavedMovePtr</span><span class="p">(</span><span class="k">new</span> <span class="n">FSavedMove_MyMovement</span><span class="p">());</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       In order to actually use the custom component we'll have to set the default subobject class in the character class constructor.
+      </p>
+      <p>
+       <i>
+        MyCharacter.cpp
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">AMyCharacter</span><span class="o">::</span><span class="n">AMyCharacter</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">)</span>
+	<span class="o">:</span><span class="n">Super</span><span class="p">(</span><span class="n">ObjectInitializer</span><span class="p">.</span><span class="n">SetDefaultSubobjectClass</span><span class="o">&lt;</span><span class="n">UMyCharacterMovement</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ACharacter</span><span class="o">::</span><span class="n">CharacterMovementComponentName</span><span class="p">))</span>
+<span class="p">{</span>
+	<span class="c1">//Do normal stuff in constructor...</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Implementing_Movement_Abilities">
+        Implementing Movement Abilities
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Sprint">
+        Sprint
+       </span>
+      </h3>
+      <p>
+       Sprint is an example of an ability that can be implemented quite easily using just the compressed flags. To start with, we'll implement a basic unlimited sprint ability. We'll gradually improve it as we go along.
+      </p>
+      <h4>
+       <span class="mw-headline" id="Unlimited_Sprint">
+        Unlimited Sprint
+       </span>
+      </h4>
+      <p>
+       The first thing to do is add the input events to the character class.
+      </p>
+      <p>
+       <i>
+        MyCharacter.cpp
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">AMyCharacter</span><span class="o">::</span><span class="n">SetupPlayerInputComponent</span><span class="p">(</span><span class="k">class</span> <span class="nc">UInputComponent</span><span class="o">*</span> <span class="n">InputComponent</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">check</span><span class="p">(</span><span class="n">InputComponent</span><span class="p">);</span>
+
+	<span class="n">InputComponent</span><span class="o">-&gt;</span><span class="n">BindAction</span><span class="p">(</span><span class="s">"Sprint"</span><span class="p">,</span> <span class="n">IE_Pressed</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">AMyCharacter</span><span class="o">::</span><span class="n">StartSprinting</span><span class="p">);</span>
+	<span class="n">InputComponent</span><span class="o">-&gt;</span><span class="n">BindAction</span><span class="p">(</span><span class="s">"Sprint"</span><span class="p">,</span> <span class="n">IE_Released</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">AMyCharacter</span><span class="o">::</span><span class="n">StopSprinting</span><span class="p">);</span>
+
+	<span class="c1">//Other input bindings...</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AMyCharacter</span><span class="o">::</span><span class="n">StartSprinting</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">UMyCharacterMovement</span><span class="o">*</span> <span class="n">MoveComp</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">UMyCharacterMovement</span><span class="o">&gt;</span><span class="p">(</span><span class="n">GetCharacterMovement</span><span class="p">());</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">MoveComp</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">MoveComp</span><span class="o">-&gt;</span><span class="n">SetSprinting</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AMyCharacter</span><span class="o">::</span><span class="n">StopSprinting</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">UMyCharacterMovement</span><span class="o">*</span> <span class="n">MoveComp</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">UMyCharacterMovement</span><span class="o">&gt;</span><span class="p">(</span><span class="n">GetCharacterMovement</span><span class="p">());</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">MoveComp</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">MoveComp</span><span class="o">-&gt;</span><span class="n">SetSprinting</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       The character movement component will need to have the SetSprinting method, and also a few properties. Add the following properties and methods to
+       <i>
+        MyCharacterMovement.h
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Sprint"</span><span class="p">)</span>
+<span class="kt">float</span> <span class="n">SprintSpeedMultiplier</span><span class="p">;</span>
+<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Sprint"</span><span class="p">)</span>
+<span class="kt">float</span> <span class="n">SprintAccelerationMultiplier</span><span class="p">;</span>
+
+<span class="c1">///@brief Activate or deactivate sprint.</span>
+<span class="kt">void</span> <span class="nf">SetSprinting</span><span class="p">(</span><span class="kt">bool</span> <span class="n">bSprinting</span><span class="p">);</span>
+
+<span class="c1">///@brief Flag for activating sprint.</span>
+<span class="n">uint8</span> <span class="nl">bWantsToSprint</span> <span class="p">:</span> <span class="mi">1</span><span class="p">;</span>
+
+<span class="c1">///@brief Override maximum speed during sprint.</span>
+<span class="k">virtual</span> <span class="kt">float</span> <span class="nf">GetMaxSpeed</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+<span class="c1">///@brief Override maximum acceleration for sprint.</span>
+<span class="k">virtual</span> <span class="kt">float</span> <span class="nf">GetMaxAcceleration</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       SetSprinting will be called to activate the sprint ability, and should need no explanation. GetMaxSpeed and GetMaxAcceleration use the sprint flag to determine whether or not to apply the speed and acceleration multipliers. This is all you need for a single player game, but try to run this in a networked game you'll quickly discover it doesn't work. The client can't sprint because the server doesn't know it's trying to, so it keeps getting corrected back to the normal walking speed.
+      </p>
+      <p>
+       <i>
+        MyCharacterMovement.cpp
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">UMyCharacterMovement</span><span class="o">::</span><span class="n">SetSprinting</span><span class="p">(</span><span class="kt">bool</span> <span class="n">bSprinting</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">bWantsToSprint</span> <span class="o">=</span> <span class="n">bSprinting</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">float</span> <span class="n">UMyCharacterMovement</span><span class="o">::</span><span class="n">GetMaxSpeed</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="kt">float</span> <span class="n">MaxSpeed</span> <span class="o">=</span> <span class="n">Super</span><span class="o">::</span><span class="n">GetMaxSpeed</span><span class="p">();</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">bWantsToSprint</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">MaxSpeed</span> <span class="o">*=</span> <span class="n">SprintSpeedMultiplier</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="n">MaxSpeed</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">float</span> <span class="n">UMyCharacterMovement</span><span class="o">::</span><span class="n">GetMaxAcceleration</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="kt">float</span> <span class="n">MaxAccel</span> <span class="o">=</span> <span class="n">Super</span><span class="o">::</span><span class="n">GetMaxAcceleration</span><span class="p">();</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">bWantsToSprint</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">MaxAccel</span> <span class="o">*=</span> <span class="n">SprintAccelerationMultiplier</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="n">MaxAccel</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       To make this replicate to the server and work with the prediction system we'll finally need to use the saved move class we inherited from earlier. We need to add a flag corresponding to the character movement component's sprint flag. This flag is used to re-trigger the ability later if a network correction forces us to resimulate the move.
+      </p>
+      <p>
+       <i>
+        MyCharacterMovement.h
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">class</span> <span class="nc">FSavedMove_MyMovement</span> <span class="o">:</span> <span class="k">public</span> <span class="n">FSavedMove_Character</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+
+	<span class="k">typedef</span> <span class="n">FSavedMove_Character</span> <span class="n">Super</span><span class="p">;</span>
+
+	<span class="c1">///@brief Resets all saved variables.</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">Clear</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+
+	<span class="c1">///@brief Store input commands in the compressed flags.</span>
+	<span class="k">virtual</span> <span class="n">uint8</span> <span class="nf">GetCompressedFlags</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+
+	<span class="c1">///@brief This is used to check whether or not two moves can be combined into one.</span>
+	<span class="c1">///Basically you just check to make sure that the saved variables are the same.</span>
+	<span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">CanCombineWith</span><span class="p">(</span><span class="k">const</span> <span class="n">FSavedMovePtr</span><span class="o">&amp;</span> <span class="n">NewMove</span><span class="p">,</span> <span class="n">ACharacter</span><span class="o">*</span> <span class="n">Character</span><span class="p">,</span> <span class="kt">float</span> <span class="n">MaxDelta</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+
+	<span class="c1">///@brief Sets up the move before sending it to the server. </span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">SetMoveFor</span><span class="p">(</span><span class="n">ACharacter</span><span class="o">*</span> <span class="n">Character</span><span class="p">,</span> <span class="kt">float</span> <span class="n">InDeltaTime</span><span class="p">,</span> <span class="n">FVector</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">NewAccel</span><span class="p">,</span> <span class="k">class</span> <span class="nc">FNetworkPredictionData_Client_Character</span> <span class="o">&amp;</span> <span class="n">ClientData</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+	<span class="c1">///@brief Sets variables on character movement component before making a predictive correction.</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">PrepMoveFor</span><span class="p">(</span><span class="k">class</span> <span class="nc">ACharacter</span><span class="o">*</span> <span class="n">Character</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+
+	<span class="n">uint8</span> <span class="nl">bSavedWantsToSprint</span> <span class="p">:</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       The character movement component will create these saved moves and fill them with data needed to replay moves on the server. The implementation of the saved move is pretty much just responsible for copying the variables needed to make the movement calculations back and forth between the saved move and the character movement component. Also, the SprintSpeedMultiplier and SprintAccelerationMultiplier should be given sensible default values in the constructor (2.0f should work fine).
+      </p>
+      <p>
+       <i>
+        MyCharacterMovement.cpp
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">UMyCharacterMovement</span><span class="o">::</span><span class="n">UpdateFromCompressedFlags</span><span class="p">(</span><span class="n">uint8</span> <span class="n">Flags</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">UpdateFromCompressedFlags</span><span class="p">(</span><span class="n">Flags</span><span class="p">);</span>
+
+	<span class="c1">//The Flags parameter contains the compressed input flags that are stored in the saved move.</span>
+	<span class="c1">//UpdateFromCompressed flags simply copies the flags from the saved move into the movement component.</span>
+	<span class="c1">//It basically just resets the movement component to the state when the move was made so it can simulate from there.</span>
+	<span class="n">bWantsToSprint</span> <span class="o">=</span> <span class="p">(</span><span class="n">Flags</span><span class="o">&amp;</span><span class="n">FSavedMove_Character</span><span class="o">::</span><span class="n">FLAG_Custom_0</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">FSavedMove_MyMovement</span><span class="o">::</span><span class="n">SetMoveFor</span><span class="p">(</span><span class="n">ACharacter</span><span class="o">*</span> <span class="n">Character</span><span class="p">,</span> <span class="kt">float</span> <span class="n">InDeltaTime</span><span class="p">,</span> <span class="n">FVector</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">NewAccel</span><span class="p">,</span> <span class="k">class</span> <span class="nc">FNetworkPredictionData_Client_Character</span><span class="o">&amp;</span> <span class="n">ClientData</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">SetMoveFor</span><span class="p">(</span><span class="n">Character</span><span class="p">,</span> <span class="n">InDeltaTime</span><span class="p">,</span> <span class="n">NewAccel</span><span class="p">,</span> <span class="n">ClientData</span><span class="p">);</span>
+
+	<span class="n">UExtendedCharacterMovement</span><span class="o">*</span> <span class="n">CharMov</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">UExtendedCharacterMovement</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Character</span><span class="o">-&gt;</span><span class="n">GetCharacterMovement</span><span class="p">());</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">CharMov</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//This is literally just the exact opposite of UpdateFromCompressed flags. We're taking the input</span>
+		<span class="c1">//from the player and storing it in the saved move.</span>
+		<span class="n">bSavedWantsToSprint</span> <span class="o">=</span> <span class="n">CharMov</span><span class="o">-&gt;</span><span class="n">bWantsToSprint</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">FSavedMove_MyMovement</span><span class="o">::</span><span class="n">Clear</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">Clear</span><span class="p">();</span>
+
+	<span class="c1">//Clear variables back to their default values.</span>
+	<span class="n">bSavedWantsToSprint</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">//This is where we compress the flags saved in SetMoveFor. We're basically just ORing a bunch of them together.</span>
+<span class="n">uint8</span> <span class="n">FSavedMove_ExtendedMovement</span><span class="o">::</span><span class="n">GetCompressedFlags</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="n">uint8</span> <span class="n">Result</span> <span class="o">=</span> <span class="n">Super</span><span class="o">::</span><span class="n">GetCompressedFlags</span><span class="p">();</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">bSavedWantsToSprint</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">Result</span> <span class="o">|=</span> <span class="n">FLAG_Custom_0</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="n">Result</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">FSavedMove_ExtendedMovement</span><span class="o">::</span><span class="n">CanCombineWith</span><span class="p">(</span><span class="k">const</span> <span class="n">FSavedMovePtr</span><span class="o">&amp;</span> <span class="n">NewMove</span><span class="p">,</span> <span class="n">ACharacter</span><span class="o">*</span> <span class="n">Character</span><span class="p">,</span> <span class="kt">float</span> <span class="n">MaxDelta</span><span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="c1">//This pretty much just tells the engine if it can optimize by combining saved moves. There doesn't appear to be</span>
+	<span class="c1">//any problem with leaving it out, but it seems that it's good practice to implement this anyways.</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">bSavedWantsToSprint</span> <span class="o">!=</span> <span class="p">((</span><span class="n">FSavedMove_ExtendedMovement</span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">NewMove</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">bSavedWantsToSprint</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="n">Super</span><span class="o">::</span><span class="n">CanCombineWith</span><span class="p">(</span><span class="n">NewMove</span><span class="p">,</span> <span class="n">Character</span><span class="p">,</span> <span class="n">MaxDelta</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       At this point you should have a basic sprint ability that can be triggered from either the client, or server. However, the sprint ability right now isn't very customizable. The player can sprint sideways and backwards just as easily as forwards, and can also sprint forever with no breaks between.
+      </p>
+      <h4>
+       <span class="mw-headline" id="Only_Sprint_Forward">
+        Only Sprint Forward
+       </span>
+      </h4>
+      <p>
+       Disclaimer: This is only my current implementation. If I come up with a better way then I'll update this tutorial.
+      </p>
+      <p>
+       There are a couple ways to prevent the player from sprinting sideways and backwards. One way would be to store the forward key state in the compressed flags just like we did with bWantsToSprint. This is fairly easy to do, but it uses up a flag that could be used for other abilities. It's actually possible to prevent the player from sprinting in other directions without sending any additional data.
+      </p>
+      <p>
+       Since inputs are handled by the saved move, as long as our calculations only rely on things that are replicated (velocity and rotation in this example), then we can make calculations based on them. Start by adding a method to check that we're moving forward.
+      </p>
+      <p>
+       <i>
+        MyCharacterMovement.h
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">///@return Whether or not the character is currently moving in a forward direction.</span>
+<span class="kt">bool</span> <span class="nf">IsMovingForward</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       <i>
+        MyCharacterMovement.cpp
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">bool</span> <span class="n">UMyCharacterMovement</span><span class="o">::</span><span class="n">IsMovingForward</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">PawnOwner</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="n">FVector</span> <span class="n">Forward</span> <span class="o">=</span> <span class="n">PawnOwner</span><span class="o">-&gt;</span><span class="n">GetActorForwardVector</span><span class="p">();</span>
+	<span class="n">FVector</span> <span class="n">MoveDirection</span> <span class="o">=</span> <span class="n">Velocity</span><span class="p">.</span><span class="n">GetSafeNormal</span><span class="p">();</span>
+
+	<span class="c1">//Ignore vertical movement</span>
+	<span class="n">Forward</span><span class="p">.</span><span class="n">Z</span> <span class="o">=</span> <span class="mf">0.0f</span><span class="p">;</span>
+	<span class="n">MoveDirection</span><span class="p">.</span><span class="n">Z</span> <span class="o">=</span> <span class="mf">0.0f</span><span class="p">;</span>
+
+	<span class="kt">float</span> <span class="n">VelocityDot</span> <span class="o">=</span> <span class="n">FVector</span><span class="o">::</span><span class="n">DotProduct</span><span class="p">(</span><span class="n">Forward</span><span class="p">,</span> <span class="n">MoveDirection</span><span class="p">);</span>
+	<span class="k">return</span> <span class="n">VelocityDot</span> <span class="o">&gt;</span> <span class="mf">0.7f</span><span class="p">;</span><span class="c1">//Check to make sure difference between headings is not too great.</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Then we simply check to make sure we're moving forward before applying the sprint speed boost in GetMaxSpeed and GetMaxAcceleration
+      </p>
+      <p>
+       <i>
+        MyCharacterMovement.cpp
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">float</span> <span class="n">UMyCharacterMovement</span><span class="o">::</span><span class="n">GetMaxSpeed</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="kt">float</span> <span class="n">MaxSpeed</span> <span class="o">=</span> <span class="n">Super</span><span class="o">::</span><span class="n">GetMaxSpeed</span><span class="p">();</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">bWantsToSprint</span> <span class="o">&amp;&amp;</span> <span class="n">IsMovingForward</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="n">MaxSpeed</span> <span class="o">*=</span> <span class="n">SprintSpeedMultiplier</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="n">MaxSpeed</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">float</span> <span class="n">UMyCharacterMovement</span><span class="o">::</span><span class="n">GetMaxAcceleration</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="kt">float</span> <span class="n">MaxAccel</span> <span class="o">=</span> <span class="n">Super</span><span class="o">::</span><span class="n">GetMaxAcceleration</span><span class="p">();</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">bWantsToSprint</span> <span class="o">&amp;&amp;</span> <span class="n">IsMovingForward</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="n">MaxAccel</span> <span class="o">*=</span> <span class="n">SprintAccelerationMultiplier</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="n">MaxAccel</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Boost_Dodge">
+        Boost Dodge
+       </span>
+      </h3>
+      <p>
+       A popular feature lately in FPS games is to have boost dodges/thruster packs basically your character quickly boosts horizontally to avoid damage, close the distance for a melee, make a long jump, or whatever else the player wants to try and use it for. Two prime examples of recent games with this ability being Halo 5 and Call of Duty: Advanced Warfare. The boost dodge ability is one example of an ability that can benefit from sending extra data alongside the typical activation flags. In Unreal Tournament 4 the ability is implemented using four flags: one for each boost direction, but in this implementation we'll be sending along the character's movement vector to the server, since we can reuse it for other abilities as well.
+      </p>
+      <p>
+       To start with we'll deal with how to send additional input data to use in prediction. First add a variable to store it in the character movement component, then add the corresponding saved direction vector to the FSavedMove_MyMovement class. We'll also need to override the OnMovementUpdated method. The ability activation flag is handled just like bWantsToSprint. Don't forget to give DodgeStrength and GroundDodgeStrengthMultiplier some sane default values in the constructor.
+      </p>
+      <p>
+       <i>
+        MyCharacterMovement.h
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Inside UMyCharacterMovement class...</span>
+<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Dodge"</span><span class="p">)</span>
+<span class="kt">float</span> <span class="n">DodgeStrength</span><span class="p">;</span>
+<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Dodge"</span><span class="p">)</span>
+<span class="kt">float</span> <span class="n">GroundDodgeStrengthMultiplier</span><span class="p">;</span>
+
+<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">Unreliable</span><span class="p">,</span> <span class="n">Server</span><span class="p">,</span> <span class="n">WithValidation</span><span class="p">)</span>
+<span class="kt">void</span> <span class="n">ServerSetMoveDirection</span><span class="p">(</span><span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">MoveDir</span><span class="p">);</span>
+
+<span class="c1">///@brief Triggers the dodge action.</span>
+<span class="kt">void</span> <span class="nf">DoDodge</span><span class="p">();</span>
+
+<span class="c1">///@brief Event triggered at the end of a movement update</span>
+<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">OnMovementUpdated</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaSeconds</span><span class="p">,</span> <span class="k">const</span> <span class="n">FVector</span> <span class="o">&amp;</span> <span class="n">OldLocation</span><span class="p">,</span> <span class="k">const</span> <span class="n">FVector</span> <span class="o">&amp;</span> <span class="n">OldVelocity</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+
+<span class="n">FVector</span> <span class="n">MoveDirection</span><span class="p">;</span>
+<span class="n">uint8</span> <span class="nl">bWantsToDodge</span> <span class="p">:</span> <span class="mi">1</span><span class="p">;</span>
+
+<span class="c1">//Inside FSavedMove_MyMovement class...</span>
+<span class="n">FVector</span> <span class="n">SavedMoveDirection</span><span class="p">;</span>
+<span class="n">uint8</span> <span class="nl">bSavedWantsToDodge</span> <span class="p">:</span> <span class="mi">1</span><span class="p">;</span>
+
+<span class="c1">///@brief This is used to copy state from the saved move to the character movement component.</span>
+<span class="c1">///This is ONLY used for predictive corrections, the actual data must be sent through RPC.</span>
+<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">PrepMoveFor</span><span class="p">(</span><span class="k">class</span> <span class="nc">ACharacter</span><span class="o">*</span> <span class="n">Character</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       For sending extra client inputs to the server, we'll need to use RPC functions in place of the compressed flags. A convenient place to send the inputs is in the beginning of the OnMovementUpdated method.
+      </p>
+      <p>
+       <i>
+        MyCharacterMovement.cpp
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">bool</span> <span class="n">UMyCharacterMovement</span><span class="o">::</span><span class="n">ServerSetMoveDirection_Validate</span><span class="p">(</span><span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">MoveDir</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">UMyCharacterMovement</span><span class="o">::</span><span class="n">ServerSetMoveDirection_Implementation</span><span class="p">(</span><span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">MoveDir</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">MoveDirection</span> <span class="o">=</span> <span class="n">DodgeDir</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">UMyCharacterMovement</span><span class="o">::</span><span class="n">OnMovementUpdated</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaSeconds</span><span class="p">,</span> <span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">OldLocation</span><span class="p">,</span> <span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">OldVelocity</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">OnMovementUpdated</span><span class="p">(</span><span class="n">DeltaSeconds</span><span class="p">,</span> <span class="n">OldLocation</span><span class="p">,</span> <span class="n">OldVelocity</span><span class="p">);</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">CharacterOwner</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">return</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="c1">//Store movement vector</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">PawnOwner</span><span class="o">-&gt;</span><span class="n">IsLocallyControlled</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="n">MoveDirection</span> <span class="o">=</span> <span class="n">PawnOwner</span><span class="o">-&gt;</span><span class="n">GetLastMovementInputVector</span><span class="p">();</span>
+	<span class="p">}</span>
+	<span class="c1">//Send movement vector to server</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">PawnOwner</span><span class="o">-&gt;</span><span class="n">Role</span> <span class="o">&lt;</span> <span class="n">ROLE_Authority</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">ServerSetMoveDirection</span><span class="p">(</span><span class="n">MoveDirection</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       The input will also need to be added to the saved moves. The implementation is very similar to adding an input flag to the saved moves, but does not involve compressed flag methods. The only difference is that PrepMoveFor needs to be implemented to allow for client corrections to be made.
+      </p>
+      <p>
+       <i>
+        MyCharacterMovement.cpp
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">FSavedMove_MyMovement</span><span class="o">::</span><span class="n">SetMoveFor</span><span class="p">(</span><span class="n">ACharacter</span><span class="o">*</span> <span class="n">Character</span><span class="p">,</span> <span class="kt">float</span> <span class="n">InDeltaTime</span><span class="p">,</span> <span class="n">FVector</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">NewAccel</span><span class="p">,</span> <span class="k">class</span> <span class="nc">FNetworkPredictionData_Client_Character</span><span class="o">&amp;</span> <span class="n">ClientData</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">SetMoveFor</span><span class="p">(</span><span class="n">Character</span><span class="p">,</span> <span class="n">InDeltaTime</span><span class="p">,</span> <span class="n">NewAccel</span><span class="p">,</span> <span class="n">ClientData</span><span class="p">);</span>
+
+	<span class="n">UMyCharacterMovement</span><span class="o">*</span> <span class="n">CharMov</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">UMyCharacterMovement</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Character</span><span class="o">-&gt;</span><span class="n">GetCharacterMovement</span><span class="p">());</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">CharMov</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//This is literally just the exact opposite of UpdateFromCompressed flags. We're taking the input</span>
+		<span class="c1">//from the player and storing it in the saved move.</span>
+		<span class="n">bSavedWantsToSprint</span> <span class="o">=</span> <span class="n">CharMov</span><span class="o">-&gt;</span><span class="n">bWantsToSprint</span><span class="p">;</span>
+
+		<span class="c1">//Again, just taking the player movement component's state and storing it for later it in the saved move.</span>
+		<span class="n">SavedMoveDirection</span> <span class="o">=</span> <span class="n">CharMov</span><span class="o">-&gt;</span><span class="n">MoveDirection</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">FSavedMove_MyMovement</span><span class="o">::</span><span class="n">Clear</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">Clear</span><span class="p">();</span>
+
+	<span class="c1">//Clear variables back to their default values.</span>
+	<span class="n">bSavedWantsToSprint</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="n">SavedMoveDirection</span> <span class="o">=</span> <span class="n">FVector</span><span class="o">::</span><span class="n">ZeroVector</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">FSavedMove_MyMovement</span><span class="o">::</span><span class="n">CanCombineWith</span><span class="p">(</span><span class="k">const</span> <span class="n">FSavedMovePtr</span><span class="o">&amp;</span> <span class="n">NewMove</span><span class="p">,</span> <span class="n">ACharacter</span><span class="o">*</span> <span class="n">Character</span><span class="p">,</span> <span class="kt">float</span> <span class="n">MaxDelta</span><span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="c1">//This pretty much just tells the engine if it can optimize by combining saved moves. There doesn't appear to be</span>
+	<span class="c1">//any problem with leaving it out, but it seems that it's good practice to implement this anyways.</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">bSavedWantsToSprint</span> <span class="o">!=</span> <span class="p">((</span><span class="n">FSavedMove_ExtendedMovement</span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">NewMove</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">bSavedWantsToSprint</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">SavedMoveDirection</span> <span class="o">!=</span> <span class="p">((</span><span class="n">FSavedMove_ExtendedMovement</span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">NewMove</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">SavedMoveDirection</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="n">Super</span><span class="o">::</span><span class="n">CanCombineWith</span><span class="p">(</span><span class="n">NewMove</span><span class="p">,</span> <span class="n">Character</span><span class="p">,</span> <span class="n">MaxDelta</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">FSavedMove_MyMovement</span><span class="o">::</span><span class="n">PrepMoveFor</span><span class="p">(</span><span class="k">class</span> <span class="nc">ACharacter</span><span class="o">*</span> <span class="n">Character</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">PrepMoveFor</span><span class="p">(</span><span class="n">Character</span><span class="p">);</span>
+
+	<span class="n">UMyCharacterMovement</span><span class="o">*</span> <span class="n">CharMov</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">UMyCharacterMovement</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Character</span><span class="o">-&gt;</span><span class="n">GetCharacterMovement</span><span class="p">());</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">CharMov</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//This is just the exact opposite of SetMoveFor. It copies the state from the saved move to the movement</span>
+		<span class="c1">//component before a correction is made to a client.</span>
+		<span class="n">CharMov</span><span class="o">-&gt;</span><span class="n">MoveDirection</span> <span class="o">=</span> <span class="n">SavedMoveDirection</span><span class="p">;</span>
+		
+		<span class="c1">//Don't update flags here. They're automatically setup before corrections using the compressed flag methods.</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Now we have all the data needed in order to implement the actual ability in OnMovementUpdated. We'll also need to implement the method to trigger the ability and hook it up to the character's input component. For the sake of brevity, and my own sanity, it's assumed that you can figure out how to hook up the DoDodge method to the input component by now if you've already made it this far, so that bit of code has been omitted.
+      </p>
+      <p>
+       <i>
+        MyCharacterMovement.cpp
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">UMyCharacterMovement</span><span class="o">::</span><span class="n">OnMovementUpdated</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaSeconds</span><span class="p">,</span> <span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">OldLocation</span><span class="p">,</span> <span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">OldVelocity</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">OnMovementUpdated</span><span class="p">(</span><span class="n">DeltaSeconds</span><span class="p">,</span> <span class="n">OldLocation</span><span class="p">,</span> <span class="n">OldVelocity</span><span class="p">);</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">CharacterOwner</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">return</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="c1">//Store movement vector</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">PawnOwner</span><span class="o">-&gt;</span><span class="n">IsLocallyControlled</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="n">MoveDirection</span> <span class="o">=</span> <span class="n">PawnOwner</span><span class="o">-&gt;</span><span class="n">GetLastMovementInputVector</span><span class="p">();</span>
+	<span class="p">}</span>
+	<span class="c1">//Send movement vector to server</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">PawnOwner</span><span class="o">-&gt;</span><span class="n">Role</span> <span class="o">&lt;</span> <span class="n">ROLE_Authority</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">ServerSetMoveDirection</span><span class="p">(</span><span class="n">MoveDirection</span><span class="p">);</span>
+	<span class="p">}</span>
+
+	<span class="c1">//Update dodge movement</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">bWantsToDodge</span><span class="p">)</span>
+	<span class="p">{</span>		
+		<span class="n">MoveDirection</span><span class="p">.</span><span class="n">Normalize</span><span class="p">();</span>
+		<span class="n">FVector</span> <span class="n">DodgeVel</span> <span class="o">=</span> <span class="n">MoveDirection</span><span class="o">*</span><span class="n">DodgeStrength</span><span class="p">;</span>
+		<span class="n">DodgeVel</span><span class="p">.</span><span class="n">Z</span> <span class="o">=</span> <span class="mf">0.0f</span><span class="p">;</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="n">IsMovingOnGround</span><span class="p">())</span>
+		<span class="p">{</span>
+			<span class="n">DodgeVel</span> <span class="o">*=</span> <span class="n">GroundDodgeStrengthMultiplier</span><span class="p">;</span>
+		<span class="p">}</span>
+
+		<span class="n">Launch</span><span class="p">(</span><span class="n">DodgeVel</span><span class="p">);</span>
+
+		<span class="n">bWantsToDodge</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">UMyCharacterMovement</span><span class="o">::</span><span class="n">DoDodge</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">bWantsToDodge</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Now you should be able to test the character movement and boost around using whatever key you've assigned boost to. To keep things simple, this is just a basic boost implementation. You could get more advanced and average the velocities in OnMovementUpdated so that you boost faster when going forward, or use all sorts of other math to make things more interesting.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Double_Jump">
+        Double Jump
+       </span>
+      </h3>
+      <p>
+       A simple double jump is actually quite easy to implement. The first thing is to override the CanJumpInternal_Implementation method in the character class so that we can actually trigger the extra jump.
+      </p>
+      <p>
+       <i>
+        MyCharacter.cpp
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">bool</span> <span class="n">AMyCharacter</span><span class="o">::</span><span class="n">CanJumpInternal_Implementation</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="kt">bool</span> <span class="n">bCanJump</span> <span class="o">=</span> <span class="n">Super</span><span class="o">::</span><span class="n">CanJumpInternal_Implementation</span><span class="p">();</span>
+
+	<span class="n">UMyCharacterMovement</span><span class="o">*</span> <span class="n">MyMovementComp</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">UMyCharacterMovement</span><span class="o">&gt;</span><span class="p">(</span><span class="n">GetCharacterMovement</span><span class="p">());</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">bCanJump</span> <span class="o">&amp;&amp;</span> <span class="n">MyMovementComp</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">bCanJump</span> <span class="o">=</span> <span class="n">MyMovementComp</span><span class="o">-&gt;</span><span class="n">CanJump</span><span class="p">();</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="n">bCanJump</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       It's much more convenient to check for double jumping capability inside the character movement component, so we'll just call into a CanJump method we'll add to it. Additionally, we'll want to override a couple methods, and add a couple properties. We'll also need to add a member to the saved move for corrections to work.
+      </p>
+      <p>
+       <i>
+        MyCharacterMovement.h
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Inside UMyCharacterMovement...</span>
+
+<span class="c1">///@brief Override DoJump to trigger the extra jumps.</span>
+<span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">DoJump</span><span class="p">(</span><span class="kt">bool</span> <span class="n">bReplayingMoves</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+<span class="c1">///@return Whether or not the character can currently jump.</span>
+<span class="kt">bool</span> <span class="nf">CanJump</span><span class="p">();</span>
+<span class="c1">///@brief This is called whenever the character lands on the ground, and will be used to reset the jump counter.</span>
+<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">ProcessLanded</span><span class="p">(</span><span class="k">const</span> <span class="n">FHitResult</span><span class="o">&amp;</span> <span class="n">Hit</span><span class="p">,</span> <span class="kt">float</span> <span class="n">remainingTime</span><span class="p">,</span> <span class="n">int32</span> <span class="n">Iterations</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+
+<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">Category</span> <span class="o">=</span> <span class="s">"Multijump"</span><span class="p">,</span> <span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">DisplayName</span> <span class="o">=</span> <span class="s">"Max Multijump Count"</span><span class="p">))</span>
+<span class="n">int32</span> <span class="n">MaxJumpCount</span><span class="p">;</span>
+<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">Category</span> <span class="o">=</span> <span class="s">"Multijump"</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">DisplayName</span> <span class="o">=</span> <span class="s">"Current jump count"</span><span class="p">))</span>
+<span class="n">int32</span> <span class="n">JumpCount</span><span class="p">;</span>
+
+<span class="c1">//Inside FSavedMove_MyMovement...</span>
+<span class="n">int32</span> <span class="n">SavedJumpCount</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       Okay, I lied. It's not necessarily a double jump, because you can set the MaxJumpCount property higher than 2 to let your character jump as many times as you want. It turns out it's easier to implement this way though, so you basically get extra functionality for free.
+      </p>
+      <p>
+       First of all just get all the saved move stuff out of the way. Not much special here, just the same as before. The only difference being we don't have to bother sending the JumpCount through an RPC, because it just gets incremented on both the client and server whenever a jump is triggered.
+      </p>
+      <p>
+       <i>
+        MyCharacterMovement.cpp
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">FSavedMove_MyMovement</span><span class="o">::</span><span class="n">Clear</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">Clear</span><span class="p">();</span>
+
+	<span class="c1">//Omitted variables from previous abilities...</span>
+
+	<span class="n">SavedJumpCount</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">FSavedMove_MyMovement</span><span class="o">::</span><span class="n">CanCombineWith</span><span class="p">(</span><span class="k">const</span> <span class="n">FSavedMovePtr</span><span class="o">&amp;</span> <span class="n">NewMove</span><span class="p">,</span> <span class="n">ACharacter</span><span class="o">*</span> <span class="n">Character</span><span class="p">,</span> <span class="kt">float</span> <span class="n">MaxDelta</span><span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="c1">//Omitted variables from previous abilities...</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">SavedJumpCount</span> <span class="o">!=</span> <span class="p">((</span><span class="n">FSavedMove_MyMovement</span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">NewMove</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">SavedJumpCount</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="n">Super</span><span class="o">::</span><span class="n">CanCombineWith</span><span class="p">(</span><span class="n">NewMove</span><span class="p">,</span> <span class="n">Character</span><span class="p">,</span> <span class="n">MaxDelta</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">FSavedMove_MyMovement</span><span class="o">::</span><span class="n">SetMoveFor</span><span class="p">(</span><span class="n">ACharacter</span><span class="o">*</span> <span class="n">Character</span><span class="p">,</span> <span class="kt">float</span> <span class="n">InDeltaTime</span><span class="p">,</span> <span class="n">FVector</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">NewAccel</span><span class="p">,</span> <span class="k">class</span> <span class="nc">FNetworkPredictionData_Client_Character</span> <span class="o">&amp;</span> <span class="n">ClientData</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">SetMoveFor</span><span class="p">(</span><span class="n">Character</span><span class="p">,</span> <span class="n">InDeltaTime</span><span class="p">,</span> <span class="n">NewAccel</span><span class="p">,</span> <span class="n">ClientData</span><span class="p">);</span>
+
+	<span class="n">UMyCharacterMovement</span><span class="o">*</span> <span class="n">CharMov</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">UMyCharacterMovement</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Character</span><span class="o">-&gt;</span><span class="n">GetCharacterMovement</span><span class="p">());</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">CharMov</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//Omitted variables from previous abilities...</span>
+
+		<span class="n">SavedJumpCount</span> <span class="o">=</span> <span class="n">CharMov</span><span class="o">-&gt;</span><span class="n">JumpCount</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">FSavedMove_MyMovement</span><span class="o">::</span><span class="n">PrepMoveFor</span><span class="p">(</span><span class="k">class</span> <span class="nc">ACharacter</span><span class="o">*</span> <span class="n">Character</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">PrepMoveFor</span><span class="p">(</span><span class="n">Character</span><span class="p">);</span>
+
+	<span class="n">UMyCharacterMovement</span><span class="o">*</span> <span class="n">CharMov</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">UMyCharacterMovement</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Character</span><span class="o">-&gt;</span><span class="n">GetCharacterMovement</span><span class="p">());</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">CharMov</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//Omitted variables from previous abilities...</span>
+
+		<span class="n">CharMov</span><span class="o">-&gt;</span><span class="n">JumpCount</span> <span class="o">=</span> <span class="n">SavedJumpCount</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Now comes the actual extra jump implementation. To let the player even trigger the jump, the CanJump method we call into from the character class needs to be implemented. It's pretty self explanatory.
+      </p>
+      <p>
+       <i>
+        MyCharacterMovement.cpp
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">bool</span> <span class="n">UExtendedCharacterMovement</span><span class="o">::</span><span class="n">CanJump</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="p">(</span><span class="n">IsMovingOnGround</span><span class="p">()</span> <span class="o">||</span> <span class="n">JumpCount</span> <span class="o">&lt;</span> <span class="n">MaxJumpCount</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">CanEverJump</span><span class="p">();</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Now all that remains is to increment the jump count whenever an extra jump is triggered, and reset it on landing. The character movement component has a DoJump method for incrementing the counter, and a convenient ProcessLanded method we can override to reset the counter.
+      </p>
+      <p>
+       <i>
+        MyCharacterMovement.cpp
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">bool</span> <span class="n">UMyCharacterMovement</span><span class="o">::</span><span class="n">DoJump</span><span class="p">(</span><span class="kt">bool</span> <span class="n">bReplayingMoves</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">Super</span><span class="o">::</span><span class="n">DoJump</span><span class="p">(</span><span class="n">bReplayingMoves</span><span class="p">))</span>
+	<span class="p">{</span>
+		<span class="n">JumpCount</span><span class="o">++</span><span class="p">;</span>
+
+		<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">UMyCharacterMovement</span><span class="o">::</span><span class="n">ProcessLanded</span><span class="p">(</span><span class="k">const</span> <span class="n">FHitResult</span><span class="o">&amp;</span> <span class="n">Hit</span><span class="p">,</span> <span class="kt">float</span> <span class="n">remainingTime</span><span class="p">,</span> <span class="n">int32</span> <span class="n">Iterations</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">JumpCount</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+	<span class="n">Super</span><span class="o">::</span><span class="n">ProcessLanded</span><span class="p">(</span><span class="n">Hit</span><span class="p">,</span> <span class="n">remainingTime</span><span class="p">,</span> <span class="n">Iterations</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       The double jump will work now if all you want to do is add an extra jump. The only problem is you can't really change directions while jumping. The good news is, we sent the movement vector earlier so that we could boost in different directions, so we can just reuse that here to make whatever velocity calculations we want to.
+      </p>
+      <p>
+       <i>
+        MyCharacterMovement.cpp
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">bool</span> <span class="n">UMyCharacterMovement</span><span class="o">::</span><span class="n">DoJump</span><span class="p">(</span><span class="kt">bool</span> <span class="n">bReplayingMoves</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">Super</span><span class="o">::</span><span class="n">DoJump</span><span class="p">(</span><span class="n">bReplayingMoves</span><span class="p">))</span>
+	<span class="p">{</span>
+		<span class="n">JumpCount</span><span class="o">++</span><span class="p">;</span>
+
+		<span class="c1">//Adjust midair velocity using the input direction</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">JumpCount</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="c1">//Calculate lateral speed to use in adjusting trajectory in midair</span>
+			<span class="n">FVector</span> <span class="n">LateralVelocity</span> <span class="o">=</span> <span class="n">Velocity</span><span class="p">;</span>
+			<span class="n">LateralVelocity</span><span class="p">.</span><span class="n">Z</span> <span class="o">=</span> <span class="mf">0.0f</span><span class="p">;</span><span class="c1">//Don't care about vertical velocity</span>
+			<span class="kt">float</span> <span class="n">LateralSpeed</span> <span class="o">=</span> <span class="n">LateralVelocity</span><span class="p">.</span><span class="n">Size</span><span class="p">();</span>
+
+			<span class="c1">//Average the actual velocity with the target velocity</span>
+			<span class="n">FVector</span> <span class="n">NewVelocity</span> <span class="o">=</span> <span class="n">MoveDirection</span><span class="o">*</span><span class="n">LateralSpeed</span><span class="p">;</span>
+			<span class="n">NewVelocity</span><span class="p">.</span><span class="n">Z</span> <span class="o">=</span> <span class="mf">0.0f</span><span class="p">;</span>
+			<span class="n">NewVelocity</span> <span class="o">+=</span> <span class="n">LateralVelocity</span><span class="p">;</span>
+			<span class="n">NewVelocity</span> <span class="o">*=</span> <span class="mf">0.5f</span><span class="p">;</span>
+
+			<span class="n">Velocity</span> <span class="o">=</span> <span class="n">NewVelocity</span><span class="p">;</span>
+			<span class="n">Velocity</span><span class="p">.</span><span class="n">Z</span> <span class="o">=</span> <span class="n">JumpZVelocity</span><span class="p">;</span>
+		<span class="p">}</span>
+
+		<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Now jumping while holding in a different direction will cause the character to change directions mid jump.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Cooldown_Timers">
+        Cooldown Timers
+       </span>
+      </h2>
+      <p>
+       The last example for character movement is cooldown timers on abilities. The boost dodge ability will be used to demonstrate how to implement a simple cooldown timer. The same concept applies to sprint energy and other timer/energy type effects as well.
+      </p>
+      <p>
+       Timers are just calculated on both the client and the server independently, because they don't really need to match up perfectly since the server is authoritative. The only reason they need to be calculated on the client too is so that players don't try to spam the boost button and see their character getting corrected back to its original position. If you have a timer that really needs to be synchronized, then you could probably set it to be replicated, but in the interest of not wasting bandwidth the boost timer won't be replicated.
+      </p>
+      <p>
+       <i>
+        MyCharacterMovement.h
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Inside UMyCharacterMovement class...</span>
+
+<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Dodge"</span><span class="p">)</span>
+<span class="kt">float</span> <span class="n">DodgeCooldown</span><span class="p">;</span>
+
+<span class="kt">float</span> <span class="n">DodgeCooldownTimer</span><span class="p">;</span>
+
+<span class="c1">//Inside FSavedMove_MyMovement class...</span>
+<span class="kt">float</span> <span class="n">SavedDodgeCooldownTimer</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       DodgeCooldown should be initialized to something like 2.0f or whatever you want the cooldown time to be. DodgeCooldownTimer is what will actually be doing the timing, so set it to 0.0f in the constructor. We'll use OnMovementUpdated to update our timers.
+      </p>
+      <p>
+       <i>
+        MyCharacterMovement.cpp
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">UMyCharacterMovement</span><span class="o">::</span><span class="n">OnMovementUpdated</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaSeconds</span><span class="p">,</span> <span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">OldLocation</span><span class="p">,</span> <span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">OldVelocity</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">//...</span>
+
+	<span class="c1">//Update dodge movement</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">bWantsToDodge</span> <span class="o">&amp;&amp;</span> <span class="n">DodgeCooldownTimer</span> <span class="o">&lt;=</span> <span class="mf">0.0f</span><span class="p">)</span>
+	<span class="p">{</span>		
+		<span class="n">MoveDirection</span><span class="p">.</span><span class="n">Normalize</span><span class="p">();</span>
+		<span class="n">FVector</span> <span class="n">DodgeVel</span> <span class="o">=</span> <span class="n">MoveDirection</span><span class="o">*</span><span class="n">DodgeStrength</span><span class="p">;</span>
+		<span class="n">DodgeVel</span><span class="p">.</span><span class="n">Z</span> <span class="o">=</span> <span class="mf">0.0f</span><span class="p">;</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="n">IsMovingOnGround</span><span class="p">())</span>
+		<span class="p">{</span>
+			<span class="n">DodgeVel</span> <span class="o">*=</span> <span class="n">GroundDodgeStrengthMultiplier</span><span class="p">;</span>
+		<span class="p">}</span>
+
+		<span class="n">Launch</span><span class="p">(</span><span class="n">DodgeVel</span><span class="p">);</span>
+
+		<span class="n">bWantsToDodge</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+
+		<span class="c1">//Reset cooldown timer</span>
+		<span class="n">DodgeCooldownTimer</span> <span class="o">=</span> <span class="n">DodgeCooldown</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="c1">//Update cooldown timers</span>
+	<span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">DodgeCooldownTimer</span> <span class="o">&gt;</span> <span class="mf">0.0f</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">DodgeCooldownTimer</span> <span class="o">-=</span> <span class="n">DeltaSeconds</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="c1">//...</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       We pretty much just update and check against the timers all in the OnMovementUpdated method. After a while this can get kind of messy, so in a larger project with lots of movement abilities it can be beneficial to refactor things a bit and maybe split stuff up into more methods, but for the sake of this example this will work fine.
+      </p>
+      <p>
+       Finally, just do the usual with the saved moves.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">FSavedMove_MyMovement</span><span class="o">::</span><span class="n">Clear</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">Clear</span><span class="p">();</span>
+ 
+	<span class="c1">//Omitted other variables...</span>
+ 
+	<span class="n">SavedDodgeCooldownTimer</span><span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+ 
+<span class="kt">bool</span> <span class="n">FSavedMove_MyMovement</span><span class="o">::</span><span class="n">CanCombineWith</span><span class="p">(</span><span class="k">const</span> <span class="n">FSavedMovePtr</span><span class="o">&amp;</span> <span class="n">NewMove</span><span class="p">,</span> <span class="n">ACharacter</span><span class="o">*</span> <span class="n">Character</span><span class="p">,</span> <span class="kt">float</span> <span class="n">MaxDelta</span><span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="c1">//Omitted other variables...</span>
+ 
+	<span class="k">if</span> <span class="p">(</span><span class="n">SavedDodgeCooldownTimer</span><span class="o">!=</span> <span class="p">((</span><span class="n">FSavedMove_MyMovement</span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">NewMove</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">SavedDodgeCooldownTimer</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="p">}</span>
+ 
+	<span class="k">return</span> <span class="n">Super</span><span class="o">::</span><span class="n">CanCombineWith</span><span class="p">(</span><span class="n">NewMove</span><span class="p">,</span> <span class="n">Character</span><span class="p">,</span> <span class="n">MaxDelta</span><span class="p">);</span>
+<span class="p">}</span>
+ 
+<span class="kt">void</span> <span class="n">FSavedMove_MyMovement</span><span class="o">::</span><span class="n">SetMoveFor</span><span class="p">(</span><span class="n">ACharacter</span><span class="o">*</span> <span class="n">Character</span><span class="p">,</span> <span class="kt">float</span> <span class="n">InDeltaTime</span><span class="p">,</span> <span class="n">FVector</span> <span class="k">const</span><span class="o">&amp;</span> <span class="n">NewAccel</span><span class="p">,</span> <span class="k">class</span> <span class="nc">FNetworkPredictionData_Client_Character</span> <span class="o">&amp;</span> <span class="n">ClientData</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">SetMoveFor</span><span class="p">(</span><span class="n">Character</span><span class="p">,</span> <span class="n">InDeltaTime</span><span class="p">,</span> <span class="n">NewAccel</span><span class="p">,</span> <span class="n">ClientData</span><span class="p">);</span>
+ 
+	<span class="n">UMyCharacterMovement</span><span class="o">*</span> <span class="n">CharMov</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">UMyCharacterMovement</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Character</span><span class="o">-&gt;</span><span class="n">GetCharacterMovement</span><span class="p">());</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">CharMov</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//Omitted other variables...</span>
+ 
+		<span class="n">SavedDodgeCooldownTimer</span> <span class="o">=</span> <span class="n">CharMov</span><span class="o">-&gt;</span><span class="n">DodgeCooldownTimer</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+ 
+<span class="kt">void</span> <span class="n">FSavedMove_MyMovement</span><span class="o">::</span><span class="n">PrepMoveFor</span><span class="p">(</span><span class="k">class</span> <span class="nc">ACharacter</span><span class="o">*</span> <span class="n">Character</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">PrepMoveFor</span><span class="p">(</span><span class="n">Character</span><span class="p">);</span>
+ 
+	<span class="n">UMyCharacterMovement</span><span class="o">*</span> <span class="n">CharMov</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">UMyCharacterMovement</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Character</span><span class="o">-&gt;</span><span class="n">GetCharacterMovement</span><span class="p">());</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">CharMov</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//Omitted other variables...</span>
+ 
+		<span class="n">CharMov</span><span class="o">-&gt;</span><span class="n">DodgeCooldownTimer</span> <span class="o">=</span> <span class="n">SavedDodgeCooldownTimer</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       Most movement abilities should be easy to implement in quite a similar fashion. A jetpack would just need to use the compressed flags to set some sort of bWantsToJetpack on the movement component, then just use OnMovementUpdated to adjust the velocity.
+      </p>
+      <p>
+       If you find any errors, or have any questions or suggestions about this tutorial then just drop them in the
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?79646-Wiki-Authoritative-Networked-Character-Movement-Tutorial&amp;p=351317#post351317" rel="nofollow">
+        forum thread
+       </a>
+       and I'll try to update accordingly.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Other_Resources">
+        Other Resources
+       </span>
+      </h2>
+      <p>
+       This section just includes links to various useful resources relating to the character movement component. I'll be updating this whenever I find more.
+      </p>
+      <p>
+      </p>
+      <p>
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Gameplay/Networking/CharacterMovementComponent/index.html" rel="nofollow">
+        Character Movement Component docs
+       </a>
+      </p>
+      <p>
+       <a class="external text" href="http://error454.com/2015/03/20/ue4/movement/replication/" rel="nofollow">
+        Error545's Character Movement Replication in UE4 blog post
+       </a>
+      </p>
+      <p>
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?5047-How-to-add-a-movement-type-inherited-from-Walking-Like-Covering" rel="nofollow">
+        Custom Movement Modes
+       </a>
+      </p>
+      <p>
+       <a class="external text" href="https://github.com/EpicGames/UnrealTournament/blob/clean-master/UnrealTournament/Source/UnrealTournament/Public/UTCharacterMovement.h" rel="nofollow">
+        UTCharacterMovement.h
+       </a>
+      </p>
+      <p>
+       <a class="external text" href="https://github.com/EpicGames/UnrealTournament/blob/clean-master/UnrealTournament/Source/UnrealTournament/Private/UTCharacterMovement.cpp" rel="nofollow">
+        UTCharacterMovement.cpp
+       </a>
+      </p>
+      <p>
+       <a class="external text" href="https://github.com/EpicGames/UnrealTournament/blob/clean-master/UnrealTournament/Source/UnrealTournament/Public/UTCharacter.h" rel="nofollow">
+        UTCharacter.h
+       </a>
+      </p>
+      <p>
+       <a class="external text" href="https://github.com/EpicGames/UnrealTournament/blob/clean-master/UnrealTournament/Source/UnrealTournament/Private/UTCharacter.cpp" rel="nofollow">
+        UTCharacter.cpp
+       </a>
+      </p>
+      <p>
+       <a class="external text" href="https://github.com/EpicGames/UnrealTournament/blob/clean-master/UnrealTournament/Source/UnrealTournament/Private/UTCharMovementReplication.cpp" rel="nofollow">
+        UTCharMovementReplication.cpp
+       </a>
+      </p>
+      <p>
+       <br/>
+       (
+     )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

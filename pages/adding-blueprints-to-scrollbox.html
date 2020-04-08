@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Adding Blueprints To Scrollbox - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Adding Blueprints To Scrollbox
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <h2>
+       <span class="mw-headline" id="Considerations">
+        Considerations
+       </span>
+      </h2>
+      <p>
+       I had the problem that I wanted to create a Blueprint that contained a complex button setup as well as other data. then I wanted to add that blueprint through the CreateWidget node to a scrollbox.
+      </p>
+      <p>
+       I learned the basics of this from Rama's tutorial which I link at the bottom. However the problem was that it requires that the button is added to the scrollbox, not the returned widget. This makes it impossible to iterate over the scrollbox's children and then cast each returned widget to my BP type because the button was not derived from my BP but part of it.
+      </p>
+      <h2>
+       <span class="mw-headline" id="The_Solution">
+        The Solution
+       </span>
+      </h2>
+      <p>
+       After some research I found a way to attach the returned BP widget directly to a scrollbox (and presumably to other widgets like HorizontalBox as well). the picture below shows the architecture in my BP that works for me:
+      </p>
+      <p>
+       <br/>
+      </p>
+      <ul class="gallery mw-gallery-traditional">
+       <li class="gallerybox" style="width: 155px">
+        <div style="width: 155px">
+         <div class="thumb" style="width: 150px;">
+          <div style="margin:36.5px auto;">
+           <img alt="" class="" height="77" src="../assets/adding-blueprints-to-scrollbox/0.jpg" width="120"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           My Solution
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <p>
+       If you wrap your Button or whatever you use in the way shown, chances are that you can add the returned Widget directly to the scrollbox and then cast any child widget back to your BP class with access to all functions and variables in your BP
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Related_Wikis">
+        Related Wikis
+       </span>
+      </h2>
+      <p>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

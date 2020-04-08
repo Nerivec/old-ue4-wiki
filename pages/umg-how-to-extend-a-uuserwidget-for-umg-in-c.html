@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   UMG, How to extend a UUserWidget:: for UMG in C++. - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    UMG, How to extend a UUserWidget:: for UMG in C++.
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Add_Header_Files_To_Project">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Add Header Files To Project
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Adding_Modules">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Adding Modules
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Compile">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Compile
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Using_the_new_User_Widget_class">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Using the new User Widget class
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Set_the_Widget_Parent">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Set the Widget Parent
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Go_down_to_the_details">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Go down to the details
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Related_Tutorials">
+          <span class="tocnumber">
+           9
+          </span>
+          <span class="toctext">
+           Related Tutorials
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Author:
+       </i>
+       (
+     )
+      </p>
+      <p>
+       <b>
+        A updated version of this tutorial can be found here.
+        <br/>
+       </b>
+       <a class="external free" href="./extend-userwidget-for-umg-widgets.html" rel="nofollow">
+        Extend UserWidget for UMG Widgets
+       </a>
+      </p>
+      <p>
+       I wanted to extend the Widget Blueprint, i
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?37292-Some-feedback-on-UMG" rel="nofollow">
+        got some great help
+       </a>
+       from
+       <a class="external text" href="https://forums.unrealengine.com/member.php?2522-NickDarnell" rel="nofollow">
+        Nick Darnell
+       </a>
+       so thanks again.
+      </p>
+      <p>
+       In order to derive my class from UUserWidget:: i did the following.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Add_Header_Files_To_Project">
+        Add Header Files To Project
+       </span>
+      </h2>
+      <p>
+       You add several headers to your project header. "(YourProjectName.h)".
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"Runtime/UMG/Public/UMG.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Runtime/UMG/Public/UMGStyle.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Runtime/UMG/Public/Slate/SObjectWidget.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Runtime/UMG/Public/IUMGModule.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Runtime/UMG/Public/Blueprint/UserWidget.h"</span><span class="cp"></span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Adding_Modules">
+        Adding Modules
+       </span>
+      </h2>
+      <p>
+       And then i also made sure that the UMG and Slate Modules was included as well.
+In "(YourProjectName.Build.cs)":
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">PublicDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"Core"</span><span class="p">,</span> <span class="s">"CoreUObject"</span><span class="p">,</span> <span class="s">"Engine"</span><span class="p">,</span> <span class="s">"InputCore"</span><span class="p">,</span> <span class="s">"UMG"</span><span class="p">,</span> <span class="s">"Slate"</span><span class="p">,</span> <span class="s">"SlateCore"</span><span class="p">})</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Compile">
+        Compile
+       </span>
+      </h2>
+      <p>
+       Compile and re-open the editor.
+And add a new class to the project derived from
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/API/Runtime/UMG/Blueprint/UUserWidget/index.html" rel="nofollow">
+        UUserWidget::
+       </a>
+      </p>
+      <p>
+       <i>
+        If you were wondering how the header of the derived class looks like after created/ added from the editor.
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+    
+<span class="cp">#include</span> <span class="cpf">"Blueprint/UserWidget.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"InventoryWidget.generated.h"</span><span class="cp"></span>
+   
+ <span class="cm">/**</span>
+<span class="cm">   * </span>
+<span class="cm">   */</span>
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">MYGAME_API</span> <span class="nl">UInventoryWidget</span> <span class="p">:</span> <span class="k">public</span> <span class="n">UUserWidget</span>
+<span class="p">{</span>
+       <span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Using_the_new_User_Widget_class">
+        Using the new User Widget class
+       </span>
+      </h2>
+      <p>
+       Create a new Widget Blueprint as shown in the image.
+       <img alt="UMG1.PNG" class="" height="502" src="../assets/umg-how-to-extend-a-uuserwidget-for-umg-in-c/0.PNG" width="428"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Set_the_Widget_Parent">
+        Set the Widget Parent
+       </span>
+      </h2>
+      <p>
+       Open up the new Widget you just created and go to the Graph of the Widget Blueprint.
+Press on the
+       <img alt="UMG2.PNG" class="" height="76" src="../assets/umg-how-to-extend-a-uuserwidget-for-umg-in-c/1.PNG" width="102"/>
+       button on the top of the window.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Go_down_to_the_details">
+        Go down to the details
+       </span>
+      </h2>
+      <p>
+       Under the Category "Globals" you set the class you derived from UUserWidget.
+       <img alt="UMG3.PNG" class="" height="961" src="../assets/umg-how-to-extend-a-uuserwidget-for-umg-in-c/2.PNG" width="1493"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       You are done, now you have a simple and fast way to extend the user widget.
+From everything from Data Storage to picking up "events" delegates and so on.
+      </p>
+      <p>
+       Hope this was helpfull.
+       <br/>
+      </p>
+      <p>
+       WCode
+      </p>
+      <h2>
+       <span class="mw-headline" id="Related_Tutorials">
+        Related Tutorials
+       </span>
+      </h2>
+      <p>
+       <a class="external text" href="./extend-userwidget-for-umg-widgets.html" rel="nofollow">
+        [Updated Tutorial] Extend UserWidget for UMG Widgets by WCode.
+       </a>
+      </p>
+      <p>
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/UMG/index.html" rel="nofollow">
+        Epic's UMG Documentation
+       </a>
+      </p>
+      <p>
+      </p>
+      <p>
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?52773-Tutorial-Snippet-Creating-a-UMG-Widget-in-C-and-delegate-example" rel="nofollow">
+        [Tutorial/ Snippet] Creating a UMG Widget in C++, and delegate example by WCode.
+       </a>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

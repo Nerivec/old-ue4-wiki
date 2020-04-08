@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Bouncepad Tutorial - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Bouncepad Tutorial
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       Author: Adam Davis
+      </p>
+      <p>
+       1. Create a new Actor blueprint. This is a blueprint that derives from the parent class 'Actor', which means it will get all of the attributes of the Actor parent.
+       <br/>
+       <img alt="ClassActor.png" class="" height="392" src="../assets/bouncepad-tutorial/0.png" width="534"/>
+       <br/>
+       2. Name the blueprint "Bouncepad" and open it by double clicking on the icon in your content browser.
+       <br/>
+       <img alt="Renamed.png" class="" height="170" src="../assets/bouncepad-tutorial/1.png" width="331"/>
+       <br/>
+       3. Add a Static Mesh component by going to "Add Component" in the Components window and selecting "Static Mesh component" from the list.
+       <br/>
+       <img alt="Staticmesh.png" class="" height="260" src="../assets/bouncepad-tutorial/2.png" width="252"/>
+       <br/>
+       4. In the Details pane, select a suitable static mesh to form the base of your bounce pad.
+       <br/>
+       <img alt="SelectMesh.png" class="" height="506" src="../assets/bouncepad-tutorial/3.png" width="537"/>
+       <br/>
+       5. Create a Box Collision component. This will be what we use to determine whether or not to activate.
+       <br/>
+       <img alt="Collision.png" class="" height="424" src="../assets/bouncepad-tutorial/4.png" width="254"/>
+       <br/>
+       6. Move the collision box to just above the static mesh. Make sure to size it so that the box is not too large or else you will launch well before it looks like you have touched the bounce pad.
+       <br/>
+       7. Add an arrow component. Move and rotate the arrow component to face straight upwards from the static mesh and have it sit slight above the mesh on the Z axis. While this won't show up while playing, it will give you an idea of which direction your bounce pad will be launching when you are setting them up.
+       <br/>
+       <img alt="SetArrow.png" class="" height="613" src="../assets/bouncepad-tutorial/5.png" width="472"/>
+       <br/>
+       8. Compile the blueprint, now open your event graph.
+       <br/>
+       9. Find the node "Event Overlap". Your blueprint should have one already set in the event graph.
+       <br/>
+       <img alt="Overlap.png" class="" height="119" src="../assets/bouncepad-tutorial/6.png" width="260"/>
+       <br/>
+       10. Drag off of the "Other Actor" pin and create a "cast to" node. The way to do this is to type in "Cast to" and, in this case, use the name of your player character blueprint. For my example it was MyCharacter, so I would type in "Cast to MyCharacter". A Cast to node is a way for blueprints to check who/what they are interacting with and respond accordingly. In many cases, you only want certain blueprints to do specific functions under specific circumstances. This is the case with the bounce pad. We only want it to trigger when the player overlaps the bouncepad, so we use a cast to the character to check what object is overlapping and see if that is or is not the character. If it is, you can continue, if not, do something else or do nothing.
+       <br/>
+       <img alt="Casttocharacter.png" class="" height="206" src="../assets/bouncepad-tutorial/7.png" width="583"/>
+       <br/>
+       11. Drag off of the "as &lt;blueprintname&gt;_C" node and type in "is falling", then select the node on the list. This will get the players state as to whether or not they are in the air. The "Is Falling" state automatically sets when jumping with most of the template pawns provided in the editor.
+       <br/>
+       <img alt="Isfalling.png" class="" height="276" src="../assets/bouncepad-tutorial/8.png" width="635"/>
+       <br/>
+       12. From the return value, drag off and create a branch node. Plug the execution pin that is unlabeled from the cast to node into the execution of the branch. This setup will check to see if the object that overlaps your bouncepad is the character, then check to see if the character is set to state "falling" or if the player is on the ground.
+       <br/>
+       <img alt="Branch - Copy.png" class="" height="318" src="../assets/bouncepad-tutorial/9.png" width="927"/>
+       <br/>
+       13. From the "as &lt;blueprintname&gt;_C" pin, drag off and type in "launch character" into the context menu. Connect this nodes execution pin to the "True" execution from your branch node. So now, if the overlap detects a player and the player is set to state "is falling", launch the character.
+       <br/>
+       <img alt="LaunchCharacter.png" class="" height="298" src="../assets/bouncepad-tutorial/10.png" width="869"/>
+       <br/>
+       14. As you may have noticed, while we've told the bouncepad to launch the player, we haven't really given it any other information to go off of! The first thing you will want to do is press the checkboxes next to "XYOverride" and "ZOverride". This will eliminate the players movement once they are launched, forcing the pawn to accept the launch velocity as the only input until they are no longer falling or you tell it to do something else.
+       <br/>
+       <img alt="CheckBools.png" class="" height="178" src="../assets/bouncepad-tutorial/11.png" width="182"/>
+       <br/>
+       15. Next, create a new variable in the "My Blueprint" section. Call this "Bounce Height" and set it to type "Vector" in the Details Pane.
+       <br/>
+       <img alt="NewVar.png" class="" height="329" src="../assets/bouncepad-tutorial/12.png" width="251"/>
+       <br/>
+       <img alt="ChangeVar.png" class="" height="365" src="../assets/bouncepad-tutorial/13.png" width="451"/>
+       <br/>
+       16. In the "My Blueprint" section, click the closed eye next to BounceHeight. This makes the variable editable so that it can be interacted with by other blueprints or outside of the event graph.
+       <br/>
+       <img alt="EditableVar.png" class="" height="170" src="../assets/bouncepad-tutorial/14.png" width="259"/>
+       <br/>
+       17. In "My Blueprint", select the "Box" component, Left Mouse Button and hold to drag this into the event graph. When you let go, press "Get".
+       <br/>
+       <img alt="GetNode Component.png" class="" height="389" src="../assets/bouncepad-tutorial/15.png" width="1183"/>
+       <br/>
+       18. Drag off of this and type in "Get Up Vector", drag off of the box again to create a "Get World Rotation". This gets the Z axis of your bouncepad and the rotation you have set the pad in the world.
+       <br/>
+       <img alt="UpVector Rotation.png" class="" height="202" src="../assets/bouncepad-tutorial/16.png" width="427"/>
+       <br/>
+       19. Drag off of your Get Up Vector and type "+ vector", select "vector + vector".
+       <br/>
+       <img alt="Vectorplus.png" class="" height="214" src="../assets/bouncepad-tutorial/17.png" width="422"/>
+       <br/>
+       20.Left mouse button and drag your bounce height variable from the "My Blueprint" pane to the empty pin on your add node. What you are doing is taking your up vector information and adding the bounce height variable to it. so if the up vector was 1,0,1 and your bounce height was set to 0,1,0, your total would end up as 1,1,1.
+       <br/>
+       <img alt="DragPin.png" class="" height="324" src="../assets/bouncepad-tutorial/18.png" width="1065"/>
+       <br/>
+       21. Drag from the output of your add node and type "rotate vector". Create the rotate vector node and plug in your world rotation. This will rotate your up vector + BounceHeight to the direction your bouncepad is set to. This is what makes those arrows so handy!
+       <br/>
+       <img alt="Rotatevector.png" class="" height="273" src="../assets/bouncepad-tutorial/19.png" width="865"/>
+       <br/>
+       22. Plug the return value from your rotate vector into your "launch velocity" for your launch character node.
+       <br/>
+       <img alt="Launchvelocity.png" class="" height="362" src="../assets/bouncepad-tutorial/20.png" width="447"/>
+       <br/>
+       23. Your blueprint should look something like this when you are done:
+       <br/>
+       <img alt="FullGraph.png" class="" height="530" src="../assets/bouncepad-tutorial/21.png" width="1351"/>
+       <br/>
+       24. Compile, save, and close your blueprint.
+       <br/>
+       25. Place a copy of your blueprint into the level and rotate it so that the arrow points in the direct you want your player to bounce.
+       <br/>
+       <img alt="ContentbrowserDrag.png" class="" height="636" src="../assets/bouncepad-tutorial/22.png" width="634"/>
+       <br/>
+       26. In the details pane when you have the bounce pad selected, set your bounceheight to the desired velocity. A good test number is (0,0,1500). Remember that you are affecting your Up vector, so you will want to make your adjustments to the Z axis, not the X or Y.
+       <br/>
+       <img alt="ChangeBounce.png" class="" height="566" src="../assets/bouncepad-tutorial/23.png" width="862"/>
+       <br/>
+       27. Press Play in editor and jump on the bouncepad
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

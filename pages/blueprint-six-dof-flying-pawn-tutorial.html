@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Blueprint Six-DOF Flying Pawn Tutorial - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Blueprint Six-DOF Flying Pawn Tutorial
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <b>
+        Skill Level
+       </b>
+       : Beginner
+      </p>
+      <p>
+       <b>
+        Engine Version
+       </b>
+       : 4.0.1
+      </p>
+      <p>
+       <br/>
+       Getting a 6-DOF flying pawn like in
+       <a class="external text" href="http://en.wikipedia.org/wiki/Descent_(video_game)" rel="nofollow">
+        Descent
+       </a>
+       is fiarly simple in UE4 using only Blueprints.
+      </p>
+      <p>
+       <i>
+        Note:
+       </i>
+       If you're starting in a blank project, be sure to set up your
+       I'll be using the Content Examples project as it provides me with a place to fly around in and some simple assets to start with as well as the standard WASD axis bindings.
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Setting_up_the_Game_Mode_and_Pawn">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Setting up the Game Mode and Pawn
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Building_the_Pawn">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Building the Pawn
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Input_Part_1:_WASD_Movement">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Input Part 1: WASD Movement
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Input_Part_2:_Steering">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Input Part 2: Steering
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Input_Part_3:_Adding_Roll">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Input Part 3: Adding Roll
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Extra_Credit:_Physics_Rotations">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Extra Credit: Physics Rotations
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h5>
+       <span class="mw-headline" id="Setting_up_the_Game_Mode_and_Pawn">
+        Setting up the Game Mode and Pawn
+       </span>
+      </h5>
+      <ol>
+       <li>
+        Create a new
+        <b>
+         Pawn Blueprint
+        </b>
+        by selecting
+        <i>
+         <b>
+          New
+         </b>
+        </i>
+        in the Content Browser. Select
+        <b>
+         Pawn
+        </b>
+        from the
+        <i>
+         Pick Parent Class
+        </i>
+        window. Name this
+        <b>
+         BP_6DOF_Pawn
+        </b>
+        .
+        <div class="thumb tnone">
+         <div class="thumbinner" style="width:452px;">
+          <img alt="PawnTut 010 NewBP.jpg" class="thumbimage" height="259" src="../assets/blueprint-six-dof-flying-pawn-tutorial/0.jpg" width="450"/>
+          <div class="thumbcaption">
+           <div class="magnify">
+           </div>
+          </div>
+         </div>
+        </div>
+       </li>
+       <li>
+        Next, create a
+        <b>
+         Game Mode Blueprint
+        </b>
+        in the same manner, this time selecting
+        <b>
+         Game Mode
+        </b>
+        from the
+        <i>
+         Pick Parent Class
+        </i>
+        window. Name this
+        <b>
+         BP_6DOF_Game
+        </b>
+        .
+       </li>
+       <li>
+        Now, you'll want to assign
+        <b>
+         BP_6DOF_Game
+        </b>
+        to the map so that you are in possession of your new Pawn when the game starts. Click on the
+        <b>
+         World Settings
+        </b>
+        button in the editor toolbar. This will open a tab with the map's properties. You will find a drop-down menu under
+        <b>
+         Game Mode
+        </b>
+        that will display your newly created Game Mode (
+        <b>
+         BP_6DOF_Game
+        </b>
+        ).
+        <div class="thumb tnone">
+         <div class="thumbinner" style="width:452px;">
+          <img alt="PawnTut 020 WorldProps.jpg" class="thumbimage" height="259" src="../assets/blueprint-six-dof-flying-pawn-tutorial/1.jpg" width="450"/>
+          <div class="thumbcaption">
+           <div class="magnify">
+           </div>
+          </div>
+         </div>
+        </div>
+       </li>
+       <li>
+        Assign
+        <b>
+         BP_6DOF_Pawn
+        </b>
+        to the
+        <b>
+         Game Mode Blueprint
+        </b>
+        by opening
+        <b>
+         BP_6DOF_Game
+        </b>
+        and clicking on the
+        <i>
+         Defaults
+        </i>
+        tab and assigning your new
+        <b>
+         BP_6DOF_Pawn
+        </b>
+        class with the
+        <i>
+         Default Pawn Class
+        </i>
+        dropdown.
+        <div class="thumb tnone">
+         <div class="thumbinner" style="width:452px;">
+          <img alt="PawnTut 030 GameMode.jpg" class="thumbimage" height="259" src="../assets/blueprint-six-dof-flying-pawn-tutorial/2.jpg" width="450"/>
+          <div class="thumbcaption">
+           <div class="magnify">
+           </div>
+          </div>
+         </div>
+        </div>
+       </li>
+      </ol>
+      <p>
+       Close the Game Mode Blueprint Editor and save your work (
+       <i>
+        File &gt; Save All
+       </i>
+       or Ctrl+S)
+      </p>
+      <h5>
+       <span class="mw-headline" id="Building_the_Pawn">
+        Building the Pawn
+       </span>
+      </h5>
+      <ol>
+       <li>
+        Open
+        <b>
+         BP_6DOF_Pawn
+        </b>
+        and click on the
+        <i>
+         Components
+        </i>
+        tab
+       </li>
+       <li>
+        Add a
+        <b>
+         Static Mesh Component
+        </b>
+        by using the
+        <i>
+         Add Component
+        </i>
+        dropdown.
+       </li>
+       <li>
+        Name it
+        <b>
+         BodyMesh
+        </b>
+       </li>
+       <li>
+        Assign your desired Static Mesh asset to the component. I've chosen the provided UFO as it fits this example very well.
+        <i>
+         An important thing to note is that the Static Mesh Component will require valid
+         <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Physics/Collision/Reference/index.html" rel="nofollow">
+          collision
+         </a>
+         to work properly!
+        </i>
+       </li>
+       <li>
+        In the Details panel, scroll down to the
+        <i>
+         Physics
+        </i>
+        section and do the following:
+        <ol>
+         <li>
+          Enable
+          <i>
+           Simulate Physics
+          </i>
+         </li>
+         <li>
+          Disable
+          <i>
+           Enable Gravity
+          </i>
+         </li>
+         <li>
+          Set
+          <i>
+           Angular Damping
+          </i>
+          to 1.0
+         </li>
+         <li>
+          Set
+          <i>
+           Linear Damping
+          </i>
+          to 1.0
+          <div class="thumb tnone">
+           <div class="thumbinner" style="width:452px;">
+            <img alt="PawnTut 040 StaticMeshDetails.jpg" class="thumbimage" height="259" src="../assets/blueprint-six-dof-flying-pawn-tutorial/3.jpg" width="450"/>
+            <div class="thumbcaption">
+             <div class="magnify">
+             </div>
+            </div>
+           </div>
+          </div>
+         </li>
+        </ol>
+       </li>
+       <li>
+        In the
+        <i>
+         Components
+        </i>
+        panel, add a new
+        <b>
+         Camera Component
+        </b>
+        from the dropdown. This will parent it to the
+        <b>
+         BodyMesh
+        </b>
+        , inheriting the movement and rotation.
+       </li>
+       <li>
+        In the
+        <i>
+         Details
+        </i>
+        panel, or using the transform gizmo in the Blueprint Editor viewport, set the position of the Camera behind the
+        <b>
+         MeshBody
+        </b>
+        .
+       </li>
+       <li>
+        Also, disable
+        <i>
+         Use Controller Rotation
+        </i>
+        as we want to follow the rotation of our Pawn, not the controller (Which tends to keep a horizontal view).
+        <div class="thumb tnone">
+         <div class="thumbinner" style="width:452px;">
+          <img alt="PawnTut 050 CameraDetails.jpg" class="thumbimage" height="259" src="../assets/blueprint-six-dof-flying-pawn-tutorial/4.jpg" width="450"/>
+          <div class="thumbcaption">
+           <div class="magnify">
+           </div>
+          </div>
+         </div>
+        </div>
+       </li>
+      </ol>
+      <p>
+       At this point, you should save your work! If you play the level (Alt-P), you should see your Pawn in front of you, but won't be able to move at all. Next, we'll get some input events and get the Pawn moving around!
+      </p>
+      <h5>
+       <span class="mw-headline" id="Input_Part_1:_WASD_Movement">
+        Input Part 1: WASD Movement
+       </span>
+      </h5>
+      <ol>
+       <li>
+        Open the
+        <b>
+         BP_6DOF_Pawn
+        </b>
+        editor from the
+        <i>
+         Content Browser
+        </i>
+        by double-clicking the icon.
+       </li>
+       <li>
+        Go to the
+        <i>
+         Graph
+        </i>
+        tab and ensure you are in the
+        <i>
+         Event Graph
+        </i>
+        (not the
+        <i>
+         Construction Script
+        </i>
+        ).
+       </li>
+       <li>
+        Right-Click in the graph area and find the
+        <b>
+         Move Forward Axis
+         <i>
+          Event
+         </i>
+        </b>
+        (not the Axis Value function).
+        <div class="thumb tnone">
+         <div class="thumbinner" style="width:452px;">
+          <img alt="PawnTut 060 MoveForward.jpg" class="thumbimage" height="259" src="../assets/blueprint-six-dof-flying-pawn-tutorial/5.jpg" width="450"/>
+          <div class="thumbcaption">
+           <div class="magnify">
+           </div>
+          </div>
+         </div>
+        </div>
+       </li>
+       <li>
+        Add a reference to the
+        <b>
+         BodyMesh
+        </b>
+        by dragging it from the variables list on the left into the graph and selecting
+        <b>
+         Get
+        </b>
+        from the menu.
+       </li>
+       <li>
+        Drag a wire from the right side of the reference of BodyMesh, releasing the mouse in the Event Graph and find
+        <b>
+         Set Physics Linear Velocity
+        </b>
+        function.
+        <div class="thumb tnone">
+         <div class="thumbinner" style="width:452px;">
+          <img alt="PawnTut 070 SetPhysicsLinearVel.jpg" class="thumbimage" height="259" src="../assets/blueprint-six-dof-flying-pawn-tutorial/6.jpg" width="450"/>
+          <div class="thumbcaption">
+           <div class="magnify">
+           </div>
+          </div>
+         </div>
+        </div>
+       </li>
+       <li>
+        Connect the
+        <b>
+         Move Forward Axis Event
+        </b>
+        to the Set
+        <b>
+         Physics Linear Velocity
+        </b>
+        function.
+       </li>
+       <li>
+        Drag a wire from the
+        <i>
+         Axis Value
+        </i>
+        node on
+        <b>
+         Move Forward Axis Event
+        </b>
+        , releasing on the Event Graph and select
+        <b>
+         Float * Float
+        </b>
+       </li>
+       <li>
+        Set the second number of the
+        <b>
+         Float * Float
+        </b>
+        to 30.0 to give our ship some thrust.
+       </li>
+       <li>
+        Now, we need to add that thrust to the local X or Forward vector of our Pawn. UE4 offers a simple method for this via the
+        <b>
+         Get Forward Vector
+        </b>
+        function.
+        <ol>
+         <li>
+          Right-click on the Event Graph and create a
+          <b>
+           Get Actor Rotation
+          </b>
+          function. This returns the world rotation of the Pawn.
+         </li>
+         <li>
+          Drag a wire from this and create a
+          <b>
+           Get Forward Vector
+          </b>
+          function.
+         </li>
+        </ol>
+       </li>
+       <li>
+        Multiply the
+        <b>
+         Get Forward Vector
+        </b>
+        return value by the multiplied Axis Value using a
+        <b>
+         Vector * Float
+        </b>
+        function.
+       </li>
+       <li>
+        Send this into the
+        <i>
+         New Vel
+        </i>
+        node of the
+        <b>
+         Set Physics Linear Velocity
+        </b>
+        function.
+       </li>
+       <li>
+        Be sure to set the
+        <i>
+         Add to Current
+        </i>
+        bool flag on the Set Physics Linear Velocity function to TRUE.
+       </li>
+      </ol>
+      <p>
+       Your Graph should look like this:
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:452px;">
+        <img alt="PawnTut 080 ForwardDone.jpg" class="thumbimage" height="259" src="../assets/blueprint-six-dof-flying-pawn-tutorial/7.jpg" width="450"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       Do the same for the for the
+       <b>
+        MoveRight Axis Event
+       </b>
+       , using the
+       <b>
+        Get Right Vector
+       </b>
+       function. Your graph should look like this:
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:452px;">
+        <img alt="PawnTut 090 RightDone.jpg" class="thumbimage" height="259" src="../assets/blueprint-six-dof-flying-pawn-tutorial/8.jpg" width="450"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       Save your work and give it a test! You should be able to move forwards and back using the W and S keys and left and right using the A and D keys (Or, even controller input using the analog sticks!). Crashing into a wall should send you spinning! you'll need to add some steering to be able to get around without crashing.
+      </p>
+      <h5>
+       <span class="mw-headline" id="Input_Part_2:_Steering">
+        Input Part 2: Steering
+       </span>
+      </h5>
+      <ol>
+       <li>
+        Right-Click on the
+        <i>
+         Event Graph
+        </i>
+        and find the
+        <b>
+         LookUp Axis Event
+        </b>
+        .
+       </li>
+       <li>
+        Drag a wire from the
+        <b>
+         LookUp Axis Event
+        </b>
+        exec node and create an
+        <b>
+         Add Actor Local Rotation
+        </b>
+        function
+       </li>
+       <li>
+        Right-Click on the
+        <i>
+         Event Graph
+        </i>
+        and create a
+        <b>
+         Make Rot
+        </b>
+        function.
+       </li>
+       <li>
+        Wire the
+        <i>
+         Axis Value
+        </i>
+        from the
+        <b>
+         LookUp Axis Event
+        </b>
+        to the
+        <i>
+         Pitch
+        </i>
+        node of the
+        <b>
+         Make Rot
+        </b>
+        function.
+       </li>
+       <li>
+        Wire the Return node of the
+        <b>
+         Make Rot
+        </b>
+        function to the
+        <i>
+         Delta Rotation
+        </i>
+        input on the
+        <b>
+         Add Actor Local Rotation
+        </b>
+        function.
+       </li>
+       <li>
+        Repeat for the
+        <b>
+         Turn Axis Event
+        </b>
+        <ol>
+         <li>
+          Rather than the
+          <i>
+           Pitch
+          </i>
+          , wire the
+          <b>
+           Turn Axis Event
+          </b>
+          <i>
+           Axis Value
+          </i>
+          to the
+          <i>
+           Yaw
+          </i>
+          .
+         </li>
+        </ol>
+       </li>
+      </ol>
+      <p>
+       Your Event Graph should look like this:
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:452px;">
+        <img alt="PawnTut 100 TurnDone.jpg" class="thumbimage" height="259" src="../assets/blueprint-six-dof-flying-pawn-tutorial/9.jpg" width="450"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br/>
+       <b>
+        Update
+       </b>
+       : one additional step that you need to do since UE4 Pawn changed and is now based of "scenerootcomponent", is to mark the mesh as root. To do so, in the components list, drag the
+       <i>
+        BodyMesh
+       </i>
+       onto the
+       <i>
+        Scene root component
+       </i>
+       to reparent it as root. Steering should now work as expected.
+      </p>
+      <p>
+       Save your work, close the Blueprint Editor and give it a try by playing (Alt-P).
+      </p>
+      <p>
+       You should get something like this:
+       <a class="external text" href="http://youtu.be/WM5BajSfWzI" rel="nofollow">
+        YouTube: http://youtu.be/WM5BajSfWzI
+       </a>
+      </p>
+      <h5>
+       <span class="mw-headline" id="Input_Part_3:_Adding_Roll">
+        Input Part 3: Adding Roll
+       </span>
+      </h5>
+      <ol>
+       <li>
+        Open the Project Settings dialog from the Edit menu.
+       </li>
+       <li>
+        Go to Input
+       </li>
+       <li>
+        Expand Axis Mappings then click the
+        <b>
+         +
+        </b>
+        symbol next to the words
+        <i>
+         Axis Mappings
+        </i>
+        . This will add a new Axis event and value to your blueprints.
+       </li>
+       <li>
+        Name the newly created mapping
+        <b>
+         Roll
+        </b>
+        .
+       </li>
+       <li>
+        Expand the
+        <b>
+         Roll
+        </b>
+        rollout and add another input by clicking the
+        <b>
+         +
+        </b>
+        next to the mapping name.
+       </li>
+       <li>
+        Select
+        <b>
+         Q
+        </b>
+        for the first dropdown and set the value to -1.0.
+       </li>
+       <li>
+        Select
+        <b>
+         E
+        </b>
+        for the second dropdown and set the value to 1.0.
+        <div class="thumb tnone">
+         <div class="thumbinner" style="width:452px;">
+          <img alt="PawnTut 110 InputMapping.jpg" class="thumbimage" height="260" src="../assets/blueprint-six-dof-flying-pawn-tutorial/10.jpg" width="450"/>
+          <div class="thumbcaption">
+           <div class="magnify">
+           </div>
+          </div>
+         </div>
+        </div>
+       </li>
+       <li>
+        Close the
+        <i>
+         Project Settings
+        </i>
+        dialog and open the
+        <b>
+         BP_6DOF_Pawn
+        </b>
+        editor.
+       </li>
+       <li>
+        Go to the
+        <i>
+         Event Graph
+        </i>
+        and add the
+        <b>
+         Roll Axis Event
+        </b>
+        , connecting it to the
+        <i>
+         Roll
+        </i>
+        input of a
+        <b>
+         Make Rot
+        </b>
+        function.
+       </li>
+      </ol>
+      <p>
+       Your Graph should look like this:
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:452px;">
+        <img alt="PawnTut 120 FinalGraph.jpg" class="thumbimage" height="260" src="../assets/blueprint-six-dof-flying-pawn-tutorial/11.jpg" width="450"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       Save your progress and hit Play (Alt-P). Now the Q and E keys should roll your ship!
+      </p>
+      <p>
+       Good luck!
+--Tom
+      </p>
+      <h5>
+       <span class="mw-headline" id="Extra_Credit:_Physics_Rotations">
+        Extra Credit: Physics Rotations
+       </span>
+      </h5>
+      <p>
+       I figured this out, but I find that it makes the controls pretty tough to handle, however you might find it instructional on how to apply Angular momentum to the pawn. I won't go into step-by-step detail, but you can follow the attached screenshot:
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:652px;">
+        <img alt="PawnTut EC1 AngularVelocity.jpg" class="thumbimage" height="395" src="../assets/blueprint-six-dof-flying-pawn-tutorial/12.jpg" width="650"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

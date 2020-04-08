@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   CustomSettings - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    CustomSettings
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Custom_settings">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Custom settings
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-3">
+             <a href="#Creating_your_settings_object">
+              <span class="tocnumber">
+               1.1.1
+              </span>
+              <span class="toctext">
+               Creating your settings object
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-4">
+             <a href="#Registering_the_object_with_our_module">
+              <span class="tocnumber">
+               1.1.2
+              </span>
+              <span class="toctext">
+               Registering the object with our module
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Using_Auto-discovery_Settings">
+            <span class="tocnumber">
+             1.2
+            </span>
+            <span class="toctext">
+             Using Auto-discovery Settings
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Summary">
+            <span class="tocnumber">
+             1.3
+            </span>
+            <span class="toctext">
+             Summary
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Original Author:
+       </i>
+       (GitHub repo:
+       <a class="external free" href="https://github.com/moritz-wundke/CustomSettings" rel="nofollow">
+        https://github.com/moritz-wundke/CustomSettings
+       </a>
+       )
+      </p>
+      <p>
+       Hi guys!
+      </p>
+      <p>
+       The following tutorial will guide you to expose your config objects (UObjects that have decorated UPROPERTY fields) in a more user-friendly way. What we will do is to expose the configuration fields into the *
+       <b>
+        Project Settings
+       </b>
+       part of the editor so you can tweak and change those values from the editor directly without going into the low-level
+       <b>
+        ini
+       </b>
+       files.
+      </p>
+      <p>
+       <img alt="CustomSettings.png" class="" height="920" src="../assets/customsettings/0.png" width="1477"/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Custom_settings">
+        Custom settings
+       </span>
+      </h3>
+      <h4>
+       <span class="mw-headline" id="Creating_your_settings_object">
+        Creating your settings object
+       </span>
+      </h4>
+      <p>
+       We will create a simple
+       <b>
+        UObject
+       </b>
+       that will hold out config data. The header should be look like the following:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 2015 Moritz Wundke. All Rights Reserved.</span>
+<span class="c1">// Released under MIT.</span>
+
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"CustomGameSettings.generated.h"</span><span class="cp"></span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Setting object used to hold both config settings and editable ones in one place</span>
+<span class="cm"> * To ensure the settings are saved to the specified config file make sure to add</span>
+<span class="cm"> * props using the globalconfig or config meta.</span>
+<span class="cm"> */</span>
+<span class="n">UCLASS</span><span class="p">(</span><span class="n">config</span> <span class="o">=</span> <span class="n">Game</span><span class="p">,</span> <span class="n">defaultconfig</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">UCustomGameSettings</span> <span class="o">:</span> <span class="k">public</span> <span class="n">UObject</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">UCustomGameSettings</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">);</span>
+
+	<span class="cm">/** Sample bool property */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Custom</span><span class="p">)</span>
+	<span class="kt">bool</span> <span class="n">bSampleBool</span><span class="p">;</span>
+
+	<span class="cm">/** Sample float property that requires a restart */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">config</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Custom</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">ConfigRestartRequired</span> <span class="o">=</span> <span class="nb">true</span><span class="p">))</span>
+	<span class="kt">float</span> <span class="n">SampleFloatRequireRestart</span><span class="p">;</span>
+
+	<span class="cm">/** Sample string list */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Custom</span><span class="p">)</span>
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FString</span><span class="o">&gt;</span> <span class="n">SampleStringList</span><span class="p">;</span>
+
+	<span class="cm">/** Or add min, max or clamp values to the settings */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Custom</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">UIMin</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ClampMin</span> <span class="o">=</span> <span class="mi">1</span><span class="p">))</span>
+	<span class="n">int32</span> <span class="n">ClampedIntSetting</span><span class="p">;</span>
+
+	<span class="cm">/** We can even use asset references */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Materials</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">AllowedClasses</span> <span class="o">=</span> <span class="s">"MaterialInterface"</span><span class="p">))</span>
+	<span class="n">FStringAssetReference</span> <span class="n">StringMaterialAssetReference</span><span class="p">;</span>
+
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       As you can see we have to tell the engine which config file to use, the
+       <i>
+        UCLASS
+       </i>
+       decorators will take care of it. Then to add items to our config we just have to decorate our
+       <i>
+        UPROPERTY
+       </i>
+       fileds with the
+       <i>
+        config
+       </i>
+       or
+       <i>
+        globalconfig
+       </i>
+       flags.
+      </p>
+      <p>
+       We will just add a stub ctor as our implementation:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 2015 Moritz Wundke. All Rights Reserved.</span>
+<span class="c1">// Released under MIT.</span>
+
+<span class="cp">#include</span> <span class="cpf">"CustomSettings.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"CustomGameSettings.h"</span><span class="cp"></span>
+
+<span class="n">UCustomGameSettings</span><span class="o">::</span><span class="n">UCustomGameSettings</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">)</span> <span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">ObjectInitializer</span><span class="p">)</span>
+<span class="p">{</span>
+
+<span class="p">}</span>
+</pre>
+      </div>
+      <h4>
+       <span class="mw-headline" id="Registering_the_object_with_our_module">
+        Registering the object with our module
+       </span>
+      </h4>
+      <p>
+       You can register the object to any game module, this will work for your game modules or even plugins. What we have to do is to create a child class of our
+       <b>
+        IModuleInterface
+       </b>
+       , plugins and game modules will inherit from different classes but the process of registering settings will be exactly the same.
+      </p>
+      <p>
+       So we will have to override the
+       <i>
+        StartupModule
+       </i>
+       and
+       <i>
+        ShutdownModule
+       </i>
+       functions, in our case I will also override
+       <i>
+        SupportsDynamicReloading
+       </i>
+       . The idea is to register our settings object in
+       <i>
+        StartModule
+       </i>
+       and unregister them in
+       <i>
+        ShutdownModule
+       </i>
+       .
+      </p>
+      <p>
+       Our module source should be something like the following:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 2015 Moritz Wundke.All Rights Reserved.</span>
+<span class="c1">// Released under MIT.</span>
+
+<span class="cp">#include</span> <span class="cpf">"CustomSettings.h"</span><span class="cp"></span>
+
+<span class="c1">// Settings</span>
+<span class="cp">#include</span> <span class="cpf">"CustomGameSettings.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"ISettingsModule.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"ISettingsSection.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"ISettingsContainer.h"</span><span class="cp"></span>
+
+<span class="cp">#define LOCTEXT_NAMESPACE "CustomSettings"</span>
+
+<span class="k">class</span> <span class="nc">FCustomSettingsModule</span> <span class="o">:</span> <span class="k">public</span> <span class="n">FDefaultGameModuleImpl</span>
+<span class="p">{</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">StartupModule</span><span class="p">()</span> <span class="k">override</span>
+	<span class="p">{</span>
+		<span class="n">RegisterSettings</span><span class="p">();</span>
+	<span class="p">}</span>
+
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">ShutdownModule</span><span class="p">()</span> <span class="k">override</span>
+	<span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">UObjectInitialized</span><span class="p">())</span>
+		<span class="p">{</span>
+			<span class="n">UnregisterSettings</span><span class="p">();</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="k">virtual</span> <span class="kt">bool</span> <span class="n">SupportsDynamicReloading</span><span class="p">()</span> <span class="k">override</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+	<span class="p">}</span>
+
+<span class="k">private</span><span class="o">:</span>
+
+	<span class="c1">// Callback for when the settings were saved.</span>
+	<span class="kt">bool</span> <span class="n">HandleSettingsSaved</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="n">UCustomGameSettings</span><span class="o">*</span> <span class="n">Settings</span> <span class="o">=</span> <span class="n">GetMutableDefault</span><span class="o">&lt;</span><span class="n">UCustomGameSettings</span><span class="o">&gt;</span><span class="p">();</span>
+		<span class="kt">bool</span> <span class="n">ResaveSettings</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+
+		<span class="c1">// You can put any validation code in here and resave the settings in case an invalid</span>
+		<span class="c1">// value has been entered</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="n">ResaveSettings</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">Settings</span><span class="o">-&gt;</span><span class="n">SaveConfig</span><span class="p">();</span>
+		<span class="p">}</span>
+
+		<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="kt">void</span> <span class="n">RegisterSettings</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="c1">// Registering some settings is just a matter of exposing the default UObject of</span>
+		<span class="c1">// your desired class, feel free to add here all those settings you want to expose</span>
+		<span class="c1">// to your LDs or artists.</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="n">ISettingsModule</span><span class="o">*</span> <span class="n">SettingsModule</span> <span class="o">=</span> <span class="n">FModuleManager</span><span class="o">::</span><span class="n">GetModulePtr</span><span class="o">&lt;</span><span class="n">ISettingsModule</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"Settings"</span><span class="p">))</span>
+		<span class="p">{</span>
+			<span class="c1">// Create the new category</span>
+			<span class="n">ISettingsContainerPtr</span> <span class="n">SettingsContainer</span> <span class="o">=</span> <span class="n">SettingsModule</span><span class="o">-&gt;</span><span class="n">GetContainer</span><span class="p">(</span><span class="s">"Project"</span><span class="p">);</span>
+
+			<span class="n">SettingsContainer</span><span class="o">-&gt;</span><span class="n">DescribeCategory</span><span class="p">(</span><span class="s">"CustomSettings"</span><span class="p">,</span>
+				<span class="n">LOCTEXT</span><span class="p">(</span><span class="s">"RuntimeWDCategoryName"</span><span class="p">,</span> <span class="s">"CustomSettings"</span><span class="p">),</span>
+				<span class="n">LOCTEXT</span><span class="p">(</span><span class="s">"RuntimeWDCategoryDescription"</span><span class="p">,</span> <span class="s">"Game configuration for the CustomSettings game module"</span><span class="p">));</span>
+
+			<span class="c1">// Register the settings</span>
+			<span class="n">ISettingsSectionPtr</span> <span class="n">SettingsSection</span> <span class="o">=</span> <span class="n">SettingsModule</span><span class="o">-&gt;</span><span class="n">RegisterSettings</span><span class="p">(</span><span class="s">"Project"</span><span class="p">,</span> <span class="s">"CustomSettings"</span><span class="p">,</span> <span class="s">"General"</span><span class="p">,</span>
+				<span class="n">LOCTEXT</span><span class="p">(</span><span class="s">"RuntimeGeneralSettingsName"</span><span class="p">,</span> <span class="s">"General"</span><span class="p">),</span>
+				<span class="n">LOCTEXT</span><span class="p">(</span><span class="s">"RuntimeGeneralSettingsDescription"</span><span class="p">,</span> <span class="s">"Base configuration for our game module"</span><span class="p">),</span>
+				<span class="n">GetMutableDefault</span><span class="o">&lt;</span><span class="n">UCustomGameSettings</span><span class="o">&gt;</span><span class="p">()</span>
+				<span class="p">);</span>
+
+			<span class="c1">// Register the save handler to your settings, you might want to use it to</span>
+			<span class="c1">// validate those or just act to settings changes.</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">SettingsSection</span><span class="p">.</span><span class="n">IsValid</span><span class="p">())</span>
+			<span class="p">{</span>
+				<span class="n">SettingsSection</span><span class="o">-&gt;</span><span class="n">OnModified</span><span class="p">().</span><span class="n">BindRaw</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">FCustomSettingsModule</span><span class="o">::</span><span class="n">HandleSettingsSaved</span><span class="p">);</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="kt">void</span> <span class="n">UnregisterSettings</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="c1">// Ensure to unregister all of your registered settings here, hot-reload would</span>
+		<span class="c1">// otherwise yield unexpected results.</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="n">ISettingsModule</span><span class="o">*</span> <span class="n">SettingsModule</span> <span class="o">=</span> <span class="n">FModuleManager</span><span class="o">::</span><span class="n">GetModulePtr</span><span class="o">&lt;</span><span class="n">ISettingsModule</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"Settings"</span><span class="p">))</span>
+		<span class="p">{</span>
+			<span class="n">SettingsModule</span><span class="o">-&gt;</span><span class="n">UnregisterSettings</span><span class="p">(</span><span class="s">"Project"</span><span class="p">,</span> <span class="s">"CustomSettings"</span><span class="p">,</span> <span class="s">"General"</span><span class="p">);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+
+<span class="n">IMPLEMENT_PRIMARY_GAME_MODULE</span><span class="p">(</span> <span class="n">FCustomSettingsModule</span><span class="p">,</span> <span class="n">CustomSettings</span><span class="p">,</span> <span class="s">"CustomSettings"</span> <span class="p">);</span>
+
+<span class="cp">#undef LOCTEXT_NAMESPACE</span>
+</pre>
+      </div>
+      <p>
+       As you can see we register our
+       <b>
+        UCustomGameSettings
+       </b>
+       into a new category, we can create as many categories as we like but I prefer having one one custom section, if not it will get messy quickly.
+       <i>
+        HandleSettingsSaved
+       </i>
+       gets called once the config object has changed, this is the best place to validate your changes and to act to the config changes to reload any required logic.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Using_Auto-discovery_Settings">
+        Using Auto-discovery Settings
+       </span>
+      </h3>
+      <p>
+       If you just want to add your settings to the
+       <b>
+        Game
+       </b>
+       section of the project settings you can skip all the custom stuff from above and just inherit from
+       <b>
+        UDeveloperSettings
+       </b>
+       .
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UCLASS</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">Game</span><span class="p">,</span> <span class="n">defaultconfig</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="p">(</span><span class="n">DisplayName</span><span class="o">=</span><span class="s">"My Settings"</span><span class="p">))</span>
+<span class="k">class</span> <span class="nc">LOADINGSCREEN_API</span> <span class="nl">UMyDeveloperSettings</span> <span class="p">:</span> <span class="k">public</span> <span class="n">UDeveloperSettings</span>
+<span class="p">{</span>
+    <span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+
+<span class="k">public</span><span class="o">:</span>
+    
+    <span class="c1">// Add all your properties here as we did before</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Summary">
+        Summary
+       </span>
+      </h3>
+      <p>
+       Adding settings to your editor makes it easier to modify them and lets non-code folk tweak without the fear of breaking the low-level config files.
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Cooking On Linux - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Cooking On Linux
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <b>
+        PRELIMINARY - WORK IN PROGRESS
+       </b>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Getting_Started">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Getting Started
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Using_UnrealFrontend">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Using UnrealFrontend
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Using_Command_Line">
+            <span class="tocnumber">
+             1.2
+            </span>
+            <span class="toctext">
+             Using Command Line
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Using_Editor">
+            <span class="tocnumber">
+             1.3
+            </span>
+            <span class="toctext">
+             Using Editor
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Getting_Started">
+        Getting Started
+       </span>
+      </h2>
+      <p>
+       The latest
+       <a class="external text" href="https://github.com/EpicGames/UnrealEngine" rel="nofollow">
+        branch
+       </a>
+       now allows natively cooking content in Linux, either from the command line or from within the Editor. This feature has not been thoroughly tested so please try it and report of issues.
+      </p>
+      <p>
+       It is assumed that you have already compiled the following binaries and that they are in your Engine/Binaries/Linux folder
+      </p>
+      <ul>
+       <li>
+        UE4Editor
+       </li>
+       <li>
+        UnrealFrontend
+       </li>
+       <li>
+        UE4Game
+       </li>
+       <li>
+        ShaderCompileWorker
+       </li>
+       <li>
+        UnrealPak
+       </li>
+      </ul>
+      <h3>
+       <span class="mw-headline" id="Using_UnrealFrontend">
+        Using UnrealFrontend
+       </span>
+      </h3>
+      <p>
+       If there is no reason to script your cooking process you can use UnrealFrontend. If you need more control over the cook process create a custom profile in UnrealFrontend.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Using_Command_Line">
+        Using Command Line
+       </span>
+      </h3>
+      <p>
+       If you are in your Engine's root folder issue the following command:
+      </p>
+      <pre>$ Engine/Build/BatchFiles/RunUAT.sh BuildCookRun -nocompile -nop4 \
+   -project="/absolute/path/to/your/MyProject/MyProject.uproject" \
+   -cook -compressed -allmaps -stage -archive \
+   -archivedirectory="/absolute/path/to/output/folder/" -package \
+   -LinuxNoEditor -clientconfig=Development -ue4exe=UE4Editor -clean \
+   -pak -targetplatform=Linux -utf8output
+</pre>
+      <p>
+       If it complains that all branches must have /Saved/Sandbox/BlankProject, then you need to build the BlankProject first.
+      </p>
+      <pre>- Open UE4Editor
+- Click New Project
+- Click Blank Project
+- Create the blank project ( I called it BlankProject )
+- Click "save all" and then exit.
+</pre>
+      <p>
+       If it complains:  No files found to deploy for
+      </p>
+      <pre>$HOME/Development/UnrealEngine/Engine/Binaries/Linux with wildcard libLND*.so
+- Copy the file libLND.so from another directory. 
+- In my case, I got it from: 
+</pre>
+      <p>
+       /UnrealEngine/Engine/Source/ThirdParty/LinuxNativeDialogs/UELinuxNativeDialogs/lib/Linux/x86_64-unknown-linux-gnu/libLND.so
+      </p>
+      <p>
+       After many lines of text you should see:
+      </p>
+      <pre>&lt;SNIP&gt;
+BuildCommand.Execute: BUILD SUCCESSFUL
+Automation.Execute: Script execution successful, exiting.
+ProcessManager.KillAll: Trying to kill 0 spawned processes.
+Program.Main: AutomationTool exiting with ExitCode=0
+Domain_ProcessExit
+ProcessManager.KillAll: Trying to kill 0 spawned processes.
+</pre>
+      <p>
+       Your packaged project should be in wherever you set your /absolute/path/to/output/folder/ above. Because the process does not rename the UE4Game binary to the name of the project, you have to do that yourself.
+      </p>
+      <p>
+       Assuming your project is named MyProject, go to the /absolute/path/to/output/folder/LinuxNoEditor/Engine/Binaries/Linux folder and do:
+      </p>
+      <pre>$ mv UE4Game MyProject
+</pre>
+      <p>
+       Then try starting your project:
+      </p>
+      <pre>$ ./MyProject
+</pre>
+      <p>
+       You might also need some other libraries such as libjemalloc.so.1 so copy it from your main UE4 Engine folder. Cooking process does not copy them either for now, and they should be statically linked into UE4Game binary anyway.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Using_Editor">
+        Using Editor
+       </span>
+      </h3>
+      <p>
+       This is a matter of loading your project and from the
+       <b>
+        File
+       </b>
+       menu selecting
+       <b>
+        Package Project
+       </b>
+       and then
+       <b>
+        Linux
+       </b>
+       . You will be prompted for an output folder, so select one where you can write to and proceed.
+      </p>
+      <p>
+       While cooking is running you can click on Show Output Log in the notification dialog to see the progress of the process.
+      </p>
+      <p>
+       Please note that there's an issue right now where the notification dialog will show Failure at the end, even though the cooking has succeeded, so always check your Output Log !
+      </p>
+      <div style="border-top: 1px solid gray; width: 300px; font-size: 14px; color: #666; margin-top: 20px; padding: 6px">
+       &lt;-- Back to the main
+       page.
+      </div>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

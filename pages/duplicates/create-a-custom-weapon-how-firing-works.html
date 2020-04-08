@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Create A Custom Weapon - How Firing Works - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Create A Custom Weapon - How Firing Works
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Intro:_How_Firing_Works_in_Unreal_Tournament">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Intro: How Firing Works in Unreal Tournament
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Requirements">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Requirements
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Classes_Overview">
+            <span class="tocnumber">
+             1.2
+            </span>
+            <span class="toctext">
+             Classes Overview
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#From_Player_to_Weapon">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           From Player to Weapon
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Weapon_States">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Weapon States
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Intro:_How_Firing_Works_in_Unreal_Tournament">
+        Intro: How Firing Works in Unreal Tournament
+       </span>
+      </h3>
+      <p>
+       So you want to create a custom weapon, but you're unsure how to implement in C++/Blueprints the functionality of your weapon design?
+      </p>
+      <p>
+       This tutorial is intended to cover some basics in conceptualizing how the pieces of weapon code work together to create the desired weapon behavior. This can be useful if you want to try implementing weapon behavior that may not exist in any known weapons, and thus extending from those weapons is not appropriate.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h4>
+       <span class="mw-headline" id="Requirements">
+        Requirements
+       </span>
+      </h4>
+      <ul>
+       <li>
+        Access to Unreal Tournament C++ Source / GitHub, &amp; Unreal Engine 4 Editor.
+       </li>
+       <li>
+        Engine version: 4.6
+       </li>
+       <li>
+        Skill level: Beginner
+       </li>
+      </ul>
+      <p>
+       At this stage I assume you have all of the Unreal Tournament source files and have successfully compiled the project from source.
+      </p>
+      <h4>
+       <span class="mw-headline" id="Classes_Overview">
+        Classes Overview
+       </span>
+      </h4>
+      <p>
+       This tutorial assumes a fairly basic level of knowledge of Unreal Engine classes, so for that purpose I will be outlining the classes featured in this tutorial and their basic functionality.
+      </p>
+      <ul>
+       <li>
+        UTPlayerController: The UTPlayerController is an abstract entity that acts as an interface between the player and the world. Think of the PlayerController as a 'spirit' that inhabits bodies within the game world.
+       </li>
+       <li>
+        UTCharacter: The UTCharacter class is the basic class that defines a "body" in the game world. Typically this might be a human, but it may also be an alien, a monster, etc. A character is generally 'possessed' by a PlayerController (or a BotController, if it's an AI Bot).
+       </li>
+       <li>
+        UTCharacterMovement: This object is a component of the Character, it defines movement related properties of a UTCharacter
+       </li>
+       <li>
+        UTWeapon: A UTWeapon is an inventory item, it is held by a UTCharacter.
+       </li>
+       <li>
+        UTWeaponState: A UTWeaponState is an object within UTWeapon used to define its state (being held, being fired, being put away, etc).
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="From_Player_to_Weapon">
+        From Player to Weapon
+       </span>
+      </h3>
+      <p>
+       What happens between the player pressing the mouse button and the firing of a weapon? How does a mouse click translate into a shock beam or a cluster of flak shards?
+When you want to implement behavior that differs from standard weapons this is a question you might find yourself asking. Other tutorials demonstrate that we can call the functions
+       <b>
+        UTWeapon::FireInstantHit()
+       </b>
+       or
+       <b>
+        UTWeapon::FireProjectile()
+       </b>
+       to fire a hitscan beam or to fire a projectile. We can override these functions to change the behavior of each function individually, but how do we get there?
+      </p>
+      <p>
+       The first step is to open the Editor and look under the menu
+       <b>
+        Edit
+       </b>
+       -&gt;
+       <b>
+        Project Settings
+       </b>
+       .
+In the
+       <b>
+        Project Settings
+       </b>
+       window we should look at the
+       <b>
+        Input
+       </b>
+       section.
+      </p>
+      <p>
+       As of the writing of this tutorial, the
+       <b>
+        Input
+       </b>
+       section for the Unreal Tournament project looks like so:
+      </p>
+      <p>
+       <img alt="Editorinput.jpg" class="" height="675" src="../assets/create-a-custom-weapon-how-firing-works/0.jpg" width="559"/>
+      </p>
+      <p>
+       This can also be seen in the
+       <b>
+        UnrealTournament/UnrealTournament/Config/DefaultInput.ini
+       </b>
+       file:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="o">+</span><span class="n">ActionMappings</span><span class="o">=</span><span class="p">(</span><span class="n">ActionName</span><span class="o">=</span><span class="s">"StartFire"</span><span class="p">,</span> <span class="n">Key</span><span class="o">=</span><span class="n">LeftMouseButton</span><span class="p">)</span>
+<span class="o">+</span><span class="n">ActionMappings</span><span class="o">=</span><span class="p">(</span><span class="n">ActionName</span><span class="o">=</span><span class="s">"StopFire"</span><span class="p">,</span> <span class="n">Key</span><span class="o">=</span><span class="n">LeftMouseButton</span><span class="p">)</span>
+<span class="o">+</span><span class="n">ActionMappings</span><span class="o">=</span><span class="p">(</span><span class="n">ActionName</span><span class="o">=</span><span class="s">"StartFire"</span><span class="p">,</span> <span class="n">Key</span><span class="o">=</span><span class="n">Gamepad_RightTrigger</span><span class="p">)</span>
+<span class="o">+</span><span class="n">ActionMappings</span><span class="o">=</span><span class="p">(</span><span class="n">ActionName</span><span class="o">=</span><span class="s">"StopFire"</span><span class="p">,</span> <span class="n">Key</span><span class="o">=</span><span class="n">Gamepad_RightTrigger</span><span class="p">)</span>
+<span class="o">+</span><span class="n">ActionMappings</span><span class="o">=</span><span class="p">(</span><span class="n">ActionName</span><span class="o">=</span><span class="s">"StartFire"</span><span class="p">,</span> <span class="n">Key</span><span class="o">=</span><span class="n">RightControl</span><span class="p">)</span>
+<span class="o">+</span><span class="n">ActionMappings</span><span class="o">=</span><span class="p">(</span><span class="n">ActionName</span><span class="o">=</span><span class="s">"StopFire"</span><span class="p">,</span> <span class="n">Key</span><span class="o">=</span><span class="n">RightControl</span><span class="p">)</span>
+<span class="o">+</span><span class="n">ActionMappings</span><span class="o">=</span><span class="p">(</span><span class="n">ActionName</span><span class="o">=</span><span class="s">"StartAltFire"</span><span class="p">,</span> <span class="n">Key</span><span class="o">=</span><span class="n">RightMouseButton</span><span class="p">)</span>
+<span class="o">+</span><span class="n">ActionMappings</span><span class="o">=</span><span class="p">(</span><span class="n">ActionName</span><span class="o">=</span><span class="s">"StopAltFire"</span><span class="p">,</span> <span class="n">Key</span><span class="o">=</span><span class="n">RightMouseButton</span><span class="p">)</span>
+<span class="o">+</span><span class="n">ActionMappings</span><span class="o">=</span><span class="p">(</span><span class="n">ActionName</span><span class="o">=</span><span class="s">"StartAltFire"</span><span class="p">,</span> <span class="n">Key</span><span class="o">=</span><span class="n">Gamepad_LeftTrigger</span><span class="p">)</span>
+<span class="o">+</span><span class="n">ActionMappings</span><span class="o">=</span><span class="p">(</span><span class="n">ActionName</span><span class="o">=</span><span class="s">"StopAltFire"</span><span class="p">,</span> <span class="n">Key</span><span class="o">=</span><span class="n">Gamepad_LeftTrigger</span><span class="p">)</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       Whether you're looking in the Editor or at DefaultInput.ini, you'll see that the important thing that occurs when the player presses the default fire input is the action called "StartFire." So what does StartFire do? Using Visual Studio we can search the entire Unreal Tournament solution (Ctrl+Shift+F) for "StartFire." These results will be found in
+       <b>
+        UTPlayerController::SetupInputComponent()
+       </b>
+       :
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>	<span class="n">InputComponent</span><span class="o">-&gt;</span><span class="n">BindAction</span><span class="p">(</span><span class="s">"StartFire"</span><span class="p">,</span> <span class="n">IE_Pressed</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">AUTPlayerController</span><span class="o">::</span><span class="n">OnFire</span><span class="p">);</span>
+	<span class="n">InputComponent</span><span class="o">-&gt;</span><span class="n">BindAction</span><span class="p">(</span><span class="s">"StopFire"</span><span class="p">,</span> <span class="n">IE_Released</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">AUTPlayerController</span><span class="o">::</span><span class="n">OnStopFire</span><span class="p">);</span>
+	<span class="n">InputComponent</span><span class="o">-&gt;</span><span class="n">BindAction</span><span class="p">(</span><span class="s">"StartAltFire"</span><span class="p">,</span> <span class="n">IE_Pressed</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">AUTPlayerController</span><span class="o">::</span><span class="n">OnAltFire</span><span class="p">);</span>
+	<span class="n">InputComponent</span><span class="o">-&gt;</span><span class="n">BindAction</span><span class="p">(</span><span class="s">"StopAltFire"</span><span class="p">,</span> <span class="n">IE_Released</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">AUTPlayerController</span><span class="o">::</span><span class="n">OnStopAltFire</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       From here we can see the InputComponent of the PlayerController is binding an action called "StartFire" to the function
+       <b>
+        UTPlayerController::OnFire()
+       </b>
+       . This tells us that when the player presses left mouse button, the StartFire binding is called and our
+       <b>
+        UTPlayerController::OnFire()
+       </b>
+       function is called.
+      </p>
+      <p>
+       Looking at the implementation of
+       <b>
+        UTPlayerController::OnFire()
+       </b>
+       we will see
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">AUTPlayerController</span><span class="o">::</span><span class="n">OnFire</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">GetPawn</span><span class="p">()</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">new</span><span class="p">(</span><span class="n">DeferredFireInputs</span><span class="p">)</span> <span class="n">FDeferredFireInput</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">IsInState</span><span class="p">(</span><span class="n">NAME_Spectating</span><span class="p">))</span>
+	<span class="p">{</span>
+		<span class="k">if</span> <span class="p">((</span><span class="n">PlayerState</span> <span class="o">==</span> <span class="k">nullptr</span> <span class="o">||</span> <span class="o">!</span><span class="n">PlayerState</span><span class="o">-&gt;</span><span class="n">bOnlySpectator</span><span class="p">)</span> <span class="o">&amp;&amp;</span> 
+			<span class="n">bPlayerIsWaiting</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">ServerRestartPlayer</span><span class="p">();</span>
+		<span class="p">}</span>
+		<span class="k">else</span>
+		<span class="p">{</span>
+			<span class="n">ServerViewNextPlayer</span><span class="p">();</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">else</span>
+	<span class="p">{</span>
+		<span class="n">ServerRestartPlayer</span><span class="p">();</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       This might look a little confusing at first, but the key element to point out here is the code that executes when we have a pawn. The majority of this code handles spectating only, so only the line
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>		<span class="k">new</span><span class="p">(</span><span class="n">DeferredFireInputs</span><span class="p">)</span> <span class="n">FDeferredFireInput</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       Is relevant to the actual firing behavior while the player is alive.
+What does this line do? In short, it creates an object of type FDeferredFireInput, passing along the FireMode, in this case 0, and whether this input was the start or end of the input.
+      </p>
+      <p>
+       The definition for the FDefferedFireInput can be seen in the UTPlayerController.h
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">struct</span> <span class="n">FDeferredFireInput</span>
+<span class="p">{</span>
+	<span class="cm">/** the fire mode */</span>
+	<span class="n">uint8</span> <span class="n">FireMode</span><span class="p">;</span>
+	<span class="cm">/** if true, call StartFire(), false call StopFire() */</span>
+	<span class="kt">bool</span> <span class="n">bStartFire</span><span class="p">;</span>
+
+	<span class="n">FDeferredFireInput</span><span class="p">(</span><span class="n">uint8</span> <span class="n">InFireMode</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bInStartFire</span><span class="p">)</span>
+		<span class="o">:</span> <span class="n">FireMode</span><span class="p">(</span><span class="n">InFireMode</span><span class="p">),</span> <span class="n">bStartFire</span><span class="p">(</span><span class="n">bInStartFire</span><span class="p">)</span>
+	<span class="p">{}</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       The FDeferredFireInput struct was created so that fire inputs can be applied in a slightly different order than they would normally occur. If you trace down where the DeferredFireInputs are used, you'll see that they are typically processed in the movement component of the UTCharacter, UTCharacterMovement::TickComponent(). This entire process is a bit circuitous, but the long and short of it is that DeferredFireInputs are ultimately resolved in
+       <b>
+        UTPlayerController::ApplyDeferredFireInputs()
+       </b>
+       .
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">AUTPlayerController</span><span class="o">::</span><span class="n">ApplyDeferredFireInputs</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">for</span> <span class="p">(</span><span class="n">FDeferredFireInput</span><span class="o">&amp;</span> <span class="nl">Input</span> <span class="p">:</span> <span class="n">DeferredFireInputs</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="n">bStartFire</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">UTCharacter</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+			<span class="p">{</span>
+				<span class="k">if</span> <span class="p">(</span><span class="n">StateName</span> <span class="o">==</span> <span class="n">NAME_Playing</span><span class="p">)</span>
+				<span class="p">{</span>
+					<span class="n">UTCharacter</span><span class="o">-&gt;</span><span class="n">StartFire</span><span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="n">FireMode</span><span class="p">);</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+			<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">GetPawn</span><span class="p">()</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span>
+			<span class="p">{</span>
+				<span class="n">GetPawn</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">PawnStartFire</span><span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="n">FireMode</span><span class="p">);</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+		<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">UTCharacter</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">UTCharacter</span><span class="o">-&gt;</span><span class="n">StopFire</span><span class="p">(</span><span class="n">Input</span><span class="p">.</span><span class="n">FireMode</span><span class="p">);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="n">DeferredFireInputs</span><span class="p">.</span><span class="n">Empty</span><span class="p">();</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Now we're getting somewhere. In
+       <b>
+        UTPlayerController::ApplyDeferredFireInputs()
+       </b>
+       the standard processing of our player input will have us calling a function on our UTCharacter called StartFire, passing along a numerical value for the firemode we're calling.
+       <b>
+        UTCharacter::StartFire()
+       </b>
+       looks like so:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">AUTCharacter</span><span class="o">::</span><span class="n">StartFire</span><span class="p">(</span><span class="n">uint8</span> <span class="n">FireModeNum</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogUTCharacter</span><span class="p">,</span> <span class="n">Verbose</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"StartFire %d"</span><span class="p">),</span> <span class="n">FireModeNum</span><span class="p">);</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">IsLocallyControlled</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogUTCharacter</span><span class="p">,</span> <span class="n">Warning</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"StartFire() can only be called on the owning client"</span><span class="p">));</span>
+	<span class="p">}</span>
+	<span class="c1">// when feigning death, attempting to fire gets us out of it</span>
+	<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">bFeigningDeath</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">FeignDeath</span><span class="p">();</span>
+	<span class="p">}</span>
+	<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">Weapon</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="o">&amp;&amp;</span> <span class="n">EmoteCount</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">Weapon</span><span class="o">-&gt;</span><span class="n">StartFire</span><span class="p">(</span><span class="n">FireModeNum</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       The important bits here is how UTCharacter passes input to the Weapon class, getting us to our destination at last, calling
+       <b>
+        UTWeapon::StartFire()
+       </b>
+       .
+      </p>
+      <p>
+       Here is a small diagram outlining the input flow through these initial classes.
+      </p>
+      <p>
+       <img alt="InputDiagramTrim1.jpg" class="" height="256" src="../assets/create-a-custom-weapon-how-firing-works/1.jpg" width="688"/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Weapon_States">
+        Weapon States
+       </span>
+      </h3>
+      <p>
+       You might be thinking, "That's great, you've shown how a single button press translates into a single function call in my weapon, but what happens next?"
+This section will walk through the steps of what happens once our player input reaches our weapon.
+      </p>
+      <p>
+       Starting off, our first point of entry into the Weapon class is the
+       <b>
+        UTWeapon::StartFire()
+       </b>
+       function:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">AUTWeapon</span><span class="o">::</span><span class="n">StartFire</span><span class="p">(</span><span class="n">uint8</span> <span class="n">FireModeNum</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">UTOwner</span><span class="o">-&gt;</span><span class="n">IsFiringDisabled</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="kt">bool</span> <span class="n">bClientFired</span> <span class="o">=</span> <span class="n">BeginFiringSequence</span><span class="p">(</span><span class="n">FireModeNum</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">Role</span> <span class="o">&lt;</span> <span class="n">ROLE_Authority</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">ServerStartFire</span><span class="p">(</span><span class="n">FireModeNum</span><span class="p">,</span> <span class="n">bClientFired</span><span class="p">);</span> 
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       As you can see, in games where the client is not the authority (e.g. all online games), this redirects to
+       <b>
+        UTWeapon::ServerStartFire()
+       </b>
+       . Lets take a brief look there as well:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">AUTWeapon</span><span class="o">::</span><span class="n">ServerStartFire_Implementation</span><span class="p">(</span><span class="n">uint8</span> <span class="n">FireModeNum</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bClientFired</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">UTOwner</span><span class="o">-&gt;</span><span class="n">IsFiringDisabled</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="n">BeginFiringSequence</span><span class="p">(</span><span class="n">FireModeNum</span><span class="p">,</span> <span class="n">bClientFired</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Both the clientside and serverside functions here call
+       <b>
+        UTWeapon::BeginFiringSequence()
+       </b>
+       , so it's important to see how input is passed along through this function to produce the firing behavior.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">bool</span> <span class="n">AUTWeapon</span><span class="o">::</span><span class="n">BeginFiringSequence</span><span class="p">(</span><span class="n">uint8</span> <span class="n">FireModeNum</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bClientFired</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">UTOwner</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">UTOwner</span><span class="o">-&gt;</span><span class="n">SetPendingFire</span><span class="p">(</span><span class="n">FireModeNum</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">FiringState</span><span class="p">.</span><span class="n">IsValidIndex</span><span class="p">(</span><span class="n">FireModeNum</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">CurrentState</span> <span class="o">!=</span> <span class="n">EquippingState</span> <span class="o">&amp;&amp;</span> <span class="n">CurrentState</span> <span class="o">!=</span> <span class="n">UnequippingState</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">FiringState</span><span class="p">[</span><span class="n">FireModeNum</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">PendingFireStarted</span><span class="p">();</span>
+		<span class="p">}</span>
+		<span class="kt">bool</span> <span class="n">bResult</span> <span class="o">=</span> <span class="n">CurrentState</span><span class="o">-&gt;</span><span class="n">BeginFiringSequence</span><span class="p">(</span><span class="n">FireModeNum</span><span class="p">,</span> <span class="n">bClientFired</span><span class="p">);</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">CurrentState</span><span class="o">-&gt;</span><span class="n">IsFiring</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">CurrentFireMode</span> <span class="o">!=</span> <span class="n">FireModeNum</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">OnMultiPress</span><span class="p">(</span><span class="n">FireModeNum</span><span class="p">);</span>
+		<span class="p">}</span>
+		<span class="k">return</span> <span class="n">bResult</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       The next step to pay attention to is in AUTWeapon::BeginFiringSequence involves looking at this next set of lines to execute,
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">FiringState</span><span class="p">.</span><span class="n">IsValidIndex</span><span class="p">(</span><span class="n">FireModeNum</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">CurrentState</span> <span class="o">!=</span> <span class="n">EquippingState</span> <span class="o">&amp;&amp;</span> <span class="n">CurrentState</span> <span class="o">!=</span> <span class="n">UnequippingState</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">FiringState</span><span class="p">[</span><span class="n">FireModeNum</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">PendingFireStarted</span><span class="p">();</span>
+		<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       If you look only at the name of this variable you might think to yourself that the FiringState is a state that controls certain firing behaviors of the weapon. If you've looked through the class structure you've likely seen such things as UTWeaponStateFiringBeam, UTWeaponStateFiringBurst, UTWeaponStateFiringSpinUp. It might seem confusing that somehow your weapon already has a so-called FiringState even though we haven't even fired a shot yet!
+      </p>
+      <p>
+       The important thing to recognize here is that FiringState is an object of type UUTWeaponState. UUTWeaponState is an object defined to exist within each UTWeapon, but each UTWeaponState corresponds to more than just a particular firing behavior in a weapon. Imagine that you are playing a game and you have in your inventory the Impact Hammer, the Enforcer, the Shock Rifle, and the Rocket Launcher. If we were to call UTWeapon::BeginFiringSequence() on all of these weapons, they would all have a 'firing state.' However, in Unreal Tournament where the player can only have one active weapon at a time, three of those weapons would be in WeaponState UTWeaponStateInactive. The one "currently-held" weapon would be in UTWeaponStateActive. There are also transitional states used for equipping and unequipping weapons, as we can see from UTWeapon::BeginFiringSequence().
+      </p>
+      <p>
+       Moving on, our code above indicates we should call the PendingFireStarted function of our Weapon State class. As I stated above, a held weapon is in the UTWeaponStateActive class, so looking at the function definition
+       <b>
+        UTWeaponStateActive::PendingFireStarted()
+       </b>
+       we see:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">bool</span> <span class="n">UUTWeaponStateActive</span><span class="o">::</span><span class="n">BeginFiringSequence</span><span class="p">(</span><span class="n">uint8</span> <span class="n">FireModeNum</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bClientFired</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">GetOuterAUTWeapon</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">FiringState</span><span class="p">.</span><span class="n">IsValidIndex</span><span class="p">(</span><span class="n">FireModeNum</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">GetOuterAUTWeapon</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">HasAmmo</span><span class="p">(</span><span class="n">FireModeNum</span><span class="p">))</span>
+	<span class="p">{</span>
+		<span class="n">GetOuterAUTWeapon</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">CurrentFireMode</span> <span class="o">=</span> <span class="n">FireModeNum</span><span class="p">;</span>
+		<span class="n">GetOuterAUTWeapon</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GotoState</span><span class="p">(</span><span class="n">GetOuterAUTWeapon</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">FiringState</span><span class="p">[</span><span class="n">FireModeNum</span><span class="p">]);</span>
+		<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Fortunately this is straightforward, knowing that our weapon initially is in state UTWeaponStateActive, we'll want to use the
+       <b>
+        UTWeapon::GotoState()
+       </b>
+       function to go to the state specified by our CurrentFireMode/FireModeNum. These actually will vary per weapon, but in all current examples these Firing States are subclasses of UTWeaponStateFiring.
+      </p>
+      <p>
+       Looking first at
+       <b>
+        UTWeapon::GotoState()
+       </b>
+       :
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">AUTWeapon</span><span class="o">::</span><span class="n">GotoState</span><span class="p">(</span><span class="n">UUTWeaponState</span><span class="o">*</span> <span class="n">NewState</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">NewState</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="o">||</span> <span class="o">!</span><span class="n">NewState</span><span class="o">-&gt;</span><span class="n">IsIn</span><span class="p">(</span><span class="k">this</span><span class="p">))</span>
+	<span class="p">{</span>
+		<span class="n">UE_LOG</span><span class="p">(</span><span class="n">UT</span><span class="p">,</span> <span class="n">Warning</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Attempt to send %s to invalid state %s"</span><span class="p">),</span> <span class="o">*</span><span class="n">GetName</span><span class="p">(),</span> <span class="o">*</span><span class="n">GetFullNameSafe</span><span class="p">(</span><span class="n">NewState</span><span class="p">));</span>
+	<span class="p">}</span>
+	<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">ensureMsgf</span><span class="p">(</span><span class="n">UTOwner</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="o">||</span> <span class="n">NewState</span> <span class="o">==</span> <span class="n">InactiveState</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Attempt to send %s to state %s while not owned"</span><span class="p">),</span> <span class="o">*</span><span class="n">GetName</span><span class="p">(),</span> <span class="o">*</span><span class="n">GetNameSafe</span><span class="p">(</span><span class="n">NewState</span><span class="p">)))</span>
+	<span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">CurrentState</span> <span class="o">!=</span> <span class="n">NewState</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">UUTWeaponState</span><span class="o">*</span> <span class="n">PrevState</span> <span class="o">=</span> <span class="n">CurrentState</span><span class="p">;</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">CurrentState</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+			<span class="p">{</span>
+				<span class="n">CurrentState</span><span class="o">-&gt;</span><span class="n">EndState</span><span class="p">();</span> <span class="c1">// NOTE: may trigger another GotoState() call</span>
+			<span class="p">}</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">CurrentState</span> <span class="o">==</span> <span class="n">PrevState</span><span class="p">)</span>
+			<span class="p">{</span>
+				<span class="n">CurrentState</span> <span class="o">=</span> <span class="n">NewState</span><span class="p">;</span>
+				<span class="n">CurrentState</span><span class="o">-&gt;</span><span class="n">BeginState</span><span class="p">(</span><span class="n">PrevState</span><span class="p">);</span> <span class="c1">// NOTE: may trigger another GotoState() call</span>
+				<span class="n">StateChanged</span><span class="p">();</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Again, for the time being we're assuming we will be going to a Weapon State that extends UTWeaponStateFiring. This is the standard base class for firing behavior.
+       <b>
+        UTWeaponStateFiring::BeginState()
+       </b>
+       shows us:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">UUTWeaponStateFiring</span><span class="o">::</span><span class="n">BeginState</span><span class="p">(</span><span class="k">const</span> <span class="n">UUTWeaponState</span><span class="o">*</span> <span class="n">PrevState</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">GetOuterAUTWeapon</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetWorldTimerManager</span><span class="p">().</span><span class="n">SetTimer</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">UUTWeaponStateFiring</span><span class="o">::</span><span class="n">RefireCheckTimer</span><span class="p">,</span> <span class="n">GetOuterAUTWeapon</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetRefireTime</span><span class="p">(</span><span class="n">GetOuterAUTWeapon</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetCurrentFireMode</span><span class="p">()),</span> <span class="nb">true</span><span class="p">);</span>
+	<span class="n">ToggleLoopingEffects</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+	<span class="n">PendingFireSequence</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+	<span class="n">bDelayShot</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="n">GetOuterAUTWeapon</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">OnStartedFiring</span><span class="p">();</span>
+	<span class="n">FireShot</span><span class="p">();</span>
+	<span class="n">GetOuterAUTWeapon</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">bNetDelayedShot</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Here we can see that the function
+       <b>
+        UTWeaponStateFiring::FireShot()
+       </b>
+       is called.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">UUTWeaponStateFiring</span><span class="o">::</span><span class="n">FireShot</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">//float CurrentMoveTime = (GetUTOwner() &amp;&amp; GetUTOwner()-&gt;UTCharacterMovement) ? GetUTOwner()-&gt;UTCharacterMovement-&gt;GetCurrentSynchTime() : GetWorld()-&gt;GetTimeSeconds();</span>
+	<span class="c1">//UE_LOG(UT, Warning, TEXT("Fire SHOT at %f (world time %f)"), CurrentMoveTime, GetWorld()-&gt;GetTimeSeconds());</span>
+	<span class="n">GetOuterAUTWeapon</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">FireShot</span><span class="p">();</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       In UTWeaponStateFiring the most basic case of firing behavior is implemented. One button press immediately fires the gun, and on release the gun firing behavior ceases. UTWeaponStateFiring::FireShot() thus calls
+       <b>
+        UTWeapon::FireShot()
+       </b>
+       :
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">AUTWeapon</span><span class="o">::</span><span class="n">FireShot</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">UTOwner</span><span class="o">-&gt;</span><span class="n">DeactivateSpawnProtection</span><span class="p">();</span>
+	<span class="n">ConsumeAmmo</span><span class="p">(</span><span class="n">CurrentFireMode</span><span class="p">);</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">FireShotOverride</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">GetUTOwner</span><span class="p">()</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="c1">// script event may kill user</span>
+	<span class="p">{</span>
+		<span class="n">PlayFiringEffects</span><span class="p">();</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">ProjClass</span><span class="p">.</span><span class="n">IsValidIndex</span><span class="p">(</span><span class="n">CurrentFireMode</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">ProjClass</span><span class="p">[</span><span class="n">CurrentFireMode</span><span class="p">]</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">FireProjectile</span><span class="p">();</span>
+		<span class="p">}</span>
+		<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">InstantHitInfo</span><span class="p">.</span><span class="n">IsValidIndex</span><span class="p">(</span><span class="n">CurrentFireMode</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">InstantHitInfo</span><span class="p">[</span><span class="n">CurrentFireMode</span><span class="p">].</span><span class="n">DamageType</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">FireInstantHit</span><span class="p">();</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">GetUTOwner</span><span class="p">()</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">static</span> <span class="n">FName</span> <span class="n">NAME_FiredWeapon</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"FiredWeapon"</span><span class="p">));</span>
+		<span class="n">GetUTOwner</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">InventoryEvent</span><span class="p">(</span><span class="n">NAME_FiredWeapon</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       From this point on our weapon code will branch to either
+       <b>
+        UTWeapon::FireProjectile()
+       </b>
+       or
+       <b>
+        UTWeapon::FireInstantHit()
+       </b>
+       . Other tutorials provide ample examples of utilizing these functions for custom firing behavior, so I leave it to the reader to decide how to implement those functions as necessary to achieve desired behavior.
+For examples of how the Weapon State is used I recommend looking at the
+       <b>
+        UTWeaponStateFiringBurst
+       </b>
+       code to see how overriding the Weapon State can allow the user to create functionality where one button press does not necessarily correspond to one shot, but rather to an arbitrary number of shots. Overriding this functionality can allow the user to implement all kinds of exotic and never-before-seen types of functionality!
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

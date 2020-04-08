@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Blueprint Node: Create Object from Blueprint - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Blueprint Node: Create Object from Blueprint
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <table align="right">
+       <tbody>
+        <tr>
+         <td>
+          <div class="toc" id="toc">
+           <div class="toctitle">
+            <h2>
+             Contents
+            </h2>
+           </div>
+           <ul>
+            <li class="toclevel-1 tocsection-1">
+             <a href="#Overview">
+              <span class="tocnumber">
+               1
+              </span>
+              <span class="toctext">
+               Overview
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-1 tocsection-2">
+             <a href="#Note:_Using_4.9.2B">
+              <span class="tocnumber">
+               2
+              </span>
+              <span class="toctext">
+               Note: Using 4.9+
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-1 tocsection-3">
+             <a href="#The_Code">
+              <span class="tocnumber">
+               3
+              </span>
+              <span class="toctext">
+               The Code
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-1 tocsection-4">
+             <a href="#Result_in_editor">
+              <span class="tocnumber">
+               4
+              </span>
+              <span class="toctext">
+               Result in editor
+              </span>
+             </a>
+            </li>
+           </ul>
+          </div>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <h1>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h1>
+      <p>
+       This snippet shows you how to make a custom blueprint node that instantiates an object from a blueprint (that extends Object). It was created with assistance from MonsOlympus.
+      </p>
+      <p>
+       Being able to instantiate an object class from Blueprints like this is useful as objects provide a nice way to store data without any having any of the overhead that actor classes create.
+      </p>
+      <p>
+       This snippet won't go into major detail, as you should
+       first - It explains how to create your own custom nodes, and the features available (and what they do). 
+-
+     (
+     )
+      </p>
+      <p>
+       I have updated this tutorial to work for 4.8, as well as added a note about using 4.9.
+-
+     (
+     )
+      </p>
+      <h1>
+       <span class="mw-headline" id="Note:_Using_4.9.2B">
+        Note: Using 4.9+
+       </span>
+      </h1>
+      <p>
+       In 4.9, Epic has added a blueprint node to do just this. It's called "Construct Object from class", and it's pretty useful. If your wanting to know how to create objects within c++, or interact c++ and blueprints, this tutorial is still useful: however if you want to create an object from blueprint, I advise you use the new built in blueprint function. Good luck!
+      </p>
+      <h1>
+       <span class="mw-headline" id="The_Code">
+        The Code
+       </span>
+      </h1>
+      <p>
+       <img alt="CustBluePNode CreateObject.jpg" class="" height="93" src="../assets/blueprint-node-create-object-from-blueprint/0.jpg" width="246"/>
+       <br clear="all"/>
+      </p>
+      <p>
+       <br/>
+       (Note that the "HyperPro.h" should be replaced with your project name)
+CPP file:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Copyleft under the creative commons license</span>
+<span class="c1">//For details see http://creativecommons.org/licenses/by-sa/4.0/</span>
+
+<span class="cp">#include</span> <span class="cpf">"HyperPro.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"CreateNewObject.h"</span><span class="cp"></span>
+
+
+<span class="n">UObject</span><span class="o">*</span> <span class="n">UCreateNewObject</span><span class="o">::</span><span class="n">NewObjectFromBlueprint</span><span class="p">(</span><span class="n">UObject</span><span class="o">*</span> <span class="n">WorldContextObject</span><span class="p">,</span> <span class="n">UClass</span><span class="o">*</span> <span class="n">UC</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">UWorld</span><span class="o">*</span> <span class="n">World</span> <span class="o">=</span> <span class="n">GEngine</span><span class="o">-&gt;</span><span class="n">GetWorldFromContextObject</span><span class="p">(</span><span class="n">WorldContextObject</span><span class="p">);</span>
+	<span class="n">UObject</span><span class="o">*</span> <span class="n">tempObject</span> <span class="o">=</span> <span class="n">NewObject</span><span class="o">&lt;</span><span class="n">UObject</span><span class="o">&gt;</span><span class="p">(</span><span class="n">UC</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="n">tempObject</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Header file (.h):
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Copyleft under the creative commons license</span>
+<span class="c1">//For details see http://creativecommons.org/licenses/by-sa/4.0/</span>
+
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"Kismet/BlueprintFunctionLibrary.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"CreateNewObject.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">UCreateNewObject</span> <span class="o">:</span> <span class="k">public</span> <span class="n">UBlueprintFunctionLibrary</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintPure</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">HidePin</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">DefaultToSelf</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">DisplayName</span> <span class="o">=</span> <span class="s">"Create Object From Blueprint"</span><span class="p">,</span> <span class="n">CompactNodeTitle</span> <span class="o">=</span> <span class="s">"Create"</span><span class="p">,</span> <span class="n">Keywords</span> <span class="o">=</span> <span class="s">"new create blueprint"</span><span class="p">),</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Game</span><span class="p">)</span>
+	<span class="k">static</span> <span class="n">UObject</span><span class="o">*</span> <span class="n">NewObjectFromBlueprint</span><span class="p">(</span><span class="n">UObject</span><span class="o">*</span> <span class="n">WorldContextObject</span><span class="p">,</span> <span class="n">UClass</span><span class="o">*</span> <span class="n">UC</span><span class="p">);</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Result_in_editor">
+        Result in editor
+       </span>
+      </h1>
+      <p>
+       Using a Blueprint extending object named "TestObject":
+      </p>
+      <p>
+       <img alt="CustBluePNode CreateObject Layout.jpg" class="" height="250" src="../assets/blueprint-node-create-object-from-blueprint/1.jpg" width="700"/>
+       <br clear="all"/>
+      </p>
+      <p>
+       <img alt="CustBluePNode CreateObject Testing.jpg" class="" height="909" src="../assets/blueprint-node-create-object-from-blueprint/2.jpg" width="1125"/>
+       <br clear="all"/>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Hello Android - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Hello Android
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       This tutorial will show you how to create a simple rotating cube in Unread Engine 4 and deploy it on an Android Device.
+      </p>
+      <p>
+       Prerequisites: had Android SDK, JDK, and Ant installed. You can find a tutorial
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Platforms/Android/GettingStarted/" rel="nofollow">
+        here
+       </a>
+       .  
+Let’s Begin!
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Level_Setup">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Level Setup
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Project_Settings">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Project Settings
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Packaging_Game">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Packaging Game
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Let.E2.80.99s_Create_our_Cube">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Let’s Create our Cube
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Level_Setup">
+        Level Setup
+       </span>
+      </h2>
+      <p>
+       Open unreal engine 4 and create a new blank project and call it "HelloAnd". Make sure "
+       <i>
+        Include started content
+       </i>
+       " is
+       <b>
+        unchecked
+       </b>
+       . Unreal will generate a sample level for us, we need to save it. From 'File' menu select Save
+Make a folder in "HelloAnd/Content" Directory and call it "Levels", choose a name for your level and hit Save. I will call my level "master"
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Project_Settings">
+        Project Settings
+       </span>
+      </h2>
+      <p>
+       We need to apply some changes to Project Settings
+      </p>
+      <ol>
+       <li>
+        Open Project Settings (Edit -&gt; Project Settings…)
+       </li>
+       <li>
+        Under Description tab you can enter some information about your game.
+       </li>
+       <li>
+        Under Map &amp; Modes tab you have to change Default map
+        <dl>
+         <dd>
+          Under Default Maps section Change Game Default Map to master by clicking on a button next to Textbox (▼) and choosing your level name ('master' in my case)
+         </dd>
+         <dd>
+          Do same thing with Editor Startup Map and Server Default Map
+         </dd>
+        </dl>
+       </li>
+       <li>
+        You need to configure project for Android Platform, Under Android tab there is a Red Warning "Project is not configured for the android platform" and there is "Configure Now" button next to it. Click on "Configure Now" Button.
+       </li>
+      </ol>
+      <ul>
+       <li>
+        Consider
+        <b>
+         unchecking
+        </b>
+        "Mobile HDR" if your mobile device doesn't support it! (Under Rendering tab, there is 'Mobile section' and a Check box for "Mobile HDR").
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:1181px;">
+         <img alt="" class="thumbimage" height="806" src="../assets/hello-android/0.png" width="1179"/>
+         <div class="thumbcaption">
+          Project Settings - Game - Description
+         </div>
+        </div>
+       </div>
+      </div>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:1186px;">
+         <img alt="" class="thumbimage" height="814" src="../assets/hello-android/1.png" width="1184"/>
+         <div class="thumbcaption">
+          Project Settings - Game - Maps &amp; modes
+         </div>
+        </div>
+       </div>
+      </div>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:1181px;">
+         <img alt="" class="thumbimage" height="806" src="../assets/hello-android/2.png" width="1179"/>
+         <div class="thumbcaption">
+          Project Settings - Platforms - Android
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       Click on "
+       <b>
+        Set as Default
+       </b>
+       " for saving changes. Now we ready to package game for android! Let's dot it!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Packaging_Game">
+        Packaging Game
+       </span>
+      </h2>
+      <p>
+       Connect your device to your computer. Make sure
+       <b>
+        USB Debug Mode
+       </b>
+       is enabled on the device. Unreal Editor will automatically find your phone and you can deploy your level into your phone.  Next to the “Launch" button on Main Editor Window there is drop down menu (▼) that list all available devices. you should see your computer’s name and name of your phone in there. Unreal Engine will automatically deploy current level into your device
+      </p>
+      <p>
+       <br/>
+      </p>
+      <div class="center">
+       <div class="floatnone">
+        <img alt="HelloAndDeploytoAndriod.png" class="" height="286" src="../assets/hello-android/3.png" width="500"/>
+       </div>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Let.E2.80.99s_Create_our_Cube">
+        Let’s Create our Cube
+       </span>
+      </h2>
+      <p>
+       We need to create a blueprint for our cube. In Content Browser, create new folder and call it "Blueprints". Under Blueprints directory create a new Blueprint and call it "BP_RotatingCube". Open "BP_RotatingCube", under "Components" section we need to add Static Mesh; it will be Root component of our blueprint, Call it MyCube. Under details panel in Static Mesh Section click on little white down pointing triangle (▼), the tiny version of Content Browser will pop up. There is "View Options" on bottom right, click on it, check the "Show Engine Content" check box. Now we are able to see all Unreal built-in contents. Find Cube (or just simply type cube in search text box).
+      </p>
+      <p>
+       <br/>
+       <img alt="HelloAnd5.png" class="" height="317" src="../assets/hello-android/4.png" width="250"/>
+       <img alt="HelloAnd6.png" class="" height="354" src="../assets/hello-android/5.png" width="250"/>
+      </p>
+      <p>
+       <br/>
+       Go to "Graph" section. Create a new Variable and call it "RotationSpeed" change its default value to 100.0 (You need to compile blueprint for setting default values)
+      </p>
+      <p>
+       <img alt="HelloAnd7.png" class="" height="788" src="../assets/hello-android/6.png" width="250"/>
+      </p>
+      <p>
+       <br/>
+       We want to rotate cube around Y axis at constant speed the blueprint for this behavior is looks like this:
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:1107px;">
+         <img alt="" class="thumbimage" height="485" src="../assets/hello-android/7.png" width="1105"/>
+         <div class="thumbcaption">
+          Final Blueprint
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <p>
+       Save blueprint.
+      </p>
+      <p>
+       After saving blueprint you can drag and drop "BP_RotatingCube" blueprint into level. hit Play to see the result.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <div class="center">
+       <div class="floatnone">
+        <img alt="Final Level" class="" height="408" src="../assets/hello-android/8.png" width="750"/>
+       </div>
+      </div>
+      <p>
+       <br/>
+       For packaging the game and generating actual
+       <i>
+        *.apk
+       </i>
+       file, go to 'File -&gt; Package Project' menus and choose 'Android'. choose destination folder and unreal engine will crate an apk file for you.
+      </p>
+      <div class="center">
+       <div class="floatnone">
+        <img alt="HelloAnd9.png" class="" height="418" src="../assets/hello-android/9.png" width="250"/>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       We have a beautiful rotating Cube in our android device.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <div class="center">
+       <div class="floatnone">
+        <img alt="HelloAndOnDevice.JPG" class="" height="275" src="../assets/hello-android/10.JPG" width="500"/>
+       </div>
+      </div>
+      <p>
+       (Original Author:
+     )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

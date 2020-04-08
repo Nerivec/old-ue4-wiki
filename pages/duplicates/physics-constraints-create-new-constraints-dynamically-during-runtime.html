@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Physics Constraints, Create New Constraints Dynamically During Runtime - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Physics Constraints, Create New Constraints Dynamically During Runtime
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Video_of_Dynamic_Physics_Constraints">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Video of Dynamic Physics Constraints
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Video_of_Destructible_Dynamic_Physics_Constraints">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Video of Destructible Dynamic Physics Constraints
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#C.2B.2B_for_Making_a_Dynamic_Physics_Constraint">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           C++ for Making a Dynamic Physics Constraint
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#My_C.2B.2B_Physics_Constraint_Library_Functions">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           My C++ Physics Constraint Library Functions
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Free.2CLimited.2CLocked">
+            <span class="tocnumber">
+             5.1
+            </span>
+            <span class="toctext">
+             Free,Limited,Locked
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Example_Usage">
+            <span class="tocnumber">
+             5.2
+            </span>
+            <span class="toctext">
+             Example Usage
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#My_C.2B.2B_Functions_For_You">
+            <span class="tocnumber">
+             5.3
+            </span>
+            <span class="toctext">
+             My C++ Functions For You
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#Updated_C.2B.2B_Functions">
+            <span class="tocnumber">
+             6.1
+            </span>
+            <span class="toctext">
+             Updated C++ Functions
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Author:
+       </i>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       This is a tutorial on how to dynamically create Physics constraints during runtime!
+      </p>
+      <p>
+       See my videos below for examples of what you can do with dynamic physics constraints!
+      </p>
+      <p>
+       The focus of my videos is enabling a user of my In-game editor to make their own physics objects....
+       <b>
+        and then destroy them into dynamic physics pieces!
+       </b>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Video_of_Dynamic_Physics_Constraints">
+        Video of Dynamic Physics Constraints
+       </span>
+      </h2>
+      <p>
+       &lt;youtube&gt;
+       <a class="external free" href="https://www.youtube.com/watch?v=ZgQxWQ9oWoQ&amp;feature=youtu.be" rel="nofollow">
+        https://www.youtube.com/watch?v=ZgQxWQ9oWoQ&amp;feature=youtu.be
+       </a>
+      </p>
+      <p>
+       In this video I am showing how you can make composite physics shapes that will act as a coordinated larger physics constraint, and you can make this combinations dynamically during runtime from user input!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Video_of_Destructible_Dynamic_Physics_Constraints">
+        Video of Destructible Dynamic Physics Constraints
+       </span>
+      </h2>
+      <p>
+       &lt;youtube&gt;
+       <a class="external free" href="https://www.youtube.com/watch?v=sOl5uKe16ZM&amp;feature=youtu.be" rel="nofollow">
+        https://www.youtube.com/watch?v=sOl5uKe16ZM&amp;feature=youtu.be
+       </a>
+      </p>
+      <p>
+       In this video I demonstrate dynamic setting and detaching of physics constraints to make a composite destructible shape that can be destroyed into partial subsections that act like physics sub objects of the original whole.
+      </p>
+      <h2>
+       <span class="mw-headline" id="C.2B.2B_for_Making_a_Dynamic_Physics_Constraint">
+        C++ for Making a Dynamic Physics Constraint
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">ASomeClass</span><span class="o">::</span><span class="n">CreateNewPhysicsConstraintBetween</span><span class="p">(</span><span class="n">AStaticMeshActor</span><span class="o">*</span> <span class="n">RootSMA</span><span class="p">,</span> <span class="n">AStaticMeshActor</span><span class="o">*</span> <span class="n">TargetSMA</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">//set up the constraint instance with all the desired values</span>
+	<span class="n">FConstraintInstance</span> <span class="n">ConstraintInstance</span><span class="p">;</span>
+
+	<span class="c1">//set values here, see functions I am sharing with you below</span>
+	<span class="c1">//UYourStaticLibrary::SetLinearLimits(ConstraintInstance, ...); //or make the functions below non static</span>
+	<span class="c1">//UYourStaticLibrary::SetAngularLimits(ConstraintInstance, ...);</span>
+
+        <span class="c1">//New Object</span>
+	<span class="n">UPhysicsConstraintComponent</span><span class="o">*</span> <span class="n">ConstraintComp</span> <span class="o">=</span> <span class="n">NewObject</span><span class="o">&lt;</span><span class="n">UPhysicsConstraintComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="n">RootSMA</span><span class="p">);</span>
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">ConstraintComp</span><span class="p">)</span> 
+        <span class="p">{</span>
+          <span class="c1">//UE_LOG constraint UObject could not be created!</span>
+          <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~</span>
+	<span class="c1">//Set Constraint Instance!</span>
+	<span class="n">ConstraintComp</span><span class="o">-&gt;</span><span class="n">ConstraintInstance</span> <span class="o">=</span> <span class="n">ConstraintInstance</span><span class="p">;</span>
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~</span>
+			
+	<span class="c1">//Set World Location</span>
+	<span class="n">ConstraintComp</span><span class="o">-&gt;</span><span class="n">SetWorldLocation</span><span class="p">(</span><span class="n">RootSMA</span><span class="o">-&gt;</span><span class="n">GetActorLocation</span><span class="p">());</span>
+				
+	<span class="c1">//Attach to Root!</span>
+	<span class="n">ConstraintComp</span><span class="o">-&gt;</span><span class="n">AttachTo</span><span class="p">(</span><span class="n">RootSMA</span><span class="o">-&gt;</span><span class="n">GetRootComponent</span><span class="p">(),</span> <span class="n">NAME_None</span><span class="p">,</span> <span class="n">EAttachLocation</span><span class="o">::</span><span class="n">KeepWorldPosition</span><span class="p">);</span>
+
+	<span class="c1">//~~~ Init Constraint ~~~</span>
+	<span class="n">ConstraintComp</span><span class="o">-&gt;</span><span class="n">SetConstrainedComponents</span><span class="p">(</span><span class="n">RootSMA</span><span class="o">-&gt;</span><span class="n">StaticMeshComponent</span><span class="p">,</span> <span class="n">NAME_None</span><span class="p">,</span> <span class="n">TargetSMA</span><span class="o">-&gt;</span><span class="n">StaticMeshComponent</span><span class="p">,</span><span class="n">NAME_None</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="My_C.2B.2B_Physics_Constraint_Library_Functions">
+        My C++ Physics Constraint Library Functions
+       </span>
+      </h2>
+      <p>
+       I've tested these and used them in the videos above!
+      </p>
+      <h3>
+       <span class="mw-headline" id="Free.2CLimited.2CLocked">
+        Free,Limited,Locked
+       </span>
+      </h3>
+      <p>
+       For ease of use I just pass in bytes for the free, limited or locked enums.
+      </p>
+      <pre> 0 = Free
+ 1 = Limited
+ 2 = Locked
+</pre>
+      <h3>
+       <span class="mw-headline" id="Example_Usage">
+        Example Usage
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//A new constraint instance!</span>
+<span class="n">FConstraintInstance</span> <span class="n">ConstraintInstance</span><span class="p">;</span>
+
+<span class="c1">//Set Angular Limits of Constraint that was just created</span>
+<span class="n">UYourStaticLibrary</span><span class="o">::</span><span class="n">SetAngularLimits</span><span class="p">(</span> <span class="c1">//or make functions below non static, put in .h</span>
+  <span class="n">ConstraintInstance</span><span class="p">,</span>
+  <span class="mi">1</span><span class="p">,</span> <span class="c1">//swing 1 limited</span>
+  <span class="mi">1</span><span class="p">,</span> <span class="c1">//swing 2 limited</span>
+  <span class="mi">0</span><span class="p">,</span> <span class="c1">//twist is free</span>
+  <span class="mi">60</span><span class="p">,</span> <span class="c1">//swing 1 angle limit</span>
+  <span class="mi">30</span> <span class="c1">//swing 2 angle limit </span>
+  <span class="mi">10</span> <span class="c1">//twist limit (not used cause its free)</span>
+<span class="p">);</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="My_C.2B.2B_Functions_For_You">
+        My C++ Functions For You
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">static</span> <span class="n">FORCEINLINE</span> <span class="kt">void</span> <span class="nf">SetLinearLimits</span><span class="p">(</span>
+	<span class="n">FConstraintInstance</span><span class="o">&amp;</span> <span class="n">Constraint</span><span class="p">,</span>
+	<span class="kt">bool</span> <span class="n">bDisableCollision</span><span class="p">,</span>
+	<span class="k">const</span> <span class="n">uint8</span> <span class="n">XLim</span><span class="p">,</span> <span class="k">const</span> <span class="n">uint8</span> <span class="n">YLim</span><span class="p">,</span> <span class="k">const</span> <span class="n">uint8</span> <span class="n">ZLim</span><span class="p">,</span>
+	<span class="k">const</span> <span class="kt">float</span> <span class="n">Size</span><span class="p">,</span>
+	<span class="kt">bool</span> <span class="n">SoftLimit</span><span class="o">=</span><span class="nb">true</span><span class="p">,</span>
+	<span class="k">const</span> <span class="kt">float</span> <span class="n">SoftStiffness</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+	<span class="k">const</span> <span class="kt">float</span> <span class="n">SoftDampening</span><span class="o">=</span><span class="mi">0</span>
+<span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">//Collision</span>
+	<span class="n">Constraint</span><span class="p">.</span><span class="n">bDisableCollision</span> <span class="o">=</span> <span class="n">bDisableCollision</span><span class="p">;</span>
+	
+	<span class="k">switch</span> <span class="p">(</span><span class="n">XLim</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">case</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">LinearXMotion</span> <span class="o">=</span> <span class="n">ELinearConstraintMotion</span><span class="o">::</span><span class="n">LCM_Free</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+		<span class="k">case</span> <span class="mi">1</span> <span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">LinearXMotion</span> <span class="o">=</span> <span class="n">ELinearConstraintMotion</span><span class="o">::</span><span class="n">LCM_Limited</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+		<span class="k">case</span> <span class="mi">2</span> <span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">LinearXMotion</span> <span class="o">=</span> <span class="n">ELinearConstraintMotion</span><span class="o">::</span><span class="n">LCM_Locked</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">switch</span> <span class="p">(</span><span class="n">YLim</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">case</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">LinearYMotion</span> <span class="o">=</span> <span class="n">ELinearConstraintMotion</span><span class="o">::</span><span class="n">LCM_Free</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+		<span class="k">case</span> <span class="mi">1</span> <span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">LinearYMotion</span> <span class="o">=</span> <span class="n">ELinearConstraintMotion</span><span class="o">::</span><span class="n">LCM_Limited</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+		<span class="k">case</span> <span class="mi">2</span> <span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">LinearYMotion</span> <span class="o">=</span> <span class="n">ELinearConstraintMotion</span><span class="o">::</span><span class="n">LCM_Locked</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">switch</span> <span class="p">(</span><span class="n">ZLim</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">case</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">LinearZMotion</span> <span class="o">=</span> <span class="n">ELinearConstraintMotion</span><span class="o">::</span><span class="n">LCM_Free</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+		<span class="k">case</span> <span class="mi">1</span> <span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">LinearZMotion</span> <span class="o">=</span> <span class="n">ELinearConstraintMotion</span><span class="o">::</span><span class="n">LCM_Limited</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+		<span class="k">case</span> <span class="mi">2</span> <span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">LinearZMotion</span> <span class="o">=</span> <span class="n">ELinearConstraintMotion</span><span class="o">::</span><span class="n">LCM_Locked</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="c1">//~~~~~~~~~~</span>
+	
+	<span class="n">Constraint</span><span class="p">.</span><span class="n">LinearLimitSize</span> <span class="o">=</span> <span class="n">Size</span><span class="p">;</span>
+	
+	<span class="k">if</span><span class="p">(</span><span class="n">SoftLimit</span><span class="p">)</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">bLinearLimitSoft</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+	<span class="k">else</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">bLinearLimitSoft</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	
+	<span class="n">Constraint</span><span class="p">.</span><span class="n">LinearLimitStiffness</span> 	<span class="o">=</span> <span class="n">SoftStiffness</span><span class="p">;</span>
+	<span class="n">Constraint</span><span class="p">.</span><span class="n">LinearLimitDamping</span> 	<span class="o">=</span> <span class="n">SoftDampening</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span> <span class="n">FORCEINLINE</span> <span class="kt">void</span> <span class="nf">SetAngularLimits</span><span class="p">(</span>
+	<span class="n">FConstraintInstance</span><span class="o">&amp;</span> <span class="n">Constraint</span><span class="p">,</span>
+	<span class="k">const</span> <span class="n">uint8</span> <span class="n">S1Lim</span><span class="p">,</span> <span class="k">const</span> <span class="n">uint8</span> <span class="n">S2Lim</span><span class="p">,</span> <span class="k">const</span> <span class="n">uint8</span> <span class="n">TLim</span><span class="p">,</span>
+	<span class="k">const</span> <span class="kt">float</span> <span class="n">Swing1LimitAngle</span><span class="p">,</span>
+	<span class="k">const</span> <span class="kt">float</span> <span class="n">Swing2LimitAngle</span><span class="p">,</span>
+	<span class="k">const</span> <span class="kt">float</span> <span class="n">TwistLimitAngle</span><span class="p">,</span>
+	
+	<span class="kt">bool</span> <span class="n">SoftSwingLimit</span><span class="o">=</span><span class="nb">true</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">SoftTwistLimit</span><span class="o">=</span><span class="nb">true</span><span class="p">,</span>
+	<span class="k">const</span> <span class="kt">float</span> <span class="n">SwingStiff</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span> <span class="n">SwingDamp</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+	<span class="k">const</span> <span class="kt">float</span> <span class="n">TwistStiff</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span> <span class="n">TwistDamp</span><span class="o">=</span><span class="mi">0</span>
+<span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">switch</span> <span class="p">(</span><span class="n">S1Lim</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">case</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">AngularSwing1Motion</span> <span class="o">=</span> <span class="n">EAngularConstraintMotion</span><span class="o">::</span><span class="n">ACM_Free</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+		<span class="k">case</span> <span class="mi">1</span> <span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">AngularSwing1Motion</span> <span class="o">=</span> <span class="n">EAngularConstraintMotion</span><span class="o">::</span><span class="n">ACM_Limited</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+		<span class="k">case</span> <span class="mi">2</span> <span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">AngularSwing1Motion</span> <span class="o">=</span> <span class="n">EAngularConstraintMotion</span><span class="o">::</span><span class="n">ACM_Locked</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">switch</span> <span class="p">(</span><span class="n">S2Lim</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">case</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">AngularSwing2Motion</span> <span class="o">=</span> <span class="n">EAngularConstraintMotion</span><span class="o">::</span><span class="n">ACM_Free</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+		<span class="k">case</span> <span class="mi">1</span> <span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">AngularSwing2Motion</span> <span class="o">=</span> <span class="n">EAngularConstraintMotion</span><span class="o">::</span><span class="n">ACM_Limited</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+		<span class="k">case</span> <span class="mi">2</span> <span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">AngularSwing2Motion</span> <span class="o">=</span> <span class="n">EAngularConstraintMotion</span><span class="o">::</span><span class="n">ACM_Locked</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">switch</span> <span class="p">(</span><span class="n">TLim</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">case</span> <span class="mi">0</span> <span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">AngularTwistMotion</span> <span class="o">=</span> <span class="n">EAngularConstraintMotion</span><span class="o">::</span><span class="n">ACM_Free</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+		<span class="k">case</span> <span class="mi">1</span> <span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">AngularTwistMotion</span> <span class="o">=</span> <span class="n">EAngularConstraintMotion</span><span class="o">::</span><span class="n">ACM_Limited</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+		<span class="k">case</span> <span class="mi">2</span> <span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">AngularTwistMotion</span> <span class="o">=</span> <span class="n">EAngularConstraintMotion</span><span class="o">::</span><span class="n">ACM_Locked</span><span class="p">;</span> <span class="k">break</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="c1">//~~~~~~~~~~</span>
+	
+	<span class="c1">//Soft Lmit?</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">SoftSwingLimit</span><span class="p">)</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">bSwingLimitSoft</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+	<span class="k">else</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">bSwingLimitSoft</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	
+	<span class="k">if</span><span class="p">(</span><span class="n">SoftTwistLimit</span><span class="p">)</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">bTwistLimitSoft</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+	<span class="k">else</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">bTwistLimitSoft</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	
+	<span class="c1">//Limit Angles</span>
+	<span class="n">Constraint</span><span class="p">.</span><span class="n">Swing1LimitAngle</span> 	<span class="o">=</span> <span class="n">Swing1LimitAngle</span><span class="p">;</span>
+	<span class="n">Constraint</span><span class="p">.</span><span class="n">Swing2LimitAngle</span> 	<span class="o">=</span> <span class="n">Swing2LimitAngle</span><span class="p">;</span>
+	<span class="n">Constraint</span><span class="p">.</span><span class="n">TwistLimitAngle</span> 	<span class="o">=</span> <span class="n">TwistLimitAngle</span><span class="p">;</span>
+	
+	<span class="n">Constraint</span><span class="p">.</span><span class="n">SwingLimitStiffness</span> 	<span class="o">=</span> <span class="n">SwingStiff</span><span class="p">;</span>
+	<span class="n">Constraint</span><span class="p">.</span><span class="n">SwingLimitDamping</span>	<span class="o">=</span> <span class="n">SwingDamp</span><span class="p">;</span>
+	<span class="n">Constraint</span><span class="p">.</span><span class="n">TwistLimitStiffness</span> 	<span class="o">=</span> <span class="n">TwistStiff</span><span class="p">;</span>
+	<span class="n">Constraint</span><span class="p">.</span><span class="n">TwistLimitDamping</span> 	<span class="o">=</span> <span class="n">TwistDamp</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       Now you have the basic code to do all sorts of fancy things with Dynamic Physics Constraints that you set up at runtime from c++ !
+      </p>
+      <p>
+       Play with the values of the two functions I am sharing with you to get all sorts of different effects!
+      </p>
+      <p>
+       <b>
+        Basics:
+       </b>
+      </p>
+      <p>
+       <b>
+        Linear Constraints
+       </b>
+       limit physical motion of the target SMA through space
+      </p>
+      <p>
+       <b>
+        Angular Constraints
+       </b>
+       control the rotation of the target SMA.
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Updated_C.2B.2B_Functions">
+        Updated C++ Functions
+       </span>
+      </h3>
+      <p>
+       <i>
+        Author:
+       </i>
+       (
+     )
+      </p>
+      <p>
+       The information above is an excellent guide (
+       <i>
+        thanks Rama!
+       </i>
+       ).  However, it appears as though in newer versions of Unreal Engine, the variables for these constraints were deprecated without documentation!  I've done my best to provide updated code, shown below.  Feel free to update this section as necessary, if additional changes are necessary or when official documentation becomes available.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//////////////////////////////////////////////////</span>
+<span class="c1">// SetAngularLimits for Physics Constraints</span>
+<span class="c1">//</span>
+<span class="c1">// THE VARIABLES FOR CONSTRAINT PROPERTIES HAVE BEEN DEPRECATED WITHOUT DOCUMENTATION!</span>
+<span class="c1">//</span>
+<span class="c1">// Despite appearing correct, I'm not entirely certain these updated functions are being correctly used. However, they have been tested, and do appear to be working correctly.</span>
+<span class="c1">/////////////////////////////////////////////////</span>
+<span class="k">static</span> <span class="n">FORCEINLINE</span> <span class="kt">void</span> <span class="nf">SetAngularLimits</span><span class="p">(</span>
+	<span class="n">FConstraintInstance</span><span class="o">&amp;</span> <span class="n">Constraint</span><span class="p">,</span>
+	<span class="k">const</span> <span class="n">uint8</span> <span class="n">Swing1Limit</span><span class="p">,</span> <span class="k">const</span> <span class="n">uint8</span> <span class="n">Swing2Limit</span><span class="p">,</span> <span class="k">const</span> <span class="n">uint8</span> <span class="n">TwistLimit</span><span class="p">,</span>
+	<span class="k">const</span> <span class="kt">float</span> <span class="n">Swing1LimitAngle</span><span class="p">,</span>
+	<span class="k">const</span> <span class="kt">float</span> <span class="n">Swing2LimitAngle</span><span class="p">,</span>
+	<span class="k">const</span> <span class="kt">float</span> <span class="n">TwistLimitAngle</span><span class="p">,</span>
+	<span class="kt">bool</span> <span class="n">SoftSwingLimit</span> <span class="o">=</span> <span class="nb">true</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">SoftTwistLimit</span> <span class="o">=</span> <span class="nb">true</span><span class="p">,</span>
+	<span class="k">const</span> <span class="kt">float</span> <span class="n">SwingStiff</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span> <span class="n">SwingDamp</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+	<span class="k">const</span> <span class="kt">float</span> <span class="n">TwistStiff</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span> <span class="n">TwistDamp</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">switch</span> <span class="p">(</span><span class="n">Swing1Limit</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//case 0: Constraint.AngularSwing1Motion_DEPRECATED = EAngularConstraintMotion::ACM_Free; break;</span>
+		<span class="k">case</span> <span class="mi">0</span><span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">SetAngularSwing1Motion</span><span class="p">(</span><span class="n">EAngularConstraintMotion</span><span class="o">::</span><span class="n">ACM_Free</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+		<span class="c1">//case 1: Constraint.AngularSwing1Motion_DEPRECATED = EAngularConstraintMotion::ACM_Limited; break;</span>
+		<span class="k">case</span> <span class="mi">1</span><span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">SetAngularSwing1Motion</span><span class="p">(</span> <span class="n">EAngularConstraintMotion</span><span class="o">::</span><span class="n">ACM_Limited</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+		<span class="c1">//case 2: Constraint.AngularSwing1Motion_DEPRECATED = EAngularConstraintMotion::ACM_Locked; break;</span>
+		<span class="k">case</span> <span class="mi">2</span><span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">SetAngularSwing1Motion</span><span class="p">(</span><span class="n">EAngularConstraintMotion</span><span class="o">::</span><span class="n">ACM_Locked</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">switch</span> <span class="p">(</span><span class="n">Swing2Limit</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//case 0: Constraint.AngularSwing2Motion_DEPRECATED = EAngularConstraintMotion::ACM_Free; break;</span>
+		<span class="k">case</span> <span class="mi">0</span><span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">SetAngularSwing2Motion</span><span class="p">(</span><span class="n">EAngularConstraintMotion</span><span class="o">::</span><span class="n">ACM_Free</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+		<span class="c1">//case 1: Constraint.AngularSwing2Motion_DEPRECATED = EAngularConstraintMotion::ACM_Limited; break;</span>
+		<span class="k">case</span> <span class="mi">1</span><span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">SetAngularSwing2Motion</span><span class="p">(</span><span class="n">EAngularConstraintMotion</span><span class="o">::</span><span class="n">ACM_Limited</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+		<span class="c1">//case 2: Constraint.AngularSwing2Motion_DEPRECATED = EAngularConstraintMotion::ACM_Locked; break;</span>
+		<span class="k">case</span> <span class="mi">2</span><span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">SetAngularSwing2Motion</span><span class="p">(</span><span class="n">EAngularConstraintMotion</span><span class="o">::</span><span class="n">ACM_Locked</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">switch</span> <span class="p">(</span><span class="n">TwistLimit</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//case 0: Constraint.AngularTwistMotion_DEPRECATED = EAngularConstraintMotion::ACM_Free; break;</span>
+		<span class="k">case</span> <span class="mi">0</span><span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">SetAngularTwistMotion</span><span class="p">(</span><span class="n">EAngularConstraintMotion</span><span class="o">::</span><span class="n">ACM_Free</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+		<span class="c1">//case 1: Constraint.AngularTwistMotion_DEPRECATED = EAngularConstraintMotion::ACM_Limited; break;</span>
+		<span class="k">case</span> <span class="mi">1</span><span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">SetAngularTwistMotion</span><span class="p">(</span><span class="n">EAngularConstraintMotion</span><span class="o">::</span><span class="n">ACM_Limited</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+		<span class="c1">//case 2: Constraint.AngularTwistMotion_DEPRECATED = EAngularConstraintMotion::ACM_Locked; break;</span>
+		<span class="k">case</span> <span class="mi">2</span><span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">SetAngularTwistMotion</span><span class="p">(</span><span class="n">EAngularConstraintMotion</span><span class="o">::</span><span class="n">ACM_Locked</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="c1">// Soft Limit?</span>
+	<span class="c1">//if (SoftSwingLimit) Constraint.bSwingLimitSoft_DEPRECATED = 1;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">SoftSwingLimit</span><span class="p">)</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">ProfileInstance</span><span class="p">.</span><span class="n">LinearLimit</span><span class="p">.</span><span class="n">bSoftConstraint</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+	<span class="c1">//else Constraint.bSwingLimitSoft_DEPRECATED = 0;</span>
+	<span class="k">else</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">ProfileInstance</span><span class="p">.</span><span class="n">LinearLimit</span><span class="p">.</span><span class="n">bSoftConstraint</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+	<span class="c1">//if (SoftTwistLimit) Constraint.bTwistLimitSoft_DEPRECATED = 1;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">SoftTwistLimit</span><span class="p">)</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">ProfileInstance</span><span class="p">.</span><span class="n">TwistLimit</span><span class="p">.</span><span class="n">bSoftConstraint</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+	<span class="c1">//else Constraint.bTwistLimitSoft_DEPRECATED = 0;</span>
+	<span class="k">else</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">ProfileInstance</span><span class="p">.</span><span class="n">TwistLimit</span><span class="p">.</span><span class="n">bSoftConstraint</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+	<span class="c1">// Limit Angles</span>
+	<span class="c1">//Constraint.Swing1LimitAngle_DEPRECATED = Swing1LimitAngle;</span>
+	<span class="n">Constraint</span><span class="p">.</span><span class="n">SetAngularSwing1Limit</span><span class="p">(</span><span class="n">EAngularConstraintMotion</span><span class="o">::</span><span class="n">ACM_Free</span><span class="p">,</span> <span class="n">Swing1LimitAngle</span><span class="p">);</span>
+	<span class="c1">//Constraint.Swing2LimitAngle_DEPRECATED = Swing2LimitAngle;</span>
+	<span class="n">Constraint</span><span class="p">.</span><span class="n">SetAngularSwing2Limit</span><span class="p">(</span><span class="n">EAngularConstraintMotion</span><span class="o">::</span><span class="n">ACM_Free</span><span class="p">,</span> <span class="n">Swing2LimitAngle</span><span class="p">);</span>
+	<span class="c1">//Constraint.TwistLimitAngle_DEPRECATED = TwistLimitAngle;</span>
+	<span class="n">Constraint</span><span class="p">.</span><span class="n">SetAngularTwistLimit</span><span class="p">(</span><span class="n">EAngularConstraintMotion</span><span class="o">::</span><span class="n">ACM_Free</span><span class="p">,</span> <span class="n">TwistLimitAngle</span><span class="p">);</span>
+
+	<span class="c1">//Constraint.SwingLimitStiffness_DEPRECATED = SwingStiff;</span>
+	<span class="n">Constraint</span><span class="p">.</span><span class="n">ProfileInstance</span><span class="p">.</span><span class="n">LinearLimit</span><span class="p">.</span><span class="n">Stiffness</span> <span class="o">=</span> <span class="n">SwingStiff</span><span class="p">;</span>
+	<span class="c1">//Constraint.SwingLimitDamping_DEPRECATED = SwingDamp;</span>
+	<span class="n">Constraint</span><span class="p">.</span><span class="n">ProfileInstance</span><span class="p">.</span><span class="n">LinearLimit</span><span class="p">.</span><span class="n">Damping</span> <span class="o">=</span> <span class="n">SwingDamp</span><span class="p">;</span>
+	<span class="c1">//Constraint.TwistLimitStiffness_DEPRECATED = TwistStiff;</span>
+	<span class="n">Constraint</span><span class="p">.</span><span class="n">ProfileInstance</span><span class="p">.</span><span class="n">TwistLimit</span><span class="p">.</span><span class="n">Stiffness</span> <span class="o">=</span> <span class="n">TwistStiff</span><span class="p">;</span>
+	<span class="c1">//Constraint.TwistLimitDamping_DEPRECATED = TwistDamp;</span>
+	<span class="n">Constraint</span><span class="p">.</span><span class="n">ProfileInstance</span><span class="p">.</span><span class="n">TwistLimit</span><span class="p">.</span><span class="n">Damping</span> <span class="o">=</span> <span class="n">TwistDamp</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">//////////////////////////////////////////////////</span>
+<span class="c1">// SetLinearLimits for Physics Constraints</span>
+<span class="c1">//</span>
+<span class="c1">// THE VARIABLES FOR CONSTRAINT PROPERTIES HAVE BEEN DEPRECATED WITHOUT DOCUMENTATION!</span>
+<span class="c1">//</span>
+<span class="c1">// Despite appearing correct, I'm not entirely certain these updated functions are being correctly used. However, they have been tested, and do appear to be working correctly.</span>
+<span class="c1">/////////////////////////////////////////////////</span>
+<span class="k">static</span> <span class="n">FORCEINLINE</span> <span class="kt">void</span> <span class="nf">SetLinearLimits</span><span class="p">(</span>
+	<span class="n">FConstraintInstance</span><span class="o">&amp;</span> <span class="n">Constraint</span><span class="p">,</span>
+	<span class="kt">bool</span> <span class="n">bDisableCollision</span><span class="p">,</span>
+	<span class="k">const</span> <span class="n">uint8</span> <span class="n">XLimit</span><span class="p">,</span> <span class="k">const</span> <span class="n">uint8</span> <span class="n">YLimit</span><span class="p">,</span> <span class="k">const</span> <span class="n">uint8</span> <span class="n">ZLimit</span><span class="p">,</span>
+	<span class="k">const</span> <span class="kt">float</span> <span class="n">Size</span><span class="p">,</span>
+	<span class="kt">bool</span> <span class="n">SoftLimit</span> <span class="o">=</span> <span class="nb">true</span><span class="p">,</span>
+	<span class="k">const</span> <span class="kt">float</span> <span class="n">SoftStiffness</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+	<span class="k">const</span> <span class="kt">float</span> <span class="n">SoftDampening</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// Collision</span>
+	<span class="c1">//Constraint.bDisableCollision_DEPRECATED = bDisableCollision;</span>
+	<span class="n">Constraint</span><span class="p">.</span><span class="n">ProfileInstance</span><span class="p">.</span><span class="n">bDisableCollision</span> <span class="o">=</span> <span class="n">bDisableCollision</span><span class="p">;</span>
+		<span class="k">switch</span> <span class="p">(</span><span class="n">XLimit</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//case 0: Constraint.LinearXMotion_DEPRECATED = ELinearConstraintMotion::LCM_Free; break;</span>
+		<span class="k">case</span> <span class="mi">0</span><span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">SetLinearXMotion</span><span class="p">(</span><span class="n">ELinearConstraintMotion</span><span class="o">::</span><span class="n">LCM_Free</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+		<span class="c1">//case 1: Constraint.LinearXMotion_DEPRECATED = ELinearConstraintMotion::LCM_Limited; break;</span>
+		<span class="k">case</span> <span class="mi">1</span><span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">SetLinearXMotion</span><span class="p">(</span><span class="n">ELinearConstraintMotion</span><span class="o">::</span><span class="n">LCM_Limited</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+		<span class="c1">//case 2: Constraint.LinearXMotion_DEPRECATED = ELinearConstraintMotion::LCM_Locked; break;</span>
+		<span class="k">case</span> <span class="mi">2</span><span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">SetLinearXMotion</span><span class="p">(</span><span class="n">ELinearConstraintMotion</span><span class="o">::</span><span class="n">LCM_Locked</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">switch</span> <span class="p">(</span><span class="n">YLimit</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//case 0: Constraint.LinearYMotion_DEPRECATED = ELinearConstraintMotion::LCM_Free; break;</span>
+		<span class="k">case</span> <span class="mi">0</span><span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">SetLinearYMotion</span><span class="p">(</span><span class="n">ELinearConstraintMotion</span><span class="o">::</span><span class="n">LCM_Free</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+		<span class="c1">//case 1: Constraint.LinearYMotion_DEPRECATED = ELinearConstraintMotion::LCM_Limited; break;</span>
+		<span class="k">case</span> <span class="mi">1</span><span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">SetLinearYMotion</span><span class="p">(</span><span class="n">ELinearConstraintMotion</span><span class="o">::</span><span class="n">LCM_Limited</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+		<span class="c1">//case 2: Constraint.LinearYMotion_DEPRECATED = ELinearConstraintMotion::LCM_Locked; break;</span>
+		<span class="k">case</span> <span class="mi">2</span><span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">SetLinearYMotion</span><span class="p">(</span><span class="n">ELinearConstraintMotion</span><span class="o">::</span><span class="n">LCM_Locked</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">switch</span> <span class="p">(</span><span class="n">ZLimit</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//case 0: Constraint.LinearZMotion_DEPRECATED = ELinearConstraintMotion::LCM_Free; break;</span>
+		<span class="k">case</span> <span class="mi">0</span><span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">SetLinearZMotion</span><span class="p">(</span><span class="n">ELinearConstraintMotion</span><span class="o">::</span><span class="n">LCM_Free</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+		<span class="c1">//case 1: Constraint.LinearZMotion_DEPRECATED = ELinearConstraintMotion::LCM_Limited; break;</span>
+		<span class="k">case</span> <span class="mi">1</span><span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">SetLinearZMotion</span><span class="p">(</span><span class="n">ELinearConstraintMotion</span><span class="o">::</span><span class="n">LCM_Limited</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+		<span class="c1">//case 2: Constraint.LinearZMotion_DEPRECATED = ELinearConstraintMotion::LCM_Locked; break;</span>
+		<span class="k">case</span> <span class="mi">2</span><span class="o">:</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">SetLinearZMotion</span><span class="p">(</span><span class="n">ELinearConstraintMotion</span><span class="o">::</span><span class="n">LCM_Locked</span><span class="p">);</span> <span class="k">break</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="c1">//Constraint.LinearLimitSize_DEPRECATED = Size;</span>
+	<span class="n">Constraint</span><span class="p">.</span><span class="n">SetLinearLimitSize</span><span class="p">(</span><span class="n">Size</span><span class="p">);</span>
+
+	<span class="c1">// Soft Limit?</span>
+	<span class="c1">//if (SoftLimit) Constraint.bLinearLimitSoft_DEPRECATED = 1;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">SoftLimit</span><span class="p">)</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">ProfileInstance</span><span class="p">.</span><span class="n">LinearLimit</span><span class="p">.</span><span class="n">bSoftConstraint</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+	<span class="c1">//else Constraint.bLinearLimitSoft_DEPRECATED = 0;</span>
+	<span class="k">else</span> <span class="n">Constraint</span><span class="p">.</span><span class="n">ProfileInstance</span><span class="p">.</span><span class="n">LinearLimit</span><span class="p">.</span><span class="n">bSoftConstraint</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+	<span class="c1">//Constraint.LinearLimitStiffness_DEPRECATED = SoftStiffness;</span>
+	<span class="n">Constraint</span><span class="p">.</span><span class="n">ProfileInstance</span><span class="p">.</span><span class="n">LinearLimit</span><span class="p">.</span><span class="n">Stiffness</span> <span class="o">=</span> <span class="n">SoftStiffness</span><span class="p">;</span>
+	<span class="c1">//Constraint.LinearLimitDamping_DEPRECATED = SoftDampening;</span>
+	<span class="n">Constraint</span><span class="p">.</span><span class="n">ProfileInstance</span><span class="p">.</span><span class="n">LinearLimit</span><span class="p">.</span><span class="n">Damping</span> <span class="o">=</span> <span class="n">SoftDampening</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

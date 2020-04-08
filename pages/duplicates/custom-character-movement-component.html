@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Custom Character Movement Component - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Custom Character Movement Component
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Character_Constructor_.28UE_.3E4.6.29">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Character Constructor (UE &gt;4.6)
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Character_Constructor_.28UE_.3C4.6.29">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Character Constructor (UE &lt;4.6)
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Header_File">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Header File
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#C.2B.2B_Source_Code_File">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           C++ Source Code File
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Accessing_Custom_Character_Movement_Component">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Accessing Custom Character Movement Component
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <b>
+        Author:
+       </b>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       If you look at CharacterMovementComponent.h the vast majority of the functions are virtual!
+      </p>
+      <p>
+       This is great news!
+      </p>
+      <p>
+       You can easily create custom character movement behaviors.... if you can get your characters to use your custom CharacterMovementComponent class!
+      </p>
+      <p>
+       Here's how you can do it!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Character_Constructor_.28UE_.3E4.6.29">
+        Character Constructor (UE &gt;4.6)
+       </span>
+      </h2>
+      <p>
+       First, replace
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">AVictoryPlayerCharacterBase</span><span class="o">::</span><span class="n">AVictoryPlayerCharacterBase</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">ObjectInitializer</span><span class="p">)</span>
+<span class="p">{</span>	
+        <span class="c1">//this is your regular constructor code</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       with (where ACharacter::CharacterMovementComponentName is a string of type FName):
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">AVictoryPlayerCharacterBase</span><span class="o">::</span><span class="n">AVictoryPlayerCharacterBase</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">ObjectInitializer</span><span class="p">.</span><span class="n">SetDefaultSubobjectClass</span><span class="o">&lt;</span><span class="n">UVictoryCharMoveComp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ACharacter</span><span class="o">::</span><span class="n">CharacterMovementComponentName</span><span class="p">))</span>
+<span class="p">{</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Character_Constructor_.28UE_.3C4.6.29">
+        Character Constructor (UE &lt;4.6)
+       </span>
+      </h2>
+      <p>
+       Replace
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">AVictoryPlayerCharacterBase</span><span class="o">::</span><span class="n">AVictoryPlayerCharacterBase</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="p">{</span>	
+        <span class="c1">//this is your regular constructor code</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       with
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">AVictoryPlayerCharacterBase</span><span class="o">::</span><span class="n">AVictoryPlayerCharacterBase</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">.</span><span class="n">SetDefaultSubobjectClass</span><span class="o">&lt;</span><span class="n">UVictoryCharMoveComp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ACharacter</span><span class="o">::</span><span class="n">CharacterMovementComponentName</span><span class="p">))</span>
+<span class="p">{</span>	
+        <span class="c1">// this is your regular constructor code</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Header_File">
+        Header File
+       </span>
+      </h2>
+      <p>
+       Following is an example for the class definition.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2013 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"VictoryCharMoveComp.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">UVictoryCharMoveComp</span> <span class="o">:</span> <span class="k">public</span> <span class="n">UCharacterMovementComponent</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+
+	
+<span class="k">protected</span><span class="o">:</span>
+	
+	<span class="c1">//Init</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">InitializeComponent</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+	
+	<span class="c1">//Tick</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">TickComponent</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaTime</span><span class="p">,</span> <span class="k">enum</span> <span class="n">ELevelTick</span> <span class="n">TickType</span><span class="p">,</span> <span class="n">FActorComponentTickFunction</span> <span class="o">*</span><span class="n">ThisTickFunction</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="C.2B.2B_Source_Code_File">
+        C++ Source Code File
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2013 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#include</span> <span class="cpf">"VictoryGame.h"</span><span class="cp"></span>
+
+<span class="c1">//////////////////////////////////////////////////////////////////////////</span>
+<span class="c1">// UVictoryCharMoveComp</span>
+
+<span class="n">UVictoryCharMoveComp</span><span class="o">::</span><span class="n">UVictoryCharMoveComp</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="p">{</span>
+	
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">UVictoryCharMoveComp</span><span class="o">::</span><span class="n">InitializeComponent</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">InitializeComponent</span><span class="p">();</span>
+	<span class="c1">//~~~~~~~~~~~~~~~~~</span>
+	
+	<span class="c1">//UE_LOG //comp Init!</span>
+<span class="p">}</span>
+
+<span class="c1">//Tick Comp</span>
+<span class="kt">void</span> <span class="n">UVictoryCharMoveComp</span><span class="o">::</span><span class="n">TickComponent</span><span class="p">(</span>
+	<span class="kt">float</span> <span class="n">DeltaTime</span><span class="p">,</span> 
+	<span class="k">enum</span> <span class="n">ELevelTick</span> <span class="n">TickType</span><span class="p">,</span> 
+	<span class="n">FActorComponentTickFunction</span> <span class="o">*</span><span class="n">ThisTickFunction</span>
+<span class="p">){</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">TickComponent</span><span class="p">(</span><span class="n">DeltaTime</span><span class="p">,</span> <span class="n">TickType</span><span class="p">,</span> <span class="n">ThisTickFunction</span><span class="p">);</span>
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+
+	<span class="c1">//UE_LOG //custom comp is ticking!!!</span>
+	
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Accessing_Custom_Character_Movement_Component">
+        Accessing Custom Character Movement Component
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Inside Character Class</span>
+
+<span class="n">UVictoryCharMoveComp</span><span class="o">*</span> <span class="n">CustomCharMovementComp</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">UVictoryCharMoveComp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">CharacterMovement</span><span class="p">);</span>
+
+<span class="k">if</span><span class="p">(</span><span class="n">CustomCharMovementComp</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">CustomCharMovementComp</span><span class="o">-&gt;</span><span class="n">CallFunction</span><span class="p">();</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       Now you know how to create entirely custom movement systems for your UE4 Characters!
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

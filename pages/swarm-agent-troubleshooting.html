@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Swarm Agent Troubleshooting - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Swarm Agent Troubleshooting
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <br/>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#About_This_Guide">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           <b>
+            About This Guide
+           </b>
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Swarm_Agent_Documentation_and_Other_Links">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Swarm Agent Documentation and Other Links
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Recommendations_and_Tips">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           <b>
+            Recommendations and Tips
+           </b>
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#General_Tips_for_using_Lightmass_in_Unreal_Engine_4">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             General Tips for using Lightmass in Unreal Engine 4
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-5">
+             <a href="#Reducing_Build_Times">
+              <span class="tocnumber">
+               2.1.1
+              </span>
+              <span class="toctext">
+               Reducing Build Times
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-6">
+             <a href="#Building_Large_Worlds">
+              <span class="tocnumber">
+               2.1.2
+              </span>
+              <span class="toctext">
+               Building Large Worlds
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Frequently_Asked_Questions">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           <b>
+            Frequently Asked Questions
+           </b>
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#.22Lightmass_Crashed.22_common_error_messages">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             "Lightmass Crashed" common error messages
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-9">
+             <a href="#.22Ran_out_of_Memory.22">
+              <span class="tocnumber">
+               3.1.1
+              </span>
+              <span class="toctext">
+               "Ran out of Memory"
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-10">
+             <a href="#.22Assertion_Failed:_.28Index.3E.3D0.29.26.28Index.3CArrayNum.29.29.22">
+              <span class="tocnumber">
+               3.1.2
+              </span>
+              <span class="toctext">
+               "Assertion Failed: (Index&gt;=0)&amp;(Index&lt;ArrayNum))"
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#Why_is_my_light_build_stuck_at_.5BX.5D.25.2C_or_Why_does_building_lighting_take_so_long.3F">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             Why is my light build stuck at [X]%, or Why does building lighting take so long?
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-12">
+           <a href="#Why_Swarm_Agent_use_100.25_of_my_CPU_when_building_lighting.3F">
+            <span class="tocnumber">
+             3.3
+            </span>
+            <span class="toctext">
+             Why Swarm Agent use 100% of my CPU when building lighting?
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-13">
+           <a href="#Why_isn.27t_Swarm_Agent_being_used_if_my_lights_are_set_to_Movable.2FDynamic.3F">
+            <span class="tocnumber">
+             3.4
+            </span>
+            <span class="toctext">
+             Why isn't Swarm Agent being used if my lights are set to Movable/Dynamic?
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-14">
+           <a href="#How_can_I_use_my_GPU_to_build_lights.3F_Or_Why_isn.27t_my_GPU_used_when_building_lighting.3F">
+            <span class="tocnumber">
+             3.5
+            </span>
+            <span class="toctext">
+             How can I use my GPU to build lights? Or Why isn't my GPU used when building lighting?
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-15">
+           <a href="#How_do_I_get_or_check_my_Logs_for_Swarm_Agent.3F">
+            <span class="tocnumber">
+             3.6
+            </span>
+            <span class="toctext">
+             How do I get or check my Logs for Swarm Agent?
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-16">
+           <a href="#How_do_I_.22Clean.22_and_.22Validate.22_my_Swarm_Agent">
+            <span class="tocnumber">
+             3.7
+            </span>
+            <span class="toctext">
+             How do I "Clean" and "Validate" my Swarm Agent
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-17">
+           <a href="#Where_is_my_Swarm_Data_Cache_stored.2C_and_Can_I_change_its_location.3F">
+            <span class="tocnumber">
+             3.8
+            </span>
+            <span class="toctext">
+             Where is my Swarm Data Cache stored, and Can I change its location?
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-18">
+           <a href="#What_does_.22Light_build_failed._Swarm_Agent_failed_to_kick_off.22_mean.2C_and_How_can_I_fix_it.3F">
+            <span class="tocnumber">
+             3.9
+            </span>
+            <span class="toctext">
+             What does "Light build failed. Swarm Agent failed to kick off" mean, and How can I fix it?
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-19">
+           <a href="#How_do_I_set_Swarm_Agent_to_be_the_Highest_Priority.3F">
+            <span class="tocnumber">
+             3.10
+            </span>
+            <span class="toctext">
+             How do I set Swarm Agent to be the Highest Priority?
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-20">
+           <a href="#Why_is_Swarm_Agent_not_launching.2C_or_What_does_.22UnrealLightmass.exe-Application_Error....22_mean.3F">
+            <span class="tocnumber">
+             3.11
+            </span>
+            <span class="toctext">
+             Why is Swarm Agent not launching, or What does "UnrealLightmass.exe-Application Error..." mean?
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-21">
+           <a href="#Swarm_Agent_Fails_with_IOException_Error">
+            <span class="tocnumber">
+             3.12
+            </span>
+            <span class="toctext">
+             Swarm Agent Fails with IOException Error
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-22">
+           <a href="#Swarm_Log:_System.Net.Socket_Error.2FSwarm_Agent.2FCoordinator_Port_Used_By_Another_Process">
+            <span class="tocnumber">
+             3.13
+            </span>
+            <span class="toctext">
+             Swarm Log: System.Net.Socket Error/Swarm Agent/Coordinator Port Used By Another Process
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="About_This_Guide">
+        <b>
+         About This Guide
+        </b>
+       </span>
+      </h2>
+      <pre>.
+</pre>
+      <p>
+       This guide is intended to go over some best practices when using Lightmass to build static lighting in Unreal Engine 4 and to address some of the more common issues that can arise with Swarm Agent while doing so. This guide is in no way meant to be comprehensive and is a living document that can be updated along with engine releases.
+      </p>
+      <p>
+       Swarm Agent is a program that is used to process Unreal's Lightmass calculations for a single system or it can distribute its workload across a network to other computers through Swarm Coordinator. Largely, Swarm Agent will go unnoticed to most who are not using network distribution for light builds since it will startup, perform its tasks, and shut down once the light build has finished.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Swarm_Agent_Documentation_and_Other_Links">
+        Swarm Agent Documentation and Other Links
+       </span>
+      </h3>
+      <ul>
+       <li>
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Rendering/LightingAndShadows/Lightmass/index.html" rel="nofollow">
+         Lightmass Global Illumination
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="http://udn.epicgames.com/Three/Swarm.html" rel="nofollow">
+         Swarm Agent Documentation
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://www.youtube.com/watch?v=WY2z8p6-kg8" rel="nofollow">
+         UDK-Networking Swarm Agent
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://iamsparky.wordpress.com/2010/08/24/tutorial-setting-up-swarm-for-multiple-machines/" rel="nofollow">
+         Brian Goodsell's Tutorial: Setting Up Swarm for Multiple Machines
+        </a>
+       </li>
+      </ul>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h2>
+       <span class="mw-headline" id="Recommendations_and_Tips">
+        <b>
+         Recommendations and Tips
+        </b>
+       </span>
+      </h2>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="General_Tips_for_using_Lightmass_in_Unreal_Engine_4">
+        General Tips for using Lightmass in Unreal Engine 4
+       </span>
+      </h3>
+      <h4>
+       <span class="mw-headline" id="Reducing_Build_Times">
+        Reducing Build Times
+       </span>
+      </h4>
+      <ul>
+       <li>
+        <b>
+         Lightmass Importance Volume:
+        </b>
+       </li>
+      </ul>
+      <p>
+       When using Lightmass Importance Volumes it’s important to know and understand that you can use as many of these as you like. You are not limited to a single instance in your level. The idea behind these volumes is to focus photons in a single area where higher quality lighting is needed where the player is. Anything outside of these volumes will only get a single bounce of lighting and will not look as high quality as the lighting generated within the volume.By using these volumes you can reduce the amount of calculation that is needed for the scene and this will help increase light builds. It’s important to also note that these volumes are not meant to be scaled to extreme sizes. This defeats their use and purpose.
+      </p>
+      <p>
+       For more information have a look at the documentation here:
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Rendering/LightingAndShadows/Lightmass/Basics/index.html#lightmassimportancevolume" rel="nofollow">
+        Lightmass Basics
+       </a>
+      </p>
+      <ul>
+       <li>
+        <b>
+         Lightmap Resolutions:
+        </b>
+       </li>
+      </ul>
+      <p>
+       These resolutions play a big part in how long it can take for Swarm Agent to build a scene. The higher the lightmap resolutions for your meshes the more time it can take to calculate and generate these textures. It is best to use the lowest possible resolution that still gives the results you are happy with.
+      </p>
+      <p>
+       It is not recommended to set all static meshes to higher resolutions. If you are finding that you have to set a mesh to a significantly higher resolution you may want to look at breaking the mesh into smaller pieces so that the Lightmap UV can be more effectively used, or you may simply need reorganize the Lightmap UV to get better results by using the 0,1 UV space better.
+      </p>
+      <ul>
+       <li>
+        <b>
+         Foliage Tool: Lightmap Resolutions:
+        </b>
+       </li>
+      </ul>
+      <p>
+       For instanced static meshes placed with the Foliage Tool these assets will use the default set Lightmap Resolution of the static mesh. This will likely generate a warning when you build lighting. It’s best to go into the Foliage Tool’s Instance Settings and enable Lightmap Resolution with a lower value of 4 or 8. With instanced static meshes this should be sufficient depending on the number of static mesh instances that have been painted into the scene. These will be clustered together into a single lightmap based on cluster size.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="" class="thumbimage" height="456" src="../assets/swarm-agent-troubleshooting/0.png" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Foliage Tool: Light Map Resolution
+        </div>
+       </div>
+      </div>
+      <ul>
+       <li>
+        <b>
+         Number of Assets and Lights:
+        </b>
+       </li>
+      </ul>
+      <p>
+       The number of assets that cast shadows and the number of shadow casting lights in the scene that are Stationary or Static will also add to the number of calculations that need to be done when using Lightmass. These calculations can directly affect how much Swarm Agent needs to process and essentially how long the light build will take.
+      </p>
+      <ul>
+       <li>
+        <b>
+         System Specs:
+        </b>
+       </li>
+      </ul>
+      <p>
+       Swarm Agent is a very CPU intensive process that requires a lot of calculations. Depending on your system specs this can speed up or slow down the process or even cause Lightmass to crash. A fast CPU can help improve calculation speed. The amount of RAM needed is dependent upon the size of the scene, number of lights, and assets being calculated. Lightmass will Crash if it runs out of memory. This is often reported as a bug, but it is simply a limitation of your system setup. See the other tips above to help reduce the chance of this happening or increase your systems RAM. 
+_________________________________________________________________________________________________
+      </p>
+      <h4>
+       <span class="mw-headline" id="Building_Large_Worlds">
+        Building Large Worlds
+       </span>
+      </h4>
+      <p>
+       If your project is going to use a larger world or even a fully open world with thousands of assets, instanced foliage, etc it is generally not recommended to use Lightmass to build lighting for these types of worlds.
+      </p>
+      <p>
+       One may argue that it has been preached that “Static lighting is better for performance and looks better.” Yes, this is a true statement, but within certain restrictions. This is not to say that static lighting cannot be used for larger worlds, it is just not an ideal use due to the memory it would take to store all the generated lightmap textures and the amount of memory it would take to build the level in the first place.
+      </p>
+      <p>
+       Larger worlds and open worlds will generally use dynamic lighting. This may seem counter-intuitive when thinking about how static lighting has zero overhead at run-time compared to dynamic lighting. This again is true, but instead of calculating shadows you will have to worry about the lightmap textures having to load for all those meshes. It’s better to focus on using dynamic lighting and then optimizing your games by gauging the performance by profiling the CPU and GPU for any bottlenecks that may come up.
+      </p>
+      <p>
+       For more information about profiling have a look at the following documentation and YouTube Support stream:
+      </p>
+      <ul>
+       <li>
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Performance/Profiler/index.html" rel="nofollow">
+         Documentation: Profiler
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Performance/index.html" rel="nofollow">
+         Documentation: Performance and Profiling
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Performance/GPU/" rel="nofollow">
+         Documentation: GPU Profiling
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://www.youtube.com/watch?v=-csRxRj_zcw" rel="nofollow">
+         Support Stream Video: Rendering Best Practices
+        </a>
+       </li>
+      </ul>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h2>
+       <span class="mw-headline" id="Frequently_Asked_Questions">
+        <b>
+         Frequently Asked Questions
+        </b>
+       </span>
+      </h2>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id=".22Lightmass_Crashed.22_common_error_messages">
+        "Lightmass Crashed" common error messages
+       </span>
+      </h3>
+      <h4>
+       <span class="mw-headline" id=".22Ran_out_of_Memory.22">
+        "Ran out of Memory"
+       </span>
+      </h4>
+      <p>
+       <img alt="Lightmass Crash: Ran out of memory" class="" height="761" src="../assets/swarm-agent-troubleshooting/1.png" width="1260"/>
+      </p>
+      <p>
+       Just as the explanation suggests, this crash is because there was not enough memory to build lighting for the scene as is.
+      </p>
+      <p>
+       <b>
+        Steps to try:
+       </b>
+      </p>
+      <ul>
+       <li>
+        Add a Lightmass Importance Volume(s) around your playable areas. (See the Tips section above for more information)
+       </li>
+       <li>
+        Lower the number of meshes in the scene
+       </li>
+       <li>
+        Lower the Lightmap Resolution for meshes that do not need higher quality shadows.
+       </li>
+       <li>
+        If using the Foliage Tool, use lightmap resolutions starting with 4 or 8, since meshes will be clustered together into a texture atlas.
+       </li>
+       <li>
+        Clean and Validate cache
+       </li>
+       <li>
+        Increase the amount of Virtual Memory that is available. Think of this as an overflow when RAM is running low. Do not rely on this over adding additional RAM though.
+       </li>
+       <li>
+        Add additional RAM to your system.
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <h4>
+       <span class="mw-headline" id=".22Assertion_Failed:_.28Index.3E.3D0.29.26.28Index.3CArrayNum.29.29.22">
+        "Assertion Failed: (Index&gt;=0)&amp;(Index&lt;ArrayNum))"
+       </span>
+      </h4>
+      <p>
+       <img alt="SA ArrayIndexOutOfBounds.png" class="" height="600" src="../assets/swarm-agent-troubleshooting/2.png" width="1178"/>
+      </p>
+      <p>
+       <b>
+        Steps to try:
+       </b>
+      </p>
+      <ul>
+       <li>
+        Clean and Validate Swarm Agent Cache
+       </li>
+      </ul>
+      <p>
+       <br/>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="Why_is_my_light_build_stuck_at_.5BX.5D.25.2C_or_Why_does_building_lighting_take_so_long.3F">
+        Why is my light build stuck at [X]%, or Why does building lighting take so long?
+       </span>
+      </h3>
+      <p>
+       If you ever see that lighting is taking a long time to build or if you are not sure if the light build process has frozen you can simply open Swarm Agent program to see what exactly is going on.
+      </p>
+      <p>
+       Once you have Swarm Agent open you can check the “Swarm Status” tab. Here you can check the progress for the light build processing and a percentage bar for where the light build is currently at in its process.
+      </p>
+      <p>
+       <img alt="Swarm Agent Status.png" class="" height="523" src="../assets/swarm-agent-troubleshooting/3.png" width="964"/>
+      </p>
+      <p>
+       <b>
+        Steps to try:
+       </b>
+      </p>
+      <ul>
+       <li>
+        Reduce the number of meshes and/or lights in the scene
+       </li>
+       <li>
+        Use Lightmass Importance Volume(s)
+       </li>
+       <li>
+        Lower the Lightmap resolutions of your meshes
+       </li>
+       <li>
+        Use multiple computers to distribute light builds using Swarm Agent and Coordinator
+       </li>
+       <li>
+        Use a recommended or more powerful CPU
+       </li>
+      </ul>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="Why_Swarm_Agent_use_100.25_of_my_CPU_when_building_lighting.3F">
+        Why Swarm Agent use 100% of my CPU when building lighting?
+       </span>
+      </h3>
+      <p>
+       The process of building lighting with Swarm Agent and Lightmass is a very CPU intensive process. Depending on the number of objects in the scene, size of the world, the Lighting Quality, lightmap resolutions, and a number of other other processes going on this can add to how much CPU power is needed to build the lighting.
+      </p>
+      <p>
+       You can adjust the number of processors being used for local and remote jobs by doing the following:
+      </p>
+      <p>
+       In the
+       <b>
+        Settings
+       </b>
+       tab of Swarm Agent, locate the option for
+       <b>
+        ShowDeveloperMenu
+       </b>
+       and set this to
+       <b>
+        True
+       </b>
+       .
+      </p>
+      <div class="floatnone">
+       <img alt="Settings Tab" class="" height="651" src="../assets/swarm-agent-troubleshooting/4.png" width="1112"/>
+      </div>
+      <p>
+       <br/>
+       Once that has been enabled you will see a new tab named
+       <b>
+        DeveloperSettings
+       </b>
+       . In here you can change
+       <b>
+        LocalJobDefaultProcessorCount
+       </b>
+       or
+       <b>
+        RemoveJobDefaultProcessorCount
+       </b>
+       .
+      </p>
+      <div class="floatnone">
+       <img alt="DeveloperSettings Tab" class="" height="651" src="../assets/swarm-agent-troubleshooting/5.png" width="1112"/>
+      </div>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="Why_isn.27t_Swarm_Agent_being_used_if_my_lights_are_set_to_Movable.2FDynamic.3F">
+        Why isn't Swarm Agent being used if my lights are set to Movable/Dynamic?
+       </span>
+      </h3>
+      <p>
+       It is a common misconception that all lighting in Unreal Engine 4 needs to be built. This isn't really the case though. This may stem from thinking that the
+       <b>
+        Build
+       </b>
+       button in the tool bar is only associated with building lighting when, in-fact, there are a number of other things going on like building geometry, nav meshes, and a number of other things. So if you're concerned that you're seeing some form of action here it is good to know that this handles more than just building lighting.
+      </p>
+      <p>
+       Swarm Agent is used by Lightmass when needing to use baked/pre-computed lighting which is why it will only work with Static/Stationary light mobilities.
+      </p>
+      <p>
+       <b>
+        Note:
+       </b>
+       If you've made the decision to use only Movable/Dynamic lighting in your game,  it's best to go ahead and disable pre-computed lighting in one of two ways.
+      </p>
+      <ol>
+       <li>
+        You can disable on a per-map basis by going to
+        <b>
+         World Settings
+        </b>
+        &gt;
+        <b>
+         Lightmass
+        </b>
+        &gt;
+        <b>
+         Force No Precomputed Lighting
+        </b>
+        is checked.
+       </li>
+       <li>
+        You can disable Static Lighting entirely for the project by going to
+        <b>
+         Menu
+        </b>
+        &gt;
+        <b>
+         Window
+        </b>
+        &gt;
+        <b>
+         Project Settings
+        </b>
+        &gt;
+        <b>
+         Rendering
+        </b>
+        &gt;
+        <b>
+         Lighting
+        </b>
+        &gt;
+        <b>
+         Allow Static Lighting
+        </b>
+        set to unchecked.
+       </li>
+      </ol>
+      <ul class="gallery mw-gallery-packed-hover">
+       <li class="gallerybox" style="width: 262px">
+        <div style="width: 262px">
+         <div class="thumb" style="width: 260px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="400" src="../assets/swarm-agent-troubleshooting/6.png" width="260"/>
+          </div>
+         </div>
+         <div class="gallerytextwrapper" style="width: 240px">
+          <div class="gallerytext">
+           <p>
+           </p>
+          </div>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 438px">
+        <div style="width: 438px">
+         <div class="thumb" style="width: 436px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="400" src="../assets/swarm-agent-troubleshooting/7.png" width="436"/>
+          </div>
+         </div>
+         <div class="gallerytextwrapper" style="width: 416px">
+          <div class="gallerytext">
+           <p>
+           </p>
+          </div>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       ________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="How_can_I_use_my_GPU_to_build_lights.3F_Or_Why_isn.27t_my_GPU_used_when_building_lighting.3F">
+        How can I use my GPU to build lights? Or Why isn't my GPU used when building lighting?
+       </span>
+      </h3>
+      <p>
+       Building lighting uses the CPU mostly, while only using the GPU when exporting the processes.
+      </p>
+      <p>
+       While it wouldn't be impossible to use Lightmass calculations with the GPU, but this is not currently being worked on or planned in the near future. The ideal solution is a lighting algorithm which renders real-time using the GPU when you are previewing, but then can be baked down into a lightmap using that same algorithm when you are a ready build. However, there are some challenges with this though. It would be hard to make the editor scale down, all of the current GI methods would have to be re-written, it would not be able to get as high of quality of end results, and it could make the editor much less stable due to the load put on GPUs. GPU's are known to be notoriously unstable with heavy loads.
+      </p>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="How_do_I_get_or_check_my_Logs_for_Swarm_Agent.3F">
+        How do I get or check my Logs for Swarm Agent?
+       </span>
+      </h3>
+      <p>
+       You can locate your Logs for Swarm Agent by going to the
+       <b>
+        Log
+       </b>
+       tab.
+      </p>
+      <p>
+       When you open the Log tab you should see something like the image below. If you see a blank log then likely indicates you have not previously built lighting for any Static/Stationary lights that require Lightmass calculations. The log will can potentially point to any issues with the light build.
+      </p>
+      <p>
+       For previous light build logs you can check the location of your
+       .
+      </p>
+      <p>
+       <br/>
+       If there is not enough information in the log to come to a conclusion try changing the log's Verbosity. This can be changed in the
+       <b>
+        Settings
+       </b>
+       tab &gt;
+       <b>
+        Verbosity
+       </b>
+       .  This will change how much information is sent to the log.
+      </p>
+      <p>
+       You have the options of:
+      </p>
+      <ul>
+       <li>
+        Silent
+       </li>
+       <li>
+        Critical
+       </li>
+       <li>
+        Simple
+       </li>
+       <li>
+        Informative (Default)
+       </li>
+       <li>
+        Complex
+       </li>
+       <li>
+        Verbose
+       </li>
+       <li>
+        Extra Verbose
+       </li>
+       <li>
+        Super Verbose
+       </li>
+      </ul>
+      <div class="floatnone">
+       <img alt="Settings: Log Verbosity" class="" height="651" src="../assets/swarm-agent-troubleshooting/8.png" width="1112"/>
+      </div>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="How_do_I_.22Clean.22_and_.22Validate.22_my_Swarm_Agent">
+        How do I "Clean" and "Validate" my Swarm Agent
+       </span>
+      </h3>
+      <p>
+       There are two options located Swarm Agent's Menu for in the
+       <b>
+        Cache
+       </b>
+       drop down for
+       <b>
+        Clean
+       </b>
+       and one for
+       <b>
+        Validate
+       </b>
+       (See image below).
+      </p>
+      <ul>
+       <li>
+        <b>
+         Clean:
+        </b>
+        This will clear out the cache at users request.
+       </li>
+       <li>
+        <b>
+         Validate:
+        </b>
+        This will validate all cache entries and hashes to make sure they are up to date.
+       </li>
+      </ul>
+      <p>
+       <b>
+        Note:
+       </b>
+       Cleaning and Validating the Cache can sometimes resolve any issues that Swarm Agent may be running into while building lights.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <div class="floatnone">
+       <img alt="Menu: Cache" class="" height="268" src="../assets/swarm-agent-troubleshooting/9.png" width="274"/>
+      </div>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="Where_is_my_Swarm_Data_Cache_stored.2C_and_Can_I_change_its_location.3F">
+        Where is my Swarm Data Cache stored, and Can I change its location?
+       </span>
+      </h3>
+      <p>
+       You can view and change the location of where your Swarm Cache is saved by opening Swarm Agent and going to the
+       <b>
+        Settings
+       </b>
+       tab. Under the
+       <b>
+        Cache Settings
+       </b>
+       drop down you will see the
+       <b>
+        CacheFolder
+       </b>
+       . (See image below)
+      </p>
+      <p>
+       You can change the file path on the right side to any location you would like. You, also, have the option to change the settings for the maximum size of the cache. This is measured in gigabytes. There is another settings for the maximum number of jobs to keep output logs for as well.
+      </p>
+      <div class="floatnone">
+       <img alt="Data Cache Settings" class="" height="571" src="../assets/swarm-agent-troubleshooting/10.png" width="1011"/>
+      </div>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="What_does_.22Light_build_failed._Swarm_Agent_failed_to_kick_off.22_mean.2C_and_How_can_I_fix_it.3F">
+        What does "Light build failed. Swarm Agent failed to kick off" mean, and How can I fix it?
+       </span>
+      </h3>
+      <p>
+       <img alt="Swarm FailedToKickOff.jpg" class="" height="54" src="../assets/swarm-agent-troubleshooting/11.jpg" width="550"/>
+      </p>
+      <p>
+       If you are seeing this issue there are a couple of things that could be causing Swarm Agent to not initialize.
+      </p>
+      <p>
+       <b>
+        Possible reasons Swarm fails to kick off:
+       </b>
+      </p>
+      <ul>
+       <li>
+        Having multiple instances of Swarm Agent open
+       </li>
+       <li>
+        Open your Task Manager and make sure there are not multiple Swarm Agent processes running
+       </li>
+       <li>
+        Corrupt levels and/or assets
+       </li>
+       <li>
+        Turn off your Firewall/Anti-Virus software
+       </li>
+       <li>
+        Restart the editor
+       </li>
+       <li>
+        Hard Drive space
+       </li>
+       <li>
+        Installation or corruption issue with the engine
+       </li>
+       <li>
+        Source Build issue with UnrealLightmass
+       </li>
+      </ul>
+      <p>
+       <b>
+        Steps to try:
+       </b>
+      </p>
+      <ol>
+       <li>
+        Try restarting Unreal Engine 4 and/or your computer.
+       </li>
+       <li>
+        Check Task Bar and/or Task Manager for multiple instances of Swarm Agent running. Close all or more than a single instance.
+       </li>
+       <li>
+        Disable Firewall and/or Anti-Virus software. If this works, make sure to add an exception for SwarmAgent.exe
+       </li>
+       <li>
+        Systematically go through and remove meshes from the level to see if one of these is causing the failure. This is a brute-force method and should be used as a last attempt when narrowing down something like this.
+       </li>
+       <li>
+        Test building lighting in known levels with assets that work, like the Default Level from Starter Content or one of the Template maps.
+       </li>
+       <li>
+        Verify the engine by going to the Epic Games Launcher &gt; Library &gt; Select Engine Version &gt; Verify (see image below)
+        <div class="floatnone">
+         <img alt="VerifyEngine.png" class="" height="219" src="../assets/swarm-agent-troubleshooting/12.png" width="275"/>
+        </div>
+       </li>
+      </ol>
+      <ol>
+       <li>
+        Re-install the engine
+       </li>
+      </ol>
+      <p>
+       <b>
+        If Building from Source Code
+       </b>
+      </p>
+      <ol>
+       <li>
+        Rebuild UnrealLightmass solution
+       </li>
+      </ol>
+      <p>
+       If you have tried these steps and are still experiencing the issue please post a question on
+       <a class="external text" href="http://answers.unrealengine.com/" rel="nofollow">
+        AnswerHub
+       </a>
+       with the steps you've tried and adequate steps to reproduce the issue.
+      </p>
+      <p>
+       <br/>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="How_do_I_set_Swarm_Agent_to_be_the_Highest_Priority.3F">
+        How do I set Swarm Agent to be the Highest Priority?
+       </span>
+      </h3>
+      <p>
+       If you were to open up Swarm Agent and see that it takes a little bit before Swarm kicks in for processing you can change this to make it start the process more quickly by adjusting the following settings.
+      </p>
+      <ol>
+       <li>
+        Open Swarm Agent &gt; Settings tab
+       </li>
+       <li>
+        Set
+        <b>
+         ShowDeveloperMenu
+        </b>
+        to
+        <b>
+         True
+        </b>
+       </li>
+       <li>
+        There will now be a new tab named "DeveloperSettings"
+       </li>
+       <li>
+        Change the
+        <b>
+         LocalJobsDefaultProcessPriority
+        </b>
+        to
+        <b>
+         BelowNormal
+        </b>
+       </li>
+       <li>
+        Change the
+        <b>
+         RemoteJobsDefaultProcessPriority
+        </b>
+        to
+        <b>
+         Idle
+        </b>
+       </li>
+      </ol>
+      <ul class="gallery mw-gallery-packed-hover">
+       <li class="gallerybox" style="width: 429.33333333333px">
+        <div style="width: 429.33333333333px">
+         <div class="thumb" style="width: 427.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="250" src="../assets/swarm-agent-troubleshooting/13.png" width="428"/>
+          </div>
+         </div>
+         <div class="gallerytextwrapper" style="width: 408px">
+          <div class="gallerytext">
+           <p>
+           </p>
+          </div>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 429.33333333333px">
+        <div style="width: 429.33333333333px">
+         <div class="thumb" style="width: 427.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="250" src="../assets/swarm-agent-troubleshooting/14.png" width="428"/>
+          </div>
+         </div>
+         <div class="gallerytextwrapper" style="width: 408px">
+          <div class="gallerytext">
+           <p>
+           </p>
+          </div>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="Why_is_Swarm_Agent_not_launching.2C_or_What_does_.22UnrealLightmass.exe-Application_Error....22_mean.3F">
+        Why is Swarm Agent not launching, or What does "UnrealLightmass.exe-Application Error..." mean?
+       </span>
+      </h3>
+      <div class="floatnone">
+       <img alt="UnrealLightmass.exe ApplicationError.png" class="" height="167" src="../assets/swarm-agent-troubleshooting/15.png" width="483"/>
+      </div>
+      <p>
+       If you are seeing this issue pop up this means that there is something that is preventing the application from opening in Windows and is not directly a cause of Unreal Engine 4.
+      </p>
+      <p>
+       If you're using 4.9 or earlier make sure that you have the latest VS2013 dependencies installed and uninstall any dependencies that may no longer be needed.
+      </p>
+      <p>
+       If you're using 4.10 or later you will need to have the VS2015 dependencies installed.
+      </p>
+      <p>
+       You can download the Visual Studio Dependencies from Microsoft's website:
+      </p>
+      <p>
+       VS2013:
+       <a class="external free" href="http://www.microsoft.com/en-us/download/details.aspx?id=40784" rel="nofollow">
+        http://www.microsoft.com/en-us/download/details.aspx?id=40784
+       </a>
+      </p>
+      <p>
+       VS2015:
+       <a class="external free" href="https://www.microsoft.com/en-us/download/details.aspx?id=48145" rel="nofollow">
+        https://www.microsoft.com/en-us/download/details.aspx?id=48145
+       </a>
+      </p>
+      <p>
+       If you’re still having issues with this try using the free application Dependency Walker to troubleshoot any DLL issues that may be preventing UnrealLightmass.exe from loading.
+      </p>
+      <p>
+       You can download Dependency Walker from their website here:
+       <a class="external free" href="http://www.dependencywalker.com/" rel="nofollow">
+        http://www.dependencywalker.com/
+       </a>
+      </p>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="Swarm_Agent_Fails_with_IOException_Error">
+        Swarm Agent Fails with IOException Error
+       </span>
+      </h3>
+      <p>
+       When seeing this error you may need to check your Swarm Agent log for any additional details.
+      </p>
+      <p>
+       Steps to possibly correct this issue:
+      </p>
+      <p>
+       - Check your level where lighting will not build for any NULL assets. These would be assets that have no reference. You can see these in your World Outliner and when you select the asset there you will see that no asset is assigned in the Details panel.
+      </p>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="Swarm_Log:_System.Net.Socket_Error.2FSwarm_Agent.2FCoordinator_Port_Used_By_Another_Process">
+        Swarm Log: System.Net.Socket Error/Swarm Agent/Coordinator Port Used By Another Process
+       </span>
+      </h3>
+      <p>
+       There are some occasions where Swarm Agent will fail to kickoff or distribute a build because the ports that are needed for Swarm Agent and Swarm Coordinator, 8008 and 8009, are in use by another process.
+      </p>
+      <p>
+       <i>
+        Note:
+       </i>
+       The steps below will help you identify the problem but not necessarily solve the problem since this is out of the purview of troubleshooting Swarm Agent/Coordinator and is in-line with solving a port assignment issue within Windows.
+       <i>
+       </i>
+      </p>
+      <p>
+       Common error seen in Swarm Agent logs:
+      </p>
+      <ul>
+       <li>
+        Exception details: System.Net.Sockets.SocketException (0x80004005): No connection could be made because the target machine actively refused it 192.168.1.34:8009
+       </li>
+      </ul>
+      <p>
+       You can download the free app TCPView to be able to quickly identify which ports are being used by what processes. You can download it from here:
+       <a class="external free" href="https://technet.microsoft.com/en-us/sysinternals/tcpview.aspx" rel="nofollow">
+        https://technet.microsoft.com/en-us/sysinternals/tcpview.aspx
+       </a>
+      </p>
+      <div class="floatnone">
+       <img alt="TCPView.jpg" class="" height="218" src="../assets/swarm-agent-troubleshooting/16.jpg" width="420"/>
+      </div>
+      <ol>
+       <li>
+        When you open TCPView you’ll want to click on the tab for Local Port so that they are lined up in numerical order.
+       </li>
+       <li>
+        Then click on View in the menu bar and set the Update Speed to 5 seconds or Paused. This will make it easier to see without the ports and processes being used updating rapidly.
+       </li>
+       <li>
+        Now scroll down and see what applications are being used by Port 8008 and 8009.
+       </li>
+      </ol>
+      <p>
+       Now that you’ve identified the processes that are using the ports and they are potentially not Swarm Agent/Coordinator you’ll need to research how to reassign port addresses so that these ports can be used by Swarm Agent/Coordinator instead of these other programs.
+      </p>
+      <p>
+       If you find that Swarm Agent/Coordinator is using these ports then you may want to try the following:
+      </p>
+      <ul>
+       <li>
+        Checking the Log while in super verbose mode to see if any issues are presented.
+       </li>
+       <li>
+        Re-installing the latest .NET framework
+       </li>
+      </ul>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

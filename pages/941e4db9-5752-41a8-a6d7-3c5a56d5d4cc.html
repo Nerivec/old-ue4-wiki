@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Урок: Время суток - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Урок: Время суток
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#.D0.92.D1.81.D1.82.D1.83.D0.BF.D0.BB.D0.B5.D0.BD.D0.B8.D0.B5">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Вступление
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#.D0.A1.D0.BE.D0.B7.D0.B4.D0.B0.D0.BD.D0.B8.D0.B5_.D1.83.D1.80.D0.BE.D0.B2.D0.BD.D1.8F">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Создание уровня
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#.D0.9D.D0.B0.D1.81.D1.82.D1.80.D0.BE.D0.B9.D0.BA.D0.B0_.D0.BE.D1.81.D0.B2.D0.B5.D1.89.D0.B5.D0.BD.D0.B8.D1.8F">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Настройка освещения
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#.D0.A0.D0.B0.D0.B1.D0.BE.D1.82.D0.B0_.D1.81_Level_Blueprint">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Работа с Level Blueprint
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#.D0.A7.D1.82.D0.BE_.D0.B4.D0.B5.D0.BB.D0.B0.D0.B5.D1.82_.D0.B4.D0.B0.D0.BD.D0.BD.D1.8B.D0.B9_.D0.BA.D0.BE.D0.B4.3F">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             Что делает данный код?
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#.D0.97.D0.B0.D0.BA.D0.BB.D1.8E.D1.87.D0.B8.D1.82.D0.B5.D0.BB.D1.8C.D0.BD.D1.8B.D0.B5_.D1.88.D0.B0.D0.B3.D0.B8">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Заключительные шаги
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#.D0.98.D1.81.D0.BF.D0.BE.D0.BB.D1.8C.D0.B7.D0.BE.D0.B2.D0.B0.D0.BD.D0.B8.D0.B5_.D0.B4.D0.B8.D0.BD.D0.B0.D0.BC.D0.B8.D1.87.D0.B5.D1.81.D0.BA.D0.BE.D0.B3.D0.BE_Global_Illumination">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Использование динамического Global Illumination
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#.D0.9F.D0.BE.D0.B8.D1.81.D0.BA_.D0.B8_.D1.83.D1.81.D1.82.D1.80.D0.B0.D0.BD.D0.B5.D0.BD.D0.B8.D0.B5_.D0.BE.D1.88.D0.B8.D0.B1.D0.BE.D0.BA">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Поиск и устранение ошибок
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#.D0.9D.D0.B8.D1.87.D0.B5.D0.B3.D0.BE_.D0.BD.D0.B5_.D0.BF.D1.80.D0.BE.D0.B8.D1.81.D1.85.D0.BE.D0.B4.D0.B8.D1.82.2C_.D0.BA.D0.BE.D0.B3.D0.B4.D0.B0_.D1.8F_.D0.BD.D0.B0.D0.B6.D0.B8.D0.BC.D0.B0.D1.8E_.D0.B8.D0.B3.D1.80.D0.B0.D1.82.D1.8C.3B_.D0.92.D1.80.D0.B5.D0.BC.D1.8F_.D1.81.D1.82.D0.BE.D0.B8.D1.82_.D0.BD.D0.B0_.D0.BC.D0.B5.D1.81.D1.82.D0.B5.21">
+            <span class="tocnumber">
+             7.1
+            </span>
+            <span class="toctext">
+             Ничего не происходит, когда я нажимаю играть; Время стоит на месте!
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#.D0.A3.D0.B3.D0.BE.D0.BB_.D0.BE.D1.81.D0.B2.D0.B5.D1.89.D0.B5.D0.BD.D0.B8.D1.8F_.D0.BC.D0.B5.D0.BD.D1.8F.D0.B5.D1.82.D1.81.D1.8F.2C_.D0.BD.D0.BE_.D0.B2.D0.B8.D0.B4.D0.B8.D0.BC.D0.BE.D0.B5_.D1.81.D0.BE.D0.BB.D0.BD.D1.86.D0.B5_.D0.BD.D0.B5_.D0.B4.D0.B2.D0.B8.D0.B3.D0.B0.D0.B5.D1.82.D1.81.D1.8F.2C_.D0.B8_.D0.BD.D0.B5.D0.B1.D0.BE_.D0.BD.D0.B5_.D0.BC.D0.B5.D0.BD.D1.8F.D0.B5.D1.82.D1.81.D1.8F_.D0.BE.D1.82_.D0.B4.D0.BD.D1.8F_.D0.BA_.D0.BD.D0.BE.D1.87.D0.B8.21_.D0.98.D0.BB.D0.B8:_.D0.95.D1.81.D1.82.D1.8C_.D0.B7.D0.B2.D0.B5.D0.B7.D0.B4.D1.8B_.D0.BD.D0.B0_.D0.BD.D0.B5.D0.B1.D0.B5.2C_.D0.B4.D0.B0.D0.B6.D0.B5_.D0.B2_.D1.82.D0.B5.D1.87.D0.B5.D0.BD.D0.B8.D0.B5_.D0.B4.D0.BD.D1.8F.21">
+            <span class="tocnumber">
+             7.2
+            </span>
+            <span class="toctext">
+             Угол освещения меняется, но видимое солнце не двигается, и небо не меняется от дня к ночи! Или: Есть звезды на небе, даже в течение дня!
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#.D0.A1.D0.BE.D0.BB.D0.BD.D1.86.D0.B5_.D0.B4.D0.B2.D0.B8.D0.B6.D0.B5.D1.82.D1.81.D1.8F_.D1.81.D0.BB.D0.B8.D1.88.D0.BA.D0.BE.D0.BC_.D0.B1.D1.8B.D1.81.D1.82.D1.80.D0.BE.21">
+            <span class="tocnumber">
+             7.3
+            </span>
+            <span class="toctext">
+             Солнце движется слишком быстро!
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-12">
+         <a href="#.D0.98.D0.B7.D0.BC.D0.B5.D0.BD.D0.B5.D0.BD.D0.B8.D0.B5_.D1.81.D1.80.D0.B5.D0.B4.D1.8B">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Изменение среды
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-13">
+           <a href="#.D0.9A.D1.80.D0.B0.D1.82.D0.BA.D0.B8.D0.B9_.D0.BE.D0.B1.D0.B7.D0.BE.D1.80:">
+            <span class="tocnumber">
+             8.1
+            </span>
+            <span class="toctext">
+             Краткий обзор:
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-14">
+           <a href="#.D0.98.D1.81.D0.BF.D0.BE.D0.BB.D1.8C.D0.B7.D1.83.D0.B5.D0.BC_.D0.BF.D0.B5.D1.80.D0.B5.D0.BC.D0.B5.D0.BD.D0.BD.D1.83.D1.8E_.22.D0.9D.D0.BE.D1.87.D1.8C.22.">
+            <span class="tocnumber">
+             8.2
+            </span>
+            <span class="toctext">
+             Используем переменную "Ночь".
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-15">
+         <a href="#.D0.97.D0.B0.D0.BA.D0.BB.D1.8E.D1.87.D0.B5.D0.BD.D0.B8.D0.B5">
+          <span class="tocnumber">
+           9
+          </span>
+          <span class="toctext">
+           Заключение
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-16">
+         <a href="#.D0.A0.D1.83.D1.81.D1.81.D0.BA.D0.BE.D0.B5_.D1.81.D0.BE.D0.BE.D0.B1.D1.89.D0.B5.D1.81.D1.82.D0.B2.D0.BE_Unreal_Engine_4">
+          <span class="tocnumber">
+           10
+          </span>
+          <span class="toctext">
+           Русское сообщество Unreal Engine 4
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id=".D0.92.D1.81.D1.82.D1.83.D0.BF.D0.BB.D0.B5.D0.BD.D0.B8.D0.B5">
+        Вступление
+       </span>
+      </h2>
+      <p>
+       Здравствуйте, в данном уроке мы научимся создавать динамические времена суток(день и ночь). Это не сложный процесс, но у вас должны быть базовые знания редактора Unreal Engine 4 и небольшой опыт работы с Blueprint.
+      </p>
+      <h2>
+       <span class="mw-headline" id=".D0.A1.D0.BE.D0.B7.D0.B4.D0.B0.D0.BD.D0.B8.D0.B5_.D1.83.D1.80.D0.BE.D0.B2.D0.BD.D1.8F">
+        Создание уровня
+       </span>
+      </h2>
+      <p>
+       Создайте новый уровень. (Вы также можете использовать готовый уровень, но убедитесь, что он имеет
+       <b>
+        SkyDome
+       </b>
+       и
+       <b>
+        directional light
+       </b>
+       ).
+Так же вы можете добавить несколько объектов, что бы увидеть некоторые тени от солнца.
+      </p>
+      <p>
+       <img alt="TODTut BaseScene.JPG" class="" height="391" src="../assets/941e4db9-5752-41a8-a6d7-3c5a56d5d4cc/0.jpg" width="500"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id=".D0.9D.D0.B0.D1.81.D1.82.D1.80.D0.BE.D0.B9.D0.BA.D0.B0_.D0.BE.D1.81.D0.B2.D0.B5.D1.89.D0.B5.D0.BD.D0.B8.D1.8F">
+        Настройка освещения
+       </span>
+      </h2>
+      <p>
+       Следующий этап данного урока, это настройка освещения. Выберите Dominant
+       <b>
+        Directional Light
+       </b>
+       и перейдите к панели деталей и свойств (details panel).
+      </p>
+      <p>
+       В блоке "Transform" измените состояние свойства "
+       <b>
+        Mobility
+       </b>
+       " на "
+       <b>
+        Movable
+       </b>
+       .". Это добавит динамические тени на сцену.
+      </p>
+      <p>
+       <img alt="TODTut_MovableSun.jpg" class="" height="209" src="../assets/941e4db9-5752-41a8-a6d7-3c5a56d5d4cc/1.jpg" width="531"/>
+      </p>
+      <p>
+       Так же, необходимо убрать галочку с "
+       <b>
+        Cast Static Shadows
+       </b>
+       ".
+      </p>
+      <h2>
+       <span class="mw-headline" id=".D0.A0.D0.B0.D0.B1.D0.BE.D1.82.D0.B0_.D1.81_Level_Blueprint">
+        Работа с Level Blueprint
+       </span>
+      </h2>
+      <p>
+       Чтобы действительно получить динамическое время суток, мы должны использовать Level Blueprint - необходимо вращать наше "солнце".
+Вы можете использовать Matinee или Timeline, но здесь мы будем просто вращать наше "солнце" каждый кадр.
+      </p>
+      <p>
+       <img alt="TODTut_LevelBlueprint.JPG" class="" height="461" src="../assets/941e4db9-5752-41a8-a6d7-3c5a56d5d4cc/2.JPG" width="1225"/>
+      </p>
+      <h3>
+       <span class="mw-headline" id=".D0.A7.D1.82.D0.BE_.D0.B4.D0.B5.D0.BB.D0.B0.D0.B5.D1.82_.D0.B4.D0.B0.D0.BD.D0.BD.D1.8B.D0.B9_.D0.BA.D0.BE.D0.B4.3F">
+        Что делает данный код?
+       </span>
+      </h3>
+      <ul>
+       <li>
+        Каждый "Тик", или кадр, мы вращаем наше "солнце" на определенный градус;
+       </li>
+       <li>
+        "SUNSPEED" - контролирует скорость, с которой солнце вращается вокруг мира. Умножим его на DeltaTime так, чтобы частота кадров не повлияла на эту скорость. Установка этого значения в 30 дает хорошую скорость.
+       </li>
+       <li>
+        "Update Sun Direction" узел меняет небо, основанный на вращении Солнца. Это функция встроена в класс SkyDome, который должен быть вызван каждый Тик(кадр). (ПРИМЕЧАНИЕ: Вы должны выбрать Skydome в 3D окне, чтобы добавить этот узел в план.) Для получения дополнительной информации об этой функции, проверить класс Skydome.
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id=".D0.97.D0.B0.D0.BA.D0.BB.D1.8E.D1.87.D0.B8.D1.82.D0.B5.D0.BB.D1.8C.D0.BD.D1.8B.D0.B5_.D1.88.D0.B0.D0.B3.D0.B8">
+        Заключительные шаги
+       </span>
+      </h2>
+      <p>
+       Перед тестирования нашей работы, пересчитайте освещение мира.
+После чего можете запустить симуляцию и увидеть, как проходят времена суток (рассвет/день/сумерки/ночь) и как динамично меняется освещение и как просчитываются тени объектов.
+      </p>
+      <h2>
+       <span class="mw-headline" id=".D0.98.D1.81.D0.BF.D0.BE.D0.BB.D1.8C.D0.B7.D0.BE.D0.B2.D0.B0.D0.BD.D0.B8.D0.B5_.D0.B4.D0.B8.D0.BD.D0.B0.D0.BC.D0.B8.D1.87.D0.B5.D1.81.D0.BA.D0.BE.D0.B3.D0.BE_Global_Illumination">
+        Использование динамического Global Illumination
+       </span>
+      </h2>
+      <p>
+       Динамическую систему суток лучше использовать вместе с Global Illumination (GI).
+Хотя эта функция работает пока еще не в полном объеме, но вы можете найти информацию о ней
+       <a class="external text" href="./light-propagation-volumes-gi.html" rel="nofollow">
+        здесь
+       </a>
+       .
+      </p>
+      <h2>
+       <span class="mw-headline" id=".D0.9F.D0.BE.D0.B8.D1.81.D0.BA_.D0.B8_.D1.83.D1.81.D1.82.D1.80.D0.B0.D0.BD.D0.B5.D0.BD.D0.B8.D0.B5_.D0.BE.D1.88.D0.B8.D0.B1.D0.BE.D0.BA">
+        Поиск и устранение ошибок
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id=".D0.9D.D0.B8.D1.87.D0.B5.D0.B3.D0.BE_.D0.BD.D0.B5_.D0.BF.D1.80.D0.BE.D0.B8.D1.81.D1.85.D0.BE.D0.B4.D0.B8.D1.82.2C_.D0.BA.D0.BE.D0.B3.D0.B4.D0.B0_.D1.8F_.D0.BD.D0.B0.D0.B6.D0.B8.D0.BC.D0.B0.D1.8E_.D0.B8.D0.B3.D1.80.D0.B0.D1.82.D1.8C.3B_.D0.92.D1.80.D0.B5.D0.BC.D1.8F_.D1.81.D1.82.D0.BE.D0.B8.D1.82_.D0.BD.D0.B0_.D0.BC.D0.B5.D1.81.D1.82.D0.B5.21">
+        Ничего не происходит, когда я нажимаю играть; Время стоит на месте!
+       </span>
+      </h3>
+      <p>
+       Убедитесь, что вы установили солнцу значение "Movable", и что "Cast Static Shadows" - отключена.
+Кроме того, убедитесь, что ваш "SUNSPEED" в Blueprint устанавливается в достаточно большое число. (Я рекомендую 30 для отладки.)
+      </p>
+      <h3>
+       <span class="mw-headline" id=".D0.A3.D0.B3.D0.BE.D0.BB_.D0.BE.D1.81.D0.B2.D0.B5.D1.89.D0.B5.D0.BD.D0.B8.D1.8F_.D0.BC.D0.B5.D0.BD.D1.8F.D0.B5.D1.82.D1.81.D1.8F.2C_.D0.BD.D0.BE_.D0.B2.D0.B8.D0.B4.D0.B8.D0.BC.D0.BE.D0.B5_.D1.81.D0.BE.D0.BB.D0.BD.D1.86.D0.B5_.D0.BD.D0.B5_.D0.B4.D0.B2.D0.B8.D0.B3.D0.B0.D0.B5.D1.82.D1.81.D1.8F.2C_.D0.B8_.D0.BD.D0.B5.D0.B1.D0.BE_.D0.BD.D0.B5_.D0.BC.D0.B5.D0.BD.D1.8F.D0.B5.D1.82.D1.81.D1.8F_.D0.BE.D1.82_.D0.B4.D0.BD.D1.8F_.D0.BA_.D0.BD.D0.BE.D1.87.D0.B8.21_.D0.98.D0.BB.D0.B8:_.D0.95.D1.81.D1.82.D1.8C_.D0.B7.D0.B2.D0.B5.D0.B7.D0.B4.D1.8B_.D0.BD.D0.B0_.D0.BD.D0.B5.D0.B1.D0.B5.2C_.D0.B4.D0.B0.D0.B6.D0.B5_.D0.B2_.D1.82.D0.B5.D1.87.D0.B5.D0.BD.D0.B8.D0.B5_.D0.B4.D0.BD.D1.8F.21">
+        Угол освещения меняется, но видимое солнце не двигается, и небо не меняется от дня к ночи! Или: Есть звезды на небе, даже в течение дня!
+       </span>
+      </h3>
+      <p>
+       Это означает, что вы не создали "Update Sun Direction" узел должным образом в вашем скрипте. Эта функция должна вызываться при каждом тике. Если вы не видите возможность добавить эту функцию, убедитесь, что у вас есть свой ​​
+       <b>
+        skydome
+       </b>
+       .
+      </p>
+      <h3>
+       <span class="mw-headline" id=".D0.A1.D0.BE.D0.BB.D0.BD.D1.86.D0.B5_.D0.B4.D0.B2.D0.B8.D0.B6.D0.B5.D1.82.D1.81.D1.8F_.D1.81.D0.BB.D0.B8.D1.88.D0.BA.D0.BE.D0.BC_.D0.B1.D1.8B.D1.81.D1.82.D1.80.D0.BE.21">
+        Солнце движется слишком быстро!
+       </span>
+      </h3>
+      <p>
+       Скорость солнца контролируется переменной "SUNSPEED" в  вашем скрипте.
+Значение этого параметра устанавливает сколько градусов солнце будет вращаться в одну секунду. 
+Например, при значении  "SUNSPEED" в 90,  это займет 4 секунды, что бы прошли сутки.
+Просто сократить это значение, чтобы замедлить движение солнца.
+      </p>
+      <h2>
+       <span class="mw-headline" id=".D0.98.D0.B7.D0.BC.D0.B5.D0.BD.D0.B5.D0.BD.D0.B8.D0.B5_.D1.81.D1.80.D0.B5.D0.B4.D1.8B">
+        Изменение среды
+       </span>
+      </h2>
+      <p>
+       В данном коде, мы определяем наше время суток: день это или ночь. Вы можете иметь способ для уровня знать, является ли это ночь или день. Если вы используете Matinee, это довольно легко сделать; просто поставить пользовательские события, чтобы вызвать желаемые результаты. Однако, если вы используете метод, который я продемонстрировал выше, это может быть сложнее.
+      </p>
+      <p>
+       <img alt="TODTut_GetSunRotation.JPG" class="" height="553" src="../assets/941e4db9-5752-41a8-a6d7-3c5a56d5d4cc/3.JPG" width="1220"/>
+      </p>
+      <h3>
+       <span class="mw-headline" id=".D0.9A.D1.80.D0.B0.D1.82.D0.BA.D0.B8.D0.B9_.D0.BE.D0.B1.D0.B7.D0.BE.D1.80:">
+        Краткий обзор:
+       </span>
+      </h3>
+      <ul>
+       <li>
+        Прежде всего, мы получаем вращение нашей лампы.
+       </li>
+       <li>
+        Затем мы проверяем, если это ниже горизонта.
+       </li>
+       <li>
+        "Ночной Порог" позволяет нам указать на сколько градусов ниже горизонта солнце должно быть, прежде чем мы перейдем на "ночь".
+       </li>
+       <li>
+        Затем мы устанавливаем "Ночь", чтобы отразить наш результат. Теперь мы можем использовать эту переменную, чтобы сделать логические решения.
+       </li>
+      </ul>
+      <h3>
+       <span class="mw-headline" id=".D0.98.D1.81.D0.BF.D0.BE.D0.BB.D1.8C.D0.B7.D1.83.D0.B5.D0.BC_.D0.BF.D0.B5.D1.80.D0.B5.D0.BC.D0.B5.D0.BD.D0.BD.D1.83.D1.8E_.22.D0.9D.D0.BE.D1.87.D1.8C.22.">
+        Используем переменную "Ночь".
+       </span>
+      </h3>
+      <p>
+       Теперь нам нужно использовать переменную "Ночь". Мы создали некоторые отдаленные события, вызываемый при изменении состояния от дня к ночи:
+      </p>
+      <p>
+       <img alt="TODTut_SetupNightEvents.jpg" class="" height="410" src="../assets/941e4db9-5752-41a8-a6d7-3c5a56d5d4cc/4.jpg" width="1308"/>
+      </p>
+      <ul>
+       <li>
+        Прежде всего: что "Установить: Night" узел в начале такая же, как самый правый узел от последнего скриншота. (Не добавляйте его снова.)
+       </li>
+       <li>
+        "LastFrameNight" - определяет текущее время суток: день или ночь. Если этого не сделать, то все события связанные со временем суток, вызовутся каждый раз.
+       </li>
+       <li>
+        Затем мы проверяем, время суток и вызываем соответственный удаленный метод
+       </li>
+      </ul>
+      <p>
+       Вы можете делать все, что вы хотите с удаленными событиями, например, включать различные звуки окр. среды и так далее.
+Вот мои настройки пользовательских событий:
+      </p>
+      <p>
+       <img alt="TODTut_ChangeTheSun.jpg" class="" height="455" src="../assets/941e4db9-5752-41a8-a6d7-3c5a56d5d4cc/5.jpg" width="1102"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id=".D0.97.D0.B0.D0.BA.D0.BB.D1.8E.D1.87.D0.B5.D0.BD.D0.B8.D0.B5">
+        Заключение
+       </span>
+      </h2>
+      <p>
+       Если вы хотите использовать более сложные события дня и ночи, лучше использовать Matinee. Вы будете иметь гораздо больший контроль над всем процессом.
+      </p>
+      <h2>
+       <span class="mw-headline" id=".D0.A0.D1.83.D1.81.D1.81.D0.BA.D0.BE.D0.B5_.D1.81.D0.BE.D0.BE.D0.B1.D1.89.D0.B5.D1.81.D1.82.D0.B2.D0.BE_Unreal_Engine_4">
+        Русское сообщество Unreal Engine 4
+       </span>
+      </h2>
+      <p>
+       <a class="external text" href="http://ue4.codengine.ru/" rel="nofollow">
+        Русское сообщество Unreal Engine 4
+       </a>
+      </p>
+      <p>
+       <a class="external text" href="http://ue4.codengine.ru/index.php/Категория:Уроки" rel="nofollow">
+        Уроки по Unreal Engine 4 на Русском
+       </a>
+      </p>
+      <p>
+       <a class="external text" href="http://ue4.codengine.ru/index.php/Время_суток" rel="nofollow">
+        Ссылка на русское сообщество
+       </a>
+      </p>
+      <p>
+       Перевел
+       <a class="external text" href="http://vk.com/sentike" rel="nofollow">
+        Дмитрий Кулик
+       </a>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

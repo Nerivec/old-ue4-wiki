@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   UMG Previewing custom UserWidgets in realtime - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    UMG Previewing custom UserWidgets in realtime
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Requirements">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Requirements
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Introduction">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Introduction
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#How_updates_to_built-in_Widgets_work">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             How updates to built-in Widgets work
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#How_to_make_it_work_with_blueprints">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             How to make it work with blueprints
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Implementation">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Implementation
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#C.2B.2B_UserWidget_subclass">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             C++ UserWidget subclass
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-8">
+             <a href="#1._Add_a_blueprint_event_called_OnSynchronizeProperties.28.29">
+              <span class="tocnumber">
+               4.1.1
+              </span>
+              <span class="toctext">
+               1. Add a blueprint event called OnSynchronizeProperties()
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-9">
+             <a href="#2._Override_SynchronizeProperties.28.29_and_call_the_OnSynchronizeProperties.28.29_event">
+              <span class="tocnumber">
+               4.1.2
+              </span>
+              <span class="toctext">
+               2. Override SynchronizeProperties() and call  the OnSynchronizeProperties() event
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-10">
+             <a href="#3._Compile_the_project">
+              <span class="tocnumber">
+               4.1.3
+              </span>
+              <span class="toctext">
+               3. Compile the project
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#Implementing_realtime_preview_in_Blueprint">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             Implementing realtime preview in Blueprint
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-12">
+             <a href="#Example_Widget">
+              <span class="tocnumber">
+               4.2.1
+              </span>
+              <span class="toctext">
+               Example Widget
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-13">
+             <a href="#Adding_realtime_preview">
+              <span class="tocnumber">
+               4.2.2
+              </span>
+              <span class="toctext">
+               Adding realtime preview
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-14">
+           <a href="#More_complex_example">
+            <span class="tocnumber">
+             4.3
+            </span>
+            <span class="toctext">
+             More complex example
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-15">
+         <a href="#Final_notes">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Final notes
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       This tutorial shows you how to enable realtime preview for custom Blueprint-based Widgets inside the UMG editor.
+      </p>
+      <p>
+       Main purpose of this feature is to allow creation of generic blueprint UserWidgets, that will react to default property changes inside the editor, just like the C++ widgets.
+      </p>
+      <p>
+       <i>
+        <b>
+         NOTE:
+        </b>
+        This feature is very experimental. Backup your project first.
+       </i>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Requirements">
+        Requirements
+       </span>
+      </h2>
+      <p>
+       Minimal amount of C++ programming is required.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Introduction">
+        Introduction
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="How_updates_to_built-in_Widgets_work">
+        How updates to built-in Widgets work
+       </span>
+      </h3>
+      <p>
+       When a built-in Widget is created, or its default properties are changed, the
+       <b>
+        Widget::SynchronizeProperties()
+       </b>
+       method is called. This method is responsible for applying the provided properties onto the Widget internals, allowing realtime preview. Each Widget has own implementation of this method.
+      </p>
+      <h3>
+       <span class="mw-headline" id="How_to_make_it_work_with_blueprints">
+        How to make it work with blueprints
+       </span>
+      </h3>
+      <p>
+       To make realtime previewing work in Blueprint Widgets, we need to run a Blueprint script when
+       <b>
+        SynchronizeProperties()
+       </b>
+       is called.
+      </p>
+      <p>
+       To achieve this, we will create a custom C++ UUserWidget with a new
+       <b>
+        OnSynchronizeProperties()
+       </b>
+       event that can be implemented in Blueprint. We will call this event from C++, when
+       <b>
+        SynchronizeProperties()
+       </b>
+       method is called by the engine.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Implementation">
+        Implementation
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="C.2B.2B_UserWidget_subclass">
+        C++ UserWidget subclass
+       </span>
+      </h3>
+      <p>
+       Create a C++ subclass of UserWidget, lets call it DesignableUserWidget
+      </p>
+      <h4>
+       <span class="mw-headline" id="1._Add_a_blueprint_event_called_OnSynchronizeProperties.28.29">
+        1. Add a blueprint event called OnSynchronizeProperties()
+       </span>
+      </h4>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">class</span> <span class="nc">MYPROJECT_API</span> <span class="nl">UDesignableUserWidget</span> <span class="p">:</span> <span class="k">public</span> <span class="n">UUserWidget</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="cm">/**</span>
+<span class="cm">	 * This is called after a widget is constructed and properties are synchronized.</span>
+<span class="cm">	 * It can also be called by the editor to update modified state.</span>
+<span class="cm">	 * Override this event in blueprint to update the widget after a default property is modified.</span>
+<span class="cm">	 */</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintNativeEvent</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"User Interface"</span><span class="p">)</span>
+		<span class="kt">void</span> <span class="n">OnSynchronizeProperties</span><span class="p">();</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">UDesignableUserWidget</span><span class="o">::</span><span class="n">OnSynchronizeProperties_Implementation</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">// Override this event in Blueprint</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h4>
+       <span class="mw-headline" id="2._Override_SynchronizeProperties.28.29_and_call_the_OnSynchronizeProperties.28.29_event">
+        2. Override SynchronizeProperties() and call  the OnSynchronizeProperties() event
+       </span>
+      </h4>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">class</span> <span class="nc">MYPROJECT_API</span> <span class="nl">UDesignableUserWidget</span> <span class="p">:</span> <span class="k">public</span> <span class="n">UUserWidget</span>
+<span class="p">{</span>
+<span class="c1">// ...</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">SynchronizeProperties</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">UDesignableUserWidget</span><span class="o">::</span><span class="n">SynchronizeProperties</span><span class="p">()</span> <span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">SynchronizeProperties</span><span class="p">();</span>
+	<span class="n">OnSynchronizeProperties</span><span class="p">();</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h4>
+       <span class="mw-headline" id="3._Compile_the_project">
+        3. Compile the project
+       </span>
+      </h4>
+      <p>
+       After compiling, you can now change the class of your Widget Blueprints from UserWidget to DesignableUserWidget.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Implementing_realtime_preview_in_Blueprint">
+        Implementing realtime preview in Blueprint
+       </span>
+      </h3>
+      <h4>
+       <span class="mw-headline" id="Example_Widget">
+        Example Widget
+       </span>
+      </h4>
+      <p>
+       As a basic example, lets have a widget that consists of two text labels:
+       <img alt="UMG Previewing custom UserWidgets in realtime Hierarchy.png" class="" height="222" src="../assets/umg-previewing-custom-userwidgets-in-realtime/0.png" width="713"/>
+      </p>
+      <p>
+       The widget contains a custom TextColor variable, which applies chosen color to labels in the Construct event:
+       <img alt="UMG Previewing custom UserWidgets in realtime ConstructEvent.png" class="" height="361" src="../assets/umg-previewing-custom-userwidgets-in-realtime/1.png" width="1224"/>
+      </p>
+      <p>
+       Changing the default value of TextColor does not change the labels colors at this point, as the Editor doesn't run the Widget Blueprint.
+      </p>
+      <h4>
+       <span class="mw-headline" id="Adding_realtime_preview">
+        Adding realtime preview
+       </span>
+      </h4>
+      <p>
+       Let's start by changing the class to our DesignableUserWidget:
+       <img alt="UMG Previewing custom UserWidgets in realtime ChangeParentClass.png" class="" height="786" src="../assets/umg-previewing-custom-userwidgets-in-realtime/2.png" width="834"/>
+      </p>
+      <p>
+       Compile the blueprint and add the new OnSynchronizeProperties event just above the Construct event:
+       <img alt="UMG Previewing custom UserWidgets in realtime AddEvent.png" class="" height="569" src="../assets/umg-previewing-custom-userwidgets-in-realtime/3.png" width="762"/>
+      </p>
+      <p>
+       Link the OnSynchronizeProperties event to nodes in your Construct event.
+       <img alt="UMG Previewing custom UserWidgets in realtime LinkEvent.png" class="" height="476" src="../assets/umg-previewing-custom-userwidgets-in-realtime/4.png" width="883"/>
+      </p>
+      <p>
+       The OnSynchronizeProperties event will be run inside of the editor, every time you update default properties.
+       <img alt="UMG Previewing custom UserWidgets in realtime Result.png" class="" height="787" src="../assets/umg-previewing-custom-userwidgets-in-realtime/5.png" width="1250"/>
+      </p>
+      <p>
+       Now you can change default properties in the editor and observe the changes being applied to your widget in realtime!
+      </p>
+      <h3>
+       <span class="mw-headline" id="More_complex_example">
+        More complex example
+       </span>
+      </h3>
+      <p>
+       Here is a popup window containing multiple generic custom list widgets. Each custom list generates a title text and list of buttons. The custom list widgets have custom default properties for the list title string and an array of button title strings.
+       <img alt="UMG Previewing custom UserWidgets in realtime DesignableUserWidget.png" class="" height="604" src="../assets/umg-previewing-custom-userwidgets-in-realtime/6.png" width="1450"/>
+      </p>
+      <p>
+       Without the realtime view, only manually added placeholder values are displayed. With realtime preview, the custom list widgets construct and configure all the neccessary widgets.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Final_notes">
+        Final notes
+       </span>
+      </h2>
+      <p>
+       This is a very useful but also very experimental feature, so please backup your project first.
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

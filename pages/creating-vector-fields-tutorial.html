@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Creating Vector Fields (Tutorial) - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Creating Vector Fields (Tutorial)
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <br/>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Authoring_Vector_fields">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Authoring Vector fields
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#VectorayGen">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           VectorayGen
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Creating_Vector_Fields_with_VectorayGen_and_Using_them_in_UE4">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Creating Vector Fields with VectorayGen and Using them in UE4
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Maya_Fluids">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Maya Fluids
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Installing_the_.27UE4_FX.27_Maya_shelf_and_FGA_Export_Script">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             Installing the 'UE4_FX' Maya shelf and FGA Export Script
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Setting_up_the_Maya_Fluid_Container">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             Setting up the Maya Fluid Container
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Emitting_Attributes_into_the_Container_and_Simulating">
+            <span class="tocnumber">
+             4.3
+            </span>
+            <span class="toctext">
+             Emitting Attributes into the Container and Simulating
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#Exporting_Velocity_Values_From_Maya_Fluid_Containers">
+            <span class="tocnumber">
+             4.4
+            </span>
+            <span class="toctext">
+             Exporting Velocity Values From Maya Fluid Containers
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#Importing_an_.FGA_File_into_UE4">
+            <span class="tocnumber">
+             4.5
+            </span>
+            <span class="toctext">
+             Importing an .FGA File into UE4
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#Setting_up_a_particle_system_with_a_Local_Vector_Field">
+            <span class="tocnumber">
+             4.6
+            </span>
+            <span class="toctext">
+             Setting up a particle system with a Local Vector Field
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-12">
+           <a href="#Local_Vector_Field_Module_Parameters">
+            <span class="tocnumber">
+             4.7
+            </span>
+            <span class="toctext">
+             Local Vector Field Module Parameters
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       In UE4, a vector grid is a 3 dimensional grid sub-divided into individual volume pixels, or 'voxels,' with each voxel storing a velocity vector (in x, y and z). This grid is useful because Cascade can treat it as a field which can influence the motion of particles inside of it. It may help to think of a vector field as a volume in space which contains 'wind' that can affect particles which move through it.
+      </p>
+      <p>
+       Two types of vector fields exist: Local Vector fields, which live inside a particle system, and global vector fields which live in the world and may affect any particle systems located within its bounding box, if those particle system have the Global Vector Field module's Field Scale parameter set higher than 1.
+      </p>
+      <p>
+       The focus of this document is authoring a local vector field.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Authoring_Vector_fields">
+        Authoring Vector fields
+       </span>
+      </h2>
+      <p>
+       There is no way to create vector fields in UE4, however there are a few options that allow you to create them outside of the engine.
+      </p>
+      <ol>
+       <li>
+        VectorayGen - A real time vector field generator made by JangaFX.
+       </li>
+       <li>
+        Maya Fluids MEL script
+       </li>
+      </ol>
+      <p>
+       Both of these options are detailed below.
+      </p>
+      <p>
+       You may author vector fields any way you like but VectorayGen is a straightforward way to generate vector fields, which are exported in the .FGA file (Fluid Grid ASCII) format. This file is a text table which you can easily edit by hand if needed.
+      </p>
+      <p>
+       The other way is to use Maya fluids. To ease this process, we have written a MEL script which only exports velocity data from Maya's fluid containers and stores them as an .FGA file (Fluid Grid ASCII). Once again, this file is a text table which you can easily edit by hand if need be.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h1>
+       <span class="mw-headline" id="VectorayGen">
+        VectorayGen
+       </span>
+      </h1>
+      <h2>
+       <span class="mw-headline" id="Creating_Vector_Fields_with_VectorayGen_and_Using_them_in_UE4">
+        Creating Vector Fields with VectorayGen and Using them in UE4
+       </span>
+      </h2>
+      <p>
+       If you don't want to edit vector fields with Maya or Blender plugins/scripts, go to
+       <a class="external free" href="https://jangafx.com/software-downloads/" rel="nofollow">
+        https://jangafx.com/software-downloads/
+       </a>
+       and download an evaluation version of VectorayGen. It is a tool built specifically for editing vector fields in real time. No waiting for fluid simulations and it is easy to learn and use.
+      </p>
+      <p>
+       VectorayGen is immensely powerful with a built in node editor, real time view port, and the ability to simulate millions of particles and vectors.
+      </p>
+      <p>
+       &lt;youtube&gt;TGbY0aUVZIM
+      </p>
+      <p>
+       To see other tutorials for VectorayGen, go here:
+       <a class="external free" href="https://jangafx.com/vectoraygen-starter-tutorial-series/" rel="nofollow">
+        https://jangafx.com/vectoraygen-starter-tutorial-series/
+       </a>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h1>
+       <span class="mw-headline" id="Maya_Fluids">
+        Maya Fluids
+       </span>
+      </h1>
+      <h2>
+       <span class="mw-headline" id="Installing_the_.27UE4_FX.27_Maya_shelf_and_FGA_Export_Script">
+        Installing the 'UE4_FX' Maya shelf and FGA Export Script
+       </span>
+      </h2>
+      <blockquote>
+       <p>
+        <b>
+         Note:
+        </b>
+        The Fluid Grid export script contained within this Maya shelf has been tested with Maya 2012 x64.
+       </p>
+      </blockquote>
+      <p>
+       1. In the shelf pane, click the left hand drop down arrow and select
+       <b>
+        Load Shelf..
+       </b>
+       :
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:516px;">
+        <img alt="LoadShelf VF.jpg" class="thumbimage" height="301" src="../assets/creating-vector-fields-tutorial/0.jpg" width="514"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       2. Inside the file browser, navigate to:
+       <code>
+        [UE4Root]\Engine\Extras\MayaVelocityGridExporter\
+       </code>
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:578px;">
+        <img alt="LoadShelfWindow VF.jpg" class="thumbimage" height="292" src="../assets/creating-vector-fields-tutorial/1.jpg" width="576"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       3. Once you click open, you will find a new shelf tab entitled
+       <b>
+        UE4_FX
+       </b>
+       which contains a single button. Clicking on this icon will bring up a dialog box along with various FGA export options.
+      </p>
+      <p>
+       By default the shelf contains a single button using a placeholder icon. A custom icon is located at
+       <code>
+        ../UE4/Engine/Extras/FX_tools/Maya2012_x64/UE4_FX_Tools/Prefs/Icons/fgaClean.png
+       </code>
+       if you wish to use it. To install the custom icon, simply copy it to your Maya user preferences directory (e.g., `C:/Users/[User]/Documents/maya/2012-x64/prefs/icon`).
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:176px;">
+        <img alt="InstalledFGAShelf VF.jpg" class="thumbimage" height="188" src="../assets/creating-vector-fields-tutorial/2.jpg" width="174"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       4. The tools to export Maya fluid containers to UE4's fluid grid format are now installed and ready to use.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Setting_up_the_Maya_Fluid_Container">
+        Setting up the Maya Fluid Container
+       </span>
+      </h2>
+      <p>
+       Creating vector fields in Maya requires the use of a Fluid container.
+      </p>
+      <p>
+       1. Switch to the dynamics major mode and then from the FluidEffects menu, select 'Create 3D Container.' This will drop a Maya fluid container in your perspective viewport. The first thing to do is to select it and then in the Attribute editor, select the 'Keep Voxels Square' checkbox.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:413px;">
+        <img alt="ContainerProperties VF.png" class="thumbimage" height="99" src="../assets/creating-vector-fields-tutorial/3.png" width="411"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <blockquote>
+       <p>
+        <b>
+         Note:
+        </b>
+        Because UE4's velocity grid cascade module operates on the GPU, Maya fluid containers need to have power-of-2 Resolution values (voxel count), with the maximum voxel count in any one axis being 128.
+       </p>
+      </blockquote>
+      <p>
+       2. Adjust the scale of the fluid container by going in its properties and changing the size setting:
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:362px;">
+        <img alt="SizeProperty VF.jpg" class="thumbimage" height="72" src="../assets/creating-vector-fields-tutorial/4.jpg" width="360"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       The base resolution now indicates the longest side's resolution, with the other sides resolution being scale proportionally to their relative sizes. Here is an example of a rectangular 16x32x16 grid which adheres to the power of two requirements.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:137px;">
+        <img alt="Grid VF.png" class="thumbimage" height="207" src="../assets/creating-vector-fields-tutorial/5.png" width="135"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       3. Set all the boundary conditions of the grid to **_None_**; allowing fluid simulation to 'exit' the fluid container.
+      </p>
+      <p>
+       4. Finally we need to enable the display of velocity vectors so we can see the data we want to export to UE4. In the **Display** section of the fluid container, check the **Velocity Draw** checkbox.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Emitting_Attributes_into_the_Container_and_Simulating">
+        Emitting Attributes into the Container and Simulating
+       </span>
+      </h2>
+      <p>
+       An emitter must be added to the fluid container in order to emit a variety of attributes which can disturb the grid values.
+      </p>
+      <p>
+       1. Select the fluid container and from the Fluid Effects menu, select
+       <b>
+        add/edit contents &gt; Emitter
+       </b>
+       .
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:434px;">
+        <img alt="AddEmitter VF.png" class="thumbimage" height="144" src="../assets/creating-vector-fields-tutorial/6.png" width="432"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       2. In the
+       <b>
+        Emiter Fluid Attributes
+       </b>
+       , set
+       <b>
+        Heat/Voxel/Sec
+       </b>
+       to `250`. This means the emitter will be emitting heat into the container. Heat will cause the density to rise.
+      </p>
+      <p>
+       3. Now select the emitter and scale it wider and move it down towards the base of the container.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:179px;">
+        <img alt="ScaleEmitter VF.png" class="thumbimage" height="137" src="../assets/creating-vector-fields-tutorial/7.png" width="177"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       4. In order for the container grid to react to dynamic heat contributions, the Maya fluid container
+       <b>
+        Temperature
+       </b>
+       method must be set to
+       <b>
+        Dynamic Grid
+       </b>
+       . This setting is located on the container grid shape.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:290px;">
+        <img alt="TemperatureProperty VF.png" class="thumbimage" height="72" src="../assets/creating-vector-fields-tutorial/8.png" width="288"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       5. Now play back the timeline to view the simulation. You should get something similar to this. I have also added some noise to the container attributes. You can do this by changing the velocity swirl, noise and turbulence strength and frequency parameters in the 'Contents Details' section of the fluid container.
+      </p>
+      <p>
+       6. The result should look similar to this:
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:164px;">
+        <img alt="Result VF.png" class="thumbimage" height="236" src="../assets/creating-vector-fields-tutorial/9.png" width="162"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Exporting_Velocity_Values_From_Maya_Fluid_Containers">
+        Exporting Velocity Values From Maya Fluid Containers
+       </span>
+      </h2>
+      <p>
+       In this example, a single frame of the simulation is exported to use as a static velocity field in UE4.
+      </p>
+      <p>
+       1. Select your fluid container and click on the FGA icon in the **UE4_FX** shelf. The **UE4 Velocity Grid Exporter** dialog box will appear.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:373px;">
+        <img alt="ExportDialog VF.png" class="thumbimage" height="214" src="../assets/creating-vector-fields-tutorial/10.png" width="371"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       2. Set the start frame that you like, along with the destination folder.
+      </p>
+      <p>
+       3. Hit export and you will see a file on disk. This is the file you will import into UE4.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:218px;">
+        <img alt="FgaFile VF.png" class="thumbimage" height="129" src="../assets/creating-vector-fields-tutorial/11.png" width="216"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Importing_an_.FGA_File_into_UE4">
+        Importing an .FGA File into UE4
+       </span>
+      </h2>
+      <p>
+       1. Launch UE4, open the Content Browser. Either click the New button and choose _Import_, or right-click and select _import_ from the contextual menu.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:457px;">
+        <img alt="ImportOption VF.png" class="thumbimage" height="183" src="../assets/creating-vector-fields-tutorial/12.png" width="455"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       2. In the file browser navigate to the FGA that was saved out earlier.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:383px;">
+        <img alt="ImportDialog VF.png" class="thumbimage" height="239" src="../assets/creating-vector-fields-tutorial/13.png" width="381"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <blockquote>
+       <p>
+        <b>
+         Note:
+        </b>
+        If you have a lot of files in the same directory, you can set the file browser's filter to _Fluid Grid Ascii_.
+       </p>
+      </blockquote>
+      <p>
+       3. In the Content Browser you should now see a _VectorField Static_ asset.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:138px;">
+        <img alt="VectorFieldAsset VF.png" class="thumbimage" height="138" src="../assets/creating-vector-fields-tutorial/14.png" width="136"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Setting_up_a_particle_system_with_a_Local_Vector_Field">
+        Setting up a particle system with a Local Vector Field
+       </span>
+      </h2>
+      <p>
+       1. Create a new particle system in the content browser. Once it is created, the Cascade window will appear.
+      </p>
+      <p>
+       2. Right-click on the black space above the emitter's module and convert the particle system dataType to
+       <b>
+        GPU Sprites
+       </b>
+       .
+      </p>
+      <p>
+       3. Next, add a
+       <b>
+        Cylinder
+       </b>
+       location module with its Height axis set to Y. Increase the Spawn module Rate property to around 50. Then delete the Initial Velocity as the particle motion will come from the local vector field. You should have something similar to this:
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:695px;">
+        <img alt="CylinderExample VF.png" class="thumbimage" height="431" src="../assets/creating-vector-fields-tutorial/15.png" width="693"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       4. Right-click below the existing modules and add a local vector field module to the emitter.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:372px;">
+        <img alt="LocalVectorFieldModule VF.png" class="thumbimage" height="137" src="../assets/creating-vector-fields-tutorial/16.png" width="370"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       The local vector field module will influence the motion of your particles when they are physically inside the Local vector field module's bounding box.
+      </p>
+      <p>
+       5. Assign the vector field asset to the Vector field slot in the Local vector field cascade module. You may want to visualize the vector field velocities in the viewport by selecting the **View &gt; Vector Fields** inside Cascade's main menu.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:498px;">
+        <img alt="VisualizeVectorFields VF.png" class="thumbimage" height="428" src="../assets/creating-vector-fields-tutorial/17.png" width="496"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       6. In its parameters, scale the Vector Fields's relative scale to 2 2 2 and translate the grid using the vector fields gizmo which appears in the Cascade preview window when the Local vector Field module is selected.
+      </p>
+      <p>
+       7. You should now see the particles moving in the preview window, driven by the Vector field velocities.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:693px;">
+        <img alt="Movement VF.png" class="thumbimage" height="371" src="../assets/creating-vector-fields-tutorial/18.png" width="691"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Local_Vector_Field_Module_Parameters">
+        Local Vector Field Module Parameters
+       </span>
+      </h2>
+      <p>
+       The
+       <b>
+        Local Vector Field
+       </b>
+       cascade module has 2 main parameters:
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:490px;">
+        <img alt="ModuleProperties VF.png" class="thumbimage" height="46" src="../assets/creating-vector-fields-tutorial/19.png" width="488"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       <b>
+        Intensity
+       </b>
+       : This is the strength of the Local vector field contribution to the particle's motion
+       <b>
+        Tightness
+       </b>
+       : How closely the particles will follow the velocities stored in the fluid grid. When set to 0, the vector field behaves as a force which adds it velocities to the particles' current velocities. When set to 1, the vector field velocities replace the particle velocities altogether.
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

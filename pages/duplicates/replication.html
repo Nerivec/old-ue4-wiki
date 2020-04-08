@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Replication - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Replication
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       Networking is one of the many areas where Unreal Engine 4 shines. For those of you who have switched from Unity to Unreal Engine 4, or for those of you who are considering it: you are in for a pleasant surprise. UE4's network replication system is a master class in how to be awesome.
+      </p>
+      <p>
+       This article will explain the details of object replication and make you a UE4 networking pro!
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Terminology">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Terminology
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Concepts">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Concepts
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#A_Guide_To_Network_Roles">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           A Guide To Network Roles
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Spawning_Rule">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             Spawning Rule
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#UPROPERTY_Replication_Rule">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             UPROPERTY Replication Rule
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Rules_For_Calling_Functions">
+            <span class="tocnumber">
+             4.3
+            </span>
+            <span class="toctext">
+             Rules For Calling Functions
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Basic_Actor_Replication">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Basic Actor Replication
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#When_Is_An_Actor_Replicated.3F">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           When Is An Actor Replicated?
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-10">
+         <a href="#Actor_Property_Replication">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Actor Property Replication
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#Getting_An_Event_When_Your_Property_Is_Replicated">
+            <span class="tocnumber">
+             7.1
+            </span>
+            <span class="toctext">
+             Getting An Event When Your Property Is Replicated
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-12">
+         <a href="#Function_Call_Replication">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Function Call Replication
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-13">
+           <a href="#Types_of_remote_function_calls">
+            <span class="tocnumber">
+             8.1
+            </span>
+            <span class="toctext">
+             Types of remote function calls
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-14">
+           <a href="#Quick_Review_Of_Roles">
+            <span class="tocnumber">
+             8.2
+            </span>
+            <span class="toctext">
+             Quick Review Of Roles
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-15">
+           <a href="#Reliable_vs_Unreliable_Function_Call_Replication">
+            <span class="tocnumber">
+             8.3
+            </span>
+            <span class="toctext">
+             Reliable vs Unreliable Function Call Replication
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-16">
+           <a href="#Remote_Function_Call_Examples">
+            <span class="tocnumber">
+             8.4
+            </span>
+            <span class="toctext">
+             Remote Function Call Examples
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-17">
+           <a href="#Tips_For_Bandwidth_and_Robustness">
+            <span class="tocnumber">
+             8.5
+            </span>
+            <span class="toctext">
+             Tips For Bandwidth and Robustness
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-18">
+         <a href="#Replication_of_Actor_Components_and_Subobjects">
+          <span class="tocnumber">
+           9
+          </span>
+          <span class="toctext">
+           Replication of Actor Components and Subobjects
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-19">
+         <a href="#Advanced:_Generic_replication_of_Actor_Subobjects">
+          <span class="tocnumber">
+           10
+          </span>
+          <span class="toctext">
+           Advanced: Generic replication of Actor Subobjects
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-20">
+           <a href="#ReplicatedSubobject_Class">
+            <span class="tocnumber">
+             10.1
+            </span>
+            <span class="toctext">
+             ReplicatedSubobject Class
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-21">
+           <a href="#Actor_Code_For_Subobject_Support">
+            <span class="tocnumber">
+             10.2
+            </span>
+            <span class="toctext">
+             Actor Code For Subobject Support
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-22">
+           <a href="#Notes">
+            <span class="tocnumber">
+             10.3
+            </span>
+            <span class="toctext">
+             Notes
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-23">
+           <a href="#Detailed_Explanation">
+            <span class="tocnumber">
+             10.4
+            </span>
+            <span class="toctext">
+             Detailed Explanation
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-24">
+           <a href="#Unreal.27s_Type_System">
+            <span class="tocnumber">
+             10.5
+            </span>
+            <span class="toctext">
+             Unreal's Type System
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-25">
+         <a href="#Related_Wiki_Tutorials">
+          <span class="tocnumber">
+           11
+          </span>
+          <span class="toctext">
+           Related Wiki Tutorials
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-26">
+         <a href="#Epic_Tutorials">
+          <span class="tocnumber">
+           12
+          </span>
+          <span class="toctext">
+           Epic Tutorials
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <ul>
+       <li>
+        Unreal's network replication is extremely fast and bandwidth efficient.
+       </li>
+       <li>
+        The networking model is authoritative server/client.
+       </li>
+       <li>
+        Character and Vehicle based motion, physics, and prediction "just work" out of the box.
+       </li>
+       <li>
+        Unreal will replicate properties, structs, and references to other objects automatically over the network.
+       </li>
+       <li>
+        You can call functions on objects "across the network" (Remote Procedure Calls).
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="Terminology">
+        Terminology
+       </span>
+      </h2>
+      <ol>
+       <li>
+        Objects, Game Objects, Actors, Pawns, Characters - These are all UObject derived classes.
+       </li>
+       <li>
+        Server - The computer process with an instance of a UWorld that contains Actors that are replicated to clients. The state of the world contained here is considered to be the "real" or "correct" one.
+       </li>
+       <li>
+        Client - The computer process with an instance of a UWorld that contains Actors that were received from a Server over a network connection. The state of a client is an approximation of the state of the Server. It is not considered to be accurate or correct.
+       </li>
+      </ol>
+      <h2>
+       <span class="mw-headline" id="Concepts">
+        Concepts
+       </span>
+      </h2>
+      <p>
+       At a high level Unreal's networking is designed to efficiently transmit (replicate) all relevant AActors contained in a UWorld from the authoritative state contained in a server to all of its connected clients. Unreal's networking is considered to be what's called "Authoritative Server/Client" because the state of the world contained in the server process is considered to be the true state of the world, while at any given time the state of the world on a client will, at best, approximate that to some degree of precision.
+      </p>
+      <p>
+       Although not without their downsides authoritative networking models, in theory, are immune to cheating. If done correctly, the entire state of the world is simulated on the server with clients restricted to issuing "input" to the server (conceptually: move forward, backwards, left, right, switch weapons) making it impossible for clients to "spoof" game state like their velocity because client calculations about their motion and velocity are entirely meaningless and never leave the clients computer. Instead clients receive the results of their "input" to the server at some later time.
+      </p>
+      <h2>
+       <span class="mw-headline" id="A_Guide_To_Network_Roles">
+        A Guide To Network Roles
+       </span>
+      </h2>
+      <p>
+       A key concept to understand Unreal's networking is the concept of a network role. Although not totally obvious at first, networking roles are really the rules that control how information flows between Server and Client. For the most part Unreal's networking is automatic and hidden out of sight: simply changing the value of a member on a field on the Server may cause that new value to be replicated to clients. Why and how that happens is because of the rules governing network roles.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Spawning_Rule">
+        Spawning Rule
+       </span>
+      </h3>
+      <p>
+       The first rule of networking in Unreal is that only servers can spawn Actors that will replicate to clients. If a client spawns an Actor that actor will only ever exist on the client that created it.
+      </p>
+      <h3>
+       <span class="mw-headline" id="UPROPERTY_Replication_Rule">
+        UPROPERTY Replication Rule
+       </span>
+      </h3>
+      <p>
+       Only the changes made to replicated properties in the server will be replicated to clients. If a client changes the value of a replicated variable locally then it will stay that way until the next time the server changes it (after which it will be replicated and overwritten on the client). In this sense you should consider a UPROPERTY that is tagged with Replicated to be owned/controlled by the server.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Rules_For_Calling_Functions">
+        Rules For Calling Functions
+       </span>
+      </h3>
+      <p>
+       One of the most powerful features of Unreal networking is the ability to call functions on objects on the server version or client version of objects. Consider an example of a game with a server and two clients and a single actor in the world. In this example there are 3 copies of the actor, one on the server, and one on each client. Let's call them Actor_Server, Actor_Client1, Actor_Client2.
+      </p>
+      <p>
+       At this point we must now start talking about network roles. There are four roles
+       <i>
+        <b>
+         (* see technical note below)
+        </b>
+       </i>
+       :
+      </p>
+      <ul>
+       <li>
+        <b>
+         ROLE_None
+        </b>
+       </li>
+      </ul>
+      <p>
+       The object has no networking role and isn't replicated.
+      </p>
+      <ul>
+       <li>
+        <b>
+         ROLE_SimulatedProxy
+        </b>
+       </li>
+      </ul>
+      <p>
+       The object locally simulates the state of the object on the server (i.e. it tries to look and act like the server version). It has no authority to change the state of the object or call a function on the object that executes remotely.
+      </p>
+      <ul>
+       <li>
+        <b>
+         ROLE_AutonomousProxy
+        </b>
+       </li>
+      </ul>
+      <p>
+       Identical to ROLE_SimulatedProxy in that this object also locally simulates the state of the object on the server, but with the ability to execute function calls on this object that execute on the server. In this sense an object with ROLE_AutomousProxy is allowed to make authoritative decisions over what the Actor does, by executing functions on the object that run on the server and therefore change its state.
+      </p>
+      <p>
+       The choice of what functions can be replicated on the server are critical in preventing cheating. For example, a replicated function that runs on the server which takes the position of an object and moves it to that location is potentially a vector for cheating, since a player could modify their code to call that function with any values they desired. A more secure design would be to have server replicated functions transmit high level commands like ServerMoveForward(), ServerMoveBackwards(), ServerFireWeapon() etc.
+      </p>
+      <ul>
+       <li>
+        <b>
+         ROLE_Authority
+        </b>
+       </li>
+      </ul>
+      <p>
+       An object with ROLE_Authority is the authoritative version of the object and its state represents what is considered to be the only "real" state of the object. Versions of this object on clients with ROLE_AutonomousProxy can call functions on this version of the object.
+      </p>
+      <p>
+       An object with ROLE_Authority can execute function calls on any object on the server. Those functions can be marked to replicate to clients and they will be executed on the ROLE_SimulatedProxy and ROLE_AutonomousProxy instances of those objects on the specified clients.
+      </p>
+      <p>
+       Finally an object with ROLE_Authority will also replicate any changes to UPROPERTY fields to any client versions of the object.
+      </p>
+      <p>
+       In the example above with Actor_Server, Actor_Client1, and Actor_Client2, the likely networking role allocation would be:
+      </p>
+      <ul>
+       <li>
+        Actor_Server - ROLE_Authority
+       </li>
+       <li>
+        Actor_Client1 - ROLE_AutonomousProxy (if the actor is a PlayerController and Client1 controls that player) or ROLE_SimulatedProxy
+       </li>
+       <li>
+        Actor_Client2 - ROLE_AutonomousProxy (if the actor is a PlayerController and Client2 controls that player) or ROLE_SimulatedProxy
+       </li>
+      </ul>
+      <p>
+       Actor_Server:
+      </p>
+      <p>
+       Will have role ROLE_Authority and changes to any UPROPERTY on the Actor_Server instance will get replicated to both Actor_Client1 and Actor_Client2 automatically, and any UFUNCTION() methods that are replicated as Client or NetMulticast that are called on Actor_Server by the server will execute on Client1 (in the case of Client) or both Client1 and Client2 in the case of NetMulticast.
+      </p>
+      <p>
+       Actor_Client1:
+      </p>
+      <p>
+       For the sake of argument assuming Client1 owns the Actor then Client1 will have network role ROLE_AutonomousProxy, and any calls to UFUNCTION() methods marked as Server will execute on Actor_Server.
+      </p>
+      <p>
+       Actor_Client2 (and any other clients):
+      </p>
+      <p>
+       Will have role ROLE_SimulatedProxy (assuming as said before that Client1 owns the actor) and any calls to replicated functions will be ignore. This object can only receive replicated information in the form of property updates and function calls.
+      </p>
+      <p>
+       <i>
+        <b>
+         *TECHNICAL NOTE: You should be aware that Unreal does not necessarily enforce "rules" regarding networking roles, and roles don't really have privileges or authority over objects. Rather, roles serve as a way for you to know how an object should behave with respect to the network, and roles are assigned in a way that reflects the architecture of UE4 networking. For example technically a ROLE_SimulatedProxy object can invoke a Server RPC if it is owned by a PlayerController (or if it is a child of a PlayerController through a hierarchy of objects). In unmodified Unreal an Actor can invoke a Server RPC if there is a UNetConnection (i.e. a Player) in its owner hierarchy, therefore ONLY a Player or an object owned by a Player or its children (PlayerController, etc) can invoke a Server RPC.
+        </b>
+       </i>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Basic_Actor_Replication">
+        Basic Actor Replication
+       </span>
+      </h2>
+      <p>
+       Any object derived from AActor can be a candidate for network replication by setting bReplicates to true inside your constructor:
+      </p>
+      <p>
+       ReplicatedActor.h:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+<span class="cp">#include</span> <span class="cpf">"Core.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"AReplicatedActor.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">AReplicatedActor</span> <span class="o">:</span> <span class="k">public</span> <span class="n">AActor</span>
+<span class="p">{</span>
+    <span class="n">GENERATED_BODY</span><span class="p">()</span>
+
+    <span class="n">AReplicatedActor</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">);</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       ReplicatedActor.cpp:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">AReplicatedActor</span><span class="o">::</span><span class="n">AReplicatedActor</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">)</span>
+<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">ObjectInitializer</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">bReplicates</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="When_Is_An_Actor_Replicated.3F">
+        When Is An Actor Replicated?
+       </span>
+      </h2>
+      <p>
+       An Actor is replicated to a client when it is considered to be "network relevant". There are a number of ways to control this. By default Unreal replicates an Actor when it is within range of a client (AActor::NetCullDistanceSquared controls the culling distance). Here are a list of the base AActor flags you can set in your constructor to control some basic relevancy semantics:
+      </p>
+      <ul>
+       <li>
+        <b>
+         bReplicates
+        </b>
+        : Must be true for an Actor to replicate anything. An actor that is spawned dynamically on a server will be replicated (and spawn) on Client ONLY if this flag is set.
+       </li>
+       <li>
+        <b>
+         bAlwaysRelevant
+        </b>
+        : Actor is always relevant to all clients and will always be replicated.
+       </li>
+       <li>
+        <b>
+         bOnlyRelevantToOwner
+        </b>
+        : Actor is only relevant to its owner. Unreal's concept of ownership for network relevancy purposes is limited to a player's APlayerController or a player's APawn. An actor's owner must be either a PlayerController or Pawn controlled by a PlayerController in order for bOnlyRelevantToOwner to function. When set it means that the actor will only replicate to the player represented by the owning Pawn or PlayerController.
+       </li>
+       <li>
+        <b>
+         bNetLoadOnClient
+        </b>
+        : If true the Actor will load from a level file on a network client. This should be set to true for Actors you place in a map that you want to exist on a client (typically most Actors want this).
+       </li>
+       <li>
+        <b>
+         bTearOff
+        </b>
+        : If the Server sets this to true all clients will take authoritative control of their locally replicated versions of the actor and changes and function calls on the actor will no longer be replicated over the network. It will be as though it was a locally spawned actor.
+       </li>
+       <li>
+        <b>
+         bReplicateMovement
+        </b>
+        : Set to true if you want to be able to move the Actor and have its position be updated on clients automatically. Pawns have this on by default.
+       </li>
+      </ul>
+      <p>
+       If the default network relevancy by distance isn't adequate you can customize relevancy per-player by implementing an override for AActor::IsNetRelevantFor():
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">bool</span> <span class="n">AActor</span><span class="o">::</span><span class="n">IsNetRelevantFor</span><span class="p">(</span><span class="k">const</span> <span class="n">AActor</span><span class="o">*</span> <span class="n">RealViewer</span><span class="p">,</span> <span class="k">const</span> <span class="n">AActor</span><span class="o">*</span> <span class="n">ViewTarget</span><span class="p">,</span> <span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">SrcLocation</span><span class="p">)</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Actor_Property_Replication">
+        Actor Property Replication
+       </span>
+      </h2>
+      <p>
+       Unreal will automatically replicate any UPROPERTY declared properties by declaring that they are Replicated and implementing UObject::GetLifetimeReplicatedProps(). Warning: It is vitally important that you do not conditionally replicate values inside GetLifetimeReplicatedProps (i.e. do not use any of your objects instance state to conditionally wrap DOREPLIFETIME). Doing this will not do what you think (internally Unreal only ever calls GetLifetimeReplicatedProps() on the first instance of an object of a given class and
+       <i>
+        it expects to be given the replication layout for that class, not for an instance of that class
+       </i>
+       . That replication layout is shared by all instances of that class for the lifetime of the UNetDriver).
+      </p>
+      <p>
+       Look here for more on GetReplicatedLifetimeProps():
+       <a class="external free" href="https://www.unrealengine.com/blog/network-tips-and-tricks" rel="nofollow">
+        https://www.unrealengine.com/blog/network-tips-and-tricks
+       </a>
+      </p>
+      <p>
+       ReplicatedActor.h:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+<span class="cp">#include</span> <span class="cpf">"Core.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"AReplicatedActor.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">AReplicatedActor</span> <span class="o">:</span> <span class="k">public</span> <span class="n">AActor</span>
+<span class="p">{</span>
+    <span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+
+<span class="k">public</span><span class="o">:</span>
+
+    <span class="cm">/** A Replicated Boolean Flag */</span>
+    <span class="n">UPROPERTY</span><span class="p">(</span><span class="n">Replicated</span><span class="p">)</span>
+    <span class="n">uint32</span> <span class="nl">bFlag</span><span class="p">:</span><span class="mi">1</span><span class="p">;</span>
+
+    <span class="cm">/** A Replicated Array Of Integers */</span>
+    <span class="n">UPROPERTY</span><span class="p">(</span><span class="n">Replicated</span><span class="p">)</span>
+    <span class="n">TArray</span><span class="o">&lt;</span><span class="n">uint32</span><span class="o">&gt;</span> <span class="n">IntegerArray</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       ReplicatedActor.cpp:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"ReplicatedActor.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"UnrealNetwork.h"</span><span class="cp"></span>
+<span class="n">AReplicatedActor</span><span class="o">::</span><span class="n">AReplicatedActor</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span>
+<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">bReplicates</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AReplicatedActor</span><span class="o">::</span><span class="n">GetLifetimeReplicatedProps</span><span class="p">(</span><span class="n">TArray</span><span class="o">&lt;</span> <span class="n">FLifetimeProperty</span> <span class="o">&gt;</span> <span class="o">&amp;</span> <span class="n">OutLifetimeProps</span><span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+    <span class="n">Super</span><span class="o">::</span><span class="n">GetLifetimeReplicatedProps</span><span class="p">(</span><span class="n">OutLifetimeProps</span><span class="p">);</span>
+
+    <span class="n">DOREPLIFETIME</span><span class="p">(</span><span class="n">AReplicatedActor</span><span class="p">,</span> <span class="n">bFlag</span><span class="p">);</span>
+    <span class="n">DOREPLIFETIME</span><span class="p">(</span><span class="n">AReplicatedActor</span><span class="p">,</span> <span class="n">IntegerArray</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Getting_An_Event_When_Your_Property_Is_Replicated">
+        Getting An Event When Your Property Is Replicated
+       </span>
+      </h3>
+      <p>
+       If you need to know when you get an update to the value of a property from the server you can use ReplicatedUsing. NOTE: The event is not triggered on the server. The example code handles this case:
+      </p>
+      <p>
+       ReplicatedActor.h
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+<span class="cp">#include</span> <span class="cpf">"Core.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"ReplicatedActor.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">AReplicatedActor</span> <span class="o">:</span> <span class="k">public</span> <span class="n">AActor</span>
+<span class="p">{</span>
+    <span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+
+<span class="k">public</span><span class="o">:</span>
+
+    <span class="kt">void</span> <span class="n">ServerSetFlag</span><span class="p">();</span>
+
+    <span class="cm">/** A Replicated Boolean Flag */</span>
+    <span class="n">UPROPERTY</span><span class="p">(</span><span class="n">ReplicatedUsing</span><span class="o">=</span><span class="n">OnRep_Flag</span><span class="p">)</span>
+    <span class="n">uint32</span> <span class="nl">bFlag</span><span class="p">:</span><span class="mi">1</span><span class="p">;</span>
+
+    <span class="cm">/** A Replicated Array Of Integers */</span>
+    <span class="n">UPROPERTY</span><span class="p">(</span><span class="n">Replicated</span><span class="p">)</span>
+    <span class="n">TArray</span><span class="o">&lt;</span><span class="n">uint32</span><span class="o">&gt;</span> <span class="n">IntegerArray</span><span class="p">;</span>
+
+<span class="k">private</span><span class="o">:</span>
+
+    <span class="n">UFUNCTION</span><span class="p">()</span>
+    <span class="kt">void</span> <span class="n">OnRep_Flag</span><span class="p">();</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       ReplicatedActor.cpp:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"ReplicatedActor.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"UnrealNetwork.h"</span><span class="cp"></span>
+<span class="n">AReplicatedActor</span><span class="o">::</span><span class="n">AReplicatedActor</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span>
+<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">bReplicates</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AReplicatedActor</span><span class="o">::</span><span class="n">ServerSetFlag</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">HasAuthority</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">bFlag</span><span class="p">)</span> <span class="c1">// Ensure Role == ROLE_Authority</span>
+    <span class="p">{</span>
+        <span class="n">bFlag</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="n">OnRep_Flag</span><span class="p">();</span> <span class="c1">// Run locally since we are the server this won't be called automatically.</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AReplicatedActor</span><span class="o">::</span><span class="n">OnRep_Flag</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="c1">// When this is called, bFlag already contains the new value. This</span>
+    <span class="c1">// just notifies you when it changes.</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AReplicatedActor</span><span class="o">::</span><span class="n">GetLifetimeReplicatedProps</span><span class="p">(</span><span class="n">TArray</span><span class="o">&lt;</span> <span class="n">FLifetimeProperty</span> <span class="o">&gt;</span> <span class="o">&amp;</span> <span class="n">OutLifetimeProps</span><span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+    <span class="n">Super</span><span class="o">::</span><span class="n">GetLifetimeReplicatedProps</span><span class="p">(</span><span class="n">OutLifetimeProps</span><span class="p">);</span>
+
+    <span class="n">DOREPLIFETIME</span><span class="p">(</span><span class="n">AReplicatedActor</span><span class="p">,</span> <span class="n">bFlag</span><span class="p">);</span>
+    <span class="n">DOREPLIFETIME</span><span class="p">(</span><span class="n">AReplicatedActor</span><span class="p">,</span> <span class="n">IntegerArray</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Function_Call_Replication">
+        Function Call Replication
+       </span>
+      </h2>
+      <p>
+       One of the most powerful features of Unreal networking is the ability to call functions remotely. Any UFUNCTION() decorated method can be set to replicate and execute on client or server instances of the object. It is important to understand networking roles because they define the semantics by which remote function calls work.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Types_of_remote_function_calls">
+        Types of remote function calls
+       </span>
+      </h3>
+      <ul>
+       <li>
+        Server - The function will execute on the server version of the object ONLY. An object must have ROLE_Authority or ROLE_AutonomousProxy to execute this method. An object with any other networking role won't do anything. NOTE: Functions marked as Server must also be marked as WithValidation and implement a validate function. This lets you do cheat prevention if desired, otherwise an empty method that just returns true is typical.
+       </li>
+       <li>
+        Client - The function will execute on the client that has a version of the object with ROLE_AutonomousProxy (which is another way of saying whatever Client has a version of this object is allowed to call Server methods on the object, and is typically known as the client that "Owns" this object). The only ROLE_AutonomousProxy objects that exist in Unreal are client instances of PlayerControllers.
+       </li>
+       <li>
+        NetMulticast - The function will execute on all clients that have an instance of the object. Only an object with ROLE_Authority can execute this function, any other networking role won't do anything.
+       </li>
+      </ul>
+      <h3>
+       <span class="mw-headline" id="Quick_Review_Of_Roles">
+        Quick Review Of Roles
+       </span>
+      </h3>
+      <ul>
+       <li>
+        ROLE_Authority - An object with ROLE_Authority (HasAuthority() will return true) is considered the authoritative state of an object. When it calls UFUNCTION() decorated methods that are marked to execute as Server, Client, or Multicast those functions will be replicated accordinly.
+       </li>
+       <li>
+        ROLE_AutonomousProxy - An object with this role can call UFUNCTION() decorated methods that are marked as Server.
+       </li>
+      </ul>
+      <p>
+       An object with a role other than ROLE_Authority or ROLE_AutonomousProxy cannot call replicated methods (if they do they will be ignored).
+      </p>
+      <h3>
+       <span class="mw-headline" id="Reliable_vs_Unreliable_Function_Call_Replication">
+        Reliable vs Unreliable Function Call Replication
+       </span>
+      </h3>
+      <p>
+       A replicated UFUNCTION() can replicate reliably or unreliably. This simply means that an unreliable method call may not be executed under severe network stress. Don't mark things as unreliable that have to happen, but this is a good idea to do for non-critical effects since it theoretically might make the game play better under network stress.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Remote_Function_Call_Examples">
+        Remote Function Call Examples
+       </span>
+      </h3>
+      <p>
+       ReplicatedActor.h
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+<span class="cp">#include</span> <span class="cpf">"Core.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"ReplicatedActor.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">AReplicatedActor</span> <span class="o">:</span> <span class="k">public</span> <span class="n">AActor</span>
+<span class="p">{</span>
+    <span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+
+<span class="k">public</span><span class="o">:</span>
+
+<span class="c1">// NOTE: all functions can have arguments, they will be replicated automatically over the network.</span>
+<span class="c1">// NOTE: UObject based classes (or derivatives) should be passed by pointer (*) and will correctly</span>
+<span class="c1">// address the version of that object on the receiving client or server (unless that object is not</span>
+<span class="c1">// replicated, in which case the pointer will be NULL).</span>
+
+    <span class="n">UFUNCTION</span><span class="p">(</span><span class="n">Server</span><span class="p">,</span> <span class="n">Reliable</span><span class="p">,</span> <span class="n">WithValidation</span><span class="p">)</span>
+    <span class="kt">void</span> <span class="n">Server_ReliableFunctionCallThatRunsOnServer</span><span class="p">();</span>
+
+    <span class="n">UFUNCTION</span><span class="p">(</span><span class="n">Client</span><span class="p">,</span> <span class="n">Reliable</span><span class="p">)</span>
+    <span class="kt">void</span> <span class="n">Client_ReliableFunctionCallThatRunsOnOwningClientOnly</span><span class="p">();</span>
+
+    <span class="n">UFUNCTION</span><span class="p">(</span><span class="n">NetMulticast</span><span class="p">,</span> <span class="n">Unreliable</span><span class="p">)</span>
+    <span class="kt">void</span> <span class="n">Client_UnreliableFunctionCallThatRunsOnAllClients</span><span class="p">();</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       ReplicatedActor.cpp:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"ReplicatedActor.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"UnrealNetwork.h"</span><span class="cp"></span>
+<span class="n">AReplicatedActor</span><span class="o">::</span><span class="n">AReplicatedActor</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span>
+<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">bReplicates</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AReplicatedActor</span><span class="o">::</span><span class="n">Server_ReliableFunctionCallThatRunsOnServer_Implementation</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="c1">// Do something here that modifies game state.</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">AReplicatedActor</span><span class="o">::</span><span class="n">Server_ReliableFunctionCallThatRunsOnServer_Validate</span><span class="p">()</span>
+<span class="p">{</span>
+   <span class="c1">// Optionally validate the request and return false if the function should not be run.</span>
+   <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AReplicatedActor</span><span class="o">::</span><span class="n">Client_ReliableFunctionCallThatRunsOnOwningClientOnly</span><span class="p">()</span>
+<span class="p">{</span>
+   <span class="c1">// Do something here to affect the client. This method was called by the server ONLY.</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AReplicatedActor</span><span class="o">::</span><span class="n">Client_UnreliableFunctionCallThatRunsOnAllClients_Implementation</span><span class="p">()</span>
+<span class="p">{</span>
+   <span class="c1">// Do something here to affect the client. This method was called by the server ONLY.</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Tips_For_Bandwidth_and_Robustness">
+        Tips For Bandwidth and Robustness
+       </span>
+      </h3>
+      <p>
+       There is a lot of flexibility when it comes to what you replicate and how you replicate it.
+      </p>
+      <ul>
+       <li>
+        When possible use an event concept to replicate lots of state to clients with a single replicated method call. For example, instead of setting replicated properties and calling multiple functions to tell a client to set the position of an effect, spawn an explosion, and then play a sound (conceptually three different things) you can encapsulate all of this as one method call: Client_ProcessExplosion(const FVector&amp; Location) that can be written to spawn explosion actors locally.
+       </li>
+       <li>
+        Going along with the previous tip, don't replicate objects that don't need to be. Explosions, sounds, ragdolls, and particle effects don't need to be marked as replicated, instead have a single replicated method that tells clients to Spawn() those Actors locally since they don't modify game state when an event happens.
+       </li>
+       <li>
+        Use Unreal's concepts of network roles to your advantage. This usually means only your player's PlayerController can call Server functions. Be careful about what you send. Instead of letting a player tell the server their position explicitly, consider having the PlayerController send player commands (like move left, up, down) and simulate that state on both client and server and let the server update the player's position as a replicated property. This avoids an entire class of cheats (like speed hacks etc).
+       </li>
+       <li>
+        Remember all replicated properties are sent reliably.
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="Replication_of_Actor_Components_and_Subobjects">
+        Replication of Actor Components and Subobjects
+       </span>
+      </h2>
+      <p>
+       The Actor class provides built-in support for replicating components (classes derived from UActorComponent). If you want a component on your actor to replicate you should call SetReplicates(true) on the specific component in your class constructor after calling PCIP.CreateDefaultSubobject() to create the component.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Advanced:_Generic_replication_of_Actor_Subobjects">
+        Advanced: Generic replication of Actor Subobjects
+       </span>
+      </h2>
+      <p>
+       Unreal can also replicate arbitrary UObject's that you have in your actor and it's surprisingly easy to do so:
+      </p>
+      <p>
+       First create the object class that you want to replicate over the network. It should override UObject::IsSupportedForNetworking(). Just like any normal object it should also contain some replicated properties or functions, and implement GetLifetimeReplicatedProps():
+      </p>
+      <h3>
+       <span class="mw-headline" id="ReplicatedSubobject_Class">
+        ReplicatedSubobject Class
+       </span>
+      </h3>
+      <p>
+       ReplicatedSubobject.h
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+<span class="cp">#include</span> <span class="cpf">"Core.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"ReplicatedSubobject.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">UReplicatedSubobject</span> <span class="o">:</span> <span class="k">public</span> <span class="n">UObject</span>
+<span class="p">{</span>
+    <span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+
+<span class="k">public</span><span class="o">:</span>
+
+    <span class="n">UPROPERTY</span><span class="p">(</span><span class="n">Replicated</span><span class="p">)</span>
+    <span class="n">uint32</span> <span class="nl">bReplicatedFlag</span><span class="p">:</span><span class="mi">1</span><span class="p">;</span>
+
+    <span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">IsSupportedForNetworking</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       ReplicatedSubobject.cpp:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"UnrealNetwork.h"</span><span class="cp"></span>
+<span class="n">UReplicatedSubobject</span><span class="o">::</span><span class="n">UReplicatedSubobject</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span>
+<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">UReplicatedSubobject</span><span class="o">::</span><span class="n">GetLifetimeReplicatedProps</span><span class="p">(</span><span class="n">TArray</span><span class="o">&lt;</span> <span class="n">FLifetimeProperty</span> <span class="o">&gt;</span> <span class="o">&amp;</span> <span class="n">OutLifetimeProps</span><span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+    <span class="n">Super</span><span class="o">::</span><span class="n">GetLifetimeReplicatedProps</span><span class="p">(</span><span class="n">OutLifetimeProps</span><span class="p">);</span>
+
+    <span class="n">DOREPLIFETIME</span><span class="p">(</span><span class="n">UReplicatedSubobject</span><span class="p">,</span> <span class="n">bReplicatedFlag</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Actor_Code_For_Subobject_Support">
+        Actor Code For Subobject Support
+       </span>
+      </h3>
+      <p>
+       On the Actor side we need to implement AActor::ReplicateSubobjects() and if we want to, we can store our custom object in a UPROPERTY just like any other object! The only "gotcha" here is that the object must be contained within the Actor (i.e. when it is constructed the new objects Outer must be the Actor).
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+<span class="cp">#include</span> <span class="cpf">"Core.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"ReplicatedSubobject.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"AReplicatedActor.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">AReplicatedActor</span> <span class="o">:</span> <span class="k">public</span> <span class="n">AActor</span>
+<span class="p">{</span>
+    <span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+
+<span class="k">public</span><span class="o">:</span>
+
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">PostInitializeComponents</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">ReplicateSubobjects</span><span class="p">(</span><span class="k">class</span> <span class="nc">UActorChannel</span> <span class="o">*</span><span class="n">Channel</span><span class="p">,</span> <span class="k">class</span> <span class="nc">FOutBunch</span> <span class="o">*</span><span class="n">Bunch</span><span class="p">,</span> <span class="n">FReplicationFlags</span> <span class="o">*</span><span class="n">RepFlags</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+
+    <span class="cm">/** A Replicated Subobject */</span>
+    <span class="n">UPROPERTY</span><span class="p">(</span><span class="n">Replicated</span><span class="p">)</span>
+    <span class="n">UReplicatedSubobject</span><span class="o">*</span> <span class="n">Subobject</span><span class="p">;</span>
+
+<span class="k">private</span><span class="o">:</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       AReplicatedActor.cpp:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"ReplicatedActor.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"UnrealNetwork.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Engine/ActorChannel.h"</span><span class="cp"></span>
+<span class="n">AReplicatedActor</span><span class="o">::</span><span class="n">AReplicatedActor</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span>
+<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">bReplicates</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AReplicatedActor</span><span class="o">::</span><span class="n">PostInitializeComponents</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">Super</span><span class="o">::</span><span class="n">PostInitializeComponents</span><span class="p">();</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">HasAuthority</span><span class="p">())</span>
+    <span class="p">{</span>
+        <span class="c1">// Objects only replicate from server to client. If we didn't guard this</span>
+        <span class="c1">// the client would create the object just fine but it would get replaced</span>
+        <span class="c1">// by the server version (more accurately the property would be replaced to</span>
+        <span class="c1">// point to the version from the server. The one the client allocated would</span>
+        <span class="c1">// eventually be garbage collected.</span>
+        <span class="n">Subobject</span> <span class="o">=</span> <span class="n">NewObject</span><span class="o">&lt;</span><span class="n">UReplicatedObject</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">);</span> <span class="c1">// NOTE: Very important, objects Outer must be our Actor!</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">AReplicatedActor</span><span class="o">::</span><span class="n">ReplicateSubobjects</span><span class="p">(</span><span class="k">class</span> <span class="nc">UActorChannel</span> <span class="o">*</span><span class="n">Channel</span><span class="p">,</span> <span class="k">class</span> <span class="nc">FOutBunch</span> <span class="o">*</span><span class="n">Bunch</span><span class="p">,</span> <span class="n">FReplicationFlags</span> <span class="o">*</span><span class="n">RepFlags</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">bool</span> <span class="n">WroteSomething</span> <span class="o">=</span> <span class="n">Super</span><span class="o">::</span><span class="n">ReplicateSubobjects</span><span class="p">(</span><span class="n">Channel</span><span class="p">,</span> <span class="n">Bunch</span><span class="p">,</span> <span class="n">RepFlags</span><span class="p">);</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="n">Subobject</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">WroteSomething</span> <span class="o">|=</span> <span class="n">Channel</span><span class="o">-&gt;</span><span class="n">ReplicateSubobject</span><span class="p">(</span><span class="n">Subobject</span><span class="p">,</span> <span class="o">*</span><span class="n">Bunch</span><span class="p">,</span> <span class="o">*</span><span class="n">RepFlags</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">WroteSomething</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AReplicatedActor</span><span class="o">::</span><span class="n">GetLifetimeReplicatedProps</span><span class="p">(</span><span class="n">TArray</span><span class="o">&lt;</span> <span class="n">FLifetimeProperty</span> <span class="o">&gt;</span> <span class="o">&amp;</span> <span class="n">OutLifetimeProps</span><span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+    <span class="n">Super</span><span class="o">::</span><span class="n">GetLifetimeReplicatedProps</span><span class="p">(</span><span class="n">OutLifetimeProps</span><span class="p">);</span>
+
+    <span class="n">DOREPLIFETIME</span><span class="p">(</span><span class="n">AReplicatedActor</span><span class="p">,</span> <span class="n">Subobject</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Notes">
+        Notes
+       </span>
+      </h3>
+      <p>
+       As if by magic, on clients their Subobject UPROPERTY will contain a valid pointer to the newly replicated object after it is received from the server. The UObject derived class can contain replicated functions and properties just like any other object (and can implement GetLifetimeReplicatedProps)
+      </p>
+      <h3>
+       <span class="mw-headline" id="Detailed_Explanation">
+        Detailed Explanation
+       </span>
+      </h3>
+      <p>
+       There is some awesomeness that is going on here that is worth peeking into to get an idea of the wizardry at work here.
+      </p>
+      <p>
+       Unreal networking is built around a few key classes and concepts. The first is an ActorChannel which is the connection to the server or client for transmitting data about the replication of an actor. The next piece is an FRepLayout contained inside the NetDriver. When Unreal calls your GetLifetimeReplicatedProps it does so only on the first replicated object of an instance of a specific UClass! The call to GetLifetimeReplicatedProps populates an FRepLayout object with the specific member fields that must be replicated for a particular UClass. This is why it's important not to have any conditionals in your GetLifetimeReplicatedProps that are based on object state.
+      </p>
+      <p>
+       Another part of the puzzle here is network GUIDs. Unreal generates a GUID for an instance of an object and stores objects in a replication map based on GUID. Objects are sent with a GUID identifier over the network. When Unreal replicates the value of a UPROPERTY that is a UObject* it is really replicating the GUID of that object, not the pointer address.
+      </p>
+      <p>
+       So what's happening here is that Unreal replicates your actor and then your subobject over the wire. On the client side they are received and your subobject is constructed with the replicated data. Then your actor property is received with the GUID of your newly constructed subobject and the property is filled in with the address of your subobject. Neat!
+      </p>
+      <h3>
+       <span class="mw-headline" id="Unreal.27s_Type_System">
+        Unreal's Type System
+       </span>
+      </h3>
+      <p>
+       The real magic that happens with Unreal's network replication is enabled because it is able to generate reflection meta-data for all of your objects which allows them to get the types and sizes of the fields you want replicated as if by "magic".
+      </p>
+      <p>
+       Unreal's type system is built from a custom C++ pre-processor (the UnrealHeaderTool) which scans your C++ codebase and generates reflection meta-data. For those uninitiated in the concept of language reflection (a feature common in C# and Java) it is the ability for code written in a language to perform "introspection" on itself and other types. This means that you can write code that programmatically discovers types, functions, function-parameters, variables, properties and other meta-data. This is not the same as polymorphism. Polymorphism depends on the compiler knowing what the base-type is at compile time (i.e. statically). With reflection your code never has to know anything about the types it is working with at compile time.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Related_Wiki_Tutorials">
+        Related Wiki Tutorials
+       </span>
+      </h2>
+      <p>
+      </p>
+      <p>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Epic_Tutorials">
+        Epic Tutorials
+       </span>
+      </h2>
+      <p>
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Gameplay/Networking/Replication/index.html" rel="nofollow">
+        Replication
+       </a>
+      </p>
+      <p>
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Gameplay/Networking/Replication/Components/index.html" rel="nofollow">
+        Component Replication
+       </a>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

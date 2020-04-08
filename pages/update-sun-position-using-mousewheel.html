@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Update sun position using mousewheel - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Update sun position using mousewheel
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       In this tutorial we will create a Blueprint setup (Level Blueprint) in which you can update the sun position (both pitch and yaw) using mouse scroll up and down. To update the pitch you'll use Mouse Scroll Up/Down and with CTRL pressed you can update the Yaw. When ALT is pressed you can speed up this movement.
+      </p>
+      <p>
+       First add Movable Directional Light in your viewport
+      </p>
+      <h2>
+       <span class="mw-headline" id="Level_Blueprint">
+        Level Blueprint
+       </span>
+      </h2>
+      <p>
+       Open your Level Blueprint and create a new Rotator variable and name it
+       <i>
+        SunRotation
+       </i>
+       . When you begin play, the directional light rotation from your level is saved to this variable so you can freely move the sun inside your viewport and still update it at runtime.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="StepI.jpg" class="thumbimage" height="522" src="../assets/update-sun-position-using-mousewheel/0.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       Now create a new float variable with name
+       <i>
+        RotationValue
+       </i>
+       . We will later use this variable to update suns rotation.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="RJ2040 SunBP StepRotationValue.jpg" class="thumbimage" height="281" src="../assets/update-sun-position-using-mousewheel/1.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       Then create a new
+       <i>
+        Event BeginPlay
+       </i>
+       node and connect like this. 
+NOTE: I am using a Blueprinted DirectionalLight. You may not want to do this. Instead you can simply add a reference to your Sun by selecting it in viewport and right click in Level Blueprint and select Add Reference to Sun.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="RJ2040 SunBP EventBeginPlay.jpg" class="thumbimage" height="122" src="../assets/update-sun-position-using-mousewheel/2.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       Now create series of nodes as shown below. Once i created the nodes i collapsed them all.
+NOTE: You may not want to add Print Node. I added it just for debugging only.
+      </p>
+      <ul class="gallery mw-gallery-traditional">
+       <li class="gallerybox" style="width: 155px">
+        <div style="width: 155px">
+         <div class="thumb" style="width: 150px;">
+          <div style="margin:46px auto;">
+           <img alt="RJ2040 SunBP RotationADD NotCollapsed.jpg" class="" height="58" src="../assets/update-sun-position-using-mousewheel/3.jpg" width="120"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 155px">
+        <div style="width: 155px">
+         <div class="thumb" style="width: 150px;">
+          <div style="margin:51.5px auto;">
+           <img alt="RJ2040 SunBP RotationADD NotCollapsed2.jpg" class="" height="47" src="../assets/update-sun-position-using-mousewheel/4.jpg" width="120"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       Now you need to create two events for MouseScrollUP and for one of them make sure to enable Control modifier. Do the same for MouseScrollDown. Then connect the output rotation to Set Rotation node (make sure the target is connected to your sun).
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="RJ2040 SunBP Connections.jpg" class="thumbimage" height="236" src="../assets/update-sun-position-using-mousewheel/5.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       Thats it! Jump into game and use your mouse wheel to dynamically update Sun position.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Make_the_sun_go_faster">
+        Make the sun go faster
+       </span>
+      </h2>
+      <p>
+       We use the
+       <i>
+        bAltPressed
+       </i>
+       boolean variable to see if the user has pressed the Alt Key. We will use this variable inside those collapsed nodes to check if we want the sun to move faster or not. Setup like this somewhere inside Level Blueprint.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="TJ2040 SunBP bAltPressed.jpg" class="thumbimage" height="196" src="../assets/update-sun-position-using-mousewheel/6.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

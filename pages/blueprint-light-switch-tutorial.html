@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Blueprint Light Switch Tutorial - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Blueprint Light Switch Tutorial
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <h1>
+       <span class="mw-headline" id="Scene_Setup">
+        Scene Setup
+       </span>
+      </h1>
+      <p>
+       1. Begin with the
+       <b>
+        Blank With Starter Content
+       </b>
+       project.
+      </p>
+      <p>
+       2. Select PointLight1, the light attached to the light fixture hanging from the ceiling.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:402px;">
+        <img alt="Selected pointlight.Jpeg" class="thumbimage" height="373" src="../assets/blueprint-light-switch-tutorial/0.jpg" width="400"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br/>
+       3. In the
+       <b>
+        Details
+       </b>
+       panel, uncheck
+       <b>
+        Visible
+       </b>
+       under
+       <b>
+        Rendering
+       </b>
+       to turn the light off.
+      </p>
+      <p>
+       4. In the Modes tab, select
+       <b>
+        Place
+       </b>
+       and then
+       <b>
+        Volumes
+       </b>
+       .
+      </p>
+      <p>
+       5. Scroll down to
+       <b>
+        Trigger Volume
+       </b>
+       , and then drag and drop a
+       <b>
+        Trigger Volume
+       </b>
+       into the world.
+      </p>
+      <p>
+       6. Scale the TriggerVolume until it fills the inside of the room.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:402px;">
+        <img alt="Placedtriggervolume.Jpeg" class="thumbimage" height="371" src="../assets/blueprint-light-switch-tutorial/1.jpg" width="400"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <h1>
+       <span class="mw-headline" id="Blueprint">
+        Blueprint
+       </span>
+      </h1>
+      <p>
+       Time to create logic in your Level Blueprint, so that you can have the light turn on when you enter the room, and turn off when you leave the room.
+      </p>
+      <p>
+       <br/>
+       1. In the
+       <b>
+        Details
+       </b>
+       tab for the TriggerVolume, scroll down to the
+       <b>
+        Blueprint
+       </b>
+       heading.
+      </p>
+      <p>
+       2. In the
+       <b>
+        Add Level Events for TriggerVolume
+       </b>
+       dropdown, select
+       <b>
+        Add On Actor Begin Overlap
+       </b>
+       .
+      </p>
+      <p>
+       The
+       <b>
+        Level Blueprint
+       </b>
+       will open, and an
+       <b>
+        Event
+       </b>
+       node for your TriggerVolume will be added automatically.
+      </p>
+      <p>
+       3. We want to toggle visibility of the light when you enter the room. We need a reference to the light, so go back to the Level Editor and select PointLight1 again.
+      </p>
+      <p>
+       4. Return to the Level Blueprint.
+      </p>
+      <p>
+       5. Right-click in an empty area of the graph, and select
+       <b>
+        Add Reference to PointLight1
+       </b>
+       (Create a Reference to) in the context menu.
+      </p>
+      <p>
+       6. Click and drag from the blue pin on the
+       <b>
+        PointLight1
+       </b>
+       reference node into an empty area of the graph to summon the context menu.
+      </p>
+      <p>
+       7. Search for
+       <b>
+        Visibility
+       </b>
+       in the context menu, and select
+       <b>
+        Toggle Visibility
+       </b>
+       .
+      </p>
+      <p>
+       8. Now we need to connect the
+       <b>
+        On Actor Begin Overlap
+       </b>
+       node to the
+       <b>
+        Toggle Visibility
+       </b>
+       node, so that the event execution will cause the
+       <b>
+        Toggle Visibility
+       </b>
+       node to execute. Click on the output pin of On Actor Begin Overlap and drag a wire to the input execution pin of
+       <b>
+        Toggle Visibility
+       </b>
+       .
+      </p>
+      <p>
+       9. Finally, we want the light to turn off when we leave the room. Right-click on the
+       <b>
+        On Actor Begin Overlap
+       </b>
+       node and select
+       <b>
+        Find Actor in Level
+       </b>
+       . This will select the TriggerVolume in the SceneOutliner.
+      </p>
+      <p>
+       10. Right-click on
+       <b>
+        TriggerVolume3
+       </b>
+       in the
+       <b>
+        Scene Outliner
+       </b>
+       .
+      </p>
+      <p>
+       11. Under
+       <b>
+        Level Blueprint Events
+       </b>
+       , hover over Add Event to expand the menu, then select
+       <b>
+        On Actor End Overlap
+       </b>
+       . The
+       <b>
+        Level Blueprint
+       </b>
+       will open, and an
+       <b>
+        Event
+       </b>
+       node for your TriggerVolume will be added automatically.
+      </p>
+      <p>
+       12. Click on the output pin of
+       <b>
+        On Actor End Overlap
+       </b>
+       and drag a wire to the input execution pin of
+       <b>
+        Toggle Visibility
+       </b>
+       . You may want to click on the
+       <b>
+        On Actor End Overlap
+       </b>
+       and drag it within the graph so it is in a better location.
+      </p>
+      <p>
+       13. Play In Editor to test your new Blueprint logic!
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:602px;">
+        <img alt="" class="thumbimage" height="404" src="../assets/blueprint-light-switch-tutorial/2.jpg" width="600"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Final Blueprint layout
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

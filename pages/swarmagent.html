@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   中文 SwarmAgent 常见问题和解决 - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    中文 SwarmAgent 常见问题和解决
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <br/>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#.E5.85.B3.E4.BA.8E.E6.9C.AC.E6.8C.87.E5.8D.97">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           <b>
+            关于本指南
+           </b>
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Swarm_Agent_.E6.96.87.E6.A1.A3.E5.92.8C.E5.85.B6.E4.BB.96.E9.93.BE.E6.8E.A5">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Swarm Agent 文档和其他链接
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#.E5.BB.BA.E8.AE.AE.E5.92.8C.E6.8A.80.E5.B7.A7">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           <b>
+            建议和技巧
+           </b>
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#.E4.BD.BF.E7.94.A8.E8.99.9A.E5.B9.BB.E5.BC.95.E6.93.8E_4_.E4.B8.AD.E7.9A.84.E5.85.89.E7.85.A7.E7.B3.BB.E7.BB.9F_.28Lightmass.29_.E7.9A.84.E4.B8.80.E8.88.AC.E6.8A.80.E5.B7.A7">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             使用虚幻引擎 4 中的光照系统 (Lightmass) 的一般技巧
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-5">
+             <a href="#.E7.BC.A9.E7.9F.AD.E6.9E.84.E5.BB.BA.E6.97.B6.E9.97.B4">
+              <span class="tocnumber">
+               2.1.1
+              </span>
+              <span class="toctext">
+               缩短构建时间
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-6">
+             <a href="#.E6.9E.84.E5.BB.BA.E5.A4.A7.E5.9E.8B.E4.B8.96.E7.95.8C">
+              <span class="tocnumber">
+               2.1.2
+              </span>
+              <span class="toctext">
+               构建大型世界
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#.E5.B8.B8.E8.A7.81.E9.97.AE.E9.A2.98.E5.8F.8A.E8.A7.A3.E7.AD.94">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           <b>
+            常见问题及解答
+           </b>
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#.E2.80.9C.E5.85.89.E7.85.A7.E7.B3.BB.E7.BB.9F.E5.B4.A9.E6.BA.83.E2.80.9D.E5.B8.B8.E8.A7.81.E9.94.99.E8.AF.AF.E6.B6.88.E6.81.AF">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             “光照系统崩溃”常见错误消息
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-9">
+             <a href="#.E2.80.9C.E8.80.97.E5.B0.BD.E5.86.85.E5.AD.98.E2.80.9D">
+              <span class="tocnumber">
+               3.1.1
+              </span>
+              <span class="toctext">
+               “耗尽内存”
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-10">
+             <a href="#.E2.80.9C.E6.96.AD.E8.A8.80.E5.A4.B1.E8.B4.A5.EF.BC.9A.28Index.3E.3D0.29.26.28Index.3CArrayNum.29.29.E2.80.9D">
+              <span class="tocnumber">
+               3.1.2
+              </span>
+              <span class="toctext">
+               “断言失败：(Index&gt;=0)&amp;(Index&lt;ArrayNum))”
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#.E4.B8.BA.E4.BB.80.E4.B9.88.E6.88.91.E7.9A.84.E7.85.A7.E6.98.8E.E6.9E.84.E5.BB.BA.E5.81.9C.E6.BB.9E.E5.9C.A8_.5BX.5D.25.EF.BC.8C.E6.88.96.E8.80.85.E4.B8.BA.E4.BB.80.E4.B9.88.E6.9E.84.E5.BB.BA.E7.85.A7.E6.98.8E.E5.A6.82.E6.AD.A4.E8.80.97.E6.97.B6.EF.BC.9F">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             为什么我的照明构建停滞在 [X]%，或者为什么构建照明如此耗时？
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-12">
+           <a href="#.E4.B8.BA.E4.BB.80.E4.B9.88.E5.9C.A8.E6.9E.84.E5.BB.BA.E7.85.A7.E6.98.8E.E6.97.B6_Swarm_Agent_.E4.BD.BF.E7.94.A8.E4.BA.86_100.25_.E7.9A.84_CPU.EF.BC.9F">
+            <span class="tocnumber">
+             3.3
+            </span>
+            <span class="toctext">
+             为什么在构建照明时 Swarm Agent 使用了 100% 的 CPU？
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-13">
+           <a href="#.E7.85.A7.E6.98.8E.E8.AE.BE.E7.BD.AE.E4.B8.BA.E2.80.9C.E5.8F.AF.E7.A7.BB.E5.8A.A8.2F.E5.8A.A8.E6.80.81.E2.80.9D.E6.97.B6.E4.B8.BA.E4.BB.80.E4.B9.88.E6.B2.A1.E6.9C.89.E4.BD.BF.E7.94.A8_Swarm_Agent.EF.BC.9F">
+            <span class="tocnumber">
+             3.4
+            </span>
+            <span class="toctext">
+             照明设置为“可移动/动态”时为什么没有使用 Swarm Agent？
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-14">
+           <a href="#.E5.A6.82.E4.BD.95.E4.BD.BF.E7.94.A8_GPU_.E6.9E.84.E5.BB.BA.E7.85.A7.E6.98.8E.EF.BC.9F.E6.88.96.E8.80.85.E6.9E.84.E5.BB.BA.E7.85.A7.E6.98.8E.E6.97.B6.E4.B8.BA.E4.BD.95.E6.B2.A1.E6.9C.89.E4.BD.BF.E7.94.A8.E6.88.91.E7.9A.84_GPU.EF.BC.9F">
+            <span class="tocnumber">
+             3.5
+            </span>
+            <span class="toctext">
+             如何使用 GPU 构建照明？或者构建照明时为何没有使用我的 GPU？
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-15">
+           <a href="#.E5.A6.82.E4.BD.95.E8.8E.B7.E5.8F.96.E6.88.96.E6.9F.A5.E7.9C.8B_Swarm_Agent_.E6.97.A5.E5.BF.97.EF.BC.9F">
+            <span class="tocnumber">
+             3.6
+            </span>
+            <span class="toctext">
+             如何获取或查看 Swarm Agent 日志？
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-16">
+           <a href="#.E5.A6.82.E4.BD.95.E2.80.9C.E6.B8.85.E7.A9.BA.E2.80.9D.E5.92.8C.E2.80.9C.E9.AA.8C.E8.AF.81.E2.80.9DSwarm_Agent">
+            <span class="tocnumber">
+             3.7
+            </span>
+            <span class="toctext">
+             如何“清空”和“验证”Swarm Agent
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-17">
+           <a href="#.E6.88.91.E7.9A.84_Swarm_.E6.95.B0.E6.8D.AE.E7.BC.93.E5.AD.98.E5.AD.98.E5.82.A8.E5.9C.A8.E5.93.AA.E9.87.8C.EF.BC.8C.E6.88.91.E5.8F.AF.E4.BB.A5.E6.89.BE.E5.88.B0.E5.AE.83.E7.9A.84.E4.BD.8D.E7.BD.AE.E5.90.97.EF.BC.9F">
+            <span class="tocnumber">
+             3.8
+            </span>
+            <span class="toctext">
+             我的 Swarm 数据缓存存储在哪里，我可以找到它的位置吗？
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-18">
+           <a href="#.E2.80.9C.E7.85.A7.E6.98.8E.E6.9E.84.E5.BB.BA.E5.A4.B1.E8.B4.A5.E3.80.82Swarm_Agent_.E6.9C.AA.E8.83.BD.E5.90.AF.E5.8A.A8.E2.80.9D.E8.A1.A8.E7.A4.BA.E4.BB.80.E4.B9.88.EF.BC.8C.E6.88.91.E8.AF.A5.E5.A6.82.E4.BD.95.E8.A7.A3.E5.86.B3.E8.BF.99.E4.B8.AA.E9.97.AE.E9.A2.98.EF.BC.9F">
+            <span class="tocnumber">
+             3.9
+            </span>
+            <span class="toctext">
+             “照明构建失败。Swarm Agent 未能启动”表示什么，我该如何解决这个问题？
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-19">
+           <a href="#.E5.A6.82.E4.BD.95.E5.B0.86_Swarm_Agent_.E8.AE.BE.E7.BD.AE.E4.B8.BA.E6.9C.80.E9.AB.98.E4.BC.98.E5.85.88.E7.BA.A7.EF.BC.9F">
+            <span class="tocnumber">
+             3.10
+            </span>
+            <span class="toctext">
+             如何将 Swarm Agent 设置为最高优先级？
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-20">
+           <a href="#.E4.B8.BA.E4.BB.80.E4.B9.88_Swarm_Agent_.E6.B2.A1.E6.9C.89.E5.90.AF.E5.8A.A8.EF.BC.8C.E6.88.96.E8.80.85.E2.80.9CUnrealLightmass.exe-.E5.BA.94.E7.94.A8.E7.A8.8B.E5.BA.8F.E9.94.99.E8.AF.AF....E2.80.9D.E6.98.AF.E4.BB.80.E4.B9.88.E6.84.8F.E6.80.9D.EF.BC.9F">
+            <span class="tocnumber">
+             3.11
+            </span>
+            <span class="toctext">
+             为什么 Swarm Agent 没有启动，或者“UnrealLightmass.exe-应用程序错误...”是什么意思？
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-21">
+           <a href="#Swarm_Agent_.E5.A4.B1.E8.B4.A5.EF.BC.8C.E5.B9.B6.E5.8F.91.E7.94.9F_IO_.E5.BC.82.E5.B8.B8.E9.94.99.E8.AF.AF">
+            <span class="tocnumber">
+             3.12
+            </span>
+            <span class="toctext">
+             Swarm Agent 失败，并发生 IO 异常错误
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-22">
+           <a href="#Swarm_.E6.97.A5.E5.BF.97.EF.BC.9ASystem.Net.Socket_.E9.94.99.E8.AF.AF.2FSwarm_Agent.2FCoordinator_.E7.AB.AF.E5.8F.A3.E8.A2.AB.E5.85.B6.E4.BB.96.E8.BF.9B.E7.A8.8B.E4.BD.BF.E7.94.A8">
+            <span class="tocnumber">
+             3.13
+            </span>
+            <span class="toctext">
+             Swarm 日志：System.Net.Socket 错误/Swarm Agent/Coordinator 端口被其他进程使用
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id=".E5.85.B3.E4.BA.8E.E6.9C.AC.E6.8C.87.E5.8D.97">
+        <b>
+         关于本指南
+        </b>
+       </span>
+      </h2>
+      <p>
+       本指南旨在介绍使用光照系统 (Lightmass) 在虚幻引擎 4 中构建静态照明的一些最佳实践，并解决执行此类操作时可能遇到的一些常见 Swarm Agent 问题。本指南并不全面，并且会随着引擎版本进行动态更新。
+      </p>
+      <p>
+       Swarm Agent 程序用于处理单个系统的虚幻光照系统 (Lightmass) 计算，也可以通过 Swarm Coordinator 在网络上将其工作负载分配到其他计算机。在大多数情况下，照明构建不使用网络分布的用户不会注意到 Swarm Agent，因为在照明构建完成后，Swarm Agent 会立即启动、执行任务并关闭。
+      </p>
+      <h3>
+       <span class="mw-headline" id="Swarm_Agent_.E6.96.87.E6.A1.A3.E5.92.8C.E5.85.B6.E4.BB.96.E9.93.BE.E6.8E.A5">
+        Swarm Agent 文档和其他链接
+       </span>
+      </h3>
+      <ul>
+       <li>
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Rendering/LightingAndShadows/Lightmass/index.html" rel="nofollow">
+         光照系统 (Lightmass) 全局光照
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="http://udn.epicgames.com/Three/Swarm.html" rel="nofollow">
+         Swarm Agent 文档
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://www.youtube.com/watch?v=WY2z8p6-kg8" rel="nofollow">
+         UDK 联网 Swarm Agent
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://iamsparky.wordpress.com/2010/08/24/tutorial-setting-up-swarm-for-multiple-machines/" rel="nofollow">
+         Brian Goodsell 教程：为多台机器设置 Swarm
+        </a>
+       </li>
+      </ul>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h2>
+       <span class="mw-headline" id=".E5.BB.BA.E8.AE.AE.E5.92.8C.E6.8A.80.E5.B7.A7">
+        <b>
+         建议和技巧
+        </b>
+       </span>
+      </h2>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id=".E4.BD.BF.E7.94.A8.E8.99.9A.E5.B9.BB.E5.BC.95.E6.93.8E_4_.E4.B8.AD.E7.9A.84.E5.85.89.E7.85.A7.E7.B3.BB.E7.BB.9F_.28Lightmass.29_.E7.9A.84.E4.B8.80.E8.88.AC.E6.8A.80.E5.B7.A7">
+        使用虚幻引擎 4 中的光照系统 (Lightmass) 的一般技巧
+       </span>
+      </h3>
+      <h4>
+       <span class="mw-headline" id=".E7.BC.A9.E7.9F.AD.E6.9E.84.E5.BB.BA.E6.97.B6.E9.97.B4">
+        缩短构建时间
+       </span>
+      </h4>
+      <ul>
+       <li>
+        <b>
+         光照系统重要体积 (Lightmass Importance Volume)：
+        </b>
+       </li>
+      </ul>
+      <p>
+       在使用“光照系统重要体积”时，必须知道并理解您可以随意使用这些体积。并不局限于关卡中的单一实例。这些体积背后的理念是聚焦于玩家所在并需要较高质量光照的单个区域中的光子。超出这些体积范围的任何对象只会获得单一光照反射，质量不如体积内生成的照明。通过使用这些体积，可以减少场景所需的计算量，从而帮助提高照明构建。还必须注意的是，这些体积并不能扩展到极限大小。这样会影响使用和用途。
+      </p>
+      <p>
+       有关更多信息，请参阅以下文档：
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Rendering/LightingAndShadows/Lightmass/Basics/index.html#lightmassimportancevolume" rel="nofollow">
+        光照系统基本知识
+       </a>
+      </p>
+      <ul>
+       <li>
+        <b>
+         光照贴图分辨率：
+        </b>
+       </li>
+      </ul>
+      <p>
+       这些分辨率对 Swarm Agent 构建场景所需的时间有重大影响。网格光照贴图分辨率越高，计算并生成这些纹理所需的时间越长。在能够达到满意效果的前提下，最好使用可能的最低分辨率。
+      </p>
+      <p>
+       不建议将所有静态网格都设置为较高分辨率。如果发现必须将某个网格设置为极高分辨率，可能需要考虑将网格细分为多个部分，这样可以更有效地使用光照贴图 UV，或者只需更合理地使用 0,1 UV 空间，重组光照贴图 UV 来达到更好的效果。
+      </p>
+      <ul>
+       <li>
+        <b>
+         植物叶子工具：光照贴图分辨率：
+        </b>
+       </li>
+      </ul>
+      <p>
+       对于使用植物叶子工具放置的实例化静态网格，这些资产将使用静态网格的默认设置的光照贴图分辨率。这在构建照明时很可能会产生警告。最好转至植物叶子工具的“实例设置”并使用较低值 4 或 8 启用光照贴图分辨率。对于实例化静态网格，该值应足以满足需要，这取决于场景中已经绘制的静态网格实例数量。这些实例会根据集群大小汇集到单一光照贴图中。
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="" class="thumbimage" height="456" src="../assets/swarmagent/0.png" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         植物叶子工具：光照贴图分辨率
+        </div>
+       </div>
+      </div>
+      <ul>
+       <li>
+        <b>
+         资产和光线数量：
+        </b>
+       </li>
+      </ul>
+      <p>
+       场景中静止或静态的投射阴影的资产数量和投影光线数量也会计入在使用光照系统时需要的计算数量。这些计算会直接影响 Swarm Agent 需要处理的内容量，本质上影响的是照明构建的时长。
+      </p>
+      <ul>
+       <li>
+        <b>
+         系统规格：
+        </b>
+       </li>
+      </ul>
+      <p>
+       Swarm Agent 是非常占用 CPU 资源的进程，需要执行大量计算。系统规格可能会导致该进程加速或减速，甚至导致光照系统崩溃。快速的 CPU 可以帮助提高计算速度。所需 RAM 量取决于场景大小、光线数量和计算的资产数量。如果耗尽内存，光照系统将会崩溃。这通常会被报告为错误，但仅仅是因为系统设置有一定的局限性。请参阅以上其他提示，帮助减少发生此错误的几率，或者增大系统 RAM。 
+_________________________________________________________________________________________________
+      </p>
+      <h4>
+       <span class="mw-headline" id=".E6.9E.84.E5.BB.BA.E5.A4.A7.E5.9E.8B.E4.B8.96.E7.95.8C">
+        构建大型世界
+       </span>
+      </h4>
+      <p>
+       如果项目要使用较大世界，甚至是包含数千个资产、实例化植物叶子之类的完全开放的世界，通常不建议使用光照系统对此类型的世界构建照明。
+      </p>
+      <p>
+       有人或许会争论道“静态照明性能更好，效果更佳”。的确如此，但有一定的限制。这并不是说静态照明不能用于较大世界，只是不是理想的工具，原因与它用来存储所有生成的光照贴图纹理的内存以及最初用来构建关卡所需的内存量有关。
+      </p>
+      <p>
+       较大的世界和开放世界通常会使用动态照明。这似乎是有点违反常理，因为与动态照明相比，静态照明在运行时是没有开销的。这也是事实，但你不用计算阴影，只需要考虑要为所有这些网格加载的光照贴图纹理。最好主要使用动态照明，然后分析 CPU 和 GPU 是否会出现任何瓶颈，测量性能，优化游戏。
+      </p>
+      <p>
+       有关更多分析信息，请参阅以下文档和 YouTube 支持流媒体视频：
+      </p>
+      <ul>
+       <li>
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Performance/Profiler/index.html" rel="nofollow">
+         文档：测评工具
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Performance/index.html" rel="nofollow">
+         文档：性能与测评
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Performance/GPU/" rel="nofollow">
+         文档：GPU 测评
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://www.youtube.com/watch?v=-csRxRj_zcw" rel="nofollow">
+         支持流媒体视频：渲染最佳实践
+        </a>
+       </li>
+      </ul>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h2>
+       <span class="mw-headline" id=".E5.B8.B8.E8.A7.81.E9.97.AE.E9.A2.98.E5.8F.8A.E8.A7.A3.E7.AD.94">
+        <b>
+         常见问题及解答
+        </b>
+       </span>
+      </h2>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id=".E2.80.9C.E5.85.89.E7.85.A7.E7.B3.BB.E7.BB.9F.E5.B4.A9.E6.BA.83.E2.80.9D.E5.B8.B8.E8.A7.81.E9.94.99.E8.AF.AF.E6.B6.88.E6.81.AF">
+        “光照系统崩溃”常见错误消息
+       </span>
+      </h3>
+      <h4>
+       <span class="mw-headline" id=".E2.80.9C.E8.80.97.E5.B0.BD.E5.86.85.E5.AD.98.E2.80.9D">
+        “耗尽内存”
+       </span>
+      </h4>
+      <p>
+       <img alt="光照系统崩溃：耗尽内存" class="" height="761" src="../assets/swarmagent/1.png" width="1260"/>
+      </p>
+      <p>
+       正如说明所述，该崩溃的原因是没有足够的内存为场景构建照明。
+      </p>
+      <p>
+       <b>
+        尝试步骤：
+       </b>
+      </p>
+      <ul>
+       <li>
+        在可游戏区域周围添加光照系统重要体积。（请参阅以上“技巧”部分了解更多信息）
+       </li>
+       <li>
+        减少场景中的网格数量
+       </li>
+       <li>
+        降低不需要高质量阴影的网格的光照贴图分辨率。
+       </li>
+       <li>
+        如果使用植物叶子工具，先使用 4 或 8 光照贴图分辨率，因为网格会汇集到一个纹理图集中。
+       </li>
+       <li>
+        清空和验证缓存
+       </li>
+       <li>
+        增大可用的虚拟内存量。将其视为 RAM 较低时的溢出。但不要将该虚拟内存当做额外的 RAM。
+       </li>
+       <li>
+        增加系统的 RAM。
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <h4>
+       <span class="mw-headline" id=".E2.80.9C.E6.96.AD.E8.A8.80.E5.A4.B1.E8.B4.A5.EF.BC.9A.28Index.3E.3D0.29.26.28Index.3CArrayNum.29.29.E2.80.9D">
+        “断言失败：(Index&gt;=0)&amp;(Index&lt;ArrayNum))”
+       </span>
+      </h4>
+      <p>
+       <img alt="SA ArrayIndexOutOfBounds.png" class="" height="600" src="../assets/swarmagent/2.png" width="1178"/>
+      </p>
+      <p>
+       <b>
+        尝试步骤：
+       </b>
+      </p>
+      <ul>
+       <li>
+        清空和验证 Swarm Agent 缓存
+       </li>
+      </ul>
+      <p>
+       <br/>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id=".E4.B8.BA.E4.BB.80.E4.B9.88.E6.88.91.E7.9A.84.E7.85.A7.E6.98.8E.E6.9E.84.E5.BB.BA.E5.81.9C.E6.BB.9E.E5.9C.A8_.5BX.5D.25.EF.BC.8C.E6.88.96.E8.80.85.E4.B8.BA.E4.BB.80.E4.B9.88.E6.9E.84.E5.BB.BA.E7.85.A7.E6.98.8E.E5.A6.82.E6.AD.A4.E8.80.97.E6.97.B6.EF.BC.9F">
+        为什么我的照明构建停滞在 [X]%，或者为什么构建照明如此耗时？
+       </span>
+      </h3>
+      <p>
+       如果发现照明需要很长的构建时间，或者不确定照明构建进程是否冻结，只需打开 Swarm Agent 程序，查看正在运行的进程即可。
+      </p>
+      <p>
+       打开 Swarm Agent 之后，可以查看“Swarm 状态 (Swarm Status)”选项卡。您可以在这里查看照明构建处理的进度，这里有一个百分比条，表示照明构建当前的处理进度。
+      </p>
+      <p>
+       <img alt="Swarm Agent Status.png" class="" height="523" src="../assets/swarmagent/3.png" width="964"/>
+      </p>
+      <p>
+       <b>
+        尝试步骤：
+       </b>
+      </p>
+      <ul>
+       <li>
+        减少场景中的网格和/或光线数量
+       </li>
+       <li>
+        使用照明系统重要体积
+       </li>
+       <li>
+        降低网格的光照贴图分辨率
+       </li>
+       <li>
+        使用多台计算机，利用 Swarm Agent 和 Swarm Coordinator 分配照明构建
+       </li>
+       <li>
+        使用推荐的或更强大的 CPU
+       </li>
+      </ul>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id=".E4.B8.BA.E4.BB.80.E4.B9.88.E5.9C.A8.E6.9E.84.E5.BB.BA.E7.85.A7.E6.98.8E.E6.97.B6_Swarm_Agent_.E4.BD.BF.E7.94.A8.E4.BA.86_100.25_.E7.9A.84_CPU.EF.BC.9F">
+        为什么在构建照明时 Swarm Agent 使用了 100% 的 CPU？
+       </span>
+      </h3>
+      <p>
+       使用 Swarm Agent 和光照系统构建照明的进程非常占用 CPU 资源。根据场景中的对象数量、世界的大小、照明质量、光照贴图分辨率以及与此有关的一系列其他进程，这可能会增加构建照明所需的 CPU 资源量。
+      </p>
+      <p>
+       您可以调整用于本地和远程作业的处理器数量，具体操作如下：
+      </p>
+      <p>
+       在 Swarm Agent 的
+       <b>
+        设置 (Settings)
+       </b>
+       选项卡上，找到
+       <b>
+        ShowDeveloperMenu
+       </b>
+       选项，并将值设置为
+       <b>
+        True
+       </b>
+       。
+      </p>
+      <div class="floatnone">
+       <img alt="“设置 (Settings)”选项卡" class="" height="651" src="../assets/swarmagent/4.png" width="1112"/>
+      </div>
+      <p>
+       <br/>
+       启用该设置后，就会看到一个名为
+       <b>
+        DeveloperSettings
+       </b>
+       的新选项卡。在这里可以更改
+       <b>
+        LocalJobDefaultProcessorCount
+       </b>
+       或
+       <b>
+        RemoveJobDefaultProcessorCount
+       </b>
+       。
+      </p>
+      <div class="floatnone">
+       <img alt="DeveloperSettings 选项卡" class="" height="651" src="../assets/swarmagent/5.png" width="1112"/>
+      </div>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id=".E7.85.A7.E6.98.8E.E8.AE.BE.E7.BD.AE.E4.B8.BA.E2.80.9C.E5.8F.AF.E7.A7.BB.E5.8A.A8.2F.E5.8A.A8.E6.80.81.E2.80.9D.E6.97.B6.E4.B8.BA.E4.BB.80.E4.B9.88.E6.B2.A1.E6.9C.89.E4.BD.BF.E7.94.A8_Swarm_Agent.EF.BC.9F">
+        照明设置为“可移动/动态”时为什么没有使用 Swarm Agent？
+       </span>
+      </h3>
+      <p>
+       有一个常见的误区是虚幻引擎 4 中的所有照明都需要构建。但事实并非如此。产生这个误区的原因可能是，工具栏中的
+       <b>
+        构建 (Build)
+       </b>
+       按钮仅与构建照明关联，而实际上还有很多其他的进程，例如构建几何结构、导航网格等诸如此类。因此，如果您担心在此看到某种形式的操作，知道这里不仅仅是在构建照明会让您放心。
+      </p>
+      <p>
+       光照系统在需要使用烘焙/预先计算照明时使用 Swarm Agent，正因如此才能处理“静态/静止照明移动”。
+      </p>
+      <p>
+       <b>
+        注：
+       </b>
+       如果您已经决定在游戏中仅使用“可移动/动态照明”，最好先通过以下方法禁用预先计算照明。
+      </p>
+      <ol>
+       <li>
+        要逐个地图地禁用该选项，选中
+        <b>
+         全局设置 (World Settings)
+        </b>
+        &gt;
+        <b>
+         光照系统 (Lightmass)
+        </b>
+        &gt;
+        <b>
+         不使用与预先计算的照明 (Force No Precomputed Lighting)
+        </b>
+        。
+       </li>
+       <li>
+        要对整个项目禁用静态照明，取消选中
+        <b>
+         菜单 (Menu)
+        </b>
+        &gt;
+        <b>
+         窗口 (Window)
+        </b>
+        &gt;
+        <b>
+         项目设置 (Project Settings)
+        </b>
+        &gt;
+        <b>
+         渲染 (Rendering)
+        </b>
+        &gt;
+        <b>
+         照明 (Lighting)
+        </b>
+        &gt;
+        <b>
+         允许静态照明 (Allow Static Lighting)
+        </b>
+        。
+       </li>
+      </ol>
+      <ul class="gallery mw-gallery-packed-hover">
+       <li class="gallerybox" style="width: 262px">
+        <div style="width: 262px">
+         <div class="thumb" style="width: 260px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="400" src="../assets/swarmagent/6.png" width="260"/>
+          </div>
+         </div>
+         <div class="gallerytextwrapper" style="width: 240px">
+          <div class="gallerytext">
+           <p>
+           </p>
+          </div>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 438px">
+        <div style="width: 438px">
+         <div class="thumb" style="width: 436px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="400" src="../assets/swarmagent/7.png" width="436"/>
+          </div>
+         </div>
+         <div class="gallerytextwrapper" style="width: 416px">
+          <div class="gallerytext">
+           <p>
+           </p>
+          </div>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       ________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id=".E5.A6.82.E4.BD.95.E4.BD.BF.E7.94.A8_GPU_.E6.9E.84.E5.BB.BA.E7.85.A7.E6.98.8E.EF.BC.9F.E6.88.96.E8.80.85.E6.9E.84.E5.BB.BA.E7.85.A7.E6.98.8E.E6.97.B6.E4.B8.BA.E4.BD.95.E6.B2.A1.E6.9C.89.E4.BD.BF.E7.94.A8.E6.88.91.E7.9A.84_GPU.EF.BC.9F">
+        如何使用 GPU 构建照明？或者构建照明时为何没有使用我的 GPU？
+       </span>
+      </h3>
+      <p>
+       构建照明主要使用 CPU，仅在导出流程时使用 GPU。
+      </p>
+      <p>
+       虽然也可以使用 GPU 进行光照系统计算，但目前没有从事这方面的开发工作，短期内也无此计划。理想的解决方案是在预览时使用 GPU 进行实时渲染的照明算法，但之后准备好构建时，可以使用该同一算法烘焙到光照贴图中。但是，这种方法也要面临一些挑战。这样很难按比例缩小编辑器，所有当前的 GI 方法都必须重新编写，无法获得高品质的最终结果，而且由于 GPU 上的负载，会导致编辑器变得十分不稳定。众所周知，负载较重时 GPU 十分不稳定。
+      </p>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id=".E5.A6.82.E4.BD.95.E8.8E.B7.E5.8F.96.E6.88.96.E6.9F.A5.E7.9C.8B_Swarm_Agent_.E6.97.A5.E5.BF.97.EF.BC.9F">
+        如何获取或查看 Swarm Agent 日志？
+       </span>
+      </h3>
+      <p>
+       您可以转至
+       <b>
+        日志 (Log)
+       </b>
+       选项卡查找 Swarm Agent 的日志。
+      </p>
+      <p>
+       打开“日志 (Log)”选项卡时，应该看到类似以下图像的界面。如果看到空白日志，很可能表示之前没有为需要光照系统计算的任何静态/静止照明构建照明。该日志可能会指出照明构建的问题。
+      </p>
+      <p>
+       要获取先前照明构建日志，可以查看
+       的位置。
+      </p>
+      <p>
+       <br/>
+       如果日志中的信息不足以得出结论，请尝试更改日志的详细程度。可以在
+       <b>
+        设置 (Settings)
+       </b>
+       选项卡 &gt;
+       <b>
+        详细程度 (Verbosity)
+       </b>
+       中更改。这样会更改发送到日志的信息量。
+      </p>
+      <p>
+       可用选项如下：
+      </p>
+      <ul>
+       <li>
+        静默 (Silent)
+       </li>
+       <li>
+        严重 (Critical)
+       </li>
+       <li>
+        简单 (Simple)
+       </li>
+       <li>
+        参考 (Informative)（默认设置）
+       </li>
+       <li>
+        复杂 (Complex)
+       </li>
+       <li>
+        详细 (Verbose)
+       </li>
+       <li>
+        超详细 (Extra Verbose)
+       </li>
+       <li>
+        极其详细 (Super Verbose)
+       </li>
+      </ul>
+      <div class="floatnone">
+       <img alt="设置 (Settings)：日志详细程度 (Log Verbosity)" class="" height="651" src="../assets/swarmagent/8.png" width="1112"/>
+      </div>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id=".E5.A6.82.E4.BD.95.E2.80.9C.E6.B8.85.E7.A9.BA.E2.80.9D.E5.92.8C.E2.80.9C.E9.AA.8C.E8.AF.81.E2.80.9DSwarm_Agent">
+        如何“清空”和“验证”Swarm Agent
+       </span>
+      </h3>
+      <p>
+       Swarm Agent 的
+       <b>
+        缓存 (Cache)
+       </b>
+       下拉菜单有两个选项，一个是
+       <b>
+        清空 (Clean)
+       </b>
+       ，一个是
+       <b>
+        验证 (Validate)
+       </b>
+       （请参加下图）。
+      </p>
+      <ul>
+       <li>
+        <b>
+         清空 (Clean)：
+        </b>
+        该选项会根据用户请求清空缓存。
+       </li>
+       <li>
+        <b>
+         验证 (Validate)：
+        </b>
+        该选项会验证所有缓存条目，并更新为最新数据。
+       </li>
+      </ul>
+      <p>
+       <b>
+        注：
+       </b>
+       清空和验证缓存有时能解决 Swarm Agent 在构建照明时可能遇到的问题。
+      </p>
+      <p>
+       <br/>
+      </p>
+      <div class="floatnone">
+       <img alt="菜单：缓存 (Cache)" class="" height="268" src="../assets/swarmagent/9.png" width="274"/>
+      </div>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id=".E6.88.91.E7.9A.84_Swarm_.E6.95.B0.E6.8D.AE.E7.BC.93.E5.AD.98.E5.AD.98.E5.82.A8.E5.9C.A8.E5.93.AA.E9.87.8C.EF.BC.8C.E6.88.91.E5.8F.AF.E4.BB.A5.E6.89.BE.E5.88.B0.E5.AE.83.E7.9A.84.E4.BD.8D.E7.BD.AE.E5.90.97.EF.BC.9F">
+        我的 Swarm 数据缓存存储在哪里，我可以找到它的位置吗？
+       </span>
+      </h3>
+      <p>
+       打开 Swarm Agent，转至
+       <b>
+        设置 (Settings)
+       </b>
+       选项卡可以查看和更改 Swarm 缓存的位置。在
+       <b>
+        缓存设置 (Cache Settings)
+       </b>
+       下拉菜单中，会看到
+       <b>
+        缓存文件夹 (CacheFolder)
+       </b>
+       。（请参见下图）
+      </p>
+      <p>
+       您可以将右侧的文件路径更改为所需的任何位置。还可以选择更改最大缓存大小设置。该值以 GB 为单位。另外一个最大作业数设置用于设置要保留的输出日志数。
+      </p>
+      <div class="floatnone">
+       <img alt="数据缓存设置" class="" height="571" src="../assets/swarmagent/10.png" width="1011"/>
+      </div>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id=".E2.80.9C.E7.85.A7.E6.98.8E.E6.9E.84.E5.BB.BA.E5.A4.B1.E8.B4.A5.E3.80.82Swarm_Agent_.E6.9C.AA.E8.83.BD.E5.90.AF.E5.8A.A8.E2.80.9D.E8.A1.A8.E7.A4.BA.E4.BB.80.E4.B9.88.EF.BC.8C.E6.88.91.E8.AF.A5.E5.A6.82.E4.BD.95.E8.A7.A3.E5.86.B3.E8.BF.99.E4.B8.AA.E9.97.AE.E9.A2.98.EF.BC.9F">
+        “照明构建失败。Swarm Agent 未能启动”表示什么，我该如何解决这个问题？
+       </span>
+      </h3>
+      <p>
+       <img alt="Swarm FailedToKickOff.jpg" class="" height="54" src="../assets/swarmagent/11.jpg" width="550"/>
+      </p>
+      <p>
+       如果看到该问题，表示有若干原因导致 Swarm Agent 未能初始化。
+      </p>
+      <p>
+       <b>
+        Swarm 未能启动的可能原因：
+       </b>
+      </p>
+      <ul>
+       <li>
+        同时打开了多个 Swarm Agent 实例
+       </li>
+       <li>
+        打开“任务管理器”，并确保没有多个 Swarm Agent 进程正在运行
+       </li>
+       <li>
+        关卡和/或资产受损
+       </li>
+       <li>
+        关闭防火墙/防病毒软件
+       </li>
+       <li>
+        重启编辑器
+       </li>
+       <li>
+        硬盘空间
+       </li>
+       <li>
+        引擎存在安装或损坏问题
+       </li>
+       <li>
+        虚幻光照系统存在源代码构建问题
+       </li>
+      </ul>
+      <p>
+       <b>
+        尝试步骤：
+       </b>
+      </p>
+      <ol>
+       <li>
+        尝试重启虚幻引擎 4 和/或计算机。
+       </li>
+       <li>
+        检查任务栏和/或任务管理器，确认是否有多个 Swarm Agent 实例正在运行。关闭所有或多个实例。
+       </li>
+       <li>
+        禁用防火墙和/或防病毒软件。如果该操作起作用了，请确保添加 SwarmAgent.exe 例外
+       </li>
+       <li>
+        按部就班地检查和移除关卡中的网格，确认是否是某个网格导致发生该失败。这属于蛮力手段，应该在将范围缩小到类似原因时作为最后的尝试方法。
+       </li>
+       <li>
+        在已知关卡中利用有用的资产测试构建照明，例如“起步内容”中的默认关卡或者某个模板地图。
+       </li>
+       <li>
+        转至 Epic Games 启动程序 &gt; 库 &gt; 选择引擎版本 &gt; 验证来验证引擎（请参见下图）
+        <div class="floatnone">
+         <img alt="VerifyEngine.png" class="" height="219" src="../assets/swarmagent/12.png" width="275"/>
+        </div>
+       </li>
+      </ol>
+      <ol>
+       <li>
+        重新安装引擎
+       </li>
+      </ol>
+      <p>
+       <b>
+        如果从源代码构建
+       </b>
+      </p>
+      <ol>
+       <li>
+        重新构建虚幻光照系统解决方案
+       </li>
+      </ol>
+      <p>
+       如果已经试过这些步骤，但仍遇到该问题，请在
+       <a class="external text" href="http://answers.unrealengine.com/" rel="nofollow">
+        AnswerHub
+       </a>
+       上发布问题，并包含您已经尝试过的步骤以及重现该问题的足够步骤。
+      </p>
+      <p>
+       <br/>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id=".E5.A6.82.E4.BD.95.E5.B0.86_Swarm_Agent_.E8.AE.BE.E7.BD.AE.E4.B8.BA.E6.9C.80.E9.AB.98.E4.BC.98.E5.85.88.E7.BA.A7.EF.BC.9F">
+        如何将 Swarm Agent 设置为最高优先级？
+       </span>
+      </h3>
+      <p>
+       如果打开 Swarm Agent 并发现需要一点时间才会打开 Swarm 以进行处理，可以调整下列设置，以便更快速地启动该进程。
+      </p>
+      <ol>
+       <li>
+        打开 Swarm Agent &gt; 设置 (Settings) 选项卡
+       </li>
+       <li>
+        将
+        <b>
+         ShowDeveloperMenu
+        </b>
+        设置为
+        <b>
+         True
+        </b>
+       </li>
+       <li>
+        此时会出现一个新的选项卡，名为 "DeveloperSettings"
+       </li>
+       <li>
+        将
+        <b>
+         LocalJobsDefaultProcessPriority
+        </b>
+        更改为
+        <b>
+         BelowNormal
+        </b>
+       </li>
+       <li>
+        将
+        <b>
+         RemoteJobsDefaultProcessPriority
+        </b>
+        更改为
+        <b>
+         Idle
+        </b>
+       </li>
+      </ol>
+      <ul class="gallery mw-gallery-packed-hover">
+       <li class="gallerybox" style="width: 429.33333333333px">
+        <div style="width: 429.33333333333px">
+         <div class="thumb" style="width: 427.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="250" src="../assets/swarmagent/13.png" width="428"/>
+          </div>
+         </div>
+         <div class="gallerytextwrapper" style="width: 408px">
+          <div class="gallerytext">
+           <p>
+           </p>
+          </div>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 429.33333333333px">
+        <div style="width: 429.33333333333px">
+         <div class="thumb" style="width: 427.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="250" src="../assets/swarmagent/14.png" width="428"/>
+          </div>
+         </div>
+         <div class="gallerytextwrapper" style="width: 408px">
+          <div class="gallerytext">
+           <p>
+           </p>
+          </div>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id=".E4.B8.BA.E4.BB.80.E4.B9.88_Swarm_Agent_.E6.B2.A1.E6.9C.89.E5.90.AF.E5.8A.A8.EF.BC.8C.E6.88.96.E8.80.85.E2.80.9CUnrealLightmass.exe-.E5.BA.94.E7.94.A8.E7.A8.8B.E5.BA.8F.E9.94.99.E8.AF.AF....E2.80.9D.E6.98.AF.E4.BB.80.E4.B9.88.E6.84.8F.E6.80.9D.EF.BC.9F">
+        为什么 Swarm Agent 没有启动，或者“UnrealLightmass.exe-应用程序错误...”是什么意思？
+       </span>
+      </h3>
+      <div class="floatnone">
+       <img alt="UnrealLightmass.exe ApplicationError.png" class="" height="167" src="../assets/swarmagent/15.png" width="483"/>
+      </div>
+      <p>
+       如果看到弹出该问题，表示 Windows 中有某些原因导致该应用程序无法打开，这并不是直接由虚幻引擎 4 所导致的。
+      </p>
+      <p>
+       如果使用的是 4.9 或更早版本，确保安装了最新的 VS2013 相关软件，卸载不再需要的任何相关软件。
+      </p>
+      <p>
+       如果使用的是 4.10 或更高版本，需要安装 VS2015 相关软件。
+      </p>
+      <p>
+       可以从 Microsoft 网站下载 Visual Studio 相关软件：
+      </p>
+      <p>
+       VS2013：
+       <a class="external free" href="http://www.microsoft.com/en-us/download/details.aspx?id=40784" rel="nofollow">
+        http://www.microsoft.com/en-us/download/details.aspx?id=40784
+       </a>
+      </p>
+      <p>
+       VS2015：
+       <a class="external free" href="https://www.microsoft.com/en-us/download/details.aspx?id=48145" rel="nofollow">
+        https://www.microsoft.com/en-us/download/details.aspx?id=48145
+       </a>
+      </p>
+      <p>
+       如果仍会遇到此类问题，尝试使用免费的应用程序 Dependency Walker 对可能导致 UnrealLightmass.exe 无法启动的任何 DLL 问题进行故障排除。
+      </p>
+      <p>
+       您可以从以下网站下载 Dependency Walker：
+       <a class="external free" href="http://www.dependencywalker.com/" rel="nofollow">
+        http://www.dependencywalker.com/
+       </a>
+      </p>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="Swarm_Agent_.E5.A4.B1.E8.B4.A5.EF.BC.8C.E5.B9.B6.E5.8F.91.E7.94.9F_IO_.E5.BC.82.E5.B8.B8.E9.94.99.E8.AF.AF">
+        Swarm Agent 失败，并发生 IO 异常错误
+       </span>
+      </h3>
+      <p>
+       当看到该错误时，可能需要查看 Swarm Agent 日志，了解更多详细信息。
+      </p>
+      <p>
+       可能会更正该问题的步骤：
+      </p>
+      <p>
+       - 检查关卡，确认没有为任何 NULL 资产构建照明。这些可能是没有参考的资产。您可以在全局大纲 (World Outliner ) 中进行查看，在这里选择资产时，会在“细节 (Details)”面板中看到没有分配资产。
+      </p>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="Swarm_.E6.97.A5.E5.BF.97.EF.BC.9ASystem.Net.Socket_.E9.94.99.E8.AF.AF.2FSwarm_Agent.2FCoordinator_.E7.AB.AF.E5.8F.A3.E8.A2.AB.E5.85.B6.E4.BB.96.E8.BF.9B.E7.A8.8B.E4.BD.BF.E7.94.A8">
+        Swarm 日志：System.Net.Socket 错误/Swarm Agent/Coordinator 端口被其他进程使用
+       </span>
+      </h3>
+      <p>
+       在某些情况下，Swarm Agent 无法启动或分发构建，因为 Swarm Agent 和 Swarm Coordinator 需要的端口 8008 和 8009 已被其他进程使用。
+      </p>
+      <p>
+       <i>
+        注：
+       </i>
+       以下步骤将帮助您识别问题，但未必能解决问题，因为这超出了 Swarm Agent/Coordinator 故障排除的范围，属于 Windows 端口分配问题的解决范畴。”
+      </p>
+      <p>
+       Swarm Agent 日志中的常见错误：
+      </p>
+      <ul>
+       <li>
+        异常详细信息：System.Net.Sockets.SocketException (0x80004005)：由于目标机器主动拒绝 192.168.1.34:8009，因此无法建立连接
+       </li>
+      </ul>
+      <p>
+       您可以下载免费应用 TCPView，以便快速识别哪些端口被哪些进程使用。您可以从
+       <a class="external free" href="https://technet.microsoft.com/en-us/sysinternals/tcpview.aspx" rel="nofollow">
+        https://technet.microsoft.com/en-us/sysinternals/tcpview.aspx
+       </a>
+       下载该应用
+      </p>
+      <div class="floatnone">
+       <img alt="TCPView.jpg" class="" height="218" src="../assets/swarmagent/16.jpg" width="420"/>
+      </div>
+      <ol>
+       <li>
+        打开 TCPView 时，需要单击 Local Port 选项卡，这样会按数字顺序列出端口。
+       </li>
+       <li>
+        然后单击菜单栏中的 View，并将 Update Speed 设置为 5 秒或 Paused。在不快速更新和使用端口和进程的情况下，更方便查看。
+       </li>
+       <li>
+        向下滚动，查看哪些应用程序正在使用端口 8008 和 8009。
+       </li>
+      </ol>
+      <p>
+       现在已经识别了使用这两个端口的进程，它们可能不是 Swarm Agent/Coordinator，您需要研究如何重新分配端口地址，让 Swarm Agent/Coordinator 使用这两个端口，而不是被其他程序使用。
+      </p>
+      <p>
+       如果发现 Swarm Agent/Coordinator 正在使用这两个端口，可能需要尝试以下操作：
+      </p>
+      <ul>
+       <li>
+        以极其详细模式查看日志，确认是否存在任何问题。
+       </li>
+       <li>
+        重新安装最新的 .NET 框架
+       </li>
+      </ul>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

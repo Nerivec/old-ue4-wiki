@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Speech Recognition Plugin - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Speech Recognition Plugin
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <table class="wikitable sortable" style="float: right;">
+       <tbody>
+        <tr>
+         <td>
+          Name
+         </td>
+         <td>
+          Speech Recognition Plugin
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Category
+         </td>
+         <td>
+          Input
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Author
+         </td>
+         <td>
+          ShaneC
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       SphinxUE4: Speech Recognition Plugin
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Help_support_by_donating">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Help support by donating
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Sphinx-UE4">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Sphinx-UE4
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Demo_Project">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Demo Project
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Maps">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Maps
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-5">
+             <a href="#Rules">
+              <span class="tocnumber">
+               3.1.1
+              </span>
+              <span class="toctext">
+               Rules
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-6">
+             <a href="#How_to_play">
+              <span class="tocnumber">
+               3.1.2
+              </span>
+              <span class="toctext">
+               How to play
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#How_to_use_the_Plugin_in_your_project">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           How to use the Plugin in your project
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Blueprint_Changes">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             Blueprint Changes
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#Speech_Recognition_Events">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             Speech Recognition Events
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-10">
+         <a href="#Plans_ahead">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Plans ahead
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-11">
+         <a href="#Contact_Information">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Contact Information
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Help_support_by_donating">
+        Help support by donating
+       </span>
+      </h1>
+      <p>
+       <i>
+        I wish to keep this plugin freely available to anyone, for whatever use they have, and if possible, help them with that goal.
+        <br/>
+       </i>
+       <i>
+        I have spent quite a lot of time working on the plugin, and helping others get it working.
+        <br/>
+       </i>
+       <i>
+        If you feel the plugin has been helpful, a PayPal donation to
+        <b>
+         {}
+        </b>
+        would mean the world. Thank you!!!
+       </i>
+      </p>
+      <h1>
+       <span class="mw-headline" id="Sphinx-UE4">
+        Sphinx-UE4
+       </span>
+      </h1>
+      <p>
+       <b>
+        IMPORTANT NOTES:
+       </b>
+      </p>
+      <ul>
+       <li>
+        Blueprint Only projects will not package properly with Plugins. This is a known issue of Unreal Engine for the time being. To work around this, simply add an empty C++ class to your Blueprint Only project.
+        <b>
+        </b>
+       </li>
+       <li>
+        When packaging a project. Ensure the model folder is included in 'Additional non-asset directories to Copy' (in Project Settings=&gt;Packaging.
+       </li>
+      </ul>
+      <p>
+       Sphinx-UE4 is a speech recognition plugin for Unreal Engine 4.  
+The plugin makes use of the Pocket-sphinx library.
+At the moment, this plugin should be used to detect phrases. (eg. "open browser").
+Singular words recognition is poor. I am looking at ways to improve this to a passable level.
+      </p>
+      <p>
+       <a class="external free" href="http://cmusphinx.sourceforge.net/" rel="nofollow">
+        http://cmusphinx.sourceforge.net
+       </a>
+      </p>
+      <h1>
+       <span class="mw-headline" id="Demo_Project">
+        Demo Project
+       </span>
+      </h1>
+      <p>
+       The following are links to a demo projects for Windows, and Mac (previous version, for the moment).
+       <br/>
+      </p>
+      <p>
+       <b>
+        Mac (4.12):
+       </b>
+       <a class="external free" href="https://github.com/shanecolb/sphinx-ue4/releases/download/1.1/Sphinx_UE4_Test_MacOSX.zip" rel="nofollow">
+        https://github.com/shanecolb/sphinx-ue4/releases/download/1.1/Sphinx_UE4_Test_MacOSX.zip
+       </a>
+       <br/>
+       <b>
+        Windows: (4.16)
+       </b>
+       <a class="external free" href="https://drive.google.com/open?id=0BxR5qe2wdwSLRWU3cFhCSGRqcDA" rel="nofollow">
+        https://drive.google.com/open?id=0BxR5qe2wdwSLRWU3cFhCSGRqcDA
+       </a>
+       <br/>
+       <b>
+        Windows: (4.17)
+       </b>
+       <a class="external free" href="https://drive.google.com/open?id=1FPxlq1FLEY2Y51F3KnDPNb4UVgQeyMLZ" rel="nofollow">
+        https://drive.google.com/open?id=1FPxlq1FLEY2Y51F3KnDPNb4UVgQeyMLZ
+       </a>
+       <br/>
+       <b>
+        Windows: (4.18)
+       </b>
+       <a class="external free" href="https://drive.google.com/open?id=1_UPQg3wj9DEf8nbkUZDc3oDbfsLBX4rs" rel="nofollow">
+        https://drive.google.com/open?id=1_UPQg3wj9DEf8nbkUZDc3oDbfsLBX4rs
+       </a>
+       <br/>
+      </p>
+      <p>
+       <br/>
+       The project includes a few example maps. Each showing a different mode of detection/recognition.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Maps">
+        Maps
+       </span>
+      </h2>
+      <ul>
+       <li>
+        <b>
+         GameExample:
+        </b>
+        <br/>
+       </li>
+      </ul>
+      <p>
+       Speech can control a character, moving them around a soccerfield, walking/running, turning and kicking the ball.
+&lt;youtube&gt;
+       <a class="external free" href="https://www.youtube.com/watch?v=b6vd0pWSGKU" rel="nofollow">
+        https://www.youtube.com/watch?v=b6vd0pWSGKU
+       </a>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Rules">
+        Rules
+       </span>
+      </h3>
+      <p>
+       The game timer is set at 3 minutes.
+A ball will spawn, of a random colour (either blue or red). A goal is obtained, by kicking the ball into the colour that matches the ball. When a goal is scored, a new ball is spawned.
+      </p>
+      <h3>
+       <span class="mw-headline" id="How_to_play">
+        How to play
+       </span>
+      </h3>
+      <p>
+       When the game starts, the game will be setup in a keyword listening mode.
+       <br/>
+       <b>
+        start the game:
+       </b>
+       Starts a game of soccer.
+       <br/>
+       <b>
+        enable walk:
+       </b>
+       The character starts walking.
+       <br/>
+       <b>
+        enable sprint:
+       </b>
+       The character starts sprinting
+       <br/>
+       <b>
+        turn left:
+       </b>
+       Rotates the character 45 degrees to the left.
+       <br/>
+       <b>
+        turn right:
+       </b>
+       Rotates the character 45 degrees to the right.
+       <br/>
+       <b>
+        kick the ball:
+       </b>
+       If a ball is in range, the player kicks the ball.
+       <br/>
+       <b>
+        one eighty:
+       </b>
+       Rotates the character 180 degrees.
+       <br/>
+       <b>
+        stop movement:
+       </b>
+       Stops all character movement.
+       <br/>
+      </p>
+      <ul>
+       <li>
+        <b>
+         GrammarTest:
+        </b>
+        <br/>
+       </li>
+      </ul>
+      <p>
+       This example shows the grammar file support. The grammar file has the form &lt;digit&gt; &lt;operation&gt; &lt;digit&gt;.
+Upon a recognition that matches the form, it will show the operation, and the result.
+For example "three add five", will look like this
+      </p>
+      <p>
+       <img alt="Speech Recognition Character 4.PNG" class="" height="433" src="../assets/speech-recognition-plugin/0.PNG" width="294"/>
+      </p>
+      <ul>
+       <li>
+        <b>
+         Language Test:
+        </b>
+        <br/>
+       </li>
+      </ul>
+      <p>
+       If you click on the character in the map, you can see that Language is selectable property.
+There's support for English, Chinese, French, Spanish, Russian.
+Take a look at the blueprint to see what words are added for what languages. 
+I can only speak English, so the testing of the foreign languages is probably pretty blotchy.
+      </p>
+      <ul>
+       <li>
+        <b>
+         Volume Test:
+        </b>
+        <br/>
+       </li>
+      </ul>
+      <p>
+       An approximate volume of the microphone can be obtained in blueprints. 
+In this example, the cone radius of the light is effected by the volume of the microphone.
+      </p>
+      <h1>
+       <span class="mw-headline" id="How_to_use_the_Plugin_in_your_project">
+        How to use the Plugin in your project
+       </span>
+      </h1>
+      <ul>
+       <li>
+        Download the demo project (for your respective OS/UE version).
+       </li>
+       <li>
+        Copy from the project, the "Content/model" and "Plugins" folders, to your new project.
+       </li>
+      </ul>
+      <p>
+       <img alt="Sphinx UE4 older.png" class="" height="222" src="../assets/speech-recognition-plugin/1.png" width="662"/>
+      </p>
+      <ul>
+       <li>
+        Right click on the .uproject file, and select regenerate solution.
+       </li>
+       <li>
+        Open the visual studio project, recompile, and open the project in UE.
+       </li>
+       <li>
+        Open the project, and enable the Speech Recognition plugin.
+       </li>
+       <li>
+        Open the blueprint of whichever actor/class you wish to improve, by adding Speech Recognition Functionality.
+       </li>
+      </ul>
+      <p>
+       I will now run through the changes necessary:
+      </p>
+      <h2>
+       <span class="mw-headline" id="Blueprint_Changes">
+        Blueprint Changes
+       </span>
+      </h2>
+      <p>
+       1) When the Begin Game event is fired, create a Speech Recognition actor, and save a reference to this actor. After this, create and bind a method to OnWordSpoken. This method is triggered each time a recognised phrase is spoken. Lastly, ensure Shutdown (on the speech recognition actor) is called during End Play.
+      </p>
+      <p>
+       <img alt="Sphinx UE4 1.PNG" class="" height="737" src="../assets/speech-recognition-plugin/2.PNG" width="1431"/>
+      </p>
+      <p>
+       2) Once the actor has been created, we will Initialise, and set configuration parameters for Sphinx. 
+There is a huge range of sphinx params that can be configured.
+       <br/>
+       <b>
+        NOTE:
+       </b>
+       Setting the recognition mode (keyword/grammar) will reset the Sphinx params that were previously added.
+       <br/>
+       Ensure sphinx config params are set, before each change of the recognition mode.
+      </p>
+      <p>
+       Although this list is old, the following provides a detailed list of the various sphinx params.
+       <br/>
+       <a class="external free" href="https://github.com/watsonbox/pocketsphinx-ruby/wiki/Default-Pocketsphinx-Configuration" rel="nofollow">
+        https://github.com/watsonbox/pocketsphinx-ruby/wiki/Default-Pocketsphinx-Configuration
+       </a>
+      </p>
+      <p>
+       At the moment, I set the following, and would suggest trying the same:
+       <img alt="Sphinx UE4 SS 3.PNG" class="" height="506" src="../assets/speech-recognition-plugin/3.PNG" width="766"/>
+       <br/>
+       I am still experimenting to try and find what works best for me.
+      </p>
+      <p>
+       3) At this time, we set the recognition mode to Keyword, and a set of Key phrases are passed in.
+       <img alt="Sphinx UE4 SS 2.PNG" class="" height="896" src="../assets/speech-recognition-plugin/4.PNG" width="849"/>
+       <br/>
+       These are used to determine which phrases are spoken by the player.  
+A Recognition Phrase comprises a string (representing the phrase we wish to detect) and a tolerance setting.  
+This tolerance determines how easily a phrase will trigger.
+Play around with the tolerance settings, to test the balance between sensitivity, and false positives.
+      </p>
+      <p>
+       If your phrase features words which are not in the dictionary, they will not be detected.
+To add words to the dictionary, open the .dict file that matches the language of your choosing (eg. English is "Content\model\en\en.dict").
+      </p>
+      <p>
+       This contains a list of recognised words. The first string is the recognised word. The rest is the phonetics of how the word is recognised.
+      </p>
+      <p>
+       Here are some examples:
+      </p>
+      <p>
+       abbott AE B AH T
+      </p>
+      <p>
+       ball B AO L
+      </p>
+      <p>
+       bandit B AE N D AH T
+      </p>
+      <p>
+       Simply add a word in a similar manner, and re-save the file.
+      </p>
+      <p>
+       4) The WordSpoken method takes in an array of recognised phrases.  
+This set is looped over, to trigger in-game logic.
+      </p>
+      <p>
+       <img alt="Sphinx UE4 SS 4.PNG" class="" height="634" src="../assets/speech-recognition-plugin/5.PNG" width="1280"/>
+      </p>
+      <p>
+       <b>
+        IMPORTANT
+       </b>
+       5) Make sure on the End Play event, that the shutdown method is called.  
+Otherwise, crashes will occur if multiple instances start up.
+      </p>
+      <p>
+       <img alt="Sphinx UE4 SS 5.PNG" class="" height="239" src="../assets/speech-recognition-plugin/6.PNG" width="598"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Speech_Recognition_Events">
+        Speech Recognition Events
+       </span>
+      </h2>
+      <p>
+       Just as there is an event fired when speech is detected, there are hooks for other events.   
+Here is a list of all of the events
+      </p>
+      <ul>
+       <li>
+        OnWordsSpoken: triggered when silence is broken, and one or more recognised phrases are detected.
+       </li>
+       <li>
+        OnUnknownPhrase: triggered when silence is broken, and no recognised phrases are detected.
+       </li>
+       <li>
+        OnStartedSpeaking: triggered when silence is broken, and speech is detected.
+       </li>
+       <li>
+        OnStoppedSpeaking: triggered when speech is broken, by silence.
+       </li>
+      </ul>
+      <h1>
+       <span class="mw-headline" id="Plans_ahead">
+        Plans ahead
+       </span>
+      </h1>
+      <ul>
+       <li>
+        Improve the accuracy
+       </li>
+       <li>
+        Add in additional components of recognised speech, into a structure that can be interrogated.
+       </li>
+      </ul>
+      <p>
+       For example, was the phrase "turn left" spoken softly, or loudly....or over how long was it spoken.
+      </p>
+      <ul>
+       <li>
+        <b>
+         Long Term:
+        </b>
+        Experiment with acoustic model adaption.
+       </li>
+      </ul>
+      <p>
+       <a class="external free" href="http://cmusphinx.sourceforge.net/wiki/tutorialadapt" rel="nofollow">
+        http://cmusphinx.sourceforge.net/wiki/tutorialadapt
+       </a>
+      </p>
+      <h1>
+       <span class="mw-headline" id="Contact_Information">
+        Contact Information
+       </span>
+      </h1>
+      <p>
+       If you have any suggestions or questions, I would love to hear them. 
+Please feel free to e-mail me at {}.
+If you have any suggestions, or wish to help out, the project is on github.
+      </p>
+      <p>
+       <a class="external free" href="https://github.com/shanecolb/sphinx-ue4" rel="nofollow">
+        https://github.com/shanecolb/sphinx-ue4
+       </a>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

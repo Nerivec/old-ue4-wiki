@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Asset Creation and Import Troubleshooting - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Asset Creation and Import Troubleshooting
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <br/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Documentation_and_Links">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           <b>
+            Documentation and Links
+           </b>
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Frequently_Asked_Questions">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           <b>
+            Frequently Asked Questions
+           </b>
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#General_Questions">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             <b>
+              General Questions
+             </b>
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-4">
+             <a href="#What_are_Degenerate_Tangents_and_what_does_this_error_message_mean.3F">
+              <span class="tocnumber">
+               2.1.1
+              </span>
+              <span class="toctext">
+               What are Degenerate Tangents and what does this error message mean?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-5">
+             <a href="#Why_won.27t_UAssets_show_up_in_the_folder.2C_or_why_can.27t_I_import_UAssets_directly.3F">
+              <span class="tocnumber">
+               2.1.2
+              </span>
+              <span class="toctext">
+               Why won't UAssets show up in the folder, or why can't I import UAssets directly?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-6">
+             <a href="#Why_does_my_model_take_so_long_to_import.2C_or_why_does_the_editor_freeze_when_I_import_my_mesh.3F">
+              <span class="tocnumber">
+               2.1.3
+              </span>
+              <span class="toctext">
+               Why does my model take so long to import, or why does the editor freeze when I import my mesh?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-7">
+             <a href="#Why_is_my_mesh_see_through.2C_or_why_are_the_faces_on_my_mesh_flipped.3F">
+              <span class="tocnumber">
+               2.1.4
+              </span>
+              <span class="toctext">
+               Why is my mesh see through, or why are the faces on my mesh flipped?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-8">
+             <a href="#Is_there_a_poly_count_limitation.3F">
+              <span class="tocnumber">
+               2.1.5
+              </span>
+              <span class="toctext">
+               Is there a poly count limitation?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-9">
+             <a href="#Why_is_my_mesh_facing_on_the_wrong_axis.3F">
+              <span class="tocnumber">
+               2.1.6
+              </span>
+              <span class="toctext">
+               Why is my mesh facing on the wrong axis?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-10">
+             <a href="#Why_is_my_mesh_so_small.2Flarge_when_I_import.3F">
+              <span class="tocnumber">
+               2.1.7
+              </span>
+              <span class="toctext">
+               Why is my mesh so small/large when I import?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-11">
+             <a href="#How_do_I_check_the_UVs_for_my_mesh.3F">
+              <span class="tocnumber">
+               2.1.8
+              </span>
+              <span class="toctext">
+               How do I check the UVs for my mesh?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-12">
+             <a href="#Why_do_I_need_to_UV_my_mesh_for_texture_mapping.3F">
+              <span class="tocnumber">
+               2.1.9
+              </span>
+              <span class="toctext">
+               Why do I need to UV my mesh for texture mapping?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-13">
+             <a href="#Why_does_my_FBX_not_apply_all_the_textures_or_shaders_that_were_made_in_my_modeling_program.3F">
+              <span class="tocnumber">
+               2.1.10
+              </span>
+              <span class="toctext">
+               Why does my FBX not apply all the textures or shaders that were made in my modeling program?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-14">
+             <a href="#How_do_I_Import_a_.apx_CLOTH_file_created_with_NVIDIA.27s_tools.3F">
+              <span class="tocnumber">
+               2.1.11
+              </span>
+              <span class="toctext">
+               How do I Import a .apx CLOTH file created with NVIDIA's tools?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-15">
+             <a href="#How_can_I_use_my_Pivot_from_my_modeling_program_instead_of_it_being_offset.3F">
+              <span class="tocnumber">
+               2.1.12
+              </span>
+              <span class="toctext">
+               How can I use my Pivot from my modeling program instead of it being offset?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-16">
+             <a href="#Why_can_I_walk_through_my_mesh.2C_or_Why_does_my_collision_look_wrong_when_I_import_my_mesh.3F">
+              <span class="tocnumber">
+               2.1.13
+              </span>
+              <span class="toctext">
+               Why can I walk through my mesh, or Why does my collision look wrong when I import my mesh?
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-17">
+           <a href="#Skeletal_Mesh">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             <b>
+              Skeletal Mesh
+             </b>
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-18">
+             <a href="#COMING_SOON.21">
+              <span class="tocnumber">
+               2.2.1
+              </span>
+              <span class="toctext">
+               COMING SOON!
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-19">
+           <a href="#Texture_or_Material">
+            <span class="tocnumber">
+             2.3
+            </span>
+            <span class="toctext">
+             <b>
+              Texture or Material
+             </b>
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-20">
+             <a href="#When_I_import_a_texture_with_an_Alpha.2C_why_doesn.27t_the_Alpha_show.3F">
+              <span class="tocnumber">
+               2.3.1
+              </span>
+              <span class="toctext">
+               When I import a texture with an Alpha, why doesn't the Alpha show?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-21">
+             <a href="#What_does_the_Power_of_2_warning_mean_when_I_import_my_image.3F">
+              <span class="tocnumber">
+               2.3.2
+              </span>
+              <span class="toctext">
+               What does the Power of 2 warning mean when I import my image?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-22">
+             <a href="#Why_can.27t_I_use_a_texture_resolution_larger_than_8192_in-game.3F">
+              <span class="tocnumber">
+               2.3.3
+              </span>
+              <span class="toctext">
+               Why can't I use a texture resolution larger than 8192 in-game?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-23">
+             <a href="#Why_does_my_texture.2Fmaterial_look_low_quality.2Fblurry_in_the_game.3F">
+              <span class="tocnumber">
+               2.3.4
+              </span>
+              <span class="toctext">
+               Why does my texture/material look low quality/blurry in the game?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-24">
+             <a href="#Why_does_the_editor_freeze.2Ftake_a_long_time_when_I_try_to_open_my_asset.3F">
+              <span class="tocnumber">
+               2.3.5
+              </span>
+              <span class="toctext">
+               Why does the editor freeze/take a long time when I try to open my asset?
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Documentation_and_Links">
+        <b>
+         Documentation and Links
+        </b>
+       </span>
+      </h2>
+      <p>
+       <a class="external free" href="https://docs.unrealengine.com/latest/INT/Engine/Content/AssetCreation/index.html" rel="nofollow">
+        https://docs.unrealengine.com/latest/INT/Engine/Content/AssetCreation/index.html
+       </a>
+       <a class="external free" href="https://docs.unrealengine.com/latest/INT/Engine/Content/FBX/BestPractices/" rel="nofollow">
+        https://docs.unrealengine.com/latest/INT/Engine/Content/FBX/BestPractices/
+       </a>
+       <a class="external free" href="https://docs.unrealengine.com/latest/INT/Engine/Content/FBX/ImportOptions/" rel="nofollow">
+        https://docs.unrealengine.com/latest/INT/Engine/Content/FBX/ImportOptions/
+       </a>
+       <a class="external free" href="https://docs.unrealengine.com/latest/INT/Engine/Content/FBX/StaticMeshes/" rel="nofollow">
+        https://docs.unrealengine.com/latest/INT/Engine/Content/FBX/StaticMeshes/
+       </a>
+       <a class="external free" href="https://docs.unrealengine.com/latest/INT/Engine/Content/FBX/Materials/" rel="nofollow">
+        https://docs.unrealengine.com/latest/INT/Engine/Content/FBX/Materials/
+       </a>
+       <a class="external free" href="https://docs.unrealengine.com/latest/INT/Engine/Content/FBX/" rel="nofollow">
+        https://docs.unrealengine.com/latest/INT/Engine/Content/FBX/
+       </a>
+       <a class="external free" href="https://docs.unrealengine.com/latest/INT/Engine/Content/FBX/Animations/" rel="nofollow">
+        https://docs.unrealengine.com/latest/INT/Engine/Content/FBX/Animations/
+       </a>
+       <a class="external free" href="https://docs.unrealengine.com/latest/INT/Engine/Content/FBX/SkeletalMeshes/" rel="nofollow">
+        https://docs.unrealengine.com/latest/INT/Engine/Content/FBX/SkeletalMeshes/
+       </a>
+       <a class="external free" href="https://docs.unrealengine.com/latest/INT/Shared/Editor/FbxErrors/" rel="nofollow">
+        https://docs.unrealengine.com/latest/INT/Shared/Editor/FbxErrors/
+       </a>
+       <a class="external free" href="https://docs.unrealengine.com/latest/INT/Engine/Content/FBX/MorphTargets/" rel="nofollow">
+        https://docs.unrealengine.com/latest/INT/Engine/Content/FBX/MorphTargets/
+       </a>
+       <a class="external free" href="https://docs.unrealengine.com/latest/INT/Engine/Content/ContentStandards/" rel="nofollow">
+        https://docs.unrealengine.com/latest/INT/Engine/Content/ContentStandards/
+       </a>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Frequently_Asked_Questions">
+        <b>
+         Frequently Asked Questions
+        </b>
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="General_Questions">
+        <b>
+         General Questions
+        </b>
+       </span>
+      </h3>
+      <h4>
+       <span class="mw-headline" id="What_are_Degenerate_Tangents_and_what_does_this_error_message_mean.3F">
+        What are Degenerate Tangents and what does this error message mean?
+       </span>
+      </h4>
+      <p>
+       If you've seen the warning message "Object has Degenerate Tangent bases which will results in incorrect shading" you may be wondering what this means exactly.
+      </p>
+      <p>
+       As of Unreal Engine version 4.7 and higher, the editor will now use MikkTSpace tangents by default. This can easily be changed in the Import Options window by changing the
+       <b>
+        Normal Generation Method
+       </b>
+       or it can be  changed in the
+       <b>
+        Build Settings
+       </b>
+       from the Static Mesh Editor.
+      </p>
+      <p>
+       The main difference between the previous method and MikkTSpace is that you have to make sure that you're static mesh asset has been properly UV mapped. If not, it can produce the error message mentioned above and will not provide accurate lighting results, even though you may not see any issue with the way the mesh is rendered. It it up to your discretion if you are happy with the results or need to use the alternative built-in method of tangent calculation over MikkTSpace.
+      </p>
+      <p>
+       In the example here the cube's face has been inset causing the UV's to no longer be properly mapped. This is the result of the tangent calculation with each method.
+      </p>
+      <ul class="gallery mw-gallery-packed-hover">
+       <li class="gallerybox" style="width: 351.33333333333px">
+        <div style="width: 351.33333333333px">
+         <div class="thumb" style="width: 349.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="300" src="../assets/asset-creation-and-import-troubleshooting/0.png" width="350"/>
+          </div>
+         </div>
+         <div class="gallerytextwrapper" style="width: 330px">
+          <div class="gallerytext">
+           <p>
+            MikkTSpace
+           </p>
+          </div>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 349.33333333333px">
+        <div style="width: 349.33333333333px">
+         <div class="thumb" style="width: 347.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="300" src="../assets/asset-creation-and-import-troubleshooting/1.png" width="348"/>
+          </div>
+         </div>
+         <div class="gallerytextwrapper" style="width: 328px">
+          <div class="gallerytext">
+           <p>
+            Built-In
+           </p>
+          </div>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <h4>
+       <span class="mw-headline" id="Why_won.27t_UAssets_show_up_in_the_folder.2C_or_why_can.27t_I_import_UAssets_directly.3F">
+        Why won't UAssets show up in the folder, or why can't I import UAssets directly?
+       </span>
+      </h4>
+      <p>
+       UAssets are compiled assets created for use with Unreal Engine 4 that are generated from files imported such as Textures, Media/Movies, and FBX/OBJs. This compile happens when the asset is imported for the first time and will now show up in your Content Browser and the subsequent Project Folder under the Content section in Windows/Mac/Linux.
+      </p>
+      <p>
+       These UAssets can be moved directly from folder to folder in your OS without the need to use the editor to migrate them, but there are some caveats to this method.
+      </p>
+      <ul>
+       <li>
+        They require the same folder structure as the original project they were created in otherwise they will lose references. For example, if you have a UAsset of a static or skeletal mesh that has materials assigned to it, the asset will need to be placed in the same folder structure as the original project to show these correctly. So if you have these in Project Folder &gt; Content &gt; Meshes for the original project and your new project you place the UAsset in Project Folder &gt; Content &gt; FBXs the material references will be lost since they will not know where they were referenced to the original mesh.
+       </li>
+      </ul>
+      <ul>
+       <li>
+        The UAsset may not be from a build of the engine that is compatible. For instance, If you have an UAsset from a 4.10 project you've made, this will not be able to be opened with a 4.9 project. Previous version of the engine are not forward compatible which is in line with pretty much any other software out there.
+       </li>
+      </ul>
+      <ul>
+       <li>
+        The UAsset may be serialized so that it can only work with a specific engine that so that the asset cannot ever be loaded in another engine or engine version that it is not assigned to. This type of serialization does not refer to the engine versions available via GitHub or the Epic Games Launcher.
+       </li>
+      </ul>
+      <h4>
+       <span class="mw-headline" id="Why_does_my_model_take_so_long_to_import.2C_or_why_does_the_editor_freeze_when_I_import_my_mesh.3F">
+        Why does my model take so long to import, or why does the editor freeze when I import my mesh?
+       </span>
+      </h4>
+      <p>
+       There are number of reasons that importing a Static Mesh or Skeletal Mesh into the editor can take a bit of time. Here are some of the things that you can do to help more quickly get your assets into UE4.
+      </p>
+      <p>
+       Static Meshes:
+      </p>
+      <p>
+       1.
+       <b>
+        FBX Triangulation:
+       </b>
+       This routine can be slow and is dependent on the mesh being imported. We use a routine provided by the FBX SDK and it can be slower with meshes that consist of larger polygon counts.
+      </p>
+      <p>
+       <b>
+        Resolution:
+       </b>
+       You can Triangulate your mesh before you export it from your modeling application.
+      </p>
+      <p>
+       2.
+       <b>
+        Lots of Meshes in a single FBX:
+       </b>
+       When importing a single FBX that may contain a number of assets that need to be combined into a single mesh on import you will see the processing time go up, sometimes exponentially. This is usually something that is reported as a "Freeze" or "Crash" with UE4, but it's just processing the asset. Largely, this can happen because there needs to be a lot of copying around in memory for this to work, which itself takes a while. Each part will save as a whole and then load another piece that needs to be added and saved.
+      </p>
+      <p>
+       <b>
+        Resolution:
+       </b>
+       In your modeling application you can combine meshes to be a single asset or bring the mesh into the editor in chunks rather than a single FBX with lots of pieces. Depending on on your asset and needs this may differ slightly for different FBXs.
+      </p>
+      <p>
+       3.
+       <b>
+        Build Adjacency Buffers:
+       </b>
+       This is required for PNT triangles to work for Tessellation. If you have a large mesh or do not plan to use tessellation with it just disable it.
+      </p>
+      <p>
+       Skeletal Meshes:
+      </p>
+      <p>
+       1.
+       <b>
+        Animation Key Frames:
+       </b>
+       This can cause the import process to increase by having a large number of Key Frames setup for your animation, and can largely depend on the number of bones that are being animated.
+      </p>
+      <p>
+       <br/>
+       2.
+       <b>
+        Morph Targets:
+       </b>
+       The more morph targets you have to be imported with your skeletal mesh the longer the import process will take.
+      </p>
+      <h4>
+       <span class="mw-headline" id="Why_is_my_mesh_see_through.2C_or_why_are_the_faces_on_my_mesh_flipped.3F">
+        Why is my mesh see through, or why are the faces on my mesh flipped?
+       </span>
+      </h4>
+      <p>
+       You may need to double check in your modeling package that your polygons normals are facing the correct direction. In most modeling programs, like 3Ds Max or Maya, the back-face will render in the viewport, however in a game engine where you don't want to render what is not needed the backface is culled unless specified to. Only the direction of the polygon's normal will render unless it has a two-sided material applied that will render the face.
+      </p>
+      <p>
+       You can verify this issue in UE4 by opening the Static/Skeletal Mesh Editors. Once enabled you will see Green lines drawn out from each vertex that shows the direction of the normal.
+      </p>
+      <ul class="gallery mw-gallery-packed-hover">
+       <li class="gallerybox" style="width: 468.66666666667px">
+        <div style="width: 468.66666666667px">
+         <div class="thumb" style="width: 466.66666666667px;">
+          <div style="margin:-0.16666666666666px auto;">
+           <img alt="" class="" height="276" src="../assets/asset-creation-and-import-troubleshooting/2.png" width="467"/>
+          </div>
+         </div>
+         <div class="gallerytextwrapper" style="width: 447px">
+          <div class="gallerytext">
+           <p>
+            Static Mesh Editor
+           </p>
+          </div>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 398.66666666667px">
+        <div style="width: 398.66666666667px">
+         <div class="thumb" style="width: 396.66666666667px;">
+          <div style="margin:-0.16666666666666px auto;">
+           <img alt="" class="" height="276" src="../assets/asset-creation-and-import-troubleshooting/3.png" width="397"/>
+          </div>
+         </div>
+         <div class="gallerytextwrapper" style="width: 377px">
+          <div class="gallerytext">
+           <p>
+            Skeletal Mesh Editor
+           </p>
+          </div>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       If these are Green lines are facing inward you will want to edit this in your modeling program to flip the faces the correct direction. Your modeling program should also have a method of displaying the direction of the normal as well.
+      </p>
+      <h4>
+       <span class="mw-headline" id="Is_there_a_poly_count_limitation.3F">
+        Is there a poly count limitation?
+       </span>
+      </h4>
+      <p>
+       For Desktop development the only limitation is based on what your hardware is capable of handling. However, on Mobile the scene view is limited to &lt;= 500k triangles. This is needed to hit 30fps on both iPad4 and iPad Air.
+      </p>
+      <p>
+       There is also a limit of 65k vertices due to lack of 32 bit index support on mobile hardware.
+      </p>
+      <p>
+       For more information about Mobile see these documentation pages:
+      </p>
+      <ul>
+       <li>
+        <a class="external free" href="https://docs.unrealengine.com/latest/INT/Platforms/Mobile/Content/index.html" rel="nofollow">
+         https://docs.unrealengine.com/latest/INT/Platforms/Mobile/Content/index.html
+        </a>
+       </li>
+      </ul>
+      <ul>
+       <li>
+        <a class="external free" href="https://docs.unrealengine.com/latest/INT/Platforms/Mobile/Performance/index.html" rel="nofollow">
+         https://docs.unrealengine.com/latest/INT/Platforms/Mobile/Performance/index.html
+        </a>
+       </li>
+      </ul>
+      <ul>
+       <li>
+        <a class="external free" href="https://docs.unrealengine.com/latest/INT/Engine/Content/ContentStandards/index.html" rel="nofollow">
+         https://docs.unrealengine.com/latest/INT/Engine/Content/ContentStandards/index.html
+        </a>
+       </li>
+      </ul>
+      <h4>
+       <span class="mw-headline" id="Why_is_my_mesh_facing_on_the_wrong_axis.3F">
+        Why is my mesh facing on the wrong axis?
+       </span>
+      </h4>
+      <p>
+       All models should have their Forward dimension facing in the direction of the X-Axis.
+      </p>
+      <p>
+       You can read more about this in the documentation here:
+       <a class="external free" href="https://docs.unrealengine.com/latest/INT/Engine/Content/ContentStandards/index.html" rel="nofollow">
+        https://docs.unrealengine.com/latest/INT/Engine/Content/ContentStandards/index.html
+       </a>
+      </p>
+      <h4>
+       <span class="mw-headline" id="Why_is_my_mesh_so_small.2Flarge_when_I_import.3F">
+        Why is my mesh so small/large when I import?
+       </span>
+      </h4>
+      <p>
+       When developing content in an external package make sure that you've setup your Scale correctly to correlate with Unreal Engine 4's scale.
+      </p>
+      <p>
+       Unreal Engine 4 uses Centimeters. 1 Unreal Unit = 1 Centimeter(cm)
+      </p>
+      <p>
+       When you export your FBX from 3Ds Max or Maya for example, you will need to also make sure that you've set the FBX to export in the scale of Centimeters otherwise it will default to Inches for it's export.
+      </p>
+      <p>
+       This is an example of the 3Ds Max export window with the section for `Units` highlighted. Here you will see that `Automatic` is unchecked and the drop-down is set to Centimeters.
+      </p>
+      <div class="center">
+       <div class="floatnone">
+        <img alt="3DsmaxExportSettings.png" class="" height="386" src="../assets/asset-creation-and-import-troubleshooting/4.png" width="350"/>
+       </div>
+      </div>
+      <p>
+       You also have the option to adjust the scale when you import by looking in the
+       <b>
+        Tranform
+       </b>
+       section.
+      </p>
+      <div class="center">
+       <div class="floatnone">
+        <img alt="ImportUniformScale.png" class="" height="301" src="../assets/asset-creation-and-import-troubleshooting/5.png" width="350"/>
+       </div>
+      </div>
+      <p>
+       For more information about External Content Creation see the documentation here:
+      </p>
+      <ul>
+       <li>
+        <a class="external free" href="https://docs.unrealengine.com/latest/INT/Engine/Content/ContentStandards/index.html" rel="nofollow">
+         https://docs.unrealengine.com/latest/INT/Engine/Content/ContentStandards/index.html
+        </a>
+       </li>
+      </ul>
+      <h4>
+       <span class="mw-headline" id="How_do_I_check_the_UVs_for_my_mesh.3F">
+        How do I check the UVs for my mesh?
+       </span>
+      </h4>
+      <p>
+       If you need to check the UVs of your mesh in you can do this for your Skeletal Mesh or your Static Mesh.
+      </p>
+      <p>
+       To view your UV(s) for your Static Mesh open it in its Static Mesh Editor, then in the toolbar click the UV icon. This will overlay a window with the currently selected UV, which defaults to UV0. You can use the drop-down to select another UV Channel if needed.
+      </p>
+      <div class="floatleft">
+       <img alt="Static Mesh Editor UV" class="" height="346" src="../assets/asset-creation-and-import-troubleshooting/6.png" width="500"/>
+      </div>
+      <p>
+       <br/>
+       <br/>
+       <br/>
+       <br/>
+       <br/>
+       <br/>
+       <br/>
+       <br/>
+       <br/>
+       <br/>
+       <br/>
+       <br/>
+       <br/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <ol>
+       <li>
+        Enables the UV Channel overlay view
+       </li>
+       <li>
+        Allows selection of UV Channel
+       </li>
+      </ol>
+      <p>
+       To view the UV of your Skeletal Mesh you will need to open it in Persona to view the Skeletal Mesh. Then in the Viewport you will be able to select the drop-down for
+       <b>
+        Show
+       </b>
+       &gt;
+       <b>
+        Advanced
+       </b>
+       &gt; Check the
+       <b>
+        UV check box
+       </b>
+       . Here you will also have the drop-down for UV Channel you would like to be overlaid in the view.
+      </p>
+      <ul class="gallery mw-gallery-packed-hover">
+       <li class="gallerybox" style="width: 398.66666666667px">
+        <div style="width: 398.66666666667px">
+         <div class="thumb" style="width: 396.66666666667px;">
+          <div style="margin:-0.16666666666666px auto;">
+           <img alt="" class="" height="276" src="../assets/asset-creation-and-import-troubleshooting/7.png" width="397"/>
+          </div>
+         </div>
+         <div class="gallerytextwrapper" style="width: 377px">
+          <div class="gallerytext">
+           <p>
+            Menu Option for UVs
+           </p>
+          </div>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 398.66666666667px">
+        <div style="width: 398.66666666667px">
+         <div class="thumb" style="width: 396.66666666667px;">
+          <div style="margin:-0.16666666666666px auto;">
+           <img alt="" class="" height="276" src="../assets/asset-creation-and-import-troubleshooting/8.png" width="397"/>
+          </div>
+         </div>
+         <div class="gallerytextwrapper" style="width: 377px">
+          <div class="gallerytext">
+           <p>
+            Skeletal Mesh UVs
+           </p>
+          </div>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <h4>
+       <span class="mw-headline" id="Why_do_I_need_to_UV_my_mesh_for_texture_mapping.3F">
+        Why do I need to UV my mesh for texture mapping?
+       </span>
+      </h4>
+      <p>
+       If you need to assign a material to your mesh it would be imperative to setup your UV, otherwise you would see stretching or other artifacts because the UV is not laid out properly.
+      </p>
+      <p>
+       You can read more about this in the documentation page:
+       <a class="external free" href="https://docs.unrealengine.com/latest/INT/Engine/Content/FBX/Materials/index.html" rel="nofollow">
+        https://docs.unrealengine.com/latest/INT/Engine/Content/FBX/Materials/index.html
+       </a>
+      </p>
+      <h4>
+       <span class="mw-headline" id="Why_does_my_FBX_not_apply_all_the_textures_or_shaders_that_were_made_in_my_modeling_program.3F">
+        Why does my FBX not apply all the textures or shaders that were made in my modeling program?
+       </span>
+      </h4>
+      <p>
+       Unreal Engine 4 cannot import specific materials/textures/shaders that were created in other programs. While the Material Editor in UE4 is a robust system there isn't a universal system in place to communicate the different shader setups from other programs. With the many different modeling packages out there and their own shader setups Unreal can only do basic imports. It is for this reason that it is recommended to use the Material Editor in the engine to create all your materials for your assets.
+      </p>
+      <p>
+       There are a few types of textures that can be imported automatically to create the material and assign to the mesh, but this is only for simple materials that use Diffuse, Normal, and Opacity(Alpha) textures. These types of textures can be automatically assigned in a generated material.
+      </p>
+      <h4>
+       <span class="mw-headline" id="How_do_I_Import_a_.apx_CLOTH_file_created_with_NVIDIA.27s_tools.3F">
+        How do I Import a .apx CLOTH file created with NVIDIA's tools?
+       </span>
+      </h4>
+      <p>
+       When you create a Apex Cloth asset with your modeling package using Maya, 3Ds Max, or Nvidias ClothingTool that comes with their SDK you may be wondering how you would import that .apb/.apx file that is created with your Cloth attributes.
+      </p>
+      <p>
+       You will not be able to directly import this type of file using the Import option from the Content Browser. Instead it will be assigned to the Skeletal Mesh that houses the material that this file needs to be assigned to.
+      </p>
+      <p>
+       1. Start by importing your Skeletal Mesh
+       <br/>
+       2. Now open the Skeletal Mesh in Persona (Skeletal Mesh Editor)
+       <br/>
+      </p>
+      3. In the Detail's panel on the left and locate the section named
+      <b>
+       Clothing
+      </b>
+      and click the
+      <b>
+       Add APEX clothing file...
+      </b>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:349px;">
+        <img alt="" class="thumbimage" height="77" src="../assets/asset-creation-and-import-troubleshooting/9.png" width="347"/>
+        <div class="thumbcaption">
+         Add APEX clothing file button
+        </div>
+       </div>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <p>
+       <br/>
+       4. Select your .apx file from the selection window.
+       <br/>
+      </p>
+      <p>
+       5. Once imported you can select the
+       <b>
+        Clothing
+       </b>
+       drop-down under each Material Element to choose where it should be assigned.
+      </p>
+      <div class="floatleft">
+       <img alt="Cloth Assignment to Material Element" class="" height="188" src="../assets/asset-creation-and-import-troubleshooting/10.png" width="400"/>
+      </div>
+      <h4>
+       <span class="mw-headline" id="How_can_I_use_my_Pivot_from_my_modeling_program_instead_of_it_being_offset.3F">
+        How can I use my Pivot from my modeling program instead of it being offset?
+       </span>
+      </h4>
+      <p>
+       By default, the pivot will use the World Origin (0,0,0) of the FBX, so if the meshes pivot is not centered out to 0,0,0 then the mesh will appear to be offset when you import it into UE4.
+      </p>
+      <p>
+       As of 4.12 you can now import your static meshes and have have the pivot use the one from the DCC for the mesh rather than being centered to the FBX's DCC.
+      </p>
+      <p>
+       Use the following when you import:
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:352px;">
+        <img alt="FBXPivot.png" class="thumbimage" height="550" src="../assets/asset-creation-and-import-troubleshooting/11.png" width="350"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       Simply uncheck the option for
+       <b>
+        Transform Vertex to Absolute
+       </b>
+       so that the Pivot, Transform, and Offset from the FBX will be used for the static mesh.
+      </p>
+      <h4>
+       <span class="mw-headline" id="Why_can_I_walk_through_my_mesh.2C_or_Why_does_my_collision_look_wrong_when_I_import_my_mesh.3F">
+        Why can I walk through my mesh, or Why does my collision look wrong when I import my mesh?
+       </span>
+      </h4>
+      <p>
+       If you are able to walk through your mesh you likely have no collision setup for your static mesh. This will prevent the player or any objects simulating physics to interact with the mesh.
+      </p>
+      <p>
+       For an overview of different methods that Unreal Engine 4 uses with collision along with how-to set these up have a look at this documentation:
+      </p>
+      <ul>
+       <li>
+        <a class="external free" href="https://docs.unrealengine.com/latest/INT/Engine/Physics/Collision/HowTo/index.html" rel="nofollow">
+         https://docs.unrealengine.com/latest/INT/Engine/Physics/Collision/HowTo/index.html
+        </a>
+       </li>
+      </ul>
+      <p>
+       If you are having trouble getting collision to be more accurate you will likely need to use the auto-convex method of collision generation with higher accuracy settings, or you will need to create custom collision in your modeling application.
+      </p>
+      <p>
+       You can read more about that here in the documentation where it covers adding convex collision and the caveats to using it.
+      </p>
+      <ul>
+       <li>
+        <a class="external free" href="https://docs.unrealengine.com/latest/INT/Engine/Physics/Collision/HowTo/AddConvexHulls/index.html" rel="nofollow">
+         https://docs.unrealengine.com/latest/INT/Engine/Physics/Collision/HowTo/AddConvexHulls/index.html
+        </a>
+       </li>
+       <li>
+        <a class="external free" href="https://docs.unrealengine.com/latest/INT/Engine/Content/FBX/StaticMeshes/index.html#collision" rel="nofollow">
+         https://docs.unrealengine.com/latest/INT/Engine/Content/FBX/StaticMeshes/index.html#collision
+        </a>
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Skeletal_Mesh">
+        <b>
+         Skeletal Mesh
+        </b>
+       </span>
+      </h3>
+      <h4>
+       <span class="mw-headline" id="COMING_SOON.21">
+        COMING SOON!
+       </span>
+      </h4>
+      <h3>
+       <span class="mw-headline" id="Texture_or_Material">
+        <b>
+         Texture or Material
+        </b>
+       </span>
+      </h3>
+      <h4>
+       <span class="mw-headline" id="When_I_import_a_texture_with_an_Alpha.2C_why_doesn.27t_the_Alpha_show.3F">
+        When I import a texture with an Alpha, why doesn't the Alpha show?
+       </span>
+      </h4>
+      <p>
+       When importing any textures that have an Alpha, like with PNG, the Alpha is disabled when viewing just the texture asset, but it's visible when viewing in the Texture Editor. When disabling the Alpha the color information is not known for this negative space and is just pulled from the colors of the pixels that are known in that area.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:111px;">
+        <img alt="" class="thumbimage" height="148" src="../assets/asset-creation-and-import-troubleshooting/12.png" width="109"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Texture Asset
+        </div>
+       </div>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <p>
+       <br/>
+       When opening the Texture Editor with this asset you can enable and disable the Alpha to see how this works.
+      </p>
+      <ul class="gallery mw-gallery-packed-hover">
+       <li class="gallerybox" style="width: 369.33333333333px">
+        <div style="width: 369.33333333333px">
+         <div class="thumb" style="width: 367.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="300" src="../assets/asset-creation-and-import-troubleshooting/13.png" width="368"/>
+          </div>
+         </div>
+         <div class="gallerytextwrapper" style="width: 348px">
+          <div class="gallerytext">
+           <p>
+            Alpha Channel Enabled
+           </p>
+          </div>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 369.33333333333px">
+        <div style="width: 369.33333333333px">
+         <div class="thumb" style="width: 367.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="300" src="../assets/asset-creation-and-import-troubleshooting/14.png" width="368"/>
+          </div>
+         </div>
+         <div class="gallerytextwrapper" style="width: 348px">
+          <div class="gallerytext">
+           <p>
+            Alpha Channel Disabled
+           </p>
+          </div>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <h4>
+       <span class="mw-headline" id="What_does_the_Power_of_2_warning_mean_when_I_import_my_image.3F">
+        What does the Power of 2 warning mean when I import my image?
+       </span>
+      </h4>
+      <p>
+       When creating or using a texture in Unreal Engine you will need to make sure that it is a Power of two, meaning that it should be using 16, 32, 64, 128, 256, etc for it's resolutions. ie. 256 x 256 for it's dimensions.
+      </p>
+      <p>
+       While you can use a texture without these dimensions you may run into issues, especially depending on the file size of the time. When not using a power of two the texture can never be streamed, which means that it cannot have mipmaps to lower its resolutions dynamically at further distances. This means that it will always render at full quality at the farthest distances and at its full file size too.
+      </p>
+      <p>
+       It's always best to use a power of two where possible and take precautions where you cannot.
+      </p>
+      <h4>
+       <span class="mw-headline" id="Why_can.27t_I_use_a_texture_resolution_larger_than_8192_in-game.3F">
+        Why can't I use a texture resolution larger than 8192 in-game?
+       </span>
+      </h4>
+      <p>
+       Unreal Engine 4 has no problem importing textures that are up to 8192, but you may have noticed if you look at the Texture Editor the in-game resolution is still listed as 4196. Before you can use 8192 you will need to make some edits to your device profiles in order to enable this.
+      </p>
+      <p>
+       Follow the documentation here to see how to proceed:
+       <a class="external free" href="https://docs.unrealengine.com/latest/INT/Engine/Content/Types/Textures/SupportAndSettings/index.html#textureresolution" rel="nofollow">
+        https://docs.unrealengine.com/latest/INT/Engine/Content/Types/Textures/SupportAndSettings/index.html#textureresolution
+       </a>
+      </p>
+      <h4>
+       <span class="mw-headline" id="Why_does_my_texture.2Fmaterial_look_low_quality.2Fblurry_in_the_game.3F">
+        Why does my texture/material look low quality/blurry in the game?
+       </span>
+      </h4>
+      <p>
+       If you're seeing a difference between working in the Editor and PIE (Play in Editor) then you will likely want to check to make sure that your Engine Scalability settings are set to EPIC. Sometimes these can be lowered when monitoring performance of your computer to make sure that you keep decent performance while working in the Editor.
+      </p>
+      <p>
+       For more information on Engine Scalability you can see the documentation here:
+       <a class="external free" href="https://docs.unrealengine.com/latest/INT/Engine/Performance/Scalability/ScalabilityReference/" rel="nofollow">
+        https://docs.unrealengine.com/latest/INT/Engine/Performance/Scalability/ScalabilityReference/
+       </a>
+      </p>
+      <p>
+       If you find that the scalability is being lowered often you can disable the option for
+       <b>
+        Monitor Editor Performance?
+       </b>
+       to keep the same quality settings.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:330px;">
+        <img alt="" class="thumbimage" height="221" src="../assets/asset-creation-and-import-troubleshooting/15.png" width="328"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Engine Scalability Monitoring
+        </div>
+       </div>
+      </div>
+      <h4>
+       <span class="mw-headline" id="Why_does_the_editor_freeze.2Ftake_a_long_time_when_I_try_to_open_my_asset.3F">
+        Why does the editor freeze/take a long time when I try to open my asset?
+       </span>
+      </h4>
+      <p>
+       If it's the first time you've opened an asset in the editor it can take a moment to write the Derive Data Cache (DDC) so that it can make it easier for the editor to know what these assets are and open them more quickly in the future. For most assets you may not notice any delay in opening them the first time, but if you have textures with high resolutions in the range of 8192 and high polygon density static meshes it can take a moment or more to write these to the DDC the first time. The time it takes to write to the DDC is dependent on the number of assets being opened and the hardware that is being used. If opening multiple assets it can take more time.
+      </p>
+      <p>
+       For more information about the Derive Data Cache you can see the documentation here:
+       <a class="external free" href="https://docs.unrealengine.com/latest/INT/Engine/Basics/DerivedDataCache/index.html" rel="nofollow">
+        https://docs.unrealengine.com/latest/INT/Engine/Basics/DerivedDataCache/index.html
+       </a>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Accessing mesh triangles and vertex positions in build - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Accessing mesh triangles and vertex positions in build
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Mesh_specific_vertices_and_triangles">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Mesh specific vertices and triangles
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Getting_Transformed_Vertex_Positions">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Getting Transformed Vertex Positions
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Summary">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Summary
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h1>
+      <p>
+       Author:
+       <a class="external text" href="http://www.dawidniemiec.com/" rel="nofollow">
+        vebski
+       </a>
+      </p>
+      <p>
+       If you are wondering how to access triangles and vertex positions in packaged project. Here is the solution I found.
+Accessing this data from Unreal's variables (ex. StaticMesh-&gt;GetPhysicsTriMeshData()) will not work since all vertex data of a mesh is serialized when packaging the project.
+      </p>
+      <p>
+       To do this we will have to use PhysX library inside UE4 (on how to include PhysX module
+       ).
+      </p>
+      <p>
+       Also remember to include these in your .cpp
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"PhysicsPublic.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"PhysXIncludes.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"ThirdParty/PhysX/PhysX-3.3/include/geometry/PxTriangleMesh.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"ThirdParty/PhysX/PhysX-3.3/include/foundation/PxSimpleTypes.h"</span><span class="cp"></span>
+</pre>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Mesh_specific_vertices_and_triangles">
+        Mesh specific vertices and triangles
+       </span>
+      </h1>
+      <p>
+       This method will access data only for specific UMeshComponent.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// MyStaticMesh is a UStaticMeshComponent</span>
+<span class="n">PxTriangleMesh</span><span class="o">*</span> <span class="n">TempTriMesh</span> <span class="o">=</span> <span class="n">MyStaticMesh</span><span class="o">-&gt;</span><span class="n">BodyInstance</span><span class="p">.</span><span class="n">BodySetup</span><span class="p">.</span><span class="n">Get</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">TriMeshes</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span>
+
+<span class="n">check</span><span class="p">(</span><span class="n">TempTriMesh</span><span class="p">);</span>
+<span class="n">int32</span> <span class="n">TriNumber</span> <span class="o">=</span> <span class="n">TempTriMesh</span><span class="o">-&gt;</span><span class="n">getNbTriangles</span><span class="p">();</span>
+
+<span class="k">const</span> <span class="n">PxVec3</span><span class="o">*</span> <span class="n">PVertices</span> <span class="o">=</span> <span class="n">TempTriMesh</span><span class="o">-&gt;</span><span class="n">getVertices</span><span class="p">();</span>
+<span class="k">const</span> <span class="kt">void</span><span class="o">*</span> <span class="n">Triangles</span> <span class="o">=</span> <span class="n">TempTriMesh</span><span class="o">-&gt;</span><span class="n">getTriangles</span><span class="p">();</span>
+
+<span class="c1">// Grab triangle indices</span>
+<span class="n">int32</span> <span class="n">I0</span><span class="p">,</span> <span class="n">I1</span><span class="p">,</span> <span class="n">I2</span><span class="p">;</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="n">int32</span> <span class="n">TriIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">TriIndex</span> <span class="o">&lt;</span> <span class="n">TriNumber</span><span class="p">;</span> <span class="o">++</span><span class="n">TriIndex</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">TempTriMesh</span><span class="o">-&gt;</span><span class="n">getTriangleMeshFlags</span><span class="p">()</span> <span class="o">&amp;</span> <span class="n">PxTriangleMeshFlag</span><span class="o">::</span><span class="n">eHAS_16BIT_TRIANGLE_INDICES</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">PxU16</span><span class="o">*</span> <span class="n">P16BitIndices</span> <span class="o">=</span> <span class="p">(</span><span class="n">PxU16</span><span class="o">*</span><span class="p">)</span><span class="n">Triangles</span><span class="p">;</span>
+		<span class="n">I0</span> <span class="o">=</span> <span class="n">P16BitIndices</span><span class="p">[(</span><span class="n">TriIndex</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="mi">0</span><span class="p">];</span>
+		<span class="n">I1</span> <span class="o">=</span> <span class="n">P16BitIndices</span><span class="p">[(</span><span class="n">TriIndex</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
+		<span class="n">I2</span> <span class="o">=</span> <span class="n">P16BitIndices</span><span class="p">[(</span><span class="n">TriIndex</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="p">];</span>
+	<span class="p">}</span>
+	<span class="k">else</span>
+	<span class="p">{</span>
+		<span class="n">PxU32</span><span class="o">*</span> <span class="n">P32BitIndices</span> <span class="o">=</span> <span class="p">(</span><span class="n">PxU32</span><span class="o">*</span><span class="p">)</span><span class="n">Triangles</span><span class="p">;</span>
+		<span class="n">I0</span> <span class="o">=</span> <span class="n">P32BitIndices</span><span class="p">[(</span><span class="n">TriIndex</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="mi">0</span><span class="p">];</span>
+		<span class="n">I1</span> <span class="o">=</span> <span class="n">P32BitIndices</span><span class="p">[(</span><span class="n">TriIndex</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
+		<span class="n">I2</span> <span class="o">=</span> <span class="n">P32BitIndices</span><span class="p">[(</span><span class="n">TriIndex</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="mi">2</span><span class="p">];</span>
+	<span class="p">}</span>
+
+        <span class="c1">// Local position</span>
+	<span class="k">const</span> <span class="n">FVector</span> <span class="n">V0</span> <span class="o">=</span> <span class="n">P2UVector</span><span class="p">(</span><span class="n">PVertices</span><span class="p">[</span><span class="n">I0</span><span class="p">]);</span>
+	<span class="k">const</span> <span class="n">FVector</span> <span class="n">V1</span> <span class="o">=</span> <span class="n">P2UVector</span><span class="p">(</span><span class="n">PVertices</span><span class="p">[</span><span class="n">I1</span><span class="p">]);</span>
+	<span class="k">const</span> <span class="n">FVector</span> <span class="n">V2</span> <span class="o">=</span> <span class="n">P2UVector</span><span class="p">(</span><span class="n">PVertices</span><span class="p">[</span><span class="n">I2</span><span class="p">]);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       There is also way of accessing all meshes (welded) of an actor.
+It can be done by calling GetAllShapes() in BodyInstance.
+      </p>
+      <h1>
+       <span class="mw-headline" id="Getting_Transformed_Vertex_Positions">
+        Getting Transformed Vertex Positions
+       </span>
+      </h1>
+      <p>
+       <b>
+        Author
+       </b>
+       (
+       )
+      </p>
+      <p>
+       Many thanks to vebski for making this wiki and providing this info!
+      </p>
+      <p>
+       I've written this code to get the transformed positions of all vertices of any static mesh component.
+      </p>
+      <p>
+       This will account for actor rotation, translation, and scaling.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Get Transformed Vertex positions of any static mesh! -Rama</span>
+<span class="kt">bool</span> <span class="n">UVictoryBPFunctionLibrary</span><span class="o">::</span><span class="n">GetStaticMeshVertexLocations</span><span class="p">(</span><span class="n">UStaticMeshComponent</span><span class="o">*</span> <span class="n">Comp</span><span class="p">,</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FVector</span><span class="o">&gt;&amp;</span> <span class="n">VertexPositions</span><span class="p">)</span>
+<span class="p">{</span>
+	
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">Comp</span><span class="p">)</span> 						
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="p">}</span>
+	
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">Comp</span><span class="o">-&gt;</span><span class="n">IsValidLowLevel</span><span class="p">())</span> 
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~</span>
+	
+	<span class="c1">//Component Transform</span>
+	<span class="n">FTransform</span> <span class="n">RV_Transform</span> <span class="o">=</span> <span class="n">Comp</span><span class="o">-&gt;</span><span class="n">GetComponentTransform</span><span class="p">();</span> 
+	
+	<span class="c1">//Body Setup valid?</span>
+	<span class="n">UBodySetup</span><span class="o">*</span> <span class="n">BodySetup</span> <span class="o">=</span> <span class="n">Comp</span><span class="o">-&gt;</span><span class="n">GetBodySetup</span><span class="p">();</span>
+	
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">BodySetup</span> <span class="o">||</span> <span class="o">!</span><span class="n">BodySetup</span><span class="o">-&gt;</span><span class="n">IsValidLowLevel</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="p">}</span>  
+	
+        <span class="c1">//array as of 4.9</span>
+	<span class="k">for</span><span class="p">(</span><span class="n">PxTriangleMesh</span><span class="o">*</span> <span class="nl">EachTriMesh</span> <span class="p">:</span> <span class="n">BodySetup</span><span class="o">-&gt;</span><span class="n">TriMeshes</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">EachTriMesh</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+		<span class="p">}</span>
+		<span class="c1">//~~~~~~~~~~~~~~~~</span>
+
+		<span class="c1">//Number of vertices</span>
+		<span class="n">PxU32</span> <span class="n">VertexCount</span> <span class="o">=</span> <span class="n">EachTriMesh</span><span class="o">-&gt;</span><span class="n">getNbVertices</span><span class="p">();</span>
+
+		<span class="c1">//Vertex array</span>
+		<span class="k">const</span> <span class="n">PxVec3</span><span class="o">*</span> <span class="n">Vertices</span> <span class="o">=</span> <span class="n">EachTriMesh</span><span class="o">-&gt;</span><span class="n">getVertices</span><span class="p">();</span>
+
+		<span class="c1">//For each vertex, transform the position to match the component Transform </span>
+		<span class="k">for</span> <span class="p">(</span><span class="n">PxU32</span> <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="n">VertexCount</span><span class="p">;</span> <span class="n">v</span><span class="o">++</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">VertexPositions</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">RV_Transform</span><span class="p">.</span><span class="n">TransformPosition</span><span class="p">(</span><span class="n">P2UVector</span><span class="p">(</span><span class="n">Vertices</span><span class="p">[</span><span class="n">v</span><span class="p">])));</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	
+	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       (
+       )
+      </p>
+      <h1>
+       <span class="mw-headline" id="Summary">
+        Summary
+       </span>
+      </h1>
+      <p>
+       I hope it will save you some time, it took me a while of reading source code to figure this out.
+      </p>
+      <p>
+       vebski
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

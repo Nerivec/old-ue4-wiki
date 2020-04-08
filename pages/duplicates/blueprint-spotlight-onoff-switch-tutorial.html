@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Blueprint Spotlight On/Off Switch Tutorial - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Blueprint Spotlight On/Off Switch Tutorial
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <h2>
+       <span class="mw-headline" id="Flow_Control_and_Level_Blueprints">
+        Flow Control and Level Blueprints
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Adding_Flow_Control_to_a_Simple_Level_Blueprint">
+        Adding Flow Control to a Simple Level Blueprint
+       </span>
+      </h3>
+      <p>
+       This example follows from the
+       Level Blueprint tutorial, so you may need to start there to add Actors to your level or set up the initial Trigger and Spotlight graph, if you are doing this as a full tutorial.
+      </p>
+      <p>
+       1. Select the comment box, then press the Delete key or right-click and select Delete.
+      </p>
+      <blockquote>
+       <p>
+        <b>
+         Note
+        </b>
+        : While you can move a comment and its contents by dragging the comment box alone, pressing the Delete key with just the comment box selected will only delete the comment.
+       </p>
+      </blockquote>
+      <p>
+       2. Right-click on the output execution pin of the OnActorBeginOverlap Node and select Break link to Set Brightness (). This will disconnect the OnActorBeginOverlap and SetBrightness Nodes.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:693px;">
+        <img alt="Spotlight toggle 2.png" class="thumbimage" height="301" src="../assets/blueprint-spotlight-onoff-switch-tutorial/0.png" width="691"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       3. Select both
+       <b>
+        Set Brightness
+       </b>
+       and
+       <b>
+        Spotlight
+       </b>
+       , either by holding Shift and clicking on them or by dragging a selection box around them. Drag both
+       <i>
+        Nodes
+       </i>
+       to the far right
+of your graph, so that you have room to construct more _Nodes_ in the center of the graph. Because execution flows from left to right in a Blueprint, it helps to lay out your nodes from left to right in a linear fashion,
+and
+       <b>
+        Set Brightness
+       </b>
+       will still be the last
+       <i>
+        Node
+       </i>
+       we execute.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="Drag nodes right SOF.png" class="thumbimage" height="260" src="../assets/blueprint-spotlight-onoff-switch-tutorial/1.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       4. Click on the execution pin on the right of your
+       <b>
+        OnActorBeginOverlap
+       </b>
+       <i>
+        Node
+       </i>
+       , drag a wire out into space, and then release it. The context menu will appear.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="Toggle actor overlap menu.png" class="thumbimage" height="154" src="../assets/blueprint-spotlight-onoff-switch-tutorial/2.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       5. Expand
+       <b>
+        Flow Control
+       </b>
+       to get a list of
+       <i>
+        Flow Control Nodes
+       </i>
+       , then select
+       <b>
+        FlipFlop
+       </b>
+       .
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="Context menu flipflop.png" class="thumbimage" height="250" src="../assets/blueprint-spotlight-onoff-switch-tutorial/3.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       <b>
+        FlipFlop
+       </b>
+       switches between state
+       <b>
+        A
+       </b>
+       and state
+       <b>
+        B
+       </b>
+       , and also outputs a
+       <i>
+        Boolean
+       </i>
+       that is true, or 1, when state
+       <b>
+        A
+       </b>
+       is selected.
+      </p>
+      <p>
+       6. Connect both the
+       <b>
+        A
+       </b>
+       pin and the
+       <b>
+        B
+       </b>
+       pin to the
+       <b>
+        Set Brightness
+       </b>
+       execution pin.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="Toggle AB connect.png" class="thumbimage" height="147" src="../assets/blueprint-spotlight-onoff-switch-tutorial/4.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <blockquote>
+       <p>
+        <b>
+         Note
+        </b>
+        : It is possible for there to be two (or more) output execution pins that are connected to one input execution pin.  However, the flow of execution through a _Blueprint_ is linear.
+You cannot have one output execution pin connected to two (or more) input execution pins to trigger those _Nodes_ simultaneously.  To have two nodes triggered by one event, the nodes must be connected in sequence.
+       </p>
+      </blockquote>
+      <p>
+       <br/>
+       At this point, the trigger will toggle the light off, and then off again. This is not the most useful light. We will now make the
+       <b>
+        NewBrightness
+       </b>
+       input on the
+       <b>
+        Set Brightness
+       </b>
+       node dependent on the
+       <b>
+        IsA
+       </b>
+       <i>
+        Boolean
+       </i>
+       .
+      </p>
+      <p>
+       <br/>
+       <b>
+        FlipFlop
+       </b>
+       selects state
+       <b>
+        A
+       </b>
+       first, and we want the trigger to turn off the light first.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <table class="wikitable">
+       <tbody>
+        <tr>
+         <th scope="col">
+          FlipFlop Selected State
+         </th>
+         <th scope="col">
+          IsA
+         </th>
+         <th scope="col">
+          Light State
+         </th>
+         <th scope="col">
+          NewBrightness
+         </th>
+        </tr>
+        <tr>
+         <td>
+          A
+         </td>
+         <td>
+          True (1)
+         </td>
+         <td>
+          Off
+         </td>
+         <td>
+          0
+         </td>
+        </tr>
+        <tr>
+         <td>
+          B
+         </td>
+         <td>
+          False (0)
+         </td>
+         <td>
+          On
+         </td>
+         <td>
+          1
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       From this table, we can see that our
+       <b>
+        NewBrightness
+       </b>
+       variable needs to be equal to
+       <i>
+        1 - IsA
+       </i>
+       .  Therefore, the next
+       <i>
+        Node
+       </i>
+       we need to add is a subtraction
+       <i>
+        Node
+       </i>
+       .
+      </p>
+      <p>
+       1. In the search bar of the
+       <b>
+        Palette
+       </b>
+       tab, type
+       <i>
+        -
+       </i>
+       .  Because the
+       <b>
+        NewBrightness
+       </b>
+       pin on our
+       <b>
+        Set Brightness
+       </b>
+       node is green, showing it is a float variable, we want to select
+       <b>
+        - (float)
+       </b>
+       .
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:280px;">
+        <img alt="Subtract float palette.png" class="thumbimage" height="295" src="../assets/blueprint-spotlight-onoff-switch-tutorial/5.png" width="278"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <blockquote>
+       <p>
+        In this case, using the context menu for the
+        <b>
+         IsA
+        </b>
+        pin will not give us the _Node_ we are looking for. Just to test this:
+1. Click on the
+        <b>
+         IsA
+        </b>
+        pin, drag into space, and then release. The context menu for this pin will appear.
+2. Typing
+        <i>
+         -
+        </i>
+        or
+        <i>
+         subtract
+        </i>
+        into the context menu yields no results.  Here we can see that sometimes the context menu will not provide the _Node_ we are looking for.
+This is especially true when the type of a variable or pin needs to be converted before it is an appropriate input for our
+        <i>
+         Node
+        </i>
+        .
+       </p>
+      </blockquote>
+      <p>
+       2. Click on
+       <b>
+        - (Float)
+       </b>
+       and drag it into the
+       <b>
+        Graph
+       </b>
+       pane to the right of the
+       <b>
+        IsA
+       </b>
+       pin.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="Subtract float drag.png" class="thumbimage" height="176" src="../assets/blueprint-spotlight-onoff-switch-tutorial/6.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       3. Type
+       <b>
+        1
+       </b>
+       in the top input text box on the
+       <b>
+        - (Float)
+       </b>
+       <i>
+        Node
+       </i>
+       .
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:159px;">
+        <img alt="Float 1 SOF.png" class="thumbimage" height="107" src="../assets/blueprint-spotlight-onoff-switch-tutorial/7.png" width="157"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       4. Connect
+       <b>
+        IsA
+       </b>
+       to the bottom input pin.
+      </p>
+      <p>
+       A
+       <i>
+        Boolean-to-Float
+       </i>
+       <i>
+        Conversion Node
+       </i>
+       will automatically appear.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:108px;">
+        <img alt="Boolean-to-float.png" class="thumbimage" height="79" src="../assets/blueprint-spotlight-onoff-switch-tutorial/8.png" width="106"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       <i>
+        Conversion Nodes
+       </i>
+       can also be found in the
+       <b>
+        Palette
+       </b>
+       pane or context menu under
+       <b>
+        Conversions
+       </b>
+       .
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:278px;">
+        <img alt="Conversion palette.png" class="thumbimage" height="417" src="../assets/blueprint-spotlight-onoff-switch-tutorial/9.png" width="276"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       You may need to rearrange the
+       <i>
+        Conversion Node'
+       </i>
+       and the
+       <b>
+        - (Float)
+       </b>
+       <i>
+        Node
+       </i>
+       so that the wires are visible.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="Toggle subtract converted.png" class="thumbimage" height="193" src="../assets/blueprint-spotlight-onoff-switch-tutorial/10.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       At this point, you could connect the output pin of the
+       <b>
+        - (Float)
+       </b>
+       <i>
+        Node
+       </i>
+       to
+       <b>
+        NewBrightness
+       </b>
+       and your light would toggle on and off. However, a brightness of 1 will not create a very strong light.
+      </p>
+      <table class="wikitable">
+       <tbody>
+        <tr>
+         <th scope="col">
+          FlipFlop Selected State
+         </th>
+         <th scope="col">
+          IsA
+         </th>
+         <th scope="col">
+          Light State
+         </th>
+         <th scope="col">
+          NewBrightness
+         </th>
+        </tr>
+        <tr>
+         <td>
+          A
+         </td>
+         <td>
+          True (1)
+         </td>
+         <td>
+          Off
+         </td>
+         <td>
+          0
+         </td>
+        </tr>
+        <tr>
+         <td>
+          B
+         </td>
+         <td>
+          False (0)
+         </td>
+         <td>
+          On
+         </td>
+         <td>
+          500
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       This is the revised table for our desired
+       <b>
+        NewBrightness
+       </b>
+       values.  If we multiply the output of the
+       <b>
+        - (Float)
+       </b>
+       <i>
+        Node
+       </i>
+       by 500, we will boost the brightness of the light when it is on.
+      </p>
+      <p>
+       5. In this case, you can use the context menu for the
+       <b>
+        - (Float)
+       </b>
+       <i>
+        Node's
+       </i>
+       output pin. Type _*_ in the search bar of the menu, then select
+       <b>
+        (Float)
+       </b>
+       .
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="Multiply context menu.png" class="thumbimage" height="353" src="../assets/blueprint-spotlight-onoff-switch-tutorial/11.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       6. Type
+       <i>
+        500
+       </i>
+       in the bottom input field of the
+       <b>
+        (Float
+       </b>
+       <i>
+        Node
+       </i>
+       that appears.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:206px;">
+        <img alt="Multiply 500.png" class="thumbimage" height="106" src="../assets/blueprint-spotlight-onoff-switch-tutorial/12.png" width="204"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       7. Connect the output pin to
+       <b>
+        NewBrightness
+       </b>
+       .
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="Toggle complete uncommented.png" class="thumbimage" height="244" src="../assets/blueprint-spotlight-onoff-switch-tutorial/13.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       The Blueprint is now complete.  If you
+       <b>
+        Compile
+       </b>
+       the
+       <i>
+        Level Blueprint
+       </i>
+       and then play the game in the Level Editor, running through the trigger on top of the square
+       <i>
+        StaticMesh
+       </i>
+       will turn off the light, and overlapping the
+       <i>
+        TriggerVolume
+       </i>
+       a second time will turn the light back on.
+      </p>
+      <p>
+       However, we will also comment our Blueprint graph so that going forward, it will be easy to know what each part of our graph does, and to keep our Blueprints organized.
+      </p>
+      <p>
+       Using the same comment process as when we made a Spotlight Off Switch, we can comment the entire graph.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="Toggle block comment.png" class="thumbimage" height="391" src="../assets/blueprint-spotlight-onoff-switch-tutorial/14.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       However, it can be very helpful to comment directly on specific _Nodes_ as well.  Our
+       <b>
+        FlipFlop
+       </b>
+       _Node_ is a good candidate for a comment, since it would be helpful to be able to tell at a glance what state
+       <b>
+        A
+       </b>
+       and state
+       <b>
+        B
+       </b>
+       mean.
+      </p>
+      <p>
+       1. Right-click on the
+       <b>
+        FlipFlop
+       </b>
+       <i>
+        Node
+       </i>
+       .
+      </p>
+      <p>
+       2. In the
+       <b>
+        Node Comment
+       </b>
+       box at the bottom of the right-click menu, type
+       <i>
+        A = Off, B = On
+       </i>
+       and then press Enter.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:278px;">
+        <img alt="Node comment SOF.png" class="thumbimage" height="461" src="../assets/blueprint-spotlight-onoff-switch-tutorial/15.png" width="276"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       Unlike the
+       <b>
+        Comment Box
+       </b>
+       ,
+       <i>
+        Node
+       </i>
+       comments won't resize as you zoom.  However, they are very useful for at-a-glance reference as you follow the path of a graph.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="Completed level toggle.png" class="thumbimage" height="391" src="../assets/blueprint-spotlight-onoff-switch-tutorial/16.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:741px;">
+        <img alt="Spotlight toggle switch.png" class="thumbimage" height="436" src="../assets/blueprint-spotlight-onoff-switch-tutorial/17.png" width="739"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

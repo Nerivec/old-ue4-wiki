@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Slate, Loading Styles &amp; Resources - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Slate, Loading Styles &amp; Resources
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:502px;">
+        <img alt="" class="thumbimage" height="272" src="../assets/slate-loading-styles-resources/0.png" width="500"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Spell icons are property of Electronic Arts, I claim no ownership of these images. Long live UO!
+        </div>
+       </div>
+      </div>
+      <p>
+       Before reading these sources, be sure to take a look at the Hello Slate tutorial, it will bring you up to speed on the necessary reading to process the information below. There are some differences to be sure, we have also added a subclassed Game Module (FDefaultGameModuleImpl) class to the mix, in addition to the AHUD and SCompoundWidget. As of 4.0.2 these classes are working on an otherwise unmodified (except for the in-editor mods in Hello Slate) build, other than that my engine/environment is completely unmodified. The Hello Slate tutorial can be found here...
+       <br/>
+       <a class="external free" href="./slate-hello.html" rel="nofollow">
+        Slate, Hello
+       </a>
+       <br/>
+       <br/>
+       So, what's going on here. I'll just give a quick run-down of execution when you launch a PIE or stand-alone game. The first thing that happens is the Game Module is instanced/loaded, in this case that happens to be an FMyProject type. Our FMyProject object then instances FMyUIResources as an object named MyUIResources. MyUIResources then loads and registers all of our resources with Slate, it stores a handle to these resources internally which we will be using later. The next thing that happens related to this code happens in AMyHUD.
+       <br/>
+       <br/>
+       AMyHUD is instanced and loaded by the system on every execution of the PIE, or whenever else the HUD is loaded. It should be set as the designated HUD for our game-type in the editor before running the game, see Hello Slate under the coding tutorials if you have no idea what I'm talking about. The first of our AMyHUD functions to be executed is AMyHUD::BeginPlay(). BeginPlay() creates our widget then gives the Viewport a handle on that widget so that it can be drawn to the screen. It then asks the widget to SetVisibility() to EVisibility::Visible and that's the end of it. Before we move on lets take a step back and talk about SMyUIWidget.
+       <br/>
+       <br/>
+       SMyUIWidget only has one (required) function, SMyUIWidget::Construct(). Construct first asks our Game Module, FMyProject, to give us a handle on the Slate Resources we Initialized() earlier. Then it uses that handle to get a brush, and last it creates the child widgets, using a pointer to the brush we just got a second ago. Destruction should be handled by UE4 and Slate, the only deviation from SCompoundWidget is the addition of a FSlateGameResources TSharedPtr (TSharedPtr&lt;FSlateGameResources&gt;) which should also be destructed when the refcount to it becomes zero.
+       <br/>
+       <br/>
+       We get TSharedPtrs from the Game Module because we want to be sure that the resources will be for no reason inaccessible to anything that would use them, by having the Game Module hand out TSharedPtrs to the resources, the refcount of these resources will never be zero while something is still using them. When the game shuts down the Game Module's ShutdownModule() is called. ShutdownModule() calls the default ShutdownModule() of it's parent class, then it calls MyUIResources.Shutdown() which Unregisters itself with Slate, dereferences the shared pointer, and frees the memory if the refcount is zero. Take a look at FMyUIResources Shutdown() method to see how this is done.
+       <br/>
+       <br/>
+       That's all there is to it.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+<span class="c1">/////Date: April 2, 2014</span>
+<span class="c1">/////Author: Bleakwise</span>
+<span class="c1">/////File: MyGameResources.h</span>
+
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"MyHUD.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Slate.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"SlateGameResources.h"</span><span class="cp"></span>
+
+<span class="c1">////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+<span class="c1">/////Data Structure and Interface for maintaining SlateGameResources on Game to Game basis</span>
+<span class="k">class</span> <span class="nc">FMyUIResources</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">FMyUIResources</span><span class="p">()</span> <span class="o">:</span> <span class="n">m_Path</span><span class="p">(</span><span class="s">"/Game/UI"</span><span class="p">),</span> <span class="n">MyUIResources</span><span class="p">(</span><span class="nb">NULL</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span> <span class="p">;</span>
+
+	<span class="cm">/*Loads resources and registers them with Slate*/</span>
+	<span class="cm">/*Do this before trying to use resources*/</span>
+	<span class="kt">void</span> <span class="nf">Initialize</span><span class="p">();</span>
+
+	<span class="cm">/*cleanup*/</span>
+	<span class="cm">/*Do this when shutting down game module*/</span>
+	<span class="kt">void</span> <span class="nf">Shutdown</span><span class="p">();</span>
+
+	<span class="cm">/*reloads textures used by slate renderer*/</span>
+	<span class="cm">/*Does nothing at the moment*/</span>
+	<span class="kt">void</span> <span class="nf">ReloadTextures</span><span class="p">();</span>
+
+	<span class="cm">/*Give caller a pointer to our FSlateGameResources*/</span>
+	<span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="n">FSlateGameResources</span><span class="o">&gt;</span> <span class="n">GetSlateGameResources</span><span class="p">();</span>
+
+<span class="k">protected</span><span class="o">:</span>
+	<span class="cm">/*Creates resources*/</span>
+	<span class="n">TSharedRef</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">FSlateGameResources</span><span class="o">&gt;</span> <span class="n">Create</span><span class="p">();</span>
+
+	<span class="cm">/*Defined in Cpp file, change as needed*/</span>
+	<span class="k">const</span> <span class="n">FString</span> <span class="n">m_Path</span><span class="p">;</span>
+
+	<span class="cm">/*Poitner to game resources, Initialize() before using*/</span>
+	<span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="n">FSlateGameResources</span><span class="o">&gt;</span> <span class="n">MyUIResources</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">SMyUIWidget</span> <span class="o">:</span> <span class="k">public</span> <span class="n">SCompoundWidget</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">SLATE_BEGIN_ARGS</span><span class="p">(</span><span class="n">SMyUIWidget</span><span class="p">)</span>
+	<span class="p">{}</span>
+
+	<span class="n">SLATE_ARGUMENT</span><span class="p">(</span><span class="n">TWeakObjectPtr</span><span class="o">&lt;</span><span class="n">AMyHUD</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">OwnerHUD</span><span class="p">)</span>
+
+		<span class="n">SLATE_END_ARGS</span><span class="p">()</span>
+
+	<span class="c1">//needed for every widget, constructs widget and children.</span>
+	<span class="kt">void</span> <span class="n">Construct</span><span class="p">(</span><span class="k">const</span> <span class="n">FArguments</span><span class="o">&amp;</span> <span class="n">InArgs</span><span class="p">);</span>
+
+<span class="k">protected</span><span class="o">:</span>
+	<span class="c1">//Pointer to our parent HUD</span>
+	<span class="c1">/////Consdier making OwnerHUD a more base type for polymorphic HUDs</span>
+	<span class="n">TWeakObjectPtr</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">AMyHUD</span><span class="o">&gt;</span> <span class="n">OwnerHUD</span><span class="p">;</span>
+
+	<span class="cm">/*Pointer to resources in GameModule*/</span>
+	<span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="n">FSlateGameResources</span><span class="o">&gt;</span> <span class="n">MyUIResources</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+<span class="c1">/////Date: April 2, 2014</span>
+<span class="c1">/////Author: Bleakwise</span>
+<span class="c1">/////File: MyGameResources.cpp</span>
+
+<span class="cp">#include</span> <span class="cpf">"MyProject.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"SlateGameResources.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"MyGameResources.h"</span><span class="cp"></span>
+
+<span class="c1">////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+     <span class="cm">/*SMyUIWidget*//*SMyUIWidget*//*SMyUIWidget*//*SMyUIWidget*//*SMyUIWidget*//*SMyUIWidget*/</span>
+<span class="c1">////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+
+<span class="kt">void</span> <span class="n">SMyUIWidget</span><span class="o">::</span><span class="n">Construct</span><span class="p">(</span><span class="k">const</span> <span class="n">FArguments</span><span class="o">&amp;</span> <span class="n">InArgs</span><span class="p">)</span>
+<span class="p">{</span>
+	
+	<span class="c1">////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+	<span class="c1">/////Get handle on game resources from GameModule</span>
+	<span class="n">MyUIResources</span> <span class="o">=</span> <span class="n">FModuleManager</span><span class="o">::</span><span class="n">GetModuleChecked</span><span class="o">&lt;</span><span class="n">FMyProject</span><span class="o">&gt;</span><span class="p">(</span><span class="n">FName</span><span class="p">(</span><span class="s">"MyProject"</span><span class="p">)).</span><span class="n">GetSlateGameResources</span><span class="p">();</span>
+
+	<span class="c1">////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+	<span class="c1">/////Get handle on spell_heal Slate Brush</span>
+	<span class="c1">/////name: member_icon</span>
+	<span class="k">const</span> <span class="n">FSlateBrush</span> <span class="o">*</span><span class="n">m_icon</span> <span class="o">=</span> <span class="n">MyUIResources</span><span class="o">-&gt;</span><span class="n">GetBrush</span><span class="p">(</span><span class="n">FName</span><span class="p">(</span><span class="s">"/spells/spell_heal"</span><span class="p">));</span>
+
+	<span class="c1">////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+	<span class="c1">/////Set owner HUD to whatever HUD called system to create this widget</span>
+	<span class="c1">/////Consider type if using multiple HUDs/types, see declaration in header</span>
+	<span class="n">OwnerHUD</span> <span class="o">=</span> <span class="n">InArgs</span><span class="p">.</span><span class="n">_OwnerHUD</span><span class="p">;</span>
+
+	<span class="c1">////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+	<span class="c1">/////Create the child widgets</span>
+
+	<span class="c1">//No need to add a new slot, ChildSlot is one, </span>
+	<span class="n">ChildSlot</span><span class="p">.</span><span class="n">VAlign</span><span class="p">(</span><span class="n">VAlign_Bottom</span><span class="p">).</span><span class="n">HAlign</span><span class="p">(</span><span class="n">HAlign_Center</span><span class="p">)</span>
+	<span class="p">[</span><span class="c1">//start adding contents</span>
+		<span class="n">SNew</span><span class="p">(</span><span class="n">SOverlay</span><span class="p">)</span>
+		<span class="cm">/* + operator adds a new slot */</span>
+		<span class="o">+</span> <span class="n">SOverlay</span><span class="o">::</span><span class="n">Slot</span><span class="p">().</span><span class="n">HAlign</span><span class="p">(</span><span class="n">HAlign_Fill</span><span class="p">).</span><span class="n">VAlign</span><span class="p">(</span><span class="n">VAlign_Fill</span><span class="p">)</span>
+		<span class="p">[</span><span class="cm">/* [ operator begins adding things to our new slot's contents */</span>
+			<span class="n">SNew</span><span class="p">(</span><span class="n">SHorizontalBox</span><span class="p">).</span><span class="n">Visibility</span><span class="p">(</span><span class="n">EVisibility</span><span class="o">::</span><span class="n">Visible</span><span class="p">)</span>
+			<span class="c1">//Add slots to HorizontalBox, these will hold images</span>
+			<span class="o">+</span> <span class="n">SHorizontalBox</span><span class="o">::</span><span class="n">Slot</span><span class="p">().</span><span class="n">HAlign</span><span class="p">(</span><span class="n">HAlign_Left</span><span class="p">).</span><span class="n">VAlign</span><span class="p">(</span><span class="n">VAlign_Bottom</span><span class="p">)</span>
+			<span class="p">[</span>   <span class="c1">//</span>
+				<span class="n">SNew</span><span class="p">(</span><span class="n">SImage</span><span class="p">).</span><span class="n">Image</span><span class="p">(</span><span class="n">m_icon</span><span class="p">)</span>
+			<span class="p">]</span>
+			<span class="o">+</span> <span class="n">SHorizontalBox</span><span class="o">::</span><span class="n">Slot</span><span class="p">().</span><span class="n">HAlign</span><span class="p">(</span><span class="n">HAlign_Left</span><span class="p">).</span><span class="n">VAlign</span><span class="p">(</span><span class="n">VAlign_Bottom</span><span class="p">)</span>
+			<span class="p">[</span>
+				<span class="n">SNew</span><span class="p">(</span><span class="n">SImage</span><span class="p">).</span><span class="n">Image</span><span class="p">(</span><span class="n">m_icon</span><span class="p">)</span>
+			<span class="p">]</span>
+			<span class="o">+</span> <span class="n">SHorizontalBox</span><span class="o">::</span><span class="n">Slot</span><span class="p">().</span><span class="n">HAlign</span><span class="p">(</span><span class="n">HAlign_Left</span><span class="p">).</span><span class="n">VAlign</span><span class="p">(</span><span class="n">VAlign_Bottom</span><span class="p">)</span>
+			<span class="p">[</span>
+				<span class="n">SNew</span><span class="p">(</span><span class="n">SImage</span><span class="p">).</span><span class="n">Image</span><span class="p">(</span><span class="n">m_icon</span><span class="p">)</span>
+			<span class="p">]</span>
+			<span class="o">+</span> <span class="n">SHorizontalBox</span><span class="o">::</span><span class="n">Slot</span><span class="p">().</span><span class="n">HAlign</span><span class="p">(</span><span class="n">HAlign_Left</span><span class="p">).</span><span class="n">VAlign</span><span class="p">(</span><span class="n">VAlign_Bottom</span><span class="p">)</span>
+			<span class="p">[</span>
+				<span class="n">SNew</span><span class="p">(</span><span class="n">SImage</span><span class="p">).</span><span class="n">Image</span><span class="p">(</span><span class="n">m_icon</span><span class="p">)</span>
+			<span class="p">]</span>
+		<span class="p">]</span><span class="c1">//End slotting of SOverlay</span>
+	<span class="p">];</span><span class="c1">//End slotting ChildSlot</span>
+<span class="p">}</span>
+
+<span class="c1">////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+     <span class="cm">/*FMyUIResources*//*FMyUIResources*//*FMyUIResources*//*FMyUIResources*//*FMyUIResources*/</span>
+<span class="c1">////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+
+<span class="kt">void</span> <span class="n">FMyUIResources</span><span class="o">::</span><span class="n">Initialize</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">MyUIResources</span><span class="p">.</span><span class="n">IsValid</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="n">MyUIResources</span> <span class="o">=</span> <span class="n">Create</span><span class="p">();</span>
+		<span class="n">FSlateStyleRegistry</span><span class="o">::</span><span class="n">RegisterSlateStyle</span><span class="p">(</span><span class="o">*</span><span class="n">MyUIResources</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="n">FSlateGameResources</span><span class="o">&gt;</span> <span class="n">FMyUIResources</span><span class="o">::</span><span class="n">GetSlateGameResources</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">MyUIResources</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">TSharedRef</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">FSlateGameResources</span><span class="o">&gt;</span> <span class="n">FMyUIResources</span><span class="o">::</span><span class="n">Create</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">FSlateGameResources</span><span class="o">::</span><span class="n">New</span><span class="p">(</span><span class="n">FName</span><span class="p">(</span><span class="s">"MyUIResources"</span><span class="p">),</span> <span class="n">m_Path</span><span class="p">,</span> <span class="n">m_Path</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="cm">/*Unregister resources/styles with Slate, cleanup, free memory*/</span>
+<span class="kt">void</span> <span class="n">FMyUIResources</span><span class="o">::</span><span class="n">Shutdown</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">//Unregister *MyUIResources with Slate</span>
+	<span class="n">FSlateStyleRegistry</span><span class="o">::</span><span class="n">UnRegisterSlateStyle</span><span class="p">(</span><span class="o">*</span><span class="n">MyUIResources</span><span class="p">);</span>
+
+	<span class="c1">//Debugging</span>
+	<span class="n">ensure</span><span class="p">(</span><span class="n">MyUIResources</span><span class="p">.</span><span class="n">IsUnique</span><span class="p">());</span>
+
+	<span class="c1">//Removes reference to resources, decrements refcount, destroys resources if refcount=0</span>
+	<span class="c1">//Do this to all SharedPtrs on Shutdown() or SomethingSimilar() to avoid memory leak</span>
+	<span class="n">MyUIResources</span><span class="p">.</span><span class="n">Reset</span><span class="p">();</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+<span class="c1">/////Date: April 2, 2014</span>
+<span class="c1">/////Author: Bleakwise</span>
+<span class="c1">/////File: MyHUD.h</span>
+
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"GameFramework/HUD.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"MyHUD.generated.h"</span><span class="cp"></span>
+
+<span class="cm">/**</span>
+<span class="cm">*</span>
+<span class="cm">*/</span>
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">AMyHUD</span> <span class="o">:</span> <span class="k">public</span> <span class="n">AHUD</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+
+	<span class="c1">////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+	<span class="c1">/////Called as soon as game starts, create SCompoundWidget and give Viewport access</span>
+	<span class="kt">void</span> <span class="n">BeginPlay</span><span class="p">();</span>
+
+<span class="k">protected</span><span class="o">:</span>
+	<span class="c1">////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+	<span class="c1">/////Reference to SCompoundWidget</span>
+	<span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">SMyUIWidget</span><span class="o">&gt;</span> <span class="n">MyUIWidget</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+<span class="c1">/////Date: April 2, 2014</span>
+<span class="c1">/////Author: Bleakwise</span>
+<span class="c1">/////File: MyHUD.cpp</span>
+
+<span class="cp">#include</span> <span class="cpf">"MyProject.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"MyGameResources.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"MyHUD.h"</span><span class="cp"></span>
+
+
+<span class="n">AMyHUD</span><span class="o">::</span><span class="n">AMyHUD</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span>
+<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="p">{</span>
+
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AMyHUD</span><span class="o">::</span><span class="n">BeginPlay</span><span class="p">()</span>
+<span class="p">{</span>
+	
+	<span class="c1">////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+	<span class="c1">/////Create a SMyUIWidget on heap referenced by MyUIWidget pointer member</span>
+	<span class="n">SAssignNew</span><span class="p">(</span><span class="n">MyUIWidget</span><span class="p">,</span> <span class="n">SMyUIWidget</span><span class="p">).</span><span class="n">OwnerHUD</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+
+	<span class="c1">////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+	<span class="c1">/////Pass our viewport a weak reference to our widget, will not increment refcount</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">GEngine</span><span class="o">-&gt;</span><span class="n">IsValidLowLevel</span><span class="p">())</span>
+		<span class="n">GEngine</span><span class="o">-&gt;</span><span class="n">GameViewport</span><span class="o">-&gt;</span>
+		<span class="n">AddViewportWidgetContent</span><span class="p">(</span><span class="n">SNew</span><span class="p">(</span><span class="n">SWeakWidget</span><span class="p">).</span><span class="n">PossiblyNullContent</span><span class="p">(</span><span class="n">MyUIWidget</span><span class="p">.</span><span class="n">ToSharedRef</span><span class="p">()));</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">MyUIWidget</span><span class="p">.</span><span class="n">IsValid</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="c1">////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+		<span class="c1">/////Set widget's properties as visibile (sets child widget's properties recurisvely)</span>
+		<span class="n">MyUIWidget</span><span class="o">-&gt;</span><span class="n">SetVisibility</span><span class="p">(</span><span class="n">EVisibility</span><span class="o">::</span><span class="n">Visible</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+<span class="c1">/////Date: April 4, 2014</span>
+<span class="c1">/////Author: Bleakwise</span>
+<span class="c1">/////File: MyProject.h</span>
+
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"Engine.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"MyGameResources.h"</span><span class="cp"></span>
+
+<span class="k">class</span> <span class="nc">FMyProject</span> <span class="o">:</span> <span class="k">public</span> <span class="n">FDefaultGameModuleImpl</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="c1">////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+	<span class="c1">/////Called when GameModule is loaded, load any resources game may need here</span>
+	<span class="kt">void</span> <span class="n">StartupModule</span><span class="p">();</span>
+
+	<span class="c1">////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+	<span class="c1">/////Called when GameModule is unloaded, before shutdown, unload resources/cleanup here</span>
+	<span class="kt">void</span> <span class="nf">ShutdownModule</span><span class="p">();</span>
+
+	<span class="c1">////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+	<span class="c1">/////Give a handle to MyUIResources to anyone who asks</span>
+	<span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="n">FSlateGameResources</span><span class="o">&gt;</span> <span class="n">GetSlateGameResources</span><span class="p">();</span>
+
+<span class="k">protected</span><span class="o">:</span>
+
+	<span class="c1">////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+	<span class="c1">/////Data Structure and Interface for maintaining SlateGameResources on Game to Game basis</span>
+	<span class="n">FMyUIResources</span> <span class="n">MyUIResources</span><span class="p">;</span>
+
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">////////////////////////////////////////////////////////////////////////////////////////////////////</span>
+<span class="c1">/////Date: April 2, 2014</span>
+<span class="c1">/////Author: Bleakwise</span>
+<span class="c1">/////File: MyProject.cpp</span>
+
+<span class="cp">#include</span> <span class="cpf">"MyProject.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"MyProject.generated.inl"</span><span class="cp"></span>
+
+<span class="n">IMPLEMENT_PRIMARY_GAME_MODULE</span><span class="p">(</span> <span class="n">FMyProject</span><span class="p">,</span> <span class="n">MyProject</span><span class="p">,</span> <span class="s">"MyProject"</span> <span class="p">);</span>
+
+<span class="kt">void</span> <span class="n">FMyProject</span><span class="o">::</span><span class="n">StartupModule</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">FDefaultGameModuleImpl</span><span class="o">::</span><span class="n">StartupModule</span><span class="p">();</span>
+
+	<span class="cm">/*Loads resources and registers them with Slate*/</span>
+	<span class="cm">/*Do this before trying to use resources*/</span>
+	<span class="n">MyUIResources</span><span class="p">.</span><span class="n">Initialize</span><span class="p">();</span>
+
+	<span class="cm">/*TODO: Anything else game module might need to do on load*/</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">FMyProject</span><span class="o">::</span><span class="n">ShutdownModule</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">FDefaultGameModuleImpl</span><span class="o">::</span><span class="n">ShutdownModule</span><span class="p">();</span>
+
+	<span class="cm">/*Unregister resources/styles with Slate, cleanup, free memory*/</span>
+	<span class="n">MyUIResources</span><span class="p">.</span><span class="n">Shutdown</span><span class="p">();</span>
+
+	<span class="cm">/*Cleanup/free any resources here*/</span>
+<span class="p">}</span>
+
+<span class="cm">/*First defined here, no need to call parent*/</span>
+<span class="cm">/*Give caller a pointer to our FSlateGameResources*/</span>
+<span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="n">FSlateGameResources</span><span class="o">&gt;</span> <span class="n">FMyProject</span><span class="o">::</span><span class="n">GetSlateGameResources</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="cm">/*Give caller a pointer to our FSlateGameResources*/</span>
+	<span class="cm">/*Giving strong pointer, helps gurantee access to resources*/</span>
+	<span class="k">return</span> <span class="n">MyUIResources</span><span class="p">.</span><span class="n">GetSlateGameResources</span><span class="p">();</span>
+<span class="p">}</span>
+</pre>
+      </div>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

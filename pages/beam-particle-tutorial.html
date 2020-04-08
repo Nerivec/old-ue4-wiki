@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Beam Particle (Tutorial) - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Beam Particle (Tutorial)
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Beam_Setup">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Beam Setup
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Adding_Noise">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Adding Noise
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Source_and_Target">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Source and Target
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Setting_Up_Source_and_Target_Instance_Parameters">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Setting Up Source and Target Instance Parameters
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Source_and_Target_Tangents">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Source and Target Tangents
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       Beams are a great way to simulate lasers, lightning, or any type of similar effect that needs to travel along the length of a beam. This document provides an overview of how to set up a basic beam emitter.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Beam_Setup">
+        Beam Setup
+       </span>
+      </h2>
+      <p>
+       Setup of functional weapon beams (such as laser cannons) requires coding/scripting and lies outside the scope of this document. Here, we will be focusing on the effect only. |
+      </p>
+      <p>
+       To properly set up a beam emitter, you will need a material with the right kind of texture. Generally, if you want a continuous beam, you will need a texture that seamlessly spans horizontally across the image. In our example, we have set up a very simple material using the following textures:
+      </p>
+      <ul class="gallery mw-gallery-traditional">
+       <li class="gallerybox" style="width: 155px">
+        <div style="width: 155px">
+         <div class="thumb" style="width: 150px;">
+          <div style="margin:15px auto;">
+           <img alt="BaseBeam.png" class="" height="120" src="../assets/beam-particle-tutorial/0.png" width="120"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 155px">
+        <div style="width: 155px">
+         <div class="thumb" style="width: 150px;">
+          <div style="margin:15px auto;">
+           <img alt="BeamPulse.png" class="" height="120" src="../assets/beam-particle-tutorial/1.png" width="120"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       These textures are combined together in the following material:
+      </p>
+      <p>
+       <img alt="Particle Beam Material Set-Up.jpg" class="" height="439" src="../assets/beam-particle-tutorial/2.jpg" width="940"/>
+      </p>
+      <p>
+       Once we have added this to our new particle system, we are ready to focus on the beam itself. First, we add a Beam TypeData module by right-clicking in the emitter and choosing TypeData &gt; New Beam Data.
+      </p>
+      <p>
+       <img alt="AddBeamData.jpg" class="" height="333" src="../assets/beam-particle-tutorial/3.jpg" width="477"/>
+      </p>
+      <p>
+       This gives us a beam emitter. However, further setup is required to get anything interesting. Use the following table for some initial settings:
+      </p>
+      <table class="wikitable">
+       <caption>
+        Module Properties
+       </caption>
+       <tbody>
+        <tr>
+         <th scope="col">
+          Property
+         </th>
+         <th scope="col">
+          Value
+         </th>
+         <th scope="col">
+          Reason
+         </th>
+        </tr>
+        <tr>
+         <th scope="col">
+          Lifetime Module
+         </th>
+        </tr>
+        <tr>
+         <td>
+          Lifetime
+         </td>
+         <td>
+          0.0
+         </td>
+         <td>
+          Allows the beam to be constant (live forever).
+         </td>
+        </tr>
+        <tr>
+         <th scope="col">
+          Beam Data Module
+         </th>
+        </tr>
+        <tr>
+         <td>
+          Beam Method
+         </td>
+         <td>
+          PEB2M_Distance
+         </td>
+         <td>
+          The beam will be calculated via distance along the emitter's X-Axis, rather than requiring a source and target.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Texture Tile Distance
+         </td>
+         <td>
+          500
+         </td>
+         <td>
+          Tiles the texture every 500 Unreal Units. Allows animated pulses to show more clearly.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Max Beam Count
+         </td>
+         <td>
+          3
+         </td>
+         <td>
+          Adds in a few more beams, which will look nice once we have noise.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Speed
+         </td>
+         <td>
+          0
+         </td>
+         <td>
+          Beam will travel instantly to its target.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Interpolation Points
+         </td>
+         <td>
+          50
+         </td>
+         <td>
+          Gives the beam some flexibility for the addition of noise, which we will do later.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Distance
+         </td>
+         <td>
+          1000
+         </td>
+         <td>
+          Extends the beam 1000 Unreal Units along the X-Axis, giving us something to work with.
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       Once these properties are set, delete the Initial Velocity and Color Over Life modules. Add back in an Initial Color module.
+      </p>
+      <p>
+       Your beam should now look something like this:
+      </p>
+      <p>
+       <img alt="DistanceBeam.jpg" class="" height="434" src="../assets/beam-particle-tutorial/4.jpg" width="501"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Adding_Noise">
+        Adding Noise
+       </span>
+      </h2>
+      <p>
+       You can make a beam more visually interesting by adding some noise to it. This is done with the Noise module. This module jitters the beam around, completely changing the nature of the effect. It is found under the Beam submenu of the module context menu.
+      </p>
+      <p>
+       <img alt="AddNoiseModule.jpg" class="" height="337" src="../assets/beam-particle-tutorial/5.jpg" width="401"/>
+      </p>
+      <p>
+       Use the following table to adjust some settings:
+      </p>
+      <table class="wikitable">
+       <caption>
+        Module Properties
+       </caption>
+       <tbody>
+        <tr>
+         <th scope="col">
+          Property
+         </th>
+         <th scope="col">
+          Value
+         </th>
+         <th scope="col">
+          Reason
+         </th>
+        </tr>
+        <tr>
+         <td>
+          Frequency
+         </td>
+         <td>
+          30
+         </td>
+         <td>
+          Gives us a nice amount of noise. Adjust to taste.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Low Freq Enabled
+         </td>
+         <td>
+          Checked
+         </td>
+         <td>
+          Enables randomization of noise points.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Noise Range
+         </td>
+         <td>
+          Vector Uniform distribution. Min:( 0, -50, -50) Max:( 0, 50, 50)
+         </td>
+         <td>
+          Tells the noise how far it can move away from the beam.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Noise Tessellation
+         </td>
+         <td>
+          10
+         </td>
+         <td>
+          Smoothes out the noise.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Frequency Distance
+         </td>
+         <td>
+          100
+         </td>
+         <td>
+          Rounds out the shape of the noise.
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       Your beam should now look something like this:
+      </p>
+      <p>
+       <img alt="NoisyBeam.jpg" class="" height="434" src="../assets/beam-particle-tutorial/6.jpg" width="499"/>
+      </p>
+      <p>
+       Tweak values to taste.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Source_and_Target">
+        Source and Target
+       </span>
+      </h2>
+      <p>
+       If we were to drop this beam emitter into a level right now, it would simply point down the local X-Axis of the emitter actor, like so:
+      </p>
+      <p>
+       <img alt="DistanceBeamInLevel.jpg" class="" height="325" src="../assets/beam-particle-tutorial/7.jpg" width="662"/>
+      </p>
+      <p>
+       However, this isn't always ideal. In some cases, you will want to specify a source point and target point for the beam, and control interpolation between these points. This is where you can use the Source and Target modules.
+      </p>
+      <p>
+       First, we will add 2 actors into the scene that we can use as source points. In this case, we used Note actors. These will become the source and target for the beam.
+      </p>
+      <p>
+       <img alt="NotesAdded.jpg" class="" height="404" src="../assets/beam-particle-tutorial/8.jpg" width="725"/>
+      </p>
+      <p>
+       Back in Cascade, add a Source and a Target module to your emitter. These are both found under the Beam submenu.
+      </p>
+      <p>
+       <img alt="SourceAndTargetModules.jpg" class="" height="352" src="../assets/beam-particle-tutorial/9.jpg" width="697"/>
+      </p>
+      <p>
+       In the Beam Type Data, Source and Target modules, adjust the following settings:
+      </p>
+      <table class="wikitable">
+       <caption>
+        Module Properties
+       </caption>
+       <tbody>
+        <tr>
+         <th scope="col">
+          Property
+         </th>
+         <th scope="col">
+          Value
+         </th>
+         <th scope="col">
+          Reason
+         </th>
+        </tr>
+        <tr>
+         <th scope="col">
+          Beam Data Module
+         </th>
+        </tr>
+        <tr>
+         <td>
+          Beam Method
+         </td>
+         <td>
+          PEB2M_Target
+         </td>
+         <td>
+          Extablishes that the beam will require a source and a target.
+         </td>
+        </tr>
+        <tr>
+         <th scope="col">
+          Source Module
+         </th>
+        </tr>
+        <tr>
+         <td>
+          Source Method
+         </td>
+         <td>
+          PEB2STM_Actor
+         </td>
+         <td>
+          Tells the beam to start at the location of an actor.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Source Name
+         </td>
+         <td>
+          BeamSource
+         </td>
+         <td>
+          Tells the beam to start at the location of an actor.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Source
+         </td>
+         <td>
+          Vector Constant Distribution. Value:(0, 0, 0)
+         </td>
+         <td>
+          This sets the display source in the Preview window to be 0,0,0.
+         </td>
+        </tr>
+        <tr>
+         <th scope="col">
+          Target Module
+         </th>
+        </tr>
+        <tr>
+         <td>
+          Target Method
+         </td>
+         <td>
+          PEB2STM_Actor
+         </td>
+         <td>
+          Tells the beam to end at the location of an actor.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Target Name
+         </td>
+         <td>
+          BeamTarget
+         </td>
+         <td>
+          This is just a parameter name and can be anything you like.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Target
+         </td>
+         <td>
+          Vector Constant Distribution. Value:(1000, 0, 0)
+         </td>
+         <td>
+          This sets the display target in the Preview window to be 1000,0,0.
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       Your beam will now look just like it did previously, but is now ready to have actors set up as the source and target.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Setting_Up_Source_and_Target_Instance_Parameters">
+        Setting Up Source and Target Instance Parameters
+       </span>
+      </h2>
+      <p>
+       To make the beam use the note actors as source and target, we must establish them as Instance Parameters for the emitter actor. This document will give only an overview of this process. For more information on setting up Instance Parameters, please see the Instance Parameter example page.
+      </p>
+      <p>
+       Once you have brought the beam emitter into the scene, do the following:
+      </p>
+      <ul>
+       <li>
+        Set up 2 instance parameters on the emitter actor. Name the first BeamSource and the second BeamTarget.
+       </li>
+      </ul>
+      <ul>
+       <li>
+        Set both of their Param Type properties to PSPT_Actor.
+       </li>
+      </ul>
+      <ul>
+       <li>
+        Set one of the note actors into the Actor field of each parameter. This may require that you lock the Details panel for convenience.
+       </li>
+      </ul>
+      <p>
+       When finished, your details panel should look something like this:
+      </p>
+      <p>
+       <img alt="InstanceParameters.jpg" class="" height="602" src="../assets/beam-particle-tutorial/10.jpg" width="363"/>
+      </p>
+      <p>
+       Your beam now moves between the two note actors:
+      </p>
+      <p>
+       <img alt="Beamnotes.jpg" class="" height="424" src="../assets/beam-particle-tutorial/11.jpg" width="779"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Source_and_Target_Tangents">
+        Source and Target Tangents
+       </span>
+      </h2>
+      <p>
+       You can make the path of the beam much more interesting by adjusting the tangents of the source and target.
+      </p>
+      <p>
+       <img alt="TangentBeam.jpg" class="" height="768" src="../assets/beam-particle-tutorial/12.jpg" width="648"/>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

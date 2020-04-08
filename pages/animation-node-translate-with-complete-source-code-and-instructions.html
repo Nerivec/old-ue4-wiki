@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Animation Node, Translate With Complete Source Code and Instructions - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Animation Node, Translate With Complete Source Code and Instructions
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Complete_Code_for_the_Translate_With_Node">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Complete Code for the Translate With Node
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Choosing_a_beginning_Class">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Choosing a beginning Class
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#AnimNode_TranslateWith">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           AnimNode_TranslateWith
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#.h">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             .h
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#About_the_Header_.28.h.29_file">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           About the Header (.h) file
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#.cpp">
+            <span class="tocnumber">
+             5.1
+            </span>
+            <span class="toctext">
+             .cpp
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#About_the_Code.28.cpp.29_file">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           About the Code(.cpp) file
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#About_EvaluateBoneTransforms">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           About EvaluateBoneTransforms
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-10">
+         <a href="#AnimGraphNode_TranslateWith">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           AnimGraphNode_TranslateWith
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#.h_2">
+            <span class="tocnumber">
+             8.1
+            </span>
+            <span class="toctext">
+             .h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-12">
+           <a href="#.cpp_2">
+            <span class="tocnumber">
+             8.2
+            </span>
+            <span class="toctext">
+             .cpp
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-13">
+         <a href="#Build.cs_and_YourGame.h_files">
+          <span class="tocnumber">
+           9
+          </span>
+          <span class="toctext">
+           Build.cs and YourGame.h files
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-14">
+           <a href="#Extension:_Non-editor_builds">
+            <span class="tocnumber">
+             9.1
+            </span>
+            <span class="toctext">
+             Extension: Non-editor builds
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-15">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           10
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Original Author
+       </i>
+      </p>
+      <p>
+       <b>
+        Dear Community
+       </b>
+       ,
+      </p>
+      <p>
+       In this new tutorial, I will explain the complete process of creating a new Animation Node.
+      </p>
+      <p>
+       The main purpose for a new tutorial is to help clear up some of the common issue people have been running into when creating nodes for use in Blueprint.
+      </p>
+      <p>
+       This tutorial will focus on creating a new Skeletal Control Node called Translate With.
+      </p>
+      <p>
+       A quick primer on the Translate With Node: The node is designed to take a bone (Target) and replicate the movements of another bone (Source) on the specified Axis, with the specified offset.
+       <img alt="Translatewith.jpg" class="" height="691" src="../assets/animation-node-translate-with-complete-source-code-and-instructions/0.jpg" width="1357"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Complete_Code_for_the_Translate_With_Node">
+        Complete Code for the Translate With Node
+       </span>
+      </h2>
+      <p>
+       I will include the complete source code, along with any other needed lines of code to completely integrate the new node into your source. (
+       <i>
+        A note on integration, before you begin, you need to determine the scope you wish to use a new node in. For example, if you want to use the node for only one project, you do not need to add the code to the engine source, and can instead add it only to your module. If you plan to use the node across a number of different projects, it may be worth your time to integrate it into your engine, however, this can cause issues if you plan to share the node with others, as they would also have to add the node to the engine in the same manner that you have
+       </i>
+       )
+      </p>
+      <h2>
+       <span class="mw-headline" id="Choosing_a_beginning_Class">
+        Choosing a beginning Class
+       </span>
+      </h2>
+      <p>
+       In Unreal there are a massive amount of Classes to start with. In general, it is always a good idea to take the time to look through these classes for a couple of reasons. First, by looking through the Classes already in place, you can find the Class that best suits your needs as a base or starting point. Second, it can be extremely helpful to look at the code of other Classes to better understand how to extend these Classes for your needs. If you are unsure of what Class to start from, you can visit
+       <a class="external free" href="https://docs.unrealengine.com/latest/INT/Programming/index.html" rel="nofollow">
+        https://docs.unrealengine.com/latest/INT/Programming/index.html
+       </a>
+       for a detailed list of the components included in the Engine.
+      </p>
+      <p>
+       For this particular project, we will be extending the
+       <b>
+        AnimNode_Base
+       </b>
+       class, which you can look through in
+       <b>
+        AnimNodeBase.h
+       </b>
+       I am starting with this class because it has the majority of the functionality we will need, but does not include any additional functionality we do not need. In contrast, you can look at
+       <b>
+        AnimNode_SkeletalControl.h
+       </b>
+       and see that it already has a few things we will not be using to help you understand this choice better.
+      </p>
+      <h2>
+       <span class="mw-headline" id="AnimNode_TranslateWith">
+        AnimNode_TranslateWith
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id=".h">
+        .h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Created by Chance_07 2014</span>
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"AnimNode_TranslateWith.generated.h"</span><span class="cp"></span>
+
+<span class="n">USTRUCT</span><span class="p">()</span>
+<span class="k">struct</span> <span class="nl">FAnimNode_TranslateWith</span> <span class="p">:</span> <span class="k">public</span>  <span class="n">FAnimNode_Base</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_USTRUCT_BODY</span><span class="p">()</span>
+
+	<span class="cm">/** Input link(Base Pose) **/</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Links</span><span class="p">)</span>
+	<span class="n">FComponentSpacePoseLink</span> <span class="n">ComponentPose</span><span class="p">;</span>
+
+	<span class="cm">/** Name of bone to control **/</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">SkeletalControl</span><span class="p">)</span>
+	<span class="n">FBoneReference</span> <span class="n">TargetBone</span><span class="p">;</span>
+
+	<span class="cm">/** Source Bone Name to get transform from **/</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">SkeletalControl</span><span class="p">)</span>
+	<span class="n">FBoneReference</span> <span class="n">SourceBone</span><span class="p">;</span>
+
+	<span class="cm">/** This is typically the FORWARD Axis, and is false by default **/</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">AxisLock</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">PinHiddenByDefault</span><span class="p">))</span>
+	<span class="kt">bool</span> <span class="n">bUpdateX</span><span class="p">;</span>
+
+	<span class="cm">/** This is typically the SIDE-TO-SIDE Axis, and is false by default **/</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">AxisLock</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">PinHiddenByDefault</span><span class="p">))</span>
+	<span class="kt">bool</span> <span class="n">bUpdateY</span><span class="p">;</span>
+
+	<span class="cm">/** This is typically the UP Axis, and is true by default **/</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">AxisLock</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">PinHiddenByDefault</span><span class="p">))</span>
+	<span class="kt">bool</span> <span class="n">bUpdateZ</span><span class="p">;</span>
+
+	<span class="cm">/** Target Location in world space if LookAtBone is empty */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">SkeletalControl</span><span class="p">)</span>
+	<span class="n">FVector</span> <span class="n">AddtoOffset</span><span class="p">;</span>
+
+	<span class="cm">/** Controls how much of the translation is blended to the target, default is 1 **/</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">SkeletalControl</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">PinShownByDefault</span><span class="p">))</span>
+	<span class="kt">float</span> <span class="n">BlendWeight</span><span class="p">;</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">FAnimNode_TranslateWith</span><span class="p">();</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="c1">// FAnimNode_Base interface</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">Initialize</span><span class="p">(</span><span class="k">const</span> <span class="n">FAnimationInitializeContext</span><span class="o">&amp;</span> <span class="n">Context</span><span class="p">)</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">CacheBones</span><span class="p">(</span><span class="k">const</span> <span class="n">FAnimationCacheBonesContext</span> <span class="o">&amp;</span> <span class="n">Context</span><span class="p">)</span>  <span class="n">OVERRIDE</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">Update</span><span class="p">(</span><span class="k">const</span> <span class="n">FAnimationUpdateContext</span><span class="o">&amp;</span> <span class="n">Context</span><span class="p">)</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">EvaluateComponentSpace</span><span class="p">(</span><span class="n">FComponentSpacePoseContext</span><span class="o">&amp;</span> <span class="n">Output</span><span class="p">)</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+	<span class="c1">// End of FAnimNode_RCAnimNode interface</span>
+<span class="k">protected</span><span class="o">:</span>
+	<span class="c1">// initialize any bone references you have</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">InitializeBoneReferences</span><span class="p">(</span><span class="k">const</span> <span class="n">FBoneContainer</span> <span class="o">&amp;</span> <span class="n">RequiredBones</span><span class="p">);</span>
+	<span class="c1">// return true if it is valid to Evaluate</span>
+	<span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">IsValidToEvaluate</span><span class="p">(</span><span class="k">const</span> <span class="n">USkeleton</span> <span class="o">*</span> <span class="n">Skeleton</span><span class="p">,</span> <span class="k">const</span> <span class="n">FBoneContainer</span> <span class="o">&amp;</span> <span class="n">RequiredBones</span><span class="p">);</span>
+	<span class="c1">// Evaluate the new component-space transforms for the affected bones.</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">EvaluateBoneTransforms</span><span class="p">(</span><span class="n">USkeletalMeshComponent</span><span class="o">*</span> <span class="n">SkelComp</span><span class="p">,</span> <span class="k">const</span> <span class="n">FBoneContainer</span> <span class="o">&amp;</span> <span class="n">RequiredBones</span><span class="p">,</span> <span class="n">FA2CSPose</span><span class="o">&amp;</span> <span class="n">MeshBases</span><span class="p">,</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FBoneTransform</span><span class="o">&gt;&amp;</span> <span class="n">OutBoneTransforms</span><span class="p">);</span><span class="c1">// {}</span>
+<span class="k">private</span><span class="o">:</span>
+	<span class="n">FVector</span> <span class="n">ModTargetLocationInCompSpace</span><span class="p">;</span>
+	<span class="n">FVector</span> <span class="n">CurrentAddedOffset</span><span class="p">;</span>
+	<span class="n">FVector</span> <span class="n">JointOffset</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="About_the_Header_.28.h.29_file">
+        About the Header (.h) file
+       </span>
+      </h2>
+      <p>
+       Lets take a quick look at this header file. At the top we have an include file. AnimNode_TranslateWith.generated.h is created by UBT. You do not need to create or edit this file, but should always be included with your code.
+      </p>
+      <p>
+       Next, we have our USTRUCT() declaration which tells Unreal what this section has, and what Class we are pulling from (in this case, FAnimNode_Base).
+      </p>
+      <p>
+       After the main declaration, we have a few more that come in the form of UPROPRETY. The first one, ComponentPose, is going to be used as the input for our node when added to an Animation Blueprint.
+      </p>
+      <p>
+       The next two are our Target Bone, and our Source Bone. The Target Bone is the bone we will be applying all of our transformations to, while the Source Bone is the bone we will be pulling information from.
+      </p>
+      <p>
+       Next we have the Constructor (FAnimNode_TranslateWith();)
+      </p>
+      <p>
+       After the Constructor, we have some functions. Notice that the first four have the word OVERRIDE at the end. This simply means that the parent class also has these functions, but we wish to modify them in our .cpp file.
+      </p>
+      <p>
+       The last two parts of our header have a few added functions, and a few variables. Notice that the variables are set to private. In this instance, I have no intention of letting any other nodes, or code have access to these, and therefor they are private.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id=".cpp">
+        .cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Created by Chance_07 2014</span>
+
+<span class="cp">#include</span> <span class="cpf">"YourGame.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"EnginePrivate.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"AnimNode_TranslateWith.h"</span><span class="cp"></span>
+
+<span class="n">FAnimNode_TranslateWith</span><span class="o">::</span><span class="n">FAnimNode_TranslateWith</span><span class="p">()</span>
+	<span class="o">:</span> <span class="n">FAnimNode_Base</span><span class="p">()</span>
+	<span class="p">,</span> <span class="n">bUpdateX</span><span class="p">(</span><span class="nb">false</span><span class="p">)</span><span class="c1">// This is only to set</span>
+	<span class="p">,</span> <span class="n">bUpdateY</span><span class="p">(</span><span class="nb">false</span><span class="p">)</span><span class="c1">// the defaults for the</span>
+	<span class="p">,</span> <span class="n">bUpdateZ</span><span class="p">(</span><span class="nb">true</span><span class="p">)</span><span class="c1">// Axis pins (Can be changed in BP)</span>
+	<span class="p">,</span> <span class="n">AddtoOffset</span><span class="p">(</span><span class="n">FVector</span><span class="o">::</span><span class="n">ZeroVector</span><span class="p">)</span>
+<span class="p">{</span>
+	 <span class="n">BlendWeight</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+	 <span class="n">JointOffset</span><span class="p">.</span><span class="n">ZeroVector</span><span class="p">;</span>
+	 <span class="c1">// NULL so that it will be tested at least once</span>
+	 <span class="n">CurrentAddedOffset</span><span class="p">.</span><span class="n">X</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+	 <span class="n">CurrentAddedOffset</span><span class="p">.</span><span class="n">Y</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+	 <span class="n">CurrentAddedOffset</span><span class="p">.</span><span class="n">Z</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">FAnimNode_TranslateWith</span><span class="o">::</span><span class="n">Initialize</span><span class="p">(</span><span class="k">const</span> <span class="n">FAnimationInitializeContext</span><span class="o">&amp;</span> <span class="n">Context</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">ComponentPose</span><span class="p">.</span><span class="n">Initialize</span><span class="p">(</span><span class="n">Context</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">FAnimNode_TranslateWith</span><span class="o">::</span><span class="n">Update</span><span class="p">(</span><span class="k">const</span> <span class="n">FAnimationUpdateContext</span><span class="o">&amp;</span> <span class="n">Context</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">ComponentPose</span><span class="p">.</span><span class="n">Update</span><span class="p">(</span><span class="n">Context</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">FAnimNode_TranslateWith</span><span class="o">::</span><span class="n">CacheBones</span><span class="p">(</span><span class="k">const</span> <span class="n">FAnimationCacheBonesContext</span> <span class="o">&amp;</span> <span class="n">Context</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">InitializeBoneReferences</span><span class="p">(</span><span class="n">Context</span><span class="p">.</span><span class="n">AnimInstance</span><span class="o">-&gt;</span><span class="n">RequiredBones</span><span class="p">);</span>
+	<span class="n">ComponentPose</span><span class="p">.</span><span class="n">CacheBones</span><span class="p">(</span><span class="n">Context</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">//This is just a check to make sure that the bones are present</span>
+<span class="kt">void</span> <span class="n">FAnimNode_TranslateWith</span><span class="o">::</span><span class="n">InitializeBoneReferences</span><span class="p">(</span><span class="k">const</span> <span class="n">FBoneContainer</span> <span class="o">&amp;</span> <span class="n">RequiredBones</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// Check the Source Bone</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">SourceBone</span><span class="p">.</span><span class="n">Initialize</span><span class="p">(</span><span class="n">RequiredBones</span><span class="p">)){}</span>
+	<span class="k">else</span>
+	<span class="p">{</span>
+			<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogAnimation</span><span class="p">,</span> <span class="n">Warning</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"No Source Bone found, please check input"</span><span class="p">));</span>
+	<span class="p">}</span>
+
+	<span class="c1">// Check the Target Bone</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">TargetBone</span><span class="p">.</span><span class="n">Initialize</span><span class="p">(</span><span class="n">RequiredBones</span><span class="p">)){}</span>
+	<span class="k">else</span>
+	<span class="p">{</span>
+			<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogAnimation</span><span class="p">,</span> <span class="n">Warning</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"No Target Bone found, please check input"</span><span class="p">));</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//This Checks for Updates, if no Axis is checked, returns Base Pose and moves on</span>
+<span class="kt">void</span> <span class="n">FAnimNode_TranslateWith</span><span class="o">::</span><span class="n">EvaluateComponentSpace</span><span class="p">(</span><span class="n">FComponentSpacePoseContext</span><span class="o">&amp;</span> <span class="n">Output</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// Evaluate the input</span>
+	<span class="n">ComponentPose</span><span class="p">.</span><span class="n">EvaluateComponentSpace</span><span class="p">(</span><span class="n">Output</span><span class="p">);</span>
+	
+
+        <span class="c1">// If any Axis is checked, and both bones are present, then we will continue</span>
+	<span class="k">if</span> <span class="p">(((</span><span class="n">bUpdateX</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">bUpdateY</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">bUpdateZ</span><span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="n">IsValidToEvaluate</span><span class="p">(</span><span class="n">Output</span><span class="p">.</span><span class="n">AnimInstance</span><span class="o">-&gt;</span><span class="n">CurrentSkeleton</span><span class="p">,</span> <span class="n">Output</span><span class="p">.</span><span class="n">AnimInstance</span><span class="o">-&gt;</span><span class="n">RequiredBones</span><span class="p">))</span>
+	<span class="p">{</span>
+		<span class="n">USkeletalMeshComponent</span><span class="o">*</span> <span class="n">Component</span> <span class="o">=</span> <span class="n">Output</span><span class="p">.</span><span class="n">AnimInstance</span><span class="o">-&gt;</span><span class="n">GetSkelMeshComponent</span><span class="p">();</span>
+		<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FBoneTransform</span><span class="o">&gt;</span> <span class="n">BoneTransforms</span><span class="p">;</span>
+		<span class="n">EvaluateBoneTransforms</span><span class="p">(</span><span class="n">Component</span><span class="p">,</span> <span class="n">Output</span><span class="p">.</span><span class="n">AnimInstance</span><span class="o">-&gt;</span><span class="n">RequiredBones</span><span class="p">,</span> <span class="n">Output</span><span class="p">.</span><span class="n">Pose</span><span class="p">,</span> <span class="n">BoneTransforms</span><span class="p">);</span>
+
+		<span class="n">checkSlow</span><span class="p">(</span><span class="o">!</span><span class="n">ContainsNaN</span><span class="p">(</span><span class="n">BoneTransforms</span><span class="p">));</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="n">BoneTransforms</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">Output</span><span class="p">.</span><span class="n">Pose</span><span class="p">.</span><span class="n">LocalBlendCSBoneTransforms</span><span class="p">(</span><span class="n">BoneTransforms</span><span class="p">,</span> <span class="n">BlendWeight</span><span class="p">);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//This Evaluates the bones, and transforms	</span>
+<span class="kt">void</span> <span class="n">FAnimNode_TranslateWith</span><span class="o">::</span><span class="n">EvaluateBoneTransforms</span><span class="p">(</span><span class="n">USkeletalMeshComponent</span><span class="o">*</span> <span class="n">SkelComp</span><span class="p">,</span> <span class="k">const</span> <span class="n">FBoneContainer</span> <span class="o">&amp;</span> <span class="n">RequiredBones</span><span class="p">,</span> <span class="n">FA2CSPose</span><span class="o">&amp;</span> <span class="n">MeshBases</span><span class="p">,</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FBoneTransform</span><span class="o">&gt;&amp;</span> <span class="n">OutBoneTransforms</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">check</span><span class="p">(</span><span class="n">OutBoneTransforms</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">);</span>
+
+	<span class="c1">// Component Space Transforms used to modify Target Bone</span>
+	<span class="n">FTransform</span> <span class="n">SourceBoneTM</span> <span class="o">=</span> <span class="n">MeshBases</span><span class="p">.</span><span class="n">GetComponentSpaceTransform</span><span class="p">(</span><span class="n">SourceBone</span><span class="p">.</span><span class="n">BoneIndex</span><span class="p">);</span>
+	<span class="n">FTransform</span> <span class="n">TargetBoneTM</span> <span class="o">=</span> <span class="n">MeshBases</span><span class="p">.</span><span class="n">GetComponentSpaceTransform</span><span class="p">(</span><span class="n">TargetBone</span><span class="p">.</span><span class="n">BoneIndex</span><span class="p">);</span>
+
+	<span class="c1">// If any changes have occured, add them, and reset offset</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="n">CurrentAddedOffset</span> <span class="o">==</span> <span class="n">AddtoOffset</span><span class="p">))</span>
+	<span class="p">{</span>
+		<span class="n">CurrentAddedOffset</span> <span class="o">=</span> <span class="n">SkelComp</span><span class="o">-&gt;</span><span class="n">ComponentToWorld</span><span class="p">.</span><span class="n">InverseTransformPosition</span><span class="p">(</span><span class="n">AddtoOffset</span><span class="p">);</span>
+		<span class="n">JointOffset</span><span class="p">.</span><span class="n">Set</span><span class="p">((</span><span class="nb">NULL</span><span class="p">),(</span><span class="nb">NULL</span><span class="p">),(</span><span class="nb">NULL</span><span class="p">));</span>
+	<span class="p">}</span>
+		
+	<span class="k">if</span> <span class="p">(</span> <span class="p">(</span><span class="n">JointOffset</span><span class="p">.</span><span class="n">X</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">JointOffset</span><span class="p">.</span><span class="n">Y</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span> <span class="o">||</span> <span class="p">(</span><span class="n">JointOffset</span><span class="p">.</span><span class="n">Z</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">))</span><span class="c1">// If no Axis are checked, no need to do anything</span>
+	<span class="p">{</span>
+	<span class="c1">// These are based on the Base Pose location and used to create the default offset</span>
+	<span class="n">FVector</span> <span class="n">tempSourceOffset</span><span class="p">;</span>
+	<span class="n">FVector</span> <span class="n">tempTargetOffset</span><span class="p">;</span>
+
+	<span class="c1">// Get the Base Pose of the Source Bone</span>
+	<span class="n">tempSourceOffset</span><span class="p">.</span><span class="n">Set</span><span class="p">((</span><span class="n">SourceBoneTM</span><span class="p">.</span><span class="n">GetLocation</span><span class="p">().</span><span class="n">X</span><span class="p">),</span> <span class="p">(</span><span class="n">SourceBoneTM</span><span class="p">.</span><span class="n">GetLocation</span><span class="p">().</span><span class="n">Y</span><span class="p">),</span> <span class="p">(</span><span class="n">SourceBoneTM</span><span class="p">.</span><span class="n">GetLocation</span><span class="p">().</span><span class="n">Z</span><span class="p">));</span>
+		
+	<span class="c1">// Get the Base Pose of the Target Bone</span>
+	<span class="n">tempTargetOffset</span><span class="p">.</span><span class="n">Set</span><span class="p">((</span><span class="n">TargetBoneTM</span><span class="p">.</span><span class="n">GetLocation</span><span class="p">().</span><span class="n">X</span><span class="p">),</span> <span class="p">(</span><span class="n">TargetBoneTM</span><span class="p">.</span><span class="n">GetLocation</span><span class="p">().</span><span class="n">Y</span><span class="p">),</span> <span class="p">(</span><span class="n">TargetBoneTM</span><span class="p">.</span><span class="n">GetLocation</span><span class="p">().</span><span class="n">Z</span><span class="p">));</span>
+
+	<span class="c1">// Get the Starting Offset from ALL inputs</span>
+	<span class="n">JointOffset</span><span class="p">.</span><span class="n">Set</span><span class="p">((</span><span class="n">tempTargetOffset</span><span class="p">.</span><span class="n">X</span><span class="o">-</span><span class="n">tempSourceOffset</span><span class="p">.</span><span class="n">X</span><span class="o">+</span><span class="n">CurrentAddedOffset</span><span class="p">.</span><span class="n">X</span><span class="p">),(</span><span class="n">tempTargetOffset</span><span class="p">.</span><span class="n">Y</span><span class="o">-</span><span class="n">tempSourceOffset</span><span class="p">.</span><span class="n">Y</span><span class="o">+</span><span class="n">CurrentAddedOffset</span><span class="p">.</span><span class="n">Y</span><span class="p">),(</span><span class="n">tempTargetOffset</span><span class="p">.</span><span class="n">Z</span><span class="o">-</span><span class="n">tempSourceOffset</span><span class="p">.</span><span class="n">Z</span><span class="o">+</span><span class="n">CurrentAddedOffset</span><span class="p">.</span><span class="n">Z</span><span class="p">));</span>
+
+	<span class="c1">// Assign Offset to Mod Target Location</span>
+	<span class="n">ModTargetLocationInCompSpace</span><span class="p">.</span><span class="n">Set</span><span class="p">((</span><span class="n">tempTargetOffset</span><span class="p">.</span><span class="n">X</span><span class="p">),</span> <span class="p">(</span><span class="n">tempTargetOffset</span><span class="p">.</span><span class="n">Y</span><span class="p">),</span> <span class="p">(</span><span class="n">tempTargetOffset</span><span class="p">.</span><span class="n">Z</span><span class="p">));</span>
+			
+
+	<span class="p">}</span>
+	<span class="c1">//need to add a multiplier control so that you can control how much of the source movement is translated to the target(I.E. BlendEffects)</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">bUpdateX</span><span class="p">)</span><span class="c1">//Update X if checked</span>
+	<span class="p">{</span>		
+		<span class="n">ModTargetLocationInCompSpace</span><span class="p">.</span><span class="n">X</span> <span class="o">=</span> <span class="p">((</span><span class="n">SourceBoneTM</span><span class="p">.</span><span class="n">GetTranslation</span><span class="p">().</span><span class="n">X</span><span class="p">)</span><span class="o">+</span> <span class="n">JointOffset</span><span class="p">.</span><span class="n">X</span><span class="p">);</span><span class="c1">//SourceTM + Offset</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">bUpdateY</span><span class="p">)</span><span class="c1">//Update Y if checked</span>
+	<span class="p">{</span>
+		<span class="n">ModTargetLocationInCompSpace</span><span class="p">.</span><span class="n">Y</span> <span class="o">=</span> <span class="p">((</span><span class="n">SourceBoneTM</span><span class="p">.</span><span class="n">GetTranslation</span><span class="p">().</span><span class="n">Y</span><span class="p">)</span> <span class="o">+</span> <span class="n">JointOffset</span><span class="p">.</span><span class="n">Y</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">bUpdateZ</span><span class="p">)</span><span class="c1">//Update Z if checked</span>
+	<span class="p">{</span>	
+		<span class="n">ModTargetLocationInCompSpace</span><span class="p">.</span><span class="n">Z</span> <span class="o">=</span> <span class="p">((</span><span class="n">SourceBoneTM</span><span class="p">.</span><span class="n">GetTranslation</span><span class="p">().</span><span class="n">Z</span><span class="p">)</span> <span class="o">+</span> <span class="n">JointOffset</span><span class="p">.</span><span class="n">Z</span><span class="p">);</span> <span class="c1">//(SourceBoneTM.GetTranslation().Z);</span>
+	<span class="p">}</span>
+	<span class="c1">//Set the Targets Transform and pass out to Output(End of tick)</span>
+	<span class="n">TargetBoneTM</span><span class="p">.</span><span class="n">SetTranslation</span><span class="p">(</span><span class="n">ModTargetLocationInCompSpace</span><span class="p">);</span>
+
+	<span class="c1">// Returns to caller with new location</span>
+	<span class="n">OutBoneTransforms</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">FBoneTransform</span><span class="p">(</span><span class="n">TargetBone</span><span class="p">.</span><span class="n">BoneIndex</span><span class="p">,</span> <span class="n">TargetBoneTM</span><span class="p">));</span>	
+<span class="p">}</span>
+
+<span class="c1">// Makes sure that both bones are valid</span>
+<span class="kt">bool</span> <span class="n">FAnimNode_TranslateWith</span><span class="o">::</span><span class="n">IsValidToEvaluate</span><span class="p">(</span><span class="k">const</span> <span class="n">USkeleton</span> <span class="o">*</span> <span class="n">Skeleton</span><span class="p">,</span> <span class="k">const</span> <span class="n">FBoneContainer</span> <span class="o">&amp;</span> <span class="n">RequiredBones</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// if both bones are valid</span>
+	<span class="k">return</span> <span class="p">(</span><span class="n">TargetBone</span><span class="p">.</span><span class="n">IsValid</span><span class="p">(</span><span class="n">RequiredBones</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">SourceBone</span><span class="p">.</span><span class="n">IsValid</span><span class="p">(</span><span class="n">RequiredBones</span><span class="p">)));</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="About_the_Code.28.cpp.29_file">
+        About the Code(.cpp) file
+       </span>
+      </h2>
+      <p>
+       Lets take a look at the code file now.
+      </p>
+      <p>
+       Again we start off with a couple of include files. One thing to note here, is that the first include file should always be the header file for your module. In this case, "YourGame.h". We also need to make sure that we include the AnimNode_TranslateWith.h file, otherwise our code will not know which header to use.
+      </p>
+      <p>
+       After the includes, we have some defaults. This section is generally up to the user, but it does outline the starting point of the node. For this example, we have set the Z-Axis to true, and the other Axis' to false. We also declare a starting point for our BlendWeight, and clear out our CurrentAddedOffset (which I will explain soon).
+      </p>
+      <p>
+       Next we have some functions. First we will Initialize the input (ComponentPose). Next we call Update. After Update, we call the CacheBones function. This does two things. First, it calls the InitializeBoneReferences function. After that has run, we cache the ComponentPose.
+      </p>
+      <p>
+       The InitializeBoneReferences works the same as our Initialize from earlier, except that it focuses on our Target and Source bones. If for whatever reason, it cannot find one of these two, we will print an error message to the Output Log. This can be helpful for troubleshooting issues.
+      </p>
+      <p>
+       After InitializeBoneReferences, we have EvaluateComponentSpace. This takes our input pose, and evaluates it. After that, it checks a couple things. First, we test to see if at least one Axis is selected for update. If no Axis has been selected, there is no need to go any farther. After we check the Axis selection, and if one is selected, we then check that the bones in Target and Source are valid bones to be evaluated. If both bones are, then we will continue.
+      </p>
+      <p>
+       If everything has checked out good to this point, we will create a couple variables, and then call EvaluateBoneTransforms.
+      </p>
+      <p>
+       After EvaluateBoneTransforms has finished, we come back here and run checkSlow on our BoneTransforms.
+      </p>
+      <p>
+       Finally, we send the output to the next node in the Animation Blueprint.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="About_EvaluateBoneTransforms">
+        About EvaluateBoneTransforms
+       </span>
+      </h2>
+      <p>
+       This is the "meat" of our node. First we will check our OutBoneTransforms array.
+Next we create two FTransform variables, and assign them to our Source bone, and Target bone.
+Next, we check our CurrentAddedOffset to see if it equals AddtoOffset. If you remember, earlier we set CurrentAddedOffset to NULL. This is why. The first time this runs, when we test the CurrentAddedOffset == AddtoOffset, it always come back as false which will in turn, run the following code. From that point on, if nothing changes, it will not have a need to update this part. After we have assigned CrrentAddedOffset a value, we clear JointOffset. This again is strictly to update only if we have to.
+      </p>
+      <p>
+       We check JointOffset for NULL values, and if any return we will run the following section.
+We create two FVectors, assign them each a value, run some simple math operations and then assign them to JointOffset. We also assign the Target bones location to ModTargetLocationInCompSpace, which simply holds the starting location in Component Space.
+      </p>
+      <p>
+       Next, we check each Axis one at a time, and if an Axis is selected, we change ModTargetLocationInCompSpace accordingly (this will be used to update our Target bone).
+      </p>
+      <p>
+       Finally, we input or new location to our Target bone transform, and return the new value to our OutBoneTransform.
+      </p>
+      <h2>
+       <span class="mw-headline" id="AnimGraphNode_TranslateWith">
+        AnimGraphNode_TranslateWith
+       </span>
+      </h2>
+      <p>
+       So now what? We have our code in place, maybe we have compiled and run the Editor, but no node. We still have two files left to add. These are the AnimGraphNode files and they hold the code that creates the visual representation of our node.
+      </p>
+      <h3>
+       <span class="mw-headline" id=".h_2">
+        .h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Created by Chance_07 2014</span>
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"AnimGraphNode_Base.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"AnimNode_TranslateWith.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"AnimGraphNode_TranslateWith.generated.h"</span><span class="cp"></span>
+
+<span class="cm">/**</span>
+<span class="cm"> * </span>
+<span class="cm"> */</span>
+<span class="n">UCLASS</span><span class="p">(</span><span class="n">MinimalAPI</span><span class="p">,</span> <span class="n">dependson</span> <span class="o">=</span> <span class="n">AnimNode_TranslateWith</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">UAnimGraphNode_TranslateWith</span> <span class="o">:</span> <span class="k">public</span> <span class="n">UAnimGraphNode_Base</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">SkeletalControl</span><span class="p">)</span>
+	<span class="n">FAnimNode_TranslateWith</span> <span class="n">Node</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+	<span class="c1">// UEdGraphNode interface</span>
+	<span class="k">virtual</span> <span class="n">FText</span> <span class="n">GetNodeTitle</span><span class="p">(</span><span class="n">ENodeTitleType</span><span class="o">::</span><span class="n">Type</span> <span class="n">TitleType</span><span class="p">)</span> <span class="k">const</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="n">FString</span> <span class="nf">GetTooltip</span><span class="p">()</span> <span class="k">const</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="n">FString</span> <span class="nf">GetNodeCategory</span><span class="p">()</span> <span class="k">const</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="n">FLinearColor</span> <span class="nf">GetNodeTitleColor</span><span class="p">()</span> <span class="k">const</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">CreateOutputPins</span><span class="p">()</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+	<span class="c1">// End of UEdGraphNode interface</span>
+
+<span class="k">protected</span><span class="o">:</span>
+	<span class="k">virtual</span> <span class="n">FText</span> <span class="n">GetControllerDescription</span><span class="p">()</span> <span class="k">const</span> <span class="p">;</span>
+	
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       AnimGraphNode_TranslateWith.h contains the same format as our previous header file. We have our include files, our declarations, and our OVERRIDE. You should notice, we do have one UPROPRETY in here where we declare a variable using the Category = SkeletalControl. This is where in the context menu our node will appear.
+      </p>
+      <h3>
+       <span class="mw-headline" id=".cpp_2">
+        .cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Created by Chance_07 2014</span>
+
+<span class="cp">#include</span> <span class="cpf">"YourGame.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Editor/AnimGraph/Private/AnimGraphPrivatePCH.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"AnimationGraphSchema.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"AnimGraphNode_TranslateWith.h"</span><span class="cp"></span>
+
+<span class="cp">#define LOCTEXT_NAMESPACE "AnimGraph_TranslateWith"</span>
+
+<span class="n">UAnimGraphNode_TranslateWith</span><span class="o">::</span><span class="n">UAnimGraphNode_TranslateWith</span><span class="p">(</span><span class="k">const</span> <span class="n">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span>
+<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="p">}</span>
+
+<span class="c1">//Title Color!</span>
+<span class="n">FLinearColor</span> <span class="n">UAnimGraphNode_TranslateWith</span><span class="o">::</span><span class="n">GetNodeTitleColor</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">FLinearColor</span><span class="p">(</span><span class="mf">0.75f</span><span class="p">,</span> <span class="mf">0.75f</span><span class="p">,</span> <span class="mf">0.10f</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">//Node Category</span>
+<span class="n">FString</span> <span class="n">UAnimGraphNode_TranslateWith</span><span class="o">::</span><span class="n">GetNodeCategory</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">FString</span><span class="p">(</span><span class="s">"Skeletal Controls"</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="n">FText</span> <span class="n">UAnimGraphNode_TranslateWith</span><span class="o">::</span><span class="n">GetControllerDescription</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">LOCTEXT</span><span class="p">(</span><span class="s">"TranslateWithNode"</span><span class="p">,</span> <span class="s">"Translate With"</span><span class="p">);</span>
+<span class="p">}</span>
+
+
+<span class="c1">//Node Tooltip</span>
+<span class="n">FString</span> <span class="n">UAnimGraphNode_TranslateWith</span><span class="o">::</span><span class="n">GetTooltip</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"The Translate WIth control allows the Target Bone to follow the Translation of the Source Bone on all Specified Axis"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">//Node Title(Needs to be updated now since node is much more versatile)</span>
+<span class="n">FText</span> <span class="n">UAnimGraphNode_TranslateWith</span><span class="o">::</span><span class="n">GetNodeTitle</span><span class="p">(</span><span class="n">ENodeTitleType</span><span class="o">::</span><span class="n">Type</span> <span class="n">TitleType</span><span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+
+	<span class="n">FFormatNamedArguments</span> <span class="n">Args</span><span class="p">;</span>
+	<span class="n">Args</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"ControllerDescription"</span><span class="p">),</span> <span class="n">GetControllerDescription</span><span class="p">());</span>
+	
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">TitleType</span> <span class="o">==</span> <span class="n">ENodeTitleType</span><span class="o">::</span><span class="n">ListView</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="n">FText</span><span class="o">::</span><span class="n">Format</span><span class="p">(</span><span class="n">LOCTEXT</span><span class="p">(</span><span class="s">"AnimGraphNode_TranslateWith_Title"</span><span class="p">,</span> <span class="s">"{ControllerDescription}"</span><span class="p">),</span> <span class="n">Args</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">else</span>
+	<span class="p">{</span>
+		<span class="n">Args</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"SourceBoneName"</span><span class="p">),</span> <span class="n">FText</span><span class="o">::</span><span class="n">FromName</span><span class="p">(</span><span class="n">Node</span><span class="p">.</span><span class="n">SourceBone</span><span class="p">.</span><span class="n">BoneName</span><span class="p">));</span>
+		<span class="n">Args</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"TargetBoneName"</span><span class="p">),</span> <span class="n">FText</span><span class="o">::</span><span class="n">FromName</span><span class="p">(</span><span class="n">Node</span><span class="p">.</span><span class="n">TargetBone</span><span class="p">.</span><span class="n">BoneName</span><span class="p">));</span>
+		<span class="k">return</span> <span class="n">FText</span><span class="o">::</span><span class="n">Format</span><span class="p">(</span><span class="n">LOCTEXT</span><span class="p">(</span><span class="s">"AnimGraphNode_TranslateWith_Title"</span><span class="p">,</span> <span class="s">"{ControllerDescription}</span><span class="se">\n</span><span class="s">Source Bone: {SourceBoneName}</span><span class="se">\n</span><span class="s">Target Bone: {TargetBoneName}"</span><span class="p">),</span> <span class="n">Args</span><span class="p">);</span>
+	<span class="p">}</span>
+
+<span class="p">}</span>
+
+<span class="c1">//Node Output Pin(Output is in Component Space, Change at own RISK!)</span>
+<span class="kt">void</span> <span class="n">UAnimGraphNode_TranslateWith</span><span class="o">::</span><span class="n">CreateOutputPins</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">const</span> <span class="n">UAnimationGraphSchema</span><span class="o">*</span> <span class="n">Schema</span> <span class="o">=</span> <span class="n">GetDefault</span><span class="o">&lt;</span><span class="n">UAnimationGraphSchema</span><span class="o">&gt;</span><span class="p">();</span>
+	<span class="n">CreatePin</span><span class="p">(</span><span class="n">EGPD_Output</span><span class="p">,</span> <span class="n">Schema</span><span class="o">-&gt;</span><span class="n">PC_Struct</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">""</span><span class="p">),</span> <span class="n">FComponentSpacePoseLink</span><span class="o">::</span><span class="n">StaticStruct</span><span class="p">(),</span> <span class="cm">/*bIsArray=*/</span> <span class="nb">false</span><span class="p">,</span> <span class="cm">/*bIsReference=*/</span> <span class="nb">false</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Pose"</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="cp">#undef LOCTEXT_NAMESPACE</span>
+</pre>
+      </div>
+      <p>
+       AnimGraphNode_TranslateWith.cpp again contains the functions we will be running. The one part I would like to draw your attention to is the CreateOutputPins function. As you can see, it is marked as Change at own RISK, and for very good reason. This output is designed to run in ComponentSpace, and if for some reason, that changes, it can cause instability issues in the Editor. I recommend, at least until you are very familiar with the Engine, that you do not change this.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Build.cs_and_YourGame.h_files">
+        Build.cs and YourGame.h files
+       </span>
+      </h2>
+      <p>
+       Depending on the Engine version you are using, this may change some but I will cover the basics. YourGame.h contains a list of include files that your module or game needs access to, so be sure to check that you have included anything you need to here. This can change greatly based on your project, but always try to only include files you have to. There is no need to include files you already have access to.
+      </p>
+      <p>
+       An example here would be:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"BlueprintUtilities.h"</span><span class="cp"></span>
+</pre>
+      </div>
+      <p>
+       Build.cs again can change greatly based on your project, but a couple lines that will help get you started:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>        <span class="n">PublicDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"Core"</span><span class="p">,</span> <span class="s">"CoreUObject"</span><span class="p">,</span> <span class="s">"Engine"</span><span class="p">});</span>
+
+        <span class="n">PrivateDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"InputCore"</span><span class="p">,</span> <span class="s">"HTTP"</span><span class="p">,</span> <span class="s">"AnimGraph"</span><span class="p">,</span> <span class="s">"BlueprintGraph"</span><span class="p">,</span> <span class="s">"UnrealEd"</span> <span class="p">});</span>
+</pre>
+      </div>
+      <p>
+       These are basically just paths to different locations within the engine.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Extension:_Non-editor_builds">
+        Extension: Non-editor builds
+       </span>
+      </h3>
+      <p>
+       Added by Leon Rosengarten (lion032)
+      </p>
+      <p>
+       When you add editor extensions you must separate the extensions into it's own module that only will be linked when you build
+your game with editor otherwise it will not compile since non-editor builds will not include any editor data!
+      </p>
+      <p>
+       To properly add new AnimNode and AnimGraph to your project you will need to split it into two modules, one for the game and one for the editor.
+      </p>
+      <p>
+       Example:
+      </p>
+      <p>
+       Directory tree:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="o">/</span><span class="n">Source</span> 
+ <span class="o">/</span><span class="n">MyGameName</span> 
+  <span class="o">/</span><span class="n">Classes</span> 
+   <span class="o">/</span><span class="n">Animation</span>
+    <span class="n">AnimNode_MyNode</span><span class="p">.</span><span class="n">h</span>
+  <span class="o">/</span><span class="n">Private</span>
+   <span class="o">/</span><span class="n">Animation</span>
+    <span class="n">AnimNode_MyNode</span><span class="p">.</span><span class="n">h</span>
+  <span class="o">/</span><span class="n">Public</span>
+ <span class="n">MyGameName</span><span class="p">.</span><span class="n">Build</span><span class="p">.</span><span class="n">cs</span>
+ <span class="o">/</span><span class="n">MyEditorExtension</span>
+  <span class="o">/</span><span class="n">Classes</span>
+   <span class="n">MyEditorExtension</span><span class="p">.</span><span class="n">Build</span><span class="p">.</span><span class="n">cs</span>
+   <span class="o">/</span><span class="n">Animation</span>
+    <span class="n">AnimGraphNode_MyNode</span><span class="p">.</span><span class="n">h</span>
+  <span class="o">/</span><span class="n">Private</span>
+   <span class="o">/</span><span class="n">Animation</span>
+    <span class="n">AnimGraphNode_MyNode</span><span class="p">.</span><span class="n">h</span>
+   <span class="n">MyEditorExtension</span><span class="p">.</span><span class="n">cpp</span>
+  <span class="o">/</span><span class="n">Public</span>
+   <span class="n">MyEditorExtension</span><span class="p">.</span><span class="n">h</span>
+</pre>
+      </div>
+      <p>
+       MyEditorExtension.Build.cs:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">using</span> <span class="nn">UnrealBuildTool</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">MyEditorExtension</span><span class="p">:</span> <span class="n">ModuleRules</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="nf">MyEditorExtension</span><span class="p">(</span><span class="n">TargetInfo</span> <span class="n">Target</span><span class="p">)</span>
+    <span class="p">{</span>
+
+        <span class="n">PrivateIncludePaths</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s">"EditorModule/Private"</span><span class="p">);</span>
+
+        <span class="n">PublicDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"Core"</span><span class="p">,</span> <span class="s">"CoreUObject"</span><span class="p">,</span> <span class="s">"Engine"</span><span class="p">,</span> <span class="s">"InputCore"</span><span class="p">,</span> <span class="p">});</span>
+
+        <span class="n">PrivateDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"UnrealEd"</span><span class="p">,</span> <span class="s">"BlueprintGraph"</span><span class="p">,</span> <span class="s">"AnimGraph"</span><span class="p">,</span> <span class="p">});</span>
+
+        <span class="n">PublicDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span>
+             <span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span>
+                    <span class="s">"MyGameName"</span>
+                <span class="p">}</span>
+        <span class="p">);</span>
+
+        <span class="n">CircularlyReferencedDependentModules</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span>
+            <span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span>
+                    <span class="s">"MyGameName"</span><span class="p">,</span>
+                <span class="p">}</span>
+        <span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       MyGameName.Build.cs:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">using</span> <span class="nn">UnrealBuildTool</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">MyGameName</span><span class="p">:</span> <span class="n">ModuleRules</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="nf">MyGameName</span><span class="p">(</span><span class="n">TargetInfo</span> <span class="n">Target</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">PublicDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"Core"</span><span class="p">,</span> <span class="s">"CoreUObject"</span><span class="p">,</span> <span class="s">"Engine"</span><span class="p">,</span> <span class="s">"InputCore"</span> <span class="p">});</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">UEBuildConfiguration</span><span class="p">.</span><span class="n">bBuildEditor</span> <span class="p">==</span> <span class="k">true</span><span class="p">)</span>
+        <span class="p">{</span>
+
+            <span class="n">PublicDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span>
+                <span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span>
+                    <span class="s">"MyEditorExtension"</span>
+                <span class="p">}</span>
+            <span class="p">);</span>
+
+            <span class="n">CircularlyReferencedDependentModules</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span>
+                <span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span>
+                    <span class="s">"MyEditorExtension"</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="p">);</span>
+        <span class="p">}</span>
+
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       At this point, you should be able to compile the Engine and run your game. Create a new Animation Blueprint (or open existing one), right click and look under Skeletal Controls. You should see Translate With as an available node now.
+      </p>
+      <p>
+       Congratulations! You created a new animation node.
+      </p>
+      <p>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

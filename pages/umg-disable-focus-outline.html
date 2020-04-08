@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   UMG Disable Focus Outline - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    UMG Disable Focus Outline
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#How_to_disable.2Fcustomize_the_UMG_focus_outline_in_C.2B.2B">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             How to disable/customize the UMG focus outline in C++
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Using_the_project_settings">
+            <span class="tocnumber">
+             1.2
+            </span>
+            <span class="toctext">
+             Using the project settings
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Related_Tutorials">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Related Tutorials
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Author:
+       </i>
+       (
+     )
+      </p>
+      <p>
+       While working on
+       <a class="external text" href="http://redgoddessgame.com/" rel="nofollow">
+        Red Godess
+       </a>
+       we had an issues with the focus using a GamePad. Always a widget acquired focus it will get a dotted outline that seams to be more for PC keyboard then a GamePad on a console.
+      </p>
+      <p>
+       We first implemented our own focus system which worked like a charm but later we investigated on how to override the default behavior. The following tutorial is about the right way to handle it :D.
+      </p>
+      <h3>
+       <span class="mw-headline" id="How_to_disable.2Fcustomize_the_UMG_focus_outline_in_C.2B.2B">
+        How to disable/customize the UMG focus outline in C++
+       </span>
+      </h3>
+      <p>
+       First of all we have to create a new class that inherits from UGameViewportClient like the following.
+      </p>
+      <p>
+       <b>
+        MyGameViewportClient.h (public header)
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Fill out your copyright notice in the Description page of Project Settings.</span>
+
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"Engine/GameViewportClient.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"MyGameViewportClient.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">(</span><span class="n">Within</span><span class="o">=</span><span class="n">Engine</span><span class="p">,</span> <span class="n">transient</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">Engine</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">MYGAME_API</span> <span class="nl">UMyGameViewportClient</span> <span class="p">:</span> <span class="k">public</span> <span class="n">UGameViewportClient</span>
+<span class="p">{</span>
+        <span class="n">GENERATED_BODY</span><span class="p">()</span>
+
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">UMyGameViewportClient</span><span class="p">();</span>
+
+    <span class="c1">// We will override this methos to only return false, this way we complete disable</span>
+    <span class="c1">// the focus outline. Consider using your own logic here.</span>
+    <span class="k">virtual</span> <span class="n">TOptional</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">QueryShowFocus</span><span class="p">(</span><span class="k">const</span> <span class="n">EFocusCause</span> <span class="n">InFocusCause</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <b>
+        MyGameViewportClient.cpp (private implementation)
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Fill out your copyright notice in the Description page of Project Settings.</span>
+
+<span class="cp">#include</span> <span class="cpf">"MyGame.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Public/MyGameViewportClient.h"</span><span class="cp"></span>
+
+<span class="n">UMyGameViewportClient</span><span class="o">::</span><span class="n">UMyGameViewportClient</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="p">}</span>
+
+<span class="n">TOptional</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span> <span class="n">UMyGameViewportClient</span><span class="o">::</span><span class="n">QueryShowFocus</span><span class="p">(</span><span class="k">const</span> <span class="n">EFocusCause</span> <span class="n">InFocusCause</span><span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+    <span class="c1">// Consider your own special logic, you might want to call the super method first.</span>
+    <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Now you just have to add the class into your
+       <b>
+        DefaultEngine.ini
+       </b>
+       file and you should be good to go.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="p">[</span><span class="o">/</span><span class="n">Script</span><span class="o">/</span><span class="n">Engine</span><span class="p">.</span><span class="n">Engine</span><span class="p">]</span>
+<span class="n">GameViewportClientClassName</span><span class="o">=/</span><span class="n">Script</span><span class="o">/</span><span class="n">MyGame</span><span class="p">.</span><span class="n">MyGameViewportClient</span>
+</pre>
+      </div>
+      <p>
+       So that should be all you need to get rid or control the focus outline your own way.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Using_the_project_settings">
+        Using the project settings
+       </span>
+      </h3>
+      <p>
+       As stated by Nick Darnell in the forums, from 4.8 you can customize the behavior directly in the Project Settings.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">Project</span> <span class="n">Settings</span> <span class="o">&gt;&gt;</span> <span class="n">User</span> <span class="n">Interface</span> <span class="o">&gt;&gt;</span> <span class="n">RenderFocusRule</span> <span class="p">(</span><span class="n">Set</span> <span class="n">To</span><span class="p">)</span> <span class="n">Never</span>
+</pre>
+      </div>
+      <p>
+       There are more option to explore if you are corious. This method will apply to the project itself while the C++ version is a more flexible way, for example, you could enable it if a keyboard is plugged in and disable it if a GamePad is detected.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Related_Tutorials">
+        Related Tutorials
+       </span>
+      </h2>
+      <p>
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/UMG/index.html" rel="nofollow">
+        Epic's UMG Documentation
+       </a>
+      </p>
+      <p>
+      </p>
+      <p>
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?52773-Tutorial-Snippet-Creating-a-UMG-Widget-in-C-and-delegate-example" rel="nofollow">
+        [Tutorial/ Snippet] Creating a UMG Widget in C++, and delegate example by WCode.
+       </a>
+      </p>
+      <p>
+       <a class="external text" href="./umg-how-to-extend-a-uuserwidget-for-umg-in-c.html" rel="nofollow">
+        [Tutorial] UMG, How to extend a UUserWidget:: for UMG in C++.
+       </a>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

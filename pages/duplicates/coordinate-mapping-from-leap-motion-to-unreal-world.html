@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Coordinate mapping from leap motion to unreal world - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Coordinate mapping from leap motion to unreal world
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Requirements">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Requirements
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Tutorials">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Tutorials
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Problem_with_this_method">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Problem with this method
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       This page provides a way to change coordinate mapping from leap motion world to unreal world in
+       <b>
+        official
+       </b>
+       leap motion plug-in. In the current leap motion plug in, there is no obvious way to change the mapping. It is inconvenient if you want to move your hand farther in unreal world.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Requirements">
+        Requirements
+       </span>
+      </h2>
+      <p>
+       This tutorial requires to change leap motion plug in code; Therefore, You need to use "build from source" version of unreal engine from unreal github. To apply the change in leap motion plug-in code, in unreal editor, you can go to Windows-&gt;Developer Tools-&gt;Modules, and find "LeapMotionController" and click recompile
+       <a class="external text" href="https://www.unrealengine.com/ue4-on-github" rel="nofollow">
+        How to build unreal engine from source
+       </a>
+       .
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Tutorials">
+        Tutorials
+       </span>
+      </h2>
+      <p>
+       Open Visual studio of your project and open LeapMotionHandActor.cpp from Engine/Runtime/LeapMotionController\Source\Private
+The Relative code is at around line 153, UpdateBones() function.
+      </p>
+      <pre>void ALeapMotionHandActor::UpdateBones(float DeltaSeconds)
+{
+   if (BoneActors.Num() == 0) { return; }
+
+   float CombinedScale = GetCombinedScale();
+
+   FLeapMotionDevice* Device = FLeapMotionControllerPlugin::GetLeapDeviceSafe();
+   if (Device &amp;&amp; Device-&gt;IsConnected())
+     {
+     int BoneArrayIndex = 0;
+     for (ELeapBone LeapBone = bShowArm ? ELeapBone::Forearm : ELeapBone::Palm; LeapBone &lt;= ELeapBone::Finger4Tip;      ((int8&amp;)LeapBone)++)
+        {
+         FVector TargetPosition;
+         FRotator TargetOrientation;
+
+         bool Success = Device-&gt;GetBonePostionAndOrientation(HandId, LeapBone, TargetPosition, TargetOrientation);
+         if (Success)
+           {
+           // Offset target position &amp; rotation by the SpawnReference actor's transform
+           const FQuat RefQuat = GetRootComponent()-&gt;GetComponentQuat();
+           TargetPosition = RefQuat * TargetPosition * CombinedScale + GetRootComponent()-&gt;GetComponentLocation();
+           TargetOrientation = (RefQuat * TargetOrientation.Quaternion()).Rotator();
+
+           // Get current position &amp; rotation
+           ALeapMotionBoneActor* BoneActor = BoneActors[BoneArrayIndex++];
+           UPrimitiveComponent* PrimitiveComponent = Cast&lt;UPrimitiveComponent&gt;(BoneActor-&gt;GetRootComponent());
+           if (PrimitiveComponent)
+           {
+           PrimitiveComponent-&gt;SetRelativeLocationAndRotation(TargetPosition, TargetOrientation, true);
+				}
+			}
+		}
+	}
+}
+</pre>
+      <p>
+       To start with, in the last line, I recommend you change 
+"PrimitiveComponent-&gt;SetRelativeLocationAndRotation(TargetPosition, TargetOrientation, true)"
+to 
+"PrimitiveComponent-&gt;SetWorldLocationAndRotation(TargetPosition, TargetOrientation, true)"
+      </p>
+      <p>
+       You might find a problem that you put LeapMotioncontroller actor into the unreal world but hand does not show up in the location you put the controller but some location far away. With the change above, hand can correctly show up in the position you placed LeapMotioncontroller actor.
+      </p>
+      <p>
+       Then we can start to change the coordinate mapping. My method is to only multiply the first bone's location by a factor and change other bones according to the first bone.
+      </p>
+      <pre>void ALeapMotionHandActor::UpdateBones(float DeltaSeconds)
+{
+   //MODIFICATION.This array to record each bone's position. The first bone's position is boneLocationData[0]
+   TArray&lt;FVector&gt; boneLocationData;
+        
+   if (BoneActors.Num() == 0) { return; }
+
+   float CombinedScale = GetCombinedScale();
+
+   FLeapMotionDevice* Device = FLeapMotionControllerPlugin::GetLeapDeviceSafe();
+   if (Device &amp;&amp; Device-&gt;IsConnected())
+    {
+      int BoneArrayIndex = 0;
+      for (ELeapBone LeapBone = bShowArm ? ELeapBone::Forearm : ELeapBone::Palm; LeapBone &lt;= ELeapBone::Finger4Tip;       ((int8&amp;)LeapBone)++)
+      {
+         FVector TargetPosition;
+         FRotator TargetOrientation;
+
+         bool Success = Device-&gt;GetBonePostionAndOrientation(HandId, LeapBone, TargetPosition, TargetOrientation);
+         if (Success)
+          {
+           // Offset target position &amp; rotation by the SpawnReference actor's transform
+            const FQuat RefQuat = GetRootComponent()-&gt;GetComponentQuat();
+            TargetPosition = RefQuat * TargetPosition * CombinedScale + GetRootComponent()-&gt;GetComponentLocation();
+            TargetOrientation = (RefQuat * TargetOrientation.Quaternion()).Rotator();
+
+            // Get current position &amp; rotation
+            ALeapMotionBoneActor* BoneActor = BoneActors[BoneArrayIndex++];
+            UPrimitiveComponent* PrimitiveComponent = Cast&lt;UPrimitiveComponent&gt;(BoneActor-&gt;GetRootComponent());
+            if (PrimitiveComponent)
+             {
+              //MODIFICATION. you can substitute 15 with the factor you like 
+               PrimitiveComponent-&gt;SetWorldLocationAndRotation(TargetPosition + FVector(boneLocationData[0].X * 15, boneLocationData[0].Y * 15, boneLocationData[0].Z*15), TargetOrientation, true);
+					
+				}
+			}
+		}
+		
+
+
+	}
+}
+</pre>
+      <h2>
+       <span class="mw-headline" id="Problem_with_this_method">
+        Problem with this method
+       </span>
+      </h2>
+      <p>
+       The Starting location will also change by this mapping. You maybe need some calculation to find out the starting location. If you find out a way not to change starting point, please feel free to change this page. I feel the possible solution is related to the
+       <a class="external text" href="https://developer.leapmotion.com/documentation/csharp/devguide/Leap_Coordinate_Mapping.html" rel="nofollow">
+        interaction box
+       </a>
+       .
+      </p>
+      <p>
+       -ywj7931
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Structs, USTRUCTS(), They're Awesome - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Structs, USTRUCTS(), They're Awesome
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Technical">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Technical
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Core_Syntax">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Core Syntax
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Examples">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Examples
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Example_1">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Example 1
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Example_2">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             Example 2
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-7">
+             <a href="#Particle_Data_Tracker">
+              <span class="tocnumber">
+               3.2.1
+              </span>
+              <span class="toctext">
+               Particle Data Tracker
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-8">
+             <a href="#Garbage_Collection">
+              <span class="tocnumber">
+               3.2.2
+              </span>
+              <span class="toctext">
+               Garbage Collection
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Structs_With_Struct_Member_Variables">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Structs With Struct Member Variables
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-10">
+         <a href="#Struct_Assignment">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Struct Assignment
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#Deep_Copy">
+            <span class="tocnumber">
+             5.1
+            </span>
+            <span class="toctext">
+             Deep Copy
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-12">
+         <a href="#Automatic_Make.2FBreak_in_BP">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Automatic Make/Break in BP
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-13">
+         <a href="#Replication">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Replication
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-14">
+         <a href="#Other_notes">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Other notes
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-15">
+         <a href="#Related_Links">
+          <span class="tocnumber">
+           9
+          </span>
+          <span class="toctext">
+           Related Links
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-16">
+         <a href="#Thank_You_Epic_for_USTRUCTS.28.29">
+          <span class="tocnumber">
+           10
+          </span>
+          <span class="toctext">
+           Thank You Epic for USTRUCTS()
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Original Author:
+       </i>
+       (
+       )
+      </p>
+      <p>
+       Structs enable you to create custom variable types to organize your data, by relating other c++ or UE4 C++ data types to each other.
+      </p>
+      <p>
+       The power of structs is
+       <b>
+        extreme organization
+       </b>
+       , as well as ability to have functions for internal data type operations!
+      </p>
+      <h3>
+       <span class="mw-headline" id="Technical">
+        Technical
+       </span>
+      </h3>
+      <p>
+       Structs enable you to create custom variable types to organize your data, by relating other C++ or UE4 C++ data types to each other. The power of structs is
+       <b>
+        extreme organization
+       </b>
+       as well as the ability to have functions for
+       <b>
+        internal data type operations
+       </b>
+       . '
+      </p>
+      <p>
+       In UE4, structs should be used for simple data type combining and data management purposes. For complex interactions with the game world, you should make a UObject or AActor subclass instead.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Core_Syntax">
+        Core Syntax
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//If you want this to appear in BP, make sure to use this instead</span>
+<span class="c1">//USTRUCT(BlueprintType)</span>
+<span class="n">USTRUCT</span><span class="p">()</span>
+<span class="k">struct</span> <span class="n">FJoyStruct</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+
+	<span class="c1">//Always make USTRUCT variables into UPROPERTY()</span>
+	<span class="c1">//    any non-UPROPERTY() struct vars are not replicated</span>
+	
+	<span class="c1">// So to simplify your life for later debugging, always use UPROPERTY()</span>
+	<span class="n">UPROPERTY</span><span class="p">()</span>
+	<span class="n">int32</span> <span class="n">SampleInt32</span><span class="p">;</span>
+	
+        <span class="c1">//If you want the property to appear in BP, make sure to use this instead</span>
+        <span class="c1">//UPROPERTY(BlueprintReadOnly)</span>
+	<span class="n">UPROPERTY</span><span class="p">()</span>
+	<span class="n">AActor</span><span class="o">*</span> <span class="n">TargetActor</span><span class="p">;</span>
+	
+	<span class="c1">//Set</span>
+	<span class="kt">void</span> <span class="nf">SetInt</span><span class="p">(</span><span class="k">const</span> <span class="n">int32</span> <span class="n">NewValue</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">SampleInt32</span> <span class="o">=</span> <span class="n">NewValue</span><span class="p">;</span>
+	<span class="p">}</span>
+	
+	<span class="c1">//Get</span>
+	<span class="n">AActor</span><span class="o">*</span> <span class="nf">GetActor</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="n">TargetActor</span><span class="p">;</span>
+	<span class="p">}</span>
+	
+	<span class="c1">//Check</span>
+	<span class="kt">bool</span> <span class="nf">ActorIsValid</span><span class="p">()</span> <span class="k">const</span>
+	<span class="p">{</span>
+		<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">TargetActor</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+		<span class="k">return</span> <span class="n">TargetActor</span><span class="o">-&gt;</span><span class="n">IsValidLowLevel</span><span class="p">();</span>
+	<span class="p">}</span>
+	
+	<span class="c1">//Constructor</span>
+	<span class="n">FJoyStruct</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="c1">//Always initialize your USTRUCT variables!</span>
+		<span class="c1">//   exception is if you know the variable type has its own default constructor</span>
+		<span class="n">SampleInt32</span> 	<span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+		<span class="n">TargetActor</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       <i>
+        Additional Note Author:
+       </i>
+       (
+     )
+       <br/>
+       Additional Note: The idea of USTRUCTS() is to declare engine data types that are in global scope and can be accessed by other classes/structs/blueprints. Because of this, it is invalid UE4 syntax to declare a struct inside of a class or other struct if using the USTRUCT() macro. Regular structs can still be utilized inside your classes and other structs; however these cannot be replicated natively and will not be available for UE4 reflective debugging or other engine systems such as Blueprints.
+      </p>
+      <p>
+       <i>
+        Additional Note Author:
+       </i>
+       (
+     )
+       <br/>
+       Additional Note: Concerning the variables visibility on the editor: In the example above, if you don't add "EditAnywhere" parameter into UPROPERTY inside the members of the USTRUCT, whey won't show up in the Editor panel. You will see the variable but there will be no way to see/change/unfold the values inside. The class that defines a new UPROPERTY using that struct type should have that parameter too. 
+In case you can't modify the data and you are using blueprints, you should add BlueprintType inside the USTRUCT parenthesis.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Examples">
+        Examples
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Example_1">
+        Example 1
+       </span>
+      </h3>
+      <p>
+       You want to relate a float brightness value with a world space location FVector, both of which are interpolated using an Alpha value.
+      </p>
+      <ul>
+       <li>
+        And you want to do this for 100 different game locations simultaneously.
+       </li>
+      </ul>
+      <ul>
+       <li>
+        And you want to do this process repeatedly over time!
+       </li>
+      </ul>
+      <ul>
+       <li>
+        You need to store the incremental interpolation values between game events.
+       </li>
+      </ul>
+      <ul>
+       <li>
+        AActors/UObjects are not involved (You could just subclass AActor/UObject and store the data per instance)
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">USTRUCT</span><span class="p">()</span>
+<span class="k">struct</span> <span class="n">FMyInterpStruct</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+
+	<span class="n">UPROPERTY</span><span class="p">()</span>
+	<span class="kt">float</span> <span class="n">Brightness</span><span class="p">;</span>
+	
+	<span class="n">UPROPERTY</span><span class="p">()</span>
+	<span class="kt">float</span> <span class="n">BrightnessGoal</span><span class="p">;</span> <span class="c1">//interping to</span>
+	
+	<span class="n">UPROPERTY</span><span class="p">()</span>
+	<span class="n">FVector</span> <span class="n">Location</span><span class="p">;</span>
+	
+	<span class="n">UPROPERTY</span><span class="p">()</span>
+	<span class="n">FVector</span> <span class="n">LocationGoal</span><span class="p">;</span>
+	
+	<span class="n">UPROPERTY</span><span class="p">()</span>
+	<span class="kt">float</span> <span class="n">Alpha</span><span class="p">;</span>
+	
+	<span class="kt">void</span> <span class="nf">InterpInternal</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="n">Location</span> <span class="o">=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Lerp</span><span class="o">&lt;</span><span class="n">FVector</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Location</span><span class="p">,</span><span class="n">LocationGoal</span><span class="p">,</span><span class="n">Alpha</span><span class="p">);</span>
+		<span class="n">Brightness</span> <span class="o">=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Lerp</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Brightness</span><span class="p">,</span><span class="n">BrightnessGoal</span><span class="p">,</span><span class="n">Alpha</span><span class="p">);</span>
+	<span class="p">}</span>
+	
+	<span class="c1">//Brightness out is returned, FVector is returned by reference</span>
+	<span class="kt">float</span> <span class="nf">Interp</span><span class="p">(</span><span class="k">const</span> <span class="kt">float</span><span class="o">&amp;</span> <span class="n">NewAlpha</span><span class="p">,</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">Out</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//value received from rest of your game engine</span>
+		<span class="n">Alpha</span> <span class="o">=</span> <span class="n">NewAlpha</span><span class="p">;</span>
+		
+		<span class="c1">//Internal data structure management</span>
+		<span class="n">InterpInternal</span><span class="p">();</span>
+		
+		<span class="c1">//Return Values</span>
+		<span class="n">Out</span> <span class="o">=</span> <span class="n">Location</span><span class="p">;</span>
+		<span class="k">return</span> <span class="n">Brightness</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="n">FMyInterpStruct</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="n">Brightness</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> 
+		<span class="n">BrightnessGoal</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+		
+		<span class="n">Alpha</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> 
+		
+		<span class="n">Location</span> <span class="o">=</span> <span class="n">FVector</span><span class="o">::</span><span class="n">ZeroVector</span><span class="p">;</span>
+		<span class="n">LocationGoal</span> <span class="o">=</span> <span class="n">FVector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">200000</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Example_2">
+        Example 2
+       </span>
+      </h3>
+      <p>
+       You want to track information about particle system components that you have spawned into the world through
+      </p>
+      <pre> UGameplayStatics::SpawnEmitterAtLocation() // returns a UParticleSystemComponent
+</pre>
+      <p>
+       and you want to track the lifetime of the particle and apply parameter changes from C++. You could write your own class, but if your needs are simple or you do not have project-permissions to make a subclass of UParticleSystemComponent, you can just make a USTRUCT to relate the various data types!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">USTRUCT</span><span class="p">()</span>
+<span class="k">struct</span> <span class="n">FParticleStruct</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+
+	<span class="n">UPROPERTY</span><span class="p">()</span>
+	<span class="n">UParticleSystemComponent</span><span class="o">*</span> <span class="n">PSCPtr</span><span class="p">;</span>
+	
+	<span class="n">UPROPERTY</span><span class="p">()</span>
+	<span class="kt">float</span> <span class="n">LifeTime</span><span class="p">;</span>
+	
+	<span class="kt">void</span> <span class="nf">SetColor</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="c1">//</span>
+	<span class="p">}</span>
+	<span class="n">FLinearColor</span> <span class="nf">GetCurrentColor</span><span class="p">()</span> <span class="k">const</span>
+	<span class="p">{</span>
+		<span class="c1">//</span>
+	<span class="p">}</span>
+	
+	<span class="c1">//For GC</span>
+	<span class="kt">void</span> <span class="nf">Destroy</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="n">PSCPtr</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+	<span class="p">}</span>
+	
+	<span class="c1">//Constructor</span>
+	<span class="n">FParticleStruct</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="n">PSCPtr</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+		<span class="n">LifeTime</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h4>
+       <span class="mw-headline" id="Particle_Data_Tracker">
+        Particle Data Tracker
+       </span>
+      </h4>
+      <p>
+       Now you can have an array of these USTRUCTS for each particle that you spawn!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Particle Data Tracking Array</span>
+<span class="n">UPROPERTY</span><span class="p">()</span>
+<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FParticleStruct</span><span class="o">&gt;</span> <span class="n">PSCArray</span><span class="p">;</span>
+</pre>
+      </div>
+      <h4>
+       <span class="mw-headline" id="Garbage_Collection">
+        Garbage Collection
+       </span>
+      </h4>
+      <p>
+       By marking a USTRUCT or USTRUCT array as UPROPERTY() and marking any UObject / AActor members as UPROPERTY(), you are protected from dangling pointer crashes
+      </p>
+      <p>
+      </p>
+      <p>
+       However you must also clear ustructs you no longer need if they have pointers to UObjects if you ever want GC to be able garbage collect those UObjects.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Structs_With_Struct_Member_Variables">
+        Structs With Struct Member Variables
+       </span>
+      </h2>
+      <p>
+       The struct that wants to use another struct must be defined below the struct it wants to include.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">USTRUCT</span><span class="p">()</span>
+<span class="k">struct</span> <span class="n">FFlowerStruct</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+
+	<span class="n">UPROPERTY</span><span class="p">()</span>
+	<span class="n">int32</span> <span class="n">NumPetals</span><span class="p">;</span>
+	
+	<span class="n">UPROPERTY</span><span class="p">()</span>
+	<span class="n">FLinearColor</span> <span class="n">Color</span><span class="p">;</span>
+	
+	<span class="n">UPROPERTY</span><span class="p">()</span>
+	<span class="n">FVector</span> <span class="n">Scale3D</span><span class="p">;</span>
+	
+	<span class="kt">void</span> <span class="nf">SetFlowerColor</span><span class="p">(</span><span class="k">const</span> <span class="n">FLinearColor</span><span class="o">&amp;</span> <span class="n">NewColor</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">Color</span> <span class="o">=</span> <span class="n">NewColor</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="n">FFlowerStruct</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="n">NumPetals</span> 	<span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+		<span class="n">Scale3D</span> 		<span class="o">=</span> <span class="n">FVector</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+		<span class="n">Color</span> 			<span class="o">=</span> <span class="n">FLinearColor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+
+<span class="n">USTRUCT</span><span class="p">()</span>
+<span class="k">struct</span> <span class="n">FIslandStruct</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+
+	<span class="n">UPROPERTY</span><span class="p">()</span>
+	<span class="n">int32</span> <span class="n">Type</span><span class="p">;</span>
+	
+	<span class="n">UPROPERTY</span><span class="p">()</span>
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FVector</span><span class="o">&gt;</span> <span class="n">StarLocations</span><span class="p">;</span>
+	
+	<span class="n">UPROPERTY</span><span class="p">()</span>
+	<span class="kt">float</span> <span class="n">RainAlpha</span><span class="p">;</span>
+	
+	<span class="c1">//Dynamic Array of Flower Custom USTRUCT()</span>
+	<span class="n">UPROPERTY</span><span class="p">()</span>
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FFlowerStruct</span><span class="o">&gt;</span> <span class="n">FlowersOnThisIsland</span><span class="p">;</span>
+	
+	<span class="kt">void</span> <span class="nf">SetRainAlpha</span><span class="p">(</span><span class="k">const</span> <span class="kt">float</span><span class="o">&amp;</span> <span class="n">NewAlpha</span><span class="p">)</span> 
+	<span class="p">{</span>
+		<span class="n">RainAlpha</span> <span class="o">=</span> <span class="n">NewAlpha</span><span class="p">;</span>
+	<span class="p">}</span>
+	
+	<span class="n">int32</span> <span class="nf">GetStarCount</span><span class="p">()</span> <span class="k">const</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="n">StarLocations</span><span class="p">.</span><span class="n">Num</span><span class="p">();</span>
+	<span class="p">}</span>
+	<span class="n">FIslandStruct</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="n">Type</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+		<span class="n">Percent</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Struct_Assignment">
+        Struct Assignment
+       </span>
+      </h2>
+      <p>
+       My personal favorite thing about structs is that unlike UObject or AActor classes, which must be utilized via pointers (AActor*) you can directly copy the entire contents of a USTRUCT to another USTRUCT of the same type with a single line of assignment!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FFlowerStruct</span> <span class="n">ExistingFlower</span><span class="p">;</span>
+
+<span class="c1">// ... create ExistingFlower here</span>
+
+<span class="n">FFlowerStruct</span> <span class="n">NewFlower</span><span class="p">;</span>
+<span class="n">NewFlower</span> <span class="o">=</span> <span class="n">ExistingFlower</span><span class="p">;</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Deep_Copy">
+        Deep Copy
+       </span>
+      </h3>
+      <p>
+       If you have struct members pointing to UObjects or array pointers, you must be careful to copy these members yourself!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">USTRUCT</span><span class="p">()</span>
+<span class="k">struct</span> <span class="n">FMyStruct</span> <span class="p">{</span>
+    <span class="n">int32</span><span class="o">*</span> <span class="n">MyIntArray</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="n">FMyStruct</span> <span class="n">MyFirstStruct</span><span class="p">,</span> <span class="n">MySecondStruct</span><span class="p">;</span>
+
+<span class="c1">// Create the integer array on the first struct</span>
+<span class="n">MyFirstStruct</span><span class="p">.</span><span class="n">MyIntArray</span> <span class="o">=</span> <span class="k">new</span> <span class="n">int32</span><span class="p">[</span><span class="mi">10</span><span class="p">];</span>
+<span class="k">for</span><span class="p">(</span> <span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span> <span class="p">)</span> <span class="p">{</span>
+  <span class="n">MyFirstStruct</span><span class="p">.</span><span class="n">MyIntArray</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">GEngine</span><span class="o">-&gt;</span><span class="n">AddOnScreenMessage</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mf">10.f</span><span class="p">,</span> <span class="n">FColor</span><span class="o">::</span><span class="n">Blue</span><span class="p">,</span> <span class="n">FString</span><span class="o">::</span><span class="n">FromInt</span><span class="p">(</span><span class="n">MyFirstStruct</span><span class="p">.</span><span class="n">MyIntArray</span><span class="p">[</span><span class="mi">4</span><span class="p">]));</span>
+
+<span class="c1">// Assign the first struct to the second struct, i.e. create a shallow copy</span>
+<span class="n">MySecondStruct</span><span class="p">.</span><span class="n">MyIntArray</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mi">6</span><span class="p">;</span>
+
+<span class="n">GEngine</span><span class="o">-&gt;</span><span class="n">AddOnScreenMessage</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mf">10.f</span><span class="p">,</span> <span class="n">FColor</span><span class="o">::</span><span class="n">Blue</span><span class="p">,</span> <span class="n">FString</span><span class="o">::</span><span class="n">Printf</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"%d %d"</span><span class="p">),</span> <span class="n">MyFirstStruct</span><span class="p">.</span><span class="n">MyIntArray</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">MySecondStruct</span><span class="p">.</span><span class="n">MyIntArray</span><span class="p">[</span><span class="mi">4</span><span class="p">]));</span>
+</pre>
+      </div>
+      <p>
+       On screen the output will be
+      </p>
+      <pre> 4
+ 6 6
+</pre>
+      <p>
+       instead of the expected
+      </p>
+      <pre> 4
+ 4 6
+</pre>
+      <p>
+       This is because the data stored in MyStruct::MyIntArray is not actually stored inside of MyStruct. The
+       <i>
+        new
+       </i>
+       keyword creates the data somewhere in RAM and we simply store a pointer there. The address the pointer stores is copied over to
+       <i>
+        MySecondStruct
+       </i>
+       , but it still points to the same data. In fact, it would be counterproductive to remove this functionality since there are cases where you want exactly that. Additionally the Unreal Property System does not support non-UObject pointers, which is why
+       <i>
+        MyIntArray
+       </i>
+       is not marked with UPROPERTY().
+      </p>
+      <p>
+       However, copying arrays of integers (e.g. int32[10] instead of int32*) means the data is stored directly inside the struct and as such "deep copied". However, if you store a pointer to a UObject, this object is NOT deep copied! Once again only the pointer is copied and the original UObject left unchanged. Which is good because otherwise you might manipulate the wrong instance thinking you only had one to begin with leaving the original UObject unaffected, thus resembling a very nerve-wrecking and very difficult to track down bug!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Automatic_Make.2FBreak_in_BP">
+        Automatic Make/Break in BP
+       </span>
+      </h2>
+      <p>
+       Marking the USTRUCT as
+       <i>
+        BlueprintType
+       </i>
+       and adding
+       <i>
+        EditAnywhere, BlueprintReadWrite, Category = "Your Category"
+       </i>
+       to USTRUCT properties causes UE4 to automatically create
+       <i>
+        Make
+       </i>
+       and
+       <i>
+        Break
+       </i>
+       Blueprint functions, allowing to construct or extract data from the custom USTRUCT.
+      </p>
+      <p>
+       Special thanks to Community member Iniside for pointing this out. :)
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">USTRUCT</span><span class="p">(</span><span class="n">BlueprintType</span><span class="p">)</span>
+<span class="k">struct</span> <span class="n">FFlowerStruct</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="s">"Flower Struct"</span><span class="p">)</span>
+	<span class="n">int32</span> <span class="n">NumPetals</span><span class="p">;</span>
+	
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="s">"Flower Struct"</span><span class="p">)</span>
+	<span class="n">FLinearColor</span> <span class="n">Color</span><span class="p">;</span>
+	
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="s">"Flower Struct"</span><span class="p">)</span>
+	<span class="n">FVector</span> <span class="n">Scale3D</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <img alt="CustomUStructMakeBreak.jpg" class="" height="560" src="../assets/structs-ustructs-theyre-awesome/0.jpg" width="1000"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Replication">
+        Replication
+       </span>
+      </h2>
+      <hr/>
+      <hr/>
+      <hr/>
+      <pre> Remember that only UPROPERTY() variables of USTRUCTS() are considered for replication!
+</pre>
+      <hr/>
+      <hr/>
+      <hr/>
+      <p>
+       So if your USTRUCT is not replicating properly, the first thing you should check is that every member is at least UPROPERTY()! The struct does not have be a BlueprintType, it just needs UPROPERTY() above all properties that you want replicated.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Other_notes">
+        Other notes
+       </span>
+      </h2>
+      <p>
+       In case you are looking for GENERATED_USTRUCT_BODY, in 4.11+, GENERATED_BODY() should be used instead.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Related_Links">
+        Related Links
+       </span>
+      </h2>
+      <p>
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?103241-UE_Log-crashing-engine-when-trying-to-print-a-FString&amp;p=488561&amp;viewfull=1#post488561" rel="nofollow">
+        UStruct data member memory management
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Thank_You_Epic_for_USTRUCTS.28.29">
+        Thank You Epic for USTRUCTS()
+       </span>
+      </h2>
+      <p>
+       I love USTRUCTS(), thank you Epic!
+      </p>
+      <p>
+       (
+       )
+      </p>
+      <p>
+       <br/>
+       Additional edits
+     (
+     )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

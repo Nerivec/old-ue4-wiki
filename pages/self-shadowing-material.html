@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Self Shadowing Material - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Self Shadowing Material
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <br/>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           <b>
+            Overview
+           </b>
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Material">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           <b>
+            Material
+           </b>
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Notes">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Notes
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Blueprint">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           <b>
+            Blueprint
+           </b>
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Notes_2">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Notes
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Full_Project">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           <b>
+            Full Project
+           </b>
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        <b>
+         Overview
+        </b>
+       </span>
+      </h2>
+      <p>
+       This Material uses a trick to generate a self shadowing effect on materials using a
+       <i>
+        fake
+       </i>
+       lighting vector created using a blueprint which looks for spotlights (in this example, can be changed to all light types or another specific type) and takes the closest spotlight and uses its forward vector to feed into the UV's of a Heightmap.
+      </p>
+      <p>
+       This material would be great for a very particular moment but would be costly to apply to all materials in your level.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Material">
+        <b>
+         Material
+        </b>
+       </span>
+      </h2>
+      <p>
+       <img alt="Material Setup" class="" height="230" src="../assets/self-shadowing-material/0.jpg" width="864"/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Notes">
+        Notes
+       </span>
+      </h3>
+      <p>
+       The 'Light Vector' in the Material is a Vector Parameter that I named after the actual Light Vector in the engine which due to the much better deferred rendering pipeline cannot be used in a material.  Although not shown, the first part of the Material starting with the Light Vector to the Texture Sample of the Height Map serves the purpose of an offset.  The Power node can be adjusted to the desired look as it is a contrast method.  Finally the clamp insures that we do not get odd emissive artifacts in the final material.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Blueprint">
+        <b>
+         Blueprint
+        </b>
+       </span>
+      </h2>
+      <p>
+       <img alt="Blueprint Setup" class="" height="294" src="../assets/self-shadowing-material/1.jpg" width="864"/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Notes_2">
+        Notes
+       </span>
+      </h3>
+      <p>
+       The Blueprint components only include a simple plane with no pre-defined material.  With some additions to the Material, you could search for more lights in a similar setup.  Again, it would not be very performance-friendly at all though.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Full_Project">
+        <b>
+         Full Project
+        </b>
+       </span>
+      </h2>
+      <p>
+       Here is a link to the full project for dissection:
+      </p>
+      <p>
+       <a class="external text" href="https://mega.co.nz/#!jQV0wYZa!aO9XHaORBafAs8Bfwi-RHJct25CcTgC3E6xpxn82SlI" rel="nofollow">
+        SelfShadowing.zip
+       </a>
+      </p>
+      <p>
+       The final build for this project is built using the
+       <b>
+        4.6.0
+       </b>
+       .  Unzip files into a new folder and double click the SelfShadowing.uproject file.
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

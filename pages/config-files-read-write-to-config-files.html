@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Config Files, Read &amp; Write to Config Files - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Config Files, Read &amp; Write to Config Files
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#ConfigCacheIni.h">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           ConfigCacheIni.h
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Code_Samples">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Code Samples
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Reading_From_Config_File">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Reading From Config File
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Writing_to_Config_File">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             Writing to Config File
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Of_Great_Importance">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Of Great Importance
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       Author:
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       In this tutorial I am showing you working code samples you can plug into your player controller class (or any class if you remove the ClientMessage() parts).
+      </p>
+      <p>
+       In these samples I retrieve various bits of information, including the Near Clip Pane value, from the Game and Engine inis, and I also write a new section into the Game.ini called Victory.Core and store some data there.
+      </p>
+      <p>
+       <br/>
+       <b>
+        The main advantage of config files is that the user can  go in and edit the data in a human-readible format any time they want!
+       </b>
+      </p>
+      <p>
+       <br/>
+       Please note that when you write out info to config files, the data is not stored in YourGame\Config where the defaultconfig files are.
+      </p>
+      <p>
+       Your data will be written to
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">YourGame</span><span class="err">\</span><span class="n">Saved</span><span class="err">\</span><span class="n">Config</span><span class="err">\</span><span class="n">Windows</span>
+</pre>
+      </div>
+      <p>
+       Here's were you can edit the data outside your game and then launch your game and read that changed data into your game system :)
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <h2>
+       <span class="mw-headline" id="ConfigCacheIni.h">
+        ConfigCacheIni.h
+       </span>
+      </h2>
+      <p>
+       Check out this header for all the function definitions and options available to you,
+for writing out arrays or reading in entire file as a FString,
+many, many useful functions
+      </p>
+      <h2>
+       <span class="mw-headline" id="Code_Samples">
+        Code Samples
+       </span>
+      </h2>
+      <p>
+       Quoting Solid Snake:
+      </p>
+      <p>
+       " There is a bunch of globals that you can use here to quickly grab 
+the core configuration files:
+      </p>
+      <ul>
+       <li>
+        GEngineIni
+       </li>
+       <li>
+        GInputIni
+       </li>
+       <li>
+        GGameIni
+       </li>
+       <li>
+        GGameUserSettingsIni
+       </li>
+      </ul>
+      <p>
+       "
+      </p>
+      <p>
+       This is very useful info!
+      </p>
+      <p>
+       You will see in the functions below I rely on these global FStrings to more quickly write out the filename function parameter
+      </p>
+      <h3>
+       <span class="mw-headline" id="Reading_From_Config_File">
+        Reading From Config File
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//in your player controller class</span>
+<span class="kt">void</span> <span class="n">AVictoryController</span><span class="o">::</span><span class="n">VictoryConfigGetTests</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">//Basic Syntax</span>
+	<span class="cm">/*</span>
+<span class="cm">	bool GetString( </span>
+<span class="cm">		const TCHAR* Section, </span>
+<span class="cm">		const TCHAR* Key, </span>
+<span class="cm">		FString&amp; Value, </span>
+<span class="cm">		const FString&amp; Filename </span>
+<span class="cm">	);</span>
+<span class="cm">	*/</span>
+		
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">GConfig</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+	<span class="c1">//~~</span>
+	
+	<span class="c1">//Retrieve Default Game Type</span>
+	<span class="n">FString</span> <span class="n">ValueReceived</span><span class="p">;</span>
+	<span class="n">GConfig</span><span class="o">-&gt;</span><span class="n">GetString</span><span class="p">(</span>
+		<span class="n">TEXT</span><span class="p">(</span><span class="s">"/Script/Engine.WorldInfo"</span><span class="p">),</span>
+		<span class="n">TEXT</span><span class="p">(</span><span class="s">"GlobalDefaultGameType"</span><span class="p">),</span>
+		<span class="n">ValueReceived</span><span class="p">,</span>
+		<span class="n">GGameIni</span>
+	<span class="p">);</span>
+	
+	<span class="n">ClientMessage</span><span class="p">(</span><span class="s">"GlobalDefaultGameType"</span><span class="p">);</span>
+	<span class="n">ClientMessage</span><span class="p">(</span><span class="n">ValueReceived</span><span class="p">);</span>
+	
+        <span class="c1">//Retrieve Max Objects not considered by GC</span>
+	<span class="n">int32</span> <span class="n">IntValueReceived</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="n">GConfig</span><span class="o">-&gt;</span><span class="n">GetInt</span><span class="p">(</span>
+		<span class="n">TEXT</span><span class="p">(</span><span class="s">"Core.System"</span><span class="p">),</span>
+		<span class="n">TEXT</span><span class="p">(</span><span class="s">"MaxObjectsNotConsideredByGC"</span><span class="p">),</span>
+		<span class="n">IntValueReceived</span><span class="p">,</span>
+		<span class="n">GEngineIni</span>
+	<span class="p">);</span>
+	
+	<span class="n">ClientMessage</span><span class="p">(</span><span class="s">"MaxObjectsNotConsideredByGC"</span><span class="p">);</span>
+	<span class="n">ClientMessage</span><span class="p">(</span><span class="n">FString</span><span class="o">::</span><span class="n">FromInt</span><span class="p">(</span><span class="n">IntValueReceived</span><span class="p">));</span>
+	
+         <span class="c1">//Retrieve Near Clip Plane (how close things can get to camera)</span>
+	<span class="kt">float</span> <span class="n">floatValueReceived</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="n">GConfig</span><span class="o">-&gt;</span><span class="n">GetFloat</span><span class="p">(</span>
+		<span class="n">TEXT</span><span class="p">(</span><span class="s">"/Script/Engine.Engine"</span><span class="p">),</span>
+		<span class="n">TEXT</span><span class="p">(</span><span class="s">"NearClipPlane"</span><span class="p">),</span>
+		<span class="n">floatValueReceived</span><span class="p">,</span>
+		<span class="n">GEngineIni</span>
+	<span class="p">);</span>
+	
+	<span class="n">ClientMessage</span><span class="p">(</span><span class="s">"NearClipPlane"</span><span class="p">);</span>
+	<span class="n">ClientMessage</span><span class="p">(</span><span class="n">FString</span><span class="o">::</span><span class="n">SanitizeFloat</span><span class="p">(</span><span class="n">floatValueReceived</span><span class="p">));</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Writing_to_Config_File">
+        Writing to Config File
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//write to existing Game.ini</span>
+<span class="c1">//the results get stored in YourGameDir\Saved\Config\Windows</span>
+<span class="kt">void</span> <span class="n">AVictoryController</span><span class="o">::</span><span class="n">VictoryConfigSetTests</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">GConfig</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+	<span class="c1">//~~</span>
+	
+	<span class="c1">//New Section to Add</span>
+	<span class="n">FString</span> <span class="n">VictorySection</span> <span class="o">=</span> <span class="s">"Victory.Core"</span><span class="p">;</span>
+	
+	<span class="c1">//String</span>
+	<span class="n">GConfig</span><span class="o">-&gt;</span><span class="n">SetString</span> <span class="p">(</span>
+		<span class="o">*</span><span class="n">VictorySection</span><span class="p">,</span>
+		<span class="n">TEXT</span><span class="p">(</span><span class="s">"RootDir"</span><span class="p">),</span>
+		<span class="n">TEXT</span><span class="p">(</span><span class="s">"E:\UE4\IsAwesome"</span><span class="p">),</span>
+		<span class="n">GGameIni</span>
+	<span class="p">);</span>
+	
+	<span class="c1">//FColor</span>
+	<span class="n">GConfig</span><span class="o">-&gt;</span><span class="n">SetColor</span> <span class="p">(</span>
+		<span class="o">*</span><span class="n">VictorySection</span><span class="p">,</span>
+		<span class="n">TEXT</span><span class="p">(</span><span class="s">"Red"</span><span class="p">),</span>
+		<span class="n">FColor</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">),</span>
+		<span class="n">GGameIni</span>
+	<span class="p">);</span>
+	
+	<span class="c1">//FVector</span>
+	<span class="n">GConfig</span><span class="o">-&gt;</span><span class="n">SetVector</span> <span class="p">(</span>
+		<span class="o">*</span><span class="n">VictorySection</span><span class="p">,</span>
+		<span class="n">TEXT</span><span class="p">(</span><span class="s">"PlayerStartLocation"</span><span class="p">),</span>
+		<span class="n">FVector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">512</span><span class="p">),</span>
+		<span class="n">GGameIni</span>
+	<span class="p">);</span>
+	
+	<span class="c1">//FRotator</span>
+	<span class="n">GConfig</span><span class="o">-&gt;</span><span class="n">SetRotator</span> <span class="p">(</span>
+		<span class="o">*</span><span class="n">VictorySection</span><span class="p">,</span>
+		<span class="n">TEXT</span><span class="p">(</span><span class="s">"SunRotation"</span><span class="p">),</span>
+		<span class="n">FRotator</span><span class="p">(</span><span class="o">-</span><span class="mi">90</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span>
+		<span class="n">GGameIni</span>
+	<span class="p">);</span>
+	
+	<span class="c1">//ConfigCacheIni.h</span>
+	<span class="c1">//void Flush( bool Read, const FString&amp; Filename=TEXT("") );</span>
+	<span class="n">GConfig</span><span class="o">-&gt;</span><span class="n">Flush</span><span class="p">(</span><span class="nb">false</span><span class="p">,</span><span class="n">GGameIni</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Of_Great_Importance">
+        Of Great Importance
+       </span>
+      </h2>
+      <p>
+       This line is very important
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">GConfig</span><span class="o">-&gt;</span><span class="n">Flush</span><span class="p">(</span><span class="nb">false</span><span class="p">,</span><span class="n">GGameIni</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       Sometimes the config file wont save changes if you don't call this function after you've set all your config keys.
+      </p>
+      <p>
+       Many thanks to Solid Snake for telling me about this, I might have spent an hour or two trying to figure out why my config file was only saving sometimes!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       Now you know how to retrieve or edit any config file you want!
+      </p>
+      <p>
+       <b>
+        And you can even add new sections to existing config files!
+       </b>
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

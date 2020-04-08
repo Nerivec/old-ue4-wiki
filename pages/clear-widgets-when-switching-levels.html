@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Clear Widgets When Switching Levels - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Clear Widgets When Switching Levels
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#The_Code">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           The Code
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Player_Controller">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Player Controller
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#GameMode">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             GameMode
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Get_All_Widgets_of_Class">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Get All Widgets of Class
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Final_Word">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Final Word
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       This tutorial is a quick and easy workaround for removing UMG widgets when travelling between levels in Multiplayer. Currently, Widgets are not destroyed automatically when opening or closing levels, so trying to Server Travel a group of players will put them the game, but their screen will still display the old widget(s), with no
+       <a class="external text" href="./clear-widgets-when-switching-levels.html" rel="nofollow">
+        easy way to remove them!
+       </a>
+      </p>
+      <p>
+      </p>
+      <h2>
+       <span class="mw-headline" id="The_Code">
+        The Code
+       </span>
+      </h2>
+      <p>
+       The code for this is extremely simple, all you need is a custom Gamemode and a custom PlayerController.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Player_Controller">
+        Player Controller
+       </span>
+      </h3>
+      <p>
+       In our Custom Player Controller, we need to declare a new Client function (call it something useful!) that will be called when our Player is travelling to a new level. It's a simple Object Iterator that checks for any widgets in the Players World, and removes them.
+      </p>
+      <p>
+       Note that because we're using the new GENERATED_BODY() Macro, we must declare the previously auto-generated Server/Client virtual functions now.
+      </p>
+      <p>
+       <b>
+        MyPlayerController.h
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">GESGAME_API</span> <span class="nl">AMyPlayerController</span> <span class="p">:</span> <span class="k">public</span> <span class="n">APlayerController</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+	
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">Client</span><span class="p">,</span> <span class="n">Reliable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Things"</span><span class="p">)</span>
+	<span class="kt">void</span> <span class="n">ClearHUDWidgets</span><span class="p">();</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">ClearHUDWidgets_Implementation</span><span class="p">();</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <b>
+        MyPlayerController.cpp
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">AMyPlayerController</span><span class="o">::</span><span class="n">ClearHUDWidgets_Implementation</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="cm">/* Object Iterator for All User Widgets! */</span>
+	<span class="k">for</span> <span class="p">(</span><span class="n">TObjectIterator</span><span class="o">&lt;</span><span class="n">UUserWidget</span><span class="o">&gt;</span> <span class="n">Itr</span><span class="p">;</span> <span class="n">Itr</span><span class="p">;</span> <span class="o">++</span><span class="n">Itr</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">UUserWidget</span><span class="o">*</span> <span class="n">LiveWidget</span> <span class="o">=</span> <span class="o">*</span><span class="n">Itr</span><span class="p">;</span>
+
+		<span class="cm">/* If the Widget has no World, Ignore it (It's probably in the Content Browser!) */</span>
+		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">LiveWidget</span><span class="o">-&gt;</span><span class="n">GetWorld</span><span class="p">())</span>
+		<span class="p">{</span>
+			<span class="k">continue</span><span class="p">;</span>
+		<span class="p">}</span>
+		<span class="k">else</span>
+		<span class="p">{</span>
+			<span class="n">LiveWidget</span><span class="o">-&gt;</span><span class="n">RemoveFromParent</span><span class="p">();</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="GameMode">
+        GameMode
+       </span>
+      </h3>
+      <p>
+       The GameMode change is very minimal. If you haven't already, create a declaration for 'ProcessClientTravel'. It's an existing function within the GameMode, so you'll want to override it like so:
+      </p>
+      <p>
+       <b>
+        MyGameMode.h
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">GESGAME_API</span> <span class="nl">AMyGameMode</span> <span class="p">:</span> <span class="k">public</span> <span class="n">AGameMode</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+
+<span class="k">public</span><span class="o">:</span>
+	<span class="k">virtual</span> <span class="n">APlayerController</span><span class="o">*</span> <span class="n">ProcessClientTravel</span><span class="p">(</span><span class="n">FString</span><span class="o">&amp;</span> <span class="n">FURL</span><span class="p">,</span> <span class="n">FGuid</span> <span class="n">NextMapGuid</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bSeamless</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bAbsolute</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       Now we're going to add some additional functionality into this GameMode. Unfortunately, we can't just call Super on it, because we need to inject some functionality right in the middle of the existing code. We'll have to copy-paste the code from the function in to start with, then add our modifications. The final code should look like this:
+      </p>
+      <p>
+       <b>
+        MyGameMode.cpp
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">APlayerController</span><span class="o">*</span> <span class="n">AMyGameMode</span><span class="o">::</span><span class="n">ProcessClientTravel</span><span class="p">(</span><span class="n">FString</span><span class="o">&amp;</span> <span class="n">FURL</span><span class="p">,</span> <span class="n">FGuid</span> <span class="n">NextMapGuid</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bSeamless</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bAbsolute</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// We call PreClientTravel directly on any local PlayerPawns (ie listen server)</span>
+	<span class="n">APlayerController</span><span class="o">*</span> <span class="n">LocalPlayerController</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+	<span class="k">for</span> <span class="p">(</span><span class="n">FConstPlayerControllerIterator</span> <span class="n">Iterator</span> <span class="o">=</span> <span class="n">GetWorld</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetPlayerControllerIterator</span><span class="p">();</span> <span class="n">Iterator</span><span class="p">;</span> <span class="o">++</span><span class="n">Iterator</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">APlayerController</span><span class="o">*</span> <span class="n">PlayerController</span> <span class="o">=</span> <span class="o">*</span><span class="n">Iterator</span><span class="p">;</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">Cast</span><span class="o">&lt;</span><span class="n">UNetConnection</span><span class="o">&gt;</span><span class="p">(</span><span class="n">PlayerController</span><span class="o">-&gt;</span><span class="n">Player</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="cm">/* Check if we're using our Custom Controller */</span>
+			<span class="n">AMyPlayerController</span><span class="o">*</span> <span class="n">MyController</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">AMyPlayerController</span><span class="o">&gt;</span><span class="p">(</span><span class="n">PlayerController</span><span class="p">);</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">MyController</span> <span class="p">)</span>
+			<span class="p">{</span>
+				<span class="n">MyController</span> <span class="o">-&gt;</span><span class="n">ClearHUDWidgets</span><span class="p">();</span>
+			<span class="p">}</span>
+
+			<span class="c1">// REMOTE PLAYER</span>
+			<span class="n">PlayerController</span><span class="o">-&gt;</span><span class="n">ClientTravel</span><span class="p">(</span><span class="n">FURL</span><span class="p">,</span> <span class="n">TRAVEL_Relative</span><span class="p">,</span> <span class="n">bSeamless</span><span class="p">,</span> <span class="n">NextMapGuid</span><span class="p">);</span>
+		<span class="p">}</span>
+		<span class="k">else</span>
+		<span class="p">{</span>
+			<span class="c1">// LOCAL PLAYER</span>
+			<span class="cm">/* Check if we're using a GES Controller */</span>
+			<span class="n">AMyPlayerController</span><span class="o">*</span> <span class="n">MyController</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">AMyPlayerController</span><span class="o">&gt;</span><span class="p">(</span><span class="n">PlayerController</span><span class="p">);</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">MyController</span> <span class="p">)</span>
+			<span class="p">{</span>
+				<span class="n">MyController</span> <span class="o">-&gt;</span><span class="n">ClearHUDWidgets</span><span class="p">();</span>
+			<span class="p">}</span>
+
+			<span class="n">LocalPlayerController</span> <span class="o">=</span> <span class="n">PlayerController</span><span class="p">;</span>
+			<span class="n">PlayerController</span><span class="o">-&gt;</span><span class="n">PreClientTravel</span><span class="p">(</span><span class="n">FURL</span><span class="p">,</span> <span class="n">bAbsolute</span> <span class="o">?</span> <span class="nl">TRAVEL_Absolute</span> <span class="p">:</span> <span class="n">TRAVEL_Relative</span><span class="p">,</span> <span class="n">bSeamless</span><span class="p">);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="n">LocalPlayerController</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       All we're doing is casting the Controller to our custom one, and calling ClearHUDWidgets() on it
+       <b>
+        BEFORE
+       </b>
+       it starts to transition to the next level.
+      </p>
+      <p>
+       You'll also be able to see from the comments that this works for both Local &amp; Remote players, so should also work in Singleplayer!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Get_All_Widgets_of_Class">
+        Get All Widgets of Class
+       </span>
+      </h2>
+      <p>
+       <b>
+        Author
+       </b>
+       (
+       )
+      </p>
+      <p>
+       I submitted a pull request that Epic accepted precisely to make this process easier!
+      </p>
+      <p>
+       You can simply run the blueprint node
+       <b>
+        "Get All Widgets of Class"
+       </b>
+       and then use a for each and remove all the widgets from the viewport.
+      </p>
+      <p>
+       The advantage of this is that it can be done client side very easily (game mode is server only) and does not require any C++.
+      </p>
+      <p>
+       <img alt="RemoveAllWidgetsFromViewport.jpg" class="" height="534" src="../assets/clear-widgets-when-switching-levels/0.jpg" width="900"/>
+      </p>
+      <p>
+       <b>
+        Get All Widgets of Class
+       </b>
+       is a static BP node, so you can use this in any blueprint you want!
+      </p>
+      <p>
+       Top-Level Only allows you to specify whether my node should only return widgets that are directly connected to the viewport, or whether to return alllll widgets even if they are subwidgets of a viewport widget!
+      </p>
+      <p>
+       I hope this makes this whole process of removing UMG widgets between levels even easier!
+      </p>
+      <p>
+       (
+       )
+      </p>
+      <p>
+       PS: Special thanks to TheJamsh for creating this wiki to address this issue for all time to come!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Final_Word">
+        Final Word
+       </span>
+      </h2>
+      <p>
+       Hope this helps!
+      </p>
+      <p>
+       (
+     )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

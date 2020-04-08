@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Landscape - World Machine perfect integration - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Landscape - World Machine perfect integration
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       This is a workflow guide to use the powerful World Machine terrain generator to create, edit and change your landscapes in Unreal Engine 4.
+It's mainly about setting up your projects and terrain generation to have a seamless import/export pipeline.
+      </p>
+      <p>
+       Let's get started!
+       <br/>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Create_and_edit_a_Landscape_in_Unreal">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Create and edit a Landscape in Unreal
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Creating_the_landscape">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Creating the landscape
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Exporting_data">
+            <span class="tocnumber">
+             1.2
+            </span>
+            <span class="toctext">
+             Exporting data
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#World_Machine_setup">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           World Machine setup
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Bringing_in_your_Heightmap">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Bringing in your Heightmap
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Setting_up_your_project">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             Setting up your project
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#World_Machine_editing">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           World Machine editing
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Adding_Nodes">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Adding Nodes
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#Masking_your_landscape">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             Masking your landscape
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Create_and_edit_a_Landscape_in_Unreal">
+        Create and edit a Landscape in Unreal
+       </span>
+      </h2>
+      <p>
+       Start from a blank scene and press
+       <b>
+        SHIFT+3
+       </b>
+       . This will bring up Landscape Tool menu'.
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Creating_the_landscape">
+        Creating the landscape
+       </span>
+      </h3>
+      <p>
+       I recommend to use
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Landscape/Creation/index.html#recommendedlandscapesizes" rel="nofollow">
+        "recommended Landscape sizes"
+       </a>
+       as a starting point, it will lead to a cleaner pipeline. If you already have a layed out scene, try to create a landscape that embed all your features using the recommended sizes.
+       <br/>
+       <br/>
+      </p>
+      <p>
+       <img alt="Creating landscape" class="thumbborder" height="450" src="../assets/landscape-world-machine-perfect-integration/0.jpg" width="800"/>
+       <br/>
+       <br/>
+      </p>
+      <p>
+       Edit it a little bit, again for the sake of the example, it will be good to reach the maximum extent of the landscape: sculpt until the mountain slope doesn't grow anymore and dig until you reach the lower limit.
+       <b>
+        WARNING : for scale Z=100 you've a range of -256m : +256m.
+       </b>
+       <br/>
+       <br/>
+      </p>
+      <p>
+       <img alt="Creating landscape" class="thumbborder" height="450" src="../assets/landscape-world-machine-perfect-integration/1.jpg" width="800"/>
+       <br/>
+       <br/>
+      </p>
+      <p>
+       Now, you should apply a Landscape material (you can use
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Resources/ContentExamples/Landscapes/1_1/index.html" rel="nofollow">
+        Content Example - Landscape
+       </a>
+       to get how to do it). Keep it simple, you need only two layers for this step: one will be the area you want to be edited by World Machine, the other is an area where you want to mantain EXACTLY the same height you've in Unreal Engine.
+In my example, I want the RED area to be left unmodified by World Machine.
+       <br/>
+       <br/>
+      </p>
+      <p>
+       <img alt="Creating landscape" class="thumbborder" height="450" src="../assets/landscape-world-machine-perfect-integration/2.jpg" width="800"/>
+       <br/>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Exporting_data">
+        Exporting data
+       </span>
+      </h3>
+      <p>
+       We're ready to export our data towards World Machine!
+       <br/>
+       Select "Sculpt" sub menu in Landscape Tool, RIGHT CLICK on Heightmap and select "Export to file". Export your .png file where you want it to be.
+       <br/>
+       <br/>
+      </p>
+      <p>
+       <img alt="Creating landscape" class="thumbborder" height="450" src="../assets/landscape-world-machine-perfect-integration/3.jpg" width="800"/>
+       <br/>
+       <br/>
+      </p>
+      <p>
+       Select "Paint" sub menu in Landscape Tool, RIGHT CLICK on the layer you want to export and select "Export to file". Export your .png file where you want it to be. Calling it "mask" or something like that it's a good idea.
+       <br/>
+       <br/>
+      </p>
+      <p>
+       <img alt="Creating landscape" class="thumbborder" height="450" src="../assets/landscape-world-machine-perfect-integration/4.jpg" width="800"/>
+       <br/>
+       <br/>
+      </p>
+      <p>
+       Now we've everything we need to use World Machine to bring some beauty into our landscape...
+       <br/>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="World_Machine_setup">
+        World Machine setup
+       </span>
+      </h2>
+      <p>
+       You'll need to be very careful when setting up your project in World Machine: stick exactly to the measurement you've in Unreal and you'll be good to go.
+Project settings and Heightmap output resolutions should be adapted to your data, I'll continue with my example.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Bringing_in_your_Heightmap">
+        Bringing in your Heightmap
+       </span>
+      </h3>
+      <p>
+       Start World Machine and bring immediately a File Input node in your node network. Then open it and load you heightmap.png.
+       <br/>
+       Now it's time for some hardcore measurement party: in the width-height input field of "File Input" dialog put THE EXACT EXTENSION OF YOUR UE4 LANDSCAPE
+       <br/>
+       For me it's 505mx505m...
+       <br/>
+      </p>
+      <p>
+       <img alt="Creating landscape" class="thumbborder" height="450" src="../assets/landscape-world-machine-perfect-integration/5.jpg" width="800"/>
+       <br/>
+       <br/>
+       <img alt="Creating landscape" class="thumbborder" height="450" src="../assets/landscape-world-machine-perfect-integration/6.jpg" width="800"/>
+       <br/>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Setting_up_your_project">
+        Setting up your project
+       </span>
+      </h3>
+      <p>
+       Then setup your project settings to match extensions and height of your UE4 landscape.
+       <br/>
+       Open "Project Settings" and modify extensions data under Render Extents and General Setup tabs.
+       <br/>
+       For me it's 505m under
+       <i>
+        "Location"
+       </i>
+       in
+       <b>
+        "Render Extents"
+       </b>
+       tab and -256:+256 in
+       <i>
+        "Terrain Altitudes"
+       </i>
+       in
+       <b>
+        "General Setup"
+       </b>
+       <br/>
+       <br/>
+      </p>
+      <p>
+       <img alt="Creating landscape" class="thumbborder" height="225" src="../assets/landscape-world-machine-perfect-integration/7.jpg" width="800"/>
+       <br/>
+       <br/>
+      </p>
+      <p>
+       If you think that from now on, exporting data via the output node will give you a perfect matching terrain in UE4, well, you're right.
+       <br/>
+       You can give it a shot by exporting this unchanged heightmap and creating a new landscape in Unreal4. It will match perfectly to what you've done!
+       <br/>
+       To try it, just RIGHT CLICK on the Height Output and select "Write output to file".
+       <br/>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="World_Machine_editing">
+        World Machine editing
+       </span>
+      </h2>
+      <p>
+       TODO
+       <br/>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Adding_Nodes">
+        Adding Nodes
+       </span>
+      </h3>
+      <p>
+       TODO
+       <br/>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Masking_your_landscape">
+        Masking your landscape
+       </span>
+      </h3>
+      <p>
+       TODO
+       <br/>
+       <br/>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

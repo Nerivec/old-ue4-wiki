@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   How To Create Custom Blueprint Pin - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    How To Create Custom Blueprint Pin
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <h2>
+       <span class="mw-headline" id="About">
+        About
+       </span>
+      </h2>
+      <p>
+       In this tutorial I will show you how to create custom Pins, which can be displayed in blueprint functions or nodes.  If you ever used GameplayTags, I'm sure you noticed that some nodes have drop down tag list, you can select, instead of typing tags manually, and in this tutorial I will show you how to do it.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Setting_up">
+        Setting up
+       </span>
+      </h2>
+      <p>
+       First you will need Editor module in your plugin/game project. You can find information how to add it here:
+      </p>
+      <p>
+       <a class="external free" href="https://answers.unrealengine.com/questions/41509/extending-editor-engine.html" rel="nofollow">
+        https://answers.unrealengine.com/questions/41509/extending-editor-engine.html
+       </a>
+      </p>
+      <p>
+       Once you have you module working, loading and compiling, you will need edit, editor module *.Build.cs file. So you public or private dependency modules will look like this:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">PublicDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span>
+	<span class="k">new</span> <span class="kt">string</span><span class="p">[]</span>
+	<span class="p">{</span>
+		<span class="s">"Core"</span><span class="p">,</span>
+                <span class="s">"Engine"</span><span class="p">,</span>
+                <span class="s">"CoreUObject"</span><span class="p">,</span>
+                <span class="s">"GameAttributes"</span><span class="p">,</span>
+                <span class="s">"UnrealEd"</span><span class="p">,</span>
+                <span class="s">"BlueprintGraph"</span><span class="p">,</span>
+                <span class="s">"GraphEditor"</span><span class="p">,</span>
+                <span class="s">"PropertyEditor"</span><span class="p">,</span>
+                <span class="s">"SlateCore"</span><span class="p">,</span>
+                <span class="s">"Slate"</span><span class="p">,</span>
+                <span class="s">"EditorStyle"</span><span class="p">,</span>
+                <span class="s">"Kismet"</span><span class="p">,</span>
+                <span class="s">"KismetCompiler"</span>
+		<span class="c1">// ... add other public dependencies that you statically link with here ...</span>
+	<span class="p">}</span>
+<span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       GameAttributes is my custom module, you should add here you custom modules, to which you want have dependencies.
+      </p>
+      <p>
+       <br/>
+       You will also need struct to customize your pin. I'm pretty sure you can do it against any type (including default Unreal Types), but I strongly advise to not do it. Since you end up with customizing everything, in every node, which might not need it ;).
+      </p>
+      <p>
+       Create new header file in your runtime module (or add to any existing file) new USTRUCT()
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">USTRUCT</span><span class="p">(</span><span class="n">BlueprintType</span><span class="p">)</span>
+<span class="k">struct</span> <span class="n">FGAAttribute</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_USTRUCT_BODY</span><span class="p">()</span>
+<span class="k">public</span><span class="o">:</span>
+        <span class="c1">//It's important to mark property as UPROPERTY(), it doesn't need to have any specifiers though.</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintReadOnly</span><span class="p">)</span>
+		<span class="n">FName</span> <span class="n">AttributeName</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Implementation">
+        Implementation
+       </span>
+      </h2>
+      <p>
+       Now we need to add several new files to project. First let's add actual pin customization class. Call it however you want, but good practice is to end it with Pin.
+Header:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+<span class="cp">#include</span> <span class="cpf">"SlateBasics.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"SGraphPin.h"</span><span class="cp"></span>
+
+
+<span class="k">class</span> <span class="nc">SGAAttributePin</span> <span class="o">:</span> <span class="k">public</span> <span class="n">SGraphPin</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">SLATE_BEGIN_ARGS</span><span class="p">(</span><span class="n">SGAAttributePin</span><span class="p">)</span> <span class="p">{}</span>
+	<span class="n">SLATE_END_ARGS</span><span class="p">()</span>
+
+<span class="k">public</span><span class="o">:</span>
+	<span class="kt">void</span> <span class="n">Construct</span><span class="p">(</span><span class="k">const</span> <span class="n">FArguments</span><span class="o">&amp;</span> <span class="n">InArgs</span><span class="p">,</span> <span class="n">UEdGraphPin</span><span class="o">*</span> <span class="n">InGraphPinObj</span><span class="p">);</span>
+        <span class="c1">//this override is used to display slate widget used forcustomization.</span>
+	<span class="k">virtual</span> <span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">SWidget</span><span class="o">&gt;</span>	<span class="n">GetDefaultValueWidget</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+	<span class="kt">void</span> <span class="nf">OnAttributeSelected</span><span class="p">(</span><span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="n">FString</span><span class="o">&gt;</span> <span class="n">ItemSelected</span><span class="p">,</span> <span class="n">ESelectInfo</span><span class="o">::</span><span class="n">Type</span> <span class="n">SelectInfo</span><span class="p">);</span>
+<span class="k">private</span><span class="o">:</span>
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="n">FString</span><span class="o">&gt;&gt;</span> <span class="n">AttributesList</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       Implementation:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"GameAttributesEditor.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"KismetEditorUtilities.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"STextComboBox.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"EdGraph/EdGraphPin.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"EdGraph/EdGraphSchema.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"GAGlobalTypes.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"GAAttributesBase.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"GAAttributePin.h"</span><span class="cp"></span>
+
+<span class="kt">void</span> <span class="n">SGAAttributePin</span><span class="o">::</span><span class="n">Construct</span><span class="p">(</span><span class="k">const</span> <span class="n">FArguments</span><span class="o">&amp;</span> <span class="n">InArgs</span><span class="p">,</span> <span class="n">UEdGraphPin</span><span class="o">*</span> <span class="n">InGraphPinObj</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">AttributesList</span><span class="p">.</span><span class="n">Empty</span><span class="p">();</span>
+
+	<span class="n">SGraphPin</span><span class="o">::</span><span class="n">Construct</span><span class="p">(</span><span class="n">SGraphPin</span><span class="o">::</span><span class="n">FArguments</span><span class="p">(),</span> <span class="n">InGraphPinObj</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">SWidget</span><span class="o">&gt;</span>	<span class="n">SGAAttributePin</span><span class="o">::</span><span class="n">GetDefaultValueWidget</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">//AttributesList.Empty();</span>
+	<span class="k">return</span>	<span class="n">SNew</span><span class="p">(</span><span class="n">STextComboBox</span><span class="p">)</span> <span class="c1">//note you can display any widget here</span>
+		<span class="p">.</span><span class="n">OptionsSource</span><span class="p">(</span><span class="o">&amp;</span><span class="n">AttributesList</span><span class="p">)</span> 
+		<span class="p">.</span><span class="n">OnSelectionChanged</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">SGAAttributePin</span><span class="o">::</span><span class="n">OnAttributeSelected</span><span class="p">);</span>
+		
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">SGAAttributePin</span><span class="o">::</span><span class="n">OnAttributeSelected</span><span class="p">(</span><span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="n">FString</span><span class="o">&gt;</span> <span class="n">ItemSelected</span><span class="p">,</span> <span class="n">ESelectInfo</span><span class="o">::</span><span class="n">Type</span> <span class="n">SelectInfo</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">//FString CurrentValue = GraphPinObj-&gt;GetDefaultAsString();</span>
+	<span class="n">FString</span> <span class="n">CurrentDefaultValue</span> <span class="o">=</span> <span class="n">GraphPinObj</span><span class="o">-&gt;</span><span class="n">GetDefaultAsString</span><span class="p">();</span>
+	<span class="n">FString</span> <span class="n">attribute</span> <span class="o">=</span> <span class="o">*</span><span class="n">ItemSelected</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">CurrentDefaultValue</span><span class="p">.</span><span class="n">IsEmpty</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="n">CurrentDefaultValue</span> <span class="o">=</span> <span class="n">FString</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"()"</span><span class="p">));</span>
+	<span class="p">}</span>
+        <span class="c1">//here we construct, setter for value in struct.</span>
+        <span class="c1">//open it with (</span>
+	<span class="n">FString</span> <span class="n">AttributeString</span> <span class="o">=</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"("</span><span class="p">);</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">attribute</span><span class="p">.</span><span class="n">IsEmpty</span><span class="p">())</span>
+	<span class="p">{</span>       
+                <span class="c1">//now set here proerty name from USTRUCT(), \" - will add opening "</span>
+                <span class="c1">// so it will look like AttributeName="</span>
+		<span class="n">AttributeString</span> <span class="o">+=</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"AttributeName=</span><span class="se">\"</span><span class="s">"</span><span class="p">);</span>
+                <span class="c1">//add value you want to set to your property"</span>
+		<span class="n">AttributeString</span> <span class="o">+=</span> <span class="n">attribute</span><span class="p">;</span>
+                <span class="c1">//close with "</span>
+		<span class="n">AttributeString</span> <span class="o">+=</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"</span><span class="se">\"</span><span class="s">"</span><span class="p">);</span>
+	<span class="p">}</span>
+        <span class="c1">//and at last add ) so it will look like (AttributeName="Value");</span>
+	<span class="n">AttributeString</span> <span class="o">+=</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">")"</span><span class="p">);</span>
+        <span class="c1">//and here we set our value to parameter if it different than last one.</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">CurrentDefaultValue</span><span class="p">.</span><span class="n">Equals</span><span class="p">(</span><span class="n">AttributeString</span><span class="p">))</span>
+	<span class="p">{</span>
+		<span class="n">GraphPinObj</span><span class="o">-&gt;</span><span class="n">GetSchema</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">TrySetDefaultValue</span><span class="p">(</span><span class="o">*</span><span class="n">GraphPinObj</span><span class="p">,</span> <span class="n">AttributeString</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Voila! We have our simple custom widget done.
+      </p>
+      <p>
+       Now we need Pin factory for our custom pin. Create new class and name it, in the way you will know it's pin factor ;).
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+<span class="cp">#include</span> <span class="cpf">"SlateBasics.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"GAGlobalTypes.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"EdGraph/EdGraphPin.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"EdGraph/EdGraphSchema.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"EdGraphSchema_K2.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"GAAttributePanelGraphPinFactory.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"GAAttributePin.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"EdGraphUtilities.h"</span><span class="cp"></span>
+
+<span class="k">class</span> <span class="nc">FGAAttributePanelGraphPinFactory</span> <span class="o">:</span> <span class="k">public</span> <span class="n">FGraphPanelPinFactory</span>
+<span class="p">{</span>
+	<span class="k">virtual</span> <span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">SGraphPin</span><span class="o">&gt;</span> <span class="n">CreatePin</span><span class="p">(</span><span class="k">class</span> <span class="nc">UEdGraphPin</span><span class="o">*</span> <span class="n">InPin</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span>
+	<span class="p">{</span>
+		<span class="k">const</span> <span class="n">UEdGraphSchema_K2</span><span class="o">*</span> <span class="n">K2Schema</span> <span class="o">=</span> <span class="n">GetDefault</span><span class="o">&lt;</span><span class="n">UEdGraphSchema_K2</span><span class="o">&gt;</span><span class="p">();</span>
+		<span class="cm">/*</span>
+<span class="cm">                Check if pin is struct, and then check if that pin is of struct type we want customize</span>
+<span class="cm">                */</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">InPin</span><span class="o">-&gt;</span><span class="n">PinType</span><span class="p">.</span><span class="n">PinCategory</span> <span class="o">==</span> <span class="n">K2Schema</span><span class="o">-&gt;</span><span class="n">PC_Struct</span> 
+			<span class="o">&amp;&amp;</span> <span class="n">InPin</span><span class="o">-&gt;</span><span class="n">PinType</span><span class="p">.</span><span class="n">PinSubCategoryObject</span> <span class="o">==</span> <span class="n">FGAAttribute</span><span class="o">::</span><span class="n">StaticStruct</span><span class="p">())</span> 
+		<span class="p">{</span>
+			<span class="k">return</span> <span class="n">SNew</span><span class="p">(</span><span class="n">SGAAttributePin</span><span class="p">,</span> <span class="n">InPin</span><span class="p">);</span> <span class="c1">//and return our customized pin widget ;).</span>
+		<span class="p">}</span>
+		<span class="k">return</span> <span class="k">nullptr</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       That's all! For factory.
+      </p>
+      <p>
+       Last step is to register our pin factory, so it will know, when to replace pins.
+      </p>
+      <p>
+       To your module implementation (YouModuleName.cpp), you will need this code, so it might end up looking like that:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+<span class="cp">#include</span> <span class="cpf">"../Public/GameAttributesEditor.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"GAAttributePin.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"GAGlobalTypes.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"GAAttributePanelGraphPinFactory.h"</span><span class="cp"></span>
+
+
+<span class="cp">#include</span> <span class="cpf">"GameAttributesEditorPrivatePCH.h"</span><span class="cp"></span>
+
+
+<span class="k">class</span> <span class="nc">FGameAttributesEditor</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IGameAttributesEditor</span>
+<span class="p">{</span>
+	<span class="cm">/** IModuleInterface implementation */</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">StartupModule</span><span class="p">()</span> <span class="k">override</span>
+	<span class="p">{</span>
+                <span class="c1">//create your factory and shared pointer to it.</span>
+		<span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="n">FGAAttributePanelGraphPinFactory</span><span class="o">&gt;</span> <span class="n">GAAttributePanelGraphPinFactory</span> <span class="o">=</span> <span class="n">MakeShareable</span><span class="p">(</span><span class="k">new</span> <span class="n">FGAAttributePanelGraphPinFactory</span><span class="p">());</span>
+                <span class="c1">//and now register it.</span>
+		<span class="n">FEdGraphUtilities</span><span class="o">::</span><span class="n">RegisterVisualPinFactory</span><span class="p">(</span><span class="n">GAAttributePanelGraphPinFactory</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">ShutdownModule</span><span class="p">()</span> <span class="k">override</span>
+	<span class="p">{</span>
+
+	<span class="p">}</span>
+<span class="p">};</span>
+
+<span class="n">IMPLEMENT_MODULE</span><span class="p">(</span><span class="n">FGameAttributesEditor</span><span class="p">,</span> <span class="n">GameAttributesEditor</span><span class="p">)</span>
+</pre>
+      </div>
+      <p>
+       And that's it! You now should have working pin customization. Assuming your pin widget is working ;).
+      </p>
+      <p>
+       (
+     )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

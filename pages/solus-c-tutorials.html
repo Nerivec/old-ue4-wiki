@@ -1,0 +1,1009 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Solus C++ Tutorials - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Solus C++ Tutorials
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Showcase_on_Solus">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Showcase on Solus
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Video:_Introduction_to_Solus">
+            <span class="tocnumber">
+             1.2
+            </span>
+            <span class="toctext">
+             Video: Introduction to Solus
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Solus_C.2B.2B_Tutorial:_Creating_Custom_Level_Blueprints_in_C.2B.2B">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Solus C++ Tutorial: Creating Custom Level Blueprints in C++
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#ALevelScriptActor">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             ALevelScriptActor
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#ASolusLevelScriptActor">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             ASolusLevelScriptActor
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#C.2B.2B_Code_For_You">
+            <span class="tocnumber">
+             2.3
+            </span>
+            <span class="toctext">
+             C++ Code For You
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#.H">
+            <span class="tocnumber">
+             2.4
+            </span>
+            <span class="toctext">
+             .H
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#.CPP">
+            <span class="tocnumber">
+             2.5
+            </span>
+            <span class="toctext">
+             .CPP
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#Get_Level_BP">
+            <span class="tocnumber">
+             2.6
+            </span>
+            <span class="toctext">
+             Get Level BP
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-11">
+             <a href="#Definition">
+              <span class="tocnumber">
+               2.6.1
+              </span>
+              <span class="toctext">
+               Definition
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-12">
+             <a href="#Sample_Usage">
+              <span class="tocnumber">
+               2.6.2
+              </span>
+              <span class="toctext">
+               Sample Usage
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-13">
+           <a href="#Reparenting_Existing_Levels">
+            <span class="tocnumber">
+             2.7
+            </span>
+            <span class="toctext">
+             Reparenting Existing Levels
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-14">
+           <a href="#Config.2FDefaultEngine.ini">
+            <span class="tocnumber">
+             2.8
+            </span>
+            <span class="toctext">
+             Config/DefaultEngine.ini
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-15">
+           <a href="#Conclusion">
+            <span class="tocnumber">
+             2.9
+            </span>
+            <span class="toctext">
+             Conclusion
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-16">
+         <a href="#Solus_Options_Menu:_Screen_Resolutions">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Solus Options Menu: Screen Resolutions
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-17">
+         <a href="#Localized_Text:_FText">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Localized Text: FText
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-18">
+           <a href="#Check_for_Valid_FText">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             Check for Valid FText
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-19">
+           <a href="#Concatenating_FText">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             Concatenating FText
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-20">
+             <a href="#Named">
+              <span class="tocnumber">
+               4.2.1
+              </span>
+              <span class="toctext">
+               Named
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-21">
+             <a href="#Ordered">
+              <span class="tocnumber">
+               4.2.2
+              </span>
+              <span class="toctext">
+               Ordered
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-22">
+           <a href="#Conclusion_2">
+            <span class="tocnumber">
+             4.3
+            </span>
+            <span class="toctext">
+             Conclusion
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-23">
+         <a href="#Custom_BP-Accessible_UObject_Components">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Custom BP-Accessible UObject Components
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-24">
+         <a href="#Globally_Accessible_Data_Storage">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Globally Accessible Data Storage
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-25">
+         <a href="#How_to_Make_Custom_BP-Defined_Console_Commands">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           How to Make Custom BP-Defined Console Commands
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-26">
+           <a href="#Solus_Examples">
+            <span class="tocnumber">
+             7.1
+            </span>
+            <span class="toctext">
+             Solus Examples
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-27">
+           <a href="#Pics">
+            <span class="tocnumber">
+             7.2
+            </span>
+            <span class="toctext">
+             Pics
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-28">
+           <a href="#.H_2">
+            <span class="tocnumber">
+             7.3
+            </span>
+            <span class="toctext">
+             .H
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-29">
+           <a href="#Conclusion_3">
+            <span class="tocnumber">
+             7.4
+            </span>
+            <span class="toctext">
+             Conclusion
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-30">
+         <a href="#Custom_Game_Instance_For_Inter-Level_Persistent_Data">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Custom Game Instance For Inter-Level Persistent Data
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Author:
+       </i>
+       (
+       )
+      </p>
+      <p>
+       This page is a repository for all of the C++ tutorials that I will be making that are directly related to the Solus Project!
+      </p>
+      <p>
+       The reason these are "Solus" tutorials is because I am sharing the development process of the Unreal Engine 4 game called Solus from the C++ perspective.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Showcase_on_Solus">
+        Showcase on Solus
+       </span>
+      </h3>
+      <p>
+       <b>
+       </b>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Video:_Introduction_to_Solus">
+        Video: Introduction to Solus
+       </span>
+      </h3>
+      <p>
+       &lt;youtube&gt;
+       <a class="external free" href="https://www.youtube.com/watch?v=lOqHpj71anw" rel="nofollow">
+        https://www.youtube.com/watch?v=lOqHpj71anw
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Solus_C.2B.2B_Tutorial:_Creating_Custom_Level_Blueprints_in_C.2B.2B">
+        Solus C++ Tutorial: Creating Custom Level Blueprints in C++
+       </span>
+      </h2>
+      <p>
+       <i>
+        Author:
+       </i>
+       (
+       )
+      </p>
+      <p>
+       For my grand goals for the Solus Save System, I needed a way to give every level a custom Solus Name, and I needed to associate binary save data with each level.
+      </p>
+      <p>
+       I also wanted to give Solus level Designers the ability to save to binary files any arbitrary data they needed, using only Blueprints.
+      </p>
+      <p>
+       I also wanted to tell each level to load its binary save data and save its binary save data when the level is streamed in and streamed out!
+      </p>
+      <p>
+       <br/>
+       To do all of this in the most effective way possible was quite puzzle!
+      </p>
+      <p>
+       <i>
+        I finally realized that you can extend the Level Blueprint!
+       </i>
+      </p>
+      <h3>
+       <span class="mw-headline" id="ALevelScriptActor">
+        ALevelScriptActor
+       </span>
+      </h3>
+      <p>
+       Each instance of the Level Blueprint is actually called ALevelScriptActor. And this is the class that you extend!
+      </p>
+      <p>
+       <b>
+        Using ALevelScriptActor you can create custom properties that are important for every level in your game!
+       </b>
+      </p>
+      <hr/>
+      <h3>
+       <span class="mw-headline" id="ASolusLevelScriptActor">
+        ASolusLevelScriptActor
+       </span>
+      </h3>
+      <p>
+       <a href="https://www.youtube.com/watch?v=lOqHpj71anw" rel="nofollow">
+        <img alt="Solus Intro" height="525" src="../d3ar1piqh1oeli.cloudfront.net/c/c9/SolusCustomLevelBP.jpg/700px-SolusCustomLevelBP.jpg" srcset="https://d3ar1piqh1oeli.cloudfront.net/c/c9/SolusCustomLevelBP.jpg/1050px-SolusCustomLevelBP.jpg 1.5x, https://d26ilriwvtzlb.cloudfront.net/c/c9/SolusCustomLevelBP.jpg 2x" width="700"/>
+       </a>
+      </p>
+      <p>
+       Using an extended version of ALevelScriptActor for Solus I have successfully:
+      </p>
+      <ul>
+       <li>
+        Created a custom name property that Level Designers can type in per-level, giving each Level the exact name that that they feel is appropriate, regardless of what the level .umap file is.
+       </li>
+      </ul>
+      <ul>
+       <li>
+        I then create binary files using the Level-Designer-Chosen Solus Name! These are the files that show up in the save system of Solus.
+       </li>
+      </ul>
+      <ul>
+       <li>
+        I have given every level in Solus a series of arrays of different data types so that Level Designers can load and save level-specific save data, using only Blueprints!
+       </li>
+      </ul>
+      <ul>
+       <li>
+        <b>
+         This level-specific save data that Designers specify in the Level Blueprint is saved to hard disk as compressed binary file data
+        </b>
+        , and is loaded/saved each time the level is streamed in or unstreamed.
+       </li>
+      </ul>
+      <h3>
+       <span class="mw-headline" id="C.2B.2B_Code_For_You">
+        C++ Code For You
+       </span>
+      </h3>
+      <p>
+       Below I am sharing with you the basic structures you need to make your own custom Level Blueprints for your game!
+      </p>
+      <h3>
+       <span class="mw-headline" id=".H">
+        .H
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/*</span>
+<span class="cm">			Solus Level Script Actor Template</span>
+<span class="cm">			</span>
+<span class="cm">					By Rama</span>
+
+<span class="cm">  This is a template you can use for your game to create custom properties for every level in your game!</span>
+<span class="cm">	</span>
+<span class="cm">  You can also write blueprint node functions specific to your game's levels!</span>
+<span class="cm">	</span>
+<span class="cm">  Enjoy!</span>
+<span class="cm">	</span>
+<span class="cm">  -Rama</span>
+<span class="cm">*/</span>
+
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"LevelScriptActor.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"SolusLevelScriptActor.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">ASolusLevelScriptActor</span> <span class="o">:</span> <span class="k">public</span> <span class="n">ALevelScriptActor</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+	
+	<span class="cm">/** A Custom name for each Solus Level, specified in Level BP Default Properties! */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditDefaultsOnly</span><span class="p">,</span> <span class="n">BlueprintReadOnly</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">SolusLevel</span><span class="p">)</span>
+	<span class="n">FName</span> <span class="n">SolusLevelName</span><span class="p">;</span>
+
+<span class="c1">//===========</span>
+<span class="c1">// BP Nodes</span>
+<span class="c1">//===========</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="cm">/** This triggers a save / update of all the Solus Save Game level data. This should be called before the level is unloaded/unstreamed via blueprints.*/</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="s">"Solus Level Save System"</span><span class="p">)</span>
+	<span class="kt">void</span> <span class="n">SolusLevel__UpdateLevelSaveData</span><span class="p">();</span>
+	
+	
+<span class="c1">//OVERRIDES</span>
+<span class="k">protected</span><span class="o">:</span>
+	
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">ReceiveBeginPlay</span><span class="p">()</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+	
+	<span class="c1">//ON REMOVE FROM WORLD - USE INSTEAD OF BEGIN DESTROY</span>
+	<span class="cm">/** Called when this actor is in a level which is being removed from the world (e.g. my level is getting UWorld::RemoveFromWorld called on it) */</span>
+	<span class="cm">/*</span>
+<span class="cm">	virtual void OnRemoveFromWorld() override;</span>
+<span class="cm">	*/</span>
+	<span class="c1">//THIS GOT REPLACED BY</span>
+	
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">EndPlay</span><span class="p">(</span><span class="k">const</span> <span class="n">EEndPlayReason</span><span class="o">::</span><span class="n">Type</span> <span class="n">EndPlayReason</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+	
+<span class="c1">//TICK</span>
+<span class="k">protected</span><span class="o">:</span>
+	
+	<span class="c1">//Tick</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">Tick</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaSeconds</span><span class="p">)</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+	
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id=".CPP">
+        .CPP
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/*</span>
+<span class="cm">	Solus Level BP Template</span>
+<span class="cm">	</span>
+<span class="cm">	by Rama</span>
+<span class="cm">*/</span>
+
+<span class="cp">#include</span> <span class="cpf">"Solus.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"SolusLevelScriptActor.h"</span><span class="cp"></span>
+
+<span class="n">ASolusLevelScriptActor</span><span class="o">::</span><span class="n">ASolusLevelScriptActor</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span> <span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="p">{</span>	
+	<span class="n">SolusLevelName</span> <span class="o">=</span> <span class="n">NAME_None</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="c1">//				Solus Level Begin Play</span>
+<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+
+<span class="c1">//Actor.h 		ReceiveBeginPlay()</span>
+<span class="kt">void</span> <span class="n">ASolusLevelScriptActor</span><span class="o">::</span><span class="n">ReceiveBeginPlay</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">ReceiveBeginPlay</span><span class="p">();</span>
+	<span class="c1">//~~~~~~~~~~</span>
+	
+	<span class="c1">//UE_LOG(YourLog,Error,TEXT("STREAMING LEVEL BEGIN PLAY %s"), *GetName());</span>
+<span class="p">}</span>
+
+
+
+<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="c1">//		 			Solus Level End Play</span>
+<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+
+<span class="kt">void</span> <span class="n">ASolusLevelScriptActor</span><span class="o">::</span><span class="n">EndPlay</span><span class="p">(</span><span class="k">const</span> <span class="n">EEndPlayReason</span><span class="o">::</span><span class="n">Type</span> <span class="n">EndPlayReason</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="n">Super</span><span class="o">::</span><span class="n">EndPlay</span><span class="p">(</span><span class="n">EndPlayReason</span><span class="p">);</span>
+	
+	<span class="cm">/*</span>
+<span class="cm">	UE_LOG(YourLog,Error,TEXT("STREAMING LEVEL UNSTREAMED (name should not be none) %s"), *GetName());</span>
+<span class="cm">	UE_LOG(YourLog,Error,TEXT("Victory!!!"));</span>
+<span class="cm">	UE_LOG(YourLog,Error,TEXT("RUN ALL UNSTREAMING LEVEL LOGIC HERE"));</span>
+<span class="cm">	*/</span>
+	
+	<span class="c1">//Save Level Just Before Exiting</span>
+	<span class="n">SolusLevel__UpdateLevelSaveData</span><span class="p">();</span>
+	
+	
+	<span class="n">Super</span><span class="o">::</span><span class="n">OnRemoveFromWorld</span><span class="p">();</span>
+	<span class="c1">//~~~~~~~~~~</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">ASolusLevelScriptActor</span><span class="o">::</span><span class="n">SolusLevel__UpdateLevelSaveData</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">//Save Level Data</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">ASolusLevelScriptActor</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaSeconds</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span><span class="n">DeltaSeconds</span><span class="p">);</span>
+	<span class="c1">//~~~~~~~~~~~~~~</span>
+	
+	<span class="c1">//UE_LOG(YourLog,Warning,TEXT("Level Name Is: %s"), *SolusLevelName);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Get_Level_BP">
+        Get Level BP
+       </span>
+      </h3>
+      <p>
+       In World.h:
+      </p>
+      <h4>
+       <span class="mw-headline" id="Definition">
+        Definition
+       </span>
+      </h4>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/**</span>
+<span class="cm"> * Returns the current (or specified) level's level scripting actor</span>
+<span class="cm"> *</span>
+<span class="cm"> * @param	OwnerLevel	the level to get the level scripting actor for.  Must correspond to one of the levels in GWorld's Levels array;</span>
+<span class="cm">*						Thus, only applicable when editing a multi-level map.  Defaults to the level currently being edited.</span>
+<span class="cm"> *</span>
+<span class="cm">* @return	A pointer to the level scripting actor, if any, for the specified level, or NULL if no level scripting actor is available</span>
+<span class="cm">*/</span>
+<span class="k">class</span> <span class="nc">ALevelScriptActor</span><span class="o">*</span> <span class="nf">GetLevelScriptActor</span><span class="p">(</span> <span class="k">class</span> <span class="nc">ULevel</span><span class="o">*</span> <span class="n">OwnerLevel</span><span class="o">=</span><span class="nb">NULL</span> <span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+</pre>
+      </div>
+      <h4>
+       <span class="mw-headline" id="Sample_Usage">
+        Sample Usage
+       </span>
+      </h4>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">AYourLevelScriptActor</span><span class="o">*</span> <span class="n">MyLvlBP</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">AYourLevelScriptActor</span><span class="o">&gt;</span><span class="p">(</span><span class="n">GetWorld</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetLevelScriptActor</span><span class="p">());</span>
+
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">MyLvlBP</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+<span class="n">MyLvlBP</span><span class="o">-&gt;</span><span class="n">Yay</span><span class="o">!</span><span class="p">();</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Reparenting_Existing_Levels">
+        Reparenting Existing Levels
+       </span>
+      </h3>
+      <p>
+       For levels you've already made, you can reparent them to your custom Level BP like this:
+      </p>
+      <p>
+       <img alt="Reparentlevels.jpg" class="" height="219" src="../assets/solus-c-tutorials/0.jpg" width="650"/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Config.2FDefaultEngine.ini">
+        Config/DefaultEngine.ini
+       </span>
+      </h3>
+      <p>
+       The preferred method for changing the default Level Script Actor that is used for new levels has changed as of 4.7. Instead of manually editing the DefaultEngine.ini file, you now change this setting in the Project Settings window. Setting the default Level Script Actor here will update the DefaultEngine.ini file for you (the Editor may appear to freeze for several seconds while the DefaultEngine.ini file is being updated).
+      </p>
+      <p>
+       <img alt="LevelScriptActor.PNG" class="" height="435" src="../assets/solus-c-tutorials/1.png" width="800"/>
+      </p>
+      <p>
+       If you are still using a version of the Engine prior to 4.7, you can still tell UE4 that you want every new level to start using your custom Level BP by manually making the following change to your DefaultEngine.ini file for your project.
+      </p>
+      <pre> ;---------------- CUSTOM LEVEL BP CLASS ------------------
+ ;--- new levels will use the new default script actor!!!
+ [/Script/Engine.Engine]
+ ;LevelScriptActorClassName=/Script/Engine.LevelScriptActor
+ LevelScriptActorClassName=/Script/Solus.SolusLevelScriptActor
+ ;----------------------------------------------------------
+</pre>
+      <h3>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h3>
+      <p>
+       Now you know how to make custom Level Blueprints to create a link from C++ to every Level Blueprint in your Game!
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+      <h2>
+       <span class="mw-headline" id="Solus_Options_Menu:_Screen_Resolutions">
+        Solus Options Menu: Screen Resolutions
+       </span>
+      </h2>
+      <p>
+       I just finished writing a function to obtain all of the screen resolutions supported by the player's display adapter!
+      </p>
+      <p>
+       If you just want to test this in some class you can remove the word static, otherwise you can add it to your own static function library!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">static</span> <span class="n">FORCEINLINE</span> <span class="kt">void</span> <span class="nf">GetDisplayAdapterScreenResolutions</span><span class="p">(</span><span class="n">FScreenResolutionArray</span><span class="o">&amp;</span> <span class="n">Resolutions</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">RHIGetAvailableResolutions</span><span class="p">(</span><span class="n">Resolutions</span><span class="p">,</span> <span class="nb">false</span><span class="p">))</span>
+	<span class="p">{</span>
+		<span class="k">for</span> <span class="p">(</span><span class="k">const</span> <span class="n">FScreenResolutionRHI</span><span class="o">&amp;</span> <span class="nl">EachResolution</span> <span class="p">:</span> <span class="n">Resolutions</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">UE_LOG</span><span class="p">(</span><span class="n">YourLog</span><span class="p">,</span> <span class="n">Warning</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"DefaultAdapter - %4d x %4d @ %d"</span><span class="p">),</span>
+				<span class="n">EachResolution</span><span class="p">.</span><span class="n">Width</span><span class="p">,</span> <span class="n">EachResolution</span><span class="p">.</span><span class="n">Height</span><span class="p">,</span> <span class="n">EachResolution</span><span class="p">.</span><span class="n">RefreshRate</span><span class="p">);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">else</span> 
+	<span class="p">{</span>
+		<span class="n">UE_LOG</span><span class="p">(</span><span class="n">YourLog</span><span class="p">,</span> <span class="n">Error</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Screen Resolutions could not be obtained"</span><span class="p">));</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <img alt="SolusScreenResolutions.jpg" class="" height="593" src="../assets/solus-c-tutorials/2.jpg" width="715"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Localized_Text:_FText">
+        Localized Text: FText
+       </span>
+      </h2>
+      <p>
+       In order to ensure that your game will have correctly formatted text for any language, use FText everywhere!
+      </p>
+      <p>
+       FText automatically handles Localization for you!
+      </p>
+      <p>
+       Thank you Epic!
+      </p>
+      <h3>
+       <span class="mw-headline" id="Check_for_Valid_FText">
+        Check for Valid FText
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FText</span> <span class="n">MyText</span><span class="p">;</span>
+
+<span class="c1">//possibly do some stuff with MyText</span>
+
+<span class="k">if</span><span class="p">(</span><span class="n">MyText</span><span class="p">.</span><span class="n">IsEmpty</span><span class="p">())</span>
+<span class="p">{</span>
+  <span class="c1">//the text is not valid</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Concatenating_FText">
+        Concatenating FText
+       </span>
+      </h3>
+      <p>
+       <img alt="SolusFTextConcatenation.jpg" class="" height="203" src="../assets/solus-c-tutorials/3.jpg" width="500"/>
+      </p>
+      <p>
+       To concatenate FText you use the FText::Format functions!
+      </p>
+      <h4>
+       <span class="mw-headline" id="Named">
+        Named
+       </span>
+      </h4>
+      <p>
+       if you want to retrieve the data in any order, you can use named arguements!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Set Formatted FTEXT from variable data.</span>
+<span class="n">FFormatNamedArguments</span> <span class="n">Args</span><span class="p">;</span>
+<span class="n">Args</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s">"DayCount"</span><span class="p">,</span> 	<span class="n">SaveDetails</span><span class="p">.</span><span class="n">DayCount</span><span class="p">);</span>    	<span class="c1">//int32 </span>
+<span class="n">Args</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s">"HP"</span><span class="p">,</span> 		<span class="n">SaveDetails</span><span class="p">.</span><span class="n">PlayerHealth</span><span class="p">);</span> 	<span class="c1">//int32</span>
+		
+<span class="c1">//Get Formatted FText back!</span>
+<span class="n">DayCount</span> <span class="o">=</span> <span class="n">FText</span><span class="o">::</span><span class="n">Format</span><span class="p">(</span><span class="n">NSLOCTEXT</span><span class="p">(</span><span class="s">"Solus"</span><span class="p">,</span><span class="s">"Day"</span><span class="p">,</span><span class="s">"Day {DayCount}"</span><span class="p">),</span>     <span class="n">Args</span><span class="p">);</span>
+<span class="n">Health</span> 	 <span class="o">=</span> <span class="n">FText</span><span class="o">::</span><span class="n">Format</span><span class="p">(</span><span class="n">NSLOCTEXT</span><span class="p">(</span><span class="s">"Solus"</span><span class="p">,</span><span class="s">"HP"</span><span class="p">,</span><span class="s">"HP {HP}"</span><span class="p">),</span> 		<span class="n">Args</span><span class="p">);</span>
+</pre>
+      </div>
+      <h4>
+       <span class="mw-headline" id="Ordered">
+        Ordered
+       </span>
+      </h4>
+      <p>
+       If you know what the order will be for sure, you can use ordered arguments!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FFormatOrderedArguments</span> <span class="n">Args</span><span class="p">;</span>
+<span class="n">Args</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">SaveDetails</span><span class="p">.</span><span class="n">DayCount</span><span class="p">);</span>    	<span class="c1">//int32 </span>
+<span class="n">Args</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">SaveDetails</span><span class="p">.</span><span class="n">PlayerHealth</span><span class="p">);</span> 	<span class="c1">//int32</span>
+<span class="n">DayCount</span> <span class="o">=</span> <span class="n">FText</span><span class="o">::</span><span class="n">Format</span><span class="p">(</span><span class="n">NSLOCTEXT</span><span class="p">(</span><span class="s">"Solus"</span><span class="p">,</span><span class="s">"Day"</span><span class="p">,</span><span class="s">"Day {0}"</span><span class="p">),</span> <span class="n">Args</span><span class="p">);</span>
+<span class="n">Health</span> 	 <span class="o">=</span> <span class="n">FText</span><span class="o">::</span><span class="n">Format</span><span class="p">(</span><span class="n">NSLOCTEXT</span><span class="p">(</span><span class="s">"Solus"</span><span class="p">,</span><span class="s">"HP"</span><span class="p">,</span><span class="s">"HP {1}"</span><span class="p">),</span>  <span class="n">Args</span><span class="p">);</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Conclusion_2">
+        Conclusion
+       </span>
+      </h3>
+      <p>
+       Enjoy!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Custom_BP-Accessible_UObject_Components">
+        Custom BP-Accessible UObject Components
+       </span>
+      </h2>
+      <p>
+       Here's how you can make your own custom UObject components exposed to Blueprints! Including their own visible Category!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+<span class="cp">#include</span> <span class="cpf">"VictorySkelMeshComp.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"VictoryMorpherComp.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">(</span><span class="n">ClassGroup</span><span class="o">=</span><span class="n">Solus</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="p">(</span><span class="n">BlueprintSpawnableComponent</span><span class="p">))</span>
+<span class="k">class</span> <span class="nc">UVictoryMorpherComp</span> <span class="o">:</span> <span class="k">public</span> <span class="n">UVictorySkelMeshComp</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+	
+	
+<span class="c1">//SkelMeshComp</span>
+<span class="k">protected</span><span class="o">:</span>
+	<span class="c1">//Init</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">InitializeComponent</span><span class="p">()</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+	
+	<span class="c1">//Tick</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">TickComponent</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaTime</span><span class="p">,</span> <span class="k">enum</span> <span class="n">ELevelTick</span> <span class="n">TickType</span><span class="p">,</span> <span class="n">FActorComponentTickFunction</span> <span class="o">*</span><span class="n">ThisTickFunction</span><span class="p">)</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <img alt="SolusComponents.jpg" class="" height="680" src="../assets/solus-c-tutorials/4.jpg" width="646"/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Globally_Accessible_Data_Storage">
+        Globally Accessible Data Storage
+       </span>
+      </h2>
+      <p>
+       This is a tutorial on a place you can store data that you want to access from any CPP or BP class, at any time during runtime!
+      </p>
+      <p>
+       <b>
+       </b>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="How_to_Make_Custom_BP-Defined_Console_Commands">
+        How to Make Custom BP-Defined Console Commands
+       </span>
+      </h2>
+      <p>
+       In this tutorial I am showing you how you as the C++ programmer can empower your whole team to run functions any time , from anywhere they want while they are in-game.
+      </p>
+      <p>
+       And! You are giving them the power to define these functions themselves using Blueprints!
+      </p>
+      <p>
+       These functions are console commands, you press the ~ key or whatever key you set to open the console, and then you can type in your custom functions and their names will appear!
+      </p>
+      <p>
+       But in the C++, all you do is set up the code structure, and then your whole team can define how these console commands work in Blueprints!
+      </p>
+      <p>
+       The end result is that you are giving your team the ability to define a set of functions that they can use any time anywhere to do whatever they want!
+      </p>
+      <h3>
+       <span class="mw-headline" id="Solus_Examples">
+        Solus Examples
+       </span>
+      </h3>
+      <p>
+       In Solus, Hourences wanted a series of console commands he could run at any time to alter the player state, kind of like in-game cheats like in older games.
+      </p>
+      <p>
+       -faster movement speed
+      </p>
+      <p>
+       -player cannot be killed / God Mode
+      </p>
+      <p>
+       -Camera orbit mode
+      </p>
+      <p>
+       -Give player full inventory / whatever base set of items Hourences chooses
+      </p>
+      <p>
+       -And anything else Hourences wants to do! He can define the functions any way he wants!
+      </p>
+      <h3>
+       <span class="mw-headline" id="Pics">
+        Pics
+       </span>
+      </h3>
+      <p>
+       This is how the console commands look in game! You can Tab-autocomplete through your custom BP-implemented console commands!
+      </p>
+      <p>
+       <img alt="ConsoleBPCommandsAutoComplete.jpg" class="" height="344" src="../assets/solus-c-tutorials/5.jpg" width="900"/>
+      </p>
+      <p>
+       Hourences implemented the console commands created in C++ in exactly the way he wanted in BP!
+      </p>
+      <p>
+       <img alt="Graph.jpg" class="" height="656" src="../assets/solus-c-tutorials/6.jpg" width="1200"/>
+      </p>
+      <h3>
+       <span class="mw-headline" id=".H_2">
+        .H
+       </span>
+      </h3>
+      <p>
+       The code involved is not that complex, I took a BlueprintImplementable function and added "exec" to it!
+      </p>
+      <p>
+       Thanks to Epic, just adding "exec" causes these functions below to show up in the TAB-auto-complete list in the console window!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="c1">//		  Console Commands BP Implementable</span>
+<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">exec</span><span class="p">,</span> <span class="n">BlueprintImplementableEvent</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="p">(</span><span class="n">FriendlyName</span> <span class="o">=</span> <span class="s">"Solus Console Command ~ solrs"</span><span class="p">))</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">solrs</span><span class="p">();</span>
+	  
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">exec</span><span class="p">,</span> <span class="n">BlueprintImplementableEvent</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="p">(</span><span class="n">FriendlyName</span> <span class="o">=</span> <span class="s">"Solus Console Command ~ solgod"</span><span class="p">))</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">solgod</span><span class="p">();</span>
+	
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">exec</span><span class="p">,</span> <span class="n">BlueprintImplementableEvent</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="p">(</span><span class="n">FriendlyName</span> <span class="o">=</span> <span class="s">"Solus Console Command ~ solscreen"</span><span class="p">))</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">solscreen</span><span class="p">();</span>
+	
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">exec</span><span class="p">,</span> <span class="n">BlueprintImplementableEvent</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="p">(</span><span class="n">FriendlyName</span> <span class="o">=</span> <span class="s">"Solus Console Command ~ solbase"</span><span class="p">))</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">solbase</span><span class="p">();</span>
+	
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">exec</span><span class="p">,</span> <span class="n">BlueprintImplementableEvent</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="p">(</span><span class="n">FriendlyName</span> <span class="o">=</span> <span class="s">"Solus Console Command ~ solspeed"</span><span class="p">))</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">solspeed</span><span class="p">();</span>
+	
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">exec</span><span class="p">,</span> <span class="n">BlueprintImplementableEvent</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="p">(</span><span class="n">FriendlyName</span> <span class="o">=</span> <span class="s">"Solus Console Command ~ solwalk"</span><span class="p">))</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">solwalk</span><span class="p">();</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Conclusion_3">
+        Conclusion
+       </span>
+      </h3>
+      <p>
+       Now you know how to empower your whole team to define their own console commands in Blueprints!
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       Rama
+      </p>
+      <h2>
+       <span class="mw-headline" id="Custom_Game_Instance_For_Inter-Level_Persistent_Data">
+        Custom Game Instance For Inter-Level Persistent Data
+       </span>
+      </h2>
+      <p>
+       As of 4.4 there is a new class called the Game Instance which you can use to store data that you want to persist between different levels involving a full level transition!
+      </p>
+      <p>
+       It's such an important new Engine feature that I gave it its own wiki page here:
+      </p>
+      <p>
+       <b>
+       </b>
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       <br/>
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Actor Custom Components, Edit Variables Per Instance In Level Editor - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Actor Custom Components, Edit Variables Per Instance In Level Editor
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <br/>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Custom_Component">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Custom Component
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Actor_Class_To_Store_Component">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Actor Class To Store Component
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Author:
+       </i>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       In this wiki I am showing you how you can make a custom C++ Actor Component whose variables can be edited on a per-instance basis in the Level Editor!
+      </p>
+      <p>
+       I used the setup I am showing here to make my own navigation system from scratch that allows me to add or remove objects from the nav mesh at any time by clicking on instanced objects in the level editor.
+      </p>
+      <p>
+       It's really useful to be able to edit your C++ component on a per-instance basis in the level editor!
+      </p>
+      <p>
+       You need two things:
+      </p>
+      <p>
+       1. A Custom C++ Component
+      </p>
+      <p>
+       2. A C++ Actor Base Class to house your custom component.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Custom_Component">
+        Custom Component
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Choosing a class group and making it BlueprintSpawnableComponent</span>
+<span class="n">UCLASS</span><span class="p">(</span><span class="n">ClassGroup</span><span class="o">=</span><span class="n">JoyMech</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="p">(</span><span class="n">BlueprintSpawnableComponent</span><span class="p">))</span>
+<span class="k">class</span> <span class="nc">UJoyNavComp</span> <span class="o">:</span> <span class="k">public</span> <span class="n">UActorComponent</span>
+<span class="p">{</span> 
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+<span class="k">public</span><span class="o">:</span> 
+	<span class="n">UJoyNavComp</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">);</span>
+	
+	<span class="c1">//UPROPERTY(EditAnywhere, BlueprintReadWrite,Category="JoyNav")</span>
+	<span class="c1">//FString CustomNavGroup;</span>
+	  
+	<span class="cm">/** Density Core Value, the smaller the more dense, density = 360/JoyNavDensity */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span><span class="n">Category</span><span class="o">=</span><span class="s">"JoyNav"</span><span class="p">)</span>
+	<span class="kt">float</span> <span class="n">JoyNavDensity</span><span class="p">;</span>
+	
+	<span class="cm">/** Draw Units! */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span><span class="n">Category</span><span class="o">=</span><span class="s">"JoyNav"</span><span class="p">)</span>
+	<span class="kt">bool</span> <span class="n">DoDrawUnits</span><span class="p">;</span>
+	
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span><span class="n">Category</span><span class="o">=</span><span class="s">"JoyNav"</span><span class="p">)</span>
+	<span class="kt">bool</span> <span class="n">DoDrawJoyNavDisplayInfo</span><span class="p">;</span>
+	 
+	<span class="cm">/** Each radius gets its own layers of units! */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span><span class="n">Category</span><span class="o">=</span><span class="s">"JoyNav"</span><span class="p">)</span>
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">int32</span><span class="o">&gt;</span> <span class="n">RadiusLevels</span><span class="p">;</span>
+	
+	<span class="cm">/** Trim out units that are closer than Radius * TrimPercent */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span><span class="n">Category</span><span class="o">=</span><span class="s">"JoyNav"</span><span class="p">)</span>
+	<span class="kt">float</span> <span class="n">TrimPercent</span><span class="p">;</span>
+	
+<span class="c1">//.. etc</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Actor_Class_To_Store_Component">
+        Actor Class To Store Component
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">AJoySMAHighest</span> <span class="o">:</span> <span class="k">public</span> <span class="n">AStaticMeshActor</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+<span class="k">public</span><span class="o">:</span>
+  <span class="n">UPROPERTY</span><span class="p">(</span><span class="n">VisibleAnywhere</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">JoySMAHighest</span><span class="p">,</span><span class="n">meta</span><span class="o">=</span><span class="p">(</span><span class="n">ExposeFunctionCategories</span><span class="o">=</span><span class="s">"JoyNav"</span><span class="p">,</span> <span class="n">AllowPrivateAccess</span> <span class="o">=</span> <span class="s">"true"</span><span class="p">))</span>
+  <span class="n">UJoyNavComp</span><span class="o">*</span> <span class="n">JoyNavComp</span><span class="p">;</span>
+
+<span class="p">};</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       By using a C++ Actor base class for your custom C++ component, you can provide your Level Designers and yourself with the fastest possible workflow for your project!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

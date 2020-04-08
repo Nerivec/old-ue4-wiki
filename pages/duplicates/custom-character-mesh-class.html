@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Custom Character Mesh Class - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Custom Character Mesh Class
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#.cpp">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           .cpp
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Review">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Review
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Summary">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Summary
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <b>
+        Author:
+       </b>
+       (
+       )
+      </p>
+      <p>
+       In this wiki I show you how you can easily use your own custom Skeletal Mesh Component class with the UE4 ACharacter class!
+      </p>
+      <p>
+       In the same way that you can easily change the UE4 Character class to use a
+       <a class="external text" href="./custom-character-movement-component.html" rel="nofollow">
+        custom character movement component
+       </a>
+       , without having to create your own character class from Pawn upward, you can also tell UE4 to use a custom character mesh class!
+      </p>
+      <p>
+       <b>
+        This means that you can implement a custom Skeletal Mesh component with your ACharacter-extending-characters at any time during development!
+       </b>
+      </p>
+      <p>
+       The only rule is that your custom USkeletalMeshComponent class must extend USkeletalMeshComponent as its base class
+      </p>
+      <h2>
+       <span class="mw-headline" id=".cpp">
+        .cpp
+       </span>
+      </h2>
+      <p>
+       In the constructor of your character, you specify your custom character mesh class:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Custom Mesh Class!</span>
+<span class="n">AYourCharacter</span><span class="o">::</span><span class="n">AYourCharacter</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">ObjectInitializer</span><span class="p">.</span><span class="n">SetDefaultSubobjectClass</span><span class="o">&lt;</span><span class="n">UVictoryMorpherComp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ACharacter</span><span class="o">::</span><span class="n">MeshComponentName</span><span class="p">))</span>
+<span class="p">{</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Review">
+        Review
+       </span>
+      </h2>
+      <p>
+       The only change to the regular UE4 constructor is this:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">Super</span><span class="p">(</span><span class="n">ObjectInitializer</span><span class="p">.</span><span class="n">SetDefaultSubobjectClass</span><span class="o">&lt;</span><span class="n">UVictoryMorpherComp</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ACharacter</span><span class="o">::</span><span class="n">MeshComponentName</span><span class="p">))</span>
+</pre>
+      </div>
+      <p>
+       You are telling UE4 to set a subobject class by name.
+      </p>
+      <p>
+       This name is set in Character.cpp
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FName</span> <span class="n">ACharacter</span><span class="o">::</span><span class="n">MeshComponentName</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"CharacterMesh0"</span><span class="p">));</span>
+</pre>
+      </div>
+      <p>
+       and used here:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">Mesh</span> <span class="o">=</span> <span class="n">CreateOptionalDefaultSubobject</span><span class="o">&lt;</span><span class="n">USkeletalMeshComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ACharacter</span><span class="o">::</span><span class="n">MeshComponentName</span><span class="p">);</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Summary">
+        Summary
+       </span>
+      </h2>
+      <p>
+       Epic Engineers have made it very easy for you to customize the ACharacter class with your own custom Skeletal Mesh, Capsule, and Movement component classes!
+      </p>
+      <p>
+       You dont have to rebuild characters from APawn to use custom components, just use the syntax shown above to tell UE4 to use your own custom component classes that derive from the base classes used by ACharacter!
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

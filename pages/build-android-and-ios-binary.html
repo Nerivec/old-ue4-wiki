@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Build Android and iOS binary - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Build Android and iOS binary
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Android">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Android
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#IOS">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           IOS
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       Greetings!
+      </p>
+      <p>
+       This is a simple tutorial show you how to build UE4 binary  for Android and iOS platform on Windows.
+      </p>
+      <p>
+       Let's start from Android.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Android">
+        Android
+       </span>
+      </h2>
+      <p>
+       Navigate to [ENGINE Source LOCATION]\Engine\Extras\Android, you'll find tadp-2.0r8-windows.exe, this a one-stop solution for Android development from NVIDIA, run the exe and use the default installation set to install. It will begin to download and install everything needed to build Android native application.
+      </p>
+      <p>
+       The important pieces are:
+      </p>
+      <ul>
+       <li>
+        SDK
+       </li>
+      </ul>
+      <ul>
+       <li>
+        NDK
+       </li>
+      </ul>
+      <ul>
+       <li>
+        JDK
+       </li>
+      </ul>
+      <ul>
+       <li>
+        Ant
+       </li>
+      </ul>
+      <p>
+       After the installation done, you should close your UE4.sln if it is open, then run [ENGINE INSTALL LOCATION]\GenerateProjectFiles.bat to refresh the project files.
+      </p>
+      <p>
+       Load UE4.sln again, now you can select Android platform from the target platform drop down list on Visual Studio toolbar, then you should change the solution configuration from Development Editor to Development, now you can right click UE4 project to build it. If everything is going well, when build progress done, you'll find UE4Game-armv7.apk和UE4Game-armv7.so in [ENGINE Source LOCATION]\Engine\Binaries fold, UE4Game-armv7.so is UE4 Android runtime library.
+      </p>
+      <h2>
+       <span class="mw-headline" id="IOS">
+        IOS
+       </span>
+      </h2>
+      <p>
+       Build for Android platform is straightforward, for iOS there is a little more steps.
+      </p>
+      <p>
+       Before start, there is something need to clarify.
+      </p>
+      <p>
+       Unreal Engine use a uniform build system, that is you can start launch any platform build proccess within Visual Studio， then UnrealBuildTool will route the build configuration parameters to platform independent toolchain to build。
+      </p>
+      <p>
+       For iOS platform, UnrealBuildTool use RPC protocol transfer needed source file and compile command to Mac，then UnrealRemoteTool will parse the compile command and launch clang to compile.
+      </p>
+      <p>
+       Prerequisite:
+      </p>
+      <p>
+       1. A Macintosh running Mac OS 10.9.2 or higher, virtual machine is OK.
+      </p>
+      <p>
+       2.With XCode 5.1 and Command Line Tool installed.
+      </p>
+      <p>
+       3.Change the Mac OS host name to a1011(UnrealBuildTool will searching for this host).
+      </p>
+      <p>
+       4.Running UnrealRemoteTool on Mac OS.
+      </p>
+      <p>
+       5.You should have a validate certificate for iOS development，more information please refer
+       <a class="external free" href="https://docs.unrealengine.com/latest/INT/Platforms/iOS/GettingStarted/index.html" rel="nofollow">
+        https://docs.unrealengine.com/latest/INT/Platforms/iOS/GettingStarted/index.html
+       </a>
+       .
+      </p>
+      <p>
+       change the mobileprovision file name to UE4Game.mobileprovision and put it into  [ENGINE Source LOCATION]\Engine\Build\IOS
+      </p>
+      <p>
+       Note: UnrealRemoteTool can find at  [ENGINE Source LOCATION]\Engine\Build\IOS
+      </p>
+      <p>
+       6.On Mac OS, open terminal window and execute follow command:
+      </p>
+      <p>
+       sudo mkdir /UE4
+      </p>
+      <p>
+       sudo chmod 777 /UE4
+      </p>
+      <p>
+       sudo mkdir -p /Library/MobileDevice/Provisioning\ Profiles
+      </p>
+      <p>
+       sudo chmod 777 /Library/MobileDevice/Provisioning\ Profiles
+      </p>
+      <p>
+       Now we can start build, change target platform to IOS and solution configuration to Development in Visual Studio, right click UE4 project to build.
+      </p>
+      <p>
+       When build process done， you can find UE4Game.app, UE4Game.ipa in /UE4/Builds/HostPCName/Users/MacUserName/Desktop/UnrealEngine-4.0/Engine/Binaries/IOS
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       The Unreal Engine 4 codebase is invaluable for developer and this uniform build system is easy to deploy and maintain, we can learn something from this treasure.
+      </p>
+      <p>
+       (
+     )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

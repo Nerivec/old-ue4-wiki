@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Global Vector Fields (Tutorial) - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Global Vector Fields (Tutorial)
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <br/>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Setup">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Setup
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Vector_Field_Volume_Actor">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Vector Field Volume Actor
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Global_Vector_Field_Particle_System">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             Global Vector Field Particle System
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       Global Vector Fields are set up in the level as placeable actors. Any GPU sprite particle system that uses the Global Vector Fields module can then be affected by these vector fields. These differ from Local Vector Fields in that a local field is inherent to a particle system. Global vector fields exist completely outside of a particle system and must have eligible particle systems placed within them in order to have an effect.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Setup">
+        Setup
+       </span>
+      </h2>
+      <p>
+       Using a Global Vector Field first requires that you have a vector field asset that you can place via a Vector Field Volume actor.
+      </p>
+      <blockquote>
+       <p>
+        Vector Field Volumes are
+        <i>
+         not
+        </i>
+        volumes in the traditional sense. They are created from the
+        <b>
+         Class Viewer
+        </b>
+        , not via a volume!
+       </p>
+      </blockquote>
+      <h3>
+       <span class="mw-headline" id="Vector_Field_Volume_Actor">
+        Vector Field Volume Actor
+       </span>
+      </h3>
+      <p>
+       Once you have a Vector Field Volume actor placed in your level, you need to associate a vector field with it. First, select your vector field asset in the Content Browser. Then, select your Vector Field Volume actor in the level. In the Details panel, look under the Vector Field Volume group and click the
+       <b>
+        Edit
+       </b>
+       button.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:589px;">
+        <img alt="VFV Details 1 GVF.png" class="thumbimage" height="639" src="../assets/global-vector-fields-tutorial/0.png" width="587"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       This will bring up the properties for this instance of the actor. Near the top, you will notice the Vector Field property. Add the selected vector field from the Content Browser to it by clicking the arrow button.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:587px;">
+        <img alt="VFV Details 2 GVF.png" class="thumbimage" height="357" src="../assets/global-vector-fields-tutorial/1.png" width="585"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       You will probably also need to resize the vector field using the local scale properties, near the bottom of the window:
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:565px;">
+        <img alt="ScaleSettings GVF.png" class="thumbimage" height="134" src="../assets/global-vector-fields-tutorial/2.png" width="563"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       You may now place the vector field in the level however you wish.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:596px;">
+        <img alt="VFScaled GVF.png" class="thumbimage" height="588" src="../assets/global-vector-fields-tutorial/3.png" width="594"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Global_Vector_Field_Particle_System">
+        Global Vector Field Particle System
+       </span>
+      </h3>
+      <p>
+       The remainder of setting up the effect is fairly straightforward. Simply create a GPU Sprites particle system that uses a Global Vector Fields module.
+      </p>
+      <p>
+       In this example, we have a GPU sprite particle system that emits a series of long-lived slow moving particles. By moving a global vector field into these particles, we can influence their motion.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:674px;">
+        <img alt="GlobalVectorFieldsSystem GVF.png" class="thumbimage" height="396" src="../assets/global-vector-fields-tutorial/4.png" width="672"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       Now simply place the particle system within the volume of the Vector Field Volume actor. In this image, the bar of slow-moving particles is being disrupted as the Vector Field Volume is moved through them.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:788px;">
+        <img alt="GameModeVFV GVF.png" class="thumbimage" height="600" src="../assets/global-vector-fields-tutorial/5.png" width="786"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   RTS Camera - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    RTS Camera
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Details">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Details
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#FESpectatorPawn.h">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             FESpectatorPawn.h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#FESpectatorPawn.cpp">
+            <span class="tocnumber">
+             1.2
+            </span>
+            <span class="toctext">
+             FESpectatorPawn.cpp
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Details">
+        Details
+       </span>
+      </h1>
+      <p>
+       <img alt="RTSCamera.png" class="" height="754" src="../assets/rts-camera/0.png" width="1290"/>
+      </p>
+      <p>
+       I will add more details to this page when I have time, just thought I would share my code for an RTS Camera for those of you who need a place to start! Let me know if you have any questions or suggestions to improve my code!
+The cursor is not locked into the viewport, I am still looking for a way to do this.
+      </p>
+      <p>
+       <br/>
+       Also, for zooming with the mouse wheel, add the inputs for mouse wheel up and down with the names:
+      </p>
+      <p>
+       WheelMouseUp
+WheelMouseDown
+      </p>
+      <p>
+       Hope this helps!
+      </p>
+      <p>
+       Author: Connor Brewster
+      </p>
+      <h2>
+       <span class="mw-headline" id="FESpectatorPawn.h">
+        FESpectatorPawn.h
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"GameFramework/SpectatorPawn.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"FESpectatorPawn.generated.h"</span><span class="cp"></span>
+
+<span class="cm">/** AFESpectatorPawn</span>
+<span class="cm"> * This Pawn Will Move Like An RTS Camera</span>
+<span class="cm"> */</span>
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">FE_API</span> <span class="nl">AFESpectatorPawn</span> <span class="p">:</span> <span class="k">public</span> <span class="n">ASpectatorPawn</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+
+<span class="k">public</span><span class="o">:</span>
+	<span class="cm">/** Camera Component */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">VisibleAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadOnly</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Camera</span><span class="p">)</span>
+	<span class="n">TSubobjectPtr</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">UCameraComponent</span><span class="o">&gt;</span> <span class="n">CameraComponent</span><span class="p">;</span>
+
+	<span class="cm">/** Camera Z Angle */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Camera</span><span class="p">)</span>
+	<span class="kt">float</span> <span class="n">CameraZAnlge</span><span class="p">;</span>
+
+	<span class="cm">/** Camera Radius From Pawn Position */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Camera</span><span class="p">)</span>
+	<span class="kt">float</span> <span class="n">CameraRadius</span><span class="p">;</span>
+
+	<span class="cm">/** Camera Height Angle */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Camera</span><span class="p">)</span>
+	<span class="kt">float</span> <span class="n">CameraHeightAngle</span><span class="p">;</span>
+
+	<span class="cm">/** Camera Zoom Speed */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Camera</span><span class="p">)</span>
+	<span class="kt">float</span> <span class="n">CameraZoomSpeed</span><span class="p">;</span>
+
+	<span class="cm">/** Camera Radius Max */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Camera</span><span class="p">)</span>
+	<span class="kt">float</span> <span class="n">CameraRadiusMax</span><span class="p">;</span>
+
+	<span class="cm">/** Camera Radius Min */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Camera</span><span class="p">)</span>
+	<span class="kt">float</span> <span class="n">CameraRadiusMin</span><span class="p">;</span>
+
+	<span class="cm">/** Camera Movement Speed */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Camera</span><span class="p">)</span>
+	<span class="kt">float</span> <span class="n">CameraMovementSpeed</span><span class="p">;</span>
+
+	<span class="cm">/** Camera Scroll Boundary */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Camera</span><span class="p">)</span>
+	<span class="kt">float</span> <span class="n">CameraScrollBoundary</span><span class="p">;</span>
+
+	<span class="cm">/** Should the camera move? */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Camera</span><span class="p">)</span>
+	<span class="kt">bool</span> <span class="n">bCanMoveCamera</span><span class="p">;</span>
+
+<span class="k">private</span><span class="o">:</span>
+	<span class="cm">/** Sets up player inputs</span>
+<span class="cm">	 *    @param InputComponent - Input Component </span>
+<span class="cm">	 */</span>
+	<span class="kt">void</span> <span class="n">SetupPlayerInputComponent</span><span class="p">(</span><span class="k">class</span> <span class="nc">UInputComponent</span><span class="o">*</span> <span class="n">InputComponent</span><span class="p">);</span>
+
+<span class="k">public</span><span class="o">:</span>
+	<span class="cm">/** Zooms In The Camera */</span>
+	<span class="n">UFUNCTION</span><span class="p">()</span>
+	<span class="kt">void</span> <span class="n">ZoomIn</span><span class="p">();</span>
+
+	<span class="cm">/** Zooms Out The Camera */</span>
+	<span class="n">UFUNCTION</span><span class="p">()</span>
+	<span class="kt">void</span> <span class="n">ZoomOut</span><span class="p">();</span>
+
+	<span class="cm">/** Gets the roatation of the camera with only the yaw value </span>
+<span class="cm">	 * @return - returns a rotator that is (0, yaw, 0) of the Camera</span>
+<span class="cm">	 */</span>
+	<span class="n">UFUNCTION</span><span class="p">()</span>
+	<span class="n">FRotator</span> <span class="n">GetIsolatedCameraYaw</span><span class="p">();</span>
+	
+	<span class="cm">/** Moves the camera forward</span>
+<span class="cm">	 * @param direcation - (1.0 for forward, -1.0 for backward)</span>
+<span class="cm">	 */</span>
+	<span class="n">UFUNCTION</span><span class="p">()</span>
+	<span class="kt">void</span> <span class="n">MoveCameraForward</span><span class="p">(</span><span class="kt">float</span> <span class="n">direction</span><span class="p">);</span>
+
+	<span class="cm">/** Moves the camera forward </span>
+<span class="cm">	 * @param direcation - (1.0 for right, -1.0 for left)</span>
+<span class="cm">	 */</span>
+	<span class="n">UFUNCTION</span><span class="p">()</span>
+	<span class="kt">void</span> <span class="n">MoveCameraRight</span><span class="p">(</span><span class="kt">float</span> <span class="n">direction</span><span class="p">);</span>
+
+	<span class="cm">/** Repositions The Camera */</span>
+	<span class="n">UFUNCTION</span><span class="p">()</span>
+	<span class="kt">void</span> <span class="n">RepositionCamera</span><span class="p">();</span>
+
+	<span class="cm">/** Tick Function, Called Every Frame */</span>
+	<span class="n">UFUNCTION</span><span class="p">()</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">Tick</span><span class="p">(</span><span class="kt">float</span> <span class="n">deltaSeconds</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="FESpectatorPawn.cpp">
+        FESpectatorPawn.cpp
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"FE.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"FESpectatorPawn.h"</span><span class="cp"></span>
+
+
+<span class="n">AFESpectatorPawn</span><span class="o">::</span><span class="n">AFESpectatorPawn</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">//Disable Standard WASD Movement</span>
+	<span class="n">bAddDefaultMovementBindings</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+
+	<span class="c1">//Set Default Camera Values</span>
+	<span class="n">CameraRadius</span> <span class="o">=</span> <span class="mf">1000.0f</span><span class="p">;</span>
+	<span class="n">CameraZAnlge</span> <span class="o">=</span> <span class="mf">0.0f</span><span class="p">;</span>
+	<span class="n">CameraHeightAngle</span> <span class="o">=</span> <span class="mf">70.0f</span><span class="p">;</span>
+	<span class="n">CameraZoomSpeed</span> <span class="o">=</span> <span class="mf">32.0f</span><span class="p">;</span>
+	<span class="n">CameraRadiusMin</span> <span class="o">=</span> <span class="mf">750.0f</span><span class="p">;</span>
+	<span class="n">CameraRadiusMax</span> <span class="o">=</span> <span class="mf">2000.0f</span><span class="p">;</span>
+	<span class="n">CameraMovementSpeed</span> <span class="o">=</span> <span class="mf">2000.0f</span><span class="p">;</span>
+	<span class="n">CameraScrollBoundary</span> <span class="o">=</span> <span class="mf">25.0f</span><span class="p">;</span>
+	<span class="c1">//TODO: While selecting units, the camera CANNOT move!</span>
+	<span class="n">bCanMoveCamera</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+
+	<span class="c1">//Intialize The Camera</span>
+	<span class="n">CameraComponent</span> <span class="o">=</span> <span class="n">PCIP</span><span class="p">.</span><span class="n">CreateDefaultSubobject</span><span class="o">&lt;</span><span class="n">UCameraComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"RTS Camera"</span><span class="p">));</span>
+	<span class="n">CameraComponent</span><span class="o">-&gt;</span><span class="n">AttachParent</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">GetRootComponent</span><span class="p">();</span>
+	<span class="n">CameraComponent</span><span class="o">-&gt;</span><span class="n">bUsePawnControlRotation</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="n">RepositionCamera</span><span class="p">();</span>
+
+	<span class="c1">//Enable Tick function</span>
+	<span class="n">PrimaryActorTick</span><span class="p">.</span><span class="n">bCanEverTick</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AFESpectatorPawn</span><span class="o">::</span><span class="n">SetupPlayerInputComponent</span><span class="p">(</span><span class="k">class</span> <span class="nc">UInputComponent</span><span class="o">*</span> <span class="n">InputComponent</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">check</span><span class="p">(</span><span class="n">InputComponent</span><span class="p">);</span>
+	
+	<span class="c1">//Bind Mouse Wheel Zooming Actions</span>
+	<span class="n">InputComponent</span><span class="o">-&gt;</span><span class="n">BindAction</span><span class="p">(</span><span class="s">"WheelMouseUp"</span><span class="p">,</span> <span class="n">IE_Pressed</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">AFESpectatorPawn</span><span class="o">::</span><span class="n">ZoomIn</span><span class="p">);</span>
+	<span class="n">InputComponent</span><span class="o">-&gt;</span><span class="n">BindAction</span><span class="p">(</span><span class="s">"WheelMouseDown"</span><span class="p">,</span> <span class="n">IE_Pressed</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">AFESpectatorPawn</span><span class="o">::</span><span class="n">ZoomOut</span><span class="p">);</span>
+
+	<span class="c1">//Bind WASD Movement</span>
+	<span class="c1">//FOR TESTING PURPOSES ONLY!!!</span>
+	<span class="c1">//InputComponent-&gt;BindAxis("MoveForward", this, &amp;AFESpectatorPawn::MoveCameraForward);</span>
+	<span class="c1">//InputComponent-&gt;BindAxis("MoveRight", this, &amp;AFESpectatorPawn::MoveCameraRight);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AFESpectatorPawn</span><span class="o">::</span><span class="n">ZoomIn</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">//Don't execute any further if the camera can't move</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">bCanMoveCamera</span><span class="p">)</span>
+		<span class="k">return</span><span class="p">;</span>
+
+	<span class="c1">//Decrease the CameraRadius but clamp it between the min and max radii</span>
+	<span class="n">CameraRadius</span> <span class="o">=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Clamp</span><span class="p">(</span><span class="n">CameraRadius</span> <span class="o">-</span> <span class="n">CameraZoomSpeed</span><span class="p">,</span> <span class="n">CameraRadiusMin</span><span class="p">,</span> <span class="n">CameraRadiusMax</span><span class="p">);</span>
+	
+	<span class="c1">//Reposition the camera in the local space</span>
+	<span class="n">RepositionCamera</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AFESpectatorPawn</span><span class="o">::</span><span class="n">ZoomOut</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">//Don't execute any further if the camera can't move</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">bCanMoveCamera</span><span class="p">)</span>
+		<span class="k">return</span><span class="p">;</span>
+
+	<span class="c1">//Increase the CameraRadius but clamp it between the min and max radii</span>
+	<span class="n">CameraRadius</span> <span class="o">=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Clamp</span><span class="p">(</span><span class="n">CameraRadius</span> <span class="o">+</span> <span class="n">CameraZoomSpeed</span><span class="p">,</span> <span class="n">CameraRadiusMin</span><span class="p">,</span> <span class="n">CameraRadiusMax</span><span class="p">);</span>
+	
+	<span class="c1">//Reposition the camera in the local space</span>
+	<span class="n">RepositionCamera</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">FRotator</span> <span class="n">AFESpectatorPawn</span><span class="o">::</span><span class="n">GetIsolatedCameraYaw</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">//Return a FRotator containing (0, CameraYaw, 0)</span>
+	<span class="k">return</span> <span class="n">FRotator</span><span class="p">(</span><span class="mf">0.0f</span><span class="p">,</span> <span class="n">CameraComponent</span><span class="o">-&gt;</span><span class="n">ComponentToWorld</span><span class="p">.</span><span class="n">Rotator</span><span class="p">().</span><span class="n">Yaw</span><span class="p">,</span> <span class="mf">0.0f</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AFESpectatorPawn</span><span class="o">::</span><span class="n">MoveCameraForward</span><span class="p">(</span><span class="kt">float</span> <span class="n">direction</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">//Don't execute any further if the camera can't move</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">bCanMoveCamera</span><span class="p">)</span>
+		<span class="k">return</span><span class="p">;</span>
+
+	<span class="c1">//Calculate how much to move the camera by</span>
+	<span class="kt">float</span> <span class="n">movementValue</span> <span class="o">=</span> <span class="n">direction</span> <span class="o">*</span> <span class="n">CameraMovementSpeed</span><span class="p">;</span>
+
+	<span class="c1">//Create a delta vector that moves by the movementValue in the direction of the camera's yaw</span>
+	<span class="n">FVector</span> <span class="n">deltaMovement</span> <span class="o">=</span> <span class="n">movementValue</span> <span class="o">*</span> <span class="n">GetIsolatedCameraYaw</span><span class="p">().</span><span class="n">Vector</span><span class="p">();</span>
+
+	<span class="c1">//Add the delta to a new vector</span>
+	<span class="n">FVector</span> <span class="n">newLocation</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">GetActorLocation</span><span class="p">()</span> <span class="o">+</span> <span class="n">deltaMovement</span><span class="p">;</span>
+
+	<span class="c1">//Set the new location of the pawn</span>
+	<span class="n">SetActorLocation</span><span class="p">(</span><span class="n">newLocation</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AFESpectatorPawn</span><span class="o">::</span><span class="n">MoveCameraRight</span><span class="p">(</span><span class="kt">float</span> <span class="n">direction</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">//Don't execute any further if the camera can't move</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">bCanMoveCamera</span><span class="p">)</span>
+		<span class="k">return</span><span class="p">;</span>
+
+	<span class="c1">//Calculate how much to move the camera by</span>
+	<span class="kt">float</span> <span class="n">movementValue</span> <span class="o">=</span> <span class="n">direction</span> <span class="o">*</span> <span class="n">CameraMovementSpeed</span><span class="p">;</span>
+
+	<span class="c1">//Create a delta vector that moves by the movementValue in the direction of the right of the camera's yaw</span>
+	<span class="n">FVector</span> <span class="n">deltaMovement</span> <span class="o">=</span> <span class="n">movementValue</span> <span class="o">*</span> <span class="p">(</span><span class="n">FRotator</span><span class="p">(</span><span class="mf">0.0f</span><span class="p">,</span><span class="mf">90.0f</span><span class="p">,</span><span class="mf">0.0f</span><span class="p">)</span> <span class="o">+</span> <span class="n">GetIsolatedCameraYaw</span><span class="p">()).</span><span class="n">Vector</span><span class="p">();</span>
+
+	<span class="c1">//Add the delta to a new vector</span>
+	<span class="n">FVector</span> <span class="n">newLocation</span> <span class="o">=</span> <span class="k">this</span><span class="o">-&gt;</span><span class="n">GetActorLocation</span><span class="p">()</span> <span class="o">+</span> <span class="n">deltaMovement</span><span class="p">;</span>
+
+	<span class="c1">//Set the new location of the pawn</span>
+	<span class="n">SetActorLocation</span><span class="p">(</span><span class="n">newLocation</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AFESpectatorPawn</span><span class="o">::</span><span class="n">RepositionCamera</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">//Create variables to hold the new values</span>
+	<span class="n">FVector</span> <span class="n">newLocation</span><span class="p">(</span><span class="mf">0.0f</span><span class="p">,</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="mf">0.0f</span><span class="p">);</span>
+	<span class="n">FRotator</span> <span class="nf">newRotation</span><span class="p">(</span><span class="mf">0.0f</span><span class="p">,</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="mf">0.0f</span><span class="p">);</span>
+
+	<span class="c1">//Find Cos and Sin of the Camera Z Angle</span>
+	<span class="kt">float</span> <span class="n">sinCameraZAngle</span> <span class="o">=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Sin</span><span class="p">(</span><span class="n">FMath</span><span class="o">::</span><span class="n">DegreesToRadians</span><span class="p">(</span><span class="n">CameraZAnlge</span><span class="p">));</span>
+	<span class="kt">float</span> <span class="n">cosCameraZAngle</span> <span class="o">=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Cos</span><span class="p">(</span><span class="n">FMath</span><span class="o">::</span><span class="n">DegreesToRadians</span><span class="p">(</span><span class="n">CameraZAnlge</span><span class="p">));</span>
+
+	<span class="c1">//Find the Cos and Sin of the Camera Height Angle</span>
+	<span class="kt">float</span> <span class="n">sinCameraHeightAngle</span> <span class="o">=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Sin</span><span class="p">(</span><span class="n">FMath</span><span class="o">::</span><span class="n">DegreesToRadians</span><span class="p">(</span><span class="n">CameraHeightAngle</span><span class="p">));</span>
+	<span class="kt">float</span> <span class="n">cosCameraHeightAngle</span> <span class="o">=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Cos</span><span class="p">(</span><span class="n">FMath</span><span class="o">::</span><span class="n">DegreesToRadians</span><span class="p">(</span><span class="n">CameraHeightAngle</span><span class="p">));</span>
+
+	<span class="c1">//Set newLocation X to cosCameraZAngle * sinCameraHeightAngle * CameraRadius</span>
+	<span class="n">newLocation</span><span class="p">.</span><span class="n">X</span> <span class="o">=</span> <span class="n">cosCameraZAngle</span> <span class="o">*</span> <span class="n">cosCameraHeightAngle</span> <span class="o">*</span> <span class="n">CameraRadius</span><span class="p">;</span>
+
+	<span class="c1">//Set newLocation Y to sinCameraZangle * sinCameraHeightAngle * CameraRadius</span>
+	<span class="n">newLocation</span><span class="p">.</span><span class="n">Y</span> <span class="o">=</span> <span class="n">sinCameraZAngle</span> <span class="o">*</span> <span class="n">cosCameraHeightAngle</span> <span class="o">*</span> <span class="n">CameraRadius</span><span class="p">;</span>
+
+	<span class="c1">//Set newLocation Z to cosCameraHeightAngle * CameraRadius</span>
+	<span class="n">newLocation</span><span class="p">.</span><span class="n">Z</span> <span class="o">=</span> <span class="n">sinCameraHeightAngle</span> <span class="o">*</span> <span class="n">CameraRadius</span><span class="p">;</span>
+
+	<span class="c1">//Set the new rotations</span>
+	<span class="n">newRotation</span> <span class="o">=</span> <span class="p">(</span><span class="n">FVector</span><span class="p">(</span><span class="mf">0.0f</span><span class="p">,</span><span class="mf">0.0f</span><span class="p">,</span><span class="mf">0.0f</span><span class="p">)</span> <span class="o">-</span> <span class="n">newLocation</span><span class="p">).</span><span class="n">Rotation</span><span class="p">();</span>
+
+
+	<span class="c1">//Set the camera's location and rotation to the new values</span>
+	<span class="n">CameraComponent</span><span class="o">-&gt;</span><span class="n">SetRelativeLocation</span><span class="p">(</span><span class="n">newLocation</span><span class="p">);</span>
+	<span class="n">CameraComponent</span><span class="o">-&gt;</span><span class="n">SetRelativeRotation</span><span class="p">(</span><span class="n">newRotation</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AFESpectatorPawn</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span><span class="kt">float</span> <span class="n">deltaSeconds</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span><span class="n">deltaSeconds</span><span class="p">);</span>
+
+	<span class="c1">//Create variables to hold mouse position and screen size</span>
+	<span class="n">FVector2D</span> <span class="n">mousePosition</span><span class="p">;</span>
+	<span class="n">FVector2D</span> <span class="n">viewportSize</span><span class="p">;</span>
+
+	<span class="c1">//Get mouse position and screen size</span>
+	<span class="n">UGameViewportClient</span><span class="o">*</span> <span class="n">gameViewport</span> <span class="o">=</span> <span class="n">GEngine</span><span class="o">-&gt;</span><span class="n">GameViewport</span><span class="p">;</span>
+
+	<span class="c1">//Make sure viewport exists</span>
+	<span class="n">check</span><span class="p">(</span><span class="n">gameViewport</span><span class="p">);</span>
+	<span class="n">gameViewport</span><span class="o">-&gt;</span><span class="n">GetViewportSize</span><span class="p">(</span><span class="n">viewportSize</span><span class="p">);</span>
+	
+	<span class="c1">//Make sure the viewport has focus(contains the mouse)</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">gameViewport</span><span class="o">-&gt;</span><span class="n">IsFocused</span><span class="p">(</span><span class="n">gameViewport</span><span class="o">-&gt;</span><span class="n">Viewport</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">gameViewport</span><span class="o">-&gt;</span><span class="n">GetMousePosition</span><span class="p">(</span><span class="n">mousePosition</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">bCanMoveCamera</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//Check if the mouse is at the left or right edge of the screen and move accordingly</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">mousePosition</span><span class="p">.</span><span class="n">X</span> <span class="o">&lt;</span> <span class="n">CameraScrollBoundary</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">MoveCameraRight</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0f</span> <span class="o">*</span> <span class="n">deltaSeconds</span><span class="p">);</span>
+		<span class="p">}</span>
+		<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">viewportSize</span><span class="p">.</span><span class="n">X</span> <span class="o">-</span> <span class="n">mousePosition</span><span class="p">.</span><span class="n">X</span> <span class="o">&lt;</span> <span class="n">CameraScrollBoundary</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">MoveCameraRight</span><span class="p">(</span><span class="mf">1.0f</span> <span class="o">*</span> <span class="n">deltaSeconds</span><span class="p">);</span>
+		<span class="p">}</span>
+
+		<span class="c1">//Check if the mouse is at the top or bottom edge of the screen and move accordingly</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">mousePosition</span><span class="p">.</span><span class="n">Y</span> <span class="o">&lt;</span> <span class="n">CameraScrollBoundary</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">MoveCameraForward</span><span class="p">(</span><span class="mf">1.0f</span> <span class="o">*</span> <span class="n">deltaSeconds</span><span class="p">);</span>
+		<span class="p">}</span>
+		<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">viewportSize</span><span class="p">.</span><span class="n">Y</span> <span class="o">-</span> <span class="n">mousePosition</span><span class="p">.</span><span class="n">Y</span> <span class="o">&lt;</span> <span class="n">CameraScrollBoundary</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">MoveCameraForward</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0f</span> <span class="o">*</span> <span class="n">deltaSeconds</span><span class="p">);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

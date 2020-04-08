@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Procedural Mesh Component in C++:Getting Started - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Procedural Mesh Component in C++:Getting Started
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <p>
+       The following is a brief guide to getting the experimental plugin "ProceduralMeshComponent" for procedural generation of meshes purely in C++. There doesn't seem to be any information anywhere, so I decided to put what I've done here in hopes others will extend it.
+      </p>
+      <p>
+       <br/>
+       <img alt="UProceduralMeshComponentGeneratedTriangle.png" class="" height="1080" src="../assets/procedural-mesh-component-in-cgetting-started/0.png" width="1874"/>
+      </p>
+      <p>
+       I create a simple triangle using the UProceduralMeshComponent API, from there extending it should be easy. Once the class is compiled you can just drag it into your scene.
+      </p>
+      <p>
+       To use this component, include the paths in the build.cs file of your project:
+      </p>
+      <p>
+       MyProject.Build.cs:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">PublicDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"Core"</span><span class="p">,</span> <span class="s">"CoreUObject"</span><span class="p">,</span> <span class="s">"Engine"</span><span class="p">,</span> <span class="s">"InputCore"</span><span class="p">,</span> <span class="s">"ProceduralMeshComponent"</span> <span class="p">});</span>
+</pre>
+      </div>
+      <p>
+       and in your .uproject file (MyProject.uproject) in case you work on a project:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>    <span class="s">"AdditionalDependencies"</span><span class="o">:</span> <span class="p">[...,</span> <span class="p">...,</span> <span class="s">"ProceduralMeshComponent"</span><span class="p">]</span>
+</pre>
+      </div>
+      <p>
+       After 4.17, plugins can now depend on other plugins, so in case you are working on a
+       <b>
+        plugin
+       </b>
+       instead of a project, you will have to add this to your .uplugin file:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>  <span class="s">"Modules"</span><span class="o">:</span> <span class="p">[</span>
+      <span class="p">{</span>
+        <span class="p">....</span>
+      <span class="p">}</span>
+    <span class="p">],</span>
+    <span class="s">"Plugins"</span><span class="o">:</span> <span class="p">[</span>                       <span class="c1">// &lt;--</span>
+      <span class="p">{</span>                                <span class="c1">// &lt;--</span>
+        <span class="s">"Name"</span><span class="o">:</span> <span class="s">"ProceduralMeshComponent"</span><span class="p">,</span>    <span class="c1">// &lt;--</span>
+        <span class="s">"Enabled"</span><span class="o">:</span> <span class="nb">true</span>                <span class="c1">// &lt;--</span>
+      <span class="p">}</span>                                <span class="c1">// &lt;--</span>
+    <span class="p">]</span>
+</pre>
+      </div>
+      <p>
+       To fix errors with Visual Studio IntelliSense you need to right-click MyProject.uproject and re-generate Visual Studio project files. In Visual Studio 2017, open "Solution Explorer" and open the "Game" folder, right-click on the first line, which should be the root of your solution, select: "Rescan Solution".
+      </p>
+      <p>
+       <br/>
+       I've created an Actor class.
+      </p>
+      <p>
+       Add the header to your MyActor.h file above the "MyActor.generated.h" include which has to be the last include.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"ProceduralMeshComponent.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"MyActor.generated.h"</span><span class="cp"></span>
+</pre>
+      </div>
+      <p>
+       In the header file, the following is added to support assigning a material.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">private</span><span class="o">:</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">VisibleAnywhere</span><span class="p">)</span>
+	<span class="n">UProceduralMeshComponent</span> <span class="o">*</span> <span class="n">mesh</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       In my cpp file I have added the following to the constructor:
+      </p>
+      <p>
+       MyActor.cpp
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Creating a standard root object.</span>
+<span class="n">AMyActor</span><span class="o">::</span><span class="n">AMyActor</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">mesh</span> <span class="o">=</span> <span class="n">CreateDefaultSubobject</span><span class="o">&lt;</span><span class="n">UProceduralMeshComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"GeneratedMesh"</span><span class="p">));</span>
+	<span class="n">RootComponent</span> <span class="o">=</span> <span class="n">mesh</span><span class="p">;</span>
+        <span class="c1">// New in UE 4.17, multi-threaded PhysX cooking.</span>
+        <span class="n">mesh</span><span class="o">-&gt;</span><span class="n">bUseAsyncCooking</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="c1">// This is called when actor is spawned (at runtime or when you drop it into the world in editor)</span>
+<span class="kt">void</span> <span class="n">AMyActor</span><span class="o">::</span><span class="n">PostActorCreated</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">PostActorCreated</span><span class="p">();</span>
+	<span class="n">CreateTriangle</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">// This is called when actor is already in level and map is opened</span>
+<span class="kt">void</span> <span class="n">AMyActor</span><span class="o">::</span><span class="n">PostLoad</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">PostLoad</span><span class="p">();</span>
+	<span class="n">CreateTriangle</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AMyActor</span><span class="o">::</span><span class="n">CreateTriangle</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FVector</span><span class="o">&gt;</span> <span class="n">vertices</span><span class="p">;</span>
+	<span class="n">vertices</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">FVector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+	<span class="n">vertices</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">FVector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+	<span class="n">vertices</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">FVector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">));</span>
+
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">int32</span><span class="o">&gt;</span> <span class="n">Triangles</span><span class="p">;</span>
+	<span class="n">Triangles</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+	<span class="n">Triangles</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+	<span class="n">Triangles</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FVector</span><span class="o">&gt;</span> <span class="n">normals</span><span class="p">;</span>
+	<span class="n">normals</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">FVector</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+	<span class="n">normals</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">FVector</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+	<span class="n">normals</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">FVector</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FVector2D</span><span class="o">&gt;</span> <span class="n">UV0</span><span class="p">;</span>
+	<span class="n">UV0</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">FVector2D</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+	<span class="n">UV0</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">FVector2D</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+	<span class="n">UV0</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">FVector2D</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">));</span>
+	
+
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FProcMeshTangent</span><span class="o">&gt;</span> <span class="n">tangents</span><span class="p">;</span>
+	<span class="n">tangents</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">FProcMeshTangent</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+	<span class="n">tangents</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">FProcMeshTangent</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+	<span class="n">tangents</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">FProcMeshTangent</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">));</span>
+
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FLinearColor</span><span class="o">&gt;</span> <span class="n">vertexColors</span><span class="p">;</span>
+	<span class="n">vertexColors</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">FLinearColor</span><span class="p">(</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">));</span>
+	<span class="n">vertexColors</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">FLinearColor</span><span class="p">(</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">));</span>
+	<span class="n">vertexColors</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">FLinearColor</span><span class="p">(</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">));</span>
+
+	<span class="n">mesh</span><span class="o">-&gt;</span><span class="n">CreateMeshSection_LinearColor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">Triangles</span><span class="p">,</span> <span class="n">normals</span><span class="p">,</span> <span class="n">UV0</span><span class="p">,</span> <span class="n">vertexColors</span><span class="p">,</span> <span class="n">tangents</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+        
+        <span class="c1">// Enable collision data</span>
+	<span class="n">mesh</span><span class="o">-&gt;</span><span class="n">ContainsPhysicsTriMeshData</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       The documentation for CreateMeshSection and CreateMeshSection_LinearColor functions is this:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>	<span class="cm">/**</span>
+<span class="cm">	*	Create/replace a section for this procedural mesh component.</span>
+<span class="cm">	*	@param	SectionIndex		Index of the section to create or replace.</span>
+<span class="cm">	*	@param	Vertices			Vertex buffer of all vertex positions to use for this mesh section.</span>
+<span class="cm">	*	@param	Triangles			Index buffer indicating which vertices make up each triangle. Length must be a multiple of 3.</span>
+<span class="cm">	*	@param	Normals				Optional array of normal vectors for each vertex. If supplied, must be same length as Vertices array.</span>
+<span class="cm">	*	@param	UV0					Optional array of texture co-ordinates for each vertex. If supplied, must be same length as Vertices array.</span>
+<span class="cm">	*	@param	VertexColors		Optional array of colors for each vertex. If supplied, must be same length as Vertices array.</span>
+<span class="cm">	*	@param	Tangents			Optional array of tangent vector for each vertex. If supplied, must be same length as Vertices array.</span>
+<span class="cm">	*	@param	bCreateCollision	Indicates whether collision should be created for this section. This adds significant cost.</span>
+<span class="cm">	*/</span>
+
+<span class="c1">// '''Don't use this function'''. It is deprecated. Use LinearColor version.</span>
+<span class="kt">void</span> <span class="nf">CreateMeshSection</span><span class="p">(</span><span class="n">int32</span> <span class="n">SectionIndex</span><span class="p">,</span> <span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FVector</span><span class="o">&gt;&amp;</span> <span class="n">Vertices</span><span class="p">,</span> <span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">int32</span><span class="o">&gt;&amp;</span> <span class="n">Triangles</span><span class="p">,</span> <span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FVector</span><span class="o">&gt;&amp;</span> <span class="n">Normals</span><span class="p">,</span> <span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FVector2D</span><span class="o">&gt;&amp;</span> <span class="n">UV0</span><span class="p">,</span> <span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FColor</span><span class="o">&gt;&amp;</span> <span class="n">VertexColors</span><span class="p">,</span> <span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FProcMeshTangent</span><span class="o">&gt;&amp;</span> <span class="n">Tangents</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bCreateCollision</span><span class="p">);</span>
+
+<span class="c1">// In this one you can send FLinearColor instead of FColor for the Vertex Colors.</span>
+<span class="kt">void</span> <span class="nf">CreateMeshSection_LinearColor</span><span class="p">(</span><span class="n">int32</span> <span class="n">SectionIndex</span><span class="p">,</span> <span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FVector</span><span class="o">&gt;&amp;</span> <span class="n">Vertices</span><span class="p">,</span> <span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">int32</span><span class="o">&gt;&amp;</span> <span class="n">Triangles</span><span class="p">,</span> <span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FVector</span><span class="o">&gt;&amp;</span> <span class="n">Normals</span><span class="p">,</span> <span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FVector2D</span><span class="o">&gt;&amp;</span> <span class="n">UV0</span><span class="p">,</span> <span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FLinearColor</span><span class="o">&gt;&amp;</span> <span class="n">VertexColors</span><span class="p">,</span> <span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FProcMeshTangent</span><span class="o">&gt;&amp;</span> <span class="n">Tangents</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bCreateCollision</span><span class="p">)</span>
+
+<span class="c1">// Updates a section of this procedural mesh component. This is faster than CreateMeshSection, but does not let you change topology. Collision info is also updated.</span>
+<span class="kt">void</span> <span class="n">UpdateMeshSection_LinearColor</span><span class="p">(</span><span class="n">int32</span> <span class="n">SectionIndex</span><span class="p">,</span> <span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FVector</span><span class="o">&gt;&amp;</span> <span class="n">Vertices</span><span class="p">,</span> <span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FVector</span><span class="o">&gt;&amp;</span> <span class="n">Normals</span><span class="p">,</span> <span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FVector2D</span><span class="o">&gt;&amp;</span> <span class="n">UV0</span><span class="p">,</span> <span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FLinearColor</span><span class="o">&gt;&amp;</span> <span class="n">VertexColors</span><span class="p">,</span> <span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FProcMeshTangent</span><span class="o">&gt;&amp;</span> <span class="n">Tangents</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       If you have a &lt;YourGameName&gt;GameModeBase.cpp, make sure to add a reference to the header of the class where you added the above code, that way you will see it in your Editor in "C++ Classes" Content Browser and will be able to drag it to your scene.
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

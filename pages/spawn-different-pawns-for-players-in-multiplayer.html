@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Spawn Different Pawns For Players in Multiplayer - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Spawn Different Pawns For Players in Multiplayer
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Step_1:_Custom_Game_Mode">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Step 1: Custom Game Mode
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Step_2:_Custom_Player_Controller">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Step 2: Custom Player Controller
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Client.2FServer_Functions">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Client/Server Functions
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Text_File_Implementation">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Text File Implementation
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Assertion">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Assertion
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Final_Word">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Final Word
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       In this tutorial, I'll show you how I use C++ to allow a player to spawn into a Multiplayer game with a Pawn of their choice. By default, Unreal Engine allows you to choose a Pawn class that every player will use. We will change this functionality so that the Clients (and Server) can choose their Pawn way before they are spawned into the world.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Step_1:_Custom_Game_Mode">
+        Step 1: Custom Game Mode
+       </span>
+      </h2>
+      <p>
+       To start with, we need to override the 'GetDefaultPawnClassForController' function in AGameMode. Normally this function simply returns the GameModes 'DefaultPawnClass', but we want to change this so that it can hook into our custom Player Controller, and read the value from there.
+      </p>
+      <p>
+       <b>
+        This is a much more flexible approach than creating lots of Pawn Variables in the GameMode, since we can specify any pawn class we want from our PlayerController this way!
+       </b>
+      </p>
+      <p>
+       <b>
+        MyGameMode.h
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">MYGAME_API</span> <span class="nl">AMyGameMode</span> <span class="p">:</span> <span class="k">public</span> <span class="n">AGameMode</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+
+	<span class="cm">/* Override To Read In Pawn From Custom Controller */</span>
+	<span class="n">UClass</span><span class="o">*</span> <span class="n">GetDefaultPawnClassForController</span><span class="p">(</span><span class="n">AController</span><span class="o">*</span> <span class="n">InController</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <b>
+        MyGameMode.cpp
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">AMyGameMode</span><span class="o">::</span><span class="n">AMyGameMode</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">)</span> <span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">ObjectInitializer</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="cm">/* Use our custom Player-Controller Class */</span>
+	<span class="n">PlayerControllerClass</span> <span class="o">=</span> <span class="n">AMyPlayerController</span><span class="o">::</span><span class="n">StaticClass</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">UClass</span><span class="o">*</span> <span class="n">AMyGameMode</span><span class="o">::</span><span class="n">GetDefaultPawnClassForController</span><span class="p">(</span><span class="n">AController</span><span class="o">*</span> <span class="n">InController</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="cm">/* Override Functionality to get Pawn from PlayerController */</span>
+	<span class="n">AMyPlayerController</span><span class="o">*</span> <span class="n">MyController</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">AMyPlayerController</span><span class="o">&gt;</span><span class="p">(</span><span class="n">InController</span><span class="p">);</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">MyController</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="n">MyController</span><span class="o">-&gt;</span><span class="n">GetPlayerPawnClass</span><span class="p">();</span>
+	<span class="p">}</span>
+
+	<span class="cm">/* If we don't get the right Controller, use the Default Pawn */</span>
+	<span class="k">return</span> <span class="n">DefaultPawnClass</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Intellisense/Visual Assist will warn you that 'GetPlayerPawnClass()' doesnt' exist yet. Fear not, we'll create that in the next section!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Step_2:_Custom_Player_Controller">
+        Step 2: Custom Player Controller
+       </span>
+      </h2>
+      <p>
+       We must now invoke some custom functionality in our PlayerController, in order to tell the Gamemode which Pawn to use. On this rare occasion, we actually want the Client to have authority over the Server to ensure the Client chooses the Pawn locally, and tell the server to do the rest.
+      </p>
+      <p>
+       My method sets a Replicated Variable on the Server, the value of which is determined on the Client beforehand. This way, we take advantage of UE4s authoritative server system, keeping the two players in-sync and ensuring that no client-side cheating can ever occur. The server still handles the spawning of the Pawn, and the developer can choose to further validate the Clients choice if they want to.
+      </p>
+      <p>
+       <b>
+        NOTE:
+       </b>
+       The method posted below determines which Pawn to use based on an external .txt file. This is purely because it suited our implementation, but I do NOT recommend following this method for almost any other game, since the file can be easily modified by an end user. It would be much safer and more flexible, to use a SaveGame class generated inside the game itself, and have the server verify that the Pawn is a valid option server-side.
+      </p>
+      <p>
+       Saving the correct Pawn to use as a SaveGame is outside the scope of this tutorial, but you can study ShooterGame's
+       <b>
+        ShooterPersistentUser
+       </b>
+       class to learn more about how to use them. Simply replace the body of 'DeterminePawnClass' with code that loads the Pawn class from your custom SaveGame.
+      </p>
+      <p>
+       <b>
+        MyPlayerController.h
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">MYGAME_API</span> <span class="nl">AMyPlayerController</span> <span class="p">:</span> <span class="k">public</span> <span class="n">APlayerController</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+
+<span class="k">public</span><span class="o">:</span>
+	<span class="cm">/* Constructor */</span>
+	<span class="n">AMyPlayerController</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">);</span>
+
+	<span class="n">FORCEINLINE</span> <span class="n">UClass</span><span class="o">*</span> <span class="nf">GetPlayerPawnClass</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">MyPawnClass</span><span class="p">;</span> <span class="p">}</span>
+
+<span class="k">protected</span><span class="o">:</span>
+	<span class="cm">/* Return The Correct Pawn Class Client-Side */</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">Reliable</span><span class="p">,</span> <span class="n">Client</span><span class="p">)</span>
+	<span class="kt">void</span> <span class="n">DeterminePawnClass</span><span class="p">();</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">DeterminePawnClass_Implementation</span><span class="p">();</span>
+
+	<span class="cm">/* Use BeginPlay to start the functionality */</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">BeginPlay</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+
+	<span class="cm">/* Set Pawn Class On Server For This Controller */</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">Reliable</span><span class="p">,</span> <span class="n">Server</span><span class="p">,</span> <span class="n">WithValidation</span><span class="p">)</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">ServerSetPawn</span><span class="p">(</span><span class="n">TSubclassOf</span><span class="o">&lt;</span><span class="n">APawn</span><span class="o">&gt;</span> <span class="n">InPawnClass</span><span class="p">);</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">ServerSetPawn_Implementation</span><span class="p">(</span><span class="n">TSubclassOf</span><span class="o">&lt;</span><span class="n">APawn</span><span class="o">&gt;</span> <span class="n">InPawnClass</span><span class="p">);</span>
+	<span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">ServerSetPawn_Validate</span><span class="p">(</span><span class="n">TSubclassOf</span><span class="o">&lt;</span><span class="n">APawn</span><span class="o">&gt;</span> <span class="n">InPawnClass</span><span class="p">);</span>
+
+	<span class="cm">/* Actual Pawn class we want to use */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">Replicated</span><span class="p">)</span>
+	<span class="n">TSubclassOf</span><span class="o">&lt;</span><span class="n">APawn</span><span class="o">&gt;</span> <span class="n">MyPawnClass</span><span class="p">;</span>
+
+	<span class="cm">/* First Pawn Type To Use */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditDefaultsOnly</span><span class="p">,</span> <span class="n">BlueprintReadOnly</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"My Controller"</span><span class="p">)</span>
+	<span class="n">TSubclassOf</span><span class="o">&lt;</span><span class="n">AGESGame_ServerPawn</span><span class="o">&gt;</span> <span class="n">PawnToUseA</span><span class="p">;</span>
+
+	<span class="cm">/* Second Pawn Type To Use */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditDefaultsOnly</span><span class="p">,</span> <span class="n">BlueprintReadOnly</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"My Controller"</span><span class="p">)</span>
+	<span class="n">TSubclassOf</span><span class="o">&lt;</span><span class="n">AGESGame_Pawn</span><span class="o">&gt;</span> <span class="n">PawnToUseB</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <b>
+        MyPlayerController.cpp
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">AMyPlayerController</span><span class="o">::</span><span class="n">AMyPlayerController</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">)</span> <span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">ObjectInitializer</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="cm">/* Initialize The Values */</span>
+	<span class="n">PawnToUseA</span><span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+	<span class="n">PawnToUseB</span><span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+
+	<span class="cm">/* Make sure the PawnClass is Replicated */</span>
+	<span class="n">bReplicates</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AMyPlayerController</span><span class="o">::</span><span class="n">BeginPlay</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">BeginPlay</span><span class="p">();</span>
+
+	<span class="n">DeterminePawnClass</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">// Pawn Class</span>
+<span class="kt">void</span> <span class="n">AMyPlayerController</span><span class="o">::</span><span class="n">DeterminePawnClass_Implementation</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">IsLocalController</span><span class="p">())</span> <span class="c1">//Only Do This Locally (NOT Client-Only, since Server wants this too!)</span>
+	<span class="p">{</span>
+		<span class="cm">/* Load Text File Into String Array */</span>
+		<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FString</span><span class="o">&gt;</span> <span class="n">TextStrings</span><span class="p">;</span>
+		<span class="k">const</span> <span class="n">FString</span> <span class="n">FilePath</span> <span class="o">=</span> <span class="n">FPaths</span><span class="o">::</span><span class="n">GameDir</span><span class="p">()</span> <span class="o">+</span> <span class="s">"Textfiles/PlayerSettings.txt"</span><span class="p">;</span>
+
+	        <span class="cm">/* Use PawnA if the Text File tells us to */</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">TextStrings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span> <span class="s">"PawnA"</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">ServerSetPawn</span><span class="p">(</span><span class="n">PawnToUseA</span><span class="p">);</span>
+			<span class="k">return</span><span class="p">;</span>
+		<span class="p">}</span>
+
+	        <span class="cm">/* Otherwise, Use PawnB :) */</span>
+		<span class="n">ServerSetPawn</span><span class="p">(</span><span class="n">PawnToUseB</span><span class="p">);</span>
+		<span class="k">return</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">AMyPlayerController</span><span class="o">::</span><span class="n">ServerSetPawn_Validate</span><span class="p">(</span><span class="n">TSubclassOf</span><span class="o">&lt;</span><span class="n">APawn</span><span class="o">&gt;</span> <span class="n">InPawnClass</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AMyPlayerController</span><span class="o">::</span><span class="n">ServerSetPawn_Implementation</span><span class="p">(</span><span class="n">TSubclassOf</span><span class="o">&lt;</span><span class="n">APawn</span><span class="o">&gt;</span> <span class="n">InPawnClass</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">MyPawnClass</span> <span class="o">=</span> <span class="n">InPawnClass</span><span class="p">;</span>
+
+	<span class="cm">/* Just in case we didn't get the PawnClass on the Server in time... */</span>
+	<span class="n">GetWorld</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetAuthGameMode</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">RestartPlayer</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// Replication</span>
+<span class="kt">void</span> <span class="n">AMyPlayerController</span><span class="o">::</span><span class="n">GetLifetimeReplicatedProps</span><span class="p">(</span><span class="n">TArray</span><span class="o">&lt;</span><span class="n">FLifetimeProperty</span><span class="o">&gt;&amp;</span> <span class="n">OutLifetimeProps</span><span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="n">DOREPLIFETIME</span><span class="p">(</span><span class="n">AMyPlayerController</span><span class="p">,</span> <span class="n">MyPawnClass</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Client.2FServer_Functions">
+        Client/Server Functions
+       </span>
+      </h2>
+      <p>
+       The
+       <b>
+        most important functionality
+       </b>
+       in the Player Controller is NOT necessarily how you determine which pawn to use, but is actually the use of Client/Server functions and the Replicated 'MyPawnClass' variable. Without this, the Server will never know which Pawn the Client wants to spawn.
+      </p>
+      <p>
+       Also note the use of 'IsLocalPlayerController()' during the 'DeterminePawnClass' function. This is a check to ensure that the Server doesn't try to load it's own TextFile for the player, and ensures that the Client tells the Server which Pawn it wants to use, not the other way around. Without it, all of the players will actually end up using the Servers' chosen Pawn, regardless of what they really want to do! Don't replace this with an Authority check, since the Server could also be a player!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Text_File_Implementation">
+        Text File Implementation
+       </span>
+      </h2>
+      <p>
+       If you want to use this functionality exactly as it's posted above, you need to create a folder in your projects' Root Directory called 'TextFiles', and in there create a new .txt file called 'PlayerSettings.txt'
+      </p>
+      <p>
+       The Player Controller will search for the file on BeginPlay and attempt to load the text inside it into an array of strings. Each line in the text file forms another element in the array. If the first line in the text file is 'PawnA', the controller will tell the GameMode to use 'PawnToUseA' for this player. If any other value is entered or no value is found, it will instead use 'PawnToUseB'.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Assertion">
+        Assertion
+       </span>
+      </h2>
+      <p>
+       I
+       <b>
+        Strongly Recommend
+       </b>
+       you add additional checks and/or asserts to the above code. The final code that I actually use does have this in place, but I used an alternative Assert Library that I do not have permission to share, and so cut them out. Remember, you should always check if something valid and never allow your code to de-reference a NULL pointer!
+      </p>
+      <p>
+       If a .txt file isn't found for the example posted above, it will crash the engine. If you want to build a packaged version of your game, you
+       <b>
+        must
+       </b>
+       copy the TextFiles folder into the games' folder when packaging has finished!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Final_Word">
+        Final Word
+       </span>
+      </h2>
+      <p>
+       I do NOT encourage the use of TextFiles to determine which pawn to use for a real project. The code above is only meant to show the order of operations, and the use of Client/Server functionality to ensure reliability. It was suitable only for a very unique implementation. I highly recommend modifying the 'DeterminePawnClass' function to return a Pawn class from a SaveGame, or similar. This method is much more secure and less prone to errors.
+      </p>
+      <p>
+       In due time, I will update this tutorial to do exactly that, as I believe it is much more suited to most projects. More advanced C++ users will be able to integrate this on their own from this point on however, so enjoy!
+      </p>
+      <p>
+       Hope this helps!
+      </p>
+      <p>
+       (
+     )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

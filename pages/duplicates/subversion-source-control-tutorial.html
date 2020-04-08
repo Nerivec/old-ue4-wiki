@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Subversion source control (Tutorial) - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Subversion source control (Tutorial)
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#SVN_Server">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           SVN Server
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Setting_Up_SVN">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Setting Up SVN
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Check_In">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Check In
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Check_In_Error">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             Check In Error
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Finally">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Finally
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       Hello Everyone! My name is Satheesh PV (aka RyanJon2040) and in this tutorial i will guide you to setup SVN (Subversion) in Unreal Engine 4. Subversion is a free/open source version control system (VCS). That is, Subversion manages files and directories, and the changes made to them, over time. This allows you to recover older versions of your data or examine the history of how your data changed.
+      </p>
+      <h2>
+       <span class="mw-headline" id="SVN_Server">
+        SVN Server
+       </span>
+      </h2>
+      <p>
+       Before you continue with this tutorial you need to host a SVN Server. I hosted mine at
+       <a class="external text" href="http://cloudforge.com/" rel="nofollow">
+        CloudForge
+       </a>
+       . They offer
+       <b>
+        Unlimited users
+       </b>
+       and
+       <b>
+        Unlimited workspace
+       </b>
+       for
+       <b>
+        FREE
+       </b>
+       but storage is limited to 2GB per account. But anyway i have my repository there so if you dont yet have a SVN repository go ahead and create one.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Setting_Up_SVN">
+        Setting Up SVN
+       </span>
+      </h2>
+      <p>
+       Now that you have a SVN repository lets start this tutorial. The very first thing you need to do is checkout a local copy of your UE4 Projects folder. (Without this, Unreal will complain that you need to checkout from a working copy). So to do this follow below steps:
+      </p>
+      <p>
+       1. Open
+       <a class="external text" href="../cdn.winability.com/info/delete-partition/start-menu-cmd.png" rel="nofollow">
+        CMD (Command Prompt)
+       </a>
+       <br clear="all"/>
+       2. Change to your
+       <b>
+        UE4 Installation Path\Engine\Binaries\ThirdParty\svn\Win64
+       </b>
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="" class="thumbimage" height="157" src="../assets/subversion-source-control-tutorial/0.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Use command:
+         <b>
+          cd /d YourUE4_SVN_Path
+         </b>
+         and press enter
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+       3. Once you are in that directory, you need to checkout your UE4 Projects directory to your working copy
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="" class="thumbimage" height="149" src="../assets/subversion-source-control-tutorial/1.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Checkout command:
+         <b>
+          svn checkout "Repository URL" "Projects Folder"
+         </b>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+       4. After checking out, you should see three new directories called
+       <b>
+        branches
+       </b>
+       ,
+       <b>
+        tags
+       </b>
+       and
+       <b>
+        trunk
+       </b>
+       in your projects folder.
+       <br clear="all"/>
+       5. Now open your UE4 Project and open Source Control dialog. (Right click on any asset and select
+       <b>
+        Connect To Source Control
+       </b>
+       )
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="" class="thumbimage" height="200" src="../assets/subversion-source-control-tutorial/2.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Give your repository link, username and password and click on
+         <b>
+          Accept Settings
+         </b>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+       6. Now you should see the connection successful message.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="6 ConnectionSuccesful.JPG" class="thumbimage" height="38" src="../assets/subversion-source-control-tutorial/3.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       If you reach upto this step successfully then Congrats! :) You have now successfully connected to SVN. Now lets begin the fun part...Checking in and out. :)
+      </p>
+      <h2>
+       <span class="mw-headline" id="Check_In">
+        Check In
+       </span>
+      </h2>
+      <p>
+       So lets begin to check in our assets to repository. Follow the steps below:
+      </p>
+      <p>
+       <br/>
+       1: First you need to mark the asset for check in. To do that right click on your asset and select
+       <b>
+        Mark For Add
+       </b>
+       .
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="8 MarkForAdd.jpg" class="thumbimage" height="198" src="../assets/subversion-source-control-tutorial/4.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+       2: Then right click on that same asset and select
+       <b>
+        Check In
+       </b>
+       .
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="" class="thumbimage" height="279" src="../assets/subversion-source-control-tutorial/5.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         You need to provide a changelist too and press OK.
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Check_In_Error">
+        Check In Error
+       </span>
+      </h3>
+      <p>
+       At this point you might probably face an error saying
+       <b>
+        Failed to check in files
+       </b>
+       .
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="" class="thumbimage" height="185" src="../assets/subversion-source-control-tutorial/6.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         See the message log.
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+       But dont worry! Its just a simple fix :). All you have to do is go to your UE4 Projects folder (Remember the one we checked out earlier using svn checkout command) and copy the
+       <i>
+        .svn
+       </i>
+       folder (Its a hidden folder) to your working project folder.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="" class="thumbimage" height="98" src="../assets/subversion-source-control-tutorial/7.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Copy this
+         <i>
+          .svn
+         </i>
+         folder to your project. For eg: Here i copied the
+         <i>
+          .svn
+         </i>
+         folder to
+         <b>
+          RTSExample
+         </b>
+         folder.
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Finally">
+        Finally
+       </span>
+      </h2>
+      <p>
+       Thats it! Check In again and enjoy SVN!
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="" class="thumbimage" height="64" src="../assets/subversion-source-control-tutorial/8.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Successfully checked in. :)
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

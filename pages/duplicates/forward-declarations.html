@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Forward Declarations - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Forward Declarations
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Forward_Declarations_To_The_Rescue.21">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Forward Declarations To The Rescue!
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#YourController.h">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           YourController.h
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Compile_Error_if_Used_in_.h">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Compile Error if Used in .h
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#You_can_.23include_anything_in_.cpp_files">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           You can #include anything in .cpp files
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Shorthand_Forward_Declaration">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Shorthand Forward Declaration
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#FORCEINLINE_Usage">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           FORCEINLINE Usage
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Summary">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Summary
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Author:
+       </i>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       In UE4 C++ you will often find that your code won't compile if you refer to other custom classes you've created.
+      </p>
+      <p>
+       For example, if you have a custom pawn and a custom hud class, and in your controller class you have in your header file (.h) :
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UPROPERTY</span><span class="p">()</span>
+<span class="n">ACustomPawn</span><span class="o">*</span> <span class="n">myPawn</span><span class="p">;</span>
+
+<span class="n">UPROPERTY</span><span class="p">()</span>
+<span class="n">ACustomHUD</span><span class="o">*</span> <span class="n">myHUD</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       The compiler will report that there are errors on the above lines because it has not yet compiled CustomPawn and CustomHUD, so these identifiers are not found yet.
+      </p>
+      <p>
+       The logical thing to do is then #include these classes above your controller .generated #include:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"CustomPawn.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"CustomHUD.h"</span><span class="cp"></span>
+</pre>
+      </div>
+      <p>
+       <i>
+        Circular Dependency!
+       </i>
+      </p>
+      <p>
+       But if your HUD and Pawn classes also #include your custom player controller you now have a circular dependency!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Forward_Declarations_To_The_Rescue.21">
+        Forward Declarations To The Rescue!
+       </span>
+      </h2>
+      <p>
+       The solution is to just declare all the classes that are not being recognized at the top of your .h file, this is called Forward Declaration
+      </p>
+      <h2>
+       <span class="mw-headline" id="YourController.h">
+        YourController.h
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"YourController.generated.h"</span><span class="cp"></span>
+
+<span class="c1">//~~~~~ Forward Declarations~~~~~</span>
+
+<span class="k">class</span> <span class="nc">ACustomPawn</span><span class="p">;</span>
+<span class="k">class</span> <span class="nc">ACustomHUD</span><span class="p">;</span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">AYourController</span> <span class="o">:</span> <span class="k">public</span> <span class="n">APlayerController</span>
+<span class="p">{</span>
+  <span class="n">ACutomPawn</span><span class="o">*</span> <span class="n">myPawn</span><span class="p">;</span>
+  <span class="n">ACustomHUD</span><span class="o">*</span> <span class="n">myHUD</span><span class="p">;</span>
+
+  <span class="c1">//etc</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Compile_Error_if_Used_in_.h">
+        Compile Error if Used in .h
+       </span>
+      </h2>
+      <p>
+       It is important to note that you cannot access the members of solely forward-declared class, you must only try to access members in the .cpp file.
+      </p>
+      <p>
+       Forward declaration will get everything to compile, but all the logic must be done in the .cpp file.
+      </p>
+      <h2>
+       <span class="mw-headline" id="You_can_.23include_anything_in_.cpp_files">
+        You can #include anything in .cpp files
+       </span>
+      </h2>
+      <p>
+       It is very important to note that you can add the required #include's in any .cpp file, it is only the .h files that have to compile without circular dependencies
+      </p>
+      <p>
+       These can be added in the .cpp file where you forward declared the types in the .h
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"CustomPawn.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"CustomHUD.h"</span><span class="cp"></span>
+</pre>
+      </div>
+      <p>
+       Now in the .cpp file you have fully defined the types that you forward declared in the .h file, and can actually access their custom member variables that are specific to your game code!
+      </p>
+      <p>
+       When you want to use #include for various headers in CPP files you don't have to worry about the compile order, and can just include all the classes you need without ever thinking about forward declaration issues!
+      </p>
+      <p>
+       Forward Declaration only has to be considered for .h files :)
+      </p>
+      <p>
+       So you should try to #include as many .h files as you can in the .cpp rather than the .h, and reserve .h #includes for the ones you really need.
+      </p>
+      <p>
+       And whenever you have circular dependencies, you can use Forward Declaration instead!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Shorthand_Forward_Declaration">
+        Shorthand Forward Declaration
+       </span>
+      </h2>
+      <p>
+       If you only need to forward declare a type in one place you can just put
+       <b>
+        class
+       </b>
+       right before it!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="s">"Joy Mech BPs"</span><span class="p">)</span>
+<span class="n">TSubclassOf</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">AJoySkelMeshOutline</span><span class="o">&gt;</span> <span class="n">JoyMechOutline</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       In the above example, I dont have to #include JoySkelMeshOutline.h, but I am still creating a pointer to a Blueprint of this class that I can then set in the Editor, without ever having told C++ the actual definition of AJoySkelMeshOutline!
+      </p>
+      <p>
+       The advantage here is that I can minimize header dependencies, and in this case I dont have to ever define the type at all since it is a UPROPERTY value that I set in the Editor!
+      </p>
+      <p>
+       This
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">TSubclassOf</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">AJoySkelMeshOutline</span><span class="o">&gt;</span> <span class="n">JoyMechOutline</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       is the equivalent of this
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="c1">//Normal Forward Declaration</span>
+<span class="k">class</span> <span class="nc">AJoySkelMeshOutline</span><span class="p">;</span>
+
+<span class="c1">//This Class .generated</span>
+<span class="cp">#include</span> <span class="cpf">"CurrentClass.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="c1">//current class definition</span>
+
+<span class="c1">//AJoySkelMeshOutline has been forward declared so this will compile</span>
+<span class="n">TSubclassOf</span><span class="o">&lt;</span><span class="n">AJoySkelMeshOutline</span><span class="o">&gt;</span> <span class="n">JoyMechOutline</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       Notice it is just easier and more organized in this case to add
+       <b>
+        class
+       </b>
+       by using forward declaration shorthand.
+      </p>
+      <h2>
+       <span class="mw-headline" id="FORCEINLINE_Usage">
+        FORCEINLINE Usage
+       </span>
+      </h2>
+      <p>
+       If you want to write functions in .h files using FORCEINLINE you must then make sure to order your classes correctly so that you can #include the .h file you need so you have the full definition of the class/struct you want to use!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Summary">
+        Summary
+       </span>
+      </h2>
+      <p>
+       Using Forward Declarations you can have as many inter-relating classes as you want in your c++ code without having circular dependencies :)
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

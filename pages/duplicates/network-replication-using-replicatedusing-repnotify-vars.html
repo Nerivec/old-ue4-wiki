@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Network Replication, Using ReplicatedUsing / RepNotify vars - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Network Replication, Using ReplicatedUsing / RepNotify vars
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Using_Repnotify.2FReplicatedUsing">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Using Repnotify/ReplicatedUsing
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Two_Approaches">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Two Approaches
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Notation">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Notation
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Server_Rep">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Server Rep
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Virtual_OnRep">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Virtual OnRep
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#.H">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           .H
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#CPP">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           CPP
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Conditional_Replication">
+          <span class="tocnumber">
+           9
+          </span>
+          <span class="toctext">
+           Conditional Replication
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-10">
+         <a href="#Summary">
+          <span class="tocnumber">
+           10
+          </span>
+          <span class="toctext">
+           Summary
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-11">
+         <a href="#Recommending_Reading">
+          <span class="tocnumber">
+           11
+          </span>
+          <span class="toctext">
+           Recommending Reading
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Author:
+       </i>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       Someone asked for some tips on doing network replication in UE4, so I wrote up this tutorial really quick!
+      </p>
+      <p>
+       The net code structure I am showing here has worked great for me in real multiplayer games with up to 3 people involved who are all simultaneously using my multiplayer in-game editor to co-create the world together! In a packaged game!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Using_Repnotify.2FReplicatedUsing">
+        Using Repnotify/ReplicatedUsing
+       </span>
+      </h2>
+      <p>
+       Here are two examples from my own code base of how I replicate things that dont have built in replication support like CharacterMovement-&gt;Velocity does.
+      </p>
+      <p>
+       These are things you have to use repnotify for so that every client will do the action that has to be performed locally.
+      </p>
+      <p>
+       These two examples involve gravity, which you have to set locally.
+      </p>
+      <p>
+       This is all occurring a class that extends ACharacter
+      </p>
+      <h2>
+       <span class="mw-headline" id="Two_Approaches">
+        Two Approaches
+       </span>
+      </h2>
+      <p>
+       I use two different approaches in the code below.
+      </p>
+      <p>
+       In one case I rely on the value itself to always be dirtied and updated properly, a bit risky sometimes, depending on your situation.
+      </p>
+      <p>
+       In the other case I am flipping a bool that serves to guarantee replication will occur, and sending along the actual relevant data at the same time.
+      </p>
+      <p>
+       I'd recommend you try this latter approach first!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Notation">
+        Notation
+       </span>
+      </h2>
+      <p>
+       Of the various notations that I use in function definitions, the only required ones are _Validate and _Implementation in the CPP file.
+      </p>
+      <p>
+       I use R_ to tell myself that a variable is being replicated so I can clearly see why it appears in certain places in my .cpp files.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Server_Rep">
+        Server Rep
+       </span>
+      </h2>
+      <p>
+       The server has to call the OnRep function manually because it does not participate in replication updates since it is the one sending them.
+      </p>
+      <p>
+       To simplify my code base I just have the Server run the same code the clients are running as it's vars have already been updated.
+      </p>
+      <p>
+       You'd want to avoid running certain code on a dedicated server that is purely graphical in nature.
+      </p>
+      <p>
+       You can avoid running code on dedicated server by wrapping it with
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">if</span><span class="p">(</span><span class="n">GEngine</span><span class="o">-&gt;</span><span class="n">GetNetMode</span><span class="p">(</span><span class="n">GetWorld</span><span class="p">())</span> <span class="o">!=</span> <span class="n">NM_DedicatedServer</span><span class="p">)</span>
+<span class="p">{</span>
+   <span class="c1">//code to run on non-dedicated servers</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Virtual_OnRep">
+        Virtual OnRep
+       </span>
+      </h2>
+      <p>
+       I always make OnRep functions virtual so that I can override just the OnRep part in subclasses, gaining full use of the replication structure I set up in the base class without having to re-write any of it in subclasses
+      </p>
+      <h2>
+       <span class="mw-headline" id=".H">
+        .H
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//~~~ Physics Gravity ~~~</span>
+<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">reliable</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">WithValidation</span><span class="p">)</span>
+<span class="kt">void</span> <span class="n">SERVER_SetPhysicsGravityActive</span><span class="p">(</span><span class="kt">bool</span> <span class="n">MakeActive</span><span class="p">);</span>
+
+<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">ReplicatedUsing</span><span class="o">=</span><span class="n">OnRep_SetPhysicsGravity</span><span class="p">)</span>
+<span class="kt">bool</span> <span class="n">R_PhysicsGravityActive</span><span class="p">;</span>
+
+<span class="n">UFUNCTION</span><span class="p">()</span>
+<span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnRep_SetPhysicsGravity</span><span class="p">();</span>
+
+
+<span class="c1">//~~~ Gravity Scale ~~~</span>
+	
+<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">reliable</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">WithValidation</span><span class="p">)</span>
+<span class="kt">void</span> <span class="n">SERVER_SetGravityScale</span><span class="p">(</span><span class="kt">float</span> <span class="n">TheGravityScale</span><span class="p">);</span>
+
+<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">ReplicatedUsing</span><span class="o">=</span><span class="n">OnRep_SetGravityScale</span><span class="p">)</span>
+<span class="kt">bool</span> <span class="n">DoRep_GravityScale</span><span class="p">;</span>
+
+<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">Replicated</span><span class="p">)</span>
+<span class="kt">float</span> <span class="n">R_GravityScale</span><span class="p">;</span>
+
+<span class="n">UFUNCTION</span><span class="p">()</span>
+<span class="k">virtual</span> <span class="kt">void</span> <span class="n">OnRep_SetGravityScale</span><span class="p">();</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="CPP">
+        CPP
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//~~~ Physics Gravity ~~~</span>
+<span class="kt">bool</span> <span class="n">AJoyCharacterBase</span><span class="o">::</span><span class="n">SERVER_SetPhysicsGravityActive_Validate</span><span class="p">(</span><span class="kt">bool</span> <span class="n">MakeActive</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">AJoyCharacterBase</span><span class="o">::</span><span class="n">SERVER_SetPhysicsGravityActive_Implementation</span><span class="p">(</span><span class="kt">bool</span> <span class="n">MakeActive</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">//Rep</span>
+	<span class="n">R_PhysicsGravityActive</span> <span class="o">=</span> <span class="n">MakeActive</span><span class="p">;</span>
+	<span class="n">OnRep_SetPhysicsGravity</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AJoyCharacterBase</span><span class="o">::</span><span class="n">OnRep_SetPhysicsGravity</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">Mesh</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">Mesh</span><span class="o">-&gt;</span><span class="n">SetEnableGravity</span><span class="p">(</span><span class="n">R_PhysicsGravityActive</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="c1">//~~~ Gravity Scale ~~~</span>
+<span class="kt">bool</span> <span class="n">AJoyCharacterBase</span><span class="o">::</span><span class="n">SERVER_SetGravityScale_Validate</span><span class="p">(</span><span class="kt">float</span> <span class="n">TheGravityScale</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">AJoyCharacterBase</span><span class="o">::</span><span class="n">SERVER_SetGravityScale_Implementation</span><span class="p">(</span><span class="kt">float</span> <span class="n">TheGravityScale</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">//Rep</span>
+	<span class="n">DoRep_GravityScale</span> 	<span class="o">=</span> <span class="o">!</span><span class="n">DoRep_GravityScale</span><span class="p">;</span>
+	<span class="n">R_GravityScale</span> 		<span class="o">=</span> <span class="n">TheGravityScale</span><span class="p">;</span>
+	  
+	<span class="c1">//Server</span>
+	<span class="n">OnRep_SetGravityScale</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AJoyCharacterBase</span><span class="o">::</span><span class="n">OnRep_SetGravityScale</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">UVictoryCore</span><span class="o">::</span><span class="n">VIsValid</span><span class="p">(</span><span class="n">CharacterMovement</span><span class="p">))</span> <span class="k">return</span><span class="p">;</span>
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+	
+	<span class="n">CharacterMovement</span><span class="o">-&gt;</span><span class="n">GravityScale</span> <span class="o">=</span> <span class="n">R_GravityScale</span><span class="p">;</span>
+	<span class="n">CharacterMovement</span><span class="o">-&gt;</span><span class="n">Velocity</span> <span class="o">=</span> <span class="n">FVector</span><span class="o">::</span><span class="n">ZeroVector</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="c1">//		Replication List</span>
+<span class="kt">void</span> <span class="n">AJoyCharacterBase</span><span class="o">::</span><span class="n">GetLifetimeReplicatedProps</span><span class="p">(</span> <span class="n">TArray</span><span class="o">&lt;</span> <span class="n">FLifetimeProperty</span> <span class="o">&gt;</span> <span class="o">&amp;</span> <span class="n">OutLifetimeProps</span> <span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">GetLifetimeReplicatedProps</span><span class="p">(</span> <span class="n">OutLifetimeProps</span> <span class="p">);</span>
+ 
+	<span class="c1">//Physics Gravity</span>
+	<span class="n">DOREPLIFETIME</span><span class="p">(</span><span class="n">AJoyCharacterBase</span><span class="p">,</span> <span class="n">R_PhysicsGravityActive</span><span class="p">);</span>
+	
+	<span class="c1">//Gravity Scale, Adjustments in In-Game Editor</span>
+	<span class="n">DOREPLIFETIME</span><span class="p">(</span><span class="n">AJoyCharacterBase</span><span class="p">,</span> <span class="n">R_GravityScale</span><span class="p">);</span>
+	<span class="n">DOREPLIFETIME</span><span class="p">(</span><span class="n">AJoyCharacterBase</span><span class="p">,</span> <span class="n">DoRep_GravityScale</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Conditional_Replication">
+        Conditional Replication
+       </span>
+      </h2>
+      <p>
+       There are several optional conditions you can place on whether a repnotify will occur!
+      </p>
+      <p>
+       See
+       <b>
+        CoreNet.h
+       </b>
+       for more info :)
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">DOREPLIFETIME_CONDITION</span><span class="p">(</span> <span class="n">AShooterWeapon_Instant</span><span class="p">,</span> <span class="n">HitNotify</span><span class="p">,</span> <span class="n">COND_SkipOwner</span> <span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       Use the above macro instead of the standard DOREPLIFETIME if you wish to use the conditions below!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/** Secondary condition to check before considering the replication of a lifetime property. */</span>
+<span class="k">enum</span> <span class="n">ELifetimeCondition</span>
+<span class="p">{</span>
+	<span class="n">COND_None</span>				<span class="o">=</span> <span class="mi">0</span><span class="p">,</span>		<span class="c1">// This property has no condition, and will send anytime it changes</span>
+	<span class="n">COND_InitialOnly</span>		<span class="o">=</span> <span class="mi">1</span><span class="p">,</span>		<span class="c1">// This property will only attempt to send on the initial bunch</span>
+	<span class="n">COND_OwnerOnly</span>			<span class="o">=</span> <span class="mi">2</span><span class="p">,</span>		<span class="c1">// This property will only send to the actor's owner</span>
+	<span class="n">COND_SkipOwner</span>			<span class="o">=</span> <span class="mi">3</span><span class="p">,</span>		<span class="c1">// This property send to every connection EXCEPT the owner</span>
+	<span class="n">COND_SimulatedOnly</span>		<span class="o">=</span> <span class="mi">4</span><span class="p">,</span>		<span class="c1">// This property will only send to simulated actors</span>
+	<span class="n">COND_AutonomousOnly</span>		<span class="o">=</span> <span class="mi">5</span><span class="p">,</span>		<span class="c1">// This property will only send to autonomous actors</span>
+	<span class="n">COND_SimulatedOrPhysics</span>	<span class="o">=</span> <span class="mi">6</span><span class="p">,</span>		<span class="c1">// This property will send to simulated OR bRepPhysics actors</span>
+	<span class="n">COND_InitialOrOwner</span>		<span class="o">=</span> <span class="mi">7</span><span class="p">,</span>		<span class="c1">// This property will send on the initial packet, or to the actors owner</span>
+	<span class="n">COND_Custom</span>				<span class="o">=</span> <span class="mi">8</span><span class="p">,</span>		<span class="c1">// This property has no particular condition, but wants the ability to toggle on/off via SetCustomIsActiveOverride</span>
+	<span class="n">COND_Max</span>				<span class="o">=</span> <span class="mi">9</span><span class="p">,</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Summary">
+        Summary
+       </span>
+      </h2>
+      <p>
+       Here I've demonstrated two ways to use ReplicatedUsing / Repnotify variables, and how you can use them to replicate effects and changes to the game state that are not already replicated for you by UE4!
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+      <h2>
+       <span class="mw-headline" id="Recommending_Reading">
+        Recommending Reading
+       </span>
+      </h2>
+      <p>
+       <b>
+        Epic Networking Tips and Tricks
+       </b>
+      </p>
+      <p>
+       <a class="external free" href="https://www.unrealengine.com/blog/network-tips-and-tricks" rel="nofollow">
+        https://www.unrealengine.com/blog/network-tips-and-tricks
+       </a>
+      </p>
+      <p>
+       <br/>
+       I recommend checking out Zoid's wiki on replication!
+      </p>
+      <p>
+       He goes over all the basics and terminology for you!
+      </p>
+      <p>
+       <a class="external free" href="./replication.html" rel="nofollow">
+        Replication
+       </a>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

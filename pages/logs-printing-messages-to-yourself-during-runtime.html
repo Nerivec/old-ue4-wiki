@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Logs, Printing Messages To Yourself During Runtime - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Logs, Printing Messages To Yourself During Runtime
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Accessing_Logs">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Accessing Logs
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#In-Game">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             In-Game
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Within_Editor_.28Play-In-Editor.29">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             Within Editor (Play-In-Editor)
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Quick_Usage">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Quick Usage
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Log_Verbosity_Levels">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Log Verbosity Levels
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Setting_Up_Your_Own_Log_Category">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Setting Up Your Own Log Category
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Log_Category_Macros">
+            <span class="tocnumber">
+             5.1
+            </span>
+            <span class="toctext">
+             Log Category Macros
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#Usage_Example">
+            <span class="tocnumber">
+             5.2
+            </span>
+            <span class="toctext">
+             Usage Example
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-10">
+             <a href="#MyGame.H">
+              <span class="tocnumber">
+               5.2.1
+              </span>
+              <span class="toctext">
+               MyGame.H
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-11">
+             <a href="#MyGame.CPP">
+              <span class="tocnumber">
+               5.2.2
+              </span>
+              <span class="toctext">
+               MyGame.CPP
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-12">
+             <a href="#MyClass.CPP">
+              <span class="tocnumber">
+               5.2.3
+              </span>
+              <span class="toctext">
+               MyClass.CPP
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-13">
+         <a href="#Log_Formatting">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Log Formatting
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-14">
+           <a href="#Log_Message">
+            <span class="tocnumber">
+             6.1
+            </span>
+            <span class="toctext">
+             Log Message
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-15">
+           <a href="#Log_an_FString">
+            <span class="tocnumber">
+             6.2
+            </span>
+            <span class="toctext">
+             Log an FString
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-16">
+           <a href="#Log_an_Bool">
+            <span class="tocnumber">
+             6.3
+            </span>
+            <span class="toctext">
+             Log an Bool
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-17">
+           <a href="#Log_an_Int">
+            <span class="tocnumber">
+             6.4
+            </span>
+            <span class="toctext">
+             Log an Int
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-18">
+           <a href="#Log_a_Float">
+            <span class="tocnumber">
+             6.5
+            </span>
+            <span class="toctext">
+             Log a Float
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-19">
+           <a href="#Log_an_FVector">
+            <span class="tocnumber">
+             6.6
+            </span>
+            <span class="toctext">
+             Log an FVector
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-20">
+           <a href="#Log_an_FName">
+            <span class="tocnumber">
+             6.7
+            </span>
+            <span class="toctext">
+             Log an FName
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-21">
+           <a href="#Log_an_FString.2CInt.2CFloat">
+            <span class="tocnumber">
+             6.8
+            </span>
+            <span class="toctext">
+             Log an FString,Int,Float
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-22">
+         <a href="#Log_Coloring">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Log Coloring
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-23">
+           <a href="#Log:_Grey">
+            <span class="tocnumber">
+             7.1
+            </span>
+            <span class="toctext">
+             Log: Grey
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-24">
+           <a href="#Warning:_Yellow">
+            <span class="tocnumber">
+             7.2
+            </span>
+            <span class="toctext">
+             Warning: Yellow
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-25">
+           <a href="#Error:_Red">
+            <span class="tocnumber">
+             7.3
+            </span>
+            <span class="toctext">
+             Error: Red
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-26">
+           <a href="#Fatal:_Crash_for_Advanced_Runtime_Protection">
+            <span class="tocnumber">
+             7.4
+            </span>
+            <span class="toctext">
+             Fatal: Crash for Advanced Runtime Protection
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-27">
+         <a href="#Related_Tutorial">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Related Tutorial
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-28">
+         <a href="#Quick_tip_print">
+          <span class="tocnumber">
+           9
+          </span>
+          <span class="toctext">
+           Quick tip print
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-29">
+         <a href="#Other_Options_for_Debugging">
+          <span class="tocnumber">
+           10
+          </span>
+          <span class="toctext">
+           Other Options for Debugging
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-30">
+           <a href="#Logging_message_to_the_screen">
+            <span class="tocnumber">
+             10.1
+            </span>
+            <span class="toctext">
+             Logging message to the screen
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-31">
+           <a href="#Logging_message_to_the_.7E_Client_Console">
+            <span class="tocnumber">
+             10.2
+            </span>
+            <span class="toctext">
+             Logging message to the ~ Client Console
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-32">
+         <a href="#Log_conventions_.28in_the_console.2C_ini_files.2C_or_environment_variables.29">
+          <span class="tocnumber">
+           11
+          </span>
+          <span class="toctext">
+           Log conventions (in the console, ini files, or environment variables)
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-33">
+         <a href="#Log_console_command_usage">
+          <span class="tocnumber">
+           12
+          </span>
+          <span class="toctext">
+           Log console command usage
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-34">
+         <a href="#Log_command_line">
+          <span class="tocnumber">
+           13
+          </span>
+          <span class="toctext">
+           Log command line
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-35">
+         <a href="#Environment_variables">
+          <span class="tocnumber">
+           14
+          </span>
+          <span class="toctext">
+           Environment variables
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-36">
+         <a href="#Config_file">
+          <span class="tocnumber">
+           15
+          </span>
+          <span class="toctext">
+           Config file
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-37">
+         <a href="#Printing_the_Class_Name.2C_Line_Number.2C_and_Function_Name_Automatically">
+          <span class="tocnumber">
+           16
+          </span>
+          <span class="toctext">
+           Printing the Class Name, Line Number, and Function Name Automatically
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Original Author:
+       </i>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       Logs are essential for giving yourself feedback as to whether
+      </p>
+      <ul>
+       <li>
+        Your new functions are even being called
+       </li>
+       <li>
+        What data your algorithm is using during runtime
+       </li>
+       <li>
+        Reporting errors to yourself and the end user / debugging team
+       </li>
+       <li>
+        Imposing a fatal error to stop runtime execution in special circumstances
+       </li>
+      </ul>
+      <p>
+       This page describes how to use the
+       <b>
+        Unreal output log
+       </b>
+       .
+      </p>
+      <p>
+       Other options are also discussed at the bottom of the page.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Accessing_Logs">
+        Accessing Logs
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="In-Game">
+        In-Game
+       </span>
+      </h3>
+      <p>
+       To see logs you must run your game with -Log (you must create a shortcut to the Editor executable and add -Log to the end).
+      </p>
+      <p>
+       or use console command "showlog" in your game.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Within_Editor_.28Play-In-Editor.29">
+        Within Editor (Play-In-Editor)
+       </span>
+      </h3>
+      <p>
+       Log messages are sent to the 'Output' log which is accessible via Window -&gt; Developer Tools -&gt; Output Log.
+      </p>
+      <p>
+       If you are using the Editor and PIE, logging should be enabled by default due to the presence of "GameCommandLine=-log" in your Engine INI file. If no logging is visible, add the "-Log" command line option as per the instructions for In-Game logging above.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Quick_Usage">
+        Quick Usage
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogTemp</span><span class="p">,</span> <span class="n">Warning</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Your message"</span><span class="p">));</span>
+</pre>
+      </div>
+      <p>
+       This way you can log without the need of creating a custom category. Doing so will keep everything clean and sorted though.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Log_Verbosity_Levels">
+        Log Verbosity Levels
+       </span>
+      </h2>
+      <p>
+       Log verbosity levels are used to more easily control what is being printed, allowing you to keep even the most detailed log statements in your code without having them spam output when you don't want them to. Each log statement declares which log it belongs to and it's verbosity level. Verbosity level is controlled on a per-log basis. Each log's verbosity is controlled by four things: Compile-time verbosity, default verbosity, ini verbosity, and runtime-verbosity.
+      </p>
+      <p>
+       If a log statement is more verbose than it's log's compile time verbosity it won't even be compiled into the game code.
+From there the log's level is set to the default verbosity, which can then be overridden in the Engine.ini file, either of those can then be overridden from the command line (the runtime verbosity).
+Once the game (or editor) is running it may not be possible to change a log category's verbosity (I am not sure, someone who knows please correct this).
+      </p>
+      <p>
+       Here are the verbosity levels available to use:
+      </p>
+      <ul>
+       <li>
+        <b>
+         Fatal
+        </b>
+       </li>
+      </ul>
+      <dl>
+       <dd>
+        Fatal level logs are always printed to console and log files and crashes even if logging is disabled.
+       </dd>
+      </dl>
+      <ul>
+       <li>
+        <b>
+         Error
+        </b>
+       </li>
+      </ul>
+      <dl>
+       <dd>
+        Error level logs are printed to console and log files. These appear red by default.
+       </dd>
+      </dl>
+      <ul>
+       <li>
+        <b>
+         Warning
+        </b>
+       </li>
+      </ul>
+      <dl>
+       <dd>
+        Warning level logs are printed to console and log files. These appear yellow by default.
+       </dd>
+      </dl>
+      <ul>
+       <li>
+        <b>
+         Display
+        </b>
+       </li>
+      </ul>
+      <dl>
+       <dd>
+        Display level logs are printed to console and log files.
+       </dd>
+      </dl>
+      <ul>
+       <li>
+        <b>
+         Log
+        </b>
+       </li>
+      </ul>
+      <dl>
+       <dd>
+        Log level logs are printed to log files but not to the in-game console. They can still be viewed in editor as they appear via the Output Log window.
+       </dd>
+      </dl>
+      <ul>
+       <li>
+        <b>
+         Verbose
+        </b>
+       </li>
+      </ul>
+      <dl>
+       <dd>
+        Verbose level logs are printed to log files but not the in-game console. This is usually used for detailed logging and debugging.
+       </dd>
+      </dl>
+      <ul>
+       <li>
+        <b>
+         VeryVerbose
+        </b>
+       </li>
+      </ul>
+      <dl>
+       <dd>
+        VeryVerbose level logs are printed to log files but not the in-game console. This is usually used for very detailed logging that would otherwise spam output.
+       </dd>
+      </dl>
+      <p>
+       For the CompileTimeVerbosity parameter of DECLARE_LOG_CATEGORY_EXTERN it is also valid to use
+       <b>
+        All
+       </b>
+       (functionally the same as using VeryVerbose) or
+       <b>
+        NoLogging
+       </b>
+       (functionally the same as using Fatal).
+      </p>
+      <h2>
+       <span class="mw-headline" id="Setting_Up_Your_Own_Log_Category">
+        Setting Up Your Own Log Category
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Log_Category_Macros">
+        Log Category Macros
+       </span>
+      </h3>
+      <p>
+       The macros DECLARE_LOG_CATEGORY_EXTERN and DEFINE_LOG_CATEGORY go in YourGame.h and YourGame.cpp respectively.
+      </p>
+      <p>
+       The macro to declare a log category has three parameters. Each declared log category should have a corresponding defined log category in a cpp.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">DECLARE_LOG_CATEGORY_EXTERN</span><span class="p">(</span><span class="n">CategoryName</span><span class="p">,</span> <span class="n">DefaultVerbosity</span><span class="p">,</span> <span class="n">CompileTimeVerbosity</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       <b>
+        CategoryName
+       </b>
+       is simply the name for the new category you are defining.
+      </p>
+      <p>
+       <b>
+        DefaultVerbosity
+       </b>
+       is the verbosity level used when one is not specified in the ini files or on the command line. Anything more verbose than this will not be logged.
+      </p>
+      <p>
+       <b>
+        CompileTimeVerbosity
+       </b>
+       is the maximum verbosity to compile in the code. Anything more verbose than this will not be compiled.
+      </p>
+      <p>
+       The macro to define a log category takes only the name of the category.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">DEFINE_LOG_CATEGORY</span><span class="p">(</span><span class="n">CategoryName</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Usage_Example">
+        Usage Example
+       </span>
+      </h3>
+      <p>
+       You can have different log categories for different aspects of your game!
+      </p>
+      <p>
+       This gives you additional info, because UE_LOG prints out which log category is displaying a message.
+      </p>
+      <p>
+       Here is an example of where the different log levels start to become useful.
+      </p>
+      <p>
+       Say you're often having trouble with a certain system in your game. In debugging you might want very detailed logs, but when you've finished debugging for now you know you might need those detailed logs later on, but they're spamming the output. What do you do? Use different log levels.
+      </p>
+      <h4>
+       <span class="mw-headline" id="MyGame.H">
+        MyGame.H
+       </span>
+      </h4>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//General Log</span>
+<span class="n">DECLARE_LOG_CATEGORY_EXTERN</span><span class="p">(</span><span class="n">LogMyGame</span><span class="p">,</span> <span class="n">Log</span><span class="p">,</span> <span class="n">All</span><span class="p">);</span>
+
+<span class="c1">//Logging during game startup</span>
+<span class="n">DECLARE_LOG_CATEGORY_EXTERN</span><span class="p">(</span><span class="n">LogMyGameInit</span><span class="p">,</span> <span class="n">Log</span><span class="p">,</span> <span class="n">All</span><span class="p">);</span>
+
+<span class="c1">//Logging for your AI system</span>
+<span class="n">DECLARE_LOG_CATEGORY_EXTERN</span><span class="p">(</span><span class="n">LogMyGameAI</span><span class="p">,</span> <span class="n">Log</span><span class="p">,</span> <span class="n">All</span><span class="p">);</span>
+
+<span class="c1">//Logging for a that troublesome system</span>
+<span class="n">DECLARE_LOG_CATEGORY_EXTERN</span><span class="p">(</span><span class="n">LogMyGameSomeSystem</span><span class="p">,</span> <span class="n">Log</span><span class="p">,</span> <span class="n">All</span><span class="p">);</span>
+
+<span class="c1">//Logging for Critical Errors that must always be addressed</span>
+<span class="n">DECLARE_LOG_CATEGORY_EXTERN</span><span class="p">(</span><span class="n">LogMyGameCriticalErrors</span><span class="p">,</span> <span class="n">Log</span><span class="p">,</span> <span class="n">All</span><span class="p">);</span>
+</pre>
+      </div>
+      <h4>
+       <span class="mw-headline" id="MyGame.CPP">
+        MyGame.CPP
+       </span>
+      </h4>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"MyGame.h"</span><span class="cp"></span>
+
+<span class="c1">//General Log</span>
+<span class="n">DEFINE_LOG_CATEGORY</span><span class="p">(</span><span class="n">LogMyGame</span><span class="p">);</span>
+
+<span class="c1">//Logging during game startup</span>
+<span class="n">DEFINE_LOG_CATEGORY</span><span class="p">(</span><span class="n">LogMyGameInit</span><span class="p">);</span>
+
+<span class="c1">//Logging for your AI system</span>
+<span class="n">DEFINE_LOG_CATEGORY</span><span class="p">(</span><span class="n">LogMyGameAI</span><span class="p">);</span>
+
+<span class="c1">//Logging for some system</span>
+<span class="n">DEFINE_LOG_CATEGORY</span><span class="p">(</span><span class="n">LogMyGameSomeSystem</span><span class="p">);</span>
+
+<span class="c1">//Logging for Critical Errors that must always be addressed</span>
+<span class="n">DEFINE_LOG_CATEGORY</span><span class="p">(</span><span class="n">LogMyGameCriticalErrors</span><span class="p">);</span>
+</pre>
+      </div>
+      <h4>
+       <span class="mw-headline" id="MyClass.CPP">
+        MyClass.CPP
+       </span>
+      </h4>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//...</span>
+<span class="kt">void</span> <span class="n">UMyClass</span><span class="o">::</span><span class="n">FireWeapon</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogMyGameSomeSystem</span><span class="p">,</span> <span class="n">Verbose</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"UMyClass %s entering FireWeapon()"</span><span class="p">),</span> <span class="o">*</span><span class="n">GetNameSafe</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+	<span class="c1">//Logic</span>
+	<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogMyGameSomeSystem</span><span class="p">,</span> <span class="n">Verbose</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"UMyClass %s Attempting to fire."</span><span class="p">),</span> <span class="o">*</span><span class="n">GetNameSafe</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">CheckSomething</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogMyGameSomeSystem</span><span class="p">,</span> <span class="n">Log</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"UMyClass %s is firing their weapon with charge of %f"</span><span class="p">),</span> <span class="o">*</span><span class="n">GetNameSafe</span><span class="p">(</span><span class="k">this</span><span class="p">),</span> <span class="n">GetCharge</span><span class="p">());</span>
+		<span class="c1">//Firing logic</span>
+	<span class="p">}</span>
+	<span class="k">else</span>
+	<span class="p">{</span>
+		<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogMyGameSomeSystem</span><span class="p">,</span> <span class="n">Error</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"UMyClass %s CheckSomething() returned false during FireWeapon(), this is bad!"</span><span class="p">),</span> <span class="o">*</span><span class="n">GetNameSafe</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+		<span class="c1">//Fail with grace</span>
+	<span class="p">}</span>
+	<span class="c1">//More code!</span>
+	<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogMyGameSomeSystem</span><span class="p">,</span> <span class="n">Verbose</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"UMyClass %s leaving FireWeapon()"</span><span class="p">),</span> <span class="o">*</span><span class="n">GetNameSafe</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">UMyClass</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaTime</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogMyGameSomeSystem</span><span class="p">,</span> <span class="n">VeryVerbose</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"UMyClass %s's charge is %f"</span><span class="p">),</span> <span class="o">*</span><span class="n">GetNameSafe</span><span class="p">(</span><span class="k">this</span><span class="p">),</span> <span class="n">GetCharge</span><span class="p">());</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">something</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogMyGameSomeSystem</span><span class="p">,</span> <span class="n">VeryVerbose</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Idk"</span><span class="p">));</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">somethingelse</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogMyGameSomeSystem</span><span class="p">,</span> <span class="n">VeryVerbose</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Stuff"</span><span class="p">));</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+<span class="c1">//...</span>
+</pre>
+      </div>
+      <p>
+       When you're not working on this system all these log statements would absolutely flood your output, and even when you are working on it you might not want the level of detail that is putting out multiple logs per tick.
+      </p>
+      <p>
+       By using log levels you can simply change the verbosity in the category's declaration, in the ini files, or on the command line to hide/reveal different layers of log statements as you need them. Ex:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//All log statements are shown.</span>
+<span class="n">DECLARE_LOG_CATEGORY_EXTERN</span><span class="p">(</span><span class="n">LogMyGameSomeSystem</span><span class="p">,</span> <span class="n">Log</span><span class="p">,</span> <span class="n">All</span><span class="p">);</span>
+
+<span class="c1">//VeryVerbose statements won't be shown.</span>
+<span class="n">DECLARE_LOG_CATEGORY_EXTERN</span><span class="p">(</span><span class="n">LogMyGameSomeSystem</span><span class="p">,</span> <span class="n">Verbose</span><span class="p">,</span> <span class="n">All</span><span class="p">);</span>
+
+<span class="c1">//Neither VeryVerbose nor Verbose statements will be shown.</span>
+<span class="n">DECLARE_LOG_CATEGORY_EXTERN</span><span class="p">(</span><span class="n">LogMyGameSomeSystem</span><span class="p">,</span> <span class="n">VeryVerbose</span><span class="p">,</span> <span class="n">All</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       The log categories used by Unreal Engine use different log levels, but defaultly have a higher CompileTimeVerbosity. In debugging interaction with Unreal code it might be helpful to turn up the verbosity of Unreal code in DefaultEngine.ini under [Core.Log] by adding an entry like LogOnline=Verbose.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Log_Formatting">
+        Log Formatting
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Log_Message">
+        Log Message
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//"This is a message to yourself during runtime!"</span>
+<span class="n">UE_LOG</span><span class="p">(</span><span class="n">YourLog</span><span class="p">,</span><span class="n">Warning</span><span class="p">,</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"This is a message to yourself during runtime!"</span><span class="p">));</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Log_an_FString">
+        Log an FString
+       </span>
+      </h3>
+      <pre> <b>%s strings are wanted as TCHAR* by Log, so use *FString()</b>
+</pre>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//"MyCharacter's Name is %s"</span>
+<span class="n">UE_LOG</span><span class="p">(</span><span class="n">YourLog</span><span class="p">,</span><span class="n">Warning</span><span class="p">,</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"MyCharacter's Name is %s"</span><span class="p">),</span> <span class="o">*</span><span class="n">MyCharacter</span><span class="o">-&gt;</span><span class="n">GetName</span><span class="p">()</span> <span class="p">);</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Log_an_Bool">
+        Log an Bool
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//"MyCharacter's Bool is %s"</span>
+<span class="n">UE_LOG</span><span class="p">(</span><span class="n">YourLog</span><span class="p">,</span><span class="n">Warning</span><span class="p">,</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"MyCharacter's Bool is %s"</span><span class="p">),</span> <span class="p">(</span><span class="n">MyCharacter</span><span class="o">-&gt;</span><span class="n">MyBool</span> <span class="o">?</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"True"</span><span class="p">)</span> <span class="o">:</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"False"</span><span class="p">)));</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Log_an_Int">
+        Log an Int
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//"MyCharacter's Health is %d"</span>
+<span class="n">UE_LOG</span><span class="p">(</span><span class="n">YourLog</span><span class="p">,</span><span class="n">Warning</span><span class="p">,</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"MyCharacter's Health is %d"</span><span class="p">),</span> <span class="n">MyCharacter</span><span class="o">-&gt;</span><span class="n">Health</span> <span class="p">);</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Log_a_Float">
+        Log a Float
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//"MyCharacter's Health is %f"</span>
+<span class="n">UE_LOG</span><span class="p">(</span><span class="n">YourLog</span><span class="p">,</span><span class="n">Warning</span><span class="p">,</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"MyCharacter's Health is %f"</span><span class="p">),</span> <span class="n">MyCharacter</span><span class="o">-&gt;</span><span class="n">Health</span> <span class="p">);</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Log_an_FVector">
+        Log an FVector
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//"MyCharacter's Location is %s"</span>
+<span class="n">UE_LOG</span><span class="p">(</span><span class="n">YourLog</span><span class="p">,</span><span class="n">Warning</span><span class="p">,</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"MyCharacter's Location is %s"</span><span class="p">),</span> 
+    <span class="o">*</span><span class="n">MyCharacter</span><span class="o">-&gt;</span><span class="n">GetActorLocation</span><span class="p">().</span><span class="n">ToString</span><span class="p">());</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Log_an_FName">
+        Log an FName
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//"MyCharacter's FName is %s"</span>
+<span class="n">UE_LOG</span><span class="p">(</span><span class="n">YourLog</span><span class="p">,</span><span class="n">Warning</span><span class="p">,</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"MyCharacter's FName is %s"</span><span class="p">),</span> 
+    <span class="o">*</span><span class="n">MyCharacter</span><span class="o">-&gt;</span><span class="n">GetFName</span><span class="p">().</span><span class="n">ToString</span><span class="p">());</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Log_an_FString.2CInt.2CFloat">
+        Log an FString,Int,Float
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//"%s has health %d, which is %f percent of total health"</span>
+<span class="n">UE_LOG</span><span class="p">(</span><span class="n">YourLog</span><span class="p">,</span><span class="n">Warning</span><span class="p">,</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"%s has health %d, which is %f percent of total health"</span><span class="p">),</span>
+    <span class="o">*</span><span class="n">MyCharacter</span><span class="o">-&gt;</span><span class="n">GetName</span><span class="p">(),</span> <span class="n">MyCharacter</span><span class="o">-&gt;</span><span class="n">Health</span><span class="p">,</span> <span class="n">MyCharacter</span><span class="o">-&gt;</span><span class="n">HealthPercent</span><span class="p">);</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Log_Coloring">
+        Log Coloring
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Log:_Grey">
+        Log: Grey
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//"this is Grey Text"</span>
+<span class="n">UE_LOG</span><span class="p">(</span><span class="n">YourLog</span><span class="p">,</span><span class="n">Log</span><span class="p">,</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"This is grey text!"</span><span class="p">));</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Warning:_Yellow">
+        Warning: Yellow
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//"this is Yellow Text"</span>
+<span class="n">UE_LOG</span><span class="p">(</span><span class="n">YourLog</span><span class="p">,</span><span class="n">Warning</span><span class="p">,</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"This is yellow text!"</span><span class="p">));</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Error:_Red">
+        Error: Red
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//"This is Red Text"</span>
+<span class="n">UE_LOG</span><span class="p">(</span><span class="n">YourLog</span><span class="p">,</span><span class="n">Error</span><span class="p">,</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"This is red text!"</span><span class="p">));</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Fatal:_Crash_for_Advanced_Runtime_Protection">
+        Fatal: Crash for Advanced Runtime Protection
+       </span>
+      </h3>
+      <p>
+       You can throw a fatal error yourself if you want to make sure that certain code never runs.
+      </p>
+      <p>
+       I have used this myself to help protect against algorithm cases that I wanted to make sure never occurred again.
+      </p>
+      <p>
+       It's actually really useful!
+      </p>
+      <p>
+       But it does look like a crash, and so if you use this, dont be worried, just look at the crash call stack :)
+      </p>
+      <pre> Again this is an advanced case that crashes the program, use only for extremely important circumstances.
+ 
+</pre>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//some complicated algorithm</span>
+<span class="k">if</span><span class="p">(</span><span class="n">some</span> <span class="n">fringe</span> <span class="k">case</span> <span class="n">that</span> <span class="n">you</span> <span class="n">want</span> <span class="n">to</span> <span class="n">tell</span> <span class="n">yourself</span> <span class="k">if</span> <span class="n">the</span> <span class="n">runtime</span> <span class="n">execution</span> <span class="n">ever</span> <span class="n">reaches</span> <span class="k">this</span> <span class="n">point</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">//"This fringe case was reached! Debug this!"</span>
+	<span class="n">UE_LOG</span><span class="p">(</span><span class="n">YourLog</span><span class="p">,</span><span class="n">Fatal</span><span class="p">,</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"This fringe case was reached! Debug this!"</span><span class="p">));</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Related_Tutorial">
+        Related Tutorial
+       </span>
+      </h2>
+      <p>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Quick_tip_print">
+        Quick tip print
+       </span>
+      </h2>
+      <p>
+       This a trick for easy print debug, you can use this MACRO at the begin of your cpp
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#define print(text) if (GEngine) GEngine-&gt;AddOnScreenDebugMessage(-1, 1.5, FColor::White,text)</span>
+</pre>
+      </div>
+      <p>
+       then you can use a regular lovely print(); inside to all.
+      </p>
+      <p>
+       To prevent your screen from being flooded, you can change the first parameter, key, to a positive number.  Any message printed with that key will remove any other messages on screen with the same key.  This is great for things you want to log frequently.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Other_Options_for_Debugging">
+        Other Options for Debugging
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Logging_message_to_the_screen">
+        Logging message to the screen
+       </span>
+      </h3>
+      <p>
+       For the times when you want to just display the message on the screen, you can also do:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span> <span class="cp">#include</span> <span class="cpf">&lt;EngineGlobals.h&gt;</span><span class="cp"></span>
+ <span class="cp">#include</span> <span class="cpf">&lt;Runtime/Engine/Classes/Engine/Engine.h&gt;</span><span class="cp"></span>
+ <span class="c1">// ...</span>
+ <span class="n">GEngine</span><span class="o">-&gt;</span><span class="n">AddOnScreenDebugMessage</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mf">5.f</span><span class="p">,</span> <span class="n">FColor</span><span class="o">::</span><span class="n">Red</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"This is an on screen message!"</span><span class="p">));</span>
+ <span class="n">GEngine</span><span class="o">-&gt;</span><span class="n">AddOnScreenDebugMessage</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mf">5.f</span><span class="p">,</span> <span class="n">FColor</span><span class="o">::</span><span class="n">Red</span><span class="p">,</span> <span class="n">FString</span><span class="o">::</span><span class="n">Printf</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"Some variable values: x: %f, y: %f"</span><span class="p">),</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">));</span>
+</pre>
+      </div>
+      <p>
+       To prevent your screen from being flooded, you can change the first parameter, key, to a positive number.  Any message printed with that key will remove any other messages on screen with the same key.  This is great for things you want to log frequently.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Logging_message_to_the_.7E_Client_Console">
+        Logging message to the ~ Client Console
+       </span>
+      </h3>
+      <p>
+       Pressing the ~ key in Unreal brings up the client console.
+      </p>
+      <p>
+       If you use the PlayerController class you can print a message to this console, which has the advantage of being a completely different logging space which does not require tabbing out of the game to view easily
+      </p>
+      <pre> PC-&gt;ClientMessage("Your Message");
+</pre>
+      <p>
+       Answerhub post on using ClientMessage:
+      </p>
+      <p>
+       <a class="external free" href="https://answers.unrealengine.com/questions/81662/vshow-function.html" rel="nofollow">
+        https://answers.unrealengine.com/questions/81662/vshow-function.html
+       </a>
+      </p>
+      <p>
+       Forum Post
+      </p>
+      <p>
+       It is also possible to [
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?33367-Log-to-Console%7Csend" rel="nofollow">
+        messages to the client console
+       </a>
+       ].
+      </p>
+      <h2>
+       <span class="mw-headline" id="Log_conventions_.28in_the_console.2C_ini_files.2C_or_environment_variables.29">
+        Log conventions (in the console, ini files, or environment variables)
+       </span>
+      </h2>
+      <ul>
+       <li>
+        [cat]   = a category for the command to operate on, or 'global' for all categories.
+       </li>
+       <li>
+        [level] = verbosity level, one of: none, error, warning, display, log, verbose, all, default
+       </li>
+      </ul>
+      <p>
+       At boot time, compiled in default is overridden by ini files setting, which is overridden by command line
+      </p>
+      <h2>
+       <span class="mw-headline" id="Log_console_command_usage">
+        Log console command usage
+       </span>
+      </h2>
+      <ul>
+       <li>
+        Log list            - list all log categories
+       </li>
+       <li>
+        Log list [string]   - list all log categories containing a substring
+       </li>
+       <li>
+        Log reset           - reset all log categories to their boot-time default
+       </li>
+       <li>
+        Log [cat]           - toggle the display of the category [cat]
+       </li>
+       <li>
+        Log [cat] off       - disable display of the category [cat]
+       </li>
+       <li>
+        Log [cat] on        - resume display of the category [cat]
+       </li>
+       <li>
+        Log [cat] [level]   - set the verbosity level of the category [cat]
+       </li>
+       <li>
+        Log [cat] break     - toggle the debug break on display of the category [cat]
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="Log_command_line">
+        Log command line
+       </span>
+      </h2>
+      <pre>-LogCmds=\"[arguments],[arguments]...\"           - applies a list of console commands at boot time
+-LogCmds=\"foo verbose, bar off\"         - turns on the foo category and turns off the bar category
+</pre>
+      <h2>
+       <span class="mw-headline" id="Environment_variables">
+        Environment variables
+       </span>
+      </h2>
+      <p>
+       Any command line option can be set via the environment variable
+       <b>
+        UE-CmdLineArgs
+       </b>
+      </p>
+      <pre>set UE-CmdLineArgs=\"-LogCmds=foo verbose breakon, bar off\"
+</pre>
+      <h2>
+       <span class="mw-headline" id="Config_file">
+        Config file
+       </span>
+      </h2>
+      <p>
+       In DefaultEngine.ini or Engine.ini:
+      </p>
+      <pre>[Core.Log]
+global=[default verbosity for things not listed later]
+[cat]=[level]
+foo=verbose break
+</pre>
+      <h2>
+       <span class="mw-headline" id="Printing_the_Class_Name.2C_Line_Number.2C_and_Function_Name_Automatically">
+        Printing the Class Name, Line Number, and Function Name Automatically
+       </span>
+      </h2>
+      <p>
+       To automatically print the Class Name, Function Name, and Line number, see my other wiki!
+      </p>
+      <p>
+       <b>
+       </b>
+      </p>
+      <p>
+       This lets you easily debug code during runtime because you are told what class and what line number is associated with the message you are printing to yourself!
+      </p>
+      <p>
+       ♥ -Rama
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

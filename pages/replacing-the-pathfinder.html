@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Replacing The Pathfinder - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Replacing The Pathfinder
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <table align="right">
+       <tbody>
+        <tr>
+         <td>
+          <div class="toc" id="toc">
+           <div class="toctitle">
+            <h2>
+             Contents
+            </h2>
+           </div>
+           <ul>
+            <li class="toclevel-1 tocsection-1">
+             <a href="#Overview">
+              <span class="tocnumber">
+               1
+              </span>
+              <span class="toctext">
+               Overview
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-1 tocsection-2">
+             <a href="#ANavigationData">
+              <span class="tocnumber">
+               2
+              </span>
+              <span class="toctext">
+               ANavigationData
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-1 tocsection-3">
+             <a href="#Code_Example_.28based_on_ARecastNavMeshData.29">
+              <span class="tocnumber">
+               3
+              </span>
+              <span class="toctext">
+               Code Example (based on ARecastNavMeshData)
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-1 tocsection-4">
+             <a href="#Using_the_new_pathfinder">
+              <span class="tocnumber">
+               4
+              </span>
+              <span class="toctext">
+               Using the new pathfinder
+              </span>
+             </a>
+            </li>
+           </ul>
+          </div>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       Pathfinding in UE4 is performed by NavMesh. While NavMesh is extremely versatile, you might be better off writing your own pathfinder tailored to the type of environment in your game (for instance, A* in a tile-based game). Thankfully it's really simple to slot in a new pathfinder - and your AIControllers won't notice the difference!
+      </p>
+      <p>
+       The original source for this tutorial is
+       <a class="external text" href="https://crussel.net/2016/06/05/neatly-replacing-navmesh-with-a-in-ue4/" rel="nofollow">
+        here
+       </a>
+       .
+      </p>
+      <h2>
+       <span class="mw-headline" id="ANavigationData">
+        ANavigationData
+       </span>
+      </h2>
+      <p>
+       The NavMesh pathfinder is contained in a class called ARecastNavMesh, a subclass of ANavigationData. The magic happens in the FindPath function:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">static</span> <span class="n">FPathFindingResult</span> <span class="nf">FindPath</span><span class="p">(</span><span class="k">const</span> <span class="n">FNavAgentProperties</span><span class="o">&amp;</span> <span class="n">AgentProperties</span><span class="p">,</span> <span class="k">const</span> <span class="n">FPathFindingQuery</span><span class="o">&amp;</span> <span class="n">Query</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       What's perhaps a little odd is that FindPath isn't a virtual function, like you might expect - it's static. Comments in the code explain it’s for performance reasons: Epic are concerned that if a lot of agents call the pathfinder in the same frame the virtual call overhead will accumulate and take too long, so instead the function is declared static and stored in a function pointer: FindPathImplementation. Which means you need to manually set the function pointer in your new navigation class constructor.
+      </p>
+      <p>
+       Another effect of FindPath being static is that it has no 'this', but thankfully a pointer to this is passed in Query.NavData so we can just use that.
+      </p>
+      <p>
+       FindPath is expected to return an FPathFindingResult struct, which just binds a success/failure enum with an FNavigationPath (which will contain the path, if successful). FindPath may need to construct a new FNavigationPath or it might be asked to reuse an existing one (if Query.PathInstanceToFill is valid).
+      </p>
+      <p>
+       All the above makes much more sense with an example!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Code_Example_.28based_on_ARecastNavMeshData.29">
+        Code Example (based on ARecastNavMeshData)
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">ACustomNavigationData</span><span class="o">::</span><span class="n">ACustomNavigationData</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">FindPathImplementation</span> <span class="o">=</span> <span class="n">FindPath</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">FPathFindingResult</span> <span class="n">ACustomNavigationData</span><span class="o">::</span><span class="n">FindPath</span><span class="p">(</span><span class="k">const</span> <span class="n">FNavAgentProperties</span><span class="o">&amp;</span> <span class="n">AgentProperties</span><span class="p">,</span> <span class="k">const</span> <span class="n">FPathFindingQuery</span><span class="o">&amp;</span> <span class="n">Query</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// wrangle a 'this' of the correct type</span>
+	<span class="k">const</span> <span class="n">ANavigationData</span><span class="o">*</span> <span class="n">Self</span> <span class="o">=</span> <span class="n">Query</span><span class="p">.</span><span class="n">NavData</span><span class="p">.</span><span class="n">Get</span><span class="p">();</span>
+	<span class="k">const</span> <span class="n">ACustomNavigationData</span><span class="o">*</span> <span class="n">Custom</span> <span class="o">=</span> <span class="k">dynamic_cast</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">ACustomNavigationData</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">Self</span><span class="p">);</span>
+	<span class="n">check</span><span class="p">(</span><span class="n">Custom</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">);</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">Custom</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="n">ENavigationQueryResult</span><span class="o">::</span><span class="n">Error</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="n">FPathFindingResult</span> <span class="n">Result</span><span class="p">(</span><span class="n">ENavigationQueryResult</span><span class="o">::</span><span class="n">Error</span><span class="p">);</span>
+
+	<span class="c1">// create a new path if we need to, or reuse an existing one</span>
+	<span class="n">Result</span><span class="p">.</span><span class="n">Path</span> <span class="o">=</span> <span class="n">Query</span><span class="p">.</span><span class="n">PathInstanceToFill</span><span class="p">.</span><span class="n">IsValid</span><span class="p">()</span> <span class="o">?</span> <span class="n">Query</span><span class="p">.</span><span class="nl">PathInstanceToFill</span> <span class="p">:</span> <span class="n">Self</span><span class="o">-&gt;</span><span class="n">CreatePathInstance</span><span class="o">&lt;</span><span class="n">FNavigationPath</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Query</span><span class="p">);</span>
+
+	<span class="n">FNavigationPath</span><span class="o">*</span> <span class="n">NavPath</span> <span class="o">=</span> <span class="n">Result</span><span class="p">.</span><span class="n">Path</span><span class="p">.</span><span class="n">Get</span><span class="p">();</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">NavPath</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">if</span> <span class="p">((</span><span class="n">Query</span><span class="p">.</span><span class="n">StartLocation</span> <span class="o">-</span> <span class="n">Query</span><span class="p">.</span><span class="n">EndLocation</span><span class="p">).</span><span class="n">IsNearlyZero</span><span class="p">())</span>
+		<span class="p">{</span>
+			<span class="n">Result</span><span class="p">.</span><span class="n">Path</span><span class="o">-&gt;</span><span class="n">GetPathPoints</span><span class="p">().</span><span class="n">Reset</span><span class="p">();</span>
+			<span class="n">Result</span><span class="p">.</span><span class="n">Path</span><span class="o">-&gt;</span><span class="n">GetPathPoints</span><span class="p">().</span><span class="n">Add</span><span class="p">(</span><span class="n">FNavPathPoint</span><span class="p">(</span><span class="n">Query</span><span class="p">.</span><span class="n">EndLocation</span><span class="p">));</span>
+			<span class="n">Result</span><span class="p">.</span><span class="n">Result</span> <span class="o">=</span> <span class="n">ENavigationQueryResult</span><span class="o">::</span><span class="n">Success</span><span class="p">;</span>
+		<span class="p">}</span>
+		<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">Query</span><span class="p">.</span><span class="n">QueryFilter</span><span class="p">.</span><span class="n">IsValid</span><span class="p">())</span>
+		<span class="p">{</span>
+			<span class="c1">// run your pathfinding algorithm from Query.StartLocation to Query.EndLocation here,</span>
+			<span class="c1">// adding each point on the path to NavPath-&gt;GetPathPoints()</span>
+			<span class="c1">// the path must contain at least 2 points that aren't the start location</span>
+
+			<span class="c1">// if your algorithm can only find a partial path call NavPath-&gt;SetIsPartial(true)</span>
+			<span class="c1">// and remember to check if Query.bAllowPartialPaths is set</span>
+			<span class="c1">// if it isn't, you should return ENavigationQueryResult::Fail</span>
+
+			<span class="c1">// and finally, remember to call this!</span>
+			<span class="n">NavPath</span><span class="o">-&gt;</span><span class="n">MarkReady</span><span class="p">();</span>
+
+			<span class="n">Result</span><span class="p">.</span><span class="n">Result</span> <span class="o">=</span> <span class="n">ENavigationQueryResult</span><span class="o">::</span><span class="n">Success</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="n">Result</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Using_the_new_pathfinder">
+        Using the new pathfinder
+       </span>
+      </h2>
+      <p>
+       To tell AI agents to use your new pathfinder instead of NavMesh, edit your project settings. Go to Engine/Navigation System and open the Supported Agents list (in a new project it will be empty). Add a new element, and change its Navigation Data Class to the one we just created.
+      </p>
+      <p>
+       <img alt="Replacepathfinderagentsettings.png" class="" height="858" src="../assets/replacing-the-pathfinder/0.png" width="1573"/>
+      </p>
+      <p>
+       If you add a NavMesh bounds to your map now, you'll notice an instance of your new pathfinder class is automatically added to the outliner. Any calls to MoveToLocation (in C++ or blueprint) will now use your pathfinder instead of NavMesh!
+      </p>
+      <p>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

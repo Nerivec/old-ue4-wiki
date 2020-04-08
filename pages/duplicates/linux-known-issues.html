@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Linux Known Issues - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Linux Known Issues
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       Presently known issues with UE4 natively running in Linux. A page of bugs until we have a better solution for tracking. This page is part of the
+       area.
+      </p>
+      <p>
+       If you are looking on how to configure an IDE editor or how to run on Linux, check
+       area.
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#GenerateProjectFiles.sh.2Fmake_.2A.2A.2A">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           GenerateProjectFiles.sh/make ***
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#General">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           General
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Problems_interfacing_with_third_party_libraries_that_use_STL">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Problems interfacing with third party libraries that use STL
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#UE4Editor">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           UE4Editor
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Building">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Building
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Running">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             Running
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Loading_C.2B.2B_Project">
+            <span class="tocnumber">
+             3.3
+            </span>
+            <span class="toctext">
+             Loading C++ Project
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#UnrealFrontend">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           UnrealFrontend
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#SDL2_issues">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           SDL2 issues
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#4.8_branch">
+            <span class="tocnumber">
+             5.1
+            </span>
+            <span class="toctext">
+             4.8 branch
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#Official_.3C.3D_4.7_branch">
+            <span class="tocnumber">
+             5.2
+            </span>
+            <span class="toctext">
+             Official  &lt;= 4.7 branch
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-12">
+         <a href="#Performance_Troubleshooting">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Performance Troubleshooting
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-13">
+         <a href="#Getting_GLSL_shaders_source">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Getting GLSL shaders source
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-14">
+         <a href="#.desktop_file_template">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           .desktop file template
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-15">
+         <a href="#Window_Managers">
+          <span class="tocnumber">
+           9
+          </span>
+          <span class="toctext">
+           Window Managers
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-16">
+           <a href="#Xfce_4.10.2B">
+            <span class="tocnumber">
+             9.1
+            </span>
+            <span class="toctext">
+             Xfce 4.10+
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-17">
+           <a href="#Unity">
+            <span class="tocnumber">
+             9.2
+            </span>
+            <span class="toctext">
+             Unity
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-18">
+           <a href="#Gnome">
+            <span class="tocnumber">
+             9.3
+            </span>
+            <span class="toctext">
+             Gnome
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-19">
+           <a href="#KDE">
+            <span class="tocnumber">
+             9.4
+            </span>
+            <span class="toctext">
+             KDE
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="GenerateProjectFiles.sh.2Fmake_.2A.2A.2A">
+        GenerateProjectFiles.sh/make ***
+       </span>
+      </h2>
+      <p>
+       If you get an error like this:
+      </p>
+      <p>
+       <b>
+        UnrealBuildTool Exception: System.Security.SecurityException: No access to the given key ---&gt; System.UnauthorizedAccessException: Access to the path "/etc/mono/registry" is denied.
+       </b>
+      </p>
+      <p>
+       you need to:
+      </p>
+      <pre>$ export MONO_REGISTRY_PATH=~/.mono/registry
+</pre>
+      <p>
+       otherwise you can create the default registry path with:
+      </p>
+      <pre>$ sudo mkdir -p /etc/mono/registry/LocalMachine
+</pre>
+      <p>
+       <br/>
+       If you get a following error:
+      </p>
+      <p>
+       <b>
+        Localisation.Automation.cs(156,96): error CS0234: The type or namespace name `LocaleCodeHelper' does not exist in the namespace `OneSky'. Are you missing an assembly reference?
+       </b>
+      </p>
+      <p>
+       from your engine root folder do:
+      </p>
+      <pre>$ cd Engine/Source/ThirdParty/OneSky
+$ xbuild OneSky.csproj /verbosity:quiet /nologo /p:TargetFrameworkVersion=v4.0 /p:Configuration="Release"
+$ cd -
+$ cp Engine/Source/ThirdParty/OneSky/bin/Release/OneSky.dll Engine/Binaries/DotNET/OneSky.dll
+</pre>
+      <h2>
+       <span class="mw-headline" id="General">
+        General
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Problems_interfacing_with_third_party_libraries_that_use_STL">
+        Problems interfacing with third party libraries that use STL
+       </span>
+      </h3>
+      <p>
+       In UE versions between 4.3 to 4.16 (both inclusive), a linker script (introduced
+       <a class="external text" href="https://github.com/EpicGames/UnrealEngine/commit/5ace6a8679073e495b83157f410156cdbae7b959" rel="nofollow">
+        in this commit
+       </a>
+       ) was used to hide global new/delete overloads. The script was needed because Steam runtime library would allocate a class instance via one of the custom new signatures that UE4 did not overload, but deletion would still happen through a regular global operator delete, resulting in a crash (due to pointers coming from two different heaps).
+      </p>
+      <p>
+       The script unfortunately had a side effect of breaking third party libraries that used STL classes in their API: code that was getting inlined in the engine would use engine's operator new/delete, while the code that resided in the library itself, or libstdc++.so/libc++.so would continue to call its own operator new/delete - again resulting in a crash.
+      </p>
+      <p>
+       The problem also affected AMD drivers (that are written in C++), although the mechanism here is not completely clear.
+      </p>
+      <p>
+       The solution for this in UE 4.3 through 4.16 is to remove the linker script (i.e. undo
+       <a class="external text" href="https://github.com/EpicGames/UnrealEngine/commit/5ace6a8679073e495b83157f410156cdbae7b959" rel="nofollow">
+        commit 5ace6a8679073
+       </a>
+       ). UE 4.17 does not hide new/delete by default and does not need any changes.
+      </p>
+      <p>
+       The original problem that necessitated the hiding should be gone now - Steam runtime problems has since been updated. In case you are running into a similar issue (custom new signature that results in allocations bypassing UE4's global new) with another library, you will need to contact the library author, since you cannot fix two of these problems at once (hiding new/delete AND being able to interface with third party C++ library that uses STL).
+      </p>
+      <h2>
+       <span class="mw-headline" id="UE4Editor">
+        UE4Editor
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Building">
+        Building
+       </span>
+      </h3>
+      <h3>
+       <span class="mw-headline" id="Running">
+        Running
+       </span>
+      </h3>
+      <p>
+       - Some people have experienced a problem with the Editor not displaying anything in the Content Browser. One work-around is opening the Unreal Project from a case insensitive filesystem, such as a mounted fat volume on your system.
+      </p>
+      <p>
+       - Creating from templates, or using existing C++ projects - other outstanding issues ie. missing IDE error, missing IDE plugins, etc,
+      </p>
+      <p>
+       - Arch Linux users are unable to start the editor in normal POSIX multi-threaded mode, but only using a -onethread command line argument. Try installing pthreads via
+       <b>
+        pecl install pthreads
+       </b>
+       (thanks to IRC user fuken for the tip) or, building the editor using a Debug profile:
+       <b>
+        make UE4Editor-Linux-Debug
+       </b>
+       instead.
+      </p>
+      <p>
+       -
+       <s>
+        Lightmass crashes/lightbuilding fails (FIXED by amigo)
+       </s>
+       still experiencing in russian (ru_RU) locale,
+      </p>
+      <p>
+       - Baking lighting fails arbitrarily, or works on some projects - inconsistent,
+      </p>
+      <p>
+       - Optimus based laptop users who are getting
+       <i>
+        Assert failed: IsInRenderingThread()
+       </i>
+       or DRI buffer related errors should try running editor with:
+       <b>
+        PRIMUS_SYNC=1 primusrun UE4Editor
+       </b>
+       (thanks to HicksD for this tip),
+      </p>
+      <p>
+       - right mouse button gets stuck sometimes so that it does not aim anymore but it dollies in and out
+      </p>
+      <p>
+       - opening widget reflector, and dragging its window doubles total slate tick time.
+      </p>
+      <p>
+       - dragging any window (non-ue4) over the editor window also increases total slate tick time.
+      </p>
+      <p>
+       - opening a window (ie. char. BP) on the 2nd screen triples/quadruples total slate tick time.
+      </p>
+      <p>
+       - opening a window (ie. mat.ed) on the 2nd screen only doubles or less total slate tick time.
+      </p>
+      <p>
+       - dragging mouse over the details panel widgets triples or more the total slate tick time.
+      </p>
+      <p>
+       - content browser does not allow some keyboard events (ie. F2 to rename).
+      </p>
+      <p>
+       - Font/text on UI showing up as rectangles can be addressed by
+       <a class="external free" href="https://answers.unrealengine.com/questions/117323/editor-rendering-problems.html" rel="nofollow">
+        https://answers.unrealengine.com/questions/117323/editor-rendering-problems.html
+       </a>
+      </p>
+      <p>
+       - For artifacts on Mesa driver, try updating to latest. More info at
+       <a class="external free" href="./running-on-linux.html" rel="nofollow">
+        Running On Linux
+       </a>
+      </p>
+      <p>
+       - Sometimes attempting to copy &amp; paste or duplicate blueprint nodes stops working (
+       <b>
+        WORKAROUND
+       </b>
+       : copy &amp; paste anything in another window, such as a text editor, and the editor should be able to copy &amp; paste / duplicate blueprint nodes once more).
+      </p>
+      <p>
+       - Tool tips can cause lag in the Editor, in Engine/Config/ConsoleVariables.ini under the editors root dir add the line
+      </p>
+      <pre> Slate.AllowToolTips=0 
+</pre>
+      <p>
+       to the bottom of the file and restart the editor, or just type in the console
+      </p>
+      <pre> Slate.AllowToolTips 0 
+</pre>
+      <p>
+       to turn Tool Tips off or
+      </p>
+      <pre> Slate.AllowToolTips 1 
+</pre>
+      <p>
+       to turn Tool Tips back on.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Loading_C.2B.2B_Project">
+        Loading C++ Project
+       </span>
+      </h3>
+      <p>
+       - when loading up the project and there is no editor module for a c++ project it will compile the missing editor module for your project but then crash, the module is built but something else crashes afterwards.
+      </p>
+      <p>
+       - you can either
+      </p>
+      <ol>
+       <li>
+        start the editor and load the project then let it compile and crash then start the Editor and load the Project again.
+       </li>
+       <li>
+        build the module in the IDE of choice then start the editor and load the project.
+       </li>
+       <li>
+        build the module in the terminal, then start the editor and load the project.
+       </li>
+      </ol>
+      <p>
+       - if it has to build the module again it may crash at the same spot.
+      </p>
+      <h2>
+       <span class="mw-headline" id="UnrealFrontend">
+        UnrealFrontend
+       </span>
+      </h2>
+      <p>
+       - Platform and process integration needs implementation/testing
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="SDL2_issues">
+        SDL2 issues
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="4.8_branch">
+        4.8 branch
+       </span>
+      </h3>
+      <p>
+       All the window issues mentioned below ( Official &lt;= 4.7 branch ) are fixed.
+      </p>
+      <p>
+       - Sometimes the Tooltip window does not disappear. (Happens when another thread starts for example if the Import File Dialog apears the open Tooltip will stuck)
+      </p>
+      <p>
+       -
+       <s>
+        Notification window is ontop of some dialog boxes.
+       </s>
+       (Fixed by yaakuro)
+      </p>
+      <p>
+       - Infinite rotation/scaling of objects in the viewport not possible.
+      </p>
+      <p>
+       - In Content Browser renaming and deleting does not work.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Official_.3C.3D_4.7_branch">
+        Official  &lt;= 4.7 branch
+       </span>
+      </h3>
+      <p>
+       -
+       <s>
+        Need to be able to enumerate all graphics adapters in the system and get their basic parameters (brand, name, VRAM size...)
+       </s>
+       <i>
+        -- SDL does support Xinerama and XRandR, i.e. all the facilities that X11 provides in that regard.
+       </i>
+      </p>
+      <p>
+       - Need to be able to create a simple text window for console output, without needing to render text in advance,
+      </p>
+      <h2>
+       <span class="mw-headline" id="Performance_Troubleshooting">
+        Performance Troubleshooting
+       </span>
+      </h2>
+      <p>
+       As per Epic|rcl:
+      </p>
+      <pre>$ sudo perf record -a -g sleep 60
+</pre>
+      <p>
+       Smaller intervals than 60 sec can be used as well..
+      </p>
+      <pre>$ perf report --no-children --sort comm,dso,sym
+</pre>
+      <p>
+       Then identify the offender and complain....use Dev builds, of course.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Getting_GLSL_shaders_source">
+        Getting GLSL shaders source
+       </span>
+      </h2>
+      <pre>1 Uncomment r.DumpShaderDebugInfo=1 in ConsoleVariables.ini
+2 Tweak GUID (change a random digit init) in ShaderVersion.usf
+3 Launch the editor
+</pre>
+      <h2>
+       <span class="mw-headline" id=".desktop_file_template">
+        .desktop file template
+       </span>
+      </h2>
+      <p>
+       Please change the location of the UnrealEngine directory:
+      </p>
+      <pre>[Desktop Entry]
+Version=1.0
+Type=Application
+Exec=Documents/UnrealEngine/Engine/Binaries/Linux/UE4Editor -opengl4
+Path=Documents/UnrealEngine/Engine/Binaries/Linux
+Name=Unreal Engine Editor
+Icon=Documents/UnrealEngine/Engine/Source/Programs/UnrealVS/Resources/Preview.png
+Terminal=false
+</pre>
+      <h2>
+       <span class="mw-headline" id="Window_Managers">
+        Window Managers
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Xfce_4.10.2B">
+        Xfce 4.10+
+       </span>
+      </h3>
+      <p>
+       Switch on the composite manager (Settings/Window Manager Tweaks/Compositor)
+      </p>
+      <h3>
+       <span class="mw-headline" id="Unity">
+        Unity
+       </span>
+      </h3>
+      <p>
+       UE4Editor does not need any special setting in the default version of Unity WM.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Gnome">
+        Gnome
+       </span>
+      </h3>
+      <h3>
+       <span class="mw-headline" id="KDE">
+        KDE
+       </span>
+      </h3>
+      <p>
+       Problems with tooltips (framerate drop and smearing) can be avoided by disabling "Allow applications to block compositing" in the KDE Compositor settings.
+      </p>
+      <div style="border-top: 1px solid gray; width: 300px; font-size: 14px; color: #666; margin-top: 20px; padding: 6px">
+       &lt;-- Back to the main
+       page.
+      </div>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

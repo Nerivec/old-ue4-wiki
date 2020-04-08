@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   GPU Particle - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    GPU Particle
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="" class="thumbimage" height="319" src="../assets/gpu-particle/0.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Example GPU sprite with Vector Field
+        </div>
+       </div>
+      </div>
+      <p>
+       GPU Sprites are particles that have most of their calculations throughout their lifespan passed on to the GPU rather than the CPU. They provide the benefit of supporting significantly more particles per system than traditional CPU particles. Functionally, however, they are not significantly different than default CPU sprite particles.
+      </p>
+      <p>
+       For more information about GPU Sprites in general please see the
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Rendering/ParticleSystems/Reference/TypeData/GPUSprites/index.html" rel="nofollow">
+        GPU Sprite reference page
+       </a>
+       .
+       <br clear="all"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Setup">
+        Setup
+       </span>
+      </h2>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="" class="thumbimage" height="233" src="../assets/gpu-particle/1.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Creating a new GPU Sprite
+        </div>
+       </div>
+      </div>
+      <p>
+       Not every module is compatible with GPU Sprites at this time. Only those modules available in the context menu after the GPU Sprites TypeData module is in place are valid.
+      </p>
+      <p>
+       Setting up a GPU emitter is as easy as adding a GPU Sprites TypeData module to your particle system via the right-click contextual menu.
+      </p>
+      <p>
+       For examples of adding Vector Fields to GPU Sprite particle systems to give motion similar to a fluidic simulation, see the
+       page and the
+       page.
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

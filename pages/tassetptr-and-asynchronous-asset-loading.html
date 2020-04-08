@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   TAssetPtr and Asynchronous Asset Loading - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    TAssetPtr and Asynchronous Asset Loading
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#What_is_a_TAssetPtr">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           What is a TAssetPtr
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#What_Problem_do_they_Solve">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           What Problem do they Solve
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Types">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Types
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Key_Features">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Key Features
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#How_to_use_them">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           How to use them
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Asset_Loader">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             Asset Loader
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Asset_Loading">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             Asset Loading
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Asset_Using">
+            <span class="tocnumber">
+             4.3
+            </span>
+            <span class="toctext">
+             Asset Using
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Further_Reading">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Further Reading
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="What_is_a_TAssetPtr">
+        What is a TAssetPtr
+       </span>
+      </h2>
+      <p>
+       Asset Pointers are similar to standard pointers in that they point to something. The difference is that TAssetPtr's point to an asset that may or may not yet be loaded, and if the asset is not loaded it contains the information required to load that asset for use. Where as standard hard pointers (*) load the asset upon creation and has no reference to the asset other than it's memory address.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="What_Problem_do_they_Solve">
+        What Problem do they Solve
+       </span>
+      </h2>
+      <p>
+       The easiest way to reference an asset is to create a UProperty of a hard pointer (*) and populate the asset in the Editor. However the asset will be loaded when the object containing the property is loaded. If you are not careful, you can end up loading 100% of your assets at game startup time. For loading and memory management reason it wouldn't make sense to load all you assets before they are needed, So why not load them asynchronously right before they are needed. Doing this allows you to only load what you need to get the game running, and have all other assets at your beck and call.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Types">
+        Types
+       </span>
+      </h2>
+      <table class="wikitable">
+       <tbody>
+        <tr>
+         <th>
+          Variable
+         </th>
+         <th>
+          Description
+         </th>
+        </tr>
+        <tr>
+         <td>
+          TAssetPtr&lt;T&gt;
+         </td>
+         <td>
+          Points to asset that hasn't been loaded yet, but can be by request
+         </td>
+        </tr>
+        <tr>
+         <td>
+          TAssetSubclassOf&lt;T&gt;
+         </td>
+         <td>
+          Points to a subclass of the defined baseclass that hasn't been loaded yet, but can be by request. Used to point to Blueprints instead of basic components.
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Key_Features">
+        Key Features
+       </span>
+      </h3>
+      <p>
+       <b>
+        .h
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/** Define the Asset Pointer. Don't forget to set a UPROPERTY */</span>
+<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">)</span>
+<span class="n">TAssetPtr</span><span class="o">&lt;</span><span class="n">MyClass</span><span class="o">&gt;</span> <span class="n">MyAssetPointer</span><span class="p">;</span>
+
+<span class="cm">/** Define a subclass version. This will only allow you to select subclasses of the defined type. */</span>
+<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">)</span>
+<span class="n">TAssetSubclassOf</span><span class="o">&lt;</span><span class="n">MyBaseClass</span><span class="o">&gt;</span> <span class="n">MyAssetSubclassOfPointer</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       <b>
+        .cpp
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Call IsValid() to test if the asset pointer points to a live UObject</span>
+<span class="n">MyAssetPointer</span><span class="p">.</span><span class="n">IsValid</span><span class="p">();</span>
+
+<span class="c1">// Call Get() to return a pointer to the UObject if one exists</span>
+<span class="n">MyAssetPointer</span><span class="p">.</span><span class="n">Get</span><span class="p">();</span>
+
+<span class="cm">/** Special Note about TAssetSubclassOf Get() it returns a UClass pointer!!*/</span>
+<span class="n">MyAssetSubclassOfPointer</span><span class="p">.</span><span class="n">Get</span><span class="p">()</span>
+<span class="cm">/** To properly use a UClass pointer you must use GetDefaultObject&lt;T&gt;() to get a pointer to the UObject or derived class there of */</span>
+<span class="n">MyAssetSubclassOfPointer</span><span class="p">.</span><span class="n">Get</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetDefaultObject</span><span class="o">&lt;</span><span class="n">MyBaseClass</span><span class="o">&gt;</span><span class="p">()</span>
+
+<span class="c1">// Call ToStringReference() to return the StringAssetReference of the asset you wish to load</span>
+<span class="c1">// More on this below</span>
+<span class="n">MyAssetPointer</span><span class="p">.</span><span class="n">ToStringReference</span><span class="p">();</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="How_to_use_them">
+        How to use them
+       </span>
+      </h2>
+      <table class="wikitable">
+       <tbody>
+        <tr>
+         <th>
+          Variable
+         </th>
+         <th>
+          Description
+         </th>
+        </tr>
+        <tr>
+         <td>
+          FStreamableManager
+         </td>
+         <td>
+          The manager that controls the streaming of assets into the game at runtime. This is a user defined object and should be defined on a object such as the GameInstance to allow for easy access.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          FStringAssetReference
+         </td>
+         <td>
+          A struct that contains a string reference to an asset, can be used to make soft references to assets. (ToStringReference() are loaded into these so they can be passed into to FStreamableManager .
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <h4>
+       <span class="mw-headline" id="Asset_Loader">
+        Asset Loader
+       </span>
+      </h4>
+      <p>
+       The FStreamableManager will be your asset loader for loading assets Asynchronously. This is best put on a persistent object like the GameInstance for two main reasons.
+      </p>
+      <ol>
+       <li>
+        To have easy access to it at all times which makes loading assets when you need them easy.
+       </li>
+       <li>
+        That it remains persistent since you never want to lose or destroy the reference to the FStreamableManager while loading objects.
+       </li>
+      </ol>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FStreamableManager</span> <span class="n">AssetLoader</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       The next major part is choosing how you want to load you're assets. There are two options
+      </p>
+      <h4>
+       <span class="mw-headline" id="Asset_Loading">
+        Asset Loading
+       </span>
+      </h4>
+      <p>
+       <b>
+        SimpleAsyncLoad
+       </b>
+       which allows you to load a single asset that is strongly referenced. This means it will never be garbage collected until you unload it manually using Unload.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// the .h</span>
+<span class="n">TAssetPtr</span><span class="o">&lt;</span><span class="n">ABaseItem</span><span class="o">&gt;</span> <span class="n">MyItem</span><span class="p">;</span>
+
+<span class="c1">// the .cpp</span>
+<span class="n">FStringAssetReference</span> <span class="n">AssetToLoad</span>
+<span class="n">AssetToLoad</span> <span class="o">=</span> <span class="n">MyItem</span><span class="p">.</span><span class="n">ToStringReference</span><span class="p">();</span>
+<span class="n">AssetLoader</span><span class="p">.</span><span class="n">SimpleAsyncLoad</span><span class="p">(</span><span class="n">AssetToLoad</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       <b>
+        RequestAsyncLoad
+       </b>
+       loads an array of objects and fires a delegate when completed. This will Unload all the assets once the delegate is called, to ensure garbage collection takes place.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//the .h</span>
+<span class="n">TArray</span><span class="o">&lt;</span> <span class="n">TAssetPtr</span><span class="o">&lt;</span><span class="n">ABaseItem</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">MyItems</span><span class="p">;</span>
+
+<span class="c1">// the .cpp</span>
+<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FStringAssetReference</span><span class="o">&gt;</span> <span class="n">AssetsToLoad</span>
+<span class="k">for</span><span class="p">(</span><span class="n">TAssetPtr</span><span class="o">&lt;</span><span class="n">ABaseItem</span><span class="o">&gt;&amp;</span> <span class="nl">AssetPtr</span> <span class="p">:</span> <span class="n">MyItems</span><span class="p">)</span> <span class="c1">// C++11 ranged loop</span>
+<span class="p">{</span>
+     <span class="n">AssetsToLoad</span><span class="p">.</span><span class="n">AddUnique</span><span class="p">(</span><span class="n">AssetPtr</span><span class="p">.</span><span class="n">ToStringReference</span><span class="p">());</span>
+<span class="p">}</span>
+<span class="n">AssetLoader</span><span class="p">.</span><span class="n">RequestAsyncLoad</span><span class="p">(</span><span class="n">AssetsToLoad</span><span class="p">,</span> <span class="n">FStreamableDelegate</span><span class="o">::</span><span class="n">CreateUObject</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">MyClass</span><span class="o">::</span><span class="n">MyFunctionToBeCalledAfterAssetsAreLoaded</span><span class="p">));</span>
+</pre>
+      </div>
+      <h4>
+       <span class="mw-headline" id="Asset_Using">
+        Asset Using
+       </span>
+      </h4>
+      <p>
+       After all this your asset(s) are ready to use. Don't forget to Get() them!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">MyItem</span><span class="p">.</span><span class="n">Get</span><span class="p">();</span> <span class="c1">// returns a pointer to the LIVE UObject</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Further_Reading">
+        Further Reading
+       </span>
+      </h2>
+      <p>
+       [
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Programming/Assets/AsyncLoading/index.html" rel="nofollow">
+        Epic's Asynchronous Asset Loading Docs
+       </a>
+       ]
+       <br/>
+      </p>
+      <p>
+       <br/>
+       (
+     )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

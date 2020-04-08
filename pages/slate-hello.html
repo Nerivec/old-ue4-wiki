@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Slate, Hello - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Slate, Hello
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:402px;">
+        <img alt="" class="thumbimage" height="73" src="../assets/slate-hello/0.png" width="400"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Hello Slate!
+        </div>
+       </div>
+      </div>
+      <p>
+       This tutorial assumes an intermediate understanding of C++ and event driven systems. It will give you a basic introduction to adding HUD capable of rendering Slate Widgets. In line with ancient tradition, the Slate Widget will render a text-box displaying the message "Hello, Slate!". Aside from the sources, there are a several steps involved in setting up a project that can handle Slate Widgets. Some things that may be glaringly obvious to someone with experience might be glazed over that aren't as obvious to someone just learning C.
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Creating_a_project">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Creating a project
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Creating_the_HUD_and_Widget_files">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Creating the HUD and Widget files
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Create_the_HUD_class">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Create the HUD class
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Create_the_Slate_Widget_class">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             Create the Slate Widget class
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Allow_C.2B.2B_Access_to_Slate_API_by_Modifying_Build_File">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Allow C++ Access to Slate API by Modifying Build File
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Adding_code_to_our_HUD">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Adding code to our HUD
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Creating_the_content_of_our_Widget">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Creating the content of our Widget
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Set_the_Game_Mode.27s_HUD">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Set the Game Mode's HUD
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Watching_the_result">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Watching the result
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-10">
+         <a href="#Links_and_Further_Reading">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Links and Further Reading
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-11">
+         <a href="#Change_Log">
+          <span class="tocnumber">
+           9
+          </span>
+          <span class="toctext">
+           Change Log
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Creating_a_project">
+        Creating a project
+       </span>
+      </h2>
+      <p>
+       If you have not done so already the first thing to do is to create a blank C++ project. For the purpose of this tutorial, it is recommended that you have
+       <b>
+        "Include Starter Content" unticked
+       </b>
+       . This tutorial will use the
+       <b>
+        project name HelloSlate
+       </b>
+       , however you can call it anything of your own choosing as long as you're comfortable with making the appropriate changes to the provided source files. For beginners I would suggest that you do not diverge from the provided example.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Creating_the_HUD_and_Widget_files">
+        Creating the HUD and Widget files
+       </span>
+      </h2>
+      <p>
+       Now the open the project. We will have to create four new c++ files:
+      </p>
+      <ul>
+       <li>
+        StandardHUD.h
+       </li>
+       <li>
+        StandardHUD.cpp
+       </li>
+       <li>
+        StandardSlateWidget.h
+       </li>
+       <li>
+        StandardSlateWidget.cpp
+       </li>
+      </ul>
+      <p>
+       To create the files, we suggest you use the UE Editor as follows.
+      </p>
+      <p>
+       Note: You can create these manually. As you might be aware of already, when you create .cpp and .h files manually, Unreal puts the files in the intermediate folder. Make sure your files are in the source folder like they should be.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Create_the_HUD_class">
+        Create the HUD class
+       </span>
+      </h3>
+      <p>
+       File --&gt; New c++ Class --&gt; On the Choose Parent Class list select "HUD" --&gt; Click Next
+      </p>
+      <p>
+       Then name for this class will be : StandardHUD. Leave the path as it is (..../HelloSlate/Source/HelloSlate/).
+The files should look like: .../HelloSlate/Source/HelloSlate/StandardHUD.h and .cpp
+      </p>
+      <p>
+       Wait until the editor compiles the new files. It will open a Visual Studio instance.
+      </p>
+      <p>
+       Now you will see the HUD file (represents the h and cpp) in your Content Browser, under C++ Classes -&gt; HelloSlate, next to the GameModeBase file.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Create_the_Slate_Widget_class">
+        Create the Slate Widget class
+       </span>
+      </h3>
+      <p>
+       Repeat the process and this time choose parent class "Slate Widget".
+The name of the class will be "StandardSlateWidget".
+After creating this class, you will not see it on the Content Browser.
+      </p>
+      <p>
+       As for v4.18, if you have any problem when Visual Studio opens due to some bugs while creating a new class, you can close all VS instances and go to "File -&gt; Refresh Visual Studio Project".
+Another good way to continue is to go to "File -&gt; Open Project" and reopen this project again.
+      </p>
+      <p>
+       Now open Visual Studio by going to "File -&gt; Open Visual Studio" or double clicking the new Standard HUD file on the content browser.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="" class="thumbimage" height="318" src="../assets/slate-hello/1.PNG" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         How the new files look in the project explorer
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Allow_C.2B.2B_Access_to_Slate_API_by_Modifying_Build_File">
+        Allow C++ Access to Slate API by Modifying Build File
+       </span>
+      </h2>
+      <p>
+       Open the HelloSlate.Build.cs file (typically located in $Projectfolder/$Projectname/Source/$Projectname) and modify it to allow Slate.
+      </p>
+      <p>
+       The contents of this file has changed since 4.8. In v4.18 you will find a commented line saying:
+       <i>
+        Uncomment if you are using Slate UI
+       </i>
+      </p>
+      <p>
+       Just uncomment the following line:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">PrivateDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"Slate"</span><span class="p">,</span> <span class="s">"SlateCore"</span> <span class="p">});</span>
+</pre>
+      </div>
+      <p>
+       If you already had a project and you wanted to use Slate, just make sure "Slate" and "SlateCore" modules are added to PrivateDependencyModuleNames.
+      </p>
+      <p>
+       Here's how the source file looks in v4.18:
+       <br/>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Fill out your copyright notice in the Description page of Project Settings.</span>
+
+<span class="k">using</span> <span class="n">UnrealBuildTool</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">HelloSlate</span> <span class="o">:</span> <span class="n">ModuleRules</span>
+<span class="p">{</span>
+	<span class="k">public</span> <span class="n">HelloSlate</span><span class="p">(</span><span class="n">ReadOnlyTargetRules</span> <span class="n">Target</span><span class="p">)</span> <span class="o">:</span> <span class="n">base</span><span class="p">(</span><span class="n">Target</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">PCHUsage</span> <span class="o">=</span> <span class="n">PCHUsageMode</span><span class="p">.</span><span class="n">UseExplicitOrSharedPCHs</span><span class="p">;</span>
+	
+		<span class="n">PublicDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"Core"</span><span class="p">,</span> <span class="s">"CoreUObject"</span><span class="p">,</span> <span class="s">"Engine"</span><span class="p">,</span> <span class="s">"InputCore"</span> <span class="p">});</span>
+
+		<span class="c1">// Uncomment if you are using Slate UI</span>
+                <span class="n">PrivateDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"Slate"</span><span class="p">,</span> <span class="s">"SlateCore"</span> <span class="p">});</span>
+		
+		<span class="c1">// Uncomment if you are using online features</span>
+		<span class="c1">// PrivateDependencyModuleNames.Add("OnlineSubsystem");</span>
+
+		<span class="c1">// To include OnlineSubsystemSteam, add it to the plugins section in your uproject file with the Enabled attribute set to true</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Save the file and close visual studio. Next time you build your project your sources can link to the Slate API.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Adding_code_to_our_HUD">
+        Adding code to our HUD
+       </span>
+      </h2>
+      <p>
+       The HUD files are blank. We will fill them with a basic HUD creation
+      </p>
+      <p>
+       Lines commented with "// ++ " are added lines to the original file:
+      </p>
+      <p>
+       <br/>
+       <b>
+        StandardHUD.h:
+       </b>
+       <br/>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+<span class="cp">#include</span> <span class="cpf">"CoreMinimal.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"GameFramework/HUD.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"StandardHUD.generated.h"</span><span class="cp"></span>
+
+<span class="c1">// ++ A predeclaration of SStandardSlateWidget that we need. The .h will be added to .cpp instead.</span>
+<span class="k">class</span> <span class="nc">SStandardSlateWidget</span><span class="p">;</span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">HELLOSLATE_API</span> <span class="nl">AStandardHUD</span> <span class="p">:</span> <span class="k">public</span> <span class="n">AHUD</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+
+<span class="k">public</span><span class="o">:</span>
+	<span class="c1">// ++ Reference to an SCompoundWidget, TSharedPtr adds to the refcount of MyUIWidget</span>
+	<span class="c1">// MyUIWidget will not self-destruct as long as refcount &gt; 0. refcount will be (refcout-1) if HUD is destroyed.</span>
+	<span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="n">SStandardSlateWidget</span><span class="o">&gt;</span> <span class="n">MyUIWidget</span><span class="p">;</span>
+
+	<span class="c1">// ++ Called as soon as game starts, create SCompoundWidget and give Viewport access</span>
+	<span class="kt">void</span> <span class="nf">BeginPlay</span><span class="p">();</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <b>
+        StandardHUD.cpp:
+       </b>
+       <br/>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Fill out your copyright notice in the Description page of Project Settings.</span>
+
+<span class="cp">#include</span> <span class="cpf">"StandardHUD.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"SStandardSlateWidget.h"</span><span class="cp"></span>
+
+<span class="c1">// ++ The SWeakWidget we are using</span>
+<span class="cp">#include</span> <span class="cpf">"Widgets/SWeakWidget.h" </span><span class="cp"></span>
+
+<span class="c1">// ++ To use GEngine. You can also import just "Engine.h" but some people mention this compiles slower than this header.</span>
+<span class="cp">#include</span> <span class="cpf">"Runtime/Engine/Classes/Engine/Engine.h" </span><span class="cp"></span>
+
+
+<span class="kt">void</span> <span class="n">AStandardHUD</span><span class="o">::</span><span class="n">BeginPlay</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">// So far only TSharedPtr&lt;SMyUIWidget&gt; has been created, now create the actual object.</span>
+	<span class="c1">// Create a SMyUIWidget on heap, our MyUIWidget shared pointer provides handle to object</span>
+	<span class="c1">// Widget will not self-destruct unless the HUD's SharedPtr (and all other SharedPtrs) are destroyed first.</span>
+	<span class="n">MyUIWidget</span> <span class="o">=</span> <span class="n">SNew</span><span class="p">(</span><span class="n">SStandardSlateWidget</span><span class="p">).</span><span class="n">OwnerHUDArg</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+
+	<span class="c1">// Pass our viewport a weak ptr to our widget</span>
+	<span class="c1">// Viewport's weak ptr will not give Viewport ownership of Widget</span>
+	<span class="n">GEngine</span><span class="o">-&gt;</span><span class="n">GameViewport</span><span class="o">-&gt;</span><span class="n">AddViewportWidgetContent</span><span class="p">(</span> 
+		<span class="n">SNew</span><span class="p">(</span><span class="n">SWeakWidget</span><span class="p">)</span>
+		<span class="p">.</span><span class="n">PossiblyNullContent</span><span class="p">(</span><span class="n">MyUIWidget</span><span class="p">.</span><span class="n">ToSharedRef</span><span class="p">())</span>
+	<span class="p">);</span>
+
+	<span class="c1">// Set widget's properties as visible (sets child widget's properties recursively)</span>
+	<span class="n">MyUIWidget</span><span class="o">-&gt;</span><span class="n">SetVisibility</span><span class="p">(</span><span class="n">EVisibility</span><span class="o">::</span><span class="n">Visible</span><span class="p">);</span>
+	
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Additional information about adding items to the viewport from the documentation:
+      </p>
+      <p>
+       <i>
+        The game's viewport is an instance of the GameViewportClient class. A reference to the current game viewport is accessible via the GameViewport member of UEngine, which can be accessed using the GEngine global pointer to the current UEngine instance for the game.
+       </i>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Creating_the_content_of_our_Widget">
+        Creating the content of our Widget
+       </span>
+      </h2>
+      <p>
+       The Widget files ("What the hell's a Widget!?" -Rodney Dangerfield) aka The Slate Widget is a custom Slate GUI component. The widget is where we will display "Hello Slate!".
+      </p>
+      <p>
+       We want to add a new argument while creating our custom SCompoundWidget.
+      </p>
+      <p>
+       <b>
+        StandardSlateWidget.h:
+       </b>
+       <br/>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+<span class="cp">#include</span> <span class="cpf">"CoreMinimal.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Widgets/SCompoundWidget.h"</span><span class="cp"></span>
+
+<span class="k">class</span> <span class="nc">HELLOSLATE_API</span> <span class="nl">SStandardSlateWidget</span> <span class="p">:</span> <span class="k">public</span> <span class="n">SCompoundWidget</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">SLATE_BEGIN_ARGS</span><span class="p">(</span><span class="n">SStandardSlateWidget</span><span class="p">)</span>
+	<span class="p">{}</span>
+
+        <span class="c1">// ++ We add a new argument called OwnerHUDArg</span>
+	<span class="n">SLATE_ARGUMENT</span><span class="p">(</span><span class="n">TWeakObjectPtr</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">AStandardHUD</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">OwnerHUDArg</span><span class="p">);</span>
+
+	<span class="n">SLATE_END_ARGS</span><span class="p">()</span>
+
+	<span class="c1">// Constructs this widget with InArgs. Needed for every widget. Builds this widget and any of it's children</span>
+	<span class="kt">void</span> <span class="n">Construct</span><span class="p">(</span><span class="k">const</span> <span class="n">FArguments</span><span class="o">&amp;</span> <span class="n">InArgs</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+	
+	<span class="c1">// ++ Pointer to our parent HUD. To make sure HUD's lifetime is controlled elsewhere, use "weak" ptr.</span>
+	<span class="c1">// ++ HUD has a "strong" pointer to Widget, circular ownership would prevent/break self-destruction of hud/widget (cause a memory leak).</span>
+	<span class="n">TWeakObjectPtr</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">AStandardHUD</span><span class="o">&gt;</span> <span class="n">OwnerHUD</span><span class="p">;</span>
+
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       Additional information taken from an answer from a staff member on the Answer Hub [
+       <a class="external text" href="https://answers.unrealengine.com/questions/74356/need-help-understanding-slate-mutators.html" rel="nofollow">
+        HERE
+       </a>
+       ]:
+      </p>
+      <p>
+       <i>
+        SLATE_BEGIN_ARGS and SLATE_END_ARGS actually create a struct containing variables added by the SLATE_ARGUMENT, SLATE_ATTRIBUTE, and SLATE_EVENT macros. The name given to those variables is in the form of _TheNameYouGaveIt.
+       </i>
+      </p>
+      <p>
+       <i>
+        SLATE_ARGUMENT creates a variable of the exact type you gave it, so SLATE_ARGUMENT(int, MyThing) makes a variable of type int, with the name _MyThing.
+       </i>
+      </p>
+      <p>
+       <i>
+        SLATE_ATTRIBUTE creates a TAttribute for the type you gave it, so SLATE_ATTRIBUTE(int, MyThing) makes a variable of type TAttribute, with the name _MyThing.
+       </i>
+      </p>
+      <p>
+       <i>
+        Additionally the macros define a series of functions to allow you to set the variable they add, which are named based on TheNameYouGaveIt.
+       </i>
+      </p>
+      <p>
+       <br/>
+       <b>
+        StandardSlateWidget.cpp:
+       </b>
+       <br/>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"SStandardSlateWidget.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"SlateOptMacros.h"</span><span class="cp"></span>
+
+<span class="n">BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION</span>
+
+<span class="c1">// ++ This is needed in order to use the localization macro LOCTEXT</span>
+<span class="cp">#define LOCTEXT_NAMESPACE "SStandardSlateWidget"</span>
+
+<span class="kt">void</span> <span class="n">SStandardSlateWidget</span><span class="o">::</span><span class="n">Construct</span><span class="p">(</span><span class="k">const</span> <span class="n">FArguments</span><span class="o">&amp;</span> <span class="n">InArgs</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// ++ Asign the argument to our local variable</span>
+        <span class="c1">// name will be _OwnerHUDArg instead of OwnerHUDArg, see comments about SLATE_ARGUMENT before</span>
+	<span class="n">OwnerHUD</span> <span class="o">=</span> <span class="n">InArgs</span><span class="p">.</span><span class="n">_OwnerHUDArg</span><span class="p">;</span>
+
+        <span class="c1">// ++ Add all this Slate code</span>
+	<span class="c1">// If the code below doesn't look like C++ to you it's because it (sort-of) isn't,</span>
+	<span class="c1">// Slate makes extensive use of the C++ Prerocessor(macros) and operator overloading,</span>
+	<span class="c1">// Epic is trying to make our lives easier, look-up the macro/operator definitions to see why.</span>
+
+	<span class="n">ChildSlot</span>
+	<span class="p">.</span><span class="n">VAlign</span><span class="p">(</span><span class="n">VAlign_Fill</span><span class="p">)</span>
+	<span class="p">.</span><span class="n">HAlign</span><span class="p">(</span><span class="n">HAlign_Fill</span><span class="p">)</span>
+	<span class="p">[</span>
+		<span class="n">SNew</span><span class="p">(</span><span class="n">SOverlay</span><span class="p">)</span>
+		<span class="o">+</span> <span class="n">SOverlay</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span>
+		<span class="p">.</span><span class="n">VAlign</span><span class="p">(</span><span class="n">VAlign_Top</span><span class="p">)</span>
+		<span class="p">.</span><span class="n">HAlign</span><span class="p">(</span><span class="n">HAlign_Center</span><span class="p">)</span>
+		<span class="p">[</span>
+			<span class="c1">// Inside lies a text block with these settings</span>
+			<span class="n">SNew</span><span class="p">(</span><span class="n">STextBlock</span><span class="p">)</span>
+			<span class="p">.</span><span class="n">ShadowColorAndOpacity</span><span class="p">(</span><span class="n">FLinearColor</span><span class="o">::</span><span class="n">Black</span><span class="p">)</span>
+			<span class="p">.</span><span class="n">ColorAndOpacity</span><span class="p">(</span><span class="n">FLinearColor</span><span class="o">::</span><span class="n">Red</span><span class="p">)</span>
+			<span class="p">.</span><span class="n">ShadowOffset</span><span class="p">(</span><span class="n">FIntPoint</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> 
+			<span class="p">.</span><span class="n">Font</span><span class="p">(</span><span class="n">FSlateFontInfo</span><span class="p">(</span><span class="s">"Veranda"</span><span class="p">,</span> <span class="mi">16</span><span class="p">))</span>
+                        <span class="c1">// localized text to be translated with a generic name HelloSlateText</span>
+			<span class="p">.</span><span class="n">Text</span><span class="p">(</span><span class="n">LOCTEXT</span><span class="p">(</span><span class="s">"HelloSlateText"</span><span class="p">,</span> <span class="s">"Hello, Slate!"</span><span class="p">))</span> 
+		<span class="p">]</span>
+	<span class="p">];</span>
+	
+<span class="p">}</span>
+
+<span class="c1">// ++ We need to undefine this namespace after we finish creating the Slate widget</span>
+<span class="cp">#undef LOCTEXT_NAMESPACE</span>
+
+<span class="n">END_SLATE_FUNCTION_BUILD_OPTIMIZATION</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Set_the_Game_Mode.27s_HUD">
+        Set the Game Mode's HUD
+       </span>
+      </h2>
+      <p>
+       The last thing we need to do is set our GameMode's HUD class to the one we just built. Every project has a default Game Mode, and every GameMode has a default Pawn, HUD, PlayerController, and GameState. To do this in v4.18, we will modify the HelloSlateGameMode.h and cpp. This is a necessary step to tell Unreal what HUD to use by default.
+      </p>
+      <p>
+       Note: Versions before 4.18 (not sure when It changed) use GameMode. Now the base class is called GameModeBase, which is a light version of GameMode. So the name will contain the "Base" suffix.
+      </p>
+      <p>
+       <b>
+        HelloSlateGameModeBase.h:
+       </b>
+       <br/>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+<span class="cp">#include</span> <span class="cpf">"CoreMinimal.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"GameFramework/GameModeBase.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"HelloSlateGameModeBase.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">HELLOSLATE_API</span> <span class="nl">AHelloSlateGameModeBase</span> <span class="p">:</span> <span class="k">public</span> <span class="n">AGameModeBase</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+	
+<span class="k">public</span><span class="o">:</span>
+        <span class="c1">// ++ Add a constructor</span>
+	<span class="n">AHelloSlateGameModeBase</span><span class="p">();</span>	
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <b>
+        HelloSlateGameMode.cpp:
+       </b>
+       <br/>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"HelloSlateGameModeBase.h"</span><span class="cp"></span>
+
+<span class="c1">// ++ Include Our HUD header</span>
+<span class="cp">#include</span> <span class="cpf">"StandardHUD.h"</span><span class="cp"></span>
+
+<span class="c1">// ++ In the constructor, call parent constructor and set the hud class to use our custom HUD by default.</span>
+<span class="n">AHelloSlateGameModeBase</span><span class="o">::</span><span class="n">AHelloSlateGameModeBase</span><span class="p">()</span> <span class="o">:</span> <span class="n">Super</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">HUDClass</span> <span class="o">=</span> <span class="n">AStandardHUD</span><span class="o">::</span><span class="n">StaticClass</span><span class="p">();</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Watching_the_result">
+        Watching the result
+       </span>
+      </h2>
+      <p>
+       Now, clean/rebuild your project and launch the Editor from Visual Studio (a fast way to do this is to use Ctrl + F5, which will compile and start without debugging, which will open the Editor).
+      </p>
+      <p>
+       If you hit "play" and you don't see any text on top of the viewport in red color, then you have to tell your game to use your Mode Game class.
+      </p>
+      <p>
+       This can be modified in several ways. One of them is doing it manually to our DefaultEngine.ini file, which is writable.
+      </p>
+      <p>
+       A faster way, if you want to permanently modify your project to use this Game Mode class, go to Edit --&gt; Project Settings. Under Maps &amp; Modes on the list, go to Default Modes section on the right side of the panel, and select our class HelloSlateModeGameBase  in Default GameMode. When you select it, if you open up Selected GameMOde, you will see that HUD Class is StandardHUD instad of HUD, which is our HUD class.
+      </p>
+      <p>
+       To use this game mode just in this scene, you can also go to Window -&gt; World Settings. In the game mode, which is probably None, select your HelloSlateModeGameBase class. You will see that underneath this dropbox there's a list of default items. The HUD should be DefaultHUD instead of HUD, so that our HUD is used instead.
+      </p>
+      <p>
+       Hit "play", hopefully you CAN see the result at the top of the Viewport.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Links_and_Further_Reading">
+        Links and Further Reading
+       </span>
+      </h2>
+      <p>
+       If you run into any questions try dropping a line in the tutorial's
+       <b>
+        wiki's thread
+       </b>
+       .
+       <a class="external free" href="https://forums.unrealengine.com/showthread.php?822-Slate-Tutorial" rel="nofollow">
+        https://forums.unrealengine.com/showthread.php?822-Slate-Tutorial
+       </a>
+      </p>
+      <p>
+       For more information on more advanced uses of Slate you can see some examples of Loading Slate Styles &amp; Resources here...
+       <br/>
+      </p>
+      <p>
+       Other advanced tutorials
+      </p>
+      <h2>
+       <span class="mw-headline" id="Change_Log">
+        Change Log
+       </span>
+      </h2>
+      <p>
+       Original Author (March 2014):
+     (
+     )
+Other Authors: [
+       <a class="external text" href="./slate-hello.html" rel="nofollow">
+        Check History
+       </a>
+       ]
+      </p>
+      <p>
+       Update 4.8: Thank you Unreal community for having the old tutorial here so I had a place to start. I will try to go through the further reading and also update those as well.
+      </p>
+      <p>
+       Update 4.8.2 (
+     7/18/2015): I probably should have done this sooner but
+       <a class="external text" href="http://katianie.com/Unreal_Source_Code/HelloSlate.zip" rel="nofollow">
+        here is a link to the full project
+       </a>
+       . I started to mess around a bit with the stuff in the next tutorial "How to Make Fancy Custom Buttons" so there is some commented out code related to that. I just tested the project before zipping it up and it works, let me know if you guys have any trouble, you can reach me on Skype at Katianie9 or send me a message through here.
+      </p>
+      <p>
+       Update 4.8 (
+     6/14/2015): I am modifying this tutorial to reflect the changes in Unreal 4.8. I followed this tutorial a few hours ago and I noticed that about half the stuff that was mentioned has been changed.
+      </p>
+      <p>
+       Update 4.18 (
+     1/12/2018): I did a whole updage of this tutorial for Unreal 4.18, added new content, titles and other stuff that may be useful. Thanks for the tutorial ! Hope this helps others.
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

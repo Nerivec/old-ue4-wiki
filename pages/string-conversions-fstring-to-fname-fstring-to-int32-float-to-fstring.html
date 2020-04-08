@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   String Conversions: FString to FName, FString to Int32, Float to FString - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    String Conversions: FString to FName, FString to Int32, Float to FString
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Converting_FString_to_FNames">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Converting FString to FNames
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#std::string_to_FString">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           std::string to FString
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#FString_to_std::string">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           FString to std::string
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#FCString_Overview">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           FCString Overview
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Converting_FString_to_Numbers">
+            <span class="tocnumber">
+             5.1
+            </span>
+            <span class="toctext">
+             Converting FString to Numbers
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#FString_to_Integer">
+            <span class="tocnumber">
+             5.2
+            </span>
+            <span class="toctext">
+             FString to Integer
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#FString_to_Float">
+            <span class="tocnumber">
+             5.3
+            </span>
+            <span class="toctext">
+             FString to Float
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Float.2FInteger_to_FString">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Float/Integer to FString
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-10">
+         <a href="#UE4_Source_Header_References">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           UE4 Source Header References
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-11">
+         <a href="#Optimization_Issues_Concerning_FNames">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Optimization Issues Concerning FNames
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <b>
+        Author:
+       </b>
+       (
+       )
+      </p>
+      <p>
+       Below are conversions for the following types:
+      </p>
+      <ol>
+       <li>
+        FString to FName
+       </li>
+       <li>
+        std::string to FString
+       </li>
+       <li>
+        FString and FCString Overview
+       </li>
+       <li>
+        FString to Integer
+       </li>
+       <li>
+        FString to Float
+       </li>
+       <li>
+        Float/Integer to FString
+       </li>
+       <li>
+        UE4 C++ Source Header References
+       </li>
+       <li>
+        Optimization Issues Concerning FNames
+       </li>
+      </ol>
+      <p>
+       All the header files I refer to in this tutorial are found in
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">your</span> <span class="n">UE4</span> <span class="n">install</span> <span class="n">directory</span>  <span class="o">/</span> <span class="n">Engine</span> <span class="o">/</span> <span class="n">Source</span>
+</pre>
+      </div>
+      <p>
+       you will probably want to do a search for them from this point :)
+      </p>
+      <h2>
+       <span class="mw-headline" id="Converting_FString_to_FNames">
+        Converting FString to FNames
+       </span>
+      </h2>
+      <p>
+       Say we have
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FString</span> <span class="n">TheString</span> <span class="o">=</span> <span class="s">"UE4_C++_IS_Awesome"</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       To convert this to an FName you do:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FName</span> <span class="n">ConvertedFString</span> <span class="o">=</span> <span class="n">FName</span><span class="p">(</span><span class="o">*</span><span class="n">TheString</span><span class="p">);</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="std::string_to_FString">
+        std::string to FString
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+
+<span class="c1">//....</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">TestString</span> <span class="o">=</span> <span class="s">"Happy"</span><span class="p">;</span> 
+<span class="n">FString</span> <span class="nf">HappyString</span><span class="p">(</span><span class="n">TestString</span><span class="p">.</span><span class="n">c_str</span><span class="p">());</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="FString_to_std::string">
+        FString to std::string
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">&lt;string&gt;</span><span class="cp"></span>
+
+<span class="c1">//....</span>
+<span class="n">FString</span> <span class="n">UE4Str</span> <span class="o">=</span> <span class="s">"Flowers"</span><span class="p">;</span>
+<span class="n">std</span><span class="o">::</span><span class="n">string</span> <span class="n">MyStdString</span><span class="p">(</span><span class="n">TCHAR_TO_UTF8</span><span class="p">(</span><span class="o">*</span><span class="n">UE4Str</span><span class="p">));</span>
+</pre>
+      </div>
+      <p>
+       You will find this particularly useful in cases other than float and int32!
+      </p>
+      <p>
+       C++ std::String::to_string
+      </p>
+      <p>
+       <a class="external free" href="http://en.cppreference.com/w/cpp/string/basic_string/to_string" rel="nofollow">
+        http://en.cppreference.com/w/cpp/string/basic_string/to_string
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="FCString_Overview">
+        FCString Overview
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Converting_FString_to_Numbers">
+        Converting FString to Numbers
+       </span>
+      </h3>
+      <p>
+       The * operator on FStrings returns their TCHAR* data which is what FCString functions use.
+      </p>
+      <p>
+       If you cant find the function you want in FStrings (UnrealString.h) then you should check out the FCString functions (CString.h)
+      </p>
+      <p>
+       I show how to convert from FString to FCString below:
+      </p>
+      <p>
+       Say we have
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FString</span> <span class="n">TheString</span> <span class="o">=</span> <span class="s">"123.021"</span><span class="p">;</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="FString_to_Integer">
+        FString to Integer
+       </span>
+      </h3>
+      <p>
+       (note Atoi is unsafe; no way to indicate errors)
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">int32</span> <span class="n">MyShinyNewInt</span> <span class="o">=</span> <span class="n">FCString</span><span class="o">::</span><span class="n">Atoi</span><span class="p">(</span><span class="o">*</span><span class="n">TheString</span><span class="p">);</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="FString_to_Float">
+        FString to Float
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">float</span> <span class="n">MyShinyNewFloat</span> <span class="o">=</span> <span class="n">FCString</span><span class="o">::</span><span class="n">Atof</span><span class="p">(</span><span class="o">*</span><span class="n">TheString</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       Note that Atoi and Atof are static functions, so you use the syntax FCString::TheFunction to call it :)
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Float.2FInteger_to_FString">
+        Float/Integer to FString
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FString</span> <span class="n">NewString</span> <span class="o">=</span> <span class="n">FString</span><span class="o">::</span><span class="n">FromInt</span><span class="p">(</span><span class="n">YourInt</span><span class="p">);</span>
+
+<span class="n">FString</span> <span class="n">VeryCleanString</span> <span class="o">=</span> <span class="n">FString</span><span class="o">::</span><span class="n">SanitizeFloat</span><span class="p">(</span><span class="n">YourFloat</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       Static functions in the UnrealString.h :)
+      </p>
+      <h2>
+       <span class="mw-headline" id="UE4_Source_Header_References">
+        UE4 Source Header References
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">CString</span><span class="p">.</span><span class="n">h</span>
+<span class="n">UnrealString</span><span class="p">.</span><span class="n">h</span>
+<span class="n">NameTypes</span><span class="p">.</span><span class="n">h</span>
+<span class="n">StringConv</span><span class="p">.</span><span class="n">h</span> <span class="p">(</span><span class="n">TCHAR_TO_ANSI</span> <span class="n">etc</span><span class="p">)</span>
+</pre>
+      </div>
+      <p>
+       See CString.h for more details and other functions like
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">atoi64</span> <span class="p">(</span><span class="n">string</span> <span class="n">to</span> <span class="n">int64</span><span class="p">)</span>
+<span class="n">Atod</span>	<span class="p">(</span><span class="n">string</span> <span class="n">to</span> <span class="kt">double</span> <span class="n">precision</span> <span class="kt">float</span><span class="p">)</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       For a great deal of helpful functions you will also want to look at
+      </p>
+      <p>
+       UnrealString.h for direct manipulation of FStrings!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Optimization_Issues_Concerning_FNames">
+        Optimization Issues Concerning FNames
+       </span>
+      </h2>
+      <p>
+       FNames are inherently fast, but you could be forcing a hashmap lookup if you are accessing them in the wrong way.  Look at the following code:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">ActorHasTag</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"MyFNameActor_Tag"</span><span class="p">)))</span>
+</pre>
+      </div>
+      <p>
+       This code will take the character string "MyFNameActor_Tag" and then look it up in the FName hashmap.
+      </p>
+      <p>
+       Whereas this code doesn't need to do a string conversion:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">static</span> <span class="k">const</span> <span class="n">FName</span> <span class="nf">NAME_MyFNameActor</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"MyFNameActor_Tag"</span><span class="p">));</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">ActorHasTag</span><span class="p">(</span><span class="n">NAME_MyFNameActor</span><span class="p">))</span>
+</pre>
+      </div>
+      <p>
+       In our testing with UE4 4.14, the second method is nearly 100 times faster than using the string lookup.  So please, always use the static const FName method over the TEXT() method.
+      </p>
+      For more info on FNames check out
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span> <span class="n">NameTypes</span><span class="p">.</span><span class="n">h</span>
+</pre>
+      </div>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+      <p>
+       Minor Authors:
+     (
+     )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

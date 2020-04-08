@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Behavior Tree Utility Plugin - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Behavior Tree Utility Plugin
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <br/>
+      </p>
+      <table class="wikitable sortable" style="float: right;">
+       <tbody>
+        <tr>
+         <td>
+          Name
+         </td>
+         <td>
+          Behavior Tree Utility Plugin
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Category
+         </td>
+         <td>
+          AI
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Author
+         </td>
+         <td>
+          Cameron Angus (kamrann)
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Version
+         </td>
+         <td>
+          1.0
+         </td>
+        </tr>
+        <tr>
+         <td>
+          UE4 Build
+         </td>
+         <td>
+          4.9+
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       This plugin extends the UE4 behavior tree with a new node, the 'Utility Selector'. Essentially, this works like the existing 'Selector' node but instead of prioritizing children left to right, it allows prioritization based on a utility value. By attaching special decorators to the child nodes, their utility value can be set as a constant, retrieved from the blackboard, or calculated dynamically in a blueprint. The selector can then be configured to either always choose the child with the highest utility value at the time, or to weight selection proportionally.
+      </p>
+      <p>
+       This gives more control over when an AI should execute which behavior, and makes it very easy to incorporate variety and randomness into behaviors.
+      </p>
+      <p>
+       A forum thread for the plugin is
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?91074-Behavior-Tree-Extension-Select-behaviors-based-on-dynamic-priority-weighting" rel="nofollow">
+        here
+       </a>
+       .
+      </p>
+      <h2>
+       <span class="mw-headline" id="Downloads">
+        Downloads
+       </span>
+      </h2>
+      <p>
+       Get the plugin
+       <a class="external text" href="http://kantandev.com/free/behavior-tree-utility-extension" rel="nofollow">
+        here
+       </a>
+       .
+Just unzip into YourProject/Plugins, load up your project, and the new nodes should be available in the behavior tree editor automatically.
+      </p>
+      <p>
+       Source code is
+       <a class="external text" href="https://github.com/kamrann/BTUtilityPlugin" rel="nofollow">
+        here
+       </a>
+       .
+A simple example project using the plugin is also available
+       <a class="external text" href="https://github.com/kamrann/BTUtilityPluginExample" rel="nofollow">
+        here
+       </a>
+       (4.10+ only).
+      </p>
+      <h2>
+       <span class="mw-headline" id="Example_BT">
+        Example BT
+       </span>
+      </h2>
+      <p>
+       <img alt="BTUtilityExampleImage.png" class="" height="748" src="../assets/behavior-tree-utility-plugin/0.png" width="1310"/>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

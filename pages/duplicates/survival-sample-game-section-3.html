@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Survival Sample Game: Section 3 - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Survival Sample Game: Section 3
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <p>
+       <b>
+        This section is part of the Survival Game project. You may first want to visit the
+        for a section overview and recommended documentation.
+       </b>
+      </p>
+      <p>
+       <b>
+        The latest
+        <a class="external text" href="https://github.com/tomlooman/EpicSurvivalGameSeries" rel="nofollow">
+         source is available for download
+        </a>
+        through GitHub!
+       </b>
+      </p>
+      <p>
+       <b>
+        If you have any questions, you can ask them in the
+        <a class="external text" href="https://forums.unrealengine.com/showthread.php?63678-Upcoming-C-Gameplay-Example-Series-Making-a-Survival-Game" rel="nofollow">
+         official forum thread official forum thread
+        </a>
+        .
+       </b>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Introduction">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Introduction
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#What_is_a_Blackboard.3F">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             What is a Blackboard?
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#What_is_a_Behavior_Tree.3F">
+            <span class="tocnumber">
+             1.2
+            </span>
+            <span class="toctext">
+             What is a Behavior Tree?
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#PawnSensing">
+            <span class="tocnumber">
+             1.3
+            </span>
+            <span class="toctext">
+             PawnSensing
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-5">
+             <a href="#Seeing">
+              <span class="tocnumber">
+               1.3.1
+              </span>
+              <span class="toctext">
+               Seeing
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-6">
+             <a href="#Hearing">
+              <span class="tocnumber">
+               1.3.2
+              </span>
+              <span class="toctext">
+               Hearing
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#The_Structural_Layout_of_the_Zombie_AI">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           The Structural Layout of the Zombie AI
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#SZombieAIController">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             SZombieAIController
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#SZombieCharacter">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             SZombieCharacter
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#Behavior_Tree">
+            <span class="tocnumber">
+             2.3
+            </span>
+            <span class="toctext">
+             Behavior Tree
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#Blackboard">
+            <span class="tocnumber">
+             2.4
+            </span>
+            <span class="toctext">
+             Blackboard
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-12">
+         <a href="#Setting_up_the_senses_in_C.2B.2B">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Setting up the senses in C++
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-13">
+         <a href="#Setting_up_the_AI_Controller">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Setting up the AI Controller
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-14">
+           <a href="#Initializing_Blackboard_.26_Behavior_Tree">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             Initializing Blackboard &amp; Behavior Tree
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-15">
+           <a href="#Updating_Blackboard_data">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             Updating Blackboard data
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-16">
+         <a href="#Breaking_down_the_Behavior_Tree">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Breaking down the Behavior Tree
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-17">
+           <a href="#Chasing_the_player">
+            <span class="tocnumber">
+             5.1
+            </span>
+            <span class="toctext">
+             Chasing the player
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-18">
+           <a href="#Wandering_the_map">
+            <span class="tocnumber">
+             5.2
+            </span>
+            <span class="toctext">
+             Wandering the map
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-19">
+         <a href="#Notes">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Notes
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-20">
+         <a href="#Closing">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Closing
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Introduction">
+        Introduction
+       </span>
+      </h1>
+      <p>
+       In section three we introduce the first features for our enemy AI. It can sense a player with both vision (using line of sight checks) and by sensing noise made through footsteps and gun shots. The AI is set up using C++ and a Behavior Tree including a custom Behavior Tree task in C++ to find an appropriate waypoint to wander around the level.
+      </p>
+      <p>
+       &lt;youtube&gt;
+       <a class="external free" href="https://www.youtube.com/watch?v=27XFykjd8Ns" rel="nofollow">
+        https://www.youtube.com/watch?v=27XFykjd8Ns
+       </a>
+      </p>
+      <p>
+       For a step-by-step tutorial on setting up Behavior Trees to follow a sensed player (using Blueprint) see
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/AI/BehaviorTrees/QuickStart/index.html" rel="nofollow">
+        Behavior Tree Quick Start Guide
+       </a>
+      </p>
+      <p>
+       This section will go into the C++ concepts of dealing with PawnSensing, Blackboards and Behavior Trees in Unreal Engine 4.
+      </p>
+      <p>
+       <img alt="Survival section3 overview01.jpg" class="" height="555" src="../assets/survival-sample-game-section-3/0.jpg" width="1000"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="What_is_a_Blackboard.3F">
+        What is a Blackboard?
+       </span>
+      </h2>
+      <p>
+       A blackboard is a data container for the Behavior Tree to use for decision making. A few examples of Blackboard data are TargetLocation, NextWaypoint, TargetPlayer and NeedAmmo.
+      </p>
+      <h2>
+       <span class="mw-headline" id="What_is_a_Behavior_Tree.3F">
+        What is a Behavior Tree?
+       </span>
+      </h2>
+      <p>
+       A Behavior Tree holds the logical tree to drive motion and decisions for a bot. It can be used to search for ammo, follow a player or hide from the player in case hitpoints are low or the bot has no ammo available. It requires a Blackboard to retrieve and store data.
+      </p>
+      <h2>
+       <span class="mw-headline" id="PawnSensing">
+        PawnSensing
+       </span>
+      </h2>
+      <p>
+       <img alt="Survival section3 pawnsensing01.jpg" class="" height="534" src="../assets/survival-sample-game-section-3/1.jpg" width="1000"/>
+      </p>
+      <p>
+       UPawnSensingComponent will give eyes and ears to AI bots. For noise sensing an additional UPawnNoiseEmitterComponent is required on our AI character.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Seeing">
+        Seeing
+       </span>
+      </h3>
+      <p>
+       PawnSensing supports line of sight checks to sense other pawns. There are a couple of variables to tweak including  peripheral-vision angle and sight radius. By default only players are sensed, so we don't need to filter out AI controlled enemies when updating our target to follow.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Hearing">
+        Hearing
+       </span>
+      </h3>
+      <p>
+       PawnSensing supports hearing of other pawns. This has nothing to do with the actual audio playback in the game, but is a separate system that uses UPawnNoiseEmitterComponent and calls to MakeNoise(...) to trigger events related to noise (eg. footsteps or loud gun noises)
+      </p>
+      <p>
+       For the AI of this project we implemented footsteps and gun sounds that both call MakeNoise(...). To trigger footstep noise at the appropriate moments of the animation we need a custom
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Animation/Sequences/Notifies/index.html" rel="nofollow">
+        AnimNotify
+       </a>
+       as seen below.
+      </p>
+      <p>
+       The top (yellow) notifies are custom notifies that we bind to our C++ code in the Animation Blueprint to add calls for MakeNoise and to keep track of the last moment a noise was made (to visualize noise in the HUD)
+      </p>
+      <p>
+       <img alt="Survival section3 animbp animnotify.jpg" class="" height="492" src="../assets/survival-sample-game-section-3/2.jpg" width="1028"/>
+      </p>
+      <p>
+       <img alt="Survival section3 animbp noiseevents.jpg" class="" height="716" src="../assets/survival-sample-game-section-3/3.jpg" width="973"/>
+      </p>
+      <h1>
+       <span class="mw-headline" id="The_Structural_Layout_of_the_Zombie_AI">
+        The Structural Layout of the Zombie AI
+       </span>
+      </h1>
+      <p>
+       There are many ways of setting up your AI class structure, I will briefly go over the one used in this project to make it easier to dig into the code and follow along with this guide.
+      </p>
+      <h2>
+       <span class="mw-headline" id="SZombieAIController">
+        SZombieAIController
+       </span>
+      </h2>
+      <p>
+       The AI Controller possesses an AI Character and holds the components for the Blackboard and Behavior Tree. It's the access point to update and retrieve Blackboard data in C++.
+      </p>
+      <h2>
+       <span class="mw-headline" id="SZombieCharacter">
+        SZombieCharacter
+       </span>
+      </h2>
+      <p>
+       Has the components for pawn and noise sensing. Updates Blackboard data through its AI Controller. Contains a Behavior Tree asset that is initialized by the AI Controller on spawn/initialization.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Behavior_Tree">
+        Behavior Tree
+       </span>
+      </h2>
+      <p>
+       Referenced by the AI Character class. Initialized by the AI Controller.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Blackboard">
+        Blackboard
+       </span>
+      </h2>
+      <p>
+       The blackboard is referenced by the Behavior Tree asset.
+      </p>
+      <h1>
+       <span class="mw-headline" id="Setting_up_the_senses_in_C.2B.2B">
+        Setting up the senses in C++
+       </span>
+      </h1>
+      <p>
+       To set up our senses in C++ we need a
+       <b>
+        UPawnSensingComponent
+       </b>
+       in the AI character class.
+      </p>
+      <p>
+       To react to sense events from this component we bind our delegates (functions that can be hooked to other classes to trigger events, much like you do with binding of mouse and key input to functions in C++)  during BeginPlay.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">ASZombieCharacter</span><span class="o">::</span><span class="n">BeginPlay</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">BeginPlay</span><span class="p">();</span>
+
+	<span class="cm">/* This is the earliest moment we can bind our delegates to the component */</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">PawnSensingComp</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">PawnSensingComp</span><span class="o">-&gt;</span><span class="n">OnSeePawn</span><span class="p">.</span><span class="n">AddDynamic</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ASZombieCharacter</span><span class="o">::</span><span class="n">OnSeePlayer</span><span class="p">);</span>
+		<span class="n">PawnSensingComp</span><span class="o">-&gt;</span><span class="n">OnHearNoise</span><span class="p">.</span><span class="n">AddDynamic</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ASZombieCharacter</span><span class="o">::</span><span class="n">OnHearNoise</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       When either of these functions are called, they will update the Blackboard with a new move-to target (the sensed player character) through the AI Controller of the AI Character instance.
+      </p>
+      <p>
+       Do note that to support hearing the AI requires a
+       <b>
+        UPawnNoiseEmitterComponent
+       </b>
+       to receive data from any MakeNoise(...) calls other Pawns may produce. (We add this component in SBaseCharacter.h class)
+      </p>
+      <h1>
+       <span class="mw-headline" id="Setting_up_the_AI_Controller">
+        Setting up the AI Controller
+       </span>
+      </h1>
+      <p>
+       The AI Controller contains the components for Blackboard and Behavior Trees (Although note that the behavior tree itself resides in the AI Character so we may re-use the same AIController class with different bot behaviors) It is the gateway to update data to the Blackboard and runs any available Behavior Tree that was provided by the AI Character it possesses.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Initializing_Blackboard_.26_Behavior_Tree">
+        Initializing Blackboard &amp; Behavior Tree
+       </span>
+      </h2>
+      <p>
+       Whenever a bot is initialized or respawned it will be possessed by an AI Controller. This is the moment to initialize the Blackboard and run the Behavior Tree to start the bot decision making.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">ASZombieAIController</span><span class="o">::</span><span class="n">Possess</span><span class="p">(</span><span class="k">class</span> <span class="nc">APawn</span><span class="o">*</span> <span class="n">InPawn</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">Possess</span><span class="p">(</span><span class="n">InPawn</span><span class="p">);</span>
+
+	<span class="n">ASZombieCharacter</span><span class="o">*</span> <span class="n">ZombieBot</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">ASZombieCharacter</span><span class="o">&gt;</span><span class="p">(</span><span class="n">InPawn</span><span class="p">);</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">ZombieBot</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">ZombieBot</span><span class="o">-&gt;</span><span class="n">BehaviorTree</span><span class="o">-&gt;</span><span class="n">BlackboardAsset</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">BlackboardComp</span><span class="o">-&gt;</span><span class="n">InitializeBlackboard</span><span class="p">(</span><span class="o">*</span><span class="n">ZombieBot</span><span class="o">-&gt;</span><span class="n">BehaviorTree</span><span class="o">-&gt;</span><span class="n">BlackboardAsset</span><span class="p">);</span>
+
+			<span class="cm">/* Make sure the Blackboard has the type of bot we possessed */</span>
+			<span class="n">BlackboardComp</span><span class="o">-&gt;</span><span class="n">SetValueAsEnum</span><span class="p">(</span><span class="n">BotTypeKeyName</span><span class="p">,</span> <span class="p">(</span><span class="n">uint8</span><span class="p">)</span><span class="n">ZombieBot</span><span class="o">-&gt;</span><span class="n">BotType</span><span class="p">);</span>
+		<span class="p">}</span>
+
+		<span class="n">BehaviorComp</span><span class="o">-&gt;</span><span class="n">StartTree</span><span class="p">(</span><span class="o">*</span><span class="n">ZombieBot</span><span class="o">-&gt;</span><span class="n">BehaviorTree</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Updating_Blackboard_data">
+        Updating Blackboard data
+       </span>
+      </h2>
+      <p>
+       When new sense data is available it must be updated in the Blackboard for the Behavior Tree to use. For this we need the KeyName (eg. "TargetLocation" as specified in the Blackboard asset) and the Blackboard Component. Below is one example of how we can push this data into the Blackboard.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">ASZombieAIController</span><span class="o">::</span><span class="n">SetTargetEnemy</span><span class="p">(</span><span class="n">APawn</span><span class="o">*</span> <span class="n">NewTarget</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">BlackboardComp</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">BlackboardComp</span><span class="o">-&gt;</span><span class="n">SetValueAsObject</span><span class="p">(</span><span class="n">TargetEnemyKeyName</span><span class="p">,</span> <span class="n">NewTarget</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Breaking_down_the_Behavior_Tree">
+        Breaking down the Behavior Tree
+       </span>
+      </h1>
+      <p>
+       <img alt="Survival section3 bt03.jpg" class="" height="1052" src="../assets/survival-sample-game-section-3/4.jpg" width="1091"/>
+      </p>
+      <p>
+       The Behavior Tree steers the decisions and motion of our AI bot. These decisions are based on the available data in the Blackboard asset.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Chasing_the_player">
+        Chasing the player
+       </span>
+      </h2>
+      <p>
+       <img alt="Survival section3 chasingplayer.jpg" class="" height="508" src="../assets/survival-sample-game-section-3/5.jpg" width="1416"/>
+      </p>
+      <p>
+       Whenever a player is sensed and the TargetEnemy is updated by the bot class in C++ we will successfully pass "Has Sensed Enemy" and move to "Has Target Location" which is set by the same AI Character C++ class. That should succeed and move into "Move to Sensed Player" to finally move to the TargetLocation.
+      </p>
+      <p>
+       "Has Sensed Player" has "Aborts Lower Priority" set up so we can immediately cancel our any other running behaviors when this value changes. This is used in this particular tree to cancel the patrol/wandering behavior on the right side of the tree.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Wandering_the_map">
+        Wandering the map
+       </span>
+      </h2>
+      <p>
+       <img alt="Survival section3 waypoints01.jpg" class="" height="624" src="../assets/survival-sample-game-section-3/6.jpg" width="1000"/>
+      </p>
+      <p>
+       By default the bot is set to Passive (this is a custom Enum we created in STypes.h), this completely disables the wander/patrol part of this blackboard through the conditional "Should Wander" check in the tree.
+      </p>
+      <p>
+       When enabled it will try to locate a Waypoint object in the level through the "Find Bot Waypoint" task. This is a custom task we created in C++ to search for objects on the map of the SBotWaypoint type. When the "Has a Waypoint" succeeds we will continue with another custom task that finds a position on the navigation mesh nearby the Waypoint object we found previously. And finally we "Move to Waypoint".
+      </p>
+      <p>
+       Both "Find X" tasks in the tree update the blackboard with new data for the other nodes to use (in this case CurrentWaypoint and PatrolLocation are updated by these tasks)
+      </p>
+      <p>
+       This flow will be cancelled as soon as "Has Sensed Enemy" is successful so sensing an enemy takes priority over wandering around the map.
+      </p>
+      <h1>
+       <span class="mw-headline" id="Notes">
+        Notes
+       </span>
+      </h1>
+      <ul>
+       <li>
+        To work with the AI features of the engine we must include the
+        <b>
+         "AIModule" in SurvivalGame.Build.cs
+        </b>
+        , please don't forget this module if you're re-creating any of these features for your own project.
+       </li>
+       <li>
+        We have several physically simulated barriers in our level, this requires a dynamic Navigation Mesh. To set this up in your own project go to
+        <b>
+         Edit &gt; Project Settings &gt; Navigation Mesh
+        </b>
+        and enable "Rebuild at runtime".
+       </li>
+       <li>
+        When using bots any level must include an encapsulating
+        <b>
+         Nav Mesh Bounds Volume
+        </b>
+        (under Modes &gt; Volumes, see image)
+       </li>
+      </ul>
+      <p>
+       <img alt="Navmeshcreation.jpg" class="" height="575" src="../assets/survival-sample-game-section-3/7.jpg" width="1590"/>
+      </p>
+      <h1>
+       <span class="mw-headline" id="Closing">
+        Closing
+       </span>
+      </h1>
+      <p>
+       In this section we've added the basic follow and patrol features for our zombie AI. In upcoming sections we will continue to expand the enemy by attacking an attack ability etc. If you are confused on a particular feature or piece of code, feel free to ask about it in the
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?67859-Announcing-Section-3-for-Survival-Game" rel="nofollow">
+        official section 3 thread
+       </a>
+       for this project.
+      </p>
+      <p>
+       <b>
+        -
+        -
+       </b>
+      </p>
+      <ul>
+       <li>
+        <a class="external text" href="https://forums.unrealengine.com/showthread.php?63678-Upcoming-C-Gameplay-Example-Series-Making-a-Survival-Game" rel="nofollow">
+         Main Forum Thread
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://github.com/tomlooman/EpicSurvivalGameSeries" rel="nofollow">
+         Source on GitHub
+        </a>
+       </li>
+      </ul>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

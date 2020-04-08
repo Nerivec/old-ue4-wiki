@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Static Mesh from Blender - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Static Mesh from Blender
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <p>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Modeling_Objects">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Modeling Objects
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Multiple_Objects">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Multiple Objects
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Texturing">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Texturing
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Base_UVs">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Base UVs
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Lightmass_UVs">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             Lightmass UVs
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Pivot_Points">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Pivot Points
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Materials">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Materials
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#LOD">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           LOD
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-10">
+         <a href="#Collision">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Collision
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#Custom_Collision">
+            <span class="tocnumber">
+             7.1
+            </span>
+            <span class="toctext">
+             Custom Collision
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-12">
+           <a href="#Automatic_Collision">
+            <span class="tocnumber">
+             7.2
+            </span>
+            <span class="toctext">
+             Automatic Collision
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-13">
+         <a href="#Exporting">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Exporting
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-14">
+         <a href="#Batch_Exporting">
+          <span class="tocnumber">
+           9
+          </span>
+          <span class="toctext">
+           Batch Exporting
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-15">
+         <a href="#Importing_in_UE4">
+          <span class="tocnumber">
+           10
+          </span>
+          <span class="toctext">
+           Importing in UE4
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <h1>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h1>
+      <p>
+       Blender 2.7x has a built-in FBX import/export addon which can be used to export models to UE4.
+      </p>
+      <p>
+       You can download the latest version
+       <a class="external text" href="https://github.com/mont29/blender-io-fbx" rel="nofollow">
+        here
+       </a>
+       , but keep in mind this tutorial is based on the FBX addon included in Blender 2.70.
+      </p>
+      <p>
+       Background about the FBX export pipeline can be found in the official documentation at:
+       <a class="external free" href="https://docs.unrealengine.com/latest/INT/Engine/Content/FBX/StaticMeshes/index.html" rel="nofollow">
+        https://docs.unrealengine.com/latest/INT/Engine/Content/FBX/StaticMeshes/index.html
+       </a>
+      </p>
+      <p>
+       <br/>
+       In a twitch session broadcast on 3 May 2014 (
+       <a class="external free" href="http://www.twitch.tv/unrealengine/c/4174458" rel="nofollow">
+        http://www.twitch.tv/unrealengine/c/4174458
+       </a>
+       ) Lead Engine Programmer Matt Kuhlenschmidt stated that due to the need for better FBX workflow from Blender to Unreal Engine, Epic was working with the developers of the Blender FBX Export plugin to improve the already good quality.
+      </p>
+      <p>
+       He requested that Epic needed examples from the community of Blender models which were known to be broken when exported as FBX.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h1>
+       <span class="mw-headline" id="Modeling_Objects">
+        Modeling Objects
+       </span>
+      </h1>
+      <p>
+       You can use any modeling technique such as Nurbs, Bezier, modifiers, etc. When you export, Blender will convert your object(s) to a mesh type.
+However, is recommended that you convert it inside Blender to unwrap its UVs appropriately.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:509px;">
+        <img alt="Tut (2).jpg" class="thumbimage" height="773" src="../assets/static-mesh-from-blender/0.jpg" width="507"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Multiple_Objects">
+        Multiple Objects
+       </span>
+      </h2>
+      <p>
+       Considering the nature of how the FBX exporter manages pivot points (
+       <i>
+        see "Pivot Points"
+       </i>
+       ), working on several objects in one .blend file can cause clutter.
+If you are working on several objects in the same .blend file, you can store each object in a separate layer, so that they can each be placed at the center of the scene without making a mess.
+      </p>
+      <p>
+       See "Exporting" and "Exporting Batch" sections for more information on how to export many objects.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h1>
+       <span class="mw-headline" id="Texturing">
+        Texturing
+       </span>
+      </h1>
+      <h2>
+       <span class="mw-headline" id="Base_UVs">
+        Base UVs
+       </span>
+      </h2>
+      <p>
+       You only need to use one UV channel for Base Color, Roughness, Normals, and other Material related properties.
+      </p>
+      <p>
+       You can create your own UV map using the Mark Seams tool (
+       <i>
+        Ctrl + E
+       </i>
+       ) and the Unwrap tool (
+       <i>
+        U key
+       </i>
+       ), or you can make use of the automatic unwrapping functions such as
+       <b>
+        Lightmap Pack
+       </b>
+       or
+       <b>
+        Smart UV Project
+       </b>
+       . Keep in mind that the latter two will not always result in nice looking seams, which is most noticeable on organic objects.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:386px;">
+        <img alt="Tut (3).jpg" class="thumbimage" height="776" src="../assets/static-mesh-from-blender/1.jpg" width="384"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br/>
+       The UV areas for all faces contained in your final FBX file should not overlap, i.e. not possess the same areas.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Lightmass_UVs">
+        Lightmass UVs
+       </span>
+      </h2>
+      <p>
+       For
+       <b>
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Rendering/LightingAndShadows/Lightmass/index.html" rel="nofollow">
+         Lightmass
+        </a>
+       </b>
+       to work with your static mesh, the mesh needs a set of UV coordinates that can be used to create the lightmap.
+      </p>
+      <ul>
+       <li>
+        Create a second UV channel to store the lightmap.
+       </li>
+       <li>
+        I recommend unwrapping the UVs for the lightmap in Blender since the automatic UV mapper inside UE4 is too slow in some cases or doesn't work at all.
+       </li>
+       <li>
+        Keep in mind that UV maps can't contain overlapping areas.
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:504px;">
+        <img alt="Tut (7).jpg" class="thumbimage" height="498" src="../assets/static-mesh-from-blender/2.jpg" width="502"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h1>
+       <span class="mw-headline" id="Pivot_Points">
+        Pivot Points
+       </span>
+      </h1>
+      <p>
+       The FBX import/export plugin will (in most cases) place the Pivot Point of your exported objects at the origin of the world, which is at the coordinates
+       <b>
+        (0, 0, 0)
+       </b>
+       , rather than using the Pivot Point of the objects in Blender.
+      </p>
+      <p>
+       This means that your objects must be positioned in such a way so that their Pivot Point is at the origin of the world, and will not be changed through exporting.
+      </p>
+      <p>
+       <br/>
+       To ensure that your object is properly aligned to the World's origin (0, 0, 0), use
+       <b>
+        Alt + G
+       </b>
+       to clear its location.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:389px;">
+        <img alt="Tut (4).jpg" class="thumbimage" height="777" src="../assets/static-mesh-from-blender/3.jpg" width="387"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <h1>
+       <span class="mw-headline" id="Materials">
+        Materials
+       </span>
+      </h1>
+      <p>
+       It's better to create your materials inside UE4 instead of importing them from Blender. This will give you more control of the asset organization in your Unreal project folder. However, if your static mesh has multiple parts that will have different materials applied to them, you must assign different placeholder materials in Blender before exporting to FBX. UE4 will divide the static mesh into different elements based on the materials assigned in Blender. These will appear in UE4 as Element 0, Element 1, etc. and cannot be renamed or re-ordered. UE4 will create these elements regardless of whether or not the "Import materials" option is enabled in the FBX importer.
+      </p>
+      <p>
+       There are several ways to find out which element corresponds to which part of the static mesh:
+      </p>
+      <ul>
+       <li>
+        Open the Static Mesh Editor and use the Highlight checkboxes for each element.
+       </li>
+       <li>
+        Add the static mesh to a level as an actor. Then drag materials onto the desired parts of the mesh in the viewport, watching for changes to the materials in the list of elements on the right.
+       </li>
+       <li>
+        Give meaningful names to the materials in Blender, then make sure "Import materials" is enable when importing the FBX into UE4. This only works as long as you keep those imported materials in your UE4 project and don't change the default materials for the static mesh.
+       </li>
+      </ul>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="Tut (5).jpg" class="thumbimage" height="623" src="../assets/static-mesh-from-blender/4.jpg" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <h1>
+       <span class="mw-headline" id="LOD">
+        LOD
+       </span>
+      </h1>
+      <p>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h1>
+       <span class="mw-headline" id="Collision">
+        Collision
+       </span>
+      </h1>
+      <p>
+       By default, when you import your static mesh asset into the Unreal Engine there will be no collision mesh associated with it. This means that players and physical objects will be able to pass through it without colliding. There are two primary methods for creating collision meshes:
+       <b>
+        Automatic
+       </b>
+       inside of UE4, and
+       <b>
+        Custom
+       </b>
+       from another 3D application.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Custom_Collision">
+        Custom Collision
+       </span>
+      </h2>
+      <p>
+       This section still needs to be written. Full documentation on creating custom collision meshes for the FBX Content Pipeline can be found
+       <b>
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Content/FBX/StaticMeshes/index.html#collision" rel="nofollow">
+         here
+        </a>
+       </b>
+       .
+      </p>
+      <p>
+       This has been tested and works with Blender and the FBX export addon.
+      </p>
+      <p>
+       When creating custom collision geometry inside Blender, it can be very helpful to first select your model and turn on X-ray mode under the object's display mode.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Automatic_Collision">
+        Automatic Collision
+       </span>
+      </h2>
+      <p>
+       In the Unreal Editor, you can automatically generate a collision mesh for your static meshes. This automatic method is not extremely accurate, but for simple props, it can get the job done. For more complex props where collision matters, it is suggested to use the above
+       <b>
+        Custom Collision
+       </b>
+       method to create your own collision meshes.
+      </p>
+      <p>
+       Locate your asset in the content browser and right click on it. Select the edit option from the context menu which pops up (as shown below):
+      </p>
+      <div class="floatnone">
+       <img alt="Static mesh edit option.png" class="" height="280" src="../assets/static-mesh-from-blender/5.png" width="437"/>
+      </div>
+      <p>
+       <br/>
+       The window which pops up should look something like this:
+      </p>
+      <div class="floatnone">
+       <img alt="Mesh editor collision.png" class="" height="344" src="../assets/static-mesh-from-blender/6.png" width="714"/>
+      </div>
+      <p>
+       <br/>
+       You will then need to click on the "Collision" menu at the top of the screen. This will present you with many options.
+Experiment with the different collision options to find the right fit for your model. Try the 6DOF (6 Degrees of Freedom) option first. You should see a box now appear around your mesh.  If the green box does not appear, then click the green
+       <b>
+        Collision
+       </b>
+       button above the window to turn that layer on.
+      </p>
+      <h1>
+       <span class="mw-headline" id="Exporting">
+        Exporting
+       </span>
+      </h1>
+      <p>
+       In the FBX Export menu, the value of the
+       <b>
+        Scale
+       </b>
+       parameter depends on how your viewport is set up in Blender.
+If you adjusted the Unit scale in your Scene settings, as described in the
+       <b>
+        Scale Conversion: Unit Scale in Blender
+       </b>
+       section, you can leave this Scale value set to
+       <b>
+        1.0
+       </b>
+       .
+      </p>
+      <p>
+       <br/>
+       <i>
+        (see the "Scale Conversion" section for more information)
+       </i>
+      </p>
+      <p>
+       <br/>
+       To export only the selected objects, enable the
+       <b>
+        Selected Objects
+       </b>
+       check box.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:244px;">
+        <img alt="Tut (10).jpg" class="thumbimage" height="479" src="../assets/static-mesh-from-blender/7.jpg" width="242"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       See also:
+       <a class="external free" href="https://forums.unrealengine.com/showthread.php?62941-Blender-2-73a-and-2-74-working-export-to-UE4-settings-for-various-types" rel="nofollow">
+        https://forums.unrealengine.com/showthread.php?62941-Blender-2-73a-and-2-74-working-export-to-UE4-settings-for-various-types
+       </a>
+      </p>
+      <h1>
+       <span class="mw-headline" id="Batch_Exporting">
+        Batch Exporting
+       </span>
+      </h1>
+      <p>
+       You can export many models at the same time in a Batch process, but you will need to create a group for each asset or separate it by Scene in "Batch mode". You can set this configuration for a Batch export. The Batch Own Dir option is useful if you want to separate it folders. Set a name and export it.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h1>
+       <span class="mw-headline" id="Importing_in_UE4">
+        Importing in UE4
+       </span>
+      </h1>
+      <ul>
+       <li>
+        Import your model.
+       </li>
+       <li>
+        Open it in the Static Mesh Editor and configure the collision mesh (if necessary) and any other settings such as LOD. Save it.
+       </li>
+       <li>
+        Insert the object into the scene.
+       </li>
+       <li>
+        Create a material (in a folder with a descriptive name), and apply it to the object in your scene. (You may need to apply materials to specific material elements, if your object is set up for multiple materials.)
+       </li>
+       <li>
+        Bake the Lightmass using the "Build" or "Build Lighting Only" command.
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="Tut (6).jpg" class="thumbimage" height="871" src="../assets/static-mesh-from-blender/8.jpg" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

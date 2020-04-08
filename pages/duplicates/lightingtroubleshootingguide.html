@@ -1,0 +1,3402 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   LightingTroubleshootingGuide - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    LightingTroubleshootingGuide
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1">
+         <a href="#About_This_Guide">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           <b>
+            About This Guide
+           </b>
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#General_Lighting">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           <b>
+            General Lighting
+           </b>
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Why_Are_My_Shadows_Black.3F">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Why Are My Shadows Black?
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Invalid_Lightmap_Settings_When_Converting_BSP_to_Static_Mesh">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             Invalid Lightmap Settings When Converting BSP to Static Mesh
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#What_if_I_don.E2.80.99t_want_to_have_lightmaps_at_all_or_my_game_doesn.E2.80.99t_need_them.3F">
+            <span class="tocnumber">
+             2.3
+            </span>
+            <span class="toctext">
+             What if I don’t want to have lightmaps at all or my game doesn’t need them?
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Two-Sided_Lighting_for_Single_Sided_Meshes.2C_or_Why_does_my_light_come_through_the_roof.3F">
+            <span class="tocnumber">
+             2.4
+            </span>
+            <span class="toctext">
+             Two-Sided Lighting for Single Sided Meshes, or Why does my light come through the roof?
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Why_does_this_look_nothing_like_it_did_before.2C_or_Engine_Scalability_and_you">
+            <span class="tocnumber">
+             2.5
+            </span>
+            <span class="toctext">
+             Why does this look nothing like it did before, or Engine Scalability and you
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Why_is_there_a_red_.E2.80.9CX.E2.80.9D_over_my_light.3F">
+            <span class="tocnumber">
+             2.6
+            </span>
+            <span class="toctext">
+             Why is there a red “X” over my light?
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Poor_Lightmap_UV_Layout">
+            <span class="tocnumber">
+             2.7
+            </span>
+            <span class="toctext">
+             Poor Lightmap UV Layout
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#The_Power_of_Post_Process_Global_Illumination_Settings">
+            <span class="tocnumber">
+             2.8
+            </span>
+            <span class="toctext">
+             The Power of Post Process Global Illumination Settings
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#Capsule_Shadows">
+            <span class="tocnumber">
+             2.9
+            </span>
+            <span class="toctext">
+             Capsule Shadows
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-11">
+         <a href="#Dynamic_.28Movable.29_Lighting">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           <b>
+            Dynamic (Movable) Lighting
+           </b>
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-12">
+           <a href="#Shadow_bleed_or_Incorrect_Shadow_Quality">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Shadow bleed or Incorrect Shadow Quality
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-13">
+             <a href="#Directional_Light_ONLY:_Cascaded_Shadow_Maps_Settings:">
+              <span class="tocnumber">
+               3.1.1
+              </span>
+              <span class="toctext">
+               Directional Light ONLY: Cascaded Shadow Maps Settings:
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-14">
+             <a href="#Far_Shadow">
+              <span class="tocnumber">
+               3.1.2
+              </span>
+              <span class="toctext">
+               Far Shadow
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-15">
+             <a href="#Adjusting_Cascades_for_better_Quality:">
+              <span class="tocnumber">
+               3.1.3
+              </span>
+              <span class="toctext">
+               Adjusting Cascades for better Quality:
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-16">
+             <a href="#All_Dynamic_Lights_.28Light_Tab_Settings.29:">
+              <span class="tocnumber">
+               3.1.4
+              </span>
+              <span class="toctext">
+               All Dynamic Lights (Light Tab Settings):
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-17">
+           <a href="#Why_does_my_Movable_light_shine_through_my_mesh_at_far_distances.3F">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             Why does my Movable light shine through my mesh at far distances?
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-18">
+         <a href="#Static_Lighting">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           <b>
+            Static Lighting
+           </b>
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-19">
+           <a href="#Lightmap_Resolution_.2F_Shadow_Quality">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             Lightmap Resolution / Shadow Quality
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-20">
+           <a href="#Shadow_Seams.2FShading_Differences_with_Indirect_Lighting">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             Shadow Seams/Shading Differences with Indirect Lighting
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-21">
+           <a href="#What_is_this_.E2.80.9COverlapping_UV_error.E2.80.9D_non-sense_when_I_build_lighting.3F">
+            <span class="tocnumber">
+             4.3
+            </span>
+            <span class="toctext">
+             What is this “Overlapping UV error” non-sense when I build lighting?
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-22">
+           <a href="#How_do_I_generate_lightmap_UVs_in_the_editor.3F">
+            <span class="tocnumber">
+             4.4
+            </span>
+            <span class="toctext">
+             How do I generate lightmap UVs in the editor?
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-23">
+           <a href="#How_to_control_Global_Illumination_with_Static_Lighting.3F.2C_or_The_Wonderful_Thing_About_Bounce">
+            <span class="tocnumber">
+             4.5
+            </span>
+            <span class="toctext">
+             How to control Global Illumination with Static Lighting?, or The Wonderful Thing About Bounce
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-24">
+           <a href="#Why_is_there_shadow_splotches_on_my_static_mesh.3F.2C_or_How_to_clean_those_dirty_lightmaps.3F">
+            <span class="tocnumber">
+             4.6
+            </span>
+            <span class="toctext">
+             Why is there shadow splotches on my static mesh?, or How to clean those dirty lightmaps?
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-25">
+           <a href="#What_is_the_.E2.80.9CLighting_needs_to_be_rebuilt.E2.80.9D_in_the_Top_left_corner_error.3F">
+            <span class="tocnumber">
+             4.7
+            </span>
+            <span class="toctext">
+             What is the  “Lighting needs to be rebuilt” in the Top left corner error?
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-26">
+             <a href="#Troubleshooting_Tips">
+              <span class="tocnumber">
+               4.7.1
+              </span>
+              <span class="toctext">
+               Troubleshooting Tips
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-27">
+           <a href="#Lighting_Quality_comparison.2C_or_Production_.3E_Preview">
+            <span class="tocnumber">
+             4.8
+            </span>
+            <span class="toctext">
+             Lighting Quality comparison, or Production &gt; Preview
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-28">
+           <a href="#Lightmap_Error_Coloring">
+            <span class="tocnumber">
+             4.9
+            </span>
+            <span class="toctext">
+             Lightmap Error Coloring
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-29">
+           <a href="#Find_the_Objects_referenced_in_.22Lighting_needs_to_be_rebuilt_.28X_Objects.29.22">
+            <span class="tocnumber">
+             4.10
+            </span>
+            <span class="toctext">
+             Find the Objects referenced in "Lighting needs to be rebuilt (X Objects)"
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-30">
+           <a href="#Light_Build_Statistics">
+            <span class="tocnumber">
+             4.11
+            </span>
+            <span class="toctext">
+             Light Build Statistics
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-31">
+           <a href="#Landscape_Grasstype_Asset_Tiled_Pattern">
+            <span class="tocnumber">
+             4.12
+            </span>
+            <span class="toctext">
+             Landscape Grasstype Asset Tiled Pattern
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-32">
+           <a href="#Build_Lighting_Via_Command_Line">
+            <span class="tocnumber">
+             4.13
+            </span>
+            <span class="toctext">
+             Build Lighting Via Command Line
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-33">
+           <a href="#Foliage_Tool_Lightmap_Resolutions">
+            <span class="tocnumber">
+             4.14
+            </span>
+            <span class="toctext">
+             Foliage Tool Lightmap Resolutions
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="About_This_Guide">
+        <b>
+         About This Guide
+        </b>
+       </span>
+      </h2>
+      <p>
+       Often the difference between a good game and a great game can come down to light.  Even the best model rendered with poor shadow resolution and not taking advantage of the right post process settings will look poor.  In the Unreal Engine, it means digging in to our robust lighting, reflection and post process settings.  This Troubleshooting guide attempts to cover some of the more common problems that people come across when they first dig into the lighting and rendering systems.  This guide is by no means meant to be completely comprehensive but a living document as the engine changes so too can we add and alter advice presented here.  The guide is meant to be a great first step for artist trying to get the most out of the engine's rendering system.
+      </p>
+      <p>
+       <b>
+        Common Lighting Documentation pages for reference:
+       </b>
+       <br/>
+      </p>
+      <dl>
+       <dd>
+        <dl>
+         <dd>
+          <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Rendering/LightingAndShadows/Lightmass/index.html" rel="nofollow">
+           <b>
+            Lightmass Global Illumination
+           </b>
+          </a>
+          <br/>
+         </dd>
+         <dd>
+          <a class="external text" href="https://docs.unrealengine.com/latest/INT/Resources/ContentExamples/Lighting/index.html" rel="nofollow">
+           <b>
+            Lighting Basics
+           </b>
+          </a>
+          <br/>
+         </dd>
+         <dd>
+          <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Rendering/LightingAndShadows/index.html" rel="nofollow">
+           <b>
+            Lighting the Environment
+           </b>
+          </a>
+          <br/>
+         </dd>
+         <dd>
+          <a class="external text" href="https://docs.unrealengine.com/latest/INT/Resources/ContentExamples/Lighting/index.html" rel="nofollow">
+           <b>
+            Lighting Content Examples
+           </b>
+          </a>
+          <br/>
+         </dd>
+         <dd>
+          <a class="external text" href="https://docs.unrealengine.com/latest/INT/Platforms/Mobile/Lighting/index.html" rel="nofollow">
+           <b>
+            Lighting for Mobile Platforms
+           </b>
+          </a>
+          <br/>
+         </dd>
+         <dd>
+          <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Rendering/index.html" rel="nofollow">
+           <b>
+            Rendering &amp; Graphics
+           </b>
+          </a>
+         </dd>
+        </dl>
+       </dd>
+      </dl>
+      <h2>
+       <span class="mw-headline" id="General_Lighting">
+        <b>
+         General Lighting
+        </b>
+       </span>
+      </h2>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="Why_Are_My_Shadows_Black.3F">
+        Why Are My Shadows Black?
+       </span>
+      </h3>
+      <p>
+       In lighting terms, deep black shadows usually mean you have no fill light.  This can often happen when doing outdoor environments where a single directional light is meant to represent the sun.  UE4 has a built in method to provide a world effecting fill light, we refer to it as a
+       <b>
+        Sky Light
+       </b>
+       .
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Rendering/LightingAndShadows/LightTypes/SkyLight/index.html" rel="nofollow">
+        <b>
+         Want to know more about Sky Lights?
+        </b>
+       </a>
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerybox" style="width: 416px">
+        <div style="width: 416px">
+         <div class="thumb" style="width: 414px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="250" src="../assets/lightingtroubleshootingguide/0.png" width="414"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           No Skylight
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 416px">
+        <div style="width: 416px">
+         <div class="thumb" style="width: 414px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="250" src="../assets/lightingtroubleshootingguide/1.png" width="414"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           With Skylight
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="Invalid_Lightmap_Settings_When_Converting_BSP_to_Static_Mesh">
+        Invalid Lightmap Settings When Converting BSP to Static Mesh
+       </span>
+      </h3>
+      <p>
+       <b>
+        As of 4.6 and higher the default Lightmap Resolution will be set to 4 for any converted BSPs, but you will still need to follow the steps to set the correct Lightmap Coordinate Index.
+       </b>
+      </p>
+      <p>
+       When you convert your BSP geometry to a static mesh, you will likely see the following result:
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:693px;">
+         <img alt="" class="thumbimage" height="641" src="../assets/lightingtroubleshootingguide/2.PNG" width="691"/>
+         <div class="thumbcaption">
+          Static Mesh Converted from a BSP Box
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       Don’t worry, this is normal! Since we’ve now converted our BSP to a Static mesh we need to make sure the right lightmap channel is assigned. To make things easier, when you convert the BSP it will automatically generate your lightmapping UVs for you. The only thing that is not setup is automatically is making sure the right channel and resolution are assigned.
+       <br clear="all"/>
+      </p>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:703px;">
+        <img alt="" class="thumbimage" height="671" src="../assets/lightingtroubleshootingguide/3.png" width="701"/>
+        <div class="thumbcaption">
+         Static Mesh Editor Details Panel
+        </div>
+       </div>
+      </div>
+      <ul>
+       <li>
+        To do this, open the newly created Static Mesh. Look to the details panel on the right and locate the tab Static Mesh Settings.
+       </li>
+      </ul>
+      <ul>
+       <li>
+        Here you’ll need to set the Lightmap Resolution. This should be any power of two increment (ie. 32, 64, 128, etc). This will be the resolution of your lightmap texture. Higher lightmap resolutions will result in better shadow quality baked into the texture, but it will also increase memory foot print and light build times.
+       </li>
+      </ul>
+      <ul>
+       <li>
+        Next we’ll set the Lightmap Coordinate Index to 1 (This is the lightmap UV channel in most cases). This is the location of our lightmap UV that will have no overlapping faces.
+       </li>
+      </ul>
+      <ul>
+       <li>
+        If you want to see what the lightmap UV looks like you can click the button for the UV in the toolbar and choose UV Channel 1 from the drop down to the right of the button.
+       </li>
+      </ul>
+      <p>
+       <br clear="all"/>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="What_if_I_don.E2.80.99t_want_to_have_lightmaps_at_all_or_my_game_doesn.E2.80.99t_need_them.3F">
+        What if I don’t want to have lightmaps at all or my game doesn’t need them?
+       </span>
+      </h3>
+      <p>
+       There may be times where a game doesn’t need lightmaps at all, because it’s been opted to use only Movable (Dynamic) lighting. There is an option to disable lightmaps all together by opening the world settings and checking the option for “Force No Precomputed Lighting.” When lighting is rebuilt it will remove all lightmaps that have been previously cooked.
+      </p>
+      <p>
+       There are two methods to disable Static Lighting:
+      </p>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:720px;">
+        <img alt="" class="thumbimage" height="654" src="../assets/lightingtroubleshootingguide/4.png" width="718"/>
+        <div class="thumbcaption">
+         Project Settings, Rendering Tab, Lighting Tab
+        </div>
+       </div>
+      </div>
+      <p>
+       <b>
+        Project Specific: Disable Static Lighting
+       </b>
+      </p>
+      <ol>
+       <li>
+        Menu &gt; Edit &gt; Project Settings
+       </li>
+       <li>
+        Go to the Rendering Tab &gt; Lighting Tab
+       </li>
+       <li>
+        Uncheck the option for
+        <b>
+         Allow Static Lighting
+        </b>
+       </li>
+       <li>
+        To enable this option fully you will need to
+        <b>
+         Restart the Editor
+        </b>
+       </li>
+      </ol>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       <b>
+        Level Specific: Disable Static Lighting
+       </b>
+      </p>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:667px;">
+        <img alt="" class="thumbimage" height="132" src="../assets/lightingtroubleshootingguide/5.png" width="665"/>
+        <div class="thumbcaption">
+         World Settings
+        </div>
+       </div>
+      </div>
+      <p>
+       1. Open World Settings
+      </p>
+      <p>
+       <br clear="all"/>
+      </p>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:426px;">
+        <img alt="" class="thumbimage" height="743" src="../assets/lightingtroubleshootingguide/6.png" width="424"/>
+        <div class="thumbcaption">
+         Lightmass Settings
+        </div>
+       </div>
+      </div>
+      <p>
+       2. Go to the Lightmass Tab
+       <br/>
+       3.  Uncheck
+       <b>
+        Force No Precomputed Lighting
+       </b>
+      </p>
+      <p>
+       <br clear="all"/>
+      </p>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:530px;">
+        <img alt="" class="thumbimage" height="131" src="../assets/lightingtroubleshootingguide/7.png" width="528"/>
+        <div class="thumbcaption">
+         Force No Precomputed Warning
+        </div>
+       </div>
+      </div>
+      <p>
+       4.  You will get a warning. Click OK.
+       <br/>
+       5.  Build Lighting to wipe lighting data already stored.
+      </p>
+      <p>
+       <br clear="all"/>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="Two-Sided_Lighting_for_Single_Sided_Meshes.2C_or_Why_does_my_light_come_through_the_roof.3F">
+        Two-Sided Lighting for Single Sided Meshes, or Why does my light come through the roof?
+       </span>
+      </h3>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:937px;">
+        <img alt="" class="thumbimage" height="582" src="../assets/lightingtroubleshootingguide/8.png" width="935"/>
+        <div class="thumbcaption">
+         Created Assets in 3DS Max
+        </div>
+       </div>
+      </div>
+      <p>
+       In this image, you’ll see I’ve made myself an awesome wall and a tube that when I turn on its side can be a creepy tunnel for me to walk through!
+      </p>
+      <p>
+       <br clear="all"/>
+      </p>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:741px;">
+        <img alt="" class="thumbimage" height="430" src="../assets/lightingtroubleshootingguide/9.png" width="739"/>
+        <div class="thumbcaption">
+         Created Assets in UE4
+        </div>
+       </div>
+      </div>
+      <p>
+       All seems well and good and I can see that I’ve got my awesome work and I can see both sides of my mesh in my modeling program of choice. However, when it’s imported into Unreal Engine 4 it’s messed up!
+      </p>
+      <p>
+       So, what gives, because this surely cannot be right?!
+      </p>
+      <p>
+       This is actually 100% normal (pun intended). Even though the plane looks good the back face is not being rendered just like the closest faces of our tube mesh.
+      </p>
+      <p>
+       <br clear="all"/>
+      </p>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:809px;">
+        <img alt="" class="thumbimage" height="462" src="../assets/lightingtroubleshootingguide/10.png" width="807"/>
+        <div class="thumbcaption">
+         Wireframe of Created Assets in UE4
+        </div>
+       </div>
+      </div>
+      <p>
+       When you create your geometry in your modeling program by default the software has set it so that you can see both sides of your geometry.
+      </p>
+      <p>
+       In UE4 the back face of a polygon is automatically culled to save on performance because every little bit helps! It’s not always necessary to have extra polygons or render sides that may not be needed, otherwise, there would be extra draw calls that could slow down your performance. with a few instances, this probably wouldn’t matter much, but when you’re developing for specific platforms or have a lot going on every draw call starts to matter.
+      </p>
+      <p>
+       To also understand why we can only see one side we can open our mesh in the static mesh editor and tick the toolbar option for “Normals.” You will see Green lines that point in the direction the face of the polygon is directed. In the image below for our tube asset, we can see that the faces where it’s invisible have the lines going towards the center of the mesh. This is the direction that the visible face can be seen.
+      </p>
+      <p>
+       <br clear="all"/>
+      </p>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:1243px;">
+        <img alt="" class="thumbimage" height="672" src="../assets/lightingtroubleshootingguide/11.png" width="1241"/>
+        <div class="thumbcaption">
+         Static Mesh Editor
+        </div>
+       </div>
+      </div>
+      <p>
+       <font size="4">
+        <i>
+         <b>
+          Pro Tip:
+         </b>
+        </i>
+        While in UE4 if you have any meshes that have what appears to be invisible geometry or missing faces you can check the normals here before fixing the issue in your modeling software.
+       </font>
+      </p>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       Now that we have all the boring stuff out of the way we can get right to fixing our invisible faces with some checkboxes and Materials.
+      </p>
+      <p>
+       1.
+       <b>
+        (STATIC ONLY)Light as if Two-Sided
+       </b>
+      </p>
+      <dl>
+       <dd>
+        <dl>
+         <dd>
+          <ul>
+           <li>
+            Enabled this option via the details panel for the selected asset in the Level Viewport.
+           </li>
+           <li>
+            With this option selected when lights are built lightmass will calculate that geometry into its bake. It will cast a shadow, even though we cannot see it from this angle, to bake into the lightmap texture. This will not work with a movable/dynamic light though since Unreal Engine 4 uses a deferred rendering pipeline.
+           </li>
+          </ul>
+         </dd>
+        </dl>
+       </dd>
+      </dl>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerybox" style="width: 307.33333333333px">
+        <div style="width: 307.33333333333px">
+         <div class="thumb" style="width: 305.33333333333px;">
+          <div style="margin:-0.16666666666667px auto;">
+           <img alt="" class="" height="226" src="../assets/lightingtroubleshootingguide/12.png" width="306"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Asset's Details Panel in Level Viewport
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 330.66666666667px">
+        <div style="width: 330.66666666667px">
+         <div class="thumb" style="width: 328.66666666667px;">
+          <div style="margin:-0.16666666666667px auto;">
+           <img alt="" class="" height="226" src="../assets/lightingtroubleshootingguide/13.png" width="329"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Final Results
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       2.
+       <b>
+        Creating a Two-Sided Material
+       </b>
+      </p>
+      <dl>
+       <dd>
+        <dl>
+         <dd>
+          <ul>
+           <li>
+            Open the material editor and in the details panel on the left select the option for “Two-sided”.
+           </li>
+           <li>
+            Save and compile your material for this to take effect.
+           </li>
+           <li>
+            This method can be used with Static/Stationary/Movable lighting. Since the material is now being rendered the faces of that were not visible before are no longer being culled and can block the light. Be aware though that this now renders both sides of the mesh adding to your draw calls. As mentioned earlier this won’t necessarily affect performance in smaller scenes or setups, but if you’re targeting hardware where every bit of performance counts this can affect that.
+           </li>
+          </ul>
+         </dd>
+        </dl>
+       </dd>
+      </dl>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerybox" style="width: 197.33333333333px">
+        <div style="width: 197.33333333333px">
+         <div class="thumb" style="width: 195.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="250" src="../assets/lightingtroubleshootingguide/14.png" width="196"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Material Attributes Details Panel
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 384px">
+        <div style="width: 384px">
+         <div class="thumb" style="width: 382px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="250" src="../assets/lightingtroubleshootingguide/15.png" width="382"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Final Results
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="Why_does_this_look_nothing_like_it_did_before.2C_or_Engine_Scalability_and_you">
+        Why does this look nothing like it did before, or Engine Scalability and you
+       </span>
+      </h3>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:587px;">
+        <img alt="" class="thumbimage" height="625" src="../assets/lightingtroubleshootingguide/16.png" width="585"/>
+        <div class="thumbcaption">
+         Engine Scalability Settings
+        </div>
+       </div>
+      </div>
+      <p>
+       The Engine Scalability settings can be accessed via the Settings &gt; Engine Scalability option in the Toolbar.
+      </p>
+      <p>
+       The purpose of this is to scale the engine rendering settings to fit machines that may have a more difficult time running smoothly. By default, the editor will lower settings here if the FPS drops too low.
+      </p>
+      <p>
+       There is an option for “Shadows” that will directly affect the shadowing distance of any movable (dynamic) shadows. This is true when the list is set to “Movable” or when lighting has not been built for the static lights yet, since those are using dynamic shadows as temporary indication until your lights are built and baked into lightmaps.
+      </p>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       The images below will demonstrate the shadow distance of each Shadow setting in the Engine Scalability tab.
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerybox" style="width: 189.33333333333px">
+        <div style="width: 189.33333333333px">
+         <div class="thumb" style="width: 187.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="200" src="../assets/lightingtroubleshootingguide/17.png" width="188"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Epic
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 195.33333333333px">
+        <div style="width: 195.33333333333px">
+         <div class="thumb" style="width: 193.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="200" src="../assets/lightingtroubleshootingguide/18.png" width="194"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           High
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 218px">
+        <div style="width: 218px">
+         <div class="thumb" style="width: 216px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="200" src="../assets/lightingtroubleshootingguide/19.png" width="216"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Medium
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 228.66666666667px">
+        <div style="width: 228.66666666667px">
+         <div class="thumb" style="width: 226.66666666667px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="200" src="../assets/lightingtroubleshootingguide/20.png" width="227"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Low
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       If there are no shadows in your level this is the best place to check first. Even if your system is top of the line these settings can still be automatically set to a lower setting and stay there if the FPS drops too low. It’s a good place to always check before looking at other issues that may be a factor.
+      </p>
+      <p>
+       If there is a need to not have the auto-scaling on it can be disabled by unchecking the option at the bottom of the Engine Scalability settings window. Do realize that this can cause performance issues as the editor will no longer monitor when there is a need to adjust this to a lower settings to help keep performance up.
+      </p>
+      <p>
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Performance/Scalability/ScalabilityReference/index.html#scalabilitysettings" rel="nofollow">
+        <b>
+         Want to know more about Engine Scalability?
+        </b>
+       </a>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="Why_is_there_a_red_.E2.80.9CX.E2.80.9D_over_my_light.3F">
+        Why is there a red “X” over my light?
+       </span>
+      </h3>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:1054px;">
+         <img alt="" class="thumbimage" height="389" src="../assets/lightingtroubleshootingguide/21.jpg" width="1052"/>
+         <div class="thumbcaption">
+          Overlapping Stationary Lights
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       Stationary lights are limited to a maximum of 4 shadow casting lights being overlapped. When the 5th is added there will be a red ‘X’ indicating that the light in this area of overlapping with the smallest radius will revert to a dynamic light. This can cause performance issue because dynamic lighting that casts shadows is more expensive to use then baked lighting.
+      </p>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       If lighting is built with any stationary lights that are overlapping offenders there will be a warning detailing which light is the offender and the ramifications.
+      </p>
+      <p>
+       <br/>
+       To correct this make sure that there are no more than 4 shadow casting overlapping Stationary lights in a single area. This may require the removal of a light, disabling the Cast Shadows flag or adjusting the radius so that it’s no longer overlapping.
+      </p>
+      <p>
+       If there are only three placed stationary lights and there is a red X over the 4th light make sure that you have no other stationary lights in your level that would be overlapping. Often times this would be the Directional light set to Stationary that is causing this issue.
+      </p>
+      <p>
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Resources/ContentExamples/Lighting/2_2/index.html" rel="nofollow">
+        <b>
+         Want to know more about Stationary Lights?
+        </b>
+       </a>
+      </p>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="Poor_Lightmap_UV_Layout">
+        Poor Lightmap UV Layout
+       </span>
+      </h3>
+      <p>
+       The key to getting a good lightmap bake is by having a proper setup for your light map so that it effectively uses the 0-1 UV space. When you go outside of this space or have faces that overlap each other you will see the dreaded “Lightmap Overlapping by xx%” in your Map Check warnings!
+      </p>
+      <p>
+       The documentation that we have on properly setting up a lightmap is a good place to start reading. Read all about Lightmapping in UE4 here.
+      </p>
+      <ul>
+       <li>
+        <a class="external free" href="https://docs.unrealengine.com/latest/INT/Engine/Content/Types/StaticMeshes/LightmapUnwrapping/" rel="nofollow">
+         https://docs.unrealengine.com/latest/INT/Engine/Content/Types/StaticMeshes/LightmapUnwrapping/
+        </a>
+       </li>
+      </ul>
+      <p>
+       Here are some key things to remember when setting up your lightmap:
+      </p>
+      <ul>
+       <li>
+        No Overlapping faces
+       </li>
+       <li>
+        No faces outside of the 0,1 UV space
+       </li>
+       <li>
+        Flat-Mapping is not the best approach and often will lead to many errors with your lightmap
+       </li>
+       <li>
+        Use as much of the 0,1 UV space so that there is no wasted texture space.
+       </li>
+       <li>
+        If you have a large and potentially complex mesh it is best to break it up into parts for a good lightmap resolution and for other performance reasons like Occlusion Culling.
+       </li>
+       <li>
+        Use as low a lightmap resolution as you can to save runtime texture memory.
+       </li>
+       <li>
+        Make sure that your UV islands have at least a 2 pixel spacing between them to prevent light bleed. Account for this based on the target resolution of your lightmap.
+       </li>
+      </ul>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="The_Power_of_Post_Process_Global_Illumination_Settings">
+        The Power of Post Process Global Illumination Settings
+       </span>
+      </h3>
+      <p>
+       The Post Process Volume can be a very powerful tool in your scene when it comes to lighting, especially statically lit areas. You can easily control this by adjusting these settings in your Post Process Settings.
+      </p>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:356px;">
+        <img alt="" class="thumbimage" height="76" src="../assets/lightingtroubleshootingguide/22.png" width="354"/>
+        <div class="thumbcaption">
+         GI Post Process Settings
+        </div>
+       </div>
+      </div>
+      <p>
+       In this simple example below this is all controlled with an emissive material for the rod, a dim point light for the room, and two post process volumes that overlap! This is a very cheap way to fake some dynamic GI with your post process!
+      </p>
+      <p>
+       Setup:
+      </p>
+      <ul>
+       <li>
+        Very dim Point light for some soft ambient light in the room.
+       </li>
+       <li>
+        Moving Rod has a simple emissive material applied with a multiplier to control how bright it is.
+       </li>
+       <li>
+        There is one Post Process Volume surrounding the scene that is using default settings, which isn’t needed really unless you plan to have other settings changed for your basic scene.
+       </li>
+       <li>
+        Second Post Process Volume that is attached to the Rod as it moves into and out of view. It is slightly larger than the Rod in length so that there is some overlap. There have been three settings tweaked in this to make it work smoothly.
+       </li>
+      </ul>
+      <ol>
+       <li>
+        The Indirect Lighting Color has been set to a lighter but similar color to that of Rod emissive color.
+       </li>
+       <li>
+        The Indirect Lighting Intensity has been adjusted to make the room feel like it’s having this emissive light cast onto it.
+       </li>
+       <li>
+        The Post Process Volume’s Blend Radius was used to blend the two volumes for a smooth effect of the light bleeding into the room.
+       </li>
+      </ol>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:642px;">
+         <img alt="" class="thumbimage" height="360" src="../assets/lightingtroubleshootingguide/23.gif" width="640"/>
+         <div class="thumbcaption">
+          Example Scene (Click the image if the gif is not loading)
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       This was all controlled with a Post Process Volume and static lighting! Being able ot control the bake GI can offer much more control over your scene if you need to make some stylistic choices and can help save from having to rely solely on light builds to look 100% accurate.
+      </p>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="Capsule_Shadows">
+        Capsule Shadows
+       </span>
+      </h3>
+      <p>
+       Capsule Shadows are a new feature for 4.11 and higher that allows skeletal meshes to blend in better in indirectly lit and directly lit areas with soft shadowing.
+      </p>
+      <p>
+       The tutorial on this page can help you get started if you’ve not used them.
+      </p>
+      <p>
+       <a class="external free" href="http://timhobsonue4.snappages.com/lighting-capsule-shadows" rel="nofollow">
+        http://timhobsonue4.snappages.com/lighting-capsule-shadows
+       </a>
+      </p>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h2>
+       <span class="mw-headline" id="Dynamic_.28Movable.29_Lighting">
+        <b>
+         Dynamic (Movable) Lighting
+        </b>
+       </span>
+      </h2>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="Shadow_bleed_or_Incorrect_Shadow_Quality">
+        Shadow bleed or Incorrect Shadow Quality
+       </span>
+      </h3>
+      <p>
+       In this guide, we’ll look at areas that will help improve the quality so that the shadows more accurately fit the meshes. This will also help in offering tips to improve dynamic lighting at a distance.
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerybox" style="width: 572.66666666667px">
+        <div style="width: 572.66666666667px">
+         <div class="thumb" style="width: 570.66666666667px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="450" src="../assets/lightingtroubleshootingguide/24.png" width="571"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Example of Shadow Bleed, or Incorrect Shadow Quality
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <h4>
+       <span class="mw-headline" id="Directional_Light_ONLY:_Cascaded_Shadow_Maps_Settings:">
+        Directional Light ONLY: Cascaded Shadow Maps Settings:
+       </span>
+      </h4>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerybox" style="width: 290.66666666667px">
+        <div style="width: 290.66666666667px">
+         <div class="thumb" style="width: 288.66666666667px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="200" src="../assets/lightingtroubleshootingguide/25.png" width="289"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Cascaded Shadow Maps Settings, in Directional Light Details
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       <b>
+        Dynamic Shadow Distance Movable
+       </b>
+       : This is the distance from the camera that shadows will cover. A value of 0 disables this.
+       <br/>
+       <br/>
+       <b>
+        Dynamic Shadow Distance Stationary
+       </b>
+       : This is the distance from the camera that shadows will cover. This is set to 0 by default for Directional Stationary Lights
+       <br/>
+       <br/>
+       <b>
+        Num Dynamic Shadow Cascades
+       </b>
+       : This is the number of cascades the view frustum will be split into. More cascades will result in better shadow resolution, but will add significant rendering cost. To read more on view frustums take a look at this article:
+       <a class="external free" href="http://en.wikipedia.org/wiki/Viewing_frustum" rel="nofollow">
+        http://en.wikipedia.org/wiki/Viewing_frustum
+       </a>
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerycaption">
+        Num Dynamic Shadow Cascades (In these examples Shadow Bias, covered later, has been set to 0 to more visibly see the cascades.)
+       </li>
+       <li class="gallerybox" style="width: 300px">
+        <div style="width: 300px">
+         <div class="thumb" style="width: 298px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="200" src="../assets/lightingtroubleshootingguide/26.png" width="298"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Cascade Number = 0
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 300px">
+        <div style="width: 300px">
+         <div class="thumb" style="width: 298px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="200" src="../assets/lightingtroubleshootingguide/27.png" width="298"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Cascade Number = 1
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 300.66666666667px">
+        <div style="width: 300.66666666667px">
+         <div class="thumb" style="width: 298.66666666667px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="200" src="../assets/lightingtroubleshootingguide/28.png" width="299"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Cascade Number = 2
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 300px">
+        <div style="width: 300px">
+         <div class="thumb" style="width: 298px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="200" src="../assets/lightingtroubleshootingguide/29.png" width="298"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Cascade Number = 3 (Default)
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 300px">
+        <div style="width: 300px">
+         <div class="thumb" style="width: 298px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="200" src="../assets/lightingtroubleshootingguide/30.png" width="298"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Cascade Number = 4
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       <b>
+        Cascade Distribution Exponent
+       </b>
+       : This controls whether the cascades are distributed closer (higher value) or further away (lower value) from the camera. A value of 1 means the transition will happen proportional to their resolution.
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerycaption">
+        Cascade Distribution Exponent
+       </li>
+       <li class="gallerybox" style="width: 300px">
+        <div style="width: 300px">
+         <div class="thumb" style="width: 298px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="200" src="../assets/lightingtroubleshootingguide/31.png" width="298"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Distribution = 1
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 300px">
+        <div style="width: 300px">
+         <div class="thumb" style="width: 298px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="200" src="../assets/lightingtroubleshootingguide/32.png" width="298"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Distribution = 2
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 300px">
+        <div style="width: 300px">
+         <div class="thumb" style="width: 298px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="200" src="../assets/lightingtroubleshootingguide/33.png" width="298"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Distribution = 3
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 300px">
+        <div style="width: 300px">
+         <div class="thumb" style="width: 298px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="200" src="../assets/lightingtroubleshootingguide/34.png" width="298"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Distribution = 4
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       <b>
+        Cascade Transition Exponent
+       </b>
+       : This controls the proportion of the fade region between cascades. Lower values will give a hard edge between the shadow cascades whereas higher values will blend between the two.
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerycaption">
+        Cascade Transition Exponent
+       </li>
+       <li class="gallerybox" style="width: 482px">
+        <div style="width: 482px">
+         <div class="thumb" style="width: 480px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="360" src="../assets/lightingtroubleshootingguide/35.gif" width="480"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Transition Effect
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerycaption">
+        Cascade Transition Exponent
+       </li>
+       <li class="gallerybox" style="width: 253.33333333333px">
+        <div style="width: 253.33333333333px">
+         <div class="thumb" style="width: 251.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="120" src="../assets/lightingtroubleshootingguide/36.png" width="252"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Hard Edge (Lower Value)
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 226px">
+        <div style="width: 226px">
+         <div class="thumb" style="width: 224px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="120" src="../assets/lightingtroubleshootingguide/37.png" width="224"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Blended Edge (Higher Value)
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       <b>
+        Shadow Distance Fadeout Fraction
+       </b>
+       :  This controls the how the shadows fade out at distances. Higher values will fade the shadow out whereas lower values will leave a darker shadow at distances.
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerycaption">
+        Shadow Distance Fadeout Fraction
+       </li>
+       <li class="gallerybox" style="width: 361.33333333333px">
+        <div style="width: 361.33333333333px">
+         <div class="thumb" style="width: 359.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/38.png" width="360"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Fadeout = 0
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 425.33333333333px">
+        <div style="width: 425.33333333333px">
+         <div class="thumb" style="width: 423.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/39.png" width="424"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Fadeout = 1
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <h4>
+       <span class="mw-headline" id="Far_Shadow">
+        Far Shadow
+       </span>
+      </h4>
+      <p>
+       The option to set the Far Shadow for a static mesh or Landscape gives the added benefits of being able to have cascaded shadow maps work for very far distances, instead of the limited range closest to the camera.
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:377px;">
+         <img alt="" class="thumbimage" height="73" src="../assets/lightingtroubleshootingguide/40.png" width="375"/>
+         <div class="thumbcaption">
+          Enable Far Shadow
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       This is controlled by enabling the Far Shadow Cascades in the Directional Light settings under Cascaded Shadow Maps.
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:306px;">
+         <img alt="" class="thumbimage" height="84" src="../assets/lightingtroubleshootingguide/41.png" width="304"/>
+         <div class="thumbcaption">
+          Far Shadow Settings
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       You can set the number of Far Shadow Cascades to be used along with the distance that Actors with the Far Shadow flag enabled on should consider shadowing. For this default setting it’s using 300 meters as the start distance. This value should also be a higher distance than the Cascaded Shadow Map Distance closest to the camera.
+      </p>
+      <p>
+       Also, keep in mind that this is best used for large objects in the distance and is not recommended to be used on every mesh you have. This can have significant performance implications and is why you have to opt in on each static mesh you want to use Far Shadows
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:642px;">
+         <img alt="" class="thumbimage" height="360" src="../assets/lightingtroubleshootingguide/42.gif" width="640"/>
+         <div class="thumbcaption">
+          Far Shadow Demonstration(Click the image if the gif is not loading)
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       In this setup, the Dynamic Shadow Distance of the Directional Light has been set to 5000 units and the far shadow distance is set to 50000 units with 4 far shadow cascades.
+      </p>
+      <p>
+       The static mesh on the left is not using the Far shadow and the one on the right has far shadow enabled.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <p>
+       <br clear="all"/>
+      </p>
+      <h4>
+       <span class="mw-headline" id="Adjusting_Cascades_for_better_Quality:">
+        Adjusting Cascades for better Quality:
+       </span>
+      </h4>
+      <p>
+       Shadow bleed and accuracy can be finely tuned by adjusting a combination of the settings demonstrated above. This next section will attempt to adjust the values that work best to get better accuracy with the shadows while in close proximity and as the camera moves away. Finding a balance that works with any particular game will require time, effort, and lots of testing with what works and what does not.
+      </p>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:1315px;">
+        <img alt="" class="thumbimage" height="897" src="../assets/lightingtroubleshootingguide/43.png" width="1313"/>
+        <div class="thumbcaption">
+         Basic Scene, Default Settings
+        </div>
+       </div>
+      </div>
+      <p>
+       Here is the basic scene with only default settings:
+      </p>
+      <p>
+       <br clear="all"/>
+      </p>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:1315px;">
+        <img alt="" class="thumbimage" height="897" src="../assets/lightingtroubleshootingguide/44.png" width="1313"/>
+        <div class="thumbcaption">
+         Highlighted Problem Areas
+        </div>
+       </div>
+      </div>
+      <p>
+       There are already a few problems that are prevalent in this scene with shadows accuracy around edges.
+      </p>
+      <p>
+       <br clear="all"/>
+      </p>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:548px;">
+        <img alt="" class="thumbimage" height="402" src="../assets/lightingtroubleshootingguide/45.png" width="546"/>
+        <div class="thumbcaption">
+         Highlighted Problem Areas, close-up
+        </div>
+       </div>
+      </div>
+      <p>
+       More clearly demonstrated here.
+      </p>
+      <p>
+       <br clear="all"/>
+      </p>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:1315px;">
+        <img alt="" class="thumbimage" height="897" src="../assets/lightingtroubleshootingguide/46.png" width="1313"/>
+        <div class="thumbcaption">
+         Default Scene, Final Results
+        </div>
+       </div>
+      </div>
+      <p>
+       By focusing on the most of the effort around the
+       <b>
+        Cascade Distribution Exponent
+       </b>
+       the shadow bleed can be minimized, within reason of course. The default distance for Dynamic shadows is set to 20,000 units. This isn’t always necessary to which this can be set to a lower value to better utilize the cascades.
+       <br/>
+      </p>
+      <p>
+       If the game level is to use indoor and outdoor scenes finding a combination that fits all or most areas will be difficult and require lots of tweaking. There is no one setting that will make everything look perfect.
+       <br/>
+      </p>
+      <p>
+       In this scene by adjusting the settings for the Distribution, the Shadows Distance, and Number of Cascades the bleed and accuracy are acceptable.
+      </p>
+      <p>
+       <br clear="all"/>
+      </p>
+      <h4>
+       <span class="mw-headline" id="All_Dynamic_Lights_.28Light_Tab_Settings.29:">
+        All Dynamic Lights (Light Tab Settings):
+       </span>
+      </h4>
+      <p>
+       Lastly, there are two other settings under the light tab in our light source that can benefit lighting accuracy as well.
+      </p>
+      <p>
+       These settings can be found here:
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerybox" style="width: 349.33333333333px">
+        <div style="width: 349.33333333333px">
+         <div class="thumb" style="width: 347.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/47.png" width="348"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Lighting Details, Shadow Bias and Filter Sharpness
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       <b>
+        Shadow Bias
+       </b>
+       will control how accurate shadows are in the scene, but will generate artifacts if set to a value that is too low. The default value is 0.5 which is a good tradeoff between how accurate and effective it is.
+       <br/>
+      </p>
+      <p>
+       <b>
+        Shadow Filter Sharpness
+       </b>
+       can help mask some of the artifacts that occur with lower values and this directly contribute to how sharp the edges of the shadows are as well.
+       <br/>
+      </p>
+      <p>
+       Taking into account that none of the previous settings have been adjusted for these images these are some examples to demonstrate
+       <b>
+        Shadow Bias
+       </b>
+       and
+       <b>
+        Shadow Filter Sharpen
+       </b>
+       .
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerycaption">
+        Shadow Bias
+       </li>
+       <li class="gallerybox" style="width: 382.66666666667px">
+        <div style="width: 382.66666666667px">
+         <div class="thumb" style="width: 380.66666666667px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/48.png" width="381"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Shadow Bias = 0.5 (Default)
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 382px">
+        <div style="width: 382px">
+         <div class="thumb" style="width: 380px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/49.png" width="380"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Shadow Bias = 0, adjusted too low will result in artifacts
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       The key here is to find a good balance without going too low and using the setting under the tab for Cascaded Shadows.
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerycaption">
+        Shadow Filter Sharpen, will sharpen the edge of the shadow with higher values
+       </li>
+       <li class="gallerybox" style="width: 441.33333333333px">
+        <div style="width: 441.33333333333px">
+         <div class="thumb" style="width: 439.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/50.png" width="440"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Filter Sharpen = 0
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 441.33333333333px">
+        <div style="width: 441.33333333333px">
+         <div class="thumb" style="width: 439.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/51.png" width="440"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Filter Sharpen = 1
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       Most notably the higher the value for the sharpen filter the shaper your shadows. The soft edge created by the lower values will now be lost.  
+_________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="Why_does_my_Movable_light_shine_through_my_mesh_at_far_distances.3F">
+        Why does my Movable light shine through my mesh at far distances?
+       </span>
+      </h3>
+      <p>
+       Dynamic lights, especially point lights, cause this kind of issue to crop up. Unreal Engine 4 does a good job of trying to optimize things so that you don’t have to worry about it so much. The problem is sometimes it gets carried away and can cause things like this to happen that may not be obvious how to fix.
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerybox" style="width: 430px">
+        <div style="width: 430px">
+         <div class="thumb" style="width: 428px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="350" src="../assets/lightingtroubleshootingguide/52.png" width="428"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           This is what we want, Close to Camera
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 430px">
+        <div style="width: 430px">
+         <div class="thumb" style="width: 428px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="350" src="../assets/lightingtroubleshootingguide/53.png" width="428"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           At a Distance from Camera
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       So, what gives?!
+      </p>
+      <p>
+       To explain this we need to discuss that awesome optimizing the engine does for you. The engine uses scene depth to determine what should be visible and what shouldn't be visible for rendering. Since we have a point light here that shoots light throughout it’s set radius when the mesh is beyond its bounds it will be occluded or no longer rendered. This causes the issue that we’re seeing with our light starting to cast in all directions.
+      </p>
+      <p>
+       You can see from this image that as the camera is further away the occlusion of parts of the mesh start to halo around the outer edge until the light is free to cast in all directions.
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerybox" style="width: 430px">
+        <div style="width: 430px">
+         <div class="thumb" style="width: 428px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="350" src="../assets/lightingtroubleshootingguide/54.gif" width="428"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Mesh Light Occlusion
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       You may notice that if you select the mesh when far away that the light returns to normal. This is expected as you have just selected the mesh and it is now focused.
+      </p>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:395px;">
+        <img alt="" class="thumbimage" height="553" src="../assets/lightingtroubleshootingguide/55.png" width="393"/>
+        <div class="thumbcaption">
+         Object Bounds, Details Panel, Rendering Tab
+        </div>
+       </div>
+      </div>
+      <p>
+       To keep the mesh from being occluded you’ll need to select the mesh and go to the details panel. Here you can search or scroll for the “Bounds Scale” (Located under the Tab for Rendering.)
+      </p>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       The default value is set to 1.0. When increasing this scale be sure to only use incremental small numbers. Using a value of 2.0 doubles what the distance was set to which can be overkill. Try increasing by smaller incremental values. (ie. 1.1, 1.2) There is no need in pushing to have more than you need as this can impact performance and shadow quality.
+      </p>
+      <p>
+       You can visualize your meshes bounds by going to the viewport &gt; Show &gt; Advanced &gt; Bounds
+      </p>
+      <p>
+       You will see something like this:
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:505px;">
+         <img alt="" class="thumbimage" height="508" src="../assets/lightingtroubleshootingguide/56.png" width="503"/>
+         <div class="thumbcaption">
+          Object Bounds Visualized
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br/>
+       Additional notes:
+      </p>
+      <p>
+       If you’re having issues with your mesh occluding, but don’t want to increase the bounds scale due to performance concerns you can try using a Spotlight. Since this only casts light in a single direction you won’t notice the light of a point light casting in all directions when the mesh is occluded. This works well for situations similar to what has been demonstrated, but testing may need to be done on your part to get things just right.
+      </p>
+      <p>
+       Alternatively, you could forego a fully movable/dynamic light and use a stationary light that bakes a lightmap texture, which can also save on performance by having zero overhead during runtime for rendering shadow information. 
+_________________________________________________________________________________________________
+      </p>
+      <h2>
+       <span class="mw-headline" id="Static_Lighting">
+        <b>
+         Static Lighting
+        </b>
+       </span>
+      </h2>
+      <hr/>
+      <h3>
+       <span class="mw-headline" id="Lightmap_Resolution_.2F_Shadow_Quality">
+        Lightmap Resolution / Shadow Quality
+       </span>
+      </h3>
+      <p>
+       Every project has its own unique art direction and goals, so this section is meant to present common concepts and give you a foundation to begin achieving what you want from your static lighting.  By no means will the settings we present here work all the time for every project.
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerybox" style="width: 801.33333333333px">
+        <div style="width: 801.33333333333px">
+         <div class="thumb" style="width: 799.33333333333px;">
+          <div style="margin:-0.16666666666666px auto;">
+           <img alt="" class="" height="478" src="../assets/lightingtroubleshootingguide/57.PNG" width="800"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           A Sample Scene with 3 Static Meshes
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       There are 3 objects in this scene; two walls and a floor mesh. Each object has is own shadows that are baked into a texture known as a lightmap. This lightmap stores any shadow/light information that is being cast on to it in this texture. It is normally handled by an artist in the asset creation.
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Content/Types/StaticMeshes/LightmapUnwrapping/index.html" rel="nofollow">
+        '
+        <i>
+         Want to know more about lightmaps and how to create them effectively?
+        </i>
+       </a>
+      </p>
+      <p>
+       In other words, If I wanted to increase the resolution of the shadow cast by the wall with the doorway, I would not adjust the doorway, but instead would adjust the floor’s lightmap resolution. This is where the shadow is being cast and baked into a lightmap.
+      </p>
+      <p>
+       Now with that out of the way, we may need to increase lightmap resolution for some meshes and not others. Each mesh has it’s own lightmap Resolution that can be set via the details panel when the mesh is selected or via the mesh editor.
+      </p>
+      <p>
+       For this lightmap quality demonstration we’ll look at the floor meshes lightmap resolution only.
+      </p>
+      <p>
+       When adjusting LM resolution make sure it is using a power of two (32 [default in engine], 64, 128, etc) with exception of BSPs (Covered below)
+      </p>
+      <p>
+       A lot of the quality in this lightmap resolution will depend on two factors: Size of the mesh and the size of the UV shells in the lightmap UV.
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerycaption">
+        Lightmap Resolutions for Static Meshes
+       </li>
+       <li class="gallerybox" style="width: 325.33333333333px">
+        <div style="width: 325.33333333333px">
+         <div class="thumb" style="width: 323.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="192" src="../assets/lightingtroubleshootingguide/58.png" width="324"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Resolution = 64
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 360px">
+        <div style="width: 360px">
+         <div class="thumb" style="width: 358px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="192" src="../assets/lightingtroubleshootingguide/59.png" width="358"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Resolution = 128
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 373.33333333333px">
+        <div style="width: 373.33333333333px">
+         <div class="thumb" style="width: 371.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="192" src="../assets/lightingtroubleshootingguide/60.png" width="372"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Resolution = 256
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 402.66666666667px">
+        <div style="width: 402.66666666667px">
+         <div class="thumb" style="width: 400.66666666667px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="192" src="../assets/lightingtroubleshootingguide/61.png" width="401"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Resolution = 512
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       The key to difference to note about using lightmaps on BSPs versus Static Meshes is that it doesn't increase, but instead decreases to get better resolution.
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerycaption">
+        Lightmap Resolutions for BSPs
+       </li>
+       <li class="gallerybox" style="width: 334px">
+        <div style="width: 334px">
+         <div class="thumb" style="width: 332px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="192" src="../assets/lightingtroubleshootingguide/62.png" width="332"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Resolution = 32
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 285.33333333333px">
+        <div style="width: 285.33333333333px">
+         <div class="thumb" style="width: 283.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="192" src="../assets/lightingtroubleshootingguide/63.png" width="284"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Resolution = 24
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 320.66666666667px">
+        <div style="width: 320.66666666667px">
+         <div class="thumb" style="width: 318.66666666667px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="192" src="../assets/lightingtroubleshootingguide/64.png" width="319"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Resolution = 16
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 309.33333333333px">
+        <div style="width: 309.33333333333px">
+         <div class="thumb" style="width: 307.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="192" src="../assets/lightingtroubleshootingguide/65.png" width="308"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Resolution = 8
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       While adjusting the lightmap resolution to get better results there are trade offs here. Using a smaller mesh will allow you to get better results for the floor with a lower lightmap resolution, while using this larger mesh you will need to increase the lightmap resolution and the texture will use more resources for your games.
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerycaption">
+        Lightmap Resolutions for Landscapes
+       </li>
+       <li class="gallerybox" style="width: 418px">
+        <div style="width: 418px">
+         <div class="thumb" style="width: 416px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/66.png" width="416"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Resolution = 1.0
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 418px">
+        <div style="width: 418px">
+         <div class="thumb" style="width: 416px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/67.png" width="416"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Resolution = 2.0
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       Much like the difference between BSP and Static Meshes for setting the static lighting resolution Landscapes are a slight bit different as well. Landscape Lightmap Resolution uses a multiplier that can be used to give better resolution for the baked shadows. Larger Landscapes may require a higher resolution value, where as smaller landscapes will not.
+      </p>
+      <p>
+       In the Details panel you have the option to increase the
+       <b>
+        Static Lighting Resolution
+       </b>
+       , which is set by default to 1. When you adjust this you only need to incrementally increase by a whole number until you are at the desired resolution you would like. 
+_________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="Shadow_Seams.2FShading_Differences_with_Indirect_Lighting">
+        Shadow Seams/Shading Differences with Indirect Lighting
+       </span>
+      </h3>
+      <p>
+       Often when you build lighting for your project and in indirectly lit areas you may notice that there is sometimes a shading difference between modular planar surfaces, typically walls, floors, and ceilings. This is an unfortunate side-effect of how static indirect lighting is handled at the moment and doesn’t have an easy way to fix. This can hopefully be made better in the future.
+      </p>
+      <p>
+       Here’s the breakdown of the issue, if you’re not familiar.
+      </p>
+      <ul>
+       <li>
+        Light hits a surface and then that light is bounced on the surrounding surfaces. This type of bounce light is referred to as Indirect Lighting. Some surfaces will be directly lit as well while still receiving some bounce, like the Wall that is partly lit fully and has some indirect lighting with the shading issue in the shadowed corner.
+       </li>
+      </ul>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:1174px;">
+         <img alt="" class="thumbimage" height="813" src="../assets/lightingtroubleshootingguide/68.png" width="1172"/>
+         <div class="thumbcaption">
+          Light Bounce Example
+         </div>
+        </div>
+       </div>
+      </div>
+      <ul>
+       <li>
+        If the surfaces receiving the indirect lighting are flat planar surfaces they generated this disparity in shading between them like this:
+       </li>
+      </ul>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:1087px;">
+         <img alt="" class="thumbimage" height="862" src="../assets/lightingtroubleshootingguide/69.png" width="1085"/>
+         <div class="thumbcaption">
+          Indirect Lighting Artifact
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br/>
+       What’s happening here is that each of these static meshes are sent to the CPU to be processed in the order they are received and on different CPU threads. This simply means that while each one has their lighting built by lightmass the others don’t know what the shading for the one before it would look like to reference the edges to make sure they match up. This leads to slight shading differences between each planar surface.
+      </p>
+      <p>
+       So, by now, you’re wondering “What can I do about this?!”, right?
+      </p>
+      <p>
+       In the World Settings under the section for Lightmass you can adjust some of the settings here to get better results.
+      </p>
+      <ul>
+       <li>
+        Indirect Lighting Quality can be set to 2 or higher.
+       </li>
+       <li>
+        Indirect Lighting Smoothness can be set to usually a range of .65-.75. The lower the value here is though the more artifacts you can run into that make the lightmap look like it has blotchiness to it.
+       </li>
+       <li>
+        (Recommended only for Advanced Users!!) Static Lighting Level Scale can be adjusted to a lower value to get better blending as well. But this changes the scale of how lighting is calculated for the entire level. This will increase build times significantly if the value is lowered but will give you better results. This is commonly used by those within the Architectural Visualization field and not by those developing games unless they have a specific reason and understand the choice.
+       </li>
+      </ul>
+      <p>
+       When you adjust the quality of indirect lighting it’s always a good idea to lower the lighting smoothness to get better results. This helps blend better between these surfaces, but it doesn’t necessarily help remove the issue completely and can have other side-effects as well. You should really test it in project or a test map to fully understand what you’re adjusting here and why.
+      </p>
+      <p>
+       There is also some steps you can take to reduce how noticeable this artifact is and steps you can take with the design of your project.
+      </p>
+      <ul>
+       <li>
+        Try not to over-modularize your levels! This is important. You may think that making  a moderately sized wall into nice smaller concise pieces that you can pack together like Lego’s is the best thing ever, but you run the risk of this shading difference happening, and you now have many more actors that add to draw calls and checks for the visibility states of these. It’s best to have have a single wall when it makes sense rather than many small pieces. You get reduced draw calls and less issues that can occur with lighting.
+       </li>
+       <li>
+        You can simply use other geometry to better hide these pieces where there would be seams, like columns or adjoining walls, or wall molding.
+       </li>
+      </ul>
+      <p>
+       <br/>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="What_is_this_.E2.80.9COverlapping_UV_error.E2.80.9D_non-sense_when_I_build_lighting.3F">
+        What is this “Overlapping UV error” non-sense when I build lighting?
+       </span>
+      </h3>
+      <p>
+       When using static or stationary lighting it is imperative to use two UVs for your meshes otherwise you will get the following warning when you build lighting:
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerybox" style="width: 800.66666666667px">
+        <div style="width: 800.66666666667px">
+         <div class="thumb" style="width: 798.66666666667px;">
+          <div style="margin:-0.16666666666666px auto;">
+           <img alt="" class="" height="294" src="../assets/lightingtroubleshootingguide/70.PNG" width="799"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Message Log, Lighting Results
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       This means that you’ll need to setup a second UV channel for your lightmap otherwise the editor will use the existing texture UV as the lightmap which can lead to these kinds of errors.
+      </p>
+      <p>
+       This can be fixed by adjusting the UV for the lightmap so that there are no overlapping faces.
+      </p>
+      <p>
+       This can be done
+       <a href="#How_do_I_generate_lightmap_UVs_in_the_editor.3F">
+        in the editor
+       </a>
+       via generating lightmaps or by using your modeling software of choice to create and edit your UVs.
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerycaption">
+        Original UVs and Results
+       </li>
+       <li class="gallerybox" style="width: 278.66666666667px">
+        <div style="width: 278.66666666667px">
+         <div class="thumb" style="width: 276.66666666667px;">
+          <div style="margin:-0.16666666666666px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/71.png" width="277"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Overlapping UVs
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 322px">
+        <div style="width: 322px">
+         <div class="thumb" style="width: 320px;">
+          <div style="margin:-0.16666666666666px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/72.png" width="320"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Results in Editor
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerycaption">
+        Corrected UVs and Results
+       </li>
+       <li class="gallerybox" style="width: 293.33333333333px">
+        <div style="width: 293.33333333333px">
+         <div class="thumb" style="width: 291.33333333333px;">
+          <div style="margin:-0.16666666666666px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/73.png" width="292"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Corrected UVs
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 296px">
+        <div style="width: 296px">
+         <div class="thumb" style="width: 294px;">
+          <div style="margin:-0.16666666666666px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/74.png" width="294"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Results in Editor
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       Take notice that the UV in the final result has no overlapping faces which allows shadow/light information to bake correctly for the texture that will be applied to our mesh after the light build.
+      </p>
+      <p>
+       With the overlapping faces these will give incorrect shading due to lighting information not being baked correctly.
+_________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="How_do_I_generate_lightmap_UVs_in_the_editor.3F">
+        How do I generate lightmap UVs in the editor?
+       </span>
+      </h3>
+      <p>
+       With the release of 4.5 the editor will automatically generate UVs on import or by using the mesh editor.
+      </p>
+      <p>
+       We will assume you’re wanting to set them up from the mesh editor.
+      </p>
+      <ul>
+       <li>
+        Open the mesh you’d like to create a lightmap with.
+       </li>
+      </ul>
+      <ul>
+       <li>
+        Locate the panel on the right that looks like this:
+       </li>
+      </ul>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerybox" style="width: 357.33333333333px">
+        <div style="width: 357.33333333333px">
+         <div class="thumb" style="width: 355.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/75.png" width="356"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Static Mesh Editor Details Panel
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       This panel will allow you to create your lightmap channel, but do note that this does not directly control your lightmap resolution or it’s coordinate index assignment. These will be covered a little later.
+      </p>
+      <p>
+       The settings here in the “Build Settings” tab that we will focus on are:
+      </p>
+      <div align="left">
+       <b>
+        Generate Lightmap UVs
+       </b>
+       = make sure this is checked.
+       <br/>
+       <p>
+        <b>
+         Min Lightmap Resolution
+        </b>
+        = This is the smallest size you would want your lightmap resolution to be.
+        <br/>
+        <b>
+         Source Lightmap Index
+        </b>
+        = This is the source which we will generate our lightmap UVs from.
+        <br/>
+       </p>
+       <b>
+        Destination Lightmap Index
+       </b>
+       = This is the location we will store this UV when it is created.
+      </div>
+      <p>
+       For most assets this should be a good setup. The key here is making sure that we select the proper source lightmap index. This is the UV that is typically used for the textures. The UV shells/islands in this UV will be repacked so that there are no overlapping faces, which is integral to using lightmaps.
+      </p>
+      <p>
+       For the lightmap resolution setting a low value to begin with is not bad because we are not obligated to using that resolution. If you decide to use a higher resolution you do not need to come back to these settings unless you know it could improve the lightmap bake. In most cases it’s not necessary.
+      </p>
+      <p>
+       Once you’ve hit “Apply Changes” we can verify our lightmap has been created and see if there appears to be any errors.
+      </p>
+      <p>
+       You can do this by going to the mesh editor toolbar and clicking the UV icon to show the UV and using the drop down to the right to select UV channel 1 to view our newly created lightmap.
+      </p>
+      <p>
+       It should look something like this:
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerybox" style="width: 371.33333333333px">
+        <div style="width: 371.33333333333px">
+         <div class="thumb" style="width: 369.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/76.png" width="370"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Static Mesh Editor, UV Channel Selection
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       That’s not quite it though. We still need to assign the correct UV channel to be used for our Lightmap.
+      </p>
+      <p>
+       In the mesh editor in the details panel on the right locate the tab labeled “Static Mesh Settings”
+      </p>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:618px;">
+        <img alt="" class="thumbimage" height="330" src="../assets/lightingtroubleshootingguide/77.PNG" width="616"/>
+        <div class="thumbcaption">
+         Static Mesh Editor Details, Lightmap Settings
+        </div>
+       </div>
+      </div>
+      <ul>
+       <li>
+        In this tab we’ll need to adjust the lightmap resolution for what we’d like here.
+       </li>
+      </ul>
+      <p>
+       32 is the default lightmap resolution. For smaller objects this would work well. For larger objects we would possibly need to use higher resolutions.
+      </p>
+      <p>
+       Make sure to adjust it by a power of 2. (ie. 32, 64, 128, 256, etc)
+      </p>
+      <ul>
+       <li>
+        The next setting we’ll need to verify is that the Lightmap Coordinate Index is now pointing to the right channel. Make sure this is set to the channel that you set in the build settings above. Typically this should be set to 1.
+       </li>
+      </ul>
+      <p>
+       After using these settings you will now have a proper lightmap resolution.
+      </p>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       There are some caveats to this though that may require the use of a modeling program like Blender, 3Ds Max, or Maya to fully correct the issue.
+      </p>
+      <p>
+       The generated lightmaps will not split or cut seams in the existing UVs from UV channel 1 used for the texture. It will only repack the existing UV layout to better fit the needs of a lightmap UV.
+      </p>
+      <p>
+       As an example, think of a cylinder. If you wanted to lay these faces all out flat you would need to cut a line in the side of the cylinder to do so. In a modeling program this isn’t always necessary depending on how you’ve set up the texture UV to be used. If this side face was not cut to be laid out flat the generated UVs via the mesh editor will not work and will still result in overlapping UVs warning being generated after a light build.
+_________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="How_to_control_Global_Illumination_with_Static_Lighting.3F.2C_or_The_Wonderful_Thing_About_Bounce">
+        How to control Global Illumination with Static Lighting?, or The Wonderful Thing About Bounce
+       </span>
+      </h3>
+      <p>
+       When using static lighting you will need to build lighting to see the results. Lightmass is used to compile and generate textures that will store this light and shadow information for our scene by baking this information into a lightmap texture.
+      </p>
+      <p>
+       By default lightmass is set to use 3 light bounces to get GI with static lighting. If more is needed we will need to directly change the lightmass settings to get different results via our World Settings tab. We can affect our Global Illumination directly by changing the number of bounces that the light will cast.
+      </p>
+      <p>
+       To enable World Settings tab you’ll need to go to the Toolbar and select Settings &gt; World Settings
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerybox" style="width: 667.33333333333px">
+        <div style="width: 667.33333333333px">
+         <div class="thumb" style="width: 665.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="132" src="../assets/lightingtroubleshootingguide/78.png" width="666"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           World Settings
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:398px;">
+        <img alt="" class="thumbimage" height="531" src="../assets/lightingtroubleshootingguide/79.png" width="396"/>
+        <div class="thumbcaption">
+         Default Lightmass World Settings
+        </div>
+       </div>
+      </div>
+      <p>
+       Click on the World Settings tab next to the Detail Panel tab on the right side.
+      </p>
+      <p>
+       Here you’ll see a lot of settings that can affect how our light is handled with lightmass that will directly affect our scene. For GI we’re only going to focus on the second option down “Num of Indirect Lighting Bounces.” The slider is clamped to be a value between 1 and 4. You can override this by manually typing in a value though.
+      </p>
+      <p>
+       The default settings are shown to the right.
+      </p>
+      <p>
+       <br clear="all"/>
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerycaption">
+        Global Illumination Sample Scene, Single Point Light at 250 (≈ 15W Light Bulb)
+       </li>
+       <li class="gallerybox" style="width: 340px">
+        <div style="width: 340px">
+         <div class="thumb" style="width: 338px;">
+          <div style="margin:-0.16666666666666px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/80.png" width="338"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Scene Setup
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 366.66666666667px">
+        <div style="width: 366.66666666667px">
+         <div class="thumb" style="width: 364.66666666667px;">
+          <div style="margin:-0.16666666666666px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/81.png" width="365"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           0 Bounces
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 367.33333333333px">
+        <div style="width: 367.33333333333px">
+         <div class="thumb" style="width: 365.33333333333px;">
+          <div style="margin:-0.16666666666666px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/82.png" width="366"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           1 Bounce
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 367.33333333333px">
+        <div style="width: 367.33333333333px">
+         <div class="thumb" style="width: 365.33333333333px;">
+          <div style="margin:-0.16666666666666px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/83.png" width="366"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           2 Bounces
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 366.66666666667px">
+        <div style="width: 366.66666666667px">
+         <div class="thumb" style="width: 364.66666666667px;">
+          <div style="margin:-0.16666666666666px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/84.png" width="365"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           3 Bounces
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 366.66666666667px">
+        <div style="width: 366.66666666667px">
+         <div class="thumb" style="width: 364.66666666667px;">
+          <div style="margin:-0.16666666666666px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/85.png" width="365"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           4 Bounces
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 367.33333333333px">
+        <div style="width: 367.33333333333px">
+         <div class="thumb" style="width: 365.33333333333px;">
+          <div style="margin:-0.16666666666666px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/86.png" width="366"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           100 Bounces
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <div align="center">
+       <font size="4">
+        <b>
+         The first bounce takes the longest to calculate. Successive bounces will have less impact on actual build times, but they will also have a much lower visual impact.
+        </b>
+       </font>
+       <p>
+        <br/>
+       </p>
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Rendering/LightingAndShadows/Lightmass/index.html" rel="nofollow">
+        <b>
+         Want to know more about Lightmass and Global Illumination?
+        </b>
+       </a>
+      </div>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="Why_is_there_shadow_splotches_on_my_static_mesh.3F.2C_or_How_to_clean_those_dirty_lightmaps.3F">
+        Why is there shadow splotches on my static mesh?, or How to clean those dirty lightmaps?
+       </span>
+      </h3>
+      <p>
+       Show stains, splotches, dirtiness, or whatever name you have for it is a common issue with UE4 when using any type of static lighting. Fear not though because we can get rid of those dirty lightmaps with a little scrubbing through our lightmass settings.
+      </p>
+      <p>
+       First though, the reason you see something like this is related to the indirect light from our GI bounces that happen with our lightmass build.
+      </p>
+      <p>
+       To replicate this in a mostly effective way this simple scene will have two rooms.
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerycaption">
+        Sample Scene
+       </li>
+       <li class="gallerybox" style="width: 378.66666666667px">
+        <div style="width: 378.66666666667px">
+         <div class="thumb" style="width: 376.66666666667px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/87.png" width="377"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Exterior
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 294.66666666667px">
+        <div style="width: 294.66666666667px">
+         <div class="thumb" style="width: 292.66666666667px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/88.png" width="293"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Interior
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       This scene will be using PRODUCTION quality for our light builds. This scene is using assets from the Starter Content pack that can be added to any newly created project. All meshes in the scene will use a lightmap resolution of 256 unless otherwise noted. The post process effects are set to default with eye adaptation to make the darker room easier to see.
+      </p>
+      <p>
+       After building our lighting, here are the results:
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerycaption">
+        Initial Lighting Build, default settings
+       </li>
+       <li class="gallerybox" style="width: 370.66666666667px">
+        <div style="width: 370.66666666667px">
+         <div class="thumb" style="width: 368.66666666667px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/89.png" width="369"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           1st Interior Room, lit with direct and 1st bounce lighting
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 369.33333333333px">
+        <div style="width: 369.33333333333px">
+         <div class="thumb" style="width: 367.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/90.png" width="368"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           2nd Interior Room, lit entirely with indirect lighting
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       Brute force can be used to remove some of the indirect lighting artifacts by increasing the lightmap resolution which effectively increases the size of the textures used to store the lighting and shadowing information, but that’s not always the best idea when a high-quality result can be achieved using a lower resolution and adjusting the lightmass settings.  When dealing with any rendering application in the engine and especially lighting just increasing a texture size, though it may appear to solve the issue is not always the most performance friendly way to handle an issue and may even result in more problems further along in your development process.
+      </p>
+      <p>
+       As any example this is the same 2nd Interior Room with lightmap resolution changed to be 1024:
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerycaption">
+        Initial Lighting Build, default settings
+       </li>
+       <li class="gallerybox" style="width: 369.33333333333px">
+        <div style="width: 369.33333333333px">
+         <div class="thumb" style="width: 367.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/91.png" width="368"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           2nd Interior Room, Lightmap Resolution 256
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 368.66666666667px">
+        <div style="width: 368.66666666667px">
+         <div class="thumb" style="width: 366.66666666667px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/92.png" width="367"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           2nd Interior Room, Lightmap Resolution 1024
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       In this example, a lot of the artifacts have been reduced by using the higher lightmap resolution, but this also increases the texture memory footprint by a factor of 4.  There is a more performance friendly solution to these Indirect Lighting Artifacts with some simple adjustments to the World Settings.
+      </p>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:668px;">
+        <img alt="" class="thumbimage" height="239" src="../assets/lightingtroubleshootingguide/93.png" width="666"/>
+        <div class="thumbcaption">
+         World Settings
+        </div>
+       </div>
+      </div>
+      <ul>
+       <li>
+        You can locate World Settings here:
+       </li>
+      </ul>
+      <p>
+       <br clear="all"/>
+      </p>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:399px;">
+        <img alt="" class="thumbimage" height="736" src="../assets/lightingtroubleshootingguide/94.png" width="397"/>
+        <div class="thumbcaption">
+         World Settings
+        </div>
+       </div>
+      </div>
+      <ul>
+       <li>
+        Here the settings for Lightmass can be adjusted:
+       </li>
+      </ul>
+      <p>
+       <br clear="all"/>
+      </p>
+      <div align="center">
+       <font size="4">
+        <b>
+         Indirect Lighting Quality
+        </b>
+        : This will increase the Global Illumination solver counts to get a higher quality for levels that need it.
+        <br/>
+        <p>
+         <b>
+          Indirect Lighting Smoothness
+         </b>
+         : This is the smoothness factor to apply to Indirect Lighting.
+         <br/>
+        </p>
+        WARNING: Using a Value greater than 1 in the Indirect Lighting Quality will GREATLY increase build times.
+       </font>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerybox" style="width: 400px">
+        <div style="width: 400px">
+         <div class="thumb" style="width: 398px;">
+          <div style="margin:0px auto;">
+           <img alt="8 settings.png" class="" height="60" src="../assets/lightingtroubleshootingguide/95.png" width="398"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 372.66666666667px">
+        <div style="width: 372.66666666667px">
+         <div class="thumb" style="width: 370.66666666667px;">
+          <div style="margin:0px auto;">
+           <img alt="10 settings.png" class="" height="60" src="../assets/lightingtroubleshootingguide/96.png" width="371"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+         </div>
+        </div>
+       </li>
+      </ul>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerybox" style="width: 369.33333333333px">
+        <div style="width: 369.33333333333px">
+         <div class="thumb" style="width: 367.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/97.png" width="368"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Default Settings
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 368.66666666667px">
+        <div style="width: 368.66666666667px">
+         <div class="thumb" style="width: 366.66666666667px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/98.png" width="367"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Settings Example #1
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       As mentioned in How to control Global Illumination with Static Lighting?, or The Wonderful Thing About Bounce, you may also want to adjust the number of indirect light bounces which will yield the following results:
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerybox" style="width: 369.33333333333px">
+        <div style="width: 369.33333333333px">
+         <div class="thumb" style="width: 367.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/99.png" width="368"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Num Indirect Lighting Bounces = 4
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 369.33333333333px">
+        <div style="width: 369.33333333333px">
+         <div class="thumb" style="width: 367.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/100.png" width="368"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Num Indirect Lighting Bounces = 5
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       At this point, the lighting settings have been adjusted enough that there may be room to hide any artifacts with some textures, but if that’s not the option there is the option to bump the lightmap resolution for each mesh up to a higher value. The value used here is 256 for the lightmap resolution. By changing it to be 512 we get the following result:
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerybox" style="width: 369.33333333333px">
+        <div style="width: 369.33333333333px">
+         <div class="thumb" style="width: 367.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/101.png" width="368"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Adjust Indirect Settings with 512 Lightmap Resolution
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 368.66666666667px">
+        <div style="width: 368.66666666667px">
+         <div class="thumb" style="width: 366.66666666667px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="300" src="../assets/lightingtroubleshootingguide/102.png" width="367"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           No Adjustment to Indirect Settings with 1024 Lightmap Resolution
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       In the beginning of this tutorial, there was a comparison shown using Lightmaps of 1024 that helped get rid of the artifacts. By adjusting a few lightmass settings the artifacts have been reduced and the assets are using a lower texture resolution with better results.
+      </p>
+      <p>
+       While this method is fully exploring the option of not having any light in this room and looking at ways to reduce the “dirtiness” artifacts that can be caused by Indirect Lighting it must be noted that using lighting can in these areas, even a very low-intensity non-shadow casting light, can get results as well. The methods listed above are a starting point and may require a little trial and error to get the results that are more appealing.
+      </p>
+      <p>
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Rendering/LightingAndShadows/Lightmass/Basics/index.html" rel="nofollow">
+        Want to know more about Lightmass Basics?
+       </a>
+      </p>
+      <p>
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Rendering/LightingAndShadows/Lightmass/index.html" rel="nofollow">
+        Want to know more about Lightmass Global Illumination?
+       </a>
+      </p>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="What_is_the_.E2.80.9CLighting_needs_to_be_rebuilt.E2.80.9D_in_the_Top_left_corner_error.3F">
+        What is the  “Lighting needs to be rebuilt” in the Top left corner error?
+       </span>
+      </h3>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:383px;">
+        <img alt="" class="thumbimage" height="87" src="../assets/lightingtroubleshootingguide/103.png" width="381"/>
+        <div class="thumbcaption">
+         Error Message
+        </div>
+       </div>
+      </div>
+      <p>
+       If this is appearing in your top left part of your viewport window when using PIE (Play in Editor), Simulate, or Standalone game this simply means that lighting needs to be rebuilt for your scene. This will only affect Static and Stationary lighting. Dynamically lit scenes do not need to have lighting built.
+      </p>
+      <p>
+       This warning is caused when lighting has been invalidated by moving or modifying a light Actor. This can cause problems because the rendered lighting in the level is not accurately representing the current state of lights in the level. This error can be solved by going to the Build menu and rebuilding lighting for a map.
+      </p>
+      <h4>
+       <span class="mw-headline" id="Troubleshooting_Tips">
+        Troubleshooting Tips
+       </span>
+      </h4>
+      <p>
+       <b>
+        Unbuilt Actors List
+       </b>
+      </p>
+      <p>
+       Sometimes may find that you have built the lighting but continue to see this warning popping up with a number of unbuilt objects but no direct way to identify which ones.
+      </p>
+      <p>
+       You can open up the
+       <b>
+        Output Log
+       </b>
+       window from the from the Developer Tools menu. Enter in the command
+       <b>
+        DumpUnbuiltLightInteractions
+       </b>
+       to be given a list of any Actors that are not having their light built or either have had their lighting invalidated.
+      </p>
+      <p>
+       This list of Actors can be really helpful to determine what is going on. It could be as simple as having a Blueprint that is set to static but has a movable component or you have an Actor that is placed via the construction script but then moved after lighting has been built.
+      </p>
+      <p>
+       <b>
+        Statistics Window
+       </b>
+      </p>
+      <p>
+       Open the
+       <b>
+        Statistics
+       </b>
+       window by going to Window &gt; Statistics. This can be a helpful tool for determining information about your lighting build and information about all your static meshes in your scene that have their lightmap resolutions set. It's a good tool for troubleshooting exactly how long specific actors took to build during the lighting building process. This can easily help identify the offenders for a long light build time if something is being slow.
+      </p>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="Lighting_Quality_comparison.2C_or_Production_.3E_Preview">
+        Lighting Quality comparison, or Production &gt; Preview
+       </span>
+      </h3>
+      <p>
+       When lighting needs to be built for a level  the quality of the light build for lightmaps can be set in the toolbar by going to the options for Build &gt; Lighting Quality &gt; and selecting a quality level.
+      </p>
+      <p>
+       By default the Quality is set to
+       <b>
+        Preview
+       </b>
+       . This setting has the fastest computation time whereas
+       <b>
+        Production
+       </b>
+       will have the slowest computational time, but be much more accurate.
+      </p>
+      <p>
+       The Lighting Quality settings can be found here:
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerybox" style="width: 480.66666666667px">
+        <div style="width: 480.66666666667px">
+         <div class="thumb" style="width: 478.66666666667px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="150" src="../assets/lightingtroubleshootingguide/104.png" width="479"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Lighting Quality Settings
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       For this demonstration there will be an enclosed room to show the quality of the shadows being built: (This will be the same scene setup used for
+       <a href="#Why_is_there_shadow_splotches_on_my_static_mesh.3F.2C_or_How_to_clean_those_dirty_lightmaps.3F">
+        #Why is there shadow splotches on my static mesh?, or How to clean those dirty lightmaps?
+       </a>
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerycaption">
+        Light Quality Settings, Architectural
+       </li>
+       <li class="gallerybox" style="width: 308px">
+        <div style="width: 308px">
+         <div class="thumb" style="width: 306px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="250" src="../assets/lightingtroubleshootingguide/105.png" width="306"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Preview
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 308px">
+        <div style="width: 308px">
+         <div class="thumb" style="width: 306px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="250" src="../assets/lightingtroubleshootingguide/106.png" width="306"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Medium
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 307.33333333333px">
+        <div style="width: 307.33333333333px">
+         <div class="thumb" style="width: 305.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="250" src="../assets/lightingtroubleshootingguide/107.png" width="306"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           High
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 308px">
+        <div style="width: 308px">
+         <div class="thumb" style="width: 306px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="250" src="../assets/lightingtroubleshootingguide/108.png" width="306"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Production
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       In this example it’s easy to see the difference between the default Preview setting and Production setting. With Production almost all of the light leaking that was prevalent in the previous quality settings is gone. This is a good way to troubleshoot your lighting issues if there is light leaking. If Production doesn’t get rid of the light leaking then it’s time to have a look at how the lightmap UVs are set up or possibly the placement of the meshes in your level.
+      </p>
+      <p>
+       With the Statue static mesh in this scene it’s not as easily noticeable that the shadow quality has been adjusted. There is slight differences in quality, but not enough to tell with the particular object.
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerycaption">
+        Light Quality Settings, Organic Lines
+       </li>
+       <li class="gallerybox" style="width: 308px">
+        <div style="width: 308px">
+         <div class="thumb" style="width: 306px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="250" src="../assets/lightingtroubleshootingguide/109.png" width="306"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Preview
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 308px">
+        <div style="width: 308px">
+         <div class="thumb" style="width: 306px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="250" src="../assets/lightingtroubleshootingguide/110.png" width="306"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Medium
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 307.33333333333px">
+        <div style="width: 307.33333333333px">
+         <div class="thumb" style="width: 305.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="250" src="../assets/lightingtroubleshootingguide/111.png" width="306"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           High
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 308px">
+        <div style="width: 308px">
+         <div class="thumb" style="width: 306px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="250" src="../assets/lightingtroubleshootingguide/112.png" width="306"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Production
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:550px;">
+        <img alt="" class="thumbimage" height="448" src="../assets/lightingtroubleshootingguide/113.gif" width="548"/>
+        <div class="thumbcaption">
+         Statue Lighting Quality
+        </div>
+       </div>
+      </div>
+      <p>
+       In this animated Gif the quality differences are minuscule from this perspective. This behavior is expected for more organic shapes.  The human eye notices non-organic straight lines (like Architectural right angles) before curved or more organic shapes given the same color and brightness.  As a note, the jaggedness of the shadows on the ground plane are the result of having a lower lightmap resolution for a larger mesh. Increasing the lightmap resolution will improve the quality of the shadow definition.
+      </p>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       <br/>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="Lightmap_Error_Coloring">
+        Lightmap Error Coloring
+       </span>
+      </h3>
+      <p>
+       This option can be enabled via the Build Menu drop-down when you select Use Error Coloring and are using Lighting Quality settings for Preview or Medium.
+      </p>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:256px;">
+        <img alt="" class="thumbimage" height="191" src="../assets/lightingtroubleshootingguide/114.png" width="254"/>
+        <div class="thumbcaption">
+         Error Coloring Option
+        </div>
+       </div>
+      </div>
+      <p>
+       When lightmass encounters an error it will color the type of error so that it’s easily identifiable. Below are the color types that will be reflected for the type of issue you have.
+      </p>
+      <ul>
+       <li>
+        Orange: This is caused by non-unique or overlapping UVs.
+       </li>
+       <li>
+        Green: This is caused by having wrapping UVs or UVs that are outside of the 0,1 UV space.
+       </li>
+       <li>
+        Yellow: These are unmapped texels that either have zero lightmap area or in the case of BSPs may be too low of a lightmap resolution.
+       </li>
+      </ul>
+      <p>
+       You can see more information in the UE3 documentation that still applies:
+       <a class="external free" href="https://udn.epicgames.com/Three/LightmassTools.html#Lightmap" rel="nofollow">
+        https://udn.epicgames.com/Three/LightmassTools.html#Lightmap
+       </a>
+       error colors
+      </p>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="Find_the_Objects_referenced_in_.22Lighting_needs_to_be_rebuilt_.28X_Objects.29.22">
+        Find the Objects referenced in "Lighting needs to be rebuilt (X Objects)"
+       </span>
+      </h3>
+      <p>
+       Sometimes you may have an issue where lighting is continually being invalidated or you may have tweaked something in your level and not realized it leaving you with this dreaded “Lighting needs to be rebuilt ([number] objects)” but no easily identifiable way to see what the “[number] objects” are.
+      </p>
+      <p>
+       Luckily we have an easy way for you to get this information to help you better track, investigate, and resolve your issue(s) with lighting being invalidated.
+      </p>
+      <ul>
+       <li>
+        Start by opening the Output Log window by going to Window &gt; Developer Tools &gt; Output Log.
+       </li>
+       <li>
+        Bring up the Console by using the ` (tilde) key and enter in the command
+        <b>
+         DumpUnbuiltLightInteractions
+        </b>
+       </li>
+      </ul>
+      <p>
+       So why is this really useful?
+      </p>
+      <ul>
+       <li>
+        You can quickly identify the Actors that are causing the warning to appear.
+       </li>
+       <li>
+        You may have an Actor that is static that is being built and then moved by using code or Blueprints that causes the warning to appear.
+       </li>
+       <li>
+        Instanced meshes with lots of instances and high lightmap resolutions may not build properly because the clustered instances lightmap doesn’t get generated. This can identify that need to lower the lightmap resolution.
+       </li>
+       <li>
+        In some instances using a Construction Script to generate mesh placement via Blueprint will have become invalidated when moving the mesh if the lighting was previously built. This command can quickly identify this as well.
+       </li>
+      </ul>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="Light_Build_Statistics">
+        Light Build Statistics
+       </span>
+      </h3>
+      <p>
+       The Statistics window available in the editor is a good way to check the statistics for your level once the light build has completed. This window can give good stats to help narrow down what actors were taking the longest for the scene and how much time was spent calculating the lighting for this actor and it’s lightmap resolution.
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:930px;">
+         <img alt="" class="thumbimage" height="529" src="../assets/lightingtroubleshootingguide/115.png" width="928"/>
+         <div class="thumbcaption">
+          Statistics Window
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <i>
+        This window was taken from a light build of Sun Temple that is available in the Epic Games Launcher via the Learn tab.
+       </i>
+      </p>
+      <p>
+       All of the information contained within the Lighting Build Info and Static Mesh Lighting Info can be helpful to help you optimize, investigate, and troubleshoot your lighting builds.
+      </p>
+      <p>
+       This information can also be found in the documentation here:
+       <a class="external free" href="https://docs.unrealengine.com/latest/INT/Engine/Rendering/LightingAndShadows/Lightmass/#gettingthebestlightingbuildtimes" rel="nofollow">
+        https://docs.unrealengine.com/latest/INT/Engine/Rendering/LightingAndShadows/Lightmass/#gettingthebestlightingbuildtimes
+       </a>
+      </p>
+      <p>
+       <br/>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="Landscape_Grasstype_Asset_Tiled_Pattern">
+        Landscape Grasstype Asset Tiled Pattern
+       </span>
+      </h3>
+      <p>
+       There is a little known feature hidden within the Landscape Grasstype asset that you may or may not be aware of. This allows you to use the landscape’s lightmap to get a better blend for the procedural landscape grass material by referencing its indirect lighting cache samples.
+      </p>
+      <p>
+       You can enable it by setting the checkbox for Use Landscape Lightmap.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:469px;">
+        <img alt="" class="thumbimage" height="489" src="../assets/lightingtroubleshootingguide/116.png" width="467"/>
+        <div class="thumbcaption">
+         Landscape Grasstype Settings
+        </div>
+       </div>
+      </div>
+      <p>
+       This feature was originally developed with the intent for dynamically lit environments, but when using stationary or statically lit environments you’ll see the pattern of that is generated from the tiled components of the landscape’s indirect lighting, which can be rather distracting.
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerycaption">
+        Landscape Grasstype Use Landscape Lightmap
+       </li>
+       <li class="gallerybox" style="width: 328.66666666667px">
+        <div style="width: 328.66666666667px">
+         <div class="thumb" style="width: 326.66666666667px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="250" src="../assets/lightingtroubleshootingguide/117.png" width="327"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Disabled
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 329.33333333333px">
+        <div style="width: 329.33333333333px">
+         <div class="thumb" style="width: 327.33333333333px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="250" src="../assets/lightingtroubleshootingguide/118.png" width="328"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Enabled
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       Once you enable or disable the option for Use Landscape Lightmap the material will be regenerated without the need to rebuild lighting, so long as it has already been built.
+      </p>
+      <p>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="Build_Lighting_Via_Command_Line">
+        Build Lighting Via Command Line
+       </span>
+      </h3>
+      <p>
+       If you have a need to build lighting via command line this has been added as of 4.10.2.
+      </p>
+      <p>
+       In order to build lighting by command line use the following structure to set it up as a basis:
+      </p>
+      <ul>
+       <li>
+        UE4-Editor.exe [Project Folder Path] -run=resavepackages -buildlighting -MapsOnly -ProjectOnly -AllowCommandletRendering -Map=[Name of map] -Messaging
+       </li>
+      </ul>
+      <p>
+       The -Map=[Map Name] can be dropped if you want it to build all the maps/levels available in the project.
+      </p>
+      <p>
+       You can find some additional details in the commit here via GitHub:
+       <a class="external free" href="https://github.com/EpicGames/UnrealEngine/commit/f89256dd0efb7d0b1427729a8f8a6007" rel="nofollow">
+        https://github.com/EpicGames/UnrealEngine/commit/f89256dd0efb7d0b1427729a8f8a6007
+       </a>
+      </p>
+      <p>
+       If you see a 404 error page, you’ll need to make sure that you have an account with GitHub and that your Epic account is linked with GitHub’s.
+      </p>
+      <p>
+       <br/>
+       _________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="Foliage_Tool_Lightmap_Resolutions">
+        Foliage Tool Lightmap Resolutions
+       </span>
+      </h3>
+      <p>
+       When using the foliage tool you have a few different settings available to you in the tools panel for the selected actor. One important one is the option to override the Lightmap Resolution of the mesh.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:416px;">
+        <img alt="" class="thumbimage" height="276" src="../assets/lightingtroubleshootingguide/119.png" width="414"/>
+        <div class="thumbcaption">
+         Foliage Lightmap Settings
+        </div>
+       </div>
+      </div>
+      <p>
+       By default this option is disabled, which means that the static meshes own lightmap resolution will be used.
+      </p>
+      <p>
+       You may be thinking “why is this a bad thing? Don’t I want to have a good lightmap resolution for nice baked shadows?”, but the problem here is that when you use the Foliage tool these are not individually placed actors that get their own lightmap. These are all clustered instances where the clusters will be baked down into a single lightmap together.
+      </p>
+      <p>
+       If you have a lot of instances and proceed to build with the static meshes default lightmap resolution you are more likely to be met with a warning that “Instanced_Foliage_Actor_[X] lightmap is too large and should be reduced.” This is a clear indication that the lightmap resolution is too high. You should enable the option above and try a lower resolution like 8 or 4 before you try rebuilding.
+      </p>
+      <p>
+       As a general good practice though you should do the following:
+      </p>
+      <ul>
+       <li>
+        Limit the use of static lighting on foliage if you are going to have the trees/grass sway in the wind. It looks unnatural for the foliage to move, but the shadow does not.
+       </li>
+       <li>
+        Reduce the lightmap resolution of foliage to a manageable size.
+       </li>
+       <li>
+        Disable static lighting on grass. This is a general good practice to have since these instances will likely number in the thousands depending on your level and it will significantly increase the light build time in most cases.
+       </li>
+      </ul>
+      <p>
+       <br/>
+       _________________________________________________________________________________________________
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

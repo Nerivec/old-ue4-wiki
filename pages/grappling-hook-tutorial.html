@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Grappling Hook Tutorial - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Grappling Hook Tutorial
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       Author: Adam Davis
+      </p>
+      <p>
+       Special Thanks: PenguinTD
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1">
+         <a href="#Set_Timers">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Set Timers
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1">
+         <a href="#Key_Press.2C_Trace.2C_Array.2C_and_Camera">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Key Press, Trace, Array, and Camera
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1">
+         <a href="#Branch_.E2.80.93_Cast-to">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Branch – Cast-to
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1">
+         <a href="#Pull_Pawn_to_Player">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Pull Pawn to Player
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1">
+         <a href="#Pull_Player_to_Location">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Pull Player to Location
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1">
+         <a href="#Closing_the_Gates:">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Closing the Gates:
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       One of the most useful objects in many games is the trusty grappling hook. Depending on which game, it may be used as a way to climb up objects manually, or it could be something that flings you toward another location. With the hook we are making, we are taking the latter route and adding just a little bit more flare for fun. Here are a few pieces of information you should know before we get started:
+      </p>
+      <div>
+       <ul>
+        <li>
+         Two Fire Modes
+        </li>
+        <div>
+         <ul>
+          <li>
+           With the grappling hook, we want to be able to perform two different types of moves, depending on what we hit with it.
+          </li>
+          <div>
+           <ul>
+            <li>
+             Pull to Location – When the hook traces to an object that is not an AI object (or whatever objects you choose), we will pull the player to that object. This is useful for walls, ceilings, etc.
+            </li>
+            <li>
+             Pull to Player – If the hook hits an AI object, we are going to pull them to us for whatever insidious purpose we choose *insert evil villain laugh here*.
+            </li>
+           </ul>
+          </div>
+         </ul>
+        </div>
+        <li>
+         What Project we use – For the sake of simplicity, I will be using the First Person Blueprint template.
+        </li>
+        <li>
+         I used the base MyCharacter blueprint provided with the starter content, though if you are inclined to make your own this can easily be added to another character blueprint.
+        </li>
+       </ul>
+      </div>
+      <p>
+       <img alt="Open MyCharacter BP.png" class="" height="574" src="../assets/grappling-hook-tutorial/0.png" width="264"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Set_Timers">
+        Set Timers
+       </span>
+      </h2>
+      <p>
+       Something we should go ahead and start with is the fact that in this grappling hook, we will not use the Tick function at all. The reason we are avoiding this is that tick is frame dependent, which can cause weird fluctuations based on individual computer specs. Instead, we are going to use a handy function: the timer.
+      </p>
+      <p>
+       <img alt="Setting Timers.png" class="" height="328" src="../assets/grappling-hook-tutorial/1.png" width="838"/>
+      </p>
+      <div>
+       <ul>
+        <li>
+         Set up timers – In your player character blueprint, right click and create an Event: Begin Play node. Drag off of the exec pin and type in timer, select “Set Timer”.  Create one more of these and give each a unique name in the Function Name input as we will need 2 separate timers for our grappling hook. I named mine “Enemy” and “Object” for simplicity. It is important to make sure that you check the “looping” feature. This will make sure that our timers continue to provide input.
+        </li>
+       </ul>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Key_Press.2C_Trace.2C_Array.2C_and_Camera">
+        Key Press, Trace, Array, and Camera
+       </span>
+      </h2>
+      <div>
+       <ul>
+        <li>
+         Set your movement to a key press. In this example, I used H
+        </li>
+        <li>
+         Next, we want to create a single line trace for objects. This will check in a line that we determine whether or not objects that it hits are of a certain type, if they are, the trace will respond accordingly.
+        </li>
+        <div>
+         <p>
+          <img alt="RunTraceForObjects.png" class="" height="507" src="../assets/grappling-hook-tutorial/2.png" width="1266"/>
+         </p>
+        </div>
+        <li>
+         Set up Array with all objects you intend to pull. In our case, we are checking for world static, world dynamic, and pawn. The reason for this is we want to be able to pull ourselves to many different surfaces while pulling enemies to us. You can limit this depending on what fits your needs.
+        </li>
+        <div>
+         <ul>
+          <li>
+           Pawn
+          </li>
+          <li>
+           WorldStatic
+          </li>
+          <li>
+           WorldDynamic
+          </li>
+         </ul>
+        </div>
+        <li>
+         The traces start point should be the player’s camera (for first person view). The end location is a rotated vector from the world rotation + 5000 + the camera’s world location. This puts the point at 5000 units away from whatever the camera’s rotation is.
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Branch_.E2.80.93_Cast-to">
+        Branch – Cast-to
+       </span>
+      </h2>
+      <div>
+       <ul>
+        <li>
+         We want to do a branch after the trace to check and see if the trace returns a value. If it does, we want to know what type it is. Create a Break Hit Result node from the “Out Hit” section of our single line trace for objects. Then, from the “Hit Actor” output, create a Cast to Character (or, if you have another object type specifically for AI, use that).
+        </li>
+       </ul>
+      </div>
+      <p>
+       <img alt="HitResult.png" class="" height="288" src="../assets/grappling-hook-tutorial/3.png" width="221"/>
+       <br/>
+       <img alt="IsAPawn.png" class="" height="219" src="../assets/grappling-hook-tutorial/4.png" width="489"/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Pull_Pawn_to_Player">
+        Pull Pawn to Player
+       </span>
+      </h2>
+      <div>
+       <ul>
+        <li>
+         If the cast succeeds and the object hit by the trace is a pawn, we want to pull that pawn to us. Think of this like the Bulletstorm Grapple Beam. Our first step is going to be to create a gate node; the cast to Character success output will drive the open input.
+        </li>
+        <li>
+         Now that you have the gate, there are a few more things you will need to get the most out of your grappling hook. First and foremost, you need two custom event nodes. Right click on the graph and type in “Custom Event”. The first one I named “Enemy”, the second “Enemy Close”. Notice that the custom event has the same name as one of our two timers from the beginning. This allows you to access the timer and drive the gate. Your second custom event, “Enemy Close”, should be plugged into the close output of the gate.
+        </li>
+        <li>
+         From “Enemy”, create a branch node. This branch will decide whether or not the gate will stay open based on the enemies distance to the player. Plug the true output into open on the gate, and the false output to close.
+        </li>
+        <li>
+         The final part is determining the Boolean values. Create a &gt;=float node and plug the return value into the condition of the branch. I set my second value to 125. This value needs to be at minimum 2*Capsule Radius + X, where X is any number. I chose 125 to give the pull some padding between the player and the pulled enemy. The first value that you need is the length of the location of the pulled pawn minus the location of the player.
+        </li>
+       </ul>
+      </div>
+      <p>
+       <img alt="GrappleEnemy.png" class="" height="637" src="../assets/grappling-hook-tutorial/5.png" width="1267"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Pull_Player_to_Location">
+        Pull Player to Location
+       </span>
+      </h2>
+      <div>
+       <ul>
+        <li>
+         If the cast to Character fails, the failed output connects to another gate, much like the Enemy pull. There are very few differences between the enemy pull and pulling to an object. To start, set up a branch, gate and a launch character as was done in the enemy function.
+        </li>
+        <li>
+         Create two custom events, one titled “Object” and one “Close Object”. These will be attached in the same manner as the enemy.
+        </li>
+        <li>
+         The Launch Velocity will be your player location minus the hit location, set the vector length to &gt;=125 as was done in the enemy function.
+        </li>
+       </ul>
+      </div>
+      <p>
+       <img alt="ObjectPull.png" class="" height="413" src="../assets/grappling-hook-tutorial/6.png" width="1238"/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Closing_the_Gates:">
+        Closing the Gates:
+       </span>
+      </h2>
+      <div>
+       <p>
+        The final step is to close the gates when the key (H) is released.
+       </p>
+       <ul>
+        <li>
+         Drag off of the H Pressed event and create a sequence node.
+        </li>
+        <li>
+         Out of the Then 0 output, create a Close Enemy node.
+        </li>
+        <li>
+         Out of Then 1, create a Close Object node.
+        </li>
+       </ul>
+       <p>
+        <img alt="CloseGates.png" class="" height="401" src="../assets/grappling-hook-tutorial/7.png" width="493"/>
+        <br/>
+       </p>
+       <p>
+        Compile the blueprint and save and you have a grappling hook to zip around your map. Give it a shot and see what you think!
+       </p>
+      </div>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

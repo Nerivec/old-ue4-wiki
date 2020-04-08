@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Blueprint Mutator Tutorial - Instagib - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Blueprint Mutator Tutorial - Instagib
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Blueprint_Mutator_Tutorial_-_Instagib">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Blueprint Mutator Tutorial - Instagib
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Requirements">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Requirements
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Create_the_Instagib_Rifle_Blueprint">
+            <span class="tocnumber">
+             1.2
+            </span>
+            <span class="toctext">
+             Create the Instagib Rifle Blueprint
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Create_the_Instagib_Mutator_Blueprint">
+            <span class="tocnumber">
+             1.3
+            </span>
+            <span class="toctext">
+             Create the Instagib Mutator Blueprint
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Testing_the_Blueprint">
+            <span class="tocnumber">
+             1.4
+            </span>
+            <span class="toctext">
+             Testing the Blueprint
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Blueprint_Mutator_Tutorial_-_Instagib">
+        Blueprint Mutator Tutorial - Instagib
+       </span>
+      </h1>
+      <p>
+       This tutorial will teach you how to make an Instagib mutator for UT using only Blueprints. I recommend starting with
+       before jumping into this tutorial.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Requirements">
+        Requirements
+       </span>
+      </h2>
+      <ul>
+       <li>
+        Engine version: 4.3
+       </li>
+       <li>
+        Skill level: intermediate blueprint knowledge
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="Create_the_Instagib_Rifle_Blueprint">
+        Create the Instagib Rifle Blueprint
+       </span>
+      </h2>
+      <ul>
+       <li>
+        A sample blueprint is currently at Blueprint'/Game/RestrictedAssets/Weapons/ShockRifle/BP_InstagibRifle.BP_InstagibRifle', but I will go over how to make your own
+       </li>
+       <li>
+        Right click Blueprint'/Game/RestrictedAssets/Weapons/ShockRifle/ShockRifle.ShockRifle' and select "Create Blueprint based on this"
+       </li>
+       <li>
+        The ShockRifle_Child blueprint will be created and then opened in the blueprint editor, I personally chose to rename it to InstagibRifle.
+       </li>
+       <li>
+        In the blueprint editor, select the defaults tab and make the following adjustments:
+        <ul>
+         <li>
+          Delete ProjClass[1] by selecting delete from the drop down chevron on the far right (highlighted in the following image)
+         </li>
+         <li>
+          <img alt="Instagibtutorial rifledefault.png" class="" height="389" src="../assets/blueprint-mutator-tutorial-instagib/0.png" width="870"/>
+         </li>
+         <li>
+          Set InstantHit[0].Damage to 1000
+         </li>
+         <li>
+          Duplicate InstantHit[0] (using the drop down chevron like the one indicated above) so that alt fire does trace damage as well
+         </li>
+         <li>
+          Duplicate FireEffect[0]
+         </li>
+         <li>
+          <img alt="Instagibtutorial riflealtered.png" class="" height="845" src="../assets/blueprint-mutator-tutorial-instagib/1.png" width="978"/>
+         </li>
+         <li>
+          Clear Dropped Pickup Class in the Pickup Section
+         </li>
+         <li>
+          <img alt="Instagibtutorial riflealtered2.png" class="" height="166" src="../assets/blueprint-mutator-tutorial-instagib/2.png" width="915"/>
+         </li>
+        </ul>
+       </li>
+       <li>
+        Compile and Save the Blueprint
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="Create_the_Instagib_Mutator_Blueprint">
+        Create the Instagib Mutator Blueprint
+       </span>
+      </h2>
+      <ul>
+       <li>
+        Create a new blueprint with parent class UTMutator just like in
+       </li>
+       <li>
+        I chose to name mine Mutator_Instagib
+       </li>
+       <li>
+        Double click your blueprint to open it in the Blueprint Editor and hit the Graph button
+       </li>
+       <li>
+        Switch to the Event Graph and right click the empty graph, select "Add Event" and then select "Init"
+       </li>
+       <li>
+        Right click the graph again and search for "Get Game Mode", then add that node to the graph
+       </li>
+       <li>
+        Cast the game mode object to "UTGameMode"
+       </li>
+       <li>
+        Drag off the "UTGameMode" object and select "Set Default Inventory"
+       </li>
+       <li>
+        Drag off the "Default Inventory" pin and search for "Make Array"
+       </li>
+       <li>
+        From the drop down of the "Make Array" node, select InstagibRifle
+       </li>
+      </ul>
+      <p>
+       <img alt="Instagibtutorial eventgraph.png" class="" height="470" src="../assets/blueprint-mutator-tutorial-instagib/3.png" width="1073"/>
+      </p>
+      <ul>
+       <li>
+        We've now set the default weapon set for the game mode, but we need to make sure that no weapon pickups spawn in.
+        <ul>
+         <li>
+          We're going to handle that by overriding the CheckRelevance function to delete all pickups and weapons.
+         </li>
+         <li>
+          We'll also override the AlwaysKeep function to make sure that InstagibRifle never gets deleted.
+         </li>
+        </ul>
+       </li>
+       <li>
+        Right click CheckRelevance in the My Blueprint panel and select "Implement Function" from the menu
+       </li>
+       <li>
+        We should now be editing the CheckRelevance function
+       </li>
+       <li>
+        Hit the Plus symbol next to "Local Variables" in the My Blueprint panel and make a local boolean variable called "Result"
+       </li>
+       <li>
+        Drag "Result" from the My Blueprint panel over to the bool return value on the graph
+       </li>
+       <li>
+        Drag off the Other pin on the graph and drop a "Cast to UTWeapon" node, then repeat with "Cast To UTPickup" and "Cast To UTDroppedPickup"
+       </li>
+       <li>
+        Arrange the graph so that successful casts will set "Result" local variable to false and then return
+       </li>
+       <li>
+        Failing a cast should attempt to call one of the remaining casts and then finally the Parent's CheckRevelance function
+        <ul>
+         <li>
+          In order to get the "Parent: Check Relevance" node, you must right click on the purple "Check Relevance" node and select "Add call to parent function"
+         </li>
+        </ul>
+       </li>
+      </ul>
+      <p>
+       <img alt="Instagibtutorial checkrelevance.png" class="" height="416" src="../assets/blueprint-mutator-tutorial-instagib/4.png" width="1143"/>
+      </p>
+      <ul>
+       <li>
+        Right click AlwaysKeep in the My Blueprint panel and select "Implement Function" from the menu
+       </li>
+       <li>
+        This time, add two local boolean variables "Prevent Modify" and "Force Keep"
+       </li>
+       <li>
+        Hook up the local variable "Prevent Modify" to the output pin "Prevent Modify"
+       </li>
+       <li>
+        Hook up the local variable "Force Keep" to the output pin "Return Value"
+       </li>
+       <li>
+        Cast Other to "Instagib Rifle"
+        <ul>
+         <li>
+          If successful, set "Force Keep" to true and "Prevent Modify" to false
+         </li>
+         <li>
+          If unsuccesful, call the parent function by right clicking on the purple "Always Keep" node and selecting "Add call to parent function"
+         </li>
+        </ul>
+       </li>
+      </ul>
+      <p>
+       <img alt="Instagibtutorial alwayskeep.png" class="" height="459" src="../assets/blueprint-mutator-tutorial-instagib/5.png" width="1136"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Testing_the_Blueprint">
+        Testing the Blueprint
+       </span>
+      </h2>
+      <ul>
+       <li>
+        Hit the drop down arrow on the Play button and select "Advanced Settings"
+       </li>
+       <li>
+        In the "Server Game Options" edit box of the "Multiplayer Options" section, enter "?mutator=/Game/RestrictedAssets/Blueprints/Mutator_Instagib.Mutator_Instagib_C"
+        <ul>
+         <li>
+          The path needs to match the folder that you placed the blueprint in, I've used the place where the shipped example blueprint lives
+         </li>
+        </ul>
+       </li>
+       <li>
+        Change "Number of Clients" to 2
+       </li>
+       <li>
+        Hit the play button and you should now be starting with the shock rifle and doing 1000 damage per hit
+        <ul>
+         <li>
+          If you do not, examine the output logs to verify that the mutator loaded successfully. You may see a warning like "LogUObjectGlobals:Warning: Failed to find object 'Class /Game/WrongPath/Mutator_Instagib_C'", in that case double check the path that you entered in the "Server Game Options"
+         </li>
+        </ul>
+       </li>
+      </ul>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

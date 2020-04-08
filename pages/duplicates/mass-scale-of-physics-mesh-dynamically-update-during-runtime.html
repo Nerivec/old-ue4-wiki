@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Mass Scale of Physics Mesh, Dynamically Update During Runtime - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Mass Scale of Physics Mesh, Dynamically Update During Runtime
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       Please note that in UE4, physics objects / Kactors are actually Static Mesh Actors that are set to have physics simulation active.
+      </p>
+      <p>
+       So the code below is for an AStaticMeshActor deriving class of your own making.
+      </p>
+      <p>
+       Here is a function you can use to set the mass scale of a Static Mesh Actor that is using physics simulation, DURING runtime!
+      </p>
+      <p>
+       <br/>
+       <b>
+        Yes, you can dynamically update the mass of UE4 Physics Objects anytime you want during runtime!
+       </b>
+      </p>
+      <p>
+       <br/>
+       The key thing to note is the function
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UpdateMassProperties</span><span class="p">()</span>
+</pre>
+      </div>
+      <p>
+       Which is present in BodyInstance.h
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">AYourStaticMeshActorClass</span><span class="o">::</span><span class="n">SetMassScale</span><span class="p">(</span><span class="k">const</span> <span class="kt">float</span><span class="o">&amp;</span> <span class="n">NewScale</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">StaticMeshComponent</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+       <span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+
+	<span class="n">FBodyInstance</span><span class="o">*</span> <span class="n">BodyInst</span> <span class="o">=</span> <span class="n">StaticMeshComponent</span><span class="o">-&gt;</span><span class="n">GetBodyInstance</span><span class="p">();</span>
+	
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">BodyInst</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~</span>
+	
+	<span class="c1">// New Scale </span>
+	<span class="n">BodyInst</span><span class="o">-&gt;</span><span class="n">MassScale</span> <span class="o">=</span> <span class="n">NewScale</span><span class="p">;</span>  
+	
+	<span class="c1">// Trigger Update! </span>
+	<span class="n">BodyInst</span><span class="o">-&gt;</span><span class="n">UpdateMassProperties</span><span class="p">();</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Summary">
+        Summary
+       </span>
+      </h2>
+      <p>
+       By accessing the BodyInstance of a Static Mesh Actor you can update its mass scale during runtime,
+      </p>
+      <p>
+       <b>
+        making physics objects in your game world lighter or heavier any time you want :)
+       </b>
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

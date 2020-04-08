@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Loading Screen - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Loading Screen
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Setup">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Setup
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Movie_Player_Module">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Movie Player Module
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#The_Code">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           The Code
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#MyGameInstance.h">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             MyGameInstance.h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#MyGameInstance.cpp">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             MyGameInstance.cpp
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Explanation">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Explanation
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Bonuses_-_Playing_Movies_.26_Custom_Widgets">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Bonuses - Playing Movies &amp; Custom Widgets
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Plugin_Version">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Plugin Version
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       In this tutorial I'll show you how to
+       <b>
+        properly
+       </b>
+       setup a self-contained Loading Screen System for your game - which will allow you to safely play movie files, audio clips or load a widget to the screen during any type of map loading. This system supports all platforms from Android -&gt; Windows -&gt; PS4.
+      </p>
+      <p>
+       As a bonus, the system requires no additional calls or setup from the user and is entirely self-contained. Loading a map via any means (other than PIE) will trigger the load visualization seamlessly.
+      </p>
+      <p>
+       This tutorial relies on C++ and there is NO blueprint alternative. However, non-C++ orientated programmers should be able to easily modify their project and copy-paste the code relatively easily.
+       <b>
+        Note that the loading screen will not be triggered in Play-In-Editor!
+       </b>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Setup">
+        Setup
+       </span>
+      </h2>
+      <p>
+       To begin with, we'll need a custom Game Instance. The GameInstance is one of the first objects initialized for a game by the engine, and is persistent for the entire play session. If you don't already have one, you need to create your own overridden version of the 'UGameInstance' class.
+      </p>
+      <p>
+       Next, you'll need to setup your project configuration to use this GameInstance for your game. Open DefaultEngine.ini, and add (or edit) the following entry. This is how it looks in my game:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="p">[</span><span class="o">/</span><span class="n">Script</span><span class="o">/</span><span class="n">EngineSettings</span><span class="p">.</span><span class="n">GameMapsSettings</span><span class="p">]</span>
+<span class="n">GameInstanceClass</span><span class="o">=/</span><span class="n">Script</span><span class="o">/</span><span class="n">MyGame</span><span class="p">.</span><span class="n">MyGameInstance</span>
+</pre>
+      </div>
+      <p>
+       Now when you open the editor or play the game, this GameInstance class will be used in place of the default one.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Movie_Player_Module">
+        Movie Player Module
+       </span>
+      </h2>
+      <p>
+       The Movie Player module is what we use to setup the loading screen. This is the same module that plays the startup movies for your game, and is therefore instantiated before almost anything else. Not only that, but the Movie Player can talk to the game engine and tell it when it's finished it's task, allowing the engine to continue.
+      </p>
+      <p>
+       The MoviePlayer runs in its own thread, meaning it can run while the engine is stopped waiting for files to load.  Also because it is in a background thread, you have to use Slate widgets, not the newer UMG widgets.
+      </p>
+      <p>
+       In order to use the Movie Player module, we must include it in our project. Open your games' Build.CS file and add the MoviePlayer module, like so:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">PublicDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"Core"</span><span class="p">,</span> <span class="s">"CoreUObject"</span><span class="p">,</span> <span class="s">"Engine"</span><span class="p">,</span> <span class="s">"InputCore"</span><span class="p">,</span> <span class="s">"MoviePlayer"</span> <span class="p">});</span>
+</pre>
+      </div>
+      <p>
+       The Movie Player Module also has the required code and setup for a default loading screen. We will use this in this tutorial, but you can also tell the movie player to play movies and audio files if you want something more advanced.
+      </p>
+      <h2>
+       <span class="mw-headline" id="The_Code">
+        The Code
+       </span>
+      </h2>
+      <p>
+       With only a small bit of code and some delegate bindings, we can now tell the movie player to display a loading screen when we need it to:
+      </p>
+      <h3>
+       <span class="mw-headline" id="MyGameInstance.h">
+        MyGameInstance.h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">public</span><span class="o">:</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">Init</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+
+	<span class="n">UFUNCTION</span><span class="p">()</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">BeginLoadingScreen</span><span class="p">(</span><span class="k">const</span> <span class="n">FString</span><span class="o">&amp;</span> <span class="n">MapName</span><span class="p">);</span>
+	<span class="n">UFUNCTION</span><span class="p">()</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">EndLoadingScreen</span><span class="p">(</span><span class="n">UWorld</span><span class="o">*</span> <span class="n">InLoadedWorld</span><span class="p">);</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="MyGameInstance.cpp">
+        MyGameInstance.cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"MoviePlayer.h"</span><span class="cp"></span>
+
+<span class="kt">void</span> <span class="n">UMyGameInstance</span><span class="o">::</span><span class="n">Init</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">Init</span><span class="p">();</span>
+
+	<span class="n">FCoreUObjectDelegates</span><span class="o">::</span><span class="n">PreLoadMap</span><span class="p">.</span><span class="n">AddUObject</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">UMyGameInstance</span><span class="o">::</span><span class="n">BeginLoadingScreen</span><span class="p">);</span>
+	<span class="n">FCoreUObjectDelegates</span><span class="o">::</span><span class="n">PostLoadMapWithWorld</span><span class="p">.</span><span class="n">AddUObject</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">UMyGameInstance</span><span class="o">::</span><span class="n">EndLoadingScreen</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">UMyGameInstance</span><span class="o">::</span><span class="n">BeginLoadingScreen</span><span class="p">(</span><span class="k">const</span> <span class="n">FString</span><span class="o">&amp;</span> <span class="n">InMapName</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">IsRunningDedicatedServer</span><span class="p">())</span>
+	<span class="p">{</span>
+ 		<span class="n">FLoadingScreenAttributes</span> <span class="n">LoadingScreen</span><span class="p">;</span>
+	 	<span class="n">LoadingScreen</span><span class="p">.</span><span class="n">bAutoCompleteWhenLoadingCompletes</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+ 		<span class="n">LoadingScreen</span><span class="p">.</span><span class="n">WidgetLoadingScreen</span> <span class="o">=</span> <span class="n">FLoadingScreenAttributes</span><span class="o">::</span><span class="n">NewTestLoadingScreenWidget</span><span class="p">();</span>
+ 
+	 	<span class="n">GetMoviePlayer</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SetupLoadingScreen</span><span class="p">(</span><span class="n">LoadingScreen</span><span class="p">);</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">UMyGameInstance</span><span class="o">::</span><span class="n">EndLoadingScreen</span><span class="p">(</span><span class="n">UWorld</span><span class="o">*</span> <span class="n">InLoadedWorld</span><span class="p">)</span>
+<span class="p">{</span>
+
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       And it really is as easy as that. The Movie Player will handle destroying the loading screen when map load has completed, but we can add our own functionality to EndLoadingScreen if we want.
+      </p>
+      <p>
+       In my case for example, I have added a full-screen fade from black when loading completes, via a custom Viewport. User Moss posted a tutorial on how to do this fade here:
+      </p>
+      <p>
+       <a class="external free" href="./global-fade-in-out.html" rel="nofollow">
+        Global Fade In out
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Explanation">
+        Explanation
+       </span>
+      </h2>
+      <p>
+       FCoreUObjectDelegates is an engine class which contains a series of Delegate bindings that are fired on various events in engine. PreLoadMap and PostLoadMap are the first items called whenever a map load begins and ends, regardless of where the load is called from.
+      </p>
+      <p>
+       We have essentially tied in our loading screen in the most seamless way possible. As the loading screen is created inside of FSlateApplication, it also ticks on it's own thread and therefore can run animation/movies independently of whatever the main game thread is doing.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Bonuses_-_Playing_Movies_.26_Custom_Widgets">
+        Bonuses - Playing Movies &amp; Custom Widgets
+       </span>
+      </h2>
+      <p>
+       FLoadingScreenAttributes contains a variety of options to allow you to customize the behaviour of the loading screen, all of which are self-explanatory. Knock yourselves out ;)
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/** Struct of all the attributes a loading screen will have. */</span>
+<span class="k">struct</span> <span class="n">MOVIEPLAYER_API</span> <span class="n">FLoadingScreenAttributes</span>
+<span class="p">{</span>
+	<span class="n">FLoadingScreenAttributes</span><span class="p">()</span>
+		<span class="o">:</span> <span class="n">MinimumLoadingScreenDisplayTime</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0f</span><span class="p">)</span>
+		<span class="p">,</span> <span class="n">bAutoCompleteWhenLoadingCompletes</span><span class="p">(</span><span class="nb">true</span><span class="p">)</span>
+		<span class="p">,</span> <span class="n">bMoviesAreSkippable</span><span class="p">(</span><span class="nb">true</span><span class="p">)</span>
+		<span class="p">,</span> <span class="n">bWaitForManualStop</span><span class="p">(</span><span class="nb">false</span><span class="p">)</span> <span class="p">{}</span>
+
+	<span class="cm">/** The widget to be displayed on top of the movie or simply standalone if there is no movie. */</span>
+	<span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">SWidget</span><span class="o">&gt;</span> <span class="n">WidgetLoadingScreen</span><span class="p">;</span>
+
+	<span class="cm">/** The movie paths local to the game's Content/Movies/ directory we will play. */</span>
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FString</span><span class="o">&gt;</span> <span class="n">MoviePaths</span><span class="p">;</span>
+
+	<span class="cm">/** The minimum time that a loading screen should be opened for. */</span>
+	<span class="kt">float</span> <span class="n">MinimumLoadingScreenDisplayTime</span><span class="p">;</span>
+
+	<span class="cm">/** If true, the loading screen will disappear as soon as all movies are played and loading is done. */</span>
+	<span class="kt">bool</span> <span class="n">bAutoCompleteWhenLoadingCompletes</span><span class="p">;</span>
+
+	<span class="cm">/** If true, movies can be skipped by clicking the loading screen as long as loading is done. */</span>
+	<span class="kt">bool</span> <span class="n">bMoviesAreSkippable</span><span class="p">;</span>
+
+	<span class="cm">/** If true, movie playback continues until Stop is called. */</span>
+	<span class="kt">bool</span> <span class="n">bWaitForManualStop</span><span class="p">;</span>
+
+	<span class="cm">/** True if there is either a standalone widget or any movie paths or both. */</span>
+	<span class="kt">bool</span> <span class="nf">IsValid</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+	<span class="cm">/** Creates a simple test loading screen widget. */</span>
+	<span class="k">static</span> <span class="n">TSharedRef</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">SWidget</span><span class="o">&gt;</span> <span class="n">NewTestLoadingScreenWidget</span><span class="p">();</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Plugin_Version">
+        Plugin Version
+       </span>
+      </h2>
+      <p>
+       Nick Darnell (aka Slatelord) from Epic made a Plugin of this system that allows you do to all of this from within the editor with no C++ required.
+      </p>
+      <p>
+       Download the plugin on GitHub here:
+       <a class="external free" href="https://github.com/ue4plugins/LoadingScreen" rel="nofollow">
+        https://github.com/ue4plugins/LoadingScreen
+       </a>
+      </p>
+      <p>
+       Hope this helps!
+      </p>
+      <p>
+       (
+     )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

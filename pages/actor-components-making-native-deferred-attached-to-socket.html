@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Actor Components, Making Native &amp; Deferred Attached to Socket - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Actor Components, Making Native &amp; Deferred Attached to Socket
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Deferred_Attachment">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Deferred Attachment
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#.h">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           .h
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#.Cpp_Constructor">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           .Cpp Constructor
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#What_is_Mesh.3F">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           What is Mesh?
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <b>
+        Author:
+       </b>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       Here is my complete code sample for creating and attaching native C++ actor components!
+      </p>
+      <p>
+       <img alt="Nativecomp.jpg" class="" height="300" src="../assets/actor-components-making-native-deferred-attached-to-socket/0.jpg" width="400"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Deferred_Attachment">
+        Deferred Attachment
+       </span>
+      </h2>
+      <p>
+       This code follows the Deferred Attachment model, whereby you pick a name and a socket, but the actual attachment occurs after the Character Blueprint has also initialized.
+      </p>
+      <p>
+       (blueprints are not yet setup during the C++ constructor, and their values cannot be relied on)
+      </p>
+      <h2>
+       <span class="mw-headline" id=".h">
+        .h
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>    <span class="c1">//JoyControl</span>
+<span class="n">TSubobjectPtr</span><span class="o">&lt;</span><span class="n">UStaticMeshComponent</span><span class="o">&gt;</span> <span class="n">JoyfulControl</span><span class="p">;</span>
+<span class="n">UStaticMesh</span> <span class="o">*</span> <span class="n">AssetSM_JoyControl</span><span class="p">;</span>
+	
+<span class="n">FORCEINLINE</span> <span class="kt">void</span> <span class="nf">SetupSMComponentsWithCollision</span><span class="p">(</span><span class="n">UStaticMeshComponent</span><span class="o">*</span> <span class="n">Comp</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">Comp</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+	<span class="c1">//~~~~~~~~</span>
+		
+	<span class="n">Comp</span><span class="o">-&gt;</span><span class="n">bOwnerNoSee</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="n">Comp</span><span class="o">-&gt;</span><span class="n">bCastDynamicShadow</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+	<span class="n">Comp</span><span class="o">-&gt;</span><span class="n">CastShadow</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+	<span class="n">Comp</span><span class="o">-&gt;</span><span class="n">BodyInstance</span><span class="p">.</span><span class="n">SetObjectType</span><span class="p">(</span><span class="n">ECC_WorldDynamic</span><span class="p">);</span>
+	<span class="n">Comp</span><span class="o">-&gt;</span><span class="n">BodyInstance</span><span class="p">.</span><span class="n">SetCollisionEnabled</span><span class="p">(</span><span class="n">ECollisionEnabled</span><span class="o">::</span><span class="n">QueryAndPhysics</span><span class="p">);</span>
+	<span class="n">Comp</span><span class="o">-&gt;</span><span class="n">BodyInstance</span><span class="p">.</span><span class="n">SetResponseToAllChannels</span><span class="p">(</span><span class="n">ECR_Ignore</span><span class="p">);</span>
+	<span class="n">Comp</span><span class="o">-&gt;</span><span class="n">BodyInstance</span><span class="p">.</span><span class="n">SetResponseToChannel</span><span class="p">(</span><span class="n">ECC_WorldStatic</span><span class="p">,</span> <span class="n">ECR_Block</span><span class="p">);</span>
+	<span class="n">Comp</span><span class="o">-&gt;</span><span class="n">BodyInstance</span><span class="p">.</span><span class="n">SetResponseToChannel</span><span class="p">(</span><span class="n">ECC_WorldDynamic</span><span class="p">,</span> <span class="n">ECR_Block</span><span class="p">);</span>
+	<span class="n">Comp</span><span class="o">-&gt;</span><span class="n">BodyInstance</span><span class="p">.</span><span class="n">SetResponseToChannel</span><span class="p">(</span><span class="n">ECC_Pawn</span><span class="p">,</span> <span class="n">ECR_Block</span><span class="p">);</span>
+	<span class="n">Comp</span><span class="o">-&gt;</span><span class="n">SetHiddenInGame</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id=".Cpp_Constructor">
+        .Cpp Constructor
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>    <span class="c1">//Asset, Reference Obtained Via Right Click in Editor</span>
+<span class="k">static</span> <span class="n">ConstructorHelpers</span><span class="o">::</span><span class="n">FObjectFinder</span><span class="o">&lt;</span><span class="n">UStaticMesh</span><span class="o">&gt;</span> <span class="n">StaticMeshOb_AW2</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"StaticMesh'/Game/VictoryGoals/Mechs/JoyControl/JoyControl_WindTurtle.JoyControl_WindTurtle'"</span><span class="p">));</span>
+
+<span class="n">AssetSM_JoyControl</span> <span class="o">=</span> <span class="n">StaticMeshOb_AW2</span><span class="p">.</span><span class="n">Object</span><span class="p">;</span>
+
+<span class="c1">//Create</span>
+<span class="n">JoyfulControl</span> <span class="o">=</span> <span class="n">ObjectInitializer</span><span class="p">.</span><span class="n">CreateDefaultSubobject</span> <span class="o">&lt;</span> <span class="n">UStaticMeshComponent</span> <span class="o">&gt;</span> <span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"JoyfulControlYay"</span><span class="p">));</span>
+
+<span class="c1">//Set Mesh</span>
+<span class="n">JoyfulControl</span><span class="o">-&gt;</span><span class="n">SetStaticMesh</span><span class="p">(</span><span class="n">AssetSM_JoyControl</span><span class="p">);</span>
+
+<span class="c1">//Setup (see .h)</span>
+<span class="n">SetupSMComponentsWithCollision</span><span class="p">(</span><span class="n">JoyfulControl</span><span class="p">);</span>
+
+<span class="c1">//Deferred Attachment (Ty Nick W.! Actual attach gets done after blueprint stuff)</span>
+<span class="n">JoyfulControl</span><span class="o">-&gt;</span><span class="n">AttachParent</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">;</span>
+<span class="n">JoyfulControl</span><span class="o">-&gt;</span><span class="n">AttachSocketName</span> <span class="o">=</span> <span class="s">"JoyControl"</span><span class="p">;</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="What_is_Mesh.3F">
+        What is Mesh?
+       </span>
+      </h2>
+      <p>
+       Mesh is a great choice for a component to attach to if you are deriving from an ACharacter class.
+      </p>
+      <p>
+       If not using ACharacter, and if you have a RootComponent for your actor class already,
+      </p>
+      <p>
+       you can simply replace Mesh with RootComponent
+      </p>
+      <pre> JoyfulControl-&gt;AttachParent = RootComponent;
+</pre>
+      <p>
+       If you are making a new actor class that does not have a RootComponent, then make one of your new components into the RootComponent
+      </p>
+      <pre> RootComponent = YourComp;
+</pre>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       Warning!
+      </p>
+      <p>
+       AttachParent not available anymore. Use SetupAttachment instead.
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

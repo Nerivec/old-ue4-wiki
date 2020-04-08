@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Particle Instance Parameters Tutorial - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Particle Instance Parameters Tutorial
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Controlling_Color_Through_Parameters">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Controlling Color Through Parameters
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Setting_up_the_Instance_Parameter">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Setting up the Instance Parameter
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Controlling_Particle_Parameters_via_Blueprint">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Controlling Particle Parameters via Blueprint
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Setting_Up_the_Particle_Parameter">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Setting Up the Particle Parameter
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       Instance Parameters are a very powerful part of the effects pipeline in UE4.  Particle Parameters can be used to control a multitude of values, on a per instance basis.  Particle Parameters are often used on placed level effects, though they can also be called by game code to control various modules.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Controlling_Color_Through_Parameters">
+        Controlling Color Through Parameters
+       </span>
+      </h2>
+      <p>
+       For this demonstration we will control the color of a fire particle system using the
+       <i>
+        ScaleColorLife
+       </i>
+       module, setup with a
+       <i>
+        ParticleParameter
+       </i>
+       . We have set up a simple level with a basic flickering torch (used in the Epic Citadel map) in the middle of a large test stage.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="DemoLevel.png" class="thumbimage" height="506" src="../assets/particle-instance-parameters-tutorial/0.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       First open your effect in Cascade, and make certain you have an initialColor or ColorOverLife module in your particle system.
+      </p>
+      <p>
+       Next right-click on the flame emitter add the
+       <i>
+        Color &gt; ScaleColor/Life
+       </i>
+       module to your system.  In the case of ScaleColor/Life the parameter gets utilized very often so setup is as easy as right-clicking and choosing
+       <i>
+        Set up particle parameter
+       </i>
+       .
+       <b>
+        Note:
+       </b>
+       this is not the case with all particleParameters.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:758px;">
+        <img alt="SetUpParameter.png" class="thumbimage" height="424" src="../assets/particle-instance-parameters-tutorial/1.png" width="756"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       If you select the module and view it's properties you can see vector and constant values have been defined for this module.   The Parameters have been automatically named
+       <i>
+        InstanceColorScaleOverLife
+       </i>
+       and
+       <i>
+        InstanceAlphaScaleOverLife
+       </i>
+       , though it is possible to modify these names and have multiple Parameter names in any particle system, placed on unique emitter stacks.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:355px;">
+        <img alt="CascadeParameters.png" class="thumbimage" height="421" src="../assets/particle-instance-parameters-tutorial/2.png" width="353"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Setting_up_the_Instance_Parameter">
+        Setting up the Instance Parameter
+       </span>
+      </h3>
+      <p>
+       The next step involves the individual EmitterActor placed in the scene.  Select the EmitterActor and look in the Details Pane. Locate the Instance Parameters section, located under the
+       <i>
+        Particles
+       </i>
+       .
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:283px;">
+        <img alt="InstanceParameters PI.png" class="thumbimage" height="264" src="../assets/particle-instance-parameters-tutorial/3.png" width="281"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       Press the
+       <i>
+        +'
+       </i>
+       button. This will add a new parameter slot into the emitter. You *could* do this twice if you wanted to control alpha, but for this example we are only going to use color.
+      </p>
+      <p>
+       Make sure the parameter name within the new parameter matches the parameter name given to the parameter in Cascade. If you left it at its default value, it will be
+       <i>
+        InstanceColorScaleOverLife
+       </i>
+       . Also set the
+       <i>
+        Param Type
+       </i>
+       property to
+       <i>
+        Color
+       </i>
+       . Your particle system will likely turn black. This is normal.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:882px;">
+        <img alt="InstanceColor.png" class="thumbimage" height="370" src="../assets/particle-instance-parameters-tutorial/4.png" width="880"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       Set the color property to any color that you like. Experiment with different colors and see what you get!
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="FlameColor.png" class="thumbimage" height="429" src="../assets/particle-instance-parameters-tutorial/5.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       It is possible to use the color parameter to customize one particle effect as needed without having to copy/paste multiple effects into your packages for basic color variation across different levels. In the following image, the particle actor was duplicated and the color parameter was changed. Notice that the change does not affect the originally changed copy. This means you can use the same parameter to have different colors on each instance.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:753px;">
+        <img alt="TwinFlames.png" class="thumbimage" height="474" src="../assets/particle-instance-parameters-tutorial/6.png" width="751"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       ParticleParameters can make organizing and finding effects much simpler, reduce memory, level load times, and reduce the amount of files required to be stored on disk.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Controlling_Particle_Parameters_via_Blueprint">
+        Controlling Particle Parameters via Blueprint
+       </span>
+      </h2>
+      <p>
+       Although parameters are useful in that they allow you to make alterations to an existing particle system without having to create an entirely new asset, one of the more useful aspects is that they expose particle control to external sources such as scripts, Matinee, and Blueprints. In this example, we're going to take the color-changing fire from above and drive its color change by way of a simple Blueprint script.
+      </p>
+      <p>
+       For simplicity's sake, we will use Level Scripting in this setup, though such systems would generally be more useful if set up with a Blueprint, which could then be easily deployed into other levels.
+      </p>
+      <p>
+       We will begin with a flame effect that has a parameter set up for color, as was done in the previous example.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:882px;">
+        <img alt="InstanceColor.png" class="thumbimage" height="370" src="../assets/particle-instance-parameters-tutorial/7.png" width="880"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       Click the
+       <b>
+        Level Script
+       </b>
+       button to open the Level Blueprint window. To prevent this document from becoming a Blueprint tutorial, here is the network used:
+      </p>
+      <ul>
+       <li>
+        <ul>
+         <li>
+          Click for larger view.**
+         </li>
+        </ul>
+       </li>
+      </ul>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="KismetNetwork.png" class="thumbimage" height="266" src="../assets/particle-instance-parameters-tutorial/8.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       1. Every frame we get the distance from the player to the particle system.
+1. We need to lerp, so normalize min and max ranges, clamp to 0-1.
+1. Log the value out to the screen for good measure.
+1. Set that color parameter using the results of our lerp.
+      </p>
+      <p>
+       <br/>
+       The final result is that the flame will change color as the player moves toward and away from it.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:622px;">
+        <img alt="FlameColorLerp.png" class="thumbimage" height="396" src="../assets/particle-instance-parameters-tutorial/9.png" width="620"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       1. When viewed at a range of 100 units, the flame has a blue tint added to it, causing it to be a faint purple.
+2. When the player moves 512 units away and beyond, the flame has shifted over to a green color.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Setting_Up_the_Particle_Parameter">
+        Setting Up the Particle Parameter
+       </span>
+      </h3>
+      <p>
+       Using a single emitter we will move the position of our effect with a particle parameter. For this example, the system has but one emitter.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:471px;">
+        <img alt="FireEffect.png" class="thumbimage" height="296" src="../assets/particle-instance-parameters-tutorial/10.png" width="469"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       Right Click and add an Initial Position module to your Emitter in Cascade.
+      </p>
+      <p>
+       Select the Initial Location module and in the Distribution List choose
+       <i>
+        DistributionVectorParticleParameter
+       </i>
+       .
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:497px;">
+        <img alt="InitialLocation.png" class="thumbimage" height="351" src="../assets/particle-instance-parameters-tutorial/11.png" width="495"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       Change the Parameter Name to
+       <i>
+        InitialPosition_1
+       </i>
+       or any parameter name you choose, just make it unique for this emitter, unless you wish to share position values across multiple emitters using a shared particle parameter.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:503px;">
+        <img alt="InitialPosition 1Parameter.png" class="thumbimage" height="323" src="../assets/particle-instance-parameters-tutorial/12.png" width="501"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       Open the Param Modes section and change the drop downs to
+       <i>
+        DPM_Direct
+       </i>
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:492px;">
+        <img alt="ParamModes.png" class="thumbimage" height="341" src="../assets/particle-instance-parameters-tutorial/13.png" width="490"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       In the level, select the Emitter actor and look at the Properties Window. Expand the
+       <i>
+        Instance Parameters
+       </i>
+       section and click the
+       <b>
+        Plus
+       </b>
+       button and add a new entry into the list. Set the
+       <i>
+        Parameter Name
+       </i>
+       to
+       <i>
+        InitialPosition_1
+       </i>
+       (or whatever name you selected earlier). Also set the
+       <i>
+        Param Type
+       </i>
+       property to
+       <i>
+        PSPT_Vector
+       </i>
+       .
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:301px;">
+        <img alt="EmitterParam.png" class="thumbimage" height="363" src="../assets/particle-instance-parameters-tutorial/14.png" width="299"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       Change the Vector values to match whatever the desired position.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:841px;">
+        <img alt="ParticlesRepositioned.png" class="thumbimage" height="364" src="../assets/particle-instance-parameters-tutorial/15.png" width="839"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       Before using a particle parameter to control position:
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:882px;">
+        <img alt="Location Before.png" class="thumbimage" height="582" src="../assets/particle-instance-parameters-tutorial/16.png" width="880"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       After using a particle parameter to control position:
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:882px;">
+        <img alt="Location After.png" class="thumbimage" height="582" src="../assets/particle-instance-parameters-tutorial/17.png" width="880"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       This demonstration is a simplified example of using particle parameters, there are many uses for this feature which may prove to be a savings for your project.
+      </p>
+      <p>
+       Using one EmitterActor to place 3 fires using a particle parameter with a unique name on 3 unique emitters in Cascade:
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:921px;">
+        <img alt="Location3.png" class="thumbimage" height="690" src="../assets/particle-instance-parameters-tutorial/18.png" width="919"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       It is essential when working with complex effects to name your particle parameters clearly, returning to an older effect with poorly name parameters can be a confusing process which may waste time deducing how the parameters work.  It is possible to use multiple particle parameters to control behavior across several modules in a single emitter or multiple emitters.  Try editing color, position, scale, lifetime etc.  It can prove beneficial to experiment with different settings to achieve the desired result.
+      </p>
+      <p>
+       In this particular case a particle parameter can be used to move the position of effect elements around in a scene, reducing emitterActor counts which in turn can help performance and load times.  It is also possible to control particle parameters through matinee and game code.
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

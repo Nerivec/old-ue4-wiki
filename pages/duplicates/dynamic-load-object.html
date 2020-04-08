@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Dynamic Load Object - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Dynamic Load Object
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Get_Object.27s_Path">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Get Object's Path
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Why_FName.3F">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Why FName?
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#My_Templated_Dynamic_Load_Object_Function">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           My Templated Dynamic Load Object Function
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Example_Uses_of_The_Template">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Example Uses of The Template
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       here are my static library functions for saving a objects path and then loading an object dynamically from a path
+      </p>
+      <p>
+       I have a templated version of my dynamic load object function for your entertainment!
+      </p>
+      <p>
+       To test this you could remove the word static and put in any .h file of your choosing like player controller
+      </p>
+      <h2>
+       <span class="mw-headline" id="Get_Object.27s_Path">
+        Get Object's Path
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Get Path</span>
+<span class="k">static</span> <span class="n">FORCEINLINE</span> <span class="n">FName</span> <span class="nf">GetObjPath</span><span class="p">(</span><span class="k">const</span> <span class="n">UObject</span><span class="o">*</span> <span class="n">Obj</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">Obj</span><span class="p">)</span> 
+        <span class="p">{</span>
+          <span class="k">return</span> <span class="n">NAME_None</span><span class="p">;</span>
+        <span class="p">}</span>
+	<span class="c1">//~</span>
+	
+	<span class="n">FStringAssetReference</span> <span class="n">ThePath</span> <span class="o">=</span> <span class="n">FStringAssetReference</span><span class="p">(</span><span class="n">Obj</span><span class="p">);</span>
+	
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">ThePath</span><span class="p">.</span><span class="n">IsValid</span><span class="p">())</span> <span class="k">return</span> <span class="n">NAME_None</span><span class="p">;</span>
+	
+	<span class="c1">//The Class FString Name For This Object</span>
+	<span class="n">FString</span> <span class="n">Str</span> <span class="o">=</span> <span class="n">Obj</span><span class="o">-&gt;</span><span class="n">GetClass</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetDescription</span><span class="p">();</span>
+	
+	<span class="n">Str</span> <span class="o">+=</span> <span class="s">"'"</span><span class="p">;</span>
+	<span class="n">Str</span> <span class="o">+=</span> <span class="n">ThePath</span><span class="p">.</span><span class="n">ToString</span><span class="p">();</span>
+	<span class="n">Str</span> <span class="o">+=</span> <span class="s">"'"</span><span class="p">;</span>
+	
+	<span class="k">return</span> <span class="n">FName</span><span class="p">(</span><span class="o">*</span><span class="n">Str</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Why_FName.3F">
+        Why FName?
+       </span>
+      </h3>
+      <p>
+       Because in my In-Game editor I only save the asset references to binary file, and use Dynamic Load Object during the loading of a level, and
+      </p>
+      <pre> FName is half the size of FString, 8 compared to 16 bytes.
+</pre>
+      <p>
+       So I do it for Save File size-reduction reasons
+      </p>
+      <h2>
+       <span class="mw-headline" id="My_Templated_Dynamic_Load_Object_Function">
+        My Templated Dynamic Load Object Function
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//TEMPLATE Load Obj From Path</span>
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">ObjClass</span><span class="o">&gt;</span>
+<span class="k">static</span> <span class="n">FORCEINLINE</span> <span class="n">ObjClass</span><span class="o">*</span> <span class="n">LoadObjFromPath</span><span class="p">(</span><span class="k">const</span> <span class="n">FName</span><span class="o">&amp;</span> <span class="n">Path</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">Path</span> <span class="o">==</span> <span class="n">NAME_None</span><span class="p">)</span> <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+	<span class="c1">//~</span>
+	
+      <span class="k">return</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">ObjClass</span><span class="o">&gt;</span><span class="p">(</span><span class="n">StaticLoadObject</span><span class="p">(</span> <span class="n">ObjClass</span><span class="o">::</span><span class="n">StaticClass</span><span class="p">(),</span> <span class="nb">NULL</span><span class="p">,</span><span class="o">*</span><span class="n">Path</span><span class="p">.</span><span class="n">ToString</span><span class="p">()));</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Example_Uses_of_The_Template">
+        Example Uses of The Template
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Load PS From Path </span>
+<span class="k">static</span> <span class="n">FORCEINLINE</span> <span class="n">UParticleSystem</span><span class="o">*</span> <span class="nf">LoadPSFromPath</span><span class="p">(</span><span class="k">const</span> <span class="n">FName</span><span class="o">&amp;</span> <span class="n">Path</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">Path</span> <span class="o">==</span> <span class="n">NAME_None</span><span class="p">)</span> <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+	<span class="c1">//~</span>
+	
+	<span class="k">return</span> <span class="n">LoadObjFromPath</span><span class="o">&lt;</span><span class="n">UParticleSystem</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Path</span><span class="p">);</span>
+<span class="p">}</span>
+
+
+<span class="c1">// Load Material From Path </span>
+<span class="k">static</span> <span class="n">FORCEINLINE</span> <span class="n">UMaterialInterface</span><span class="o">*</span> <span class="nf">LoadMatFromPath</span><span class="p">(</span><span class="k">const</span> <span class="n">FName</span><span class="o">&amp;</span> <span class="n">Path</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">Path</span> <span class="o">==</span> <span class="n">NAME_None</span><span class="p">)</span> <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+	<span class="c1">//~</span>
+	
+	<span class="k">return</span> <span class="n">LoadObjFromPath</span><span class="o">&lt;</span><span class="n">UMaterialInterface</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Path</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// Load Static Mesh From Path </span>
+<span class="k">static</span> <span class="n">FORCEINLINE</span> <span class="n">UStaticMesh</span><span class="o">*</span> <span class="nf">LoadMeshFromPath</span><span class="p">(</span><span class="k">const</span> <span class="n">FName</span><span class="o">&amp;</span> <span class="n">Path</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">Path</span> <span class="o">==</span> <span class="n">NAME_None</span><span class="p">)</span> <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+	<span class="c1">//~</span>
+	
+	<span class="k">return</span> <span class="n">LoadObjFromPath</span><span class="o">&lt;</span><span class="n">UStaticMesh</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Path</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Networking/Replication - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Networking/Replication
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Creating_a_server">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Creating a server
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Listen">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Listen
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Dedicated">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             Dedicated
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Joining_a_server">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Joining a server
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Play_In_Editor_Support">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Play In Editor Support
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Blueprint_support">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Blueprint support
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#C.2B.2B_examples">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           C++ examples
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#Sync_character_health_to_all_clients">
+            <span class="tocnumber">
+             6.1
+            </span>
+            <span class="toctext">
+             Sync character health to all clients
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-10">
+             <a href="#YourCharacter.h">
+              <span class="tocnumber">
+               6.1.1
+              </span>
+              <span class="toctext">
+               YourCharacter.h
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-11">
+             <a href="#YourCharacter.cpp">
+              <span class="tocnumber">
+               6.1.2
+              </span>
+              <span class="toctext">
+               YourCharacter.cpp
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-12">
+           <a href="#Command_from_client_to_server">
+            <span class="tocnumber">
+             6.2
+            </span>
+            <span class="toctext">
+             Command from client to server
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-13">
+             <a href="#YourPlayerController.h">
+              <span class="tocnumber">
+               6.2.1
+              </span>
+              <span class="toctext">
+               YourPlayerController.h
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-14">
+             <a href="#YourPlayerController.cpp">
+              <span class="tocnumber">
+               6.2.2
+              </span>
+              <span class="toctext">
+               YourPlayerController.cpp
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       Unreal Engine has been designed with networking in mind since Unreal Engine 1.
+       <br/>
+       This includes:
+      </p>
+      <ul>
+       <li>
+        Remote procedure calls (RPC).
+       </li>
+       <li>
+        Replication of variables, including structs &amp; dynamic arrays.
+       </li>
+       <li>
+        Dedicated server support.
+       </li>
+       <li>
+        VOIP
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="Creating_a_server">
+        Creating a server
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Listen">
+        Listen
+       </span>
+      </h3>
+      <p>
+       A listen server includes the host as a local player.
+       <br/>
+       To launch a listen server, use the command line:
+       <br/>
+       &lt;mygame.exe&gt; &lt;mymap&gt;?listen -game
+      </p>
+      <h3>
+       <span class="mw-headline" id="Dedicated">
+        Dedicated
+       </span>
+      </h3>
+      <p>
+       A dedicated server does not include the host as a local player.
+       <br/>
+       Renderering, audio, and anything else that isn't required is disabled to use a minimal footprint both in memory and cpu.
+      </p>
+      <p>
+       To launch a dedicated server, use the command line:
+       <br/>
+       &lt;mygame.exe&gt; &lt;mymap&gt; -server
+      </p>
+      <p>
+       Games that are ready to ship with cooked data will also include a standalone executable &lt;mygameserver.exe&gt;.
+       <br/>
+       These are fully optimized for multiple instances per machine.
+      </p>
+      <p>
+       To launch a dedicated server using &lt;mygameserver.exe&gt;, use the command line:
+       <br/>
+       &lt;mygameserver.exe&gt; &lt;mymap&gt;
+      </p>
+      <h2>
+       <span class="mw-headline" id="Joining_a_server">
+        Joining a server
+       </span>
+      </h2>
+      <p>
+       To join a server at a specified IP address as a client, use the command line:
+       <br/>
+       &lt;mygame.exe&gt; &lt;IP address&gt; -game
+      </p>
+      <p>
+       To join a server via the in-game console, use the command:
+       <br/>
+       open &lt;IP address&gt;
+      </p>
+      <h2>
+       <span class="mw-headline" id="Play_In_Editor_Support">
+        Play In Editor Support
+       </span>
+      </h2>
+      <p>
+       The editor includes built in support for networked games.
+      </p>
+      <p>
+       This is incredibly handy for quickly testing multiplayer games on a single host machine.
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:268px;">
+         <img alt="" class="thumbimage" height="325" src="../assets/networkingreplication/0.jpg" width="266"/>
+         <div class="thumbcaption">
+          <div class="magnify">
+          </div>
+          PIE Options
+         </div>
+        </div>
+       </div>
+      </div>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:268px;">
+         <img alt="" class="thumbimage" height="325" src="../assets/networkingreplication/1.jpg" width="266"/>
+         <div class="thumbcaption">
+          <div class="magnify">
+          </div>
+          PIE Advanced Settings
+         </div>
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Blueprint_support">
+        Blueprint support
+       </span>
+      </h2>
+      <p>
+       Blueprints fully support replication, including replication notifications.
+       <br/>
+       Replication notifications are handy if you want a client to do something when a variable updates.
+       <br/>
+       eg. Play a particle effect if their health increases.
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:302px;">
+         <img alt="" class="thumbimage" height="284" src="../assets/networkingreplication/2.jpg" width="300"/>
+         <div class="thumbcaption">
+          <div class="magnify">
+          </div>
+          Blueprint Replication
+         </div>
+        </div>
+       </div>
+      </div>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:302px;">
+         <img alt="" class="thumbimage" height="393" src="../assets/networkingreplication/3.jpg" width="300"/>
+         <div class="thumbcaption">
+          <div class="magnify">
+          </div>
+          Blueprint On Rep
+         </div>
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="C.2B.2B_examples">
+        C++ examples
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Sync_character_health_to_all_clients">
+        Sync character health to all clients
+       </span>
+      </h3>
+      <h4>
+       <span class="mw-headline" id="YourCharacter.h">
+        YourCharacter.h
+       </span>
+      </h4>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>    <span class="n">UPROPERTY</span><span class="p">(</span><span class="n">Replicated</span><span class="p">)</span>
+    <span class="kt">float</span> <span class="n">Health</span><span class="p">;</span>
+</pre>
+      </div>
+      <h4>
+       <span class="mw-headline" id="YourCharacter.cpp">
+        YourCharacter.cpp
+       </span>
+      </h4>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"UnrealNetwork.h"</span><span class="cp"></span>
+<span class="c1">// ...</span>
+<span class="kt">void</span> <span class="n">AYourCharacter</span><span class="o">::</span><span class="n">GetLifetimeReplicatedProps</span><span class="p">(</span><span class="n">TArray</span><span class="o">&lt;</span> <span class="n">FLifetimeProperty</span> <span class="o">&gt;</span> <span class="o">&amp;</span> <span class="n">OutLifetimeProps</span><span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+    <span class="n">Super</span><span class="o">::</span><span class="n">GetLifetimeReplicatedProps</span><span class="p">(</span><span class="n">OutLifetimeProps</span><span class="p">);</span>
+
+    <span class="c1">// Replicate to everyone</span>
+    <span class="n">DOREPLIFETIME</span><span class="p">(</span><span class="n">AYourCharacter</span><span class="p">,</span> <span class="n">Health</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       The DOREPLIFETIME macro is defined in UnrealNetwork.h, so make sure you #include it in your .cpp file. Your project will need a dependency on the "Engine" module in its Build.cs file to find the header, but most projects will have this dependency already.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Command_from_client_to_server">
+        Command from client to server
+       </span>
+      </h3>
+      <h4>
+       <span class="mw-headline" id="YourPlayerController.h">
+        YourPlayerController.h
+       </span>
+      </h4>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>    <span class="kt">bool</span> <span class="n">bSomeBool</span><span class="p">;</span>
+    
+    <span class="kt">void</span> <span class="nf">SetSomeBool</span><span class="p">(</span><span class="kt">bool</span> <span class="n">bNewSomeBool</span><span class="p">);</span>
+
+    <span class="n">UFUNCTION</span><span class="p">(</span><span class="n">reliable</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">WithValidation</span><span class="p">)</span>
+    <span class="kt">void</span> <span class="n">ServerSetSomeBool</span><span class="p">(</span><span class="kt">bool</span> <span class="n">bNewSomeBool</span><span class="p">);</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">ServerSetSomeBool_Implementation</span><span class="p">(</span><span class="kt">bool</span> <span class="n">bNewSomeBool</span><span class="p">);</span>
+    <span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">ServerSetSomeBool_Validate</span><span class="p">(</span><span class="kt">bool</span> <span class="n">bNewSomeBool</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       As of UE 4.15 the compile system adds the implementation and validation definitions for you. Making the code for the header as follows
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>    <span class="kt">bool</span> <span class="n">bSomeBool</span><span class="p">;</span>
+    
+    <span class="kt">void</span> <span class="nf">SetSomeBool</span><span class="p">(</span><span class="kt">bool</span> <span class="n">bNewSomeBool</span><span class="p">);</span>
+
+    <span class="n">UFUNCTION</span><span class="p">(</span><span class="n">reliable</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">WithValidation</span><span class="p">)</span>
+    <span class="kt">void</span> <span class="n">ServerSetSomeBool</span><span class="p">(</span><span class="kt">bool</span> <span class="n">bNewSomeBool</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       You'll still need everything in the cpp file though!
+      </p>
+      <h4>
+       <span class="mw-headline" id="YourPlayerController.cpp">
+        YourPlayerController.cpp
+       </span>
+      </h4>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">AYourPlayerController</span><span class="o">::</span><span class="n">SetSomeBool</span><span class="p">(</span><span class="kt">bool</span> <span class="n">bNewSomeBool</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// Change the value of the bSomeBool property</span>
+    <span class="n">bSomeBool</span> <span class="o">=</span> <span class="n">bNewSomeBool</span><span class="p">;</span>
+
+    <span class="c1">// If this next check succeeds, we are *not* the authority, meaning we are a network client.</span>
+    <span class="c1">// In this case we also want to call the server function to tell it to change the bSomeBool property as well.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Role</span> <span class="o">&lt;</span> <span class="n">ROLE_Authority</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">ServerSetSomeBool</span><span class="p">(</span><span class="n">bNewSomeBool</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">AYourPlayerController</span><span class="o">::</span><span class="n">ServerSetSomeBool_Validate</span><span class="p">(</span><span class="kt">bool</span> <span class="n">bNewSomeBool</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AYourPlayerController</span><span class="o">::</span><span class="n">ServerSetSomeBool_Implementation</span><span class="p">(</span><span class="kt">bool</span> <span class="n">bNewSomeBool</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// This function is only called on the server (where Role == ROLE_Authority), called over the network by clients.</span>
+    <span class="c1">// We need to call SetSomeBool() to actually change the value of the bool now!</span>
+    <span class="c1">// Inside that function, Role == ROLE_Authority, so it won't try to call ServerSetSomeBool() again.</span>
+    <span class="n">SetSomeBool</span><span class="p">(</span><span class="n">bNewSomeBool</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

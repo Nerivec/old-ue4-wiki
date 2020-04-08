@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Blueprint Sound Node: Cue Player - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Blueprint Sound Node: Cue Player
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#SoundNodeCuePlayer.h">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           SoundNodeCuePlayer.h
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#SoundNodeCuePlayer.cpp">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           SoundNodeCuePlayer.cpp
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Results">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Results
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       Author:
+     (
+     )
+      </p>
+      <p>
+       Dear Community,
+       <br/>
+       In this tutorial I want to show you a custom Sound Node which can be used in a Sound Cue Editor. By default, Sound Cue Editor allows you to import Sound Waves and edit them by using various Sound Nodes such as Mixer, Modulator, Random etc. However, sometimes you may want to combine many Sound Cues together or a Sound Cue with a Sound Wave. This is why I’ve decided to
+       <a class="external text" href="http://www.tomlooman.com/custom-soundnode-for-multiplayer-in-ue4/" rel="nofollow">
+        follow in Tom Looman's footsteps
+       </a>
+       and create a custom Sound Node called
+       <b>
+        CuePlayer
+       </b>
+       .
+      </p>
+      <p>
+       <img alt="Mixer.PNG" class="" height="672" src="../assets/blueprint-sound-node-cue-player/0.PNG" width="1680"/>
+      </p>
+      <p>
+       In your project, create a new C++ class which inherits from
+       <b>
+        SoundNodeAssetReferencer
+       </b>
+       . In a
+       <i>
+        Choose Parent Class
+       </i>
+       window, check the
+       <i>
+        Show All Classes
+       </i>
+       checkbox and type
+       <i>
+        SoundNodeAssetReferencer
+       </i>
+       . Then click 'Next' and name it '
+       <b>
+        SoundNodeCuePlayer'
+       </b>
+       .
+      </p>
+      <p>
+       <img alt="ParentClassCuePlayer.PNG" class="" height="297" src="../assets/blueprint-sound-node-cue-player/1.PNG" width="1182"/>
+      </p>
+      <p>
+       <b>
+        SoundNodeCuePlayer
+       </b>
+       will be pretty similar to the
+       <i>
+        SoundNodeWavePlayer
+       </i>
+       class (both of them inherit from
+       <i>
+        SoundNodeAssetReferencer
+       </i>
+       ). Here is how the header file should look like:
+      </p>
+      <h2>
+       <span class="mw-headline" id="SoundNodeCuePlayer.h">
+        SoundNodeCuePlayer.h
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"Sound/SoundNodeAssetReferencer.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"SoundNodeCuePlayer.generated.h"</span><span class="cp"></span>
+
+<span class="k">class</span> <span class="nc">USoundCue</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm">* Sound node that contains a reference to the Sound Cue file to be played</span>
+<span class="cm">*/</span>
+<span class="n">UCLASS</span><span class="p">(</span><span class="n">hidecategories</span> <span class="o">=</span> <span class="n">Object</span><span class="p">,</span> <span class="n">editinlinenew</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">DisplayName</span> <span class="o">=</span> <span class="s">"Cue Player"</span><span class="p">))</span>
+<span class="k">class</span> <span class="nc">CUSTOMAUDIOPROJECT_API</span> <span class="nl">USoundNodeCuePlayer</span> <span class="p">:</span> <span class="k">public</span> <span class="n">USoundNodeAssetReferencer</span>
+<span class="p">{</span>
+	<span class="c1">// IMPORTANT: Please remember to update the '*_API' identifier above to match your own project</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+
+<span class="k">private</span><span class="o">:</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">CuePlayer</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">DisplayName</span> <span class="o">=</span> <span class="s">"Sound Cue"</span><span class="p">))</span>
+	<span class="n">TSoftObjectPtr</span><span class="o">&lt;</span><span class="n">USoundCue</span><span class="o">&gt;</span> <span class="n">SoundCueAssetPtr</span><span class="p">;</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">transient</span><span class="p">)</span>
+	<span class="n">USoundCue</span><span class="o">*</span> <span class="n">SoundCue</span><span class="p">;</span>
+
+	<span class="c1">// Make sure Cue Player doesn't play the same Cue we created</span>
+	<span class="n">TSoftObjectPtr</span><span class="o">&lt;</span><span class="n">USoundNodeCuePlayer</span><span class="o">&gt;</span> <span class="n">CuePlayerAssetPtr</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+	<span class="kt">bool</span> <span class="nf">IsTheSameSoundCue</span><span class="p">();</span>
+
+	<span class="kt">void</span> <span class="nf">OnSoundCueLoaded</span><span class="p">(</span><span class="k">const</span> <span class="n">FName</span><span class="o">&amp;</span> <span class="n">PackageName</span><span class="p">,</span> <span class="n">UPackage</span><span class="o">*</span> <span class="n">Package</span><span class="p">,</span> <span class="n">EAsyncLoadingResult</span><span class="o">::</span><span class="n">Type</span> <span class="n">Result</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bAddToRoot</span><span class="p">);</span>
+
+	<span class="n">uint32</span> <span class="nl">bAsyncLoading</span> <span class="p">:</span> <span class="mi">1</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+	<span class="c1">//~ Begin UObject Interface</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">Serialize</span><span class="p">(</span><span class="n">FArchive</span><span class="o">&amp;</span> <span class="n">Ar</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+<span class="cp">#if WITH_EDITOR</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">PostEditChangeProperty</span><span class="p">(</span><span class="n">FPropertyChangedEvent</span><span class="o">&amp;</span> <span class="n">PropertyChangedEvent</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+<span class="cp">#endif</span>
+	<span class="c1">//~ End UObject Interface</span>
+
+	<span class="c1">//~ Begin USoundNode Interface</span>
+	<span class="k">virtual</span> <span class="n">int32</span> <span class="nf">GetMaxChildNodes</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="mi">0</span><span class="p">;</span> <span class="p">}</span> <span class="c1">// A Cue Player is the end of the chain, so it has no children</span>
+	<span class="k">virtual</span> <span class="kt">float</span> <span class="nf">GetDuration</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">ParseNodes</span><span class="p">(</span><span class="n">FAudioDevice</span><span class="o">*</span> <span class="n">AudioDevice</span><span class="p">,</span> <span class="k">const</span> <span class="n">UPTRINT</span> <span class="n">NodeWaveInstanceHash</span><span class="p">,</span> <span class="n">FActiveSound</span><span class="o">&amp;</span> <span class="n">ActiveSound</span><span class="p">,</span> <span class="k">const</span> <span class="n">FSoundParseParameters</span><span class="o">&amp;</span> <span class="n">ParseParams</span><span class="p">,</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FWaveInstance</span><span class="o">*&gt;&amp;</span> <span class="n">WaveInstances</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+<span class="cp">#if WITH_EDITOR</span>
+	<span class="k">virtual</span> <span class="n">FText</span> <span class="nf">GetTitle</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+<span class="cp">#endif</span>
+	<span class="c1">//~ End USoundNode Interface</span>
+
+	<span class="c1">//~ Begin USoundNodeAssetReferencer Interface</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">LoadAsset</span><span class="p">(</span><span class="kt">bool</span> <span class="n">bAddToRoot</span> <span class="o">=</span> <span class="nb">false</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">ClearAssetReferences</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+	<span class="c1">//~ End USoundNode Interface</span>
+
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <b>
+        IMPORTANT:
+       </b>
+       Please remember to change the '
+       <b>
+        *_API'
+       </b>
+       identifier, because it has to match your project's name. My project was called
+       <i>
+        CustomAudioProject
+       </i>
+       , this is why there is a '
+       <b>
+        CUSTOMAUDIOPROJECT_API'
+       </b>
+       identifier in the header's code.
+      </p>
+      <h2>
+       <span class="mw-headline" id="SoundNodeCuePlayer.cpp">
+        SoundNodeCuePlayer.cpp
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"SoundNodeCuePlayer.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"ActiveSound.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Sound/SoundCue.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"FrameworkObjectVersion.h"</span><span class="cp"></span>
+
+<span class="cp">#define LOCTEXT_NAMESPACE "SoundNodeCuePlayer"</span>
+
+<span class="kt">void</span> <span class="n">USoundNodeCuePlayer</span><span class="o">::</span><span class="n">Serialize</span><span class="p">(</span><span class="n">FArchive</span><span class="o">&amp;</span> <span class="n">Ar</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">Serialize</span><span class="p">(</span><span class="n">Ar</span><span class="p">);</span>
+
+	<span class="n">Ar</span><span class="p">.</span><span class="n">UsingCustomVersion</span><span class="p">(</span><span class="n">FFrameworkObjectVersion</span><span class="o">::</span><span class="n">GUID</span><span class="p">);</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">Ar</span><span class="p">.</span><span class="n">CustomVer</span><span class="p">(</span><span class="n">FFrameworkObjectVersion</span><span class="o">::</span><span class="n">GUID</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">FFrameworkObjectVersion</span><span class="o">::</span><span class="n">HardSoundReferences</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">Ar</span><span class="p">.</span><span class="n">IsLoading</span><span class="p">())</span>
+			<span class="n">Ar</span> <span class="o">&lt;&lt;</span> <span class="n">SoundCue</span><span class="p">;</span>
+		<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">Ar</span><span class="p">.</span><span class="n">IsSaving</span><span class="p">())</span>
+		<span class="p">{</span>
+			<span class="n">USoundCue</span><span class="o">*</span> <span class="n">HardReference</span> <span class="o">=</span> <span class="p">(</span><span class="n">ShouldHardReferenceAsset</span><span class="p">()</span> <span class="o">?</span> <span class="nl">SoundCue</span> <span class="p">:</span> <span class="k">nullptr</span><span class="p">);</span>
+			<span class="n">Ar</span> <span class="o">&lt;&lt;</span> <span class="n">HardReference</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">USoundNodeCuePlayer</span><span class="o">::</span><span class="n">LoadAsset</span><span class="p">(</span><span class="kt">bool</span> <span class="n">bAddToRoot</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">IsAsyncLoading</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="n">SoundCue</span> <span class="o">=</span> <span class="n">SoundCueAssetPtr</span><span class="p">.</span><span class="n">Get</span><span class="p">();</span>
+		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">SoundCue</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="k">const</span> <span class="n">FString</span> <span class="n">LongPackageName</span> <span class="o">=</span> <span class="n">SoundCueAssetPtr</span><span class="p">.</span><span class="n">GetLongPackageName</span><span class="p">();</span>
+			<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">LongPackageName</span><span class="p">.</span><span class="n">IsEmpty</span><span class="p">())</span>
+			<span class="p">{</span>
+				<span class="n">bAsyncLoading</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+				<span class="n">LoadPackageAsync</span><span class="p">(</span><span class="n">LongPackageName</span><span class="p">,</span> <span class="n">FLoadPackageAsyncDelegate</span><span class="o">::</span><span class="n">CreateUObject</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">USoundNodeCuePlayer</span><span class="o">::</span><span class="n">OnSoundCueLoaded</span><span class="p">,</span> <span class="n">bAddToRoot</span><span class="p">));</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+		<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">bAddToRoot</span><span class="p">)</span>
+			<span class="n">SoundCue</span><span class="o">-&gt;</span><span class="n">AddToRoot</span><span class="p">();</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">SoundCue</span><span class="p">)</span>
+			<span class="n">SoundCue</span><span class="o">-&gt;</span><span class="n">AddToCluster</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">else</span>
+	<span class="p">{</span>
+		<span class="n">SoundCue</span> <span class="o">=</span> <span class="n">SoundCueAssetPtr</span><span class="p">.</span><span class="n">LoadSynchronous</span><span class="p">();</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">SoundCue</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">bAddToRoot</span><span class="p">)</span>
+				<span class="n">SoundCue</span><span class="o">-&gt;</span><span class="n">AddToRoot</span><span class="p">();</span>
+			<span class="n">SoundCue</span><span class="o">-&gt;</span><span class="n">AddToCluster</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">USoundNodeCuePlayer</span><span class="o">::</span><span class="n">ClearAssetReferences</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">SoundCue</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">USoundNodeCuePlayer</span><span class="o">::</span><span class="n">OnSoundCueLoaded</span><span class="p">(</span><span class="k">const</span> <span class="n">FName</span><span class="o">&amp;</span> <span class="n">PackageName</span><span class="p">,</span> <span class="n">UPackage</span><span class="o">*</span> <span class="n">Package</span><span class="p">,</span> <span class="n">EAsyncLoadingResult</span><span class="o">::</span><span class="n">Type</span> <span class="n">Result</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bAddToRoot</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">Result</span> <span class="o">==</span> <span class="n">EAsyncLoadingResult</span><span class="o">::</span><span class="n">Succeeded</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">SoundCue</span> <span class="o">=</span> <span class="n">SoundCueAssetPtr</span><span class="p">.</span><span class="n">Get</span><span class="p">();</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">SoundCue</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">bAddToRoot</span><span class="p">)</span>
+				<span class="n">SoundCue</span><span class="o">-&gt;</span><span class="n">AddToRoot</span><span class="p">();</span>
+			<span class="n">SoundCue</span><span class="o">-&gt;</span><span class="n">AddToCluster</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="n">bAsyncLoading</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cp">#if WITH_EDITOR</span>
+<span class="kt">void</span> <span class="n">USoundNodeCuePlayer</span><span class="o">::</span><span class="n">PostEditChangeProperty</span><span class="p">(</span><span class="n">FPropertyChangedEvent</span><span class="o">&amp;</span> <span class="n">PropertyChangedEvent</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">PropertyChangedEvent</span><span class="p">.</span><span class="n">Property</span> <span class="o">&amp;&amp;</span> <span class="n">PropertyChangedEvent</span><span class="p">.</span><span class="n">Property</span><span class="o">-&gt;</span><span class="n">GetFName</span><span class="p">()</span> <span class="o">==</span> <span class="n">GET_MEMBER_NAME_CHECKED</span><span class="p">(</span><span class="n">USoundNodeCuePlayer</span><span class="p">,</span> <span class="n">SoundCueAssetPtr</span><span class="p">))</span>
+		<span class="n">LoadAsset</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="cp">#endif</span>
+
+<span class="kt">void</span> <span class="n">USoundNodeCuePlayer</span><span class="o">::</span><span class="n">ParseNodes</span><span class="p">(</span><span class="n">FAudioDevice</span><span class="o">*</span> <span class="n">AudioDevice</span><span class="p">,</span> <span class="k">const</span> <span class="n">UPTRINT</span> <span class="n">NodeWaveInstanceHash</span><span class="p">,</span> <span class="n">FActiveSound</span><span class="o">&amp;</span> <span class="n">ActiveSound</span><span class="p">,</span> <span class="k">const</span> <span class="n">FSoundParseParameters</span><span class="o">&amp;</span> <span class="n">ParseParams</span><span class="p">,</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FWaveInstance</span><span class="o">*&gt;&amp;</span> <span class="n">WaveInstances</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">bAsyncLoading</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogAudio</span><span class="p">,</span> <span class="n">Verbose</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Asynchronous load of %s not complete in USoundNodeCuePlayer::ParseNodes, will attempt to play later."</span><span class="p">),</span> <span class="o">*</span><span class="n">GetFullNameSafe</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+		<span class="c1">// We're still loading so don't stop this active sound yet</span>
+		<span class="n">ActiveSound</span><span class="p">.</span><span class="n">bFinished</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+		<span class="k">return</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">SoundCue</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">IsTheSameSoundCue</span><span class="p">())</span>
+		<span class="n">SoundCue</span><span class="o">-&gt;</span><span class="n">Parse</span><span class="p">(</span><span class="n">AudioDevice</span><span class="p">,</span> <span class="n">NodeWaveInstanceHash</span><span class="p">,</span> <span class="n">ActiveSound</span><span class="p">,</span> <span class="n">ParseParams</span><span class="p">,</span> <span class="n">WaveInstances</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">float</span> <span class="n">USoundNodeCuePlayer</span><span class="o">::</span><span class="n">GetDuration</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">SoundCue</span><span class="o">-&gt;</span><span class="n">Duration</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cp">#if WITH_EDITOR</span>
+<span class="n">FText</span> <span class="n">USoundNodeCuePlayer</span><span class="o">::</span><span class="n">GetTitle</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="n">FText</span> <span class="n">SoundCueName</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">SoundCue</span><span class="p">)</span>
+		<span class="n">SoundCueName</span> <span class="o">=</span> <span class="n">FText</span><span class="o">::</span><span class="n">FromString</span><span class="p">(</span><span class="n">SoundCue</span><span class="o">-&gt;</span><span class="n">GetFName</span><span class="p">().</span><span class="n">ToString</span><span class="p">());</span>
+	<span class="k">else</span>
+		<span class="n">SoundCueName</span> <span class="o">=</span> <span class="n">LOCTEXT</span><span class="p">(</span><span class="s">"NoSoundCue"</span><span class="p">,</span> <span class="s">"NONE"</span><span class="p">);</span>
+
+	<span class="n">FText</span> <span class="n">Title</span><span class="p">;</span>
+
+	<span class="n">FFormatNamedArguments</span> <span class="n">Arguments</span><span class="p">;</span>
+	<span class="n">Arguments</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"Description"</span><span class="p">),</span> <span class="n">Super</span><span class="o">::</span><span class="n">GetTitle</span><span class="p">());</span>
+	<span class="n">Arguments</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"SoundCueName"</span><span class="p">),</span> <span class="n">SoundCueName</span><span class="p">);</span>
+	<span class="n">Title</span> <span class="o">=</span> <span class="n">FText</span><span class="o">::</span><span class="n">Format</span><span class="p">(</span><span class="n">LOCTEXT</span><span class="p">(</span><span class="s">"SoundCueDescription"</span><span class="p">,</span> <span class="s">"{Description} : {SoundCueName}"</span><span class="p">),</span> <span class="n">Arguments</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="n">Title</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="cp">#endif</span>
+
+<span class="kt">bool</span> <span class="n">USoundNodeCuePlayer</span><span class="o">::</span><span class="n">IsTheSameSoundCue</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">SoundCueAssetPtr</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">SoundCueAssetPtr</span><span class="p">.</span><span class="n">GetAssetName</span><span class="p">()</span> <span class="o">==</span> <span class="n">CuePlayerAssetPtr</span><span class="p">.</span><span class="n">GetAssetName</span><span class="p">();</span>
+	<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cp">#undef LOCTEXT_NAMESPACE</span>
+</pre>
+      </div>
+      <p>
+       <b>
+        IMPORTANT:
+       </b>
+       Again, that source file is similar to
+       <i>
+        SoundNodeWavePlayer.cpp
+       </i>
+       . However, the
+       <b>
+        IsTheSameSoundCue()
+       </b>
+       function is actually pretty important. As I said before: by default Sound Cue Editor allows you to import Sound Waves only. We want to create a Cue Player node, so we have to be sure that Cue Player node won't play the Sound Cue we're currently editing in Sound Cue Editor.
+      </p>
+      <p>
+       <img alt="1z76s1.jpg" class="" height="512" src="../assets/blueprint-sound-node-cue-player/2.jpg" width="1127"/>
+      </p>
+      <p>
+       So, if the asset in the Cue Player node is the Sound Cue we're currently working on, we don't want to parse the sound and generate WaveInstances to play. This is why the
+       <b>
+        IsTheSameSoundCue()
+       </b>
+       function is called inside
+       <b>
+        ParseNodes()
+       </b>
+       .
+      </p>
+      <h2>
+       <span class="mw-headline" id="Results">
+        Results
+       </span>
+      </h2>
+      <p>
+       If you changed the '
+       <b>
+        *_API'
+       </b>
+       identifier in
+       <i>
+        SoundNodeCuePlayer.h
+       </i>
+       and successfully build your solution, you should be able to use the Cue Player node in Sound Cue Editor. Now you can mix Sound Cues and Sound Waves inside a single Sound Cue. Yay!
+      </p>
+      <center>
+       <img alt="1z6ayo.jpg" class="" height="481" src="../assets/blueprint-sound-node-cue-player/3.jpg" width="742"/>
+      </center>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

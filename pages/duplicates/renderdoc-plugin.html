@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   RenderDoc plugin - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    RenderDoc plugin
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <br/>
+      </p>
+      <table class="wikitable sortable" style="float: right;">
+       <tbody>
+        <tr>
+         <td>
+          Name
+         </td>
+         <td>
+          RenderDoc Plugin
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Category
+         </td>
+         <td>
+          Debugging, Rendering, Shaders
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Author
+         </td>
+         <td>
+          Fredrik Lindh
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Version
+         </td>
+         <td>
+          Alpha 1
+         </td>
+        </tr>
+        <tr>
+         <td>
+          UE4 Build
+         </td>
+         <td>
+          4.7.0
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <h1>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h1>
+      <p>
+       This plugin integrates the RenderDoc shader debugger with UE4.
+You can get the latest source code at:
+       <a class="external free" href="https://github.com/Temaran/UE4RenderDocPlugin" rel="nofollow">
+        https://github.com/Temaran/UE4RenderDocPlugin
+       </a>
+       Make sure to check out the appropriate r/ branch for your Unreal Engine version!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Key_Features">
+        Key Features
+       </span>
+      </h2>
+      <ul>
+       <li>
+        It detects your current installation of renderdoc, so you are not bound to the version I use, and can update at will as long as the API is compatible.
+       </li>
+      </ul>
+      <p>
+       If you don't have an installation, and have just downloaded a zip, built it yourself etc. It will prompt for a path. Or you could set the path yourself in your project game.ini under [RenderDoc] BinaryPath=PATHGOESHERE
+      </p>
+      <ul>
+       <li>
+        It adds capture buttons to all viewports of the editor. This means you no longer have to cycle swap chains to get to the element you want. When you press the capture button (or its hotkey) it will capture the window the viewport
+       </li>
+      </ul>
+      <p>
+       is attached to, and then launch renderdoc with that capture as argument. It also opens a connection to renderdoc so you can perform subsequent captures etc.
+      </p>
+      <ul>
+       <li>
+        Options menu button next to the capture button. This small window lets you set several properties that control how the plugin operates:
+       </li>
+      </ul>
+      <p>
+       The settings are:
+      </p>
+      <ul>
+       <li>
+        Capture callstacks
+       </li>
+      </ul>
+      <p>
+       Save the call stack for every draw event in addition to the event itself. This is useful when you need additional information to solve your particular problem.
+      </p>
+      <ul>
+       <li>
+        Capture all resources:
+       </li>
+      </ul>
+      <p>
+       Capture all resources, including those that are not referenced by the current frame.
+      </p>
+      <ul>
+       <li>
+        Save all initial states
+       </li>
+      </ul>
+      <p>
+       Save the initial status of all resources, even if we think that they will be overwritten in this frame.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Installation">
+        Installation
+       </span>
+      </h2>
+      <p>
+       To install the plugin, simply clone this git-repo to your project/plugins/ folder:
+       <a class="external free" href="https://github.com/Temaran/UE4RenderDocPlugin" rel="nofollow">
+        https://github.com/Temaran/UE4RenderDocPlugin
+       </a>
+      </p>
+      <p>
+       You can also add it to your engine plugins, although I personally prefer project installation.
+      </p>
+      <p>
+       You also need a compatible version of renderdoc. You can find the newer binary releases here:
+       <a class="external free" href="https://renderdoc.org/builds" rel="nofollow">
+        https://renderdoc.org/builds
+       </a>
+      </p>
+      <p>
+       Or you can clone this repo and build it yourself if you prefer:
+       <a class="external free" href="https://github.com/baldurk/renderdoc" rel="nofollow">
+        https://github.com/baldurk/renderdoc
+       </a>
+      </p>
+      <p>
+       Each release branch of the plugin is tested with a certain version of renderdoc, so if the latest version of renderdoc does not work (due to API changes or bugs for example), you should be able to get the version that the branch is tested for and use that.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Links">
+        Links
+       </span>
+      </h2>
+      <p>
+       RenderDoc Plugin repository:
+       <a class="external free" href="https://github.com/Temaran/UE4RenderDocPlugin" rel="nofollow">
+        https://github.com/Temaran/UE4RenderDocPlugin
+       </a>
+      </p>
+      <p>
+       RenderDoc repository:
+       <a class="external free" href="https://github.com/baldurk/renderdoc" rel="nofollow">
+        https://github.com/baldurk/renderdoc
+       </a>
+      </p>
+      <p>
+       RenderDoc build link:
+       <a class="external free" href="http://renderdoc.org/builds" rel="nofollow">
+        http://renderdoc.org/builds
+       </a>
+      </p>
+      <p>
+       RenderDoc video tutorials:
+       <a class="external free" href="https://www.youtube.com/watch?v=EMFG...tYkxKiCDl4UO1Q" rel="nofollow">
+        https://www.youtube.com/watch?v=EMFG...tYkxKiCDl4UO1Q
+       </a>
+      </p>
+      <p>
+       --
+     (
+     )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

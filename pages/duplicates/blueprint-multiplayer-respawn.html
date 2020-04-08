@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Blueprint Multiplayer Respawn - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Blueprint Multiplayer Respawn
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <b>
+        Prerequisites
+       </b>
+       : Go through Epic's
+       tutorial and have a properly
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?2107-Come-Learn-Blueprint-Multiplayer-with-me!-(aka-Tom-s-a-Glutton-for-Punishment)&amp;p=20372&amp;viewfull=1#post20372" rel="nofollow">
+        working Multiplayer ready Pawn
+       </a>
+       .
+      </p>
+      <p>
+       <b>
+        Skill Level
+       </b>
+       : Intermediate
+      </p>
+      <p>
+       <b>
+        Engine Version
+       </b>
+       : 4.1.0
+      </p>
+      <p>
+       <br/>
+       Before you start, make sure your pawn can fully function under dedicated server and client situation. Having a gamepad is highly recommended. Also, you will have to bind a action called "respawn" to any key/button you preferred.
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Introduction">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Introduction
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Background_Knowledge">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Background Knowledge
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Blueprint_implementation">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Blueprint implementation
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#First.2C_the_custom_GameMode_to_handle_respawn:">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             First, the custom GameMode to handle respawn:
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Second.2C_the_PlayerController:">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             Second, the PlayerController:
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Third">
+            <span class="tocnumber">
+             3.3
+            </span>
+            <span class="toctext">
+             Third
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Introduction">
+        Introduction
+       </span>
+      </h2>
+      <p>
+       It took me to dig through source code to come up with this respawn method, which mimics how a proper client side requested respawn should work. The core idea of how it works requires that you understand how replication works, so PLEASE make sure you go through Epic's
+       tutorial before you continue, otherwise you will be blindly follow my example and don't know how to change to fit your needs.
+      </p>
+      <p>
+       I also assume you already got a working Pawn that replicated and control properly, if you have any key/button inside your Pawn's blueprint, please make sure that it was replaced with a action/axis mapping in
+       <b>
+        Menu-&gt;Edit-&gt;Project Settings-&gt;Engine section-&gt;Input
+       </b>
+       .
+      </p>
+      <p>
+       This tutorial will not modify your Pawn blueprint, the only required blueprint to modify is a GameMode and a PlayerController blueprint. Also, I will not be covering how to select player start, you can refer to the thread linked in the Prerequisites and Tom provided a method as a starting point. For this tutorial, we will only need one PlayerStart and let the engine handle initial spawning.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Background_Knowledge">
+        Background Knowledge
+       </span>
+      </h2>
+      <p>
+       The PlayerController is default to not getting replicated, which is good as the only thing server requires to update all clients' Pawn is parameters(ie Force/Velocity/etc). But a client's PlayerController is indeed connected to server, and there is a server side counterpart that work as a remote control receiver, they are just not replicated to the rest of clients.
+      </p>
+      <p>
+       When a Pawn gets destroyed under GameMode condition, say health below zero, it is GameMode that destroys your Pawn on server, and then server replicate that event and request your client to also destroys your Pawn. When this happens, your server side controller gets detached from the Pawn pending destroy, so you lose possession of your Pawn BEFORE it gets destroyed and you see it disappear on client end. If you try to do the respawn from server side(which handled by GameMode) before client properly lose possession, some of the core class code might actually detach your controller again.
+      </p>
+      <p>
+       So the proper way to initiate respawn, is to
+      </p>
+      <ol>
+       <li>
+        make sure you check client side PlayerController already controls no Pawn
+       </li>
+       <li>
+        then issue a event that calls server side PlayerController to make a request event to GameMode that handles respawn
+       </li>
+       <li>
+        GameMode(only on server) will spawn the Pawn you want and possess it with your server side PlayerController.
+       </li>
+      </ol>
+      <p>
+       You can certainly add more requirement like minimum spawn delay, or how many lives, etc to determine if a client can respawn or not. But here we just cover the bare minimum of the respawn process.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Blueprint_implementation">
+        Blueprint implementation
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="First.2C_the_custom_GameMode_to_handle_respawn:">
+        First, the custom GameMode to handle respawn:
+       </span>
+      </h3>
+      <div class="floatleft">
+       <img alt="BP Respawn GameMode.png" class="" height="734" src="../assets/blueprint-multiplayer-respawn/0.png" width="1920"/>
+      </div>
+      <ol>
+       <li>
+        add a custom event by right click in empty space, then Add Event-&gt;Custom Events, I named it
+        <b>
+         respawn
+        </b>
+       </li>
+       <li>
+        make sure in detail tab, change replication settings to
+        <b>
+         Run On Server
+        </b>
+        and check
+        <b>
+         Reliable
+        </b>
+       </li>
+       <li>
+        add a new input and set the input type to
+        <b>
+         PlayerController
+        </b>
+        , do NOT use your custom player controller type( that ends with _C )
+       </li>
+       <li>
+        check if the controller is valid
+       </li>
+       <li>
+        add a switch has authority to make sure it's server side[Authority]
+       </li>
+       <li>
+        create a
+        <b>
+         Spawn Actor From Class
+        </b>
+        node.
+       </li>
+       <li>
+        <b>
+         IMPORTANT
+        </b>
+        , I know there is a function to get default pawn class, but it will cause compiler error the next time you open editor, I think it's a bug that should be fixed. But in the mean time, select it manually from the drop down menu and select your custom Pawn class.
+       </li>
+       <li>
+        plug in a transform as you see fit
+       </li>
+       <li>
+        check spawned Pawn is valid
+       </li>
+       <li>
+        call Possess by dragging pin from the our event's input parameter(a PlayerController), and then plug spawned object to the InPawn pin.
+       </li>
+       <li>
+        now your GameMode setup is complete.
+       </li>
+      </ol>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Second.2C_the_PlayerController:">
+        Second, the PlayerController:
+       </span>
+      </h3>
+      <div class="floatleft">
+       <img alt="BP Respawn PlayerController.png" class="" height="714" src="../assets/blueprint-multiplayer-respawn/1.png" width="1920"/>
+      </div>
+      <ol>
+       <li>
+        add the respawn input event you bind in your project settings
+       </li>
+       <li>
+        add a custom event by right click in empty space, then Add Event-&gt;Custom Events
+       </li>
+       <li>
+        name your custom event, in my case
+        <b>
+         requestGMRespawn
+        </b>
+       </li>
+       <li>
+        make sure you also in the detail tab, change replication settngs to
+        <b>
+         Run On Server
+        </b>
+        and check
+        <b>
+         Reliable
+        </b>
+       </li>
+       <li>
+        back to our input event, add a switch has authority to make sure this is a client side[Remote] event
+       </li>
+       <li>
+        add a isValid from getControlledPawn to make sure your controller already controls nothing.
+       </li>
+       <li>
+        and if we controls nothing, call the custom event we just made by right click empty space and at the bottom of
+        <b>
+         Call Functions
+        </b>
+        should see your event.
+       </li>
+       <li>
+        Now client side is done. Back to our
+        <b>
+         requestGMRespawn
+        </b>
+        event node( the Red one )
+       </li>
+       <li>
+        add switch has authority to make sure it's server side[Authority]
+       </li>
+       <li>
+        get GameMode and use isValid to check
+       </li>
+       <li>
+        cast the GameMode to your custom one.
+       </li>
+       <li>
+        and use self and cast to base PlayerController object
+       </li>
+       <li>
+        drag on GameMode pin on your CastTo node(should say As [your_game_mode_name]_C), and in context menu you should be able to see server side respawn event you created in your GameMode blueprint.
+       </li>
+       <li>
+        link the PlayerController object you just casted to your GameMode's respawn event input.
+       </li>
+       <li>
+        now your PlayerController setup is also done.
+       </li>
+      </ol>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Third">
+        Third
+       </span>
+      </h3>
+      <ol>
+       <li>
+        launch your game
+       </li>
+       <li>
+        make your pawn die
+       </li>
+       <li>
+        hit the action button you assigned to request respawn
+       </li>
+       <li>
+        and dancing like a little kid because you just got your respawn setup completed. :D
+       </li>
+      </ol>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

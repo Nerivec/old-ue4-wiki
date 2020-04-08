@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Quest Framework - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Quest Framework
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <a class="external text" href="http://enjoy-game-programming.blogspot.com/2016/02/unreal-engine-4-quest-framework-c-part-1.html" rel="nofollow">
+        Original Content
+       </a>
+      </p>
+      <p>
+       Lately, I have been working on a simple horror game in UE4 that has a very simple Objective system that drives the gameplay. After looking at the code, I realized it could serve as the basis of a framework for a generic questing system. Today I will share all of that code and explain each class as it pertains to the framework.
+      </p>
+      <p>
+       The following classes to get started on a simple quest framework would are AQuest and AObjective, using the UE4 naming conventions for classes. AObjective is metadata about the quest as well the actual worker when it comes to completing parts of a quest. AQuest is a container of objectives and does group management of objectives. Both classes are derived from AInfo as they are purely classes of information and do not need to have a transform or collision within the world.
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Objectives">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Objectives
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Objective.h">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Objective.h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Objective.cpp">
+            <span class="tocnumber">
+             1.2
+            </span>
+            <span class="toctext">
+             Objective.cpp
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Quests">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Quests
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Quest.h">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Quest.h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Quest.cpp">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             Quest.cpp
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Objectives">
+        Objectives
+       </span>
+      </h2>
+      <p>
+       Since it is the foundation for a quest, I will first layout and explain AObjective. The header of AObjective goes as follows:
+      </p>
+      <h3>
+       <span class="mw-headline" id="Objective.h">
+        Objective.h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Fill out your copyright notice in the Description page of Project Settings.</span>
+
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"GameFramework/Info.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Objective.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">QUESTGAME_API</span> <span class="nl">AObjective</span> <span class="p">:</span> <span class="k">public</span> <span class="n">AInfo</span>
+<span class="p">{</span>
+ <span class="n">GENERATED_BODY</span><span class="p">()</span>
+ 
+<span class="k">public</span><span class="o">:</span> 
+ <span class="c1">// Sets default values for this actor's properties</span>
+ <span class="n">AObjective</span><span class="p">();</span>
+
+ <span class="c1">// Called when the game starts or when spawned</span>
+ <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">BeginPlay</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+ 
+ <span class="c1">// Called every frame</span>
+ <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">Tick</span><span class="p">(</span> <span class="kt">float</span> <span class="n">DeltaSeconds</span> <span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+
+ <span class="n">UPROPERTY</span><span class="p">(</span> <span class="n">EditDefaultsOnly</span><span class="p">,</span> <span class="n">BlueprintReadOnly</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"O"</span> <span class="p">)</span>
+  <span class="n">FText</span> <span class="n">Description</span><span class="p">;</span>
+
+ <span class="n">UPROPERTY</span><span class="p">(</span> <span class="n">EditDefaultsOnly</span><span class="p">,</span> <span class="n">BlueprintReadOnly</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"O"</span> <span class="p">)</span>
+  <span class="n">FName</span> <span class="n">ObjectiveName</span><span class="p">;</span>
+
+ <span class="n">UPROPERTY</span><span class="p">(</span> <span class="n">EditDefaultsOnly</span><span class="p">,</span> <span class="n">BlueprintReadOnly</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"O"</span> <span class="p">)</span>
+  <span class="kt">bool</span> <span class="n">MustBeCompletedToAdvance</span><span class="p">;</span>
+
+ <span class="n">UPROPERTY</span><span class="p">(</span> <span class="n">EditDefaultsOnly</span><span class="p">,</span> <span class="n">BlueprintReadOnly</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"O"</span> <span class="p">)</span>
+  <span class="n">int32</span> <span class="n">TotalProgressNeeded</span><span class="p">;</span>
+
+ <span class="n">UPROPERTY</span><span class="p">(</span> <span class="n">EditDefaultsOnly</span><span class="p">,</span> <span class="n">BlueprintReadOnly</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"O"</span> <span class="p">)</span>
+  <span class="n">int32</span> <span class="n">CurrentProgress</span><span class="p">;</span>
+
+ <span class="n">UFUNCTION</span><span class="p">(</span> <span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"O"</span> <span class="p">)</span>
+  <span class="kt">void</span> <span class="n">Update</span><span class="p">(</span> <span class="n">int32</span> <span class="n">Progress</span> <span class="p">);</span>
+
+ <span class="n">UFUNCTION</span><span class="p">(</span> <span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"O"</span> <span class="p">)</span>
+  <span class="k">virtual</span> <span class="kt">bool</span> <span class="n">IsComplete</span><span class="p">(</span> <span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+ <span class="n">UFUNCTION</span><span class="p">(</span> <span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"O"</span> <span class="p">)</span>
+  <span class="k">virtual</span> <span class="kt">float</span> <span class="n">GetProgress</span><span class="p">(</span> <span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+ 
+ 
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       Not that bad of a deal. The only responsibilities of an AObjective is to track the completion of the sub-portion of an AQuest and offer some idea of what the player must do.
+      </p>
+      <p>
+       The objective is tracked by the CurrentProgress and TotalProgressNeeded properties. Added by the supplied helper functions, Update, IsComplete, and GetProgress, we can get a reasonable amount of data about just this tiny portion of a quest. These functions give you all the functionality needed to start a questing framework for your UE4 game.
+      </p>
+      <p>
+       There is one boolean property that has not been mentioned: MustBeCompletedToAdvance. Depending on the use case, this could be used to ensure a sequential order in objectives or having required and optional objectives. I will implement it as the first in this tutorial. Only minor changes later on would be needed to use it as an indicator or optional or required quests. Or, you could just add a new property to support both.
+      </p>
+      <p>
+       There are two more properties that help us out with AObjective management: ObjectiveName and Description. ObjectiveName can be thought of as a unique identifier for the implemented AObjective. The ObjectiveName's purpose is for player feedback. For instance, the FText value could be (in simple string terms) "Get a rock". It is nothing specific to the game, it is only something to be used as a hint in either a UI or other visual element to let the player know that they need to do something in order to complete the objective.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Objective.cpp">
+        Objective.cpp
+       </span>
+      </h3>
+      <p>
+       Next, we can look at the small amount of code that is used to define AObjective.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Fill out your copyright notice in the Description page of Project Settings.</span>
+
+<span class="cp">#include</span> <span class="cpf">"QuestGame.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Objective.h"</span><span class="cp"></span>
+
+
+<span class="c1">// Sets default values</span>
+<span class="n">AObjective</span><span class="o">::</span><span class="n">AObjective</span><span class="p">(</span> <span class="p">)</span> <span class="o">:</span>
+ <span class="n">Description</span><span class="p">(</span> <span class="p">),</span>
+ <span class="n">ObjectiveName</span><span class="p">(</span> <span class="n">NAME_None</span> <span class="p">),</span>
+ <span class="n">TotalProgressNeeded</span><span class="p">(</span> <span class="mi">1</span> <span class="p">),</span>
+ <span class="n">CurrentProgress</span><span class="p">(</span> <span class="mi">0</span> <span class="p">),</span>
+ <span class="n">MustBeCompletedToAdvance</span><span class="p">(</span> <span class="nb">true</span> <span class="p">)</span>
+<span class="p">{</span>
+  <span class="c1">// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.</span>
+ <span class="n">PrimaryActorTick</span><span class="p">.</span><span class="n">bCanEverTick</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+
+<span class="p">}</span>
+
+<span class="c1">// Called when the game starts or when spawned</span>
+<span class="kt">void</span> <span class="n">AObjective</span><span class="o">::</span><span class="n">BeginPlay</span><span class="p">()</span>
+<span class="p">{</span>
+ <span class="n">Super</span><span class="o">::</span><span class="n">BeginPlay</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">// Called every frame</span>
+<span class="kt">void</span> <span class="n">AObjective</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span> <span class="kt">float</span> <span class="n">DeltaTime</span> <span class="p">)</span>
+<span class="p">{</span>
+ <span class="n">Super</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span> <span class="n">DeltaTime</span> <span class="p">);</span>
+
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AObjective</span><span class="o">::</span><span class="n">Update</span><span class="p">(</span> <span class="n">int32</span> <span class="n">Progress</span> <span class="p">)</span>
+<span class="p">{</span>
+ <span class="n">CurrentProgress</span> <span class="o">+=</span> <span class="n">Progress</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">AObjective</span><span class="o">::</span><span class="n">IsComplete</span><span class="p">(</span> <span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+ <span class="k">return</span> <span class="n">CurrentProgress</span> <span class="o">&gt;=</span> <span class="n">TotalProgressNeeded</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">float</span> <span class="n">AObjective</span><span class="o">::</span><span class="n">GetProgress</span><span class="p">(</span> <span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+ <span class="n">check</span><span class="p">(</span> <span class="n">TotalProgressNeeded</span> <span class="o">!=</span> <span class="mi">0</span> <span class="p">)</span>
+ <span class="k">return</span> <span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="n">CurrentProgress</span> <span class="o">/</span> <span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="n">TotalProgressNeeded</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Again, you will be hard pressed to say "that is a lot of code". Indeed, the most complex code is the division in the GetProgress function.
+      </p>
+      <p>
+       Wait, why do we call / override BeginPlay or Tick? Well, that is an extreme implementation detail. For instance, what if, while an AObjective is active, you want to tick a countdown for a time trialed AObjective.
+      </p>
+      <p>
+       For BeingPlay we could implement various other details such as activating certain items in the world, spawning enemies, and so on and so forth. You are only limited by your code skills and imagination.
+      </p>
+      <p>
+       Right, so how do we manage all of these objectives and make sure only relevant AObjectives are available? Well, we implement an AQuest class in which it acts as an AObjective manager.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Quests">
+        Quests
+       </span>
+      </h2>
+      <p>
+       Here is the declaration of an AQuest to get you started:
+      </p>
+      <h3>
+       <span class="mw-headline" id="Quest.h">
+        Quest.h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Fill out your copyright notice in the Description page of Project Settings.</span>
+
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"GameFramework/Info.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Quest.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">QUESTGAME_API</span> <span class="nl">AQuest</span> <span class="p">:</span> <span class="k">public</span> <span class="n">AInfo</span>
+<span class="p">{</span>
+ <span class="n">GENERATED_BODY</span><span class="p">()</span>
+ 
+<span class="k">public</span><span class="o">:</span> 
+ <span class="c1">// Sets default values for this actor's properties</span>
+ <span class="n">AQuest</span><span class="p">();</span>
+
+ <span class="c1">// Called when the game starts or when spawned</span>
+ <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">BeginPlay</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+ 
+ <span class="c1">// Called every frame</span>
+ <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">Tick</span><span class="p">(</span> <span class="kt">float</span> <span class="n">DeltaSeconds</span> <span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+ <span class="n">UPROPERTY</span><span class="p">(</span> <span class="n">EditDefaultsOnly</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Q"</span> <span class="p">)</span>
+  <span class="n">TArray</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">AObjective</span><span class="o">*&gt;</span> <span class="n">CurrentObjectives</span><span class="p">;</span>
+
+ <span class="n">UPROPERTY</span><span class="p">(</span> <span class="n">EditDefaultsOnly</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Q"</span> <span class="p">)</span>
+  <span class="n">TArray</span><span class="o">&lt;</span><span class="n">TSubclassOf</span><span class="o">&lt;</span><span class="n">AObjective</span><span class="o">&gt;&gt;</span> <span class="n">Objectives</span><span class="p">;</span>
+
+ <span class="n">UPROPERTY</span><span class="p">(</span> <span class="n">EditDefaultsOnly</span><span class="p">,</span> <span class="n">BlueprintReadOnly</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Q"</span> <span class="p">)</span>
+  <span class="n">USoundCue</span><span class="o">*</span> <span class="n">QuestStartSoundCue</span><span class="p">;</span>
+
+ <span class="n">UPROPERTY</span><span class="p">(</span> <span class="n">EditDefaultsOnly</span><span class="p">,</span> <span class="n">BlueprintReadOnly</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Q"</span> <span class="p">)</span>
+  <span class="n">FName</span> <span class="n">QuestName</span><span class="p">;</span>
+
+ <span class="n">UPROPERTY</span><span class="p">(</span> <span class="n">EditDefaultsOnly</span><span class="p">,</span> <span class="n">BlueprintReadOnly</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Q"</span> <span class="p">)</span>
+  <span class="n">FText</span> <span class="n">QuestStartDescription</span><span class="p">;</span>
+
+ <span class="n">UPROPERTY</span><span class="p">(</span> <span class="n">EditDefaultsOnly</span><span class="p">,</span> <span class="n">BlueprintReadOnly</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Q"</span> <span class="p">)</span>
+  <span class="n">FText</span> <span class="n">QuestEndDescription</span><span class="p">;</span>
+
+ <span class="n">UFUNCTION</span><span class="p">(</span> <span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Q"</span> <span class="p">)</span>
+  <span class="kt">bool</span> <span class="n">IsQuestComplete</span><span class="p">(</span> <span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+ <span class="n">UFUNCTION</span><span class="p">(</span> <span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Q"</span> <span class="p">)</span>
+  <span class="kt">bool</span> <span class="n">CanUpdate</span><span class="p">(</span> <span class="n">FName</span> <span class="n">Objective</span> <span class="p">);</span>
+
+ <span class="n">UFUNCTION</span><span class="p">(</span> <span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Q"</span> <span class="p">)</span>
+  <span class="kt">void</span> <span class="n">Update</span><span class="p">(</span> <span class="n">FName</span> <span class="n">Objective</span><span class="p">,</span> <span class="n">int32</span> <span class="n">Progress</span> <span class="p">);</span>
+
+ <span class="n">UFUNCTION</span><span class="p">(</span> <span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Q"</span> <span class="p">)</span>
+  <span class="kt">bool</span> <span class="n">TryUpdate</span><span class="p">(</span> <span class="n">FName</span> <span class="n">Objective</span><span class="p">,</span> <span class="n">int32</span> <span class="n">Progress</span> <span class="p">);</span>
+
+        <span class="n">UFUNCTION</span><span class="p">(</span> <span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Q"</span> <span class="p">)</span>
+                <span class="kt">float</span> <span class="n">QuestCompletion</span><span class="p">(</span> <span class="p">)</span> <span class="k">const</span><span class="p">;</span> 
+ 
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       Not much bigger that the AObjective class is it? This is because all AQuest does is wrap around a collection of  AObjective's and provides some utility functions to help manage them.
+      </p>
+      <p>
+       The Objectives property is a simple way to configure an AQuest's objectives via the Blueprints Editor. And the CurrentObjectives is a collection of all live AObjective's that are configured for the given AQuest.
+      </p>
+      <p>
+       There are several user friendly properties such as a USoundCue, FName, and FText types that help give audio visual feedback to the player. For instance, when a player starts a quest, a nice sound plays - like a chime - and the QuestStartDescription text is written to the player's HUD and a journal implementation. Then, when a player completes a quest, a get is called for the QuestEndDescription property and writes it to a journal implementation. But those are all specific implementation details related to your game and is limited only by coding skills and imagination.
+      </p>
+      <p>
+       All of the functions for AQuest are wrappers to operate on collections of AObjectives to update and query for completion. All AObjectives in the AQuest are referenced and found by FName property types. This allows for updating different instances of AObjectives that are essentially the same, but differ at the data level. It also allows the removal of managing pointers. As another argument, it decouples knowledge of what an AObjective object is from other classes, so completing quests via other class implementations only requires the knowledge of an AQuest - or the container for the AQuest - object and default types supplied by the engine such as int32 and FName.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Quest.cpp">
+        Quest.cpp
+       </span>
+      </h3>
+      <p>
+       How does this all work, well, just like before, here is the definition of AQuest:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Fill out your copyright notice in the Description page of Project Settings.</span>
+
+<span class="cp">#include</span> <span class="cpf">"QuestGame.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Objective.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Quest.h"</span><span class="cp"></span>
+
+
+<span class="n">AQuest</span><span class="o">::</span><span class="n">AQuest</span><span class="p">()</span> <span class="o">:</span>
+    <span class="n">QuestName</span><span class="p">(</span> <span class="n">NAME_None</span> <span class="p">),</span>
+    <span class="n">CurrentObjectives</span><span class="p">(</span> <span class="p">),</span>
+    <span class="n">QuestStartDescription</span><span class="p">(</span> <span class="p">),</span>
+    <span class="n">QuestEndDescription</span><span class="p">(</span> <span class="p">)</span>
+<span class="p">{</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AQuest</span><span class="o">::</span><span class="n">BeginPlay</span><span class="p">()</span>
+<span class="p">{</span>
+ <span class="n">Super</span><span class="o">::</span><span class="n">BeginPlay</span><span class="p">();</span>
+        <span class="n">UWorld</span><span class="o">*</span> <span class="n">World</span> <span class="o">=</span> <span class="n">GetWorld</span><span class="p">();</span>
+ <span class="k">if</span> <span class="p">(</span> <span class="n">World</span> <span class="p">)</span>
+ <span class="p">{</span>
+  <span class="k">for</span> <span class="p">(</span> <span class="k">auto</span> <span class="nl">Objective</span> <span class="p">:</span> <span class="n">Objectives</span> <span class="p">)</span>
+  <span class="p">{</span>
+   <span class="n">CurrentObjectives</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">World</span><span class="o">-&gt;</span><span class="n">SpawnActor</span><span class="p">(</span><span class="n">Objective</span><span class="p">));</span>
+  <span class="p">}</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Called every frame</span>
+<span class="kt">void</span> <span class="n">AQuest</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span> <span class="kt">float</span> <span class="n">DeltaTime</span> <span class="p">)</span>
+<span class="p">{</span>
+ <span class="n">Super</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span> <span class="n">DeltaTime</span> <span class="p">);</span>
+
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">AQuest</span><span class="o">::</span><span class="n">IsQuestComplete</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+ <span class="kt">bool</span> <span class="n">result</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+ <span class="k">for</span> <span class="p">(</span> <span class="k">auto</span> <span class="nl">Objective</span> <span class="p">:</span> <span class="n">CurrentObjectives</span> <span class="p">)</span>
+ <span class="p">{</span>
+  <span class="n">result</span> <span class="o">&amp;=</span> <span class="n">Objective</span><span class="o">-&gt;</span><span class="n">IsComplete</span><span class="p">();</span>
+ <span class="p">}</span>
+ <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">AQuest</span><span class="o">::</span><span class="n">CanUpdate</span><span class="p">(</span> <span class="n">FName</span> <span class="n">Objective</span> <span class="p">)</span>
+<span class="p">{</span>
+ <span class="kt">bool</span> <span class="n">PreviousIsComplete</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+ <span class="k">for</span> <span class="p">(</span> <span class="k">auto</span> <span class="nl">Obj</span> <span class="p">:</span> <span class="n">CurrentObjectives</span> <span class="p">)</span>
+ <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span> <span class="n">PreviousIsComplete</span> <span class="p">)</span>
+  <span class="p">{</span>
+   <span class="k">if</span> <span class="p">(</span> <span class="n">Objective</span> <span class="o">==</span> <span class="n">Obj</span><span class="o">-&gt;</span><span class="n">ObjectiveName</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+   <span class="k">else</span>
+    <span class="n">PreviousIsComplete</span> <span class="o">=</span> <span class="n">Obj</span><span class="o">-&gt;</span><span class="n">IsComplete</span><span class="p">()</span> <span class="o">|</span>
+    <span class="o">!</span><span class="n">Obj</span><span class="o">-&gt;</span><span class="n">MustBeCompletedToAdvance</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="k">else</span>
+  <span class="p">{</span>
+   <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+  <span class="p">}</span>
+ <span class="p">}</span>
+ <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AQuest</span><span class="o">::</span><span class="n">Update</span><span class="p">(</span> <span class="n">FName</span> <span class="n">Objective</span><span class="p">,</span> <span class="n">int32</span> <span class="n">Progress</span> <span class="p">)</span>
+<span class="p">{</span>
+ <span class="k">for</span> <span class="p">(</span> <span class="k">auto</span> <span class="nl">Obj</span> <span class="p">:</span> <span class="n">CurrentObjectives</span> <span class="p">)</span>
+ <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span> <span class="n">Obj</span><span class="o">-&gt;</span><span class="n">ObjectiveName</span> <span class="o">==</span> <span class="n">Objective</span> <span class="p">)</span>
+  <span class="p">{</span>
+   <span class="n">Obj</span><span class="o">-&gt;</span><span class="n">Update</span><span class="p">(</span> <span class="n">Progress</span> <span class="p">);</span>
+   <span class="k">return</span><span class="p">;</span>
+  <span class="p">}</span>
+ <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">AQuest</span><span class="o">::</span><span class="n">TryUpdate</span><span class="p">(</span> <span class="n">FName</span> <span class="n">Objective</span><span class="p">,</span> <span class="n">int32</span> <span class="n">Progress</span> <span class="p">)</span>
+<span class="p">{</span>
+ <span class="kt">bool</span> <span class="n">result</span> <span class="o">=</span> <span class="n">CanUpdate</span><span class="p">(</span> <span class="n">Objective</span> <span class="p">);</span>
+ <span class="k">if</span> <span class="p">(</span> <span class="n">result</span> <span class="p">)</span>
+ <span class="p">{</span>
+  <span class="n">Update</span><span class="p">(</span> <span class="n">Objective</span><span class="p">,</span> <span class="n">Progress</span> <span class="p">);</span>
+ <span class="p">}</span>
+ <span class="k">return</span> <span class="n">result</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">float</span> <span class="n">AQuest</span><span class="o">::</span><span class="n">QuestCompletion</span><span class="p">(</span> <span class="p">)</span> <span class="k">const</span> 
+<span class="p">{</span>
+        <span class="n">int32</span> <span class="n">NumObjectives</span> <span class="o">=</span> <span class="n">CurrentObjectives</span><span class="p">.</span><span class="n">Num</span><span class="p">(</span> <span class="p">);</span>
+        <span class="k">if</span><span class="p">(</span> <span class="n">NumObjectives</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">)</span> <span class="k">return</span> <span class="mf">1.0f</span><span class="p">;</span>
+
+        <span class="kt">float</span> <span class="n">AggregateCompletion</span> <span class="o">=</span> <span class="mf">0.0f</span><span class="p">;</span>
+        <span class="k">for</span><span class="p">(</span> <span class="k">auto</span> <span class="nl">Objective</span> <span class="p">:</span> <span class="n">CurrentObjectives</span> <span class="p">)</span>
+        <span class="p">{</span>
+                <span class="n">AggregateCompletion</span> <span class="o">+=</span> <span class="n">Objective</span><span class="o">-&gt;</span><span class="n">GetProgress</span><span class="p">(</span> <span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">AggregateCompletion</span> <span class="o">/</span> <span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="n">NumObjectives</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Probably the most complex code out of all of this is the CanUpdate method. It checks to see, sequentially (so order of AObjective configuration matters), if an AObjective is completed and if it is required to complete any other AObjectives after it. This is where the bitwise OR comes in. So basicly, we cannot advance to the requested AObjective if any of the previous AObjectives are not complete and are set to MustBeCompletedToAdvance (or as the listeral code says you CAN advance if the previous AObjective IS complete OR it does not required to be completed in order to advance).
+      </p>
+      <p>
+       The IsComplete function is just and aggregate check to see if all AObjectives are complete - defining a completed AQuest. The QuestCompletion method is a simple averaging of all AObjective completion percentages.
+      </p>
+      <p>
+       Also, the AQuest class has a simple function to wrap up the CanUpdate and Update calls into one neat little function called TryUpdate. This allows a check for the ability to update before applying the requested progress update and returns an indicator of success or failure. This is useful when code outside of AQuest wants to attempt AObjective updates without caring about much else.
+      </p>
+      <p>
+       Finally, for the same reason of AObjective's BeginPlay and Tick functions, AQuest also overrides these to allow your coding skills and imagination to fly.
+      </p>
+      <p>
+       Hopefully, this was a good introduction into the groundwork of designing a questing framework for your Unreal Engine 4 game. If you did enjoy it, comment or like it. If there is enough interest I will continue on-wards with Part II: Nesting Quests and Objectives. That part will be a tutorial just like this, with full code samples, explaining how to structure the framework to nest multiple AObjectives into an AObjective to create a structure of sub-objectives as well as the same pattern applied to AQuest to supply sub-quests.
+      </p>
+      <p>
+       <b>
+        Update
+       </b>
+       : Random Objective Generation in a Quest was added and
+       <a class="external text" href="http://enjoy-game-programming.blogspot.com/2016/09/unreal-engine-quest-framework-part-15.html" rel="nofollow">
+        the samples can be found here.
+       </a>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

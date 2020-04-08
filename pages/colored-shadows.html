@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Colored Shadows - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Colored Shadows
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Colored_Transluscent_Shadows_for_Stained_Glass">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           <b>
+            Colored Transluscent Shadows for Stained Glass
+           </b>
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Setting_up_the_material">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           <b>
+            Setting up the material
+           </b>
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Making_use_of_the_material">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           <b>
+            Making use of the material
+           </b>
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Using_this_effect_in_combination_with_other_assets">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           <b>
+            Using this effect in combination with other assets
+           </b>
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Dynamically_Faked_Colored_Shadow_starting_point_in_Provided_Scene">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           <b>
+            Dynamically Faked Colored Shadow starting point in Provided Scene
+           </b>
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Colored_Transluscent_Shadows_for_Stained_Glass">
+        <big>
+         <b>
+          Colored Transluscent Shadows for Stained Glass
+         </b>
+        </big>
+       </span>
+      </h2>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       <br/>
+       <big>
+        <big>
+         <b>
+          Documentation:
+         </b>
+        </big>
+       </big>
+       <b>
+        <a class="external free" href="https://docs.unrealengine.com/latest/INT/Engine/Rendering/LightingAndShadows/Lightmass/index.html" rel="nofollow">
+         https://docs.unrealengine.com/latest/INT/Engine/Rendering/LightingAndShadows/Lightmass/index.html
+        </a>
+       </b>
+      </p>
+      <p>
+       <br clear="all"/>
+       <b>
+        You can download the Individual image pack and the project used in this example below:
+       </b>
+      </p>
+      <p>
+       <b>
+        <a class="external text" href="https://www.dropbox.com/s/hg3slkvnf8gxmr6/StainedGlass_Source_Images.zip?dl=0" rel="nofollow">
+         Image Pack
+        </a>
+       </b>
+      </p>
+      <p>
+       <a class="external text" href="https://www.dropbox.com/s/fdqk2ah8t22rdym/StainedGlassTutorial.zip?dl=0" rel="nofollow">
+        <b>
+         Colored Shadow Tutorial Project
+        </b>
+       </a>
+       <br clear="all"/>
+      </p>
+      <p>
+       <br/>
+       The goal with this project is to replicate something similar to this from the linked documentation.
+       <br clear="all"/>
+      </p>
+      <p>
+       We’ll go through the process of creating unlit version since this is the most practical and visibly noticeable.
+       <br clear="all"/>
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:548px;">
+        <img alt="" class="thumbimage" height="545" src="../assets/colored-shadows/0.png" width="546"/>
+        <div class="thumbcaption">
+         Stained Glass from Documentation
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Setting_up_the_material">
+        <b>
+         <big>
+          Setting up the material
+         </big>
+        </b>
+       </span>
+      </h2>
+      <p>
+       First we’ll want to import our material that we will use for our Colored Transluscent Shadow.
+      </p>
+      <p>
+       Once you’ve imported the materials you will want to create a new material based and set it up like so:
+       <br clear="all"/>
+      </p>
+      <p>
+       <br/>
+       <big>
+        <b>
+         Unlit Material Setup:
+        </b>
+       </big>
+      </p>
+      <p>
+       <br clear="all"/>
+       <b>
+        Set Blend Mode:
+       </b>
+       Modulate
+       <br clear="all"/>
+       <b>
+        (Optional):
+       </b>
+       Check Two Sided (Best for single planes)
+       <br clear="all"/>
+       <b>
+        Translucency:
+       </b>
+       Uncheck Enable Separate Translucency
+      </p>
+      <p>
+       <br clear="all"/>
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:878px;">
+        <img alt="Unlit Mat Setup.png" class="thumbimage" height="671" src="../assets/colored-shadows/1.png" width="876"/>
+        <div class="thumbcaption">
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Making_use_of_the_material">
+        <big>
+         <b>
+          Making use of the material
+         </b>
+        </big>
+       </span>
+      </h2>
+      <p>
+       Now that our materials are setup we can apply these to a single plane mesh and setup our lighting to render a Colored Translucent Shadow.
+       <br clear="all"/>
+       <br clear="all"/>
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:874px;">
+        <img alt="Unlit Colored Shadow.png" class="thumbimage" height="561" src="../assets/colored-shadows/2.png" width="872"/>
+        <div class="thumbcaption">
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       <big>
+        <b>
+         Getting Better Resolutions:
+        </b>
+       </big>
+       <br clear="all"/>
+       Just like static lightmap shadows you’ll need to apply the same methodologies here as well. The higher resolution on the mesh receiving the cast shadow will give you better image results.
+       <br clear="all"/>
+      </p>
+      <p>
+       <big>
+        <b>
+         Here are two examples:
+        </b>
+       </big>
+       <br clear="all"/>
+      </p>
+      <p>
+       <b>
+        Lightmap Resolution of the Floor Mesh set to 64
+       </b>
+      </p>
+      <p>
+       <br clear="all"/>
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:703px;">
+        <img alt="CS LM Res 64.png" class="thumbimage" height="601" src="../assets/colored-shadows/3.png" width="701"/>
+        <div class="thumbcaption">
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       <b>
+        Lightmap Resolution of the Floor Mesh set to 1024
+       </b>
+      </p>
+      <p>
+       <br clear="all"/>
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:814px;">
+        <img alt="CS LM Res 1024.png" class="thumbimage" height="602" src="../assets/colored-shadows/4.png" width="812"/>
+        <div class="thumbcaption">
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       <br clear="all"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Using_this_effect_in_combination_with_other_assets">
+        <b>
+         <big>
+          Using this effect in combination with other assets
+         </big>
+        </b>
+       </span>
+      </h2>
+      <p>
+       <br clear="all"/>
+       Since we’re using an unlit material to drive our Colored Translucent Shadow we don’t have a way to use normal maps and get that amazing detail for our rippled effect for Stained glass.
+       <br clear="all"/>
+      </p>
+      <p>
+       <b>
+        <big>
+         Here is the target result:
+        </big>
+       </b>
+      </p>
+      <p>
+       <br clear="all"/>
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:473px;">
+         <img alt="Faked CS Effect.png" class="thumbimage" height="814" src="../assets/colored-shadows/5.png" width="471"/>
+         <div class="thumbcaption">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       To achieve this affect we’re going to cheat a little bit.
+       <br clear="all"/>
+       In total we’re going to place two planes with two separate materials.
+       <br clear="all"/>
+       On the first plane we’ll set up our original unlit material to cast our Colored Translucent Shadow.
+       <br clear="all"/>
+       We’ll place this in our scene where we want our window to be.
+       <br clear="all"/>
+       Next we’ll create a new material that will be our lit material to represent our Stained glass and have a normal map setup.
+       <br clear="all"/>
+      </p>
+      <p>
+       <big>
+        <b>
+         Here is the material setup:
+        </b>
+       </big>
+      </p>
+      <p>
+       <br clear="all"/>
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:1025px;">
+        <img alt="Lit Mat Setup.jpg" class="thumbimage" height="569" src="../assets/colored-shadows/6.jpg" width="1023"/>
+        <div class="thumbcaption">
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       We’ll place this material on our second plane.
+       <br clear="all"/>
+       Place both these planes together or at least close together.
+       <br clear="all"/>
+       In the settings for our unlit material plane that will cast our Colored Translucent Shadow we’ll need to set it up so that it doesn't appear in game, but still cast our colored shadow.
+       <br clear="all"/>
+       In the details panel make sure to uncheck “Actor Hidden in Game” so that it does not render.
+       <br clear="all"/>
+       We’ll next need to change our settings for our Lit material plane.
+       <br clear="all"/>
+       Make sure to uncheck cast shadows in the details panel.
+       <br clear="all"/>
+       This setup will allow us to have a lit material that does not cast shadow but that we can adjust the settings via our material itself. By setting up the opacity and the emissive power as a parameter we can adjust how translucent our material is and how bright the material is to get our desired result.
+      </p>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       <br/>
+       I hope you’ve enjoyed this short tutorial!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Dynamically_Faked_Colored_Shadow_starting_point_in_Provided_Scene">
+        <big>
+         <b>
+          Dynamically Faked Colored Shadow starting point in Provided Scene
+         </b>
+        </big>
+       </span>
+      </h2>
+      <p>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

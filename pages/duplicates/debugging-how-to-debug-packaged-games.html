@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Debugging How To Debug Packaged Games - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Debugging How To Debug Packaged Games
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Debug_Symbols_For_Crash_Reporter">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Debug Symbols For Crash Reporter
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Debugging_With_Visual_Studio">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Debugging With Visual Studio
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Enjoy.21">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Enjoy!
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       Original Author:
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       In this wiki I explain how it is that you can debug packaged games, both by having the
+       <b>
+        debug symbols/files available
+       </b>
+       for the UE4 crash reporter, and via
+       <b>
+        attach to process
+       </b>
+       using Visual Studio!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Debug_Symbols_For_Crash_Reporter">
+        Debug Symbols For Crash Reporter
+       </span>
+      </h2>
+      <p>
+       If you're reading this you probably have gotten a crash in your packaged game and simply been told that you do not have debugging symbols enabled/available to assist further with figuring out what happened.
+      </p>
+      <p>
+       To package the game so that debugging symbols are included, check out this pic!
+      </p>
+      <p>
+       You can get here from
+       <b>
+        Package Project -&gt; Packaging Settings
+       </b>
+       or
+       <b>
+        Project Settings -&gt; Packaging Settings
+       </b>
+      </p>
+      <p>
+       <img alt="DebugGame2.jpg" class="" height="768" src="../assets/debugging-how-to-debug-packaged-games/0.jpg" width="1366"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Debugging_With_Visual_Studio">
+        Debugging With Visual Studio
+       </span>
+      </h2>
+      <p>
+       To debug a packaged game via Visual Studio:
+      </p>
+      <p>
+       1. In visual studio, compile the game for DebugGame Win32/Win64
+      </p>
+      <p>
+       2. After packaging, add all of the DebugGame files you find in your Binaries folder to your packaged Binaries folder, in Win32/Win64 directory.
+      </p>
+      <p>
+       3.
+       <b>
+        Run the DebugGame executable instead of the regular one.
+       </b>
+      </p>
+      <p>
+       4. After your game starts, open visual studio, and press CTRL + ALT + P
+      </p>
+      <p>
+       5. Find your game in the process list and select it.
+      </p>
+      <p>
+       6. Now debugger symbols will load and you have full debugging help for your game!
+      </p>
+      <p>
+       <img alt="DebugGame1.jpg" class="" height="768" src="../assets/debugging-how-to-debug-packaged-games/1.jpg" width="1366"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Enjoy.21">
+        Enjoy!
+       </span>
+      </h2>
+      <p>
+       Oh ye UE4 C++ Programmers!
+      </p>
+      <p>
+       You can now rest easy, your debugging powers in packaged games have just exponentially increased!
+      </p>
+      <p>
+       ♥
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   NinjaMetrics - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    NinjaMetrics
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <br/>
+      </p>
+      <table class="wikitable sortable" style="float: right;">
+       <tbody>
+        <tr>
+         <td>
+          Name
+         </td>
+         <td>
+          NinjaMetrics
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Category
+         </td>
+         <td>
+          Analytics
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Author
+         </td>
+         <td>
+          Ninja Metrics, Inc.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Version
+         </td>
+         <td>
+          1.1.0
+         </td>
+        </tr>
+        <tr>
+         <td>
+          UE4 Build
+         </td>
+         <td>
+          4.4.1
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <h1>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h1>
+      <p>
+       The Ninja Metrics plugin provides an implementation of the Unreal Engine in-game analytics engine.  Further documentation for in-game analytics can be found at:
+       <a class="external free" href="https://udn.unrealengine.com/docs/ue4/INT/Gameplay/Analytics/index.html" rel="nofollow">
+        https://udn.unrealengine.com/docs/ue4/INT/Gameplay/Analytics/index.html
+       </a>
+       .
+      </p>
+      <h2>
+       <span class="mw-headline" id="Download">
+        Download
+       </span>
+      </h2>
+      <p>
+       You can download the latest as a [
+       <a class="external text" href="https://bitbucket.org/ninja_metrics/ninjametrics-unreal-plugin/get/master.zip" rel="nofollow">
+        compressed file
+       </a>
+       ] or visit our [
+       <a class="external text" href="https://bitbucket.org/ninja_metrics/ninjametrics-unreal-plugin/overview" rel="nofollow">
+        bitbucket repo
+       </a>
+       ] for full information.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Installation">
+        Installation
+       </span>
+      </h2>
+      <p>
+       The code for the Ninja Metrics plugin can be placed in:
+	&lt;gamename&gt;\Plugins\NinjaMetrics
+      </p>
+      <p>
+       The built-in analytics API doesn't support identifying the type of the data being sent to distinguish between strings, floats, and longs as required by the Ninja Metrics JSON interface. The implementation of the Ninja Metrics interface supporting types can be found in the blueprint class UNinjaMetricsEvents including type and range constraints. This allows calling the interface from both C++ code and blueprints.
+      </p>
+      <p>
+       There is an additional change required in Unreal Engine in ModuleManager.cpp to add a line to 'void FModuleManager::UnloadModulesAtShutdown()':
+      </p>
+      <p>
+       <br/>
+      </p>
+      <dl>
+       <dd>
+        TArray&lt;FModulePair&gt; ModulesToUnload;
+        <br/>
+       </dd>
+       <dd>
+        for( FModuleMap::TConstIterator ModuleIt( Modules ); ModuleIt; ++ModuleIt )
+        <br/>
+       </dd>
+       <dd>
+        {
+        <br/>
+       </dd>
+       <dd>
+        TSharedRef&lt; FModuleInfo &gt; ModuleInfo( ModuleIt.Value() );
+        <br/>
+       </dd>
+      </dl>
+      <p>
+       <br/>
+      </p>
+      <dl>
+       <dd>
+        // Only if already loaded
+        <br/>
+       </dd>
+       <dd>
+        if( ModuleInfo-&gt;Module.IsValid() )
+        <br/>
+       </dd>
+       <dd>
+        {
+        <br/>
+       </dd>
+       <dd>
+        // Only if the module supports shutting down in this phase
+        <br/>
+       </dd>
+       <dd>
+        if( ModuleInfo-&gt;Module-&gt;SupportsAutomaticShutdown() )
+        <br/>
+       </dd>
+       <dd>
+        {
+        <br/>
+       </dd>
+       <dd>
+        new (ModulesToUnload) FModulePair(ModuleIt.Key(), ModuleIt.Value()-&gt;LoadOrder);
+        <br/>
+       </dd>
+       <dd>
+        ---&gt;			// [PHX][BS] Call the PreUnloadCallback before unload.
+        <br/>
+       </dd>
+       <dd>
+        ---&gt;			ModuleInfo-&gt;Module-&gt;PreUnloadCallback();
+        <br/>
+       </dd>
+       <dd>
+        ---&gt;			// [PHX][BS]
+        <br/>
+       </dd>
+       <dd>
+        }
+        <br/>
+       </dd>
+       <dd>
+        }
+        <br/>
+       </dd>
+       <dd>
+        }
+        <br/>
+       </dd>
+      </dl>
+      <p>
+       To configure using the Ninja Metrics plugin add the following information to your DefaultEngine.ini file for your game from
+       <a class="external free" href="https://katana.ninjametrics.com/ninja/account/applications" rel="nofollow">
+        https://katana.ninjametrics.com/ninja/account/applications
+       </a>
+       :
+      </p>
+      <dl>
+       <dd>
+        [Analytics]
+        <br/>
+       </dd>
+       <dd>
+        ProviderModuleName=NinjaMetrics
+        <br/>
+       </dd>
+       <dd>
+        ClientID=&lt;ClientID&gt;
+        <br/>
+       </dd>
+       <dd>
+        ApplicationID=&lt;ApplicationID&gt;
+        <br/>
+       </dd>
+       <dd>
+        AccessToken=&lt;AccessToken&gt;
+        <br/>
+       </dd>
+      </dl>
+      <p>
+       <br/>
+      </p>
+      <dl>
+       <dd>
+        [AnalyticsDevelopment]
+        <br/>
+       </dd>
+       <dd>
+        ProviderModuleName=NinjaMetrics
+        <br/>
+       </dd>
+       <dd>
+        ClientID=&lt;ClientID&gt;
+        <br/>
+       </dd>
+       <dd>
+        ApplicationID=&lt;ApplicationID&gt;
+        <br/>
+       </dd>
+       <dd>
+        AccessToken=&lt;AccessToken&gt;
+        <br/>
+       </dd>
+      </dl>
+      <p>
+       <br/>
+      </p>
+      <dl>
+       <dd>
+        [AnalyticsTest]
+        <br/>
+       </dd>
+       <dd>
+        ProviderModuleName=NinjaMetrics
+        <br/>
+       </dd>
+       <dd>
+        ClientID=&lt;ClientID&gt;
+        <br/>
+       </dd>
+       <dd>
+        ApplicationID=&lt;ApplicationID&gt;
+        <br/>
+       </dd>
+       <dd>
+        AccessToken=&lt;AccessToken&gt;
+        <br/>
+       </dd>
+      </dl>
+      <p>
+       <br/>
+      </p>
+      <dl>
+       <dd>
+        [AnalyticsProduction]
+        <br/>
+       </dd>
+       <dd>
+        ProviderModuleName=NinjaMetrics
+        <br/>
+       </dd>
+       <dd>
+        ClientID=&lt;ClientID&gt;
+        <br/>
+       </dd>
+       <dd>
+        ApplicationID=&lt;ApplicationID&gt;
+        <br/>
+       </dd>
+       <dd>
+        AccessToken=&lt;AccessToken&gt;
+        <br/>
+       </dd>
+      </dl>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Verifying_Installation">
+        Verifying Installation
+       </span>
+      </h2>
+      <p>
+       You can verify functionality after these changes by running the Ninja Metrics test suite:
+	Engine\Binaries\Win64\UE4Editor.exe &lt;gamename&gt; -game -automationtests="NinjaMetrics" -unattended -nopause -testexit="Automation Test Queue Empty" -log
+      </p>
+      <p>
+       The test pass should complete successfully. Output will include the json data for failures to trace issues.
+      </p>
+      <p>
+       Data can be verified online at
+       <a class="external free" href="https://katana.ninjametrics.com/ninja/account/logs" rel="nofollow">
+        https://katana.ninjametrics.com/ninja/account/logs
+       </a>
+       . There is a 5-30 minute latency for updates.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Contact">
+        Contact
+       </span>
+      </h2>
+      <p>
+       If you have any Questions, Comments, Bug reports or feature requests for this plugin, or you wish to contact us you can and should email us at
+       .
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

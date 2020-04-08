@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Compiling For Linux - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Compiling For Linux
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Why_cross-compilation">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Why cross-compilation
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Platform_Support_for_Cross-Compilation">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Platform Support for Cross-Compilation
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Getting_the_toolchain">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Getting the toolchain
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Using_the_toolchain">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Using the toolchain
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Setup">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             Setup
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-6">
+             <a href="#clang_v8.2B">
+              <span class="tocnumber">
+               4.1.1
+              </span>
+              <span class="toctext">
+               clang v8+
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-7">
+             <a href="#clang_v4-7">
+              <span class="tocnumber">
+               4.1.2
+              </span>
+              <span class="toctext">
+               clang v4-7
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Packaging_for_Linux">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             Packaging for Linux
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-9">
+             <a href="#From_the_editor">
+              <span class="tocnumber">
+               4.2.1
+              </span>
+              <span class="toctext">
+               From the editor
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-10">
+             <a href="#Additional_Step_for_Linux-ARM_platforms">
+              <span class="tocnumber">
+               4.2.2
+              </span>
+              <span class="toctext">
+               Additional Step for Linux-ARM platforms
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Why_cross-compilation">
+        Why cross-compilation
+       </span>
+      </h2>
+      <p>
+       Cross-compilation was chosen in order to make it easier for game developers (who tend to have a centric workflow on a platform that differs from the deployment target). At the moment, this is only supported for Windows, Mac users currently have to resort to
+       .
+      </p>
+      <h2>
+       <span class="mw-headline" id="Platform_Support_for_Cross-Compilation">
+        Platform Support for Cross-Compilation
+       </span>
+      </h2>
+      <p>
+       Currently cross compilation from
+       <b>
+        Windows
+       </b>
+       is supported for Linux-x86_64 and Linux-ARM target platforms.
+      </p>
+      <p>
+       Support is currently for:
+      </p>
+      <ul>
+       <li>
+        On Windows | For Linux-x86_64
+       </li>
+       <li>
+        On Windows | For Linux-ARM
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="Getting_the_toolchain">
+        Getting the toolchain
+       </span>
+      </h2>
+      <p>
+       There are now 2 toolchain binaries available for cross compiling from Windows. One for cross compiling to Linux-x86_64 platforms and another for cross compiling to Linux-ARM platforms.
+       <br/>
+       The Linux-x86_64 cross compile toolchain binaries can be downloaded from
+       <br/>
+      </p>
+      <pre>- v4 <a class="external text" href="http://cdn.unrealengine.com/qfe/v4_clang-3.5.0_ld-2.24_glibc-2.12.2.zip" rel="nofollow">clang-3.5.0-based</a> - for UE4 &lt;= 4.8
+- v6 <a class="external text" href="https://s3.amazonaws.com/unrealengine/qfe/v6_clang-3.6.0_ld-2.24_glibc-2.12.2.zip" rel="nofollow">clang-3.6.0-based</a> - for UE4 4.9 and 4.10
+- v7 <a class="external text" href="https://s3.amazonaws.com/unrealengine/CrossToolchain_Linux/v7_clang-3.7.0_ld-2.24_glibc-2.12.2.zip" rel="nofollow">clang 3.7.0-based</a> - for UE4 4.11, 4.12 and 4.13
+- v8 <a class="external text" href="http://cdn.unrealengine.com/qfe/v8_clang-3.9.0-centos7.zip" rel="nofollow">clang 3.9.0-based</a> - for UE4 4.14 and 4.15
+- v9 <a class="external text" href="http://cdn.unrealengine.com/CrossToolchain_Linux/v9_clang-4.0.0-centos7.zip" rel="nofollow">clang 4.0.0-based</a> - for UE4 4.16 and 4.17
+- v10 <a class="external text" href="http://cdn.unrealengine.com/CrossToolchain_Linux/v10_clang-5.0.0-centos7.zip" rel="nofollow">clang 5.0.0-based</a> - for UE4 4.18
+- v11 <a class="external text" href="http://cdn.unrealengine.com/CrossToolchain_Linux/v11_clang-5.0.0-centos7.zip" rel="nofollow">clang 5.0.0-based</a> - for UE4 4.19 (includes extra tools for LTO compared to v10)
+</pre>
+      <p>
+       <br/>
+       The Linux-ARM cross compile toolchain binaries can be downloaded from
+       <a class="external text" href="https://s3.amazonaws.com/unrealengine/qfe/arm-unknown-linux-gnueabihf_v5_clang-3.5.0-ld-2.23.1-glibc-2.13.zip" rel="nofollow">
+        clang-3.5.0-arm
+       </a>
+       .
+       <br/>
+       For other cross compile configurations see
+       (this is needed if you want different versions of the tools).
+      </p>
+      <p>
+       The clang v4 Linux-x86_64 cross compile toolchain can be automatically set up with this Powershell script
+       <a class="external text" href="https://gist.github.com/megamorf/46a36a7be2979d43ee07" rel="nofollow">
+        Install-LinuxToolChain
+       </a>
+       . Run Powershell as Administrator and paste the contents into the Powershell window and hit enter twice.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Using_the_toolchain">
+        Using the toolchain
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Setup">
+        Setup
+       </span>
+      </h3>
+      <h4>
+       <span class="mw-headline" id="clang_v8.2B">
+        clang v8+
+       </span>
+      </h4>
+      <p>
+       Add an environment variable (Control Panel-&gt;System-&gt;Advanced system settings-&gt;Advanced-&gt;Environment variables)
+named LINUX_MULTIARCH_ROOT. The value should be the path to the clang v8 directory containing the multiple linux architecture directories (for example one being x86_64-unknown-linux-gnu and another arm-unknown-linux-gnueabihf). Make sure the new environment variable has been registered to the system / application (MSVC) by rebooting the machine or restarting the app at least before continuing to the build step.
+      </p>
+      <h4>
+       <span class="mw-headline" id="clang_v4-7">
+        clang v4-7
+       </span>
+      </h4>
+      <p>
+       Add an environment variable (Control Panel-&gt;System-&gt;Advanced system settings-&gt;Advanced-&gt;Environment variables)
+named LINUX_ROOT, value of which is the absolute path to your toolchain, without trailing backslash:
+      </p>
+      <p>
+       <br/>
+       <img alt="Setting Windows Environment Variable LINUX_ROOT" class="" height="431" src="../assets/compiling-for-linux/0.png" width="800"/>
+      </p>
+      <p>
+       If you are using the Linux-ARM cross compile toolchain before running GenerateProjectFiles.bat below edit the following file in the UE4 source code:
+       <br/>
+       .../UnrealEngine/Engine/Source/Programs/UnrealBuildTool/Linux/UEBuildLinux.cs
+       <br/>
+       by commenting out the following line:
+       <br/>
+       static private string DefaultArchitecture = "x86_64-unknown-linux-gnu";
+       <br/>
+       and un-commenting the linux-arm architecture line just below it:
+       <br/>
+       //static private string DefaultArchitecture = "arm-unknown-linux-gnueabihf";
+      </p>
+      <p>
+       After you made sure that variable is set, re-regenerate UE4 project files (using GenerateProjectFiles.bat) and restart Visual Studio.
+After this, you should have "Linux" available among Win32/Win64 configurations, and you should be able to cross-compile for it. Should but not always will. As of 4.17 you won't have it on a source version of the engine for some reason. Just don't trust this thing like I did and spend 5 minutes looking for it, just launch the editor and try packaging to linux again. At this point you are reading too much into this wiki page. Just download the toolkit, extract and set your environment variables. If this doesn't work then that's when you come back and read more.
+      </p>
+      <p>
+       You also need to rerun Setup.bat or .../UnrealEngine/Engine/Binaries/DotNET/GitDependencies.exe because that step will grab/copy libc++ stuff to .../UnrealEngine/Engine/Source/ThirdParty/Linux/LibCxx/. Otherwise, cross-compiling will fails with saying it cannot find standard C++ headers. If you haven't explicitly defined and set an environment variable of UE4_LINUX_USE_LIBCXX to 0, cross-compiling will use libc++ headers/libraries in there by default instead of the one inside the clang toolchain.
+      </p>
+      <p>
+       For packaging for Linux platforms (both x86_64 and ARM) the CrashReportClient is also needed to be built for the Linux configuration in addition to the default UE4Game project.
+      </p>
+      <p>
+       Notice that you may want to (re)build the Editor for your platform to get Linux target modules built. They are built for your current platform (i.e. select Win64 in configuration), and they are needed so that Unreal Editor and Unreal Frontend know how to cook/package games for Linux.
+      </p>
+      <p>
+       Note: If packaging for Linux (see below) fails it may be necessary to explicitly build UnrealPak and ShaderCompileWorker for the host platform, which in this case is windows (Win32 or Win64). To do this right-click on each of this project in the solution explorer and execute the "Build" command.
+      </p>
+      <p>
+       Note: If starting UE4Editor fails with message about not able to find libfbxsdk.dll, this can be fixed by copying libfbxsdk.dll from ...\UnrealEngine\Engine\Source\ThirdParty\FBX\2014.2.1\lib\vs2012\x64\release to the same location as the UE4Editor executable file where ...\UnrealEngine is the top location of the UE4 source code. For Win32 systems use the file located under ...\x86\release instead.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Packaging_for_Linux">
+        Packaging for Linux
+       </span>
+      </h3>
+      <h4>
+       <span class="mw-headline" id="From_the_editor">
+        From the editor
+       </span>
+      </h4>
+      <p>
+       The easiest way to package a project is opening it in the editor and then using File-&gt;Package To-&gt;Linux (assuming that you have a cross-toolchain installed in the previous step and Linux target modules are built for the editor in question - if you don't see Linux in the list, then it's likely that one of the former is not true - see
+       <a href="#Setup">
+        above
+       </a>
+       ). After some time (which depends on the project in question and is rather short for sample project) you will have game assets and binaries in the directory you chose to package to.
+      </p>
+      <p>
+       The details of the packaging process can be seen by clicking the "Show Output Log" link. If this process fails with error message "unable to find UnrealPak or ShaderCompileWorker" see
+       <a href="#Setup">
+        above
+       </a>
+       about building them for the host (windows) platform.
+      </p>
+      <p>
+       Scp or otherwise copy it to a target machine (mounting a Samba share - if you know how to do that - may be better if target machine is low on disk space, this also reduces iteration times), chmod +x the target executable (which will be located in LinuxNoEditor/&lt;ProjectName&gt;/Binaries/Linux/ directory) and run it.
+      </p>
+      <h4>
+       <span class="mw-headline" id="Additional_Step_for_Linux-ARM_platforms">
+        Additional Step for Linux-ARM platforms
+       </span>
+      </h4>
+      <p>
+       An additional step is required for the packaged project to be runnable on Linux-ARM platforms. The following has been verified using the SunTemple project packaged using Unreal-4.6 and executed on NVIDIA's Jetson TK1 platform.
+      </p>
+      <p>
+       Assuming the packaged project is located at \Users\foo\SunTemple_Linux open the following location:
+       <br/>
+       \Users\foo\SunTemple_Linux\LinuxNoEditor\Engine\Binaries\Linux
+       <br/>
+       and replace libopenal.so.1 with the version from:
+       <br/>
+       ...\UnrealEngine\Engine\Source\ThirdParty\OpenAL\1.15.1\lib\Linux\arm-unknown-linux-gnueabihf\libopenal.so
+       <br/>
+       where ...\UnrealEngine is the location of the UE4 source code. Please be sure to rename libopenal.so to libopenal.so.1.
+      </p>
+      <p>
+       Now the project can be copied over to the target machine, chmod+x the target executable and run it as instructed above.
+      </p>
+      <div style="border-top: 1px solid gray; width: 300px; font-size: 14px; color: #666; margin-top: 20px; padding: 6px">
+       &lt;-- Back to the main
+       page.
+      </div>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

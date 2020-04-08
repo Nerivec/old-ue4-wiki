@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Visual Effects: Lesson 08: Using Depth Buffer Collisions with GPU Particles - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Visual Effects: Lesson 08: Using Depth Buffer Collisions with GPU Particles
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Depth_Buffer_Module_Setup_and_controls">
+        Depth Buffer Module Setup and controls
+       </span>
+      </h2>
+      <p>
+       GPU Particles support Depth Buffer Collision, using the Collision (Scene Depth) Module in Cascade.
+      </p>
+      <p>
+       Let’s add a Depth Buffer module to any translucent particle system you may have available from the previous lessons. I am using a spark emitter I have around from another project.
+      </p>
+      <p>
+       Depth buffer collision is only supported for translucent materials, masked and opaque materials contribute to the buffer and cannot collide with it.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:402px;">
+        <img alt="8 1.png" class="thumbimage" height="430" src="../assets/visual-effects-lesson-08-using-depth-buffer-collisions-with-gpu-particles/0.png" width="400"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:402px;">
+        <img alt="8 2.png" class="thumbimage" height="281" src="../assets/visual-effects-lesson-08-using-depth-buffer-collisions-with-gpu-particles/1.png" width="400"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       The module is fairly straight forward, and each option has well written descriptions of what the feature does.
+      </p>
+      <p>
+       <b>
+        Resillience
+       </b>
+       – controls how bouncy the particle is.  This can be mapped to a uniform distribution for variation.
+      </p>
+      <p>
+       You can see the difference in response between these two images. Note the difference in the Max field changes from 1, which is very bouncy, to .1 which nearly sticks to the surface.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:402px;">
+        <img alt="8 3.png" class="thumbimage" height="186" src="../assets/visual-effects-lesson-08-using-depth-buffer-collisions-with-gpu-particles/2.png" width="400"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:402px;">
+        <img alt="8 4.png" class="thumbimage" height="205" src="../assets/visual-effects-lesson-08-using-depth-buffer-collisions-with-gpu-particles/3.png" width="400"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       <b>
+        Friction
+       </b>
+       – Controls how much particles will grip or slide when colliding with a surface.
+      </p>
+      <p>
+       In the first image you can see the particles have a tendency to clump up near the point of contact with the surface which is tilted at ~30 degree angle.  In the second image the lower friction allows the particles to maintain more of their original velocity and slide more easily.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:402px;">
+        <img alt="8 5.png" class="thumbimage" height="216" src="../assets/visual-effects-lesson-08-using-depth-buffer-collisions-with-gpu-particles/4.png" width="400"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:402px;">
+        <img alt="8 6.png" class="thumbimage" height="221" src="../assets/visual-effects-lesson-08-using-depth-buffer-collisions-with-gpu-particles/5.png" width="400"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       <b>
+        Radius Scale
+       </b>
+       - offsets your particles from the surface with which they are colliding.  This is a good way to offset larger sprites if, for example, you are unhappy with surface interpenetration.
+      </p>
+      <p>
+       It is important to keep in mind that the collision of a particle is based on its radius, or rather its size, so changes to Size and Radius Scale can both affect the offset between a particle and surface. In the following examples, you can see how increasing size also increases the offset, making the particles further from the surface despite having the same Radius Scale.
+      </p>
+      <p>
+       Size 2.0 Radius Scale 10
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:368px;">
+        <img alt="8 7.png" class="thumbimage" height="474" src="../assets/visual-effects-lesson-08-using-depth-buffer-collisions-with-gpu-particles/6.png" width="366"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+       Size 30 Radius Scale 10
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:402px;">
+        <img alt="8 8.png" class="thumbimage" height="478" src="../assets/visual-effects-lesson-08-using-depth-buffer-collisions-with-gpu-particles/7.png" width="400"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       All Translucent GPU particles with the Depth Buffer Module applied will show this type of behavior when colliding with Opaque or Masked materials.
+      </p>
+      <p>
+       If you want to see the surfaces Particles will collide against, and how the surface normal impacts evaluation use the Buffer Visualization tool
+      </p>
+      <p>
+       <br/>
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:402px;">
+        <img alt="8 9.png" class="thumbimage" height="371" src="../assets/visual-effects-lesson-08-using-depth-buffer-collisions-with-gpu-particles/8.png" width="400"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <ul>
+       <li>
+       </li>
+      </ul>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

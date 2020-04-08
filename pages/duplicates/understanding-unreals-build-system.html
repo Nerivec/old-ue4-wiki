@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Understanding Unreal's Build System - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Understanding Unreal's Build System
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Introduction_to_Builds">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Introduction to Builds
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Configurations">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Configurations
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#How_and_Why">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           How and Why
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Editor_Builds">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Editor Builds
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Executable_Builds">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             Executable Builds
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Command_Line">
+            <span class="tocnumber">
+             3.3
+            </span>
+            <span class="toctext">
+             Command Line
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Compile_in_Editor">
+            <span class="tocnumber">
+             3.4
+            </span>
+            <span class="toctext">
+             Compile in Editor
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       It can be initially confusing when presented with the different solution configurations or build options in Visual Studio. This is a compiled list detailing how the overall build systems seems to work and what you need to know as a developer.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Introduction_to_Builds">
+        Introduction to Builds
+       </span>
+      </h2>
+      <p>
+       To start things off you can find your builds in the Binaries folder of your Project Directory. Anytime you launch the Editor you need to have a compiled version of your project to run against. This is
+       <i>
+        <big>
+         always
+        </big>
+       </i>
+       your
+       <b>
+        UE4Editor-YourGame.dll
+       </b>
+       but not limited to. Which brings us to the topic of Configurations:
+      </p>
+      <h4>
+       <span class="mw-headline" id="Configurations">
+        Configurations
+       </span>
+      </h4>
+      <table>
+       <tbody>
+        <tr>
+         <th>
+          Configuration
+         </th>
+         <th>
+          Output
+         </th>
+         <th>
+         </th>
+        </tr>
+        <tr>
+         <td>
+          DebugGame
+         </td>
+         <td>
+          YourGame-Win64-DebugGame.exe
+         </td>
+         <td>
+          An Executable that runs on cooked content. It contains a non-optimized version wherein you can see and access some normally optimized variables such as FString's or other low level objects.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          DebugGame Editor
+         </td>
+         <td>
+          UE4Editor-YourGame-Win64-DebugGame.dll
+         </td>
+         <td>
+          Same as above, but this version runs in the Editor.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Development
+         </td>
+         <td>
+          YourGame.exe
+         </td>
+         <td>
+          An Executable that runs on cooked content. This is a semi-optimized version wherein you can't see every variable in debug mode but still has most debugging features. You can read in-game log, etc.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Development Editor
+         </td>
+         <td>
+          UE4Editor-YourGame.dll
+         </td>
+         <td>
+          This version is the required version by the editor in order for it to boot up. It is the same as above, but this version runs in the Editor.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Shipping
+         </td>
+         <td>
+          YourGame.exe
+         </td>
+         <td>
+          This is your game with complete optimization and is the version you will ship to your users
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <h2>
+       <span class="mw-headline" id="How_and_Why">
+        How and Why
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Editor_Builds">
+        Editor Builds
+       </span>
+      </h3>
+      <ul>
+       <li>
+        Development Editor
+       </li>
+       <li>
+        DebugGame Editor
+       </li>
+      </ul>
+      <p>
+       When the UE4Editor.exe is loaded it attaches to the Development Editor [UE4Editor-YourGame.dll]. If this .dll is not present it will offer to build it. Once the editor is loaded you can update it by recompiling from Visual Studio as a Development Editor build. You can also recompile from Visual Studio as a DebugGame Editor build [UE4Editor-YourGame-Win64-DebugGame.dll].
+      </p>
+      <p>
+       It's worth noting before moving on, that if you shut down the editor and reload it will use the last good Development Editor build. So if you were using DebugGame Editor builds it may look like you lost work. Simply rebuild the DebugGame Editor and it will hot load into the editor.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Executable_Builds">
+        Executable Builds
+       </span>
+      </h3>
+      <ul>
+       <li>
+        Development
+       </li>
+       <li>
+        DebugGame
+       </li>
+       <li>
+        Shipping
+       </li>
+      </ul>
+      <p>
+       When using a standalone build you drop the overhead of the UE4Editor and just run the game. This must be done with COOKED content created from the editor. Simply go to
+       <b>
+        File &gt; Cook Content for [Platform]
+       </b>
+       . This will create cooked content in your game in project local directory
+       <b>
+        ..\Saved\Cooked\WindowsNoEditor
+       </b>
+       .
+      </p>
+      <h3>
+       <span class="mw-headline" id="Command_Line">
+        Command Line
+       </span>
+      </h3>
+      <ul>
+       <li>
+        Development Editor
+       </li>
+       <li>
+        DebugGame Editor
+       </li>
+      </ul>
+      <p>
+       Either listed build type can be used when launching the your game from command line. using switch "-game" will launch your game using [UE4Editor-YourGame.dll]. And using switches "-game -debug" will launch your game using [UE4Editor-YourGame-Win64-DebugGame.dll].
+      </p>
+      <h3>
+       <span class="mw-headline" id="Compile_in_Editor">
+        Compile in Editor
+       </span>
+      </h3>
+      <p>
+       The editor contains a Compile button on the main shelf. When this button is pushed, the unreal build tools create a new Development Editor build and hot links it back to the editor.
+      </p>
+      <p>
+       This introduction should be expanded as more is learned, but I hope this helps!
+      </p>
+      <p>
+       (
+     )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

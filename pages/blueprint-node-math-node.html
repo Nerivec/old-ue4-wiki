@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Blueprint Node: Math Node - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Blueprint Node: Math Node
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Random_Cone_vector">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Random Cone vector
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Radians">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Radians
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Degrees">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             Degrees
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Angle_to_Angle">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Angle to Angle
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Degrees_to_Radians">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Degrees to Radians
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Radians_to_Degrees">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             Radians to Degrees
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Is_Float_nearly_equal_to">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Is Float nearly equal to
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#IsNearlyEqual">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             IsNearlyEqual
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#IsEqualZero">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             IsEqualZero
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-11">
+         <a href="#IsPowerOfTwo">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           IsPowerOfTwo
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-12">
+         <a href="#Full_code">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Full code
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-13">
+           <a href="#Header">
+            <span class="tocnumber">
+             6.1
+            </span>
+            <span class="toctext">
+             Header
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-14">
+           <a href="#C.2B.2B">
+            <span class="tocnumber">
+             6.2
+            </span>
+            <span class="toctext">
+             C++
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h1>
+      <p>
+       This is a node that exposes a couple of extra math functions to blueprints, which may be of use.
+      </p>
+      <p>
+       I've detailed each node individually, explaining the node's inputs and its uses. I've also put the full source at the bottom, which you can just copy and paste into a .h/.cpp file and compile directly. The only change that must be done is in the .cpp where it reads "#include "HyperPro.h"" - this must be changed to the project header, which is the name of your project - i.e if your project is called "MyAwesomeGame" then the header you want to use should be "MyAwesomeGame.h"
+      </p>
+      <p>
+       -
+     (
+     )
+      </p>
+      <h1>
+       <span class="mw-headline" id="Random_Cone_vector">
+        Random Cone vector
+       </span>
+      </h1>
+      <p>
+       This node returns a random vector in the shape of a cone.
+      </p>
+      <p>
+       Note the bIsSquished - This is for if you have a cone thats not uniform. While HorizontalConeHalfAngleRad / HorizontalConeHalfAngleDeg has the word Horizontal in it, if bIsSquished is false then HorizontalConeHalfAngleRad /HorizontalConeHalfAngleDeg will be used for all axes.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Radians">
+        Radians
+       </span>
+      </h2>
+      <p>
+       This version takes the angles as radians:
+      </p>
+      <p>
+       <img alt="BlueNode RanVCone 1.jpg" class="" height="127" src="../assets/blueprint-node-math-node/0.jpg" width="274"/>
+       <br clear="all"/>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintPure</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">HidePin</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">DefaultToSelf</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">FriendlyName</span> <span class="o">=</span> <span class="s">"Random VCone"</span><span class="p">,</span> <span class="n">CompactNodeTitle</span> <span class="o">=</span> <span class="s">"RanVCone"</span><span class="p">,</span> <span class="n">Keywords</span> <span class="o">=</span> <span class="s">"random vector cone radians"</span><span class="p">),</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Math</span><span class="p">)</span>
+	<span class="k">static</span> <span class="n">FVector</span> <span class="n">VRandomConeFromRad</span><span class="p">(</span><span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">Dir</span><span class="p">,</span> <span class="kt">float</span> <span class="n">HorizontalConeHalfAngleRad</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bIsSquished</span><span class="p">,</span> <span class="kt">float</span> <span class="n">VerticalConeHalfAngleRad</span><span class="p">);</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Degrees">
+        Degrees
+       </span>
+      </h2>
+      <p>
+       This version takes the angles in degrees:
+      </p>
+      <p>
+       <img alt="BlueNode RanVConeDeg 1.jpg" class="" height="124" src="../assets/blueprint-node-math-node/1.jpg" width="354"/>
+       <br clear="all"/>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintPure</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">HidePin</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">DefaultToSelf</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">FriendlyName</span> <span class="o">=</span> <span class="s">"Random VCone From Degrees"</span><span class="p">,</span> <span class="n">CompactNodeTitle</span> <span class="o">=</span> <span class="s">"RanVConeDeg"</span><span class="p">,</span> <span class="n">Keywords</span> <span class="o">=</span> <span class="s">"random vector cone degrees"</span><span class="p">),</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Math</span><span class="p">)</span>
+	<span class="k">static</span> <span class="n">FVector</span> <span class="n">VRandomConeFromDeg</span><span class="p">(</span><span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">Dir</span><span class="p">,</span> <span class="kt">float</span> <span class="n">HorizontalConeHalfAngleDeg</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bIsSquished</span><span class="p">,</span> <span class="kt">float</span> <span class="n">VerticalConeHalfAngleDeg</span><span class="p">);</span>
+</pre>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Angle_to_Angle">
+        Angle to Angle
+       </span>
+      </h1>
+      <p>
+       This just converts from one angle type to another.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Degrees_to_Radians">
+        Degrees to Radians
+       </span>
+      </h2>
+      <p>
+       <img alt="BlueNode DegToRad 1.jpg" class="" height="71" src="../assets/blueprint-node-math-node/2.jpg" width="264"/>
+       <br clear="all"/>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintPure</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">HidePin</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">DefaultToSelf</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">FriendlyName</span> <span class="o">=</span> <span class="s">"Convert Degrees to Radians"</span><span class="p">,</span> <span class="n">CompactNodeTitle</span> <span class="o">=</span> <span class="s">"DegToRad"</span><span class="p">,</span> <span class="n">Keywords</span> <span class="o">=</span> <span class="s">"convert radians degrees"</span><span class="p">),</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Math</span><span class="p">)</span>
+	<span class="k">static</span> <span class="kt">float</span> <span class="n">FDegToRad</span><span class="p">(</span><span class="kt">float</span> <span class="n">AngleInDegrees</span><span class="p">);</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Radians_to_Degrees">
+        Radians to Degrees
+       </span>
+      </h2>
+      <p>
+       <img alt="BlueNode RadToDeg 1.jpg" class="" height="69" src="../assets/blueprint-node-math-node/3.jpg" width="261"/>
+       <br clear="all"/>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintPure</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">HidePin</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">DefaultToSelf</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">FriendlyName</span> <span class="o">=</span> <span class="s">"Convert Radians to Degrees"</span><span class="p">,</span> <span class="n">CompactNodeTitle</span> <span class="o">=</span> <span class="s">"RadToDeg"</span><span class="p">,</span> <span class="n">Keywords</span> <span class="o">=</span> <span class="s">"convert radians degrees"</span><span class="p">),</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Math</span><span class="p">)</span>
+	<span class="k">static</span> <span class="kt">float</span> <span class="n">FRadToDeg</span><span class="p">(</span><span class="kt">float</span> <span class="n">AngleInRadians</span><span class="p">);</span>
+</pre>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Is_Float_nearly_equal_to">
+        Is Float nearly equal to
+       </span>
+      </h1>
+      <p>
+       These two nodes take a float and check if it equals zero or another number within range. This is very reason for eliminating what's known as machine epsilon.
+      </p>
+      <p>
+       Its an error caused by rounding when doing math with floating points and an issue I had when working with UDK + UnrealScript. If you add 0.004 enough times you'll get something like 0.x999 with x being the number of times you added -1. For me, in unrealscript it was normally about 4 times, so:
+      </p>
+      <p>
+       0.001+ 0.001 = 0.002
+      </p>
+      <p>
+       0.002+ 0.001 = 0.003
+      </p>
+      <p>
+       0.003+ 0.001 = 0.39999999999
+      </p>
+      <p>
+       This is a massive pain when doing things such as math animations or movement, where you compare if x == y. The computer will be comparing 0.00399999999 == 0.004 and thus return false. These two nodes are very useful for eliminating that, because you can do "Does X equal Y +- 1?". Note that machine epsilon can't be eliminated by rounding as you would lose decimal precision - You can use very careful rounding to eliminate the issue, but its easy to get confused and mix up your numbers. Thus this is a useful shortcut both in Blueprints and C++.
+      </p>
+      <h2>
+       <span class="mw-headline" id="IsNearlyEqual">
+        IsNearlyEqual
+       </span>
+      </h2>
+      <p>
+       <img alt="BlueNode IsNear= 1.jpg" class="" height="103" src="../assets/blueprint-node-math-node/4.jpg" width="219"/>
+       <br clear="all"/>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintPure</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">HidePin</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">DefaultToSelf</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">FriendlyName</span> <span class="o">=</span> <span class="s">"Is float nearly equal"</span><span class="p">,</span> <span class="n">CompactNodeTitle</span> <span class="o">=</span> <span class="s">"IsNear="</span><span class="p">,</span> <span class="n">Keywords</span> <span class="o">=</span> <span class="s">"nearly equal float"</span><span class="p">),</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Math</span><span class="p">)</span>
+	<span class="k">static</span> <span class="kt">bool</span> <span class="n">IsNearlyEqual</span><span class="p">(</span><span class="kt">float</span> <span class="n">A</span><span class="p">,</span> <span class="kt">float</span> <span class="n">B</span><span class="p">,</span> <span class="kt">float</span> <span class="n">ErrorTolerance</span><span class="p">);</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="IsEqualZero">
+        IsEqualZero
+       </span>
+      </h2>
+      <p>
+       This is the same, but it just compares to zero, instead of a given number.
+      </p>
+      <p>
+       <img alt="BlueNode IsNear0.jpg" class="" height="75" src="../assets/blueprint-node-math-node/5.jpg" width="226"/>
+       <br clear="all"/>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintPure</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">HidePin</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">DefaultToSelf</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">FriendlyName</span> <span class="o">=</span> <span class="s">"Is float nearly zero"</span><span class="p">,</span> <span class="n">CompactNodeTitle</span> <span class="o">=</span> <span class="s">"IsNear0"</span><span class="p">,</span> <span class="n">Keywords</span> <span class="o">=</span> <span class="s">"nearly zero float"</span><span class="p">),</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Math</span><span class="p">)</span>
+	<span class="k">static</span> <span class="kt">bool</span> <span class="n">IsNearlyZero</span><span class="p">(</span><span class="kt">float</span> <span class="n">Value</span><span class="p">,</span> <span class="kt">float</span> <span class="n">ErrorTolerance</span><span class="p">);</span>
+</pre>
+      </div>
+      <h1>
+       <span class="mw-headline" id="IsPowerOfTwo">
+        IsPowerOfTwo
+       </span>
+      </h1>
+      <p>
+       This tells you quickly if a number is a power of two or not.
+      </p>
+      <p>
+       <img alt="BlueNode IsPowOf2 1.jpg" class="" height="75" src="../assets/blueprint-node-math-node/6.jpg" width="266"/>
+       <br clear="all"/>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintPure</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">HidePin</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">DefaultToSelf</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">FriendlyName</span> <span class="o">=</span> <span class="s">"Is power of two"</span><span class="p">,</span> <span class="n">CompactNodeTitle</span> <span class="o">=</span> <span class="s">"IsPowOf2"</span><span class="p">,</span> <span class="n">Keywords</span> <span class="o">=</span> <span class="s">"is power two"</span><span class="p">),</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Math</span><span class="p">)</span>
+	<span class="k">static</span> <span class="kt">bool</span> <span class="n">IsPowerOfTwo</span><span class="p">(</span><span class="kt">float</span> <span class="n">Value</span><span class="p">);</span>
+</pre>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Full_code">
+        Full code
+       </span>
+      </h1>
+      <h2>
+       <span class="mw-headline" id="Header">
+        Header
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2014 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"EdGraph/EdGraphNode.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"EdGraph/EdGraphSchema.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"BlueprintMath.generated.h"</span><span class="cp"></span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Created by Gareth "G-Rath" Jones, 06/04/2014L</span>
+<span class="cm"> */</span>
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">UBlueprintMath</span> <span class="o">:</span> <span class="k">public</span> <span class="n">UEdGraphNode</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+
+<span class="k">public</span><span class="o">:</span>
+	
+	<span class="cm">/*</span>
+<span class="cm">	* Returns a random unit vector, uniformly distributed, within the specified cone.</span>
+<span class="cm">	* HorizontalConeHalfAngleRad is the half-angle of cone, in radians.  Returns a normalized vector.</span>
+<span class="cm">	*</span>
+<span class="cm">	* If bIsSquished is true then it creates a random cone with different angle limits in the Y and Z axes. </span>
+<span class="cm">	* Set by HorizontalConeHalfAngleRad and VerticalConeHalfAngleRad respectively</span>
+<span class="cm">	*	Otherwise only HorizontalConeHalfAngleRad is used.</span>
+<span class="cm">	* </span>
+<span class="cm">	* Assumes world Y and Z, although this could be extended to handle arbitrary rotations.</span>
+<span class="cm">	*/</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintPure</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">HidePin</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">DefaultToSelf</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">FriendlyName</span> <span class="o">=</span> <span class="s">"Random VCone"</span><span class="p">,</span> <span class="n">CompactNodeTitle</span> <span class="o">=</span> <span class="s">"RanVCone"</span><span class="p">,</span> <span class="n">Keywords</span> <span class="o">=</span> <span class="s">"random vector cone radians"</span><span class="p">),</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Math</span><span class="p">)</span>
+		<span class="k">static</span> <span class="n">FVector</span> <span class="n">VRandomConeFromRad</span><span class="p">(</span><span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">Dir</span><span class="p">,</span> <span class="kt">float</span> <span class="n">HorizontalConeHalfAngleRad</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bIsSquished</span><span class="p">,</span> <span class="kt">float</span> <span class="n">VerticalConeHalfAngleRad</span><span class="p">);</span>
+
+	<span class="cm">/*</span>
+<span class="cm">	* Returns a random unit vector, uniformly distributed, within the specified cone.</span>
+<span class="cm">	* HorizontalConeHalfAngleDeg is the half-angle of cone, in degrees.  Returns a normalized vector.</span>
+<span class="cm">	*</span>
+<span class="cm">	* If bIsSquished is true then it creates a random cone with different angle limits in the Y and Z axes.</span>
+<span class="cm">	* Set by HorizontalConeHalfAngleDeg and VerticalConeHalfAngleDeg respectively.</span>
+<span class="cm">	*	Otherwise only HorizontalConeHalfAngleDeg is used.</span>
+<span class="cm">	*</span>
+<span class="cm">	* Assumes world Y and Z, although this could be extended to handle arbitrary rotations.</span>
+<span class="cm">	*/</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintPure</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">HidePin</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">DefaultToSelf</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">FriendlyName</span> <span class="o">=</span> <span class="s">"Random VCone From Degrees"</span><span class="p">,</span> <span class="n">CompactNodeTitle</span> <span class="o">=</span> <span class="s">"RanVConeDeg"</span><span class="p">,</span> <span class="n">Keywords</span> <span class="o">=</span> <span class="s">"random vector cone degrees"</span><span class="p">),</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Math</span><span class="p">)</span>
+		<span class="k">static</span> <span class="n">FVector</span> <span class="n">VRandomConeFromDeg</span><span class="p">(</span><span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">Dir</span><span class="p">,</span> <span class="kt">float</span> <span class="n">HorizontalConeHalfAngleDeg</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bIsSquished</span><span class="p">,</span> <span class="kt">float</span> <span class="n">VerticalConeHalfAngleDeg</span><span class="p">);</span>
+
+	<span class="cm">/** Convets a angle in degrees into radians */</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintPure</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">HidePin</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">DefaultToSelf</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">FriendlyName</span> <span class="o">=</span> <span class="s">"Convert Degrees to Radians"</span><span class="p">,</span> <span class="n">CompactNodeTitle</span> <span class="o">=</span> <span class="s">"DegToRad"</span><span class="p">,</span> <span class="n">Keywords</span> <span class="o">=</span> <span class="s">"convert radians degrees"</span><span class="p">),</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Math</span><span class="p">)</span>
+		<span class="k">static</span> <span class="kt">float</span> <span class="n">FDegToRad</span><span class="p">(</span><span class="kt">float</span> <span class="n">AngleInDegrees</span><span class="p">);</span>
+	
+	<span class="cm">/** Convets a angle in radians into degrees */</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintPure</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">HidePin</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">DefaultToSelf</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">FriendlyName</span> <span class="o">=</span> <span class="s">"Convert Radians to Degrees"</span><span class="p">,</span> <span class="n">CompactNodeTitle</span> <span class="o">=</span> <span class="s">"RadToDeg"</span><span class="p">,</span> <span class="n">Keywords</span> <span class="o">=</span> <span class="s">"convert radians degrees"</span><span class="p">),</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Math</span><span class="p">)</span>
+		<span class="k">static</span> <span class="kt">float</span> <span class="n">FRadToDeg</span><span class="p">(</span><span class="kt">float</span> <span class="n">AngleInRadians</span><span class="p">);</span>
+	
+	<span class="cm">/**</span>
+<span class="cm">	*	Checks if two floating point numbers are nearly equal.</span>
+<span class="cm">	*	@param A				First number to compare</span>
+<span class="cm">	*	@param B				Second number to compare</span>
+<span class="cm">	*	@param ErrorTolerance	Maximum allowed difference for considering them as 'nearly equal'</span>
+<span class="cm">	*	@return					true if A and B are nearly equal</span>
+<span class="cm">	*/</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintPure</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">HidePin</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">DefaultToSelf</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">FriendlyName</span> <span class="o">=</span> <span class="s">"Is float nearly equal"</span><span class="p">,</span> <span class="n">CompactNodeTitle</span> <span class="o">=</span> <span class="s">"IsNear="</span><span class="p">,</span> <span class="n">Keywords</span> <span class="o">=</span> <span class="s">"nearly equal float"</span><span class="p">),</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Math</span><span class="p">)</span>
+		<span class="k">static</span> <span class="kt">bool</span> <span class="n">IsNearlyEqual</span><span class="p">(</span><span class="kt">float</span> <span class="n">A</span><span class="p">,</span> <span class="kt">float</span> <span class="n">B</span><span class="p">,</span> <span class="kt">float</span> <span class="n">ErrorTolerance</span><span class="p">);</span>
+
+	<span class="cm">/**</span>
+<span class="cm">	*	Checks if a floating point number is nearly zero.</span>
+<span class="cm">	*	@param Value			Number to compare</span>
+<span class="cm">	*	@param ErrorTolerance	Maximum allowed difference for considering Value as 'nearly zero'</span>
+<span class="cm">	*	@return					true if Value is nearly zero</span>
+<span class="cm">	*/</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintPure</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">HidePin</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">DefaultToSelf</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">FriendlyName</span> <span class="o">=</span> <span class="s">"Is float nearly zero"</span><span class="p">,</span> <span class="n">CompactNodeTitle</span> <span class="o">=</span> <span class="s">"IsNear0"</span><span class="p">,</span> <span class="n">Keywords</span> <span class="o">=</span> <span class="s">"nearly zero float"</span><span class="p">),</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Math</span><span class="p">)</span>
+		<span class="k">static</span> <span class="kt">bool</span> <span class="n">IsNearlyZero</span><span class="p">(</span><span class="kt">float</span> <span class="n">Value</span><span class="p">,</span> <span class="kt">float</span> <span class="n">ErrorTolerance</span><span class="p">);</span>
+
+	<span class="cm">/**</span>
+<span class="cm">	*	Checks whether a number is a power of two.</span>
+<span class="cm">	*	@param Value	Number to check</span>
+<span class="cm">	*	@return			true if Value is a power of two</span>
+<span class="cm">	*/</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintPure</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">HidePin</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">DefaultToSelf</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">FriendlyName</span> <span class="o">=</span> <span class="s">"Is power of two"</span><span class="p">,</span> <span class="n">CompactNodeTitle</span> <span class="o">=</span> <span class="s">"IsPowOf2"</span><span class="p">,</span> <span class="n">Keywords</span> <span class="o">=</span> <span class="s">"is power two"</span><span class="p">),</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Math</span><span class="p">)</span>
+		<span class="k">static</span> <span class="kt">bool</span> <span class="n">IsPowerOfTwo</span><span class="p">(</span><span class="kt">float</span> <span class="n">Value</span><span class="p">);</span>
+
+<span class="p">};</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="C.2B.2B">
+        C++
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2014 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#include</span> <span class="cpf">"HyperPro.h" //Change this to your project's header file (Its the file thats got the same name as your project and ends with .h)</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"UnrealMathVectorCommon.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"BlueprintMath.h"</span><span class="cp"></span>
+
+<span class="cp">#define SMALL_NUMBER		(1.e-8f)</span>
+
+<span class="n">UBlueprintMath</span><span class="o">::</span><span class="n">UBlueprintMath</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="p">}</span>
+
+<span class="n">FVector</span> <span class="n">UBlueprintMath</span><span class="o">::</span><span class="n">VRandomConeFromRad</span><span class="p">(</span><span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">Dir</span><span class="p">,</span> <span class="kt">float</span> <span class="n">HorizontalConeHalfAngleRad</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bIsSquished</span><span class="p">,</span> <span class="kt">float</span> <span class="n">VerticalConeHalfAngleRad</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">bIsSquished</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">FMath</span><span class="o">::</span><span class="n">VRandCone</span><span class="p">(</span><span class="n">Dir</span><span class="p">,</span> <span class="n">HorizontalConeHalfAngleRad</span><span class="p">,</span> <span class="n">VerticalConeHalfAngleRad</span><span class="p">);</span>
+	<span class="k">else</span>
+		<span class="k">return</span> <span class="n">FMath</span><span class="o">::</span><span class="n">VRandCone</span><span class="p">(</span><span class="n">Dir</span><span class="p">,</span> <span class="n">HorizontalConeHalfAngleRad</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">FVector</span> <span class="n">UBlueprintMath</span><span class="o">::</span><span class="n">VRandomConeFromDeg</span><span class="p">(</span><span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">Dir</span><span class="p">,</span> <span class="kt">float</span> <span class="n">HorizontalConeHalfAngleDeg</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bIsSquished</span><span class="p">,</span>  <span class="kt">float</span> <span class="n">VerticalConeHalfAngleDeg</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">bIsSquished</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">FMath</span><span class="o">::</span><span class="n">VRandCone</span><span class="p">(</span><span class="n">Dir</span><span class="p">,</span> <span class="n">FMath</span><span class="o">::</span><span class="n">DegreesToRadians</span><span class="p">(</span><span class="n">HorizontalConeHalfAngleDeg</span><span class="p">),</span> <span class="n">FMath</span><span class="o">::</span><span class="n">DegreesToRadians</span><span class="p">(</span><span class="n">VerticalConeHalfAngleDeg</span><span class="p">));</span>
+	<span class="k">else</span>
+		<span class="k">return</span> <span class="n">FMath</span><span class="o">::</span><span class="n">VRandCone</span><span class="p">(</span><span class="n">Dir</span><span class="p">,</span> <span class="n">FMath</span><span class="o">::</span><span class="n">DegreesToRadians</span><span class="p">(</span><span class="n">HorizontalConeHalfAngleDeg</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="kt">float</span> <span class="n">UBlueprintMath</span><span class="o">::</span><span class="n">FDegToRad</span><span class="p">(</span><span class="kt">float</span> <span class="n">AngleInDegrees</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">FMath</span><span class="o">::</span><span class="n">DegreesToRadians</span><span class="p">(</span><span class="n">AngleInDegrees</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">float</span> <span class="n">UBlueprintMath</span><span class="o">::</span><span class="n">FRadToDeg</span><span class="p">(</span><span class="kt">float</span> <span class="n">AngleInRadians</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">FMath</span><span class="o">::</span><span class="n">RadiansToDegrees</span><span class="p">(</span><span class="n">AngleInRadians</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">UBlueprintMath</span><span class="o">::</span><span class="n">IsNearlyEqual</span><span class="p">(</span><span class="kt">float</span> <span class="n">A</span><span class="p">,</span> <span class="kt">float</span> <span class="n">B</span><span class="p">,</span> <span class="kt">float</span> <span class="n">ErrorTolerance</span> <span class="o">=</span> <span class="n">SMALL_NUMBER</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">FMath</span><span class="o">::</span><span class="n">IsNearlyEqual</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">ErrorTolerance</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">UBlueprintMath</span><span class="o">::</span><span class="n">IsNearlyZero</span><span class="p">(</span><span class="kt">float</span> <span class="n">Value</span><span class="p">,</span> <span class="kt">float</span> <span class="n">ErrorTolerence</span> <span class="o">=</span> <span class="n">SMALL_NUMBER</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">FMath</span><span class="o">::</span><span class="n">IsNearlyZero</span><span class="p">(</span><span class="n">Value</span><span class="p">,</span> <span class="n">ErrorTolerence</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">UBlueprintMath</span><span class="o">::</span><span class="n">IsPowerOfTwo</span><span class="p">(</span><span class="kt">float</span> <span class="n">Value</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">FMath</span><span class="o">::</span><span class="n">IsPowerOfTwo</span><span class="p">(</span><span class="n">Value</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

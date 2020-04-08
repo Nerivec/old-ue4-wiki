@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   How to package your game with commands - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    How to package your game with commands
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       This aims to be a quick guide on how to package and distribute your game.
+      </p>
+      <p>
+       Some points:
+      </p>
+      <ul>
+       <li>
+        If you use unreferenced blueprints/objects, you should add them a) using command line or b) by creating a level with all the objects you need to publish in your game (not recomended)
+       </li>
+       <li>
+        Cooking is the proccess of removing unwanted files from your final build
+       </li>
+       <li>
+        You can choose to Pak (like zip) all your content into a single file
+       </li>
+       <li>
+        If you are building a dedicated server, you need to have the compiled version of Unreal or will not work.
+       </li>
+       <li>
+        You will find the RunUAT at UnrealEngine/Engine/Build/BatchFiles
+       </li>
+       <li>
+        Add the command -build if you're using Source Version from Github
+       </li>
+       <li>
+        If the -allmaps flag is used, [AllMaps] with valid +Map=\Game\Maps\Map.umap syntax should be added to DefaultEditor.ini
+       </li>
+       <li>
+        Specific maps can be built (must remove -allmaps flag) using the -maps=Map1+Map2+Map3
+       </li>
+      </ul>
+      <p>
+       <b>
+        Compiling the client (With PAK files):
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">RunUAT</span> <span class="n">BuildCookRun</span> <span class="o">-</span><span class="n">project</span><span class="o">=</span><span class="s">"full_project_path_and_project_name.uproject"</span> <span class="o">-</span><span class="n">noP4</span> <span class="o">-</span><span class="n">platform</span><span class="o">=</span><span class="n">Win64</span> <span class="o">-</span><span class="n">clientconfig</span><span class="o">=</span><span class="n">Development</span> <span class="o">-</span><span class="n">serverconfig</span><span class="o">=</span><span class="n">Development</span> <span class="o">-</span><span class="n">cook</span> <span class="o">-</span><span class="n">allmaps</span> <span class="o">-</span><span class="n">build</span> <span class="o">-</span><span class="n">stage</span> <span class="o">-</span><span class="n">pak</span> <span class="o">-</span><span class="n">archive</span> <span class="o">-</span><span class="n">archivedirectory</span><span class="o">=</span><span class="s">"Output Directory"</span>
+</pre>
+      </div>
+      <p>
+       <b>
+        Cooking the client (With PAK files):
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">RunUAT</span> <span class="n">BuildCookRun</span> <span class="o">-</span><span class="n">project</span><span class="o">=</span><span class="s">"full_project_path_and_project_name.uproject"</span> <span class="o">-</span><span class="n">noP4</span> <span class="o">-</span><span class="n">platform</span><span class="o">=</span><span class="n">Win64</span> <span class="o">-</span><span class="n">clientconfig</span><span class="o">=</span><span class="n">Development</span> <span class="o">-</span><span class="n">serverconfig</span><span class="o">=</span><span class="n">Development</span> <span class="o">-</span><span class="n">cook</span> <span class="o">-</span><span class="n">allmaps</span> <span class="o">-</span><span class="n">NoCompile</span> <span class="o">-</span><span class="n">stage</span> <span class="o">-</span><span class="n">pak</span> <span class="o">-</span><span class="n">archive</span> <span class="o">-</span><span class="n">archivedirectory</span><span class="o">=</span><span class="s">"Output Directory"</span>
+</pre>
+      </div>
+      <p>
+       <b>
+        Compiling the dedicated server (With PAK files):
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">RunUAT</span> <span class="n">BuildCookRun</span> <span class="o">-</span><span class="n">project</span><span class="o">=</span><span class="s">"full_project_path_and_project_name.uproject"</span> <span class="o">-</span><span class="n">noP4</span> <span class="o">-</span><span class="n">platform</span><span class="o">=</span><span class="n">Win64</span> <span class="o">-</span><span class="n">clientconfig</span><span class="o">=</span><span class="n">Development</span> <span class="o">-</span><span class="n">serverconfig</span><span class="o">=</span><span class="n">Development</span> <span class="o">-</span><span class="n">cook</span> <span class="o">-</span><span class="n">server</span> <span class="o">-</span><span class="n">serverplatform</span><span class="o">=</span><span class="n">Win64</span> <span class="o">-</span><span class="n">noclient</span> <span class="o">-</span><span class="n">build</span> <span class="o">-</span><span class="n">stage</span> <span class="o">-</span><span class="n">pak</span> <span class="o">-</span><span class="n">archive</span> <span class="o">-</span><span class="n">archivedirectory</span><span class="o">=</span><span class="s">"Output Directory"</span>
+</pre>
+      </div>
+      <p>
+       <b>
+        Cooking the dedicated server (With PAK files):
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">RunUAT</span> <span class="n">BuildCookRun</span> <span class="o">-</span><span class="n">project</span><span class="o">=</span><span class="s">"full_project_path_and_project_name.uproject"</span> <span class="o">-</span><span class="n">noP4</span> <span class="o">-</span><span class="n">platform</span><span class="o">=</span><span class="n">Win64</span> <span class="o">-</span><span class="n">clientconfig</span><span class="o">=</span><span class="n">Development</span> <span class="o">-</span><span class="n">serverconfig</span><span class="o">=</span><span class="n">Development</span> <span class="o">-</span><span class="n">cook</span> <span class="o">-</span><span class="n">server</span> <span class="o">-</span><span class="n">serverplatform</span><span class="o">=</span><span class="n">Win64</span> <span class="o">-</span><span class="n">noclient</span> <span class="o">-</span><span class="n">NoCompile</span> <span class="o">-</span><span class="n">stage</span> <span class="o">-</span><span class="n">pak</span> <span class="o">-</span><span class="n">archive</span> <span class="o">-</span><span class="n">archivedirectory</span><span class="o">=</span><span class="s">"Output Directory"</span>
+</pre>
+      </div>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

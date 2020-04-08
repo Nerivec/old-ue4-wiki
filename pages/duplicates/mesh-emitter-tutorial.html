@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Mesh Emitter (Tutorial) - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Mesh Emitter (Tutorial)
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       Mesh emitters are perfect when you want to use meshes instead of sprite particles for your effect. They are ideal for debris, shrapnel, and similar effects where you need lots of pieces of moving objects.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Setup">
+        Setup
+       </span>
+      </h2>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="" class="thumbimage" height="255" src="../assets/mesh-emitter-tutorial/0.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Mesh emitter example
+        </div>
+       </div>
+      </div>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="" class="thumbimage" height="94" src="../assets/mesh-emitter-tutorial/1.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         The modules used in the example emitter image
+        </div>
+       </div>
+      </div>
+      <p>
+       In general, the setup of a mesh emitter simply requires that you add a Mesh TypeData module from the right-click contextual menu, and then add whatever mesh you want to use into that module.
+      </p>
+      <p>
+       In this example, we actually have 3 separate emitters: two emitting swords and one emitting axes. Each emitter simply uses some random initial velocity, random rotation rate, and a shared Constant Acceleration to apply some gravity.
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

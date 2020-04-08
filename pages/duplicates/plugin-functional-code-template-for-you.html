@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Plugin, Functional Code Template For You - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Plugin, Functional Code Template For You
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Deprecated.21">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Deprecated!
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Overview">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Download">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Download
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#.h">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           .h
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Deprecated.21">
+        Deprecated!
+       </span>
+      </h2>
+      <p>
+       The example plugin Rama provides here is old and depends on plugin descriptor version 1.0 whereas the latest is 3.0. Please refer to this community wiki guide instead:
+       .
+      </p>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Author
+       </i>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       Here is a completely functional plugin template that you can download and modify to your liking!
+      </p>
+      <p>
+       It is functional because it is basically a wrapper for some extra BP nodes that I like to give to my clients to use in their BP AI systems.
+      </p>
+      <p>
+       The whole purpose of this wiki is to provide you with a download of a simple and completely usable plugin template that you can load up and see what it does immediately, and then modify to your wishes :)
+      </p>
+      <h2>
+       <span class="mw-headline" id="Download">
+        Download
+       </span>
+      </h2>
+      <p>
+       <b>
+        Rama's AI Plugin Template
+       </b>
+      </p>
+      <p>
+      </p>
+      <h2>
+       <span class="mw-headline" id=".h">
+        .h
+       </span>
+      </h2>
+      <p>
+       Here's the list of BP nodes that come with this plugin!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/** SQUARED distanced between actors */</span>
+<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintPure</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"VictoryAILibrary"</span><span class="p">)</span>
+<span class="k">static</span> <span class="kt">float</span> <span class="n">Calculations__SquaredDistanceBetweenActors</span><span class="p">(</span><span class="n">AActor</span><span class="o">*</span> <span class="n">Actor1</span><span class="p">,</span><span class="n">AActor</span><span class="o">*</span> <span class="n">Actor2</span><span class="p">);</span>
+
+
+<span class="c1">//~~~</span>
+
+<span class="cm">/** Convert Rotator to Vector */</span>
+<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintPure</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"VictoryBPLibrary"</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">FriendlyName</span> <span class="o">=</span> <span class="s">"Vector To Rotator"</span><span class="p">,</span> <span class="n">CompactNodeTitle</span> <span class="o">=</span> <span class="s">"-&gt;"</span><span class="p">,</span> <span class="n">Keywords</span> <span class="o">=</span> <span class="s">"convert vector rotator conversion"</span><span class="p">))</span>
+<span class="k">static</span> <span class="n">FRotator</span> <span class="n">Conversions__VectorToRotator</span><span class="p">(</span><span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">TheVector</span><span class="p">);</span>
+
+<span class="cm">/** Convert Vector to Rotator*/</span>
+<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintPure</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"VictoryBPLibrary"</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">FriendlyName</span> <span class="o">=</span> <span class="s">"Rotator to Vector"</span><span class="p">,</span> <span class="n">CompactNodeTitle</span> <span class="o">=</span> <span class="s">"-&gt;"</span><span class="p">,</span> <span class="n">Keywords</span> <span class="o">=</span> <span class="s">"convert vector rotator conversion"</span><span class="p">))</span>
+<span class="k">static</span> <span class="n">FVector</span> <span class="n">Conversions__RotatorToVector</span><span class="p">(</span><span class="k">const</span> <span class="n">FRotator</span><span class="o">&amp;</span> <span class="n">TheRotator</span><span class="p">);</span>
+
+<span class="c1">//~~~</span>
+
+<span class="cm">/** Set Max Move Speed. Supply the Character whose Character Movement to change! Returns false if operation could not occur due to invalid Character or MovementComponent could not be obtained.*/</span>
+<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"VictoryAILibrary"</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="p">(</span><span class="n">DefaultToSelf</span><span class="o">=</span><span class="s">"TheCharacter"</span><span class="p">))</span>
+<span class="k">static</span> <span class="kt">bool</span> <span class="n">CharacterMovement__SetMaxMoveSpeed</span><span class="p">(</span><span class="n">ACharacter</span><span class="o">*</span> <span class="n">TheCharacter</span><span class="p">,</span> <span class="kt">float</span> <span class="n">NewMaxMoveSpeed</span><span class="p">);</span>
+
+<span class="cm">/** Replicated Jump Rama-Style. Use negative values for down, backward, and left. Returns false if operation could not occur. */</span>
+<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"VictoryAILibrary"</span><span class="p">)</span>
+<span class="k">static</span> <span class="kt">bool</span> <span class="n">CharacterMovement__RamaJump</span><span class="p">(</span><span class="n">ACharacter</span><span class="o">*</span> <span class="n">TheCharacter</span><span class="p">,</span> <span class="kt">float</span> <span class="n">UpAmount</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span> <span class="kt">float</span> <span class="n">ForwardAmount</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span> <span class="kt">float</span> <span class="n">RightAmount</span><span class="o">=</span><span class="mi">0</span><span class="p">);</span>
+
+<span class="cm">/** Replicated Jump Rama-Style. Directions are relative to direction to target. Forward = direct line to target. Use negative values for down, backward, and left. Returns false if operation could not occur. */</span>
+<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"VictoryAILibrary"</span><span class="p">)</span>
+<span class="k">static</span> <span class="kt">bool</span> <span class="n">CharacterMovement__RamaJumpRelativeToTarget</span><span class="p">(</span><span class="n">ACharacter</span><span class="o">*</span> <span class="n">TheCharacter</span><span class="p">,</span> <span class="n">AActor</span><span class="o">*</span> <span class="n">Target</span><span class="p">,</span> <span class="kt">float</span> <span class="n">UpAmount</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span> <span class="kt">float</span> <span class="n">ForwardAmount</span><span class="o">=</span><span class="mi">3000</span><span class="p">,</span> <span class="kt">float</span> <span class="n">RightAmount</span><span class="o">=</span><span class="mi">0</span><span class="p">);</span>
+
+
+<span class="cm">/** Is Controller's Pawn Falling? Returns the Controller's Pawn as a Character */</span>
+<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"VictoryAILibrary"</span><span class="p">)</span>
+<span class="k">static</span> <span class="n">ACharacter</span><span class="o">*</span> <span class="n">CharacterMovement__ControllerPawnIsFalling</span><span class="p">(</span><span class="n">AActor</span><span class="o">*</span> <span class="n">Controller</span><span class="p">,</span> <span class="kt">bool</span><span class="o">&amp;</span> <span class="n">IsFalling</span><span class="p">);</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       Have fun making plugins!
+      </p>
+      <p>
+       ♥
+      </p>
+      <p>
+       Rama
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

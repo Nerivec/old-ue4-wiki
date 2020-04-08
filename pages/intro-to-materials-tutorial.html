@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Intro To Materials (Tutorial) - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Intro To Materials (Tutorial)
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       The Material Editor is very powerful tool in the Unreal Editor suite that allows you to create a multitude of effects. Here you will see how to create a few basic material effects.
+      </p>
+      <p>
+       This tutorial assumes that you understand importing Textures.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Creating_a_New_Material">
+        Creating a New Material
+       </span>
+      </h2>
+      <p>
+       Once you have your textures in the content browser you can create your material. Right click in the black space in the center of the content browser and select New Material.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="NewMaterial.png" class="thumbimage" height="658" src="../assets/intro-to-materials-tutorial/0.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       This creates a new Material asset. Double-click on it to open it in the Material Editor.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:668px;">
+        <img alt="Mat TutStone.png" class="thumbimage" height="703" src="../assets/intro-to-materials-tutorial/1.png" width="666"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Material_Editor">
+        Material Editor
+       </span>
+      </h2>
+      <p>
+       In the material editor you can hold "T" and click in the black space to place a Texture Sample node using the texture currently selected in the content browser. You should add the Diffuse Texture and the Normal Texture and connect them to the Diffuse and Normal inputs. This will give you a basic surface that has bumpy details that react to light.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="BasicMaterial 1.png" class="thumbimage" height="446" src="../assets/intro-to-materials-tutorial/2.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       You can also add a basic mask/heightmap texture to get a bump offset/parallax effect. Right click and select Utility, BumpOffset then connect the red channel of your mask texture to the height input of the bump offset then connect it's output to the Base Color and Normal textures' UV inputs.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="BasicMaterial 2.png" class="thumbimage" height="343" src="../assets/intro-to-materials-tutorial/3.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       To get a basic specular response on the Material you can hold 1 and click to create a Constant. Select this and set its R value to 0.5, then plug it into both the Roughness and the Specular inputs. This defines a Material that reflects some light and is partially smooth, giving you a reflected specular highlight.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="BasicMaterial 3.png" class="thumbimage" height="416" src="../assets/intro-to-materials-tutorial/4.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       A good way to add contrast to the mask texture is to create a lerp node by right clicking in the blank area and selecting
+       <b>
+        Math &gt; LinearInterpolate
+       </b>
+       . Connect the red channel of the mask texture to the Alpha input of the Lerp node. Create 2 scalar constant nodes by holding the "1" key and clicking twice. Give one of them values of 0.1 and 0.5 and connect them to the Lerp's A and B inputs, respectively. Connect the output of the Lerp node to the Specular input of the Material. Experiment with the values and see what sorts of Specular results you can make!
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="BasicMaterial 4.png" class="thumbimage" height="369" src="../assets/intro-to-materials-tutorial/5.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

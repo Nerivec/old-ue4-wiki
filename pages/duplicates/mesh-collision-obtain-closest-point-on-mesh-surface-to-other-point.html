@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Mesh Collision, Obtain Closest Point on Mesh Surface To Other Point - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Mesh Collision, Obtain Closest Point on Mesh Surface To Other Point
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Using_With_Base_Static_Mesh_Actor_Class">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Using With Base Static Mesh Actor Class
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Using_With_Custom_SMA_Class">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Using With Custom SMA Class
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Two_Function_Return_Values">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Two Function Return Values
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Simple_Collision">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Simple Collision
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Summary">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Summary
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       Use this function to determine what point on a static mesh component is closest to a given point, in this case I use the location of an Actor.
+      </p>
+      <p>
+       This exact function tells you the closest point on an SMA to an Actor, returning the distance between the two.
+      </p>
+      <p>
+       <br/>
+       <b>
+        The power of this function is that it is returning the point on the actual Mesh Collision Surface!
+       </b>
+      </p>
+      <p>
+       <br/>
+       This is very precise and can lead to some great game effects!
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Using_With_Base_Static_Mesh_Actor_Class">
+        Using With Base Static Mesh Actor Class
+       </span>
+      </h2>
+      <p>
+       You could test a Static Mesh Actor base class by using
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">TheSMA</span><span class="o">-&gt;</span><span class="n">StaticMeshComponent</span><span class="o">-&gt;</span><span class="n">GetDistanceToCollision</span><span class="p">(</span><span class="n">PointToTest</span><span class="p">,</span> <span class="n">OutFVector</span><span class="p">);</span> <span class="c1">//see below for more info</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Using_With_Custom_SMA_Class">
+        Using With Custom SMA Class
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">float</span> <span class="n">AYourSMAClass</span><span class="o">::</span><span class="n">DistanceOfActorToThisMeshSurface</span><span class="p">(</span><span class="n">AActor</span><span class="o">*</span> <span class="n">TestActor</span><span class="p">,</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">ClosestSurfacePoint</span><span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">TestActor</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">TestActor</span><span class="o">-&gt;</span><span class="n">IsValidLowLevel</span><span class="p">())</span> <span class="k">return</span><span class="p">;</span>
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+	
+	<span class="c1">//Dist of Actor to Surface, retrieve closest Surface Point to Actor</span>
+	<span class="k">return</span> <span class="n">StaticMeshComponent</span><span class="o">-&gt;</span><span class="n">GetDistanceToCollision</span><span class="p">(</span>
+               <span class="n">TestActor</span><span class="o">-&gt;</span><span class="n">GetActorLocation</span><span class="p">(),</span> <span class="n">ClosestSurfacePoint</span>
+        <span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Two_Function_Return_Values">
+        Two Function Return Values
+       </span>
+      </h2>
+      <p>
+       The
+       <b>
+        float returned
+       </b>
+       is the distance from your chosen test point to the closest point on the Mesh Collision Surface.
+      </p>
+      <p>
+       The
+       <b>
+        FVector returned by reference
+       </b>
+       is the actual point on the Mesh Collision Surface!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Simple_Collision">
+        Simple Collision
+       </span>
+      </h2>
+      <p>
+       If you are having issues getting this function to work properly, make sure the static mesh for the SMA you are testing with has actual simple collision primitives! (not using complex as simple)
+      </p>
+      <h2>
+       <span class="mw-headline" id="Summary">
+        Summary
+       </span>
+      </h2>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

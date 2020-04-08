@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   How to Change FPS Cap , Near Clip, Editor &amp; Game - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    How to Change FPS Cap , Near Clip, Editor &amp; Game
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#MaxFPS">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           MaxFPS
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Default_Engine_Config_File">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Default Engine Config File
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Editor">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Editor
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Game_.28confirmed_in_4.13_as_still_viable_method.29">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Game (confirmed in 4.13 as still viable method)
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Commenting_Stuff_Out">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Commenting Stuff Out
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Summary">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Summary
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <b>
+        Author:
+       </b>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       Here is how you can set the FPS Cap and the near clip plane for both the editor and your actual game!
+      </p>
+      <p>
+       Several methods and configuration options now exist.
+      </p>
+      <h2>
+       <span class="mw-headline" id="MaxFPS">
+        MaxFPS
+       </span>
+      </h2>
+      <p>
+       In ConsoleVariables.ini add:
+      </p>
+      <pre>  [Startup]
+  t.MaxFPS=30
+</pre>
+      <p>
+       Additional options and methods below are optional.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Default_Engine_Config_File">
+        Default Engine Config File
+       </span>
+      </h2>
+      <p>
+       Navigate to
+      </p>
+      <pre> YourProject/Config/DefaultEngine.ini
+</pre>
+      <h2>
+       <span class="mw-headline" id="Editor">
+        Editor
+       </span>
+      </h2>
+      <pre> [/Script/UnrealEd.EditorEngine]
+ NearClipPlane=3.0     ;useful when zooming in Persona
+ bSmoothFrameRate=true
+ MinSmoothedFrameRate=5
+ MaxSmoothedFrameRate=120
+</pre>
+      <h2>
+       <span class="mw-headline" id="Game_.28confirmed_in_4.13_as_still_viable_method.29">
+        Game (confirmed in 4.13 as still viable method)
+       </span>
+      </h2>
+      <pre> [/Script/Engine.Engine]
+ NearClipPlane=12.0     ;in case you have weapon model clipping when zoomed in close
+ bSmoothFrameRate=true 
+ MinSmoothedFrameRate=5
+ MaxSmoothedFrameRate = 90
+</pre>
+      <p>
+       <br/>
+       EDIT: As of 4.2 you instead need to go into the Editor
+      </p>
+      <pre> Project Settings-&gt;Engine-&gt;General Settings-&gt;Frame Rate
+</pre>
+      <h2>
+       <span class="mw-headline" id="Commenting_Stuff_Out">
+        Commenting Stuff Out
+       </span>
+      </h2>
+      <p>
+       In config files you can use ; to comment stuff out
+      </p>
+      <pre> [/Script/Engine.Engine]
+ ;NearClipPlane=12.0    
+ bSmoothFrameRate=true 
+ MinSmoothedFrameRate=5
+ MaxSmoothedFrameRate = 90
+</pre>
+      <h2>
+       <span class="mw-headline" id="Summary">
+        Summary
+       </span>
+      </h2>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

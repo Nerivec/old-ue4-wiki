@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Static Const, Make Const Versions of UE4 Types - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Static Const, Make Const Versions of UE4 Types
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#.h">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           .h
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#.cpp">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           .cpp
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Keep_Global_Namespace_Clean">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Keep Global Namespace Clean
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Summary">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Summary
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       Using Constant versions of complex variable types can be useful,
+      </p>
+      <pre><b>especially if these variables are used every tick but their values never change</b>.
+</pre>
+      <p>
+       To make a Constant version of something like an FLinearColor or an FName you can do this:
+      </p>
+      <h2>
+       <span class="mw-headline" id=".h">
+        .h
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">public</span><span class="o">:</span>
+
+<span class="k">static</span> <span class="k">const</span> <span class="n">FLinearColor</span> <span class="n">Red</span><span class="p">;</span>
+<span class="k">static</span> <span class="k">const</span> <span class="n">FName</span> <span class="n">HeadSocket</span><span class="p">;</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id=".cpp">
+        .cpp
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2013 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#include</span> <span class="cpf">"YourGameGame.h"</span><span class="cp"></span>
+
+<span class="c1">//////////////////////////////////////////////////////////////////////////</span>
+<span class="c1">// AYourClass</span>
+
+<span class="c1">//you declare the static const outside of any function, but make sure to include the YourClass:: part :)</span>
+
+<span class="k">const</span> <span class="n">FName</span>        <span class="n">AYourClass</span><span class="o">::</span><span class="n">HeadSocket</span> <span class="o">=</span> <span class="n">FName</span><span class="p">(</span><span class="s">"Head"</span><span class="p">);</span>
+<span class="k">const</span> <span class="n">FLinearColor</span> <span class="n">AYourClass</span><span class="o">::</span><span class="n">Red</span> <span class="o">=</span> <span class="n">FLinearColor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+
+<span class="n">AYourClass</span><span class="o">::</span><span class="n">AYourClass</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="p">{</span>
+
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Keep_Global_Namespace_Clean">
+        Keep Global Namespace Clean
+       </span>
+      </h2>
+      <p>
+       Make sure to specify your class context when you declare your static const variables!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">Myclass</span><span class="o">::</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Summary">
+        Summary
+       </span>
+      </h2>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

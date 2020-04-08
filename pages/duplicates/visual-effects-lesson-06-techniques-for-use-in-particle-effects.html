@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Visual Effects: Lesson 06: Techniques for use in Particle Effects - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Visual Effects: Lesson 06: Techniques for use in Particle Effects
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Techniques_for_using_Particle_Effects_in_Unreal_Engine_4.0">
+        Techniques for using Particle Effects in Unreal Engine 4.0
+       </span>
+      </h2>
+      <p>
+       <b>
+        Beginner Level
+       </b>
+      </p>
+      <p>
+       Prerequisite – Lesson 05: This lesson builds directly on 05, I advise at least reading it quickly.
+      </p>
+      <p>
+       -Advanced Curve editing techniques in Cascade, for faster modification, iteration times.
+      </p>
+      <p>
+       This lesson will cover some of the less ‘Sexy’ aspects of FX creation.  Quickly editing Color, Size, ScaleColor, and just about any other value over the lifetime of a sprite, mesh, light, etc. in Cascade is a fundamental part of making FX.
+      </p>
+      <p>
+       I am going to take some time and cover some of the basics of curve editing, and then get into more advanced features to help you quickly modify attributes of an effect with a high level of precision.
+      </p>
+      <p>
+       I will make my best effort to be as detailed as possible and include plenty of images, but if you are not 100% familiar with the curve editor now might be a good time to quickly read this page.
+      </p>
+      <p>
+       <a class="external free" href="https://docs.unrealengine.com/latest/INT/Engine/Rendering/ParticleSystems/Cascade/index.html#curveeditor" rel="nofollow">
+        https://docs.unrealengine.com/latest/INT/Engine/Rendering/ParticleSystems/Cascade/index.html#curveeditor
+       </a>
+      </p>
+      <p>
+       Let’s get started by duplicating the effect we created for Lesson 05, and name it something like
+       <i>
+        P_CurveEdit
+       </i>
+       .  Double-click your effect to open Cascade.  If you don’t have the effect from the previous lesson, take a minute and review Lesson 05 and create that effect really quickly.
+      </p>
+      <p>
+       Set your
+       <b>
+        Spawn rate
+       </b>
+       to a value of 1.
+      </p>
+      <p>
+       <img alt="VisualEffects Lesson 06pic1.png" class="" height="182" src="../assets/visual-effects-lesson-06-techniques-for-use-in-particle-effects/0.png" width="405"/>
+      </p>
+      <p>
+       <br/>
+       Make sure your
+       <b>
+        Lifetime
+       </b>
+       is set to 1.
+      </p>
+      <p>
+       <img alt="VisualEffects Lesson 06pic2.png" class="" height="135" src="../assets/visual-effects-lesson-06-techniques-for-use-in-particle-effects/1.png" width="411"/>
+      </p>
+      <p>
+       <br/>
+       Next, map your Scale
+       <b>
+        Color/Life
+       </b>
+       module to the Curve Editor timeline by clicking on the small graph icon.
+      </p>
+      <p>
+       <img alt="VisualEffects Lesson 06pic3.png" class="" height="119" src="../assets/visual-effects-lesson-06-techniques-for-use-in-particle-effects/2.png" width="240"/>
+      </p>
+      <p>
+       <br/>
+       Press the
+       <b>
+        All
+       </b>
+       button in the Curve Editor to frame up your curves.
+      </p>
+      <p>
+       <img alt="VisualEffects Lesson 06pic4.png" class="" height="221" src="../assets/visual-effects-lesson-06-techniques-for-use-in-particle-effects/3.png" width="261"/>
+      </p>
+      <p>
+       <br/>
+       If you are using the duplicate effect from the previous lesson, you might have something like this on your timeline.
+      </p>
+      <p>
+       <img alt="VisualEffects Lesson 06pic5.png" class="" height="198" src="../assets/visual-effects-lesson-06-techniques-for-use-in-particle-effects/4.png" width="624"/>
+      </p>
+      <p>
+       <br/>
+       If not, set up your color/alpha curves to be similar and then
+       <b>
+        disable
+       </b>
+       the view of the
+       <b>
+        ColorScaleOverLife
+       </b>
+       curve with the radial button in the curve editor.
+      </p>
+      <p>
+       <img alt="VisualEffects Lesson 06pic6.png" class="" height="133" src="../assets/visual-effects-lesson-06-techniques-for-use-in-particle-effects/5.png" width="310"/>
+      </p>
+      <p>
+       <br/>
+       This time, instead of pressing the ‘All’ button to frame up your alpha curve, try holding Shift+Z key and move your mouse while holding the left mouse button.  This will scale the curve view vertically, shrinking your curve in the view.
+      </p>
+      <p>
+       <img alt="VisualEffects Lesson 06pic7.png" class="" height="186" src="../assets/visual-effects-lesson-06-techniques-for-use-in-particle-effects/6.png" width="624"/>
+      </p>
+      <p>
+       <br/>
+       Now press the All button to frame up your curve on the timeline.
+      </p>
+      <p>
+       Try holding Shft+Z and moving your mouse from side to side while holding the right mouse button, this will scale your curve horizontally in the view.
+      </p>
+      <p>
+       <img alt="VisualEffects Lesson 06pic8.png" class="" height="187" src="../assets/visual-effects-lesson-06-techniques-for-use-in-particle-effects/7.png" width="624"/>
+      </p>
+      <p>
+       <br/>
+       You can tell when you have effectively entered the Zoom/Scale mode by watching the Pan/Zoom icons change above the graph.
+      </p>
+      <p>
+       <img alt="VisualEffects Lesson 06pic9.png" class="" height="81" src="../assets/visual-effects-lesson-06-techniques-for-use-in-particle-effects/8.png" width="101"/>
+      </p>
+      <p>
+       Zooming in and out like this can be very helpful when you are trying to time up the alpha fade in/out of your alpha curve against the playback speed of a SubUV image sequence.  Sometimes, I ease my SubUV playback in and out, depending on my alpha settings, so I get the most out of the frames in my image sequence. Or, perhaps there is a particular frame that has an element in it I want highly visible for a moment in time. Being able to scale a 0,1 curve in the view against a 0,63 curve can be very helpful.
+      </p>
+      <p>
+       <img alt="VisualEffects Lesson 06pic10.png" class="" height="187" src="../assets/visual-effects-lesson-06-techniques-for-use-in-particle-effects/9.png" width="624"/>
+      </p>
+      <p>
+       <br/>
+       Don’t worry about adding a SubUV index to your effect, I just wanted to better illustrate the point I was trying to make 
+      </p>
+      <p>
+       Next, let’s hit the ‘All’ button again to frame the entire alpha curve in range.
+      </p>
+      <p>
+       Since this tutorial is about more advanced curve editing techniques, I am going to assume you already know how to move points along the curve, but let’s say you want to scale one of the values on your curve, and you need to do it precisely.
+      </p>
+      <p>
+       This is very easy in the curve editor. Marquee select your curve tangent, right-click, choose
+       <b>
+        scale Values
+       </b>
+       , and enter a value in the field of 4.133.
+      </p>
+      <p>
+       <img alt="VisualEffects Lesson 06pic11.png" class="" height="134" src="../assets/visual-effects-lesson-06-techniques-for-use-in-particle-effects/10.png" width="301"/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <p>
+       Note that if your initial value was 1, your new value for point 1 on your curve is now precisely 4.133.
+      </p>
+      <p>
+       <img alt="VisualEffects Lesson 06pic12.png" class="" height="268" src="../assets/visual-effects-lesson-06-techniques-for-use-in-particle-effects/11.png" width="624"/>
+      </p>
+      <p>
+       <br/>
+       Set the value back to 1 on the curve using the field shown above.
+      </p>
+      <p>
+       Now, let’s say you want to offset the entire curve, not just one point on the curve.
+      </p>
+      <p>
+       Using the same curve editing interface on the left of the curve editor, enter a value of .5 in the 0, and 2 positions.
+      </p>
+      <p>
+       <img alt="VisualEffects Lesson 06pic13.png" class="" height="387" src="../assets/visual-effects-lesson-06-techniques-for-use-in-particle-effects/12.png" width="316"/>
+      </p>
+      <p>
+       <br/>
+       <img alt="VisualEffects Lesson 06pic14.png" class="" height="113" src="../assets/visual-effects-lesson-06-techniques-for-use-in-particle-effects/13.png" width="624"/>
+      </p>
+      <p>
+       <br/>
+       Your curve should now map from .5 to 1 to .5 over the lifetime of the particle.
+      </p>
+      <p>
+       Marquee select the entire curve, right-click, and Scale your values by 1.5.
+      </p>
+      <p>
+       <img alt="VisualEffects Lesson 06pic15.png" class="" height="145" src="../assets/visual-effects-lesson-06-techniques-for-use-in-particle-effects/14.png" width="624"/>
+      </p>
+      <p>
+       <br/>
+       In the previous example, scaling by hand would be pretty straight forward, but with a curve like the one below, things might get a bit more hectic if you just wanted to punch your alpha up a bit…
+      </p>
+      <p>
+       <img alt="VisualEffects Lesson 06pic16.png" class="" height="234" src="../assets/visual-effects-lesson-06-techniques-for-use-in-particle-effects/15.png" width="624"/>
+      </p>
+      <p>
+       <br/>
+       Precisely scaling a curve like this up, or down while retaining timing is a cinch with the marquee select feature.
+      </p>
+      <p>
+       <img alt="VisualEffects Lesson 06pic17.png" class="" height="174" src="../assets/visual-effects-lesson-06-techniques-for-use-in-particle-effects/16.png" width="624"/>
+      </p>
+      <p>
+       <br/>
+       Let’s say we want to scale our size settings, which is often the case.  Let’s go ahead and change the screen alignment mode of our sprite to be rectangle.
+      </p>
+      <p>
+       Click the Required Module and find the
+       <b>
+        Screen Alignment
+       </b>
+       drop down, click it and choose
+       <i>
+        PSA_Rectangle
+       </i>
+       .
+      </p>
+      <p>
+       <img alt="VisualEffects Lesson 06pic18.png" class="" height="251" src="../assets/visual-effects-lesson-06-techniques-for-use-in-particle-effects/17.png" width="370"/>
+      </p>
+      <p>
+       <br/>
+       Select the
+       <b>
+        Initial Size
+       </b>
+       module and make sure your distribution is set to
+       <b>
+        Constant
+       </b>
+       .
+      </p>
+      <p>
+       <img alt="VisualEffects Lesson 06pic19.png" class="" height="162" src="../assets/visual-effects-lesson-06-techniques-for-use-in-particle-effects/18.png" width="387"/>
+      </p>
+      <p>
+       <br/>
+       With Screen alignment set to Rectangle, if either of your X,Y vectors are set to 0 the particle will disappear.  Set all of the values to 115.3315
+      </p>
+      <p>
+       <img alt="VisualEffects Lesson 06pic20.png" class="" height="165" src="../assets/visual-effects-lesson-06-techniques-for-use-in-particle-effects/19.png" width="382"/>
+      </p>
+      <p>
+       <br/>
+       Now, let’s say hypothetically that 115.3314 is the perfect size for your particle along the X axis.  For any random reason you can come up with, it just HAS to be that width, but you need it to be twice as tall as it is wide - precisely twice as tall and not a guess. Sure, you could do this math in your head with a bit of concentration…maybe if you block out the music on your headphones …
+      </p>
+      <p>
+       Or, you could just do the math right there in the field, in Cascade.
+      </p>
+      <p>
+       <img alt="VisualEffects Lesson 06pic21.png" class="" height="135" src="../assets/visual-effects-lesson-06-techniques-for-use-in-particle-effects/20.png" width="252"/>
+      </p>
+      <p>
+       <br/>
+       One of the best kept secrets about Cascade, the Material Editor and many other systems in UE4 is that you can do math, right in the input fields.  So add *2 to the end of your Y value and hit enter.
+      </p>
+      <p>
+       <img alt="VisualEffects Lesson 06pic22.png" class="" height="346" src="../assets/visual-effects-lesson-06-techniques-for-use-in-particle-effects/21.png" width="388"/>
+      </p>
+      <p>
+       Now your sprite size = 2* the width with some basic math.  This can be incredibly handy when trying to tweak mesh emitter sizes based on values to which you construct your mesh in an external package, especially if you are using a mesh to convey gameplay specific areas such as a Heal Aura, or an area of Denial.
+      </p>
+      <p>
+       It is also helpful to keep in mind, anything you can marquee select in the Curve editor can have the same scale values applied to them in one go.  If you need to scale Color and Alpha across multiple modules, do it in the Curve Editor to get it done quickly and precisely.
+      </p>
+      <p>
+       <img alt="VisualEffects Lesson 06pic23.png" class="" height="303" src="../assets/visual-effects-lesson-06-techniques-for-use-in-particle-effects/22.png" width="624"/>
+      </p>
+      <p>
+       <br/>
+       Here, I selected the curve points for multiple modules, even an InitialColor module with no time mapping, and scaled their values by 1.5.
+      </p>
+      <p>
+       <img alt="VisualEffects Lesson 06pic24.png" class="" height="300" src="../assets/visual-effects-lesson-06-techniques-for-use-in-particle-effects/23.png" width="624"/>
+      </p>
+      <p>
+       <br/>
+       Being able to scale your color values can be incredibly helpful if you have the perfect shade of Blue, for example, but you want to punch up the intensity a bit without fighting to keep the same hue.
+      </p>
+      <p>
+       Hopefully this workflow saves you some time when making tweaks to large complex FX.
+      </p>
+      <ul>
+       <li>
+       </li>
+       <li>
+       </li>
+      </ul>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

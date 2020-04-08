@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Interfaces in C++ - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Interfaces in C++
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Creating_The_Interface">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Creating The Interface
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#ReactsToTimeOfDay.h">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             ReactsToTimeOfDay.h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#ReactsToTimeOfDay.cpp">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             ReactsToTimeOfDay.cpp
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Using_An_Interface_With_C.2B.2B_Classes">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Using An Interface With C++ Classes
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Flower.h">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Flower.h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Flower.cpp">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             Flower.cpp
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Frog.h">
+            <span class="tocnumber">
+             3.3
+            </span>
+            <span class="toctext">
+             Frog.h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#Frog.cpp">
+            <span class="tocnumber">
+             3.4
+            </span>
+            <span class="toctext">
+             Frog.cpp
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#Determining_If_a_Given_Actor_Has_The_Interface">
+            <span class="tocnumber">
+             3.5
+            </span>
+            <span class="toctext">
+             Determining If a Given Actor Has The Interface
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#The_Magic_Interfaces">
+            <span class="tocnumber">
+             3.6
+            </span>
+            <span class="toctext">
+             The Magic Interfaces
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-12">
+         <a href="#Overriding_Behaviour_In_Blueprints">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Overriding Behaviour In Blueprints
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-13">
+         <a href="#Summary">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Summary
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Original Author
+       </i>
+       (
+       )
+      </p>
+      <p>
+       <i>
+        Updated &amp; Expanded for 4.11
+       </i>
+       Thank you for all that you contribute to the community Rama!
+      </p>
+      <p>
+       : You're welcome and thank you for this lovely addition!
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       Here's a tutorial on using
+       <b>
+        UE4 C++ Interfaces in 4.11+
+       </b>
+      </p>
+      <p>
+       Interfaces allow different objects to share common functions, but allow objects to handle that function differently if it needs to. Any classes that use an interface must implement the functions that are associated with that interface.
+      </p>
+      <p>
+       This gives you a lot of power over your game actors, allowing you to trigger events both in C++ and in blueprints that your game actors can handle differently.
+      </p>
+      <p>
+       For example, the interface implemented in this tutorial enables you to have an interface like TimeBasedBehaviour, which has a function ReactToHighNoon, and have a bunch of actors respond to this event differently, each with their own behaviour.
+      </p>
+      <p>
+       Flower actors that implement this interface could override the ReactToHighNoon method to open blossoms completely
+Frog actors implementing it could override ReactToHighNoon to hide under rocks, for example
+      </p>
+      <p>
+       You can then have an event, SunReachedHighNoon that is triggered anywhere (such as the level blueprint, in an actor, or a static blueprint library) which can take any actor, check if it implements the interface, and if it does it can call any of the functions of that interface and the actor will act according to how that specific actor has the behaviours defined.
+      </p>
+      <p>
+       This means you can trigger events
+       <i>
+        anywhere
+       </i>
+       and as long as you have a pointer to your actor, you can ask it to do specific things without needing to know its types because you can
+       <b>
+        easily determine whether any given actor has an interface or not by casting an actor to that interface
+       </b>
+       . If the cast succeeds then the actor
+       <i>
+        does
+       </i>
+       implement the given interface, and you can call functions using that interface.
+      </p>
+      <p>
+       We will implement two interface functions: one which forces you to implement default C++ behaviour on any class which uses the interface, a
+       <b>
+        BlueprintNativeEvent
+       </b>
+       called ReactToHighNoon(), and one
+       <b>
+        BlueprintImplementableEvent
+       </b>
+       which does
+       <i>
+        not
+       </i>
+       force you to define default C++ behaviour, called ReactToMidnight().
+      </p>
+      <h2>
+       <span class="mw-headline" id="Creating_The_Interface">
+        Creating The Interface
+       </span>
+      </h2>
+      <p>
+       The following is an example implementation of a ReactsToTimeOfDay interface.
+      </p>
+      <p>
+       When following this tutorial and creating your interface, you'd replace ReactToHighNoon() with your function you want to force default behaviour, and ReactToMidnight() with your function that has no default behaviour.
+      </p>
+      <p>
+       (If you wish the function to be treated as an event, then it must return void. If you wish the function to be able to be overridden in the BP editor, then it must have a non-void return type. Replace the return type of the function with a string or void if you want to perform a simplistic test. The reasoning is discussed further below in the Critical To Note section)
+      </p>
+      <h3>
+       <span class="mw-headline" id="ReactsToTimeOfDay.h">
+        ReactsToTimeOfDay.h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2013 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"ReactsToTimeOfDay.generated.h"</span><span class="cp"></span>
+
+<span class="cm">/* must have BlueprintType as a specifier to have this interface exposed to blueprints</span>
+<span class="cm">   with this line you can easily add this interface to any blueprint class */</span>
+<span class="n">UINTERFACE</span><span class="p">(</span><span class="n">BlueprintType</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">MYPROJECT_API</span> <span class="nl">UReactsToTimeOfDay</span> <span class="p">:</span> <span class="k">public</span> <span class="n">UInterface</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UINTERFACE_BODY</span><span class="p">()</span>
+<span class="p">};</span>
+
+<span class="k">class</span> <span class="nc">MYPROJECT_API</span> <span class="n">IReactsToTimeOfDay</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_IINTERFACE_BODY</span><span class="p">()</span>
+	
+<span class="k">public</span><span class="o">:</span>
+	<span class="c1">//classes using this interface must implement ReactToHighNoon</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintNativeEvent</span><span class="p">,</span> <span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"MyCategory"</span><span class="p">)</span>
+		<span class="kt">bool</span> <span class="n">ReactToHighNoon</span><span class="p">();</span>
+
+	<span class="c1">//classes using this interface may implement ReactToMidnight</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintImplementableEvent</span><span class="p">,</span> <span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"MyCategory"</span><span class="p">)</span>
+		<span class="kt">bool</span> <span class="n">ReactToMidnight</span><span class="p">();</span>
+
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <i>
+        Note checked for 4.18: GENERATED_UINTERFACE_BODY() and GENERATED_IINTERFACE_BODY(), can be now changed to GENERATED_BODY(), which is an updated version of those two that works for structs, etc, but errors could be a little confusing if you get compile errors since there's no way to differentiate. You could create an automatic interface to see how it looks now using Create C++ Class context menu on the content editor and choosing Interface type.
+       </i>
+      </p>
+      <h3>
+       <span class="mw-headline" id="ReactsToTimeOfDay.cpp">
+        ReactsToTimeOfDay.cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2013 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#include</span> <span class="cpf">"MyProject.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"ReactsToTimeOfDay.h"</span><span class="cp"></span>
+
+<span class="n">UReactsToTimeOfDay</span><span class="o">::</span><span class="n">UReactsToTimeOfDay</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">ObjectInitializer</span><span class="p">)</span>
+<span class="p">{</span>
+	
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Using_An_Interface_With_C.2B.2B_Classes">
+        Using An Interface With C++ Classes
+       </span>
+      </h2>
+      <p>
+       You have to use
+       <b>
+        multiple inheritance
+       </b>
+       , and inherit from the IReactsToTimeOfDay class we created.
+      </p>
+      <p>
+       The first inherited class will be the base class of your actor, anything you want, a ASkeletalMeshActor is used here as an example.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Flower.h">
+        Flower.h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//..other includes may appear here depending on your class</span>
+<span class="cp">#include</span> <span class="cpf">"ReactsToTimeOfDay.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"ASkeletalMeshActor.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">AFlower</span> <span class="o">:</span> <span class="k">public</span> <span class="n">ASkeletalMeshActor</span><span class="p">,</span>  <span class="k">public</span> <span class="n">IReactsToTimeOfDay</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+
+<span class="k">public</span><span class="o">:</span>
+	<span class="cm">/*</span>
+<span class="cm">	... other AFlower properties and functions declared ...</span>
+<span class="cm">	*/</span>
+	
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">BlueprintNativeEvent</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"MyCategory"</span><span class="p">)</span>
+		<span class="kt">bool</span> <span class="n">ReactToHighNoon</span><span class="p">();</span>
+		<span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">ReactToHighNoon_Implementation</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+	
+	
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <i>
+        virtual bool ReactToHighNoon_Implementation() override;
+       </i>
+       This line tells your class that it has a function of this name and signature to inherit from the interface, which is how calls to the interface functions are able to interact with this class.
+      </p>
+      <p>
+       <i>
+        UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "MyCategory")
+       </i>
+       <i>
+        bool ReactToHighNoon();
+       </i>
+       This tells your class that you can both call and override this function in blueprints.
+You need this part as well if you want to be able to override C++ functionality within BP, as BlueprintNativeEvents are intended to be used.
+      </p>
+      <p>
+       Notice that ReactToMidnight(), the BlueprintImplementableEvent, is not defined here. A BlueprintImplementableEvent is
+       <i>
+        declared
+       </i>
+       (its existance) in our interface, but
+       <i>
+        defined
+       </i>
+       (its behaviour) in blueprints only.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Flower.cpp">
+        Flower.cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//other flower.cpp code</span>
+
+<span class="kt">bool</span> <span class="n">AFlower</span><span class="o">::</span><span class="n">ReactToHighNoon_Implementation</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">//Default behaviour for how flower would react at noon</span>
+	<span class="c1">//OpenPetals();</span>
+	<span class="c1">//AcceptBugs();</span>
+	<span class="c1">//...</span>
+
+	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Any number of classes and subclasses can implement this interface using this format
+      </p>
+      <h3>
+       <span class="mw-headline" id="Frog.h">
+        Frog.h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//..other includes may appear here depending on your class</span>
+<span class="cp">#include</span> <span class="cpf">"ReactsToTimeOfDay.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"AFrog.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">AFrog</span> <span class="o">:</span> <span class="k">public</span> <span class="n">ACharacter</span><span class="p">,</span>  <span class="k">public</span> <span class="n">IReactsToTimeOfDay</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+	<span class="cm">/*</span>
+<span class="cm">	... other AFrog properties and functions declared ...</span>
+<span class="cm">	*/</span>
+	
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">BlueprintNativeEvent</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"MyCategory"</span><span class="p">)</span>
+		<span class="kt">bool</span> <span class="n">ReactToHighNoon</span><span class="p">();</span>
+		<span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">ReactToHighNoon_Implementation</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+	
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Frog.cpp">
+        Frog.cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//other Frog code</span>
+
+<span class="kt">bool</span> <span class="n">AFrog</span><span class="o">::</span><span class="n">ReactToHighNoon_Implementation</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">//Default behaviour for how a frog would react at noon</span>
+	<span class="c1">//GoSwim();</span>
+	<span class="c1">//...</span>
+
+	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Determining_If_a_Given_Actor_Has_The_Interface">
+        Determining If a Given Actor Has The Interface
+       </span>
+      </h3>
+      <p>
+       To determine if an actor implements an interface in C++, simply cast your class to the interface, if it returns NULL then the object is not using it. If it is successful, you can use that pointer cast to the interface to call your function, which will execute from the proper class.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Example: somewhere else in code we are trying to see if our object reacts to time of day</span>
+
+<span class="c1">//Some pointer is defined to any class inheriting from UObject</span>
+<span class="n">UObject</span><span class="o">*</span> <span class="n">pointerToAnyUObject</span><span class="p">;</span>
+
+<span class="c1">//....</span>
+
+
+	<span class="n">IReactsToTimeOfDay</span><span class="o">*</span> <span class="n">TheInterface</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">IReactsToTimeOfDay</span><span class="o">&gt;</span><span class="p">(</span><span class="n">pointerToAnyUObject</span><span class="p">);</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">TheInterface</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//Don't call your functions directly, use the 'Execute_' prefix</span>
+		<span class="c1">//the Execute_ReactToHighNoon and Execute_ReactToMidnight are generated on compile</span>
+		<span class="c1">//you may need to compile before these functions will appear</span>
+		<span class="n">TheInterface</span><span class="o">-&gt;</span><span class="n">Execute_ReactToHighNoon</span> <span class="p">(</span><span class="n">pointerToAnyUObject</span><span class="p">);</span>
+		<span class="n">TheInterface</span><span class="o">-&gt;</span><span class="n">Execute_ReactToMidnight</span> <span class="p">(</span><span class="n">pointerToAnyUObject</span><span class="p">);</span>
+	<span class="p">}</span>
+
+
+<span class="c1">//end of code segment</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       <b>
+        Critical To Note
+       </b>
+      </p>
+      <ul>
+       <li>
+        Whenever calling your interface functions in C++, never call the direct functions, always use the one with the Execute_ prefix
+       </li>
+       <li>
+        Although it might seem, that you function must return a value to be properly implemented, this is not true. If your interface doesn't return a value UE4 treats it as an event. At first glance this might seem as an error, but this is not the case. You just have to create the implementation details in the event graph instead of overriding. You still can call the function normally via function, or interface call. --
+      (
+      ) 21:00, 27 December 2017 (UTC)
+       </li>
+       <li>
+        To determine if an actor implements an interface in both C++ and Blueprints use
+       </li>
+      </ul>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">pointerToAnyUObject</span><span class="o">-&gt;</span><span class="n">GetClass</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">ImplementsInterface</span><span class="p">(</span><span class="n">UReactsToTimeOfDay</span><span class="o">::</span><span class="n">StaticClass</span><span class="p">()))</span>
+    <span class="n">IReactsToTimeOfDay</span><span class="o">::</span><span class="n">Execute_ReactToHighNoon</span><span class="p">(</span><span class="n">pointerToAnyUObject</span><span class="p">);</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="The_Magic_Interfaces">
+        The Magic Interfaces
+       </span>
+      </h3>
+      <p>
+       <i>
+        TheInterface-&gt;Execute_ReactToHighNoon()
+       </i>
+      </p>
+      <p>
+       From the above code you can see that the function is being called off of the interface, you never even need to know what type of object you're dealing with, just whether it supports the interface you need.
+      </p>
+      <p>
+       It produces different results depending on the actual class it is, calling the overridden function.
+This is called polymorphism.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Overriding_Behaviour_In_Blueprints">
+        Overriding Behaviour In Blueprints
+       </span>
+      </h2>
+      <p>
+       Once this is all implemented, the classes that you have set up with the interface in C++ will have its interface functions appear with the blueprint's variables and other functions.
+      </p>
+      <p>
+       <img alt="InterfaceBP1.png" class="" height="480" src="../assets/interfaces-in-c/0.png" width="623"/>
+      </p>
+      <p>
+       <img alt="InterfaceBP2.png" class="" height="278" src="../assets/interfaces-in-c/1.png" width="620"/>
+      </p>
+      <p>
+       <br/>
+       Again, your function
+       <b>
+        must
+       </b>
+       have a return value for it to appear in this list, otherwise it is considered an event and cannot be overridden as a function. You can however use the event from the interface in blueprint's event graph and override it that way.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Summary">
+        Summary
+       </span>
+      </h2>
+      <p>
+       You can trigger global events that only certain actors will respond to
+       <br/>
+      </p>
+      <p>
+       Each actor can respond to an event in their own unique way.
+      </p>
+      <p>
+       While it's a little bit more complicated of a setup it helps keeping the code
+       <i>
+        very
+       </i>
+       simple and is much more performance friendly than casting to multiple different types of classes!
+      </p>
+      <p>
+       (
+       )
+       <br/>
+       <br/>
+       <br/>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

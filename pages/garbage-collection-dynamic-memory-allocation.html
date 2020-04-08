@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Garbage Collection &amp; Dynamic Memory Allocation - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Garbage Collection &amp; Dynamic Memory Allocation
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Dynamic_Load_Object_From_Asset_Path">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Dynamic Load Object From Asset Path
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Disclaimer">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Disclaimer
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Dynamic_UObject_Allocation">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Dynamic UObject Allocation
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Preventing_Garbage_Collection">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Preventing Garbage Collection
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#.H">
+            <span class="tocnumber">
+             5.1
+            </span>
+            <span class="toctext">
+             .H
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#.CPP">
+            <span class="tocnumber">
+             5.2
+            </span>
+            <span class="toctext">
+             .CPP
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Implications_of_Not_Using_UPROPERTY.28.29">
+            <span class="tocnumber">
+             5.3
+            </span>
+            <span class="toctext">
+             Implications of Not Using UPROPERTY()
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Using_UObject_Flag_to_Prevent_Garbage_Collection">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Using UObject Flag to Prevent Garbage Collection
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-10">
+         <a href="#Counting_UPROPERTY.28.29_References_To_Any_Object">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Counting UPROPERTY() References To Any Object
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-11">
+         <a href="#Destroying_.2F_Deallocating">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Destroying / Deallocating
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-12">
+           <a href="#Destroying_Objects">
+            <span class="tocnumber">
+             8.1
+            </span>
+            <span class="toctext">
+             Destroying Objects
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-13">
+           <a href="#Destroying_Actors">
+            <span class="tocnumber">
+             8.2
+            </span>
+            <span class="toctext">
+             Destroying Actors
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-14">
+         <a href="#IsValidLowLevel.28.29">
+          <span class="tocnumber">
+           9
+          </span>
+          <span class="toctext">
+           IsValidLowLevel()
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-15">
+         <a href="#Weak_Pointers">
+          <span class="tocnumber">
+           10
+          </span>
+          <span class="toctext">
+           Weak Pointers
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-16">
+         <a href="#">
+          <span class="tocnumber">
+           11
+          </span>
+          <span class="toctext">
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-17">
+         <a href="#Dynamic_Memory_Management">
+          <span class="tocnumber">
+           12
+          </span>
+          <span class="toctext">
+           Dynamic Memory Management
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-18">
+           <a href="#C.2B.2B_operator_new_and_delete">
+            <span class="tocnumber">
+             12.1
+            </span>
+            <span class="toctext">
+             C++ operator new and delete
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-19">
+           <a href="#Every_New_Must_Have_a_Delete">
+            <span class="tocnumber">
+             12.2
+            </span>
+            <span class="toctext">
+             Every New Must Have a Delete
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-20">
+           <a href="#UnrealMemory.h_.2F_FMemory::">
+            <span class="tocnumber">
+             12.3
+            </span>
+            <span class="toctext">
+             UnrealMemory.h / FMemory::
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-21">
+           <a href="#Templated_UE4_C.2B.2B_Malloc_Function">
+            <span class="tocnumber">
+             12.4
+            </span>
+            <span class="toctext">
+             Templated UE4 C++ Malloc Function
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-22">
+             <a href="#Example_Usage">
+              <span class="tocnumber">
+               12.4.1
+              </span>
+              <span class="toctext">
+               Example Usage
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-23">
+           <a href="#UE4_C.2B.2B_Free">
+            <span class="tocnumber">
+             12.5
+            </span>
+            <span class="toctext">
+             UE4 C++ Free
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-24">
+         <a href="#If_You_Use_Malloc_You_Must_Use_Free">
+          <span class="tocnumber">
+           13
+          </span>
+          <span class="toctext">
+           If You Use Malloc You Must Use Free
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-25">
+           <a href="#UE4_new_operator_and_running_out_of_memory">
+            <span class="tocnumber">
+             13.1
+            </span>
+            <span class="toctext">
+             UE4 new operator and running out of memory
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-26">
+         <a href="#How_to_Disable_GC_Verify_To_Avoid_Hitches">
+          <span class="tocnumber">
+           14
+          </span>
+          <span class="toctext">
+           How to Disable GC Verify To Avoid Hitches
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-27">
+         <a href="#Summary">
+          <span class="tocnumber">
+           15
+          </span>
+          <span class="toctext">
+           Summary
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Original Author:
+       </i>
+       (
+       )
+      </p>
+      <p>
+       Please note this tutorial in its present state reflects only my understanding and is not an Epic tutorial, you should examine the UE4 Source to get a more complete understanding of Dynamic Memory Management and the Garbage Collection System.
+      </p>
+      <p>
+       <b>
+        What I post here are the basics to get you started :)
+       </b>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Dynamic_Load_Object_From_Asset_Path">
+        Dynamic Load Object From Asset Path
+       </span>
+      </h2>
+      <p>
+       See my Dynamic Load Object Tutorial!
+      </p>
+      <p>
+       <b>
+       </b>
+      </p>
+      <p>
+       This is how you load objects from an Asset Path, after creating those assets via the Editor!
+      </p>
+      <p>
+       You can use Dynamic Load Object to load a UStaticMesh into your game and then assign it to a Static Mesh Actor that you spawn, for example.
+      </p>
+      <pre> If you are new to C++ / UE4 C++ I recommend you start with my Dynamic Load Object tutorial.
+</pre>
+      <h2>
+       <span class="mw-headline" id="Disclaimer">
+        Disclaimer
+       </span>
+      </h2>
+      <pre> Please note that the rest of this tutorial is an advanced tutorial, 
+ and you should not attempt any of this until you are comfortable with C++ and UE4 C++.
+</pre>
+      <h2>
+       <span class="mw-headline" id="Dynamic_UObject_Allocation">
+        Dynamic UObject Allocation
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//in any class</span>
+<span class="n">UMyObjectClass</span><span class="o">*</span> <span class="n">DynamicObj</span> <span class="o">=</span> <span class="n">NewObject</span><span class="o">&lt;</span><span class="n">UMyObjectClass</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       this = Outer, if you are looking through the UE4 Source.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Preventing_Garbage_Collection">
+        Preventing Garbage Collection
+       </span>
+      </h2>
+      <p>
+       <b>
+        UE4 Garbage Collection only counts references to UObjects that are UPROPERTY()
+       </b>
+      </p>
+      <p>
+       To ensure that your spawned UObjects or objects created with NewObject are not Garbage Collected prematurely, you must have at least 1 reference to the UObject that is UPROPERTY()
+      </p>
+      <h3>
+       <span class="mw-headline" id=".H">
+        .H
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UPROPERTY</span><span class="p">()</span>
+<span class="n">UMyObjectClass</span><span class="o">*</span> <span class="n">MyGCProtectedObj</span><span class="p">;</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id=".CPP">
+        .CPP
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">MyGCProtectedObj</span> <span class="o">=</span> <span class="n">NewObject</span><span class="o">&lt;</span><span class="n">UMyObjectClass</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Implications_of_Not_Using_UPROPERTY.28.29">
+        Implications of Not Using UPROPERTY()
+       </span>
+      </h3>
+      <p>
+       If you do not use UPROPERTY() you can
+       <b>
+        never rely on your dynamic UObject staying in existence!
+       </b>
+       <br/>
+       <b>
+        Make sure you pay close attention to this if you are spawning UObjects or using NewObject())!
+       </b>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Using_UObject_Flag_to_Prevent_Garbage_Collection">
+        Using UObject Flag to Prevent Garbage Collection
+       </span>
+      </h2>
+      <p>
+       You can also prevent an object from being garbage collected by setting the RF_RootSet flag.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">YourObjectInstance</span><span class="o">-&gt;</span><span class="n">AddToRoot</span><span class="p">();</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Counting_UPROPERTY.28.29_References_To_Any_Object">
+        Counting UPROPERTY() References To Any Object
+       </span>
+      </h2>
+      <p>
+       I have created a wiki that shows you how you can find out exactly who is referring to your UObject/AActor at any time!
+      </p>
+      <p>
+       <a class="external text" href="./garbage-collection-count-references-to-any-object.html" rel="nofollow">
+        Garbage Collection ~ Count References To Any Object
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Destroying_.2F_Deallocating">
+        Destroying / Deallocating
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Destroying_Objects">
+        Destroying Objects
+       </span>
+      </h3>
+      <p>
+       You can destroy objects created during runtime using:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">MyObject</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">MyObject</span><span class="o">-&gt;</span><span class="n">IsValidLowLevel</span><span class="p">())</span> <span class="k">return</span><span class="p">;</span>
+
+<span class="n">MyObject</span><span class="o">-&gt;</span><span class="n">ConditionalBeginDestroy</span><span class="p">();</span> <span class="c1">//instantly clears UObject out of memory</span>
+<span class="n">MyObject</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Destroying_Actors">
+        Destroying Actors
+       </span>
+      </h3>
+      <p>
+       You can destroy AActor extending classes using
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">TheCharacter</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">TheCharacter</span><span class="o">-&gt;</span><span class="n">IsValidLowLevel</span><span class="p">())</span> <span class="k">return</span><span class="p">;</span>
+<span class="n">TheCharacter</span><span class="o">-&gt;</span><span class="n">Destroy</span><span class="p">();</span>
+<span class="n">TheCharacter</span><span class="o">-&gt;</span><span class="n">ConditionalBeginDestroy</span><span class="p">();</span> <span class="c1">//essential extra step, in all my testing</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="IsValidLowLevel.28.29">
+        IsValidLowLevel()
+       </span>
+      </h2>
+      <p>
+       You must always check if a UObject or AActor is valid before deferencing the pointer to it!
+      </p>
+      <pre> If you are wanting to use Dynamic Allocation of UObjects, 
+ you really should also use IsValidLowLevel()
+</pre>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Get the Name of my Dynamic Object</span>
+
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">MyGCProtectedObj</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">MyGCProtectedObj</span><span class="o">-&gt;</span><span class="n">IsValidLowLevel</span><span class="p">())</span> <span class="k">return</span><span class="p">;</span>
+<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+
+<span class="c1">//It is safe to dereference now :)</span>
+<span class="n">ClientMessage</span><span class="p">(</span><span class="n">MyGCProtectedObj</span><span class="o">-&gt;</span><span class="n">GetName</span><span class="p">());</span>
+</pre>
+      </div>
+      <p>
+       IsValidLowLevel() checks the actual validity of the created UObject and can prevent crashes where a simple pointer check wouldn't, because the pointer is valid but is pointing to an incomplete / partially deconstructed UObject.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Weak_Pointers">
+        Weak Pointers
+       </span>
+      </h2>
+      <p>
+       Quoting Epic Dev Matt
+      </p>
+      <pre> If you know that the lifetime of an object is managed elsewhere 
+ and you just want to observe it and not contribute any references to it, 
+ you can hold onto a TWeakObjectPtr to that object 
+ which will safely be nulled out when the object is destroyed.
+</pre>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">TWeakObjectPtr</span><span class="o">&lt;</span><span class="n">UStaticMesh</span><span class="o">&gt;</span> <span class="n">MeshThatCouldBeNull</span><span class="p">;</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="">
+       </span>
+      </h2>
+      <h2>
+       <span class="mw-headline" id="Dynamic_Memory_Management">
+        Dynamic Memory Management
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="C.2B.2B_operator_new_and_delete">
+        C++ operator new and delete
+       </span>
+      </h3>
+      <p>
+       Although you can use Malloc and free as I explain below, I personally recommend that you use c++ operator
+       <b>
+        new
+       </b>
+       and
+       <b>
+        delete
+       </b>
+       !
+      </p>
+      <p>
+       This is because C++ operator new
+       <b>
+        properly initializes the vtable
+       </b>
+       (virtual function table) for any virtual functions in your data type, and also
+       <b>
+        calls the constructor
+       </b>
+       for your data type!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>  <span class="n">FYourDataType</span><span class="o">*</span> <span class="n">NewDataPtr</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FYourDataType</span><span class="p">();</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Every_New_Must_Have_a_Delete">
+        Every New Must Have a Delete
+       </span>
+      </h3>
+      <p>
+       Please note you absolutely must
+       <b>
+        pair every use of new with a delete
+       </b>
+       to avoid memory leaks, as you are now doing your own memory management!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>  <span class="k">delete</span> <span class="n">NewDataPtr</span><span class="p">;</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="UnrealMemory.h_.2F_FMemory::">
+        UnrealMemory.h / FMemory::
+       </span>
+      </h3>
+      <p>
+       Use the Memory.h functions!
+      </p>
+      <p>
+       Do not use c++ level memory functions!
+      </p>
+      <pre> UnrealMemory.h contains UE4 C++ versions of C++ memory management functions 
+ that are maintained by Epic as the engine evolves.
+</pre>
+      <h3>
+       <span class="mw-headline" id="Templated_UE4_C.2B.2B_Malloc_Function">
+        Templated UE4 C++ Malloc Function
+       </span>
+      </h3>
+      <p>
+       Here is my very own Templated Malloc function which I used to make my
+       <b>
+       </b>
+      </p>
+      <p>
+       <b>
+       </b>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//The purpose of this template is to ensure no typos when malloc-ing</span>
+<span class="c1">//  types that are related and will pass static cast, but if there's a typo could be allocating</span>
+<span class="c1">//  insufficient amount of space</span>
+
+<span class="c1">//the name is VStruct because I was mallocing USTRUCTS</span>
+
+<span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">DataType</span><span class="o">&gt;</span>
+<span class="n">FORCEINLINE</span> <span class="n">DataType</span><span class="o">*</span> <span class="n">VStructMalloc</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">return</span>	<span class="k">static_cast</span><span class="o">&lt;</span><span class="n">DataType</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">FMemory</span><span class="o">::</span><span class="n">Malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">DataType</span><span class="p">)));</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h4>
+       <span class="mw-headline" id="Example_Usage">
+        Example Usage
+       </span>
+      </h4>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FVictoryUndoDataCreateWall</span><span class="o">*</span> <span class="n">NewUndo</span> <span class="o">=</span> <span class="n">VStructMalloc</span><span class="o">&lt;</span><span class="n">FVictoryUndoDataCreateWall</span><span class="o">&gt;</span><span class="p">();</span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">NewUndo</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="UE4_C.2B.2B_Free">
+        UE4 C++ Free
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FMemory</span><span class="o">::</span><span class="n">Free</span><span class="p">(</span><span class="n">NewUndo</span><span class="p">);</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="If_You_Use_Malloc_You_Must_Use_Free">
+        If You Use Malloc You Must Use Free
+       </span>
+      </h2>
+      <p>
+       Every Malloc must be paired with a Free when you are doing your own Dynamic Memory management, or you will have a Memory Leak.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FMemory</span><span class="o">::</span><span class="n">Malloc</span>
+<span class="n">FMemory</span><span class="o">::</span><span class="n">Free</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="UE4_new_operator_and_running_out_of_memory">
+        UE4 new operator and running out of memory
+       </span>
+      </h3>
+      <p>
+       From AnswerHub answer by Jamie Dale:
+      </p>
+      <blockquote>
+       UObject and UStruct types overload operator new via one of the nested macros within GENERATED_UCLASS_BODY and GENERATED_USTRUCT_BODY. Slate widgets also override this operator, as do modules via REPLACEMENT_OPERATOR_NEW_AND_DELETE.
+       <p>
+        The module level replacement seems to catch all the allocations made within a module, even if you're not allocating a UObject, UStruct, or Slate widget.
+       </p>
+       <p>
+        Ultimately they call through to FMemory::Malloc, which will forward it onto whichever allocator is active (eg, FMallocTBB). If one of these allocators fails to perform an allocation, they will call an implementation specific OutOfMemory function to log a fatal error.
+       </p>
+       <p>
+        I tried allocating 0x7fffffffffffffff bytes. With a debugger attached, it broke into the debugger on the failed allocation; without a debugger attached, the application just quit.
+       </p>
+      </blockquote>
+      <h2>
+       <span class="mw-headline" id="How_to_Disable_GC_Verify_To_Avoid_Hitches">
+        How to Disable GC Verify To Avoid Hitches
+       </span>
+      </h2>
+      <p>
+       If you want to disable GC in release builds to avoid hitches (if you are experiencing them)
+      </p>
+      <p>
+       In the commandline when you run the game:
+      </p>
+      <pre> -NoVerifyGC
+</pre>
+      <p>
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Performance/Options/index.html" rel="nofollow">
+        Epic Documentation
+       </a>
+      </p>
+      <p>
+       <a class="external text" href="https://answers.unrealengine.com/questions/177892/game-hitches-gc-mark-time.html" rel="nofollow">
+        AnswerHub Explanation by Epic Dev Robert
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Summary">
+        Summary
+       </span>
+      </h2>
+      <p>
+       Now you know how to dynamically spawn / create UObjects and also prevent them from getting Garbage Collected!
+      </p>
+      <p>
+       You also know how to prevent your game from crashing constantly.
+      </p>
+      <pre> It's called IsValidLowLevel() !!!
+</pre>
+      <p>
+       You also have a very brief intro into Dynamic Memory Management which I plan to let you explore further by studying UnrealMemory.h directly.
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

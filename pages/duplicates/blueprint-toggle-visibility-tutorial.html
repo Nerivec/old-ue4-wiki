@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Blueprint Toggle Visibility Tutorial - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Blueprint Toggle Visibility Tutorial
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       1. Begin with the
+       <b>
+        Blank With Starter Content
+       </b>
+       project.
+      </p>
+      <p>
+       2. Click on the
+       <b>
+        Blueprints
+       </b>
+       button in the toolbar, and select
+       <b>
+        Class Blueprint: Create...
+       </b>
+       from the dropdown menu.
+      </p>
+      <p>
+       3. Select
+       <b>
+        Actor
+       </b>
+       as the parent class in the window that appears.
+      </p>
+      <p>
+       4. Name your Blueprint, then click
+       <b>
+        OK
+       </b>
+       . In this example, the Blueprint is named
+       <b>
+        CeilingLampBlueprint
+       </b>
+       . By default, the Blueprint's save location will be Game/Blueprints.
+      </p>
+      <p>
+       Your Class Blueprint will open in
+       <b>
+        Components Mode
+       </b>
+       .
+      </p>
+      <p>
+       1. Add a
+       <b>
+        Static Mesh Component
+       </b>
+       in the Components tab.
+      </p>
+      <p>
+       2. Set the
+       <b>
+        Static Mesh
+       </b>
+       to
+       <b>
+        SM_Lamp_Ceiling
+       </b>
+       .
+      </p>
+      <p>
+       3. Add a
+       <b>
+        PointLightComponent
+       </b>
+       in the Components tab.
+      </p>
+      <p>
+       4. Set the
+       <b>
+        PointLightComponent's
+       </b>
+       location to [0, 0, -240].
+      </p>
+      <p>
+       5. In the
+       <b>
+        Details
+       </b>
+       panel, uncheck
+       <b>
+        Visible
+       </b>
+       under
+       <b>
+        Rendering
+       </b>
+       to turn the light off.
+      </p>
+      <p>
+       6. Add a BoxComponent in the Components tab.
+      </p>
+      <p>
+       7. Set the BoxComponent's location to [0, 0, -200] and scale to [5, 5, 7].
+      </p>
+      <p>
+       8. In the Details panel for Box1, find the
+       <b>
+        Add Event
+       </b>
+       dropdown menu and select
+       <b>
+        Add OnComponentBeginOverlap
+       </b>
+       .
+      </p>
+      <p>
+       9. Find the
+       <b>
+        My Blueprint
+       </b>
+       panel.
+      </p>
+      <p>
+       10. Click and drag from
+       <b>
+        PointLight1
+       </b>
+       in the
+       <b>
+        My Blueprint
+       </b>
+       panel into the graph.
+      </p>
+      <p>
+       11. Select
+       <b>
+        Get
+       </b>
+       to get a reference to
+       <b>
+        PointLight1
+       </b>
+       .
+      </p>
+      <p>
+       12. Click and drag from the blue pin on the
+       <b>
+        PointLight1
+       </b>
+       reference node into an empty area of the graph to summon the context menu.
+      </p>
+      <p>
+       13. Search for Visibility in the context menu, and select Toggle Visibility.
+      </p>
+      <p>
+       14. Now we need to connect the
+       <b>
+        OnComponentBeginOverlap
+       </b>
+       node to the
+       <b>
+        Toggle Visibility
+       </b>
+       node, so that the event execution will cause the
+       <b>
+        Toggle Visibility
+       </b>
+       node to execute. Click on the output pin of
+       <b>
+        OnComponentBeginOverlap
+       </b>
+       and drag a wire to the input execution pin of
+       <b>
+        Toggle Visibility
+       </b>
+       .
+      </p>
+      <p>
+       15. Select
+       <b>
+        Box1
+       </b>
+       in the
+       <b>
+        My Blueprint
+       </b>
+       tab.
+      </p>
+      <p>
+       16. Right-click in the graph, and expand
+       <b>
+        Add Event
+       </b>
+       for
+       <b>
+        Box1 &gt; Collision
+       </b>
+       in the context menu.
+      </p>
+      <p>
+       17. Select
+       <b>
+        Add On Component End Overlap
+       </b>
+       .
+      </p>
+      <p>
+       18. Click on the output pin of
+       <b>
+        OnComponentEndOverlap
+       </b>
+       and drag a wire to the input execution pin of
+       <b>
+        Toggle Visibility
+       </b>
+       . You may want to click on the
+       <b>
+        On Actor End Overlap
+       </b>
+       and drag it within the graph so it is in a better location.
+      </p>
+      <p>
+       19. Return to the
+       <b>
+        Level Editor
+       </b>
+       , and open the
+       <b>
+        Blueprints
+       </b>
+       folder in the
+       <b>
+        Content Browser
+       </b>
+       .
+      </p>
+      <p>
+       20. Drag and drop
+       <b>
+        CeilingLampBlueprint
+       </b>
+       from the
+       <b>
+        Content Browser
+       </b>
+       into the level to place an instance of your ceiling light.
+      </p>
+      <p>
+       21.
+       <b>
+        Play In Editor
+       </b>
+       to test your new Blueprint logic!
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

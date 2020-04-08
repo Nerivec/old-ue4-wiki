@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   VR Console Commands - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    VR Console Commands
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Commands">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Commands
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#General_VR_Commands">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             General VR Commands
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Rendering_VR_Commands">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             Rendering VR Commands
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Oculus_VR_Commands">
+            <span class="tocnumber">
+             2.3
+            </span>
+            <span class="toctext">
+             Oculus VR Commands
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Gear_VR_Commands">
+            <span class="tocnumber">
+             2.4
+            </span>
+            <span class="toctext">
+             Gear VR Commands
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Steam_VR_Commands">
+            <span class="tocnumber">
+             2.5
+            </span>
+            <span class="toctext">
+             Steam VR Commands
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Google_VR_Commands">
+            <span class="tocnumber">
+             2.6
+            </span>
+            <span class="toctext">
+             Google VR Commands
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       Unreal Engine 4 has various console commands that effect and interact with various VR specific functionality.
+       <br/>
+       Pre 4.16 these commands followed little structure however now they all start with the "vr." prefix making them easier to document and use.
+       <br/>
+       Although descriptions can be found in the engine I found it easier to have all the commands along with their description in one place.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Commands">
+        Commands
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="General_VR_Commands">
+        General VR Commands
+       </span>
+      </h3>
+      <table class="wikitable" width="300">
+       <tbody>
+        <tr>
+         <th>
+          Command
+         </th>
+         <th>
+          Description
+         </th>
+        </tr>
+        <tr>
+         <td>
+          vr.bEnableHMD
+         </td>
+         <td>
+          Enables or disables the HMD device. Use 1, True, or Yes to enable, 0, False or No to disable.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.bEnableStereo
+         </td>
+         <td>
+          Enables or disables the stereo rendering. Use 1, True, or Yes to enable, 0, False or No to disable.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.HMDVersion
+         </td>
+         <td>
+          Prints version information for the current HMD device.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.WorldToMetersScale
+         </td>
+         <td>
+          Get or set the current world to meters scale.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.HiddenAreaMask
+         </td>
+         <td>
+          Enable or disable hidden area mask 0: disabled 1: enabled
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.Debug.bEnableDevOverrides
+         </td>
+         <td>
+          Enables or disables console commands that modify various developer-only settings.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.StereoLayers.bMixLayerPriorities
+         </td>
+         <td>
+          By default, Face-Locked Stereo Layers are always rendered on top of any other layer position types. Set this to a non-zero value to disable this behavior (not supported on all platforms.)
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.Debug.VisualizeTrackingSensors
+         </td>
+         <td>
+          Show or hide the location and coverage area of the tracking sensors Use 1, True, or Yes to enable, 0, False or No to disable.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.TrackingOrigin
+         </td>
+         <td>
+          Floor or 0 - tracking origin is at the floor, Eye or 1 - tracking origin is at the eye level.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.SpectatorScreenMode (vr.MirrorMode pre 4.17)
+         </td>
+         <td>
+          Changes the look of the spectator if supported by the HMD plugin. 0: disable mirroring\n 1: single eye 2: stereo pair. Numbers larger than 2 may be possible and specify HMD plugin-specific variations.Negative values are treated the same as 0.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.HeadTracking.ResetPosition
+         </td>
+         <td>
+          Reset the position of the head mounted display.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.HeadTracking.ResetOrientation
+         </td>
+         <td>
+          Reset the rotation of the head mounted display.\nPass in an optional yaw for the new rotation in degrees.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.HeadTracking.Reset
+         </td>
+         <td>
+          Reset the rotation and position of the head mounted display. Pass in an optional yaw for the new rotation in degrees.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.HeadTracking.Status
+         </td>
+         <td>
+          Reports the current status of the head tracking.
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <h3>
+       <span class="mw-headline" id="Rendering_VR_Commands">
+        Rendering VR Commands
+       </span>
+      </h3>
+      <table class="wikitable" width="300">
+       <tbody>
+        <tr>
+         <th>
+          Command
+         </th>
+         <th>
+          Description
+         </th>
+        </tr>
+        <tr>
+         <td>
+          vr.InstancedStereo
+         </td>
+         <td>
+          Enable instanced stereo rendering (only available for D3D SM5 or PS4).
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.MultiView
+         </td>
+         <td>
+          Enable multi-view for instanced stereo rendering (only available on the PS4).
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.MobileMultiView
+         </td>
+         <td>
+          Enable mobile multi-view rendering (only available on some GearVR Android devices using OpenGL ES 2.0).
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.MobileMultiView.Direct
+         </td>
+         <td>
+          Enable direct mobile multi-view rendering (only available on multi-view enabled GearVR Android devices).
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.MonoscopicFarField
+         </td>
+         <td>
+          Enable monoscopic far field rendering (only available for mobile).
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.AllowMotionBlurInVR
+         </td>
+         <td>
+          For projects with motion blur enabled, this allows motion blur to be enabled even while in VR.
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <h3>
+       <span class="mw-headline" id="Oculus_VR_Commands">
+        Oculus VR Commands
+       </span>
+      </h3>
+      <table class="wikitable" width="300">
+       <tbody>
+        <tr>
+         <th>
+          Command
+         </th>
+         <th>
+          Description
+         </th>
+        </tr>
+        <tr>
+         <td>
+          vr.oculus.PixelDensity
+         </td>
+         <td>
+          Pixel density sets the render target texture size as a factor of recommended texture size. Since this may be slightly larger than the native resolution, setting PixelDensity to 1.0 is usually not the same as setting r.ScreenPercentage to 100
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.oculus.PixelDensity.min
+         </td>
+         <td>
+          Minimum pixel density when adaptive pixel density is enabled.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.oculus.PixelDensity.max
+         </td>
+         <td>
+          Maximum pixel density when adaptive pixel density is enabled.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.oculus.PixelDensity.adaptive
+         </td>
+         <td>
+          Enable or disable adaptive pixel density.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.oculus.bHQBuffer
+         </td>
+         <td>
+          Enable or disable using floating point texture format for the eye layer.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.oculus.bHQDistortion
+         </td>
+         <td>
+          Enable or disable using multiple mipmap levels for the eye layer.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.oculus.Debug.Property
+         </td>
+         <td>
+          Read or write an OVR property.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.oculus.Debug.bShowStats
+         </td>
+         <td>
+          Enable or disable rendering of stats. (Such as pixel density and latency.)
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.oculus.Debug.bDrawGrid
+         </td>
+         <td>
+          Enable or disable rendering of debug grid.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.oculus.Debug.CaptureCubemap
+         </td>
+         <td>
+          Captures a cubemap for Oculus Home. Optional arguments (default is zero for all numeric arguments):
+          <p>
+           xoff=&lt;float&gt; -- X axis offset from the origin
+           <br/>
+           yoff=&lt;float&gt; -- Y axis offset
+           <br/>
+           zoff=&lt;float&gt; -- Z axis offset
+           <br/>
+           yaw=&lt;float&gt;  -- the direction to look into (roll and pitch is fixed to zero)
+           <br/>
+           gearvr -- Generate a GearVR format cubemap (height of the captured cubemap will be 1024 instead of 2048 pixels)
+          </p>
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.oculus.bUpdateOnRenderThread
+         </td>
+         <td>
+          Enables or disables updating on the render thread.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.oculus.bUpdateOnGameThread
+         </td>
+         <td>
+          Not available in UE_BUILD_SHIPPING builds. Enables or disables updating on the game thread.&lt;/span&gt;
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.oculus.Debug.PositionOffset
+         </td>
+         <td>
+          Not available in UE_BUILD_SHIPPING builds. Add an offset tp the current position.&lt;/span&gt;
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.oculus.Debug.EnforceHeadTracking
+         </td>
+         <td>
+          Not available in UE_BUILD_SHIPPING builds. Set to on to enforce head tracking even when not in stereo mode.&lt;/span&gt;
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.oculus.Debug.Show
+         </td>
+         <td>
+          Shows the current value of various stereo rendering params. (Such as IPD and clipping planes.)
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.oculus.Debug.Reset
+         </td>
+         <td>
+          Resets various stereo rendering params back to the original setting.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.oculus.Debug.IPD
+         </td>
+         <td>
+          Shows or changes the current interpupillary distance in meters.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.oculus.Debug.FCP
+         </td>
+         <td>
+          Shows or overrides the current far clipping plane.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.oculus.Debug.NCP
+         </td>
+         <td>
+          Shows or overrides the current near clipping plane.
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <h3>
+       <span class="mw-headline" id="Gear_VR_Commands">
+        Gear VR Commands
+       </span>
+      </h3>
+      <table class="wikitable" width="300">
+       <tbody>
+        <tr>
+         <th>
+          Command
+         </th>
+         <th>
+          Description
+         </th>
+        </tr>
+        <tr>
+         <td>
+          vr.oculus.EnableMSAA
+         </td>
+         <td>
+          Enable 4xMSAA when rendering on GearVR.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.oculus.EnableQueueAhead
+         </td>
+         <td>
+          Enable full-frame queue ahead for rendering on GearVR
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.oculus.HandleBackButton
+         </td>
+         <td>
+          GearVR plugin will handle the 'back' button
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.oculus.Dev.HFOV
+         </td>
+         <td>
+          The current horizontal field-of-view setting. (vr.Debug.bEnableDevOverides needs to be &gt; 0.)
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.oculus.Dev.VFOV
+         </td>
+         <td>
+          The current vertical field-of-view setting. (vr.Debug.bEnableDevOverides needs to be &gt; 0.)
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.oculus.ShowGlobalMenu
+         </td>
+         <td>
+          Opens the global menu.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.oculus.ShowQuitMenu
+         </td>
+         <td>
+          Opens the quit menu.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.oculus.Debug.ToggleLoadingIconMode
+         </td>
+         <td>
+          Toggles loading icon mode.
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <h3>
+       <span class="mw-headline" id="Steam_VR_Commands">
+        Steam VR Commands
+       </span>
+      </h3>
+      <table class="wikitable" width="300">
+       <tbody>
+        <tr>
+         <th>
+          Command
+         </th>
+         <th>
+          Description
+         </th>
+        </tr>
+        <tr>
+         <td>
+          vr.SteamVR.UsePostPresentHandoff
+         </td>
+         <td>
+          Whether or not to use PostPresentHandoff.  If true, more GPU time will be available, but this relies on no SceneCaptureComponent2D or WidgetComponents being active in the scene.  Otherwise, it will break async reprojection.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.SwapMotionControllerInput
+         </td>
+         <td>
+          This command allows you to swap the button / axis input handedness for the input controller, for debugging purposes.
+          <p>
+           0: don't swap (default)
+           <br/>
+           1: swap left and right buttons
+          </p>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <h3>
+       <span class="mw-headline" id="Google_VR_Commands">
+        Google VR Commands
+       </span>
+      </h3>
+      <table class="wikitable" width="300">
+       <tbody>
+        <tr>
+         <th>
+          Command
+         </th>
+         <th>
+          Description
+         </th>
+        </tr>
+        <tr>
+         <td>
+          vr.googlevr.ViewerPreview
+         </td>
+         <td>
+          Change which viewer data is used for VR previewing.
+          <p>
+           0: No viewer or distortion
+           <br/>
+           1: Google Cardboard 1.0
+           <br/>
+           2: Google Cardboard 2.0
+           <br/>
+           3: ViewMaster (default)
+           <br/>
+           4: SnailVR
+           <br/>
+           5: RiTech 2.0
+           <br/>
+           6: Go4D C1-Glass
+          </p>
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.googlevr.PreviewSensitivity
+         </td>
+         <td>
+          Change preview sensitivity of Yaw and Pitch multiplier. Values are clamped between 0.1 and 10.0&lt;/span&gt;
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.googlevr.DistortionCorrection.bEnable
+         </td>
+         <td>
+          Enable or disable lens distortion correction.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.googlevr.DistortionCorrection.Method
+         </td>
+         <td>
+          Set the lens distortion method.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.googlevr.RenderTargetSize
+         </td>
+         <td>
+          Set or reset render target size.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.googlevr.NeckModelScale
+         </td>
+         <td>
+          Set the neck model scale.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.googlevr.DistortionMesh
+         </td>
+         <td>
+          Set the size of the distortion mesh.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.googlevr.bShowSplash
+         </td>
+         <td>
+          Show or hide the splash screen.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.googlevr.SplashScreenDistance
+         </td>
+         <td>
+          Set the distance to the splash screen.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.googlevr.SplashScreenRenderScale
+         </td>
+         <td>
+          et the scale at which the splash screen is rendered.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          vr.googlevr.bEnableSustainedPerformanceMode
+         </td>
+         <td>
+          Enable or Disable Sustained Performance Mode.
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       Original Author:
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

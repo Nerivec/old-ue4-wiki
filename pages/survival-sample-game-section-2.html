@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Survival Sample Game: Section 2 - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Survival Sample Game: Section 2
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <p>
+       Be sure to first read the
+       for information on the project series, recommended documentation and a section overview! The best place for questions and feedback is the
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?63678-Upcoming-C-Gameplay-Example-Series-Making-a-Survival-Game" rel="nofollow">
+        <b>
+         official forum thread
+        </b>
+       </a>
+       , it is monitored (the community is often kind enough to help out too!) and will try to answer any question as quickly as possible.
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Introduction">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Introduction
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Additional_concepts_introduced_in_code">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Additional concepts introduced in code
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Concepts">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Concepts
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Manipulating_materials_in_C.2B.2B">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Manipulating materials in C++
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Driving_FX_with_Physical_Materials">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             Driving FX with Physical Materials
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Attaching.2FDetaching_Actors_using_Sockets">
+            <span class="tocnumber">
+             2.3
+            </span>
+            <span class="toctext">
+             Attaching/Detaching Actors using Sockets
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Dealing_.26_handling_damage">
+            <span class="tocnumber">
+             2.4
+            </span>
+            <span class="toctext">
+             Dealing &amp; handling damage
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Closing">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Closing
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Introduction">
+        Introduction
+       </span>
+      </h1>
+      <p>
+       This section adds weapon support for the character, a flashlight, UT-style inventory with on-character visual representation of the carried items and deals with damage, death and respawns for players.
+      </p>
+      <p>
+       Please consider this documentation a reference guide to get additional information on topics covered in the sample game's source itself. If you are missing a topic or think a specific topic requires more details then feel free to leave your feedback on the
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?66263-Announcing-Section-2-for-Survival-Game" rel="nofollow">
+        <b>
+         section-specific forum thread
+        </b>
+       </a>
+       !
+      </p>
+      <p>
+       <img alt="Section2 overview02.jpg" class="" height="582" src="../assets/survival-sample-game-section-2/0.jpg" width="1266"/>
+      </p>
+      <p>
+       <img alt="Flashlight 01..jpg" class="" height="685" src="../assets/survival-sample-game-section-2/1.jpg" width="1470"/>
+      </p>
+      <p>
+       View &amp; download
+       <a class="external text" href="https://github.com/tomlooman/EpicSurvivalGameSeries" rel="nofollow">
+        <b>
+         latest project source
+        </b>
+       </a>
+       on GitHub
+      </p>
+      <h2>
+       <span class="mw-headline" id="Additional_concepts_introduced_in_code">
+        Additional concepts introduced in code
+       </span>
+      </h2>
+      <ul>
+       <li>
+        Arrays (See: SCharacter.h - Inventory)
+       </li>
+       <li>
+        Structs (See: STypes.h - FTakeHitInfo)
+       </li>
+       <li>
+        Enums (See: STypes.h - EInventorySlot)
+       </li>
+      </ul>
+      <p>
+       &lt;youtube&gt;
+       <a class="external free" href="https://www.youtube.com/watch?v=UHPAmfHlYOA" rel="nofollow">
+        https://www.youtube.com/watch?v=UHPAmfHlYOA
+       </a>
+      </p>
+      <h1>
+       <span class="mw-headline" id="Concepts">
+        Concepts
+       </span>
+      </h1>
+      <h2>
+       <span class="mw-headline" id="Manipulating_materials_in_C.2B.2B">
+        Manipulating materials in C++
+       </span>
+      </h2>
+      <p>
+       <img alt="Section2 materialinstances.jpg" class="" height="636" src="../assets/survival-sample-game-section-2/2.jpg" width="1568"/>
+      </p>
+      <p>
+       To alter a single object's material during gameplay we have to create a
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Rendering/Materials/MaterialInstances/index.html#materialinstancedynamic" rel="nofollow">
+        MaterialInstanceDynamic
+       </a>
+       . This gives us a unique instance to change parameters like the flashlight brightness.
+      </p>
+      <p>
+       First we create the instance. Any new instance must be applied to the mesh, CreateAndSetMaterialInstanceDynamic takes care of both. The first parameter for the material index is usually 0 - your StaticMesh may have more than one material applied using multiple indices (see the Weapons/SK_Rifle mesh for an example)
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">ASFlashlight</span><span class="o">::</span><span class="n">BeginPlay</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">BeginPlay</span><span class="p">();</span>
+
+	<span class="cm">/* Create an instance unique to this actor instance to manipulate emissive intensity */</span>
+	<span class="n">USkeletalMeshComponent</span><span class="o">*</span> <span class="n">MeshComp</span> <span class="o">=</span> <span class="n">GetWeaponMesh</span><span class="p">();</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">MeshComp</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">MatDynamic</span> <span class="o">=</span> <span class="n">MeshComp</span><span class="o">-&gt;</span><span class="n">CreateAndSetMaterialInstanceDynamic</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       If you didn't create this MaterialInstanceDynamic, changing a parameter on a material, would change it on all meshes that use the same material since by default instances of the same materials are shared between meshes.
+      </p>
+      <p>
+       Now that we have a material to play around with, we can update the brightness of our flashlight like so:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">ASFlashlight</span><span class="o">::</span><span class="n">UpdateLight</span><span class="p">(</span><span class="kt">bool</span> <span class="n">Enabled</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="cm">/* Update material parameter */</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">MatDynamic</span><span class="p">)</span>
+	<span class="p">{</span>		
+		<span class="cm">/* " Enabled ? MaxEmissiveIntensity : 0.0f " picks between first or second value based on "Enabled" boolean */</span>
+		<span class="n">MatDynamic</span><span class="o">-&gt;</span><span class="n">SetScalarParameterValue</span><span class="p">(</span><span class="n">EmissiveParamName</span><span class="p">,</span> <span class="n">Enabled</span> <span class="o">?</span> <span class="nl">MaxEmissiveIntensity</span> <span class="p">:</span> <span class="mf">0.0f</span><span class="p">);</span>	
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       The EmissiveParamName contains the FName of the parameter, in this case "Brightness".
+      </p>
+      <p>
+       The second parameter field may look strange to you, here is a code snippet to explain what it does:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/* This line is a shorthand for the if-statement below */</span>
+<span class="n">Enabled</span> <span class="o">?</span> <span class="nl">MaxEmissiveIntensity</span> <span class="p">:</span> <span class="mf">0.0f</span>
+
+<span class="kt">float</span> <span class="n">Intensity</span><span class="p">;</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">Enabled</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Intensity</span> <span class="o">=</span> <span class="n">MaxEmissiveIntensity</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">else</span>
+<span class="p">{</span>
+    <span class="n">Intensity</span> <span class="o">=</span> <span class="mf">0.0f</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Driving_FX_with_Physical_Materials">
+        Driving FX with Physical Materials
+       </span>
+      </h2>
+      <p>
+       <img alt="Section2 DrivingFXphysmats.jpg" class="" height="412" src="../assets/survival-sample-game-section-2/3.jpg" width="1037"/>
+      </p>
+      <p>
+       To spawn particle FX based on the surface we hit, or play a sound based on the surface we standing on we need to know the PhysicalMaterial of a StaticMesh or SkeletalMesh. For StaticMesh this is specified in the shader material in the MaterialEditor, for SkeletalMeshes it's set using the
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Physics/PhAT/index.html" rel="nofollow">
+        PhatTool
+       </a>
+       on the PhysicsAsset assigned to the SkeletalMesh.
+      </p>
+      <p>
+       You need to define your own custom Physics Material first. (See: SurvivalGame.h) Default already exists, but for convenience we assign a C++ definition to it. Don't forget to add them to DefaultEngine.ini or the engine won't recognize the types (the C++ code below is only for convenience, the .ini file it where the actual defining is done)
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/** when you modify this, please note that this information can be saved with instances</span>
+<span class="cm">* also DefaultEngine.ini [/Script/Engine.PhysicsSettings] should match with this list **/</span>
+<span class="cp">#define SURFACE_DEFAULT				SurfaceType_Default</span>
+<span class="cp">#define SURFACE_FLESH				SurfaceType1</span>
+</pre>
+      </div>
+      <p>
+       We assign these types to PhysicalMaterial assets. (See: '/Base/PhysMat_Flesh') And the assets are then applied to either (shader) materials or PhysicsAsset (See: '/AnimStarterPack/Character/HeroTPP_Physics')
+      </p>
+      <p>
+       Now there is one step remaining, our code needs to check the type we hit, and spawn a particle effect, or play a sound based on what we just hit. (See: SImpactEffect.cpp)
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">ASImpactEffect</span><span class="o">::</span><span class="n">PostInitializeComponents</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">PostInitializeComponents</span><span class="p">();</span>
+
+	<span class="cm">/* Figure out what we hit (SurfaceHit is setting during actor instantiation in weapon class) */</span>
+	<span class="n">UPhysicalMaterial</span><span class="o">*</span> <span class="n">HitPhysMat</span> <span class="o">=</span> <span class="n">SurfaceHit</span><span class="p">.</span><span class="n">PhysMaterial</span><span class="p">.</span><span class="n">Get</span><span class="p">();</span>
+	<span class="n">EPhysicalSurface</span> <span class="n">HitSurfaceType</span> <span class="o">=</span> <span class="n">UPhysicalMaterial</span><span class="o">::</span><span class="n">DetermineSurfaceType</span><span class="p">(</span><span class="n">HitPhysMat</span><span class="p">);</span>
+
+	<span class="n">UParticleSystem</span><span class="o">*</span> <span class="n">ImpactFX</span> <span class="o">=</span> <span class="n">GetImpactFX</span><span class="p">(</span><span class="n">HitSurfaceType</span><span class="p">);</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">ImpactFX</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">UGameplayStatics</span><span class="o">::</span><span class="n">SpawnEmitterAtLocation</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">ImpactFX</span><span class="p">,</span> <span class="n">GetActorLocation</span><span class="p">(),</span> <span class="n">GetActorRotation</span><span class="p">());</span>
+	<span class="p">}</span>
+
+	<span class="n">USoundCue</span><span class="o">*</span> <span class="n">ImpactSound</span> <span class="o">=</span> <span class="n">GetImpactSound</span><span class="p">(</span><span class="n">HitSurfaceType</span><span class="p">);</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">ImpactSound</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">UGameplayStatics</span><span class="o">::</span><span class="n">PlaySoundAtLocation</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">ImpactSound</span><span class="p">,</span> <span class="n">GetActorLocation</span><span class="p">());</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       The SurfaceHit variable is applied by SWeaponInstant.cpp.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">ASWeaponInstant</span><span class="o">::</span><span class="n">SpawnImpactEffects</span><span class="p">(</span><span class="k">const</span> <span class="n">FHitResult</span><span class="o">&amp;</span> <span class="n">Impact</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">ImpactTemplate</span> <span class="o">&amp;&amp;</span> <span class="n">Impact</span><span class="p">.</span><span class="n">bBlockingHit</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="cm">/* This function prepares an actor to spawn, but requires another call to finish the actual spawn progress. This allows manipulation of properties before entering into the level */</span>
+		<span class="n">ASImpactEffect</span><span class="o">*</span> <span class="n">EffectActor</span> <span class="o">=</span> <span class="n">GetWorld</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SpawnActorDeferred</span><span class="o">&lt;</span><span class="n">ASImpactEffect</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ImpactTemplate</span><span class="p">,</span> <span class="n">Impact</span><span class="p">.</span><span class="n">ImpactPoint</span><span class="p">,</span> <span class="n">Impact</span><span class="p">.</span><span class="n">ImpactPoint</span><span class="p">.</span><span class="n">Rotation</span><span class="p">());</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">EffectActor</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">EffectActor</span><span class="o">-&gt;</span><span class="n">SurfaceHit</span> <span class="o">=</span> <span class="n">Impact</span><span class="p">;</span>
+			<span class="n">UGameplayStatics</span><span class="o">::</span><span class="n">FinishSpawningActor</span><span class="p">(</span><span class="n">EffectActor</span><span class="p">,</span> <span class="n">FTransform</span><span class="p">(</span><span class="n">Impact</span><span class="p">.</span><span class="n">ImpactNormal</span><span class="p">.</span><span class="n">Rotation</span><span class="p">(),</span> <span class="n">Impact</span><span class="p">.</span><span class="n">ImpactPoint</span><span class="p">));</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       We retrieved this surface information by performing a ray-trace with bReturnPhysicalMaterial = true. (See: SWeapon.cpp)
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FHitResult</span> <span class="n">ASWeapon</span><span class="o">::</span><span class="n">WeaponTrace</span><span class="p">(</span><span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">TraceFrom</span><span class="p">,</span> <span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">TraceTo</span><span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="n">FCollisionQueryParams</span> <span class="n">TraceParams</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"WeaponTrace"</span><span class="p">),</span> <span class="nb">true</span><span class="p">,</span> <span class="n">Instigator</span><span class="p">);</span>
+	<span class="n">TraceParams</span><span class="p">.</span><span class="n">bTraceAsyncScene</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+	<span class="n">TraceParams</span><span class="p">.</span><span class="n">bReturnPhysicalMaterial</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+
+	<span class="n">FHitResult</span> <span class="nf">Hit</span><span class="p">(</span><span class="n">ForceInit</span><span class="p">);</span>
+	<span class="n">GetWorld</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">LineTraceSingle</span><span class="p">(</span><span class="n">Hit</span><span class="p">,</span> <span class="n">TraceFrom</span><span class="p">,</span> <span class="n">TraceTo</span><span class="p">,</span> <span class="n">COLLISION_WEAPON</span><span class="p">,</span> <span class="n">TraceParams</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="n">Hit</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Attaching.2FDetaching_Actors_using_Sockets">
+        Attaching/Detaching Actors using Sockets
+       </span>
+      </h2>
+      <p>
+       <img alt="Section2 attachedmeshsockets.jpg" class="" height="666" src="../assets/survival-sample-game-section-2/4.jpg" width="1280"/>
+      </p>
+      <p>
+       Sockets are great for creating your own attach points on skeletal meshes. To use a socket in C++ you must know the name of the socket as specified through the Skeletal Mesh Editor. See the
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Content/Types/SkeletalMeshes/Sockets/index.html" rel="nofollow">
+        Docs on how to setup and name Sockets
+       </a>
+       .
+      </p>
+      <p>
+       In this project we are using it for a couple of things. To attach a weapon to our character's hands, back and pelvis and on the weapon mesh to define the muzzle location. You can use it for many other things too, such as spawning particle FX on your jetpack.
+      </p>
+      <p>
+       In the code snippet below we retrieve an FName for the slot we wish to attach our weapon to. The AttachTo() function doesn't require you to specify a Bone or Socket, if you omit this value, it will use the root (or pivot) instead.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">ASWeapon</span><span class="o">::</span><span class="n">AttachMeshToPawn</span><span class="p">(</span><span class="n">EInventorySlot</span> <span class="n">Slot</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">MyPawn</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">// Remove and hide</span>
+		<span class="n">DetachMeshFromPawn</span><span class="p">();</span>
+
+		<span class="n">USkeletalMeshComponent</span><span class="o">*</span> <span class="n">PawnMesh</span> <span class="o">=</span> <span class="n">MyPawn</span><span class="o">-&gt;</span><span class="n">GetMesh</span><span class="p">();</span>
+		<span class="n">FName</span> <span class="n">AttachPoint</span> <span class="o">=</span> <span class="n">MyPawn</span><span class="o">-&gt;</span><span class="n">GetInventoryAttachPoint</span><span class="p">(</span><span class="n">Slot</span><span class="p">);</span>
+		<span class="n">Mesh</span><span class="o">-&gt;</span><span class="n">SetHiddenInGame</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
+		<span class="n">Mesh</span><span class="o">-&gt;</span><span class="n">AttachTo</span><span class="p">(</span><span class="n">PawnMesh</span><span class="p">,</span> <span class="n">AttachPoint</span><span class="p">,</span> <span class="n">EAttachLocation</span><span class="o">::</span><span class="n">SnapToTarget</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Detaching is even simpler:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">ASWeapon</span><span class="o">::</span><span class="n">DetachMeshFromPawn</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Mesh</span><span class="o">-&gt;</span><span class="n">DetachFromParent</span><span class="p">();</span>
+	<span class="n">Mesh</span><span class="o">-&gt;</span><span class="n">SetHiddenInGame</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Dealing_.26_handling_damage">
+        Dealing &amp; handling damage
+       </span>
+      </h2>
+      <p>
+       <img alt="Section2 dealingdamage.jpg" class="" height="452" src="../assets/survival-sample-game-section-2/5.jpg" width="1134"/>
+      </p>
+      <p>
+       The engine already have a base framework to support damage. If you're new to Unreal Engine, check out the blog post on
+       <a class="external text" href="https://www.unrealengine.com/blog/damage-in-ue4" rel="nofollow">
+        Damage in UE4
+       </a>
+       .
+      </p>
+      <p>
+       An example on dealing damage to an Actor is available in SWeaponInstant.cpp (Note that Actor already includes the function TakeDamage() ) We override and extend this function in our SCharacter.cpp to update Hitpoints and handle death.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">ASWeaponInstant</span><span class="o">::</span><span class="n">DealDamage</span><span class="p">(</span><span class="k">const</span> <span class="n">FHitResult</span><span class="o">&amp;</span> <span class="n">Impact</span><span class="p">,</span> <span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">ShootDir</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">FPointDamageEvent</span> <span class="n">PointDmg</span><span class="p">;</span>
+	<span class="n">PointDmg</span><span class="p">.</span><span class="n">DamageTypeClass</span> <span class="o">=</span> <span class="n">DamageType</span><span class="p">;</span>
+	<span class="n">PointDmg</span><span class="p">.</span><span class="n">HitInfo</span> <span class="o">=</span> <span class="n">Impact</span><span class="p">;</span>
+	<span class="n">PointDmg</span><span class="p">.</span><span class="n">ShotDirection</span> <span class="o">=</span> <span class="n">ShootDir</span><span class="p">;</span>
+	<span class="n">PointDmg</span><span class="p">.</span><span class="n">Damage</span> <span class="o">=</span> <span class="n">HitDamage</span><span class="p">;</span>
+
+	<span class="n">Impact</span><span class="p">.</span><span class="n">GetActor</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">TakeDamage</span><span class="p">(</span><span class="n">PointDmg</span><span class="p">.</span><span class="n">Damage</span><span class="p">,</span> <span class="n">PointDmg</span><span class="p">,</span> <span class="n">MyPawn</span><span class="o">-&gt;</span><span class="n">Controller</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Another way to deal damage is through UGameplayStatics::ApplyRadialDamage (variations exist like ApplyPointDamage and ApplyRadialDamageWithFalloff) The SBombActor uses it to apply damage to anything within the explosion radius.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">ASBombActor</span><span class="o">::</span><span class="n">OnExplode</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">bExploded</span><span class="p">)</span>
+		<span class="k">return</span><span class="p">;</span>
+
+	<span class="c1">// Notify the clients to simulate the explosion</span>
+	<span class="n">bExploded</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+	
+	<span class="c1">// Run on server side</span>
+	<span class="n">SimulateExplosion</span><span class="p">();</span>
+
+	<span class="c1">// Apply damage to player, enemies and environmental objects</span>
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">AActor</span><span class="o">*&gt;</span> <span class="n">IgnoreActors</span><span class="p">;</span>
+	<span class="n">UGameplayStatics</span><span class="o">::</span><span class="n">ApplyRadialDamage</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">ExplosionDamage</span><span class="p">,</span> <span class="n">GetActorLocation</span><span class="p">(),</span> <span class="n">ExplosionRadius</span><span class="p">,</span> <span class="n">DamageType</span><span class="p">,</span> <span class="n">IgnoreActors</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="k">nullptr</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       You can specify your own DamageTypes in content and deal with different types individually (eg. ExplosionDamage, FallDamage etc.) and have each type specify different magnitudes of impulse, if any.
+      </p>
+      <h1>
+       <span class="mw-headline" id="Closing">
+        Closing
+       </span>
+      </h1>
+      <p>
+       In this section we've added the basics for our gameloop. In the upcoming sections we will introduce enemies and game objective to put all this to use. If you are confused on a particular feature that was covered, feel free to ask about it in the
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?66263-Announcing-Section-2-for-Survival-Game" rel="nofollow">
+        official section 2 thread
+       </a>
+       for this project.
+      </p>
+      <p>
+       <b>
+        -
+        -
+       </b>
+      </p>
+      <ul>
+       <li>
+        <a class="external text" href="https://forums.unrealengine.com/showthread.php?63678-Upcoming-C-Gameplay-Example-Series-Making-a-Survival-Game" rel="nofollow">
+         Main Forum Thread
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://github.com/tomlooman/EpicSurvivalGameSeries" rel="nofollow">
+         Source on GitHub
+        </a>
+       </li>
+      </ul>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

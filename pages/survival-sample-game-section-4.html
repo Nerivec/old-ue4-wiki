@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Survival Sample Game: Section 4 - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Survival Sample Game: Section 4
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       C++ Sample project covering common gameplay concepts packed in a small coop survival game.
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Introduction">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Introduction
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Links">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Links
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Time_of_Day_in_Multiplayer">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Time of Day in Multiplayer
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Client-side_smoothing">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Client-side smoothing
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Level_Setup">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             Level Setup
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Showing_HUD_Messages_using_Events">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Showing HUD Messages using Events
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Exposing_functions_to_commandline">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Exposing functions to commandline
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Spectating_other_players">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Spectating other players
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Respawning">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Respawning
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#Respawn_at_team_using_the_Navigation_Mesh">
+            <span class="tocnumber">
+             6.1
+            </span>
+            <span class="toctext">
+             Respawn at team using the Navigation Mesh
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#Respawn_using_Spawnpoints">
+            <span class="tocnumber">
+             6.2
+            </span>
+            <span class="toctext">
+             Respawn using Spawnpoints
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-12">
+         <a href="#In_Closing">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           In Closing
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-13">
+           <a href="#Links_2">
+            <span class="tocnumber">
+             7.1
+            </span>
+            <span class="toctext">
+             Links
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-14">
+           <a href="#Notes">
+            <span class="tocnumber">
+             7.2
+            </span>
+            <span class="toctext">
+             Notes
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Introduction">
+        Introduction
+       </span>
+      </h2>
+      <p>
+       In section 4 of the ongoing survival game series we introduced a dynamic time of day, advanced player spawning and a basic game loop.
+      </p>
+      <p>
+       If you are not yet familiar with this ongoing project be sure to check out the
+       for information on the series!
+      </p>
+      <p>
+       <img alt="Survival section4 banner01.jpg" class="" height="664" src="../assets/survival-sample-game-section-4/0.jpg" width="1266"/>
+      </p>
+      <p>
+       Please consider this documentation a reference guide to get additional information on topics covered in the sample game's source itself. If you have any questions or think a documented concept requires more details then feel free to leave your feedback on the
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?69308-Announcing-Section-4-for-Survival-Game-Setting-up-the-survival-game-loop" rel="nofollow">
+        section-specific forum thread!
+       </a>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Links">
+        Links
+       </span>
+      </h3>
+      <ul>
+       <li>
+        <a class="external text" href="https://forums.unrealengine.com/showthread.php?63678-Ongoing-C-Gameplay-Example-Series-Making-a-Survival-Game" rel="nofollow">
+         Forum Thread
+        </a>
+       </li>
+       <li>
+       </li>
+       <li>
+       </li>
+       <li>
+        <a class="external text" href="https://github.com/tomlooman/EpicSurvivalGameSeries" rel="nofollow">
+         Source at GitHub
+        </a>
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="Time_of_Day_in_Multiplayer">
+        Time of Day in Multiplayer
+       </span>
+      </h2>
+      <p>
+       <img alt="Survival section4 tod01.jpg" class="" height="442" src="../assets/survival-sample-game-section-4/1.jpg" width="1242"/>
+      </p>
+      <p>
+       Dynamic time of day is a common feature in (open world) survival games. In this series we use it to drive certain gameplay elements beyond visual aspect such as spawning of enemies and respawning players who died during the night at sunrise. That is entirely GameMode specific and can be omitted if you are only interested in steering your time of day in a networked scenario.
+      </p>
+      <p>
+       Using the existing features, setting up a dynamic time of day is pretty simple. The primary requirements are, a DirectionalLight set to Movable, an instance of BP_SkySphere (automatically added by the default level template) and finally an Actor that holds the time and update the other actors. For this last one I created STimeOfDayManager.cpp, with BP_TimeOfDayManager to update the sun position of the BP_SkySphere which we cannot access from C++ because it's implemented in Blueprint.
+      </p>
+      <p>
+       The time of day value is stored in SGameState.cpp.
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Gameplay/Framework/GameState/index.html" rel="nofollow">
+        GameState
+       </a>
+       objects exist on both the server and client (unlike GameMode, which is unique to the server) and are a good place to store state data on the world.
+      </p>
+      <p>
+       Replicated values that should appear smooth (like the sun crawling along the horizon) require some additional smoothing on the client side or the result is a choppy motion as data is only received once every few ticks and can be unpredictable with higher latency or packet loss in actual networking scenarios. The Gamemode class controls the sun position on the server side, updated once every second. The client needs to smooth out this 1-second interval by performing some simple prediction which I will explain below.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Client-side_smoothing">
+        Client-side smoothing
+       </span>
+      </h3>
+      <p>
+       The variable that controls the time of day is only updated and replicated once per second in our Gamemode. So we need to apply our own per-frame interpolation to smooth out the sun movement.
+      </p>
+      <p>
+       We smooth out the movement by keeping track of the last time we received and update for ElapsedGameTime variable (stored in SGameState) and applying a prediction to the sun position based on how long ago that was multiplied by the speed the sun is moving.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// STimeOfDayManager.cpp</span>
+
+<span class="kt">void</span> <span class="n">ASTimeOfDayManager</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaSeconds</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span><span class="n">DeltaSeconds</span><span class="p">);</span>
+
+	<span class="n">ASGameState</span><span class="o">*</span> <span class="n">MyGameState</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">ASGameState</span><span class="o">&gt;</span><span class="p">(</span><span class="n">GetWorld</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetGameState</span><span class="p">());</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">MyGameState</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="cm">/* Update the position of the sun. */</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">PrimarySunLight</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">LastTimeOfDay</span> <span class="o">==</span> <span class="n">MyGameState</span><span class="o">-&gt;</span><span class="n">ElapsedGameMinutes</span><span class="p">)</span>
+			<span class="p">{</span>
+				<span class="n">TimeSinceLastIncrement</span> <span class="o">+=</span> <span class="n">DeltaSeconds</span><span class="p">;</span>
+			<span class="p">}</span>
+			<span class="k">else</span>
+			<span class="p">{</span>
+				<span class="cm">/* Reset prediction */</span>
+				<span class="n">TimeSinceLastIncrement</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+			<span class="p">}</span>
+
+			<span class="cm">/* Predict the movement of the sun to smooth out the rotations between replication updates of the actual time of day */</span>
+			<span class="k">const</span> <span class="kt">float</span> <span class="n">PredictedIncrement</span> <span class="o">=</span> <span class="n">MyGameState</span><span class="o">-&gt;</span><span class="n">GetTimeOfDayIncrement</span><span class="p">()</span> <span class="o">*</span> <span class="n">TimeSinceLastIncrement</span><span class="p">;</span>
+
+			<span class="cm">/* TimeOfDay is expressed in minutes, we need to convert this into a pitch rotation */</span>
+			<span class="k">const</span> <span class="kt">float</span> <span class="n">MinutesInDay</span> <span class="o">=</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">60</span><span class="p">;</span>
+			<span class="k">const</span> <span class="kt">float</span> <span class="n">PitchOffset</span> <span class="o">=</span> <span class="mi">90</span><span class="p">;</span> <span class="cm">/* The offset to account for time of day 0 should equal midnight */</span>
+			<span class="k">const</span> <span class="kt">float</span> <span class="n">PitchRotation</span> <span class="o">=</span> <span class="mi">360</span> <span class="o">*</span> <span class="p">((</span><span class="n">MyGameState</span><span class="o">-&gt;</span><span class="n">ElapsedGameMinutes</span> <span class="o">+</span> <span class="n">PredictedIncrement</span><span class="p">)</span> <span class="o">/</span> <span class="n">MinutesInDay</span><span class="p">);</span>
+
+			<span class="n">FRotator</span> <span class="n">NewSunRotation</span> <span class="o">=</span> <span class="n">FRotator</span><span class="p">(</span><span class="n">PitchRotation</span> <span class="o">+</span> <span class="n">PitchOffset</span><span class="p">,</span> <span class="mf">45.0f</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+			<span class="n">PrimarySunLight</span><span class="o">-&gt;</span><span class="n">SetActorRelativeRotation</span><span class="p">(</span><span class="n">NewSunRotation</span><span class="p">);</span>
+
+			<span class="n">LastTimeOfDay</span> <span class="o">=</span> <span class="n">MyGameState</span><span class="o">-&gt;</span><span class="n">ElapsedGameMinutes</span><span class="p">;</span>
+		<span class="p">}</span>
+       <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       This yields a nice and smooth sun crawling along the sky with a time of day that is only replicated once per second.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Level_Setup">
+        Level Setup
+       </span>
+      </h3>
+      <p>
+       The dynamic time of day requires a few Actors to exist and be properly configured in your level. The BP_SkySphere, which is included with default map template. A directional light, that must be set to
+       <b>
+        Movable
+       </b>
+       . A SkyLight Actor, also set to
+       <b>
+        Movable
+       </b>
+       and finally our own Blueprint object BP_TimeOfDayManager (in Content/Base/...)
+      </p>
+      <p>
+       <img alt="Survival section4 level01.jpg" class="" height="589" src="../assets/survival-sample-game-section-4/2.jpg" width="1696"/>
+      </p>
+      <p>
+       BP_TimeOfDayManager grabs references to the skylight, directional light and skysphere objects during BeginPlay, so there is no further manual setup required.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Showing_HUD_Messages_using_Events">
+        Showing HUD Messages using Events
+       </span>
+      </h2>
+      <p>
+       <img alt="Survival section4 hudevents.jpg" class="" height="414" src="../assets/survival-sample-game-section-4/3.jpg" width="1262"/>
+      </p>
+      <p>
+       When an important gameplay event happens we want to notify the player through the HUD. One example is announcing the sun has fallen and the dangerous night just started. We set up the event function in C++ and make it Blueprint accessible. Now when something interesting happens the Blueprint HUD class can respond by updating a text widget with the text data we sent.
+      </p>
+      <p>
+       The function is marked BlueprintImplementableEvent so we can setup the HUD in Blueprint to pass the FString data to the appropriate UMG Widget (which our C++ level has no reference to, so we must do this in Blueprint)
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// SHUD.cpp</span>
+
+<span class="cm">/* An event hook to call HUD text events to display in the HUD. Blueprint HUD class must implement how to deal with this event. */</span>
+<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintImplementableEvent</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"HUDEvents"</span><span class="p">)</span>
+<span class="kt">void</span> <span class="n">MessageReceived</span><span class="p">(</span><span class="k">const</span> <span class="n">FString</span><span class="o">&amp;</span> <span class="n">TextMessage</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       The Blueprint implementation simply redirects this event to the UMG widget where we added a function called SetMessage to internally update a Text Block (and perform some timer logic to fade-out after several sections)
+      </p>
+      <p>
+       <img alt="Survival section4 hudBP01.jpg" class="" height="473" src="../assets/survival-sample-game-section-4/4.jpg" width="1062"/>
+      </p>
+      <p>
+       This type of event messaging is great for many different interactions between the C++ and your HUD. For example one could use it to display hit notifications when a zombie damaged the player.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Exposing_functions_to_commandline">
+        Exposing functions to commandline
+       </span>
+      </h2>
+      <p>
+       It's very easy to expose your functions to the command line (~ tilde) input which is incredibly valuable for debugging (eg. infinite ammo, god mode, teleport etc.) All you need is to specify the "exec" keyword with your UFUNCTION() as below.
+      </p>
+      <p>
+       <img alt="Survival section4 cmdline.jpg" class="" height="304" src="../assets/survival-sample-game-section-4/5.jpg" width="1075"/>
+      </p>
+      <p>
+       While in-game, type ~ (tilde) and start typing your function name, you will see it appear in the auto completion and it supports parameter passing like the time of day float in the sample above.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// SGameState.cpp</span>
+
+<span class="cm">/* By passing in "exec" we expose it as a command line (press ~ to open) */</span>
+<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">exec</span><span class="p">)</span>
+<span class="kt">void</span> <span class="n">SetTimeOfDay</span><span class="p">(</span><span class="kt">float</span> <span class="n">NewTimeOfDay</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       Exposing functions this way is a great tool for debugging, but keep in mind that most commands are only valid on the server.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Spectating_other_players">
+        Spectating other players
+       </span>
+      </h2>
+      <p>
+       <img alt="Survival section4 spectating.jpg" class="" height="344" src="../assets/survival-sample-game-section-4/6.jpg" width="1254"/>
+      </p>
+      <p>
+       When a player dies and another player is still alive he will spectate the player until he respawns. With the current ruleset respawning happens at sunrise (more on that in the next block "Respawning" below)
+      </p>
+      <p>
+       In the following code snippet (taken from SPlayerController) you can see we initiate spectating at the UnFreeze() call (the moment the controller receives access to input) which happens almost immediately after death.
+      </p>
+      <p>
+       The state is updated to Spectating on client and server and by calling ViewAPlayer(direction) we set the spectating focus on on the other player that is (possibly) still alive. Finally the HUD is updated to show the spectator screen.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// SPlayerController.cpp</span>
+
+<span class="kt">void</span> <span class="n">ASPlayerController</span><span class="o">::</span><span class="n">UnFreeze</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">UnFreeze</span><span class="p">();</span>
+
+        <span class="c1">// ...</span>
+
+	<span class="n">StartSpectating</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">ASPlayerController</span><span class="o">::</span><span class="n">StartSpectating</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="cm">/* Update the state on server */</span>
+	<span class="n">PlayerState</span><span class="o">-&gt;</span><span class="n">bIsSpectator</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+	<span class="n">ChangeState</span><span class="p">(</span><span class="n">NAME_Spectating</span><span class="p">);</span>
+	<span class="cm">/* Push the state update to the client */</span>
+	<span class="n">ClientGotoState</span><span class="p">(</span><span class="n">NAME_Spectating</span><span class="p">);</span>
+
+	<span class="cm">/* Focus on the remaining alive player */</span>
+	<span class="n">ViewAPlayer</span><span class="p">(</span><span class="mi">1</span><span class="p">);</span>
+
+	<span class="cm">/* Update the HUD to show the spectator screen */</span>
+	<span class="n">ClientHUDStateChanged</span><span class="p">(</span><span class="n">EHUDState</span><span class="o">::</span><span class="n">Spectating</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       The ViewAPlayer takes care of the camera management of setting it to the 3rd-person view, locked to the remaining player. You can repeatedly call this function to cycle through remaining players while spectating. Keep in mind that we filter out the bots by overwriting the CanSpectate logic of GameMode, see below.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">bool</span> <span class="n">ASGameMode</span><span class="o">::</span><span class="n">CanSpectate</span><span class="p">(</span><span class="n">APlayerController</span><span class="o">*</span> <span class="n">Viewer</span><span class="p">,</span> <span class="n">APlayerState</span><span class="o">*</span> <span class="n">ViewTarget</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="cm">/* Don't allow spectating of other non-player bots */</span>
+	<span class="k">return</span> <span class="p">(</span><span class="n">ViewTarget</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">ViewTarget</span><span class="o">-&gt;</span><span class="n">bIsABot</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       This could be further extended to filter by TeamIndex if multiple teams exist on the map or by checking if the player is still alive.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Respawning">
+        Respawning
+       </span>
+      </h2>
+      <p>
+       By default the gamemode attempts to spawn players and bots at PlayerStart actors. You can add your own logic on how to pick the best player start, for example by checking if a start is exclusive to a specific team, or if it's a player-only spawn or through a weighting system that does line of sight checks so any spawnpoint out of sight of players is preferred. You simply implement any kind of logic in the ChoosePlayerStart function of GameMode, see "Respawn Using Spawnpoints" below for an example.
+      </p>
+      <p>
+       For the coop gamemode we respawn players not at PlayerStarts, but near teammates.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Respawn_at_team_using_the_Navigation_Mesh">
+        Respawn at team using the Navigation Mesh
+       </span>
+      </h3>
+      <p>
+       <img alt="Survival section4 navmeshrespawn.jpg" class="" height="558" src="../assets/survival-sample-game-section-4/7.jpg" width="1816"/>
+      </p>
+      <p>
+       In the coop ruleset we (re-)spawn at any player that is still alive. For this we utilize the NavigationMesh data that is orignally intended for AI pathfinding. (Press "P" in the map to see the navigation mesh, if your map doesn't have a nav mesh you need to insert a
+       <b>
+        NavMeshBoundsVolume
+       </b>
+       ) By using this navigation data we know it will get a valid walking position and we don't accidentally spawn our player into a wall or other blocking Actor.
+      </p>
+      <p>
+       The following function to respawn the player can be split into 4 distinct parts. First we try to get a position and rotation from the first alive player we can find. If we failed to find a player, we fall back to using PlayerStart Actors instead (as defined in the base class of GameMode) On success however, we query the navigation system to find a random point in a small radius around the other player. The final part is almost identical to the base GameMode function and it's where we create a new pawn, let the controller possess it and finally adjust rotation to match that of the currently alive player.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// SGameMode.cpp</span>
+
+<span class="kt">void</span> <span class="n">ASGameMode</span><span class="o">::</span><span class="n">RestartPlayer</span><span class="p">(</span><span class="k">class</span> <span class="nc">AController</span><span class="o">*</span> <span class="n">NewPlayer</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// ...</span>
+
+	<span class="cm">/* Look for a live player to spawn next to */</span>
+	<span class="n">FVector</span> <span class="n">SpawnOrigin</span> <span class="o">=</span> <span class="n">FVector</span><span class="o">::</span><span class="n">ZeroVector</span><span class="p">;</span>
+	<span class="n">FRotator</span> <span class="n">StartRotation</span> <span class="o">=</span> <span class="n">FRotator</span><span class="o">::</span><span class="n">ZeroRotator</span><span class="p">;</span>
+	<span class="k">for</span> <span class="p">(</span><span class="n">FConstPawnIterator</span> <span class="n">It</span> <span class="o">=</span> <span class="n">GetWorld</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetPawnIterator</span><span class="p">();</span> <span class="n">It</span><span class="p">;</span> <span class="n">It</span><span class="o">++</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">ASCharacter</span><span class="o">*</span> <span class="n">MyCharacter</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">ASCharacter</span><span class="o">&gt;</span><span class="p">(</span><span class="o">*</span><span class="n">It</span><span class="p">);</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">MyCharacter</span> <span class="o">&amp;&amp;</span> <span class="n">MyCharacter</span><span class="o">-&gt;</span><span class="n">IsAlive</span><span class="p">())</span>
+		<span class="p">{</span>
+			<span class="cm">/* Get the origin of the first player we can find */</span>
+			<span class="n">SpawnOrigin</span> <span class="o">=</span> <span class="n">MyCharacter</span><span class="o">-&gt;</span><span class="n">GetActorLocation</span><span class="p">();</span>
+			<span class="n">StartRotation</span> <span class="o">=</span> <span class="n">MyCharacter</span><span class="o">-&gt;</span><span class="n">GetActorRotation</span><span class="p">();</span>
+			<span class="k">break</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="cm">/* No player is alive (yet) - spawn using one of the PlayerStarts */</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">SpawnOrigin</span> <span class="o">==</span> <span class="n">FVector</span><span class="o">::</span><span class="n">ZeroVector</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">Super</span><span class="o">::</span><span class="n">RestartPlayer</span><span class="p">(</span><span class="n">NewPlayer</span><span class="p">);</span>
+		<span class="k">return</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="cm">/* Get a point on the nav mesh near the other player */</span>
+	<span class="n">FVector</span> <span class="n">StartLocation</span> <span class="o">=</span> <span class="n">UNavigationSystem</span><span class="o">::</span><span class="n">GetRandomPointInRadius</span><span class="p">(</span><span class="n">NewPlayer</span><span class="p">,</span> <span class="n">SpawnOrigin</span><span class="p">,</span> <span class="mf">250.0f</span><span class="p">);</span>
+
+	<span class="c1">// Try to create a pawn to use of the default class for this player</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">NewPlayer</span><span class="o">-&gt;</span><span class="n">GetPawn</span><span class="p">()</span> <span class="o">==</span> <span class="k">nullptr</span> <span class="o">&amp;&amp;</span> <span class="n">GetDefaultPawnClassForController</span><span class="p">(</span><span class="n">NewPlayer</span><span class="p">)</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">FActorSpawnParameters</span> <span class="n">SpawnInfo</span><span class="p">;</span>
+		<span class="n">SpawnInfo</span><span class="p">.</span><span class="n">Instigator</span> <span class="o">=</span> <span class="n">Instigator</span><span class="p">;</span>
+		<span class="n">APawn</span><span class="o">*</span> <span class="n">ResultPawn</span> <span class="o">=</span> <span class="n">GetWorld</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SpawnActor</span><span class="o">&lt;</span><span class="n">APawn</span><span class="o">&gt;</span><span class="p">(</span><span class="n">GetDefaultPawnClassForController</span><span class="p">(</span><span class="n">NewPlayer</span><span class="p">),</span> <span class="n">StartLocation</span><span class="p">,</span> <span class="n">StartRotation</span><span class="p">,</span> <span class="n">SpawnInfo</span><span class="p">);</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">ResultPawn</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogGameMode</span><span class="p">,</span> <span class="n">Warning</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Couldn't spawn Pawn of type %s at %s"</span><span class="p">),</span> <span class="o">*</span><span class="n">GetNameSafe</span><span class="p">(</span><span class="n">DefaultPawnClass</span><span class="p">),</span> <span class="o">&amp;</span><span class="n">StartLocation</span><span class="p">);</span>
+		<span class="p">}</span>
+		<span class="n">NewPlayer</span><span class="o">-&gt;</span><span class="n">SetPawn</span><span class="p">(</span><span class="n">ResultPawn</span><span class="p">);</span>
+	<span class="p">}</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">NewPlayer</span><span class="o">-&gt;</span><span class="n">GetPawn</span><span class="p">()</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">NewPlayer</span><span class="o">-&gt;</span><span class="n">FailedToSpawnPawn</span><span class="p">();</span>
+	<span class="p">}</span>
+	<span class="k">else</span>
+	<span class="p">{</span>
+		<span class="n">NewPlayer</span><span class="o">-&gt;</span><span class="n">Possess</span><span class="p">(</span><span class="n">NewPlayer</span><span class="o">-&gt;</span><span class="n">GetPawn</span><span class="p">());</span>
+
+		<span class="c1">// If the Pawn is destroyed as part of possession we have to abort</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">NewPlayer</span><span class="o">-&gt;</span><span class="n">GetPawn</span><span class="p">()</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">NewPlayer</span><span class="o">-&gt;</span><span class="n">FailedToSpawnPawn</span><span class="p">();</span>
+		<span class="p">}</span>
+		<span class="k">else</span>
+		<span class="p">{</span>
+			<span class="c1">// Set initial control rotation to player start's rotation</span>
+			<span class="n">NewPlayer</span><span class="o">-&gt;</span><span class="n">ClientSetRotation</span><span class="p">(</span><span class="n">NewPlayer</span><span class="o">-&gt;</span><span class="n">GetPawn</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetActorRotation</span><span class="p">(),</span> <span class="nb">true</span><span class="p">);</span>
+
+			<span class="n">FRotator</span> <span class="n">NewControllerRot</span> <span class="o">=</span> <span class="n">StartRotation</span><span class="p">;</span>
+			<span class="n">NewControllerRot</span><span class="p">.</span><span class="n">Roll</span> <span class="o">=</span> <span class="mf">0.f</span><span class="p">;</span>
+			<span class="n">NewPlayer</span><span class="o">-&gt;</span><span class="n">SetControlRotation</span><span class="p">(</span><span class="n">NewControllerRot</span><span class="p">);</span>
+
+			<span class="n">SetPlayerDefaults</span><span class="p">(</span><span class="n">NewPlayer</span><span class="o">-&gt;</span><span class="n">GetPawn</span><span class="p">());</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Respawn_using_Spawnpoints">
+        Respawn using Spawnpoints
+       </span>
+      </h3>
+      <p>
+       <img alt="Survival section4 spawnpoints.jpg" class="" height="639" src="../assets/survival-sample-game-section-4/8.jpg" width="1835"/>
+      </p>
+      <p>
+       To spawn enemies and players into our level we setup PlayerStart actors at appropriate points. To designate a specific PlayerStart as "player only" we setup an extension SPlayerStart.cpp with a boolean bPlayerOnly. The base PlayerStart can still be used to spawn the zombie AI and if the bPlayerOnly is TRUE it's automatically the preferred spawn location for any player.
+      </p>
+      <p>
+       The ChoosePlayerStart function is called by RestartPlayer on respawn. By checking IsSpawnpointAllowed and IsSpawnpointPreferred on all playerstarts we can determine the best spawn position for bots and players.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// SGameMode.cpp</span>
+
+<span class="n">AActor</span><span class="o">*</span> <span class="n">ASGameMode</span><span class="o">::</span><span class="n">ChoosePlayerStart</span><span class="p">(</span><span class="n">AController</span><span class="o">*</span> <span class="n">Player</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">APlayerStart</span><span class="o">*&gt;</span> <span class="n">PreferredSpawns</span><span class="p">;</span>
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">APlayerStart</span><span class="o">*&gt;</span> <span class="n">FallbackSpawns</span><span class="p">;</span>
+
+	<span class="k">for</span> <span class="p">(</span><span class="n">int32</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">PlayerStarts</span><span class="p">.</span><span class="n">Num</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">APlayerStart</span><span class="o">*</span> <span class="n">TestStart</span> <span class="o">=</span> <span class="n">PlayerStarts</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">IsSpawnpointAllowed</span><span class="p">(</span><span class="n">TestStart</span><span class="p">,</span> <span class="n">Player</span><span class="p">))</span>
+		<span class="p">{</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">IsSpawnpointPreferred</span><span class="p">(</span><span class="n">TestStart</span><span class="p">,</span> <span class="n">Player</span><span class="p">))</span>
+			<span class="p">{</span>
+				<span class="n">PreferredSpawns</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">TestStart</span><span class="p">);</span>
+			<span class="p">}</span>
+			<span class="k">else</span>
+			<span class="p">{</span>
+				<span class="n">FallbackSpawns</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">TestStart</span><span class="p">);</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="n">APlayerStart</span><span class="o">*</span> <span class="n">BestStart</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">PreferredSpawns</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">BestStart</span> <span class="o">=</span> <span class="n">PreferredSpawns</span><span class="p">[</span><span class="n">FMath</span><span class="o">::</span><span class="n">RandHelper</span><span class="p">(</span><span class="n">PreferredSpawns</span><span class="p">.</span><span class="n">Num</span><span class="p">())];</span>
+	<span class="p">}</span>
+	<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">FallbackSpawns</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">BestStart</span> <span class="o">=</span> <span class="n">FallbackSpawns</span><span class="p">[</span><span class="n">FMath</span><span class="o">::</span><span class="n">RandHelper</span><span class="p">(</span><span class="n">FallbackSpawns</span><span class="p">.</span><span class="n">Num</span><span class="p">())];</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="n">BestStart</span> <span class="o">?</span> <span class="nl">BestStart</span> <span class="p">:</span> <span class="n">Super</span><span class="o">::</span><span class="n">ChoosePlayerStart</span><span class="p">(</span><span class="n">Player</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="cm">/* Check to see if a player and/or AI may spawn at the PlayerStart */</span>
+<span class="kt">bool</span> <span class="n">ASGameMode</span><span class="o">::</span><span class="n">IsSpawnpointAllowed</span><span class="p">(</span><span class="n">APlayerStart</span><span class="o">*</span> <span class="n">SpawnPoint</span><span class="p">,</span> <span class="n">AController</span><span class="o">*</span> <span class="n">Controller</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">Controller</span> <span class="o">==</span> <span class="k">nullptr</span> <span class="o">||</span> <span class="n">Controller</span><span class="o">-&gt;</span><span class="n">PlayerState</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span>
+		<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+
+	<span class="cm">/* Check for extended playerstart class */</span>
+	<span class="n">ASPlayerStart</span><span class="o">*</span> <span class="n">MyPlayerStart</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">ASPlayerStart</span><span class="o">&gt;</span><span class="p">(</span><span class="n">SpawnPoint</span><span class="p">);</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">MyPlayerStart</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="n">MyPlayerStart</span><span class="o">-&gt;</span><span class="n">GetIsPlayerOnly</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">Controller</span><span class="o">-&gt;</span><span class="n">PlayerState</span><span class="o">-&gt;</span><span class="n">bIsABot</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="cm">/* Cast failed, Anyone can spawn at the base playerstart class */</span>
+	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">ASGameMode</span><span class="o">::</span><span class="n">IsSpawnpointPreferred</span><span class="p">(</span><span class="n">APlayerStart</span><span class="o">*</span> <span class="n">SpawnPoint</span><span class="p">,</span> <span class="n">AController</span><span class="o">*</span> <span class="n">Controller</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">SpawnPoint</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="cm">/* Iterate all pawns to check for collision overlaps with the spawn point */</span>
+		<span class="k">const</span> <span class="n">FVector</span> <span class="n">SpawnLocation</span> <span class="o">=</span> <span class="n">SpawnPoint</span><span class="o">-&gt;</span><span class="n">GetActorLocation</span><span class="p">();</span>
+		<span class="k">for</span> <span class="p">(</span><span class="n">FConstPawnIterator</span> <span class="n">It</span> <span class="o">=</span> <span class="n">GetWorld</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetPawnIterator</span><span class="p">();</span> <span class="n">It</span><span class="p">;</span> <span class="n">It</span><span class="o">++</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">ACharacter</span><span class="o">*</span> <span class="n">OtherPawn</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">ACharacter</span><span class="o">&gt;</span><span class="p">(</span><span class="o">*</span><span class="n">It</span><span class="p">);</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">OtherPawn</span><span class="p">)</span>
+			<span class="p">{</span>
+				<span class="k">const</span> <span class="kt">float</span> <span class="n">CombinedHeight</span> <span class="o">=</span> <span class="p">(</span><span class="n">SpawnPoint</span><span class="o">-&gt;</span><span class="n">GetCapsuleComponent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetScaledCapsuleHalfHeight</span><span class="p">()</span> <span class="o">+</span> <span class="n">OtherPawn</span><span class="o">-&gt;</span><span class="n">GetCapsuleComponent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetScaledCapsuleHalfHeight</span><span class="p">())</span> <span class="o">*</span> <span class="mf">2.0f</span><span class="p">;</span>
+				<span class="k">const</span> <span class="kt">float</span> <span class="n">CombinedWidth</span> <span class="o">=</span> <span class="n">SpawnPoint</span><span class="o">-&gt;</span><span class="n">GetCapsuleComponent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetScaledCapsuleRadius</span><span class="p">()</span> <span class="o">+</span> <span class="n">OtherPawn</span><span class="o">-&gt;</span><span class="n">GetCapsuleComponent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetScaledCapsuleRadius</span><span class="p">();</span>
+				<span class="k">const</span> <span class="n">FVector</span> <span class="n">OtherLocation</span> <span class="o">=</span> <span class="n">OtherPawn</span><span class="o">-&gt;</span><span class="n">GetActorLocation</span><span class="p">();</span>
+
+				<span class="c1">// Check if player overlaps the playerstart</span>
+				<span class="k">if</span> <span class="p">(</span><span class="n">FMath</span><span class="o">::</span><span class="n">Abs</span><span class="p">(</span><span class="n">SpawnLocation</span><span class="p">.</span><span class="n">Z</span> <span class="o">-</span> <span class="n">OtherLocation</span><span class="p">.</span><span class="n">Z</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">CombinedHeight</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">SpawnLocation</span> <span class="o">-</span> <span class="n">OtherLocation</span><span class="p">).</span><span class="n">Size2D</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">CombinedWidth</span><span class="p">)</span>
+				<span class="p">{</span>
+					<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+
+		<span class="cm">/* Check if spawnpoint is exclusive to players */</span>
+		<span class="n">ASPlayerStart</span><span class="o">*</span> <span class="n">MyPlayerStart</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">ASPlayerStart</span><span class="o">&gt;</span><span class="p">(</span><span class="n">SpawnPoint</span><span class="p">);</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">MyPlayerStart</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="k">return</span> <span class="n">MyPlayerStart</span><span class="o">-&gt;</span><span class="n">GetIsPlayerOnly</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">Controller</span><span class="o">-&gt;</span><span class="n">PlayerState</span><span class="o">-&gt;</span><span class="n">bIsABot</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       This is pretty basic implementation of a spawn system. More advanced spawning could include line of sight checks to make sure we don't spawn enemies when a player is looking at that particular spawn point and take distance between spawns and players into account to either spread players out or keep them closely together.
+      </p>
+      <h2>
+       <span class="mw-headline" id="In_Closing">
+        In Closing
+       </span>
+      </h2>
+      <p>
+       In the fourth section we added a basic framework for the gameloop of spawning both players and AI, a replicated time of day, scoring on kills and nights survived as well as a failure state for the game mode.
+      </p>
+      <p>
+       Section 5 will be announced later this week May 22nd, so keep an eye out on the
+       <a class="external text" href="https://forums.unrealengine.com/forumdisplay.php?8-Announcements-and-Releases" rel="nofollow">
+        Announcement Forums
+       </a>
+       !
+      </p>
+      <p>
+       If you have feedback or questions on this section, feel free to reach out through the
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?69308-Announcing-Section-4-for-Survival-Game-Setting-up-the-survival-game-loop" rel="nofollow">
+        official forum thread
+       </a>
+       .
+      </p>
+      <h3>
+       <span class="mw-headline" id="Links_2">
+        Links
+       </span>
+      </h3>
+      <p>
+       <b>
+        -
+        -
+       </b>
+      </p>
+      <ul>
+       <li>
+        <a class="external text" href="https://forums.unrealengine.com/showthread.php?63678-Ongoing-C-Gameplay-Example-Series-Making-a-Survival-Game" rel="nofollow">
+         Forum Thread
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://github.com/tomlooman/EpicSurvivalGameSeries" rel="nofollow">
+         Source at GitHub
+        </a>
+       </li>
+      </ul>
+      <h3>
+       <span class="mw-headline" id="Notes">
+        Notes
+       </span>
+      </h3>
+      <p>
+       Please keep in mind we assigned our SLocalPlayer in DefaultEngine.ini in case you are migrating code into your own project.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="p">[</span><span class="o">/</span><span class="n">Script</span><span class="o">/</span><span class="n">Engine</span><span class="p">.</span><span class="n">Engine</span><span class="p">]</span>
+<span class="p">;</span> <span class="n">Our</span> <span class="n">custom</span> <span class="n">LocalPlayer</span> <span class="k">class</span>
+<span class="nc">LocalPlayerClassName</span><span class="o">=/</span><span class="n">Script</span><span class="o">/</span><span class="n">SurvivalGame</span><span class="p">.</span><span class="n">SLocalPlayer</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       <b>
+        Project &amp; Wiki by
+        <a class="external text" href="http://www.tomlooman.com/" rel="nofollow">
+         Tom Looman
+        </a>
+       </b>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

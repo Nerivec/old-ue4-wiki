@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Custom Blueprint Node Creation - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Custom Blueprint Node Creation
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <table align="right">
+       <tbody>
+        <tr>
+         <td>
+          <div class="toc" id="toc">
+           <div class="toctitle">
+            <h2>
+             Contents
+            </h2>
+           </div>
+           <ul>
+            <li class="toclevel-1 tocsection-1">
+             <a href="#Overview">
+              <span class="tocnumber">
+               1
+              </span>
+              <span class="toctext">
+               Overview
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-1 tocsection-2">
+             <a href="#Extending_Classes">
+              <span class="tocnumber">
+               2
+              </span>
+              <span class="toctext">
+               Extending Classes
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-1 tocsection-3">
+             <a href="#Exposing_functions_to_Blueprint">
+              <span class="tocnumber">
+               3
+              </span>
+              <span class="toctext">
+               Exposing functions to Blueprint
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-1 tocsection-4">
+             <a href="#Function_code">
+              <span class="tocnumber">
+               4
+              </span>
+              <span class="toctext">
+               Function code
+              </span>
+             </a>
+             <ul>
+              <li class="toclevel-2 tocsection-5">
+               <a href="#CompactNodeTitle">
+                <span class="tocnumber">
+                 4.1
+                </span>
+                <span class="toctext">
+                 CompactNodeTitle
+                </span>
+               </a>
+              </li>
+             </ul>
+            </li>
+            <li class="toclevel-1 tocsection-6">
+             <a href="#Things_to_look_into">
+              <span class="tocnumber">
+               5
+              </span>
+              <span class="toctext">
+               Things to look into
+              </span>
+             </a>
+            </li>
+           </ul>
+          </div>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <h1>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h1>
+      <p>
+       This tutorial will cover how to make a custom blueprint node that you can use to introduce cool C++ powers into your blueprints. This tutorial is rather basic for now, since I've not done much with the code, so there could be steps I'm missing here for handling special programming concepts such as iterators or delegates.
+      </p>
+      <h1>
+       <span class="mw-headline" id="Extending_Classes">
+        Extending Classes
+       </span>
+      </h1>
+      <p>
+       You can choose which class to extend by using the "Add code to project" option from the File menu and then choosing the class to extend from.  This creates a new class with the functionality of the class you extended from (the parent) as well as any functionality you give it in code.
+      </p>
+      <h1>
+       <span class="mw-headline" id="Exposing_functions_to_Blueprint">
+        Exposing functions to Blueprint
+       </span>
+      </h1>
+      <p>
+       To do this you must use Function Specifiers, of which there are a couple:
+      </p>
+      <ul>
+       <li>
+        BlueprintAuthorityOnly
+       </li>
+       <li>
+        BlueprintCallable
+       </li>
+       <li>
+        BlueprintCosmetic
+       </li>
+       <li>
+        BlueprintImplementableEvent
+       </li>
+       <li>
+        BlueprintNativeEvent
+       </li>
+       <li>
+        BlueprintPure
+       </li>
+      </ul>
+      <p>
+       Of these I've only used BlueprintPure and BlueprintCallable. The former (BlueprintPure) means the function does not affect the owning object in any way and thus creates a node without Exec pins. The latter (BlueprintCallable) makes a function which can be executed in Blueprints - Thus it has Exec pins.
+      </p>
+      <p>
+       You can also have metadata about the node, like so:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintPure</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">DisplayName</span> <span class="o">=</span> <span class="s">"Create Object From Class"</span><span class="p">,</span> <span class="n">CompactNodeTitle</span> <span class="o">=</span> <span class="s">"New"</span><span class="p">,</span> <span class="n">Keywords</span> <span class="o">=</span> <span class="s">"new create blueprint"</span><span class="p">),</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Game</span><span class="p">)</span>
+</pre>
+      </div>
+      <ul>
+       <li>
+        DisplayName is the full name of the node, shown when you mouse over the node and in the blueprint drop down menu. Its lets you name the node using characters not allowed in C++ function names.
+       </li>
+       <li>
+        CompactNodeTitle is the word(s) that appear on the node, such as "New" in the image above.  Note that the use of a CompactNodeTitle will cause the parameters to show in the BP node without names.  Omit the CompactNodeTitle if having the param names next to the wire connections is important for your node.
+       </li>
+       <li>
+        Keywords is the list of keywords that helps you to find node when you search for it using Blueprint drop-down menu. Good example is "Print String" node which you can find also by using keyword "log".
+       </li>
+       <li>
+        Category is the category your node will be under in the Blueprint drop-down menu.
+       </li>
+      </ul>
+      <p>
+       If you leave out the "Static" prefix you'll likely get an error which reads "Pin Target must have a connection" error:
+      </p>
+      <p>
+       <img alt="BlueprintNode-Custom-TargetPin-Error.jpg" class="" height="318" src="../assets/custom-blueprint-node-creation/0.jpg" width="843"/>
+       <br clear="all"/>
+      </p>
+      <p>
+       Just as a note, if you have the static prefix and still get this issue, try adding "HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"," inside your meta=( in UFUNCTION like so:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintPure</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">HidePin</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">DefaultToSelf</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">DisplayName</span> <span class="o">=</span> <span class="s">"Create Object From Class"</span><span class="p">,</span>
+ <span class="n">CompactNodeTitle</span> <span class="o">=</span> <span class="s">"New"</span><span class="p">,</span> <span class="n">Keywords</span> <span class="o">=</span> <span class="s">"new create blueprint"</span><span class="p">),</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Game</span><span class="p">)</span>
+</pre>
+      </div>
+      <p>
+       The error seems to (it comes and goes from what I've seen of it) relate to Self being the actual Blueprint graph, and so it returns the class of the blueprint. However the function is declared in a class that's under a static object - hence it doesn't match its own type. This line hides the target pin and sets the nodes Self to WorldContextObject. For clarity see the above image.
+      </p>
+      <h1>
+       <span class="mw-headline" id="Function_code">
+        Function code
+       </span>
+      </h1>
+      <p>
+       Nothing special - just code as normal:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="p">(.</span><span class="n">h</span> <span class="n">File</span><span class="p">)</span>
+<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintPure</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">DisplayName</span> <span class="o">=</span> <span class="s">"Hello World"</span><span class="p">,</span> <span class="n">CompactNodeTitle</span> <span class="o">=</span> <span class="s">"HelloWorld"</span><span class="p">,</span> <span class="n">Keywords</span> <span class="o">=</span> <span class="s">"String Hello World"</span><span class="p">),</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Game</span><span class="p">)</span>
+	<span class="k">static</span> <span class="n">FText</span> <span class="n">HelloWorld</span><span class="p">();</span>
+
+<span class="p">(.</span><span class="n">cpp</span> <span class="n">file</span><span class="p">)</span>
+<span class="n">FText</span> <span class="n">UCreateNewObject</span><span class="o">::</span><span class="n">HelloWorld</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">FText</span><span class="o">::</span><span class="n">FromString</span><span class="p">(</span><span class="s">"Hello World"</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <img alt="HelloWorld CustomNode.png" class="" height="99" src="../assets/custom-blueprint-node-creation/1.png" width="361"/>
+       <br clear="all"/>
+      </p>
+      <p>
+       Having parameters are the same as well:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="p">(.</span><span class="n">h</span> <span class="n">File</span><span class="p">)</span>
+<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintPure</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">DisplayName</span> <span class="o">=</span> <span class="s">"Adds floats"</span><span class="p">,</span> <span class="n">CompactNodeTitle</span> <span class="o">=</span> <span class="s">"Add Floats"</span><span class="p">,</span> <span class="n">Keywords</span> <span class="o">=</span> <span class="s">"Float Add"</span><span class="p">),</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Game</span><span class="p">)</span>
+	<span class="k">static</span> <span class="kt">float</span> <span class="n">AddFloats</span><span class="p">(</span><span class="kt">float</span> <span class="n">fA</span><span class="p">,</span> <span class="kt">float</span> <span class="n">fB</span><span class="p">);</span>
+
+<span class="p">(.</span><span class="n">cpp</span> <span class="n">File</span><span class="p">)</span>
+<span class="kt">float</span> <span class="n">UCreateNewObject</span><span class="o">::</span><span class="n">AddFloats</span><span class="p">(</span><span class="kt">float</span> <span class="n">fA</span><span class="p">,</span> <span class="kt">float</span> <span class="n">fB</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">fA</span> <span class="o">+</span> <span class="n">fB</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <img alt="AddFloats CustomNode.png" class="" height="147" src="../assets/custom-blueprint-node-creation/2.png" width="381"/>
+       <br clear="all"/>
+      </p>
+      <p>
+       Note that you might not find your node with "Context Sensitive" ticked.
+      </p>
+      <h2>
+       <span class="mw-headline" id="CompactNodeTitle">
+        CompactNodeTitle
+       </span>
+      </h2>
+      <p>
+       If you give a compact node title in the UFUNCTION then the node will not have a header, while if you do give it a CompactNodeTitle it will. You can see the visual difference in the image below. The top node has CompactNodeTitle while the bottom node does not:
+      </p>
+      <p>
+       <img alt="CompactvsNonCompactNodeTitle 1.jpg" class="" height="174" src="../assets/custom-blueprint-node-creation/3.jpg" width="368"/>
+       <br clear="all"/>
+      </p>
+      <h1>
+       <span class="mw-headline" id="Things_to_look_into">
+        Things to look into
+       </span>
+      </h1>
+      <p>
+       These are just somethings I don't know, and think would be good to know - A bit like "things to try by playing around with this tutorial":
+      </p>
+      <ul>
+       <li>
+        What sets Context Sensitive?
+       </li>
+       <li>
+        Check out the enums in  ...\Engine\Source\Runtime\CoreUObject\Public\UObject\ObjectBase.h to see more about the various UE macro options
+       </li>
+      </ul>
+      <p>
+       -
+     (
+     )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Installing UE4 To A Different Hard Drive - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Installing UE4 To A Different Hard Drive
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <p>
+       <br/>
+       <i>
+        <b>
+         NOTE: THIS GUIDE IS FOR WINDOWS.
+        </b>
+       </i>
+       - But with slight variations applies to linux and mac machines as well.
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Steps_to_move_Unreal_Engine_to_a_Different_HDD">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Steps to move Unreal Engine to a Different HDD
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Video_tutorial_for_Windows_7">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Video tutorial for Windows 7
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#On_Windows_10">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           On Windows 10
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       This is a simple guide for people who would like to move Unreal Engine 4 to a different directory (After installing it before). For example, if you were to install Unreal Engine 4 on C:/ and then later down the line you purchased another Hard Disk Drive and plug it into your PC. Now, you're running out of space on C:/ and want to move it to another directory.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Steps_to_move_Unreal_Engine_to_a_Different_HDD">
+        Steps to move Unreal Engine to a Different HDD
+       </span>
+      </h2>
+      <p>
+       <b>
+        BEFORE WE START. MAKE SURE THE LAUNCHER AND UNREAL ENGINE 4 EDITOR ARE NOT RUNNING.
+       </b>
+      </p>
+      <p>
+       Sidenote: The directory where the unreal engine is installed may be different depending on your launcher/engine version. It may be under C:\Program Files\Epic Games\VersionNumber or under C:\Program Files\Unreal\VersionNumber.
+      </p>
+      <p>
+       1) Create the folder where you want to move Unreal Engine to. In this case "D:\Unreal" is used
+      </p>
+      <p>
+       2) Cut all the directories under the folder where Unreal Engine is installed and paste them to your desired location.
+      </p>
+      <p>
+       3)Make a link for each directory you moved:
+For example, if your install location is "C:\Program Files\Epic Games\" and you want to link a directory named 4.8 to "D:\Unreal\4.8", you would open a command prompt (Windows Key + R, then type "cmd" , then press Enter Key) and type:
+      </p>
+      <p>
+       <code>
+        cd "C:\Program Files\Epic Games\"
+       </code>
+      </p>
+      <p>
+       <code>
+        mklink /j 4.8 D:\Unreal\4.8
+       </code>
+      </p>
+      <p>
+       You also need to make a link for the other Engine versions as well as the Launcher and DirectXRedist folder.
+      </p>
+      <p>
+       <b>
+        You have now successfully moved whole Unreal Engine to a different folder.
+       </b>
+      </p>
+      <p>
+       P.S. The same concept applies to linux and mac machines. The link command is just different.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Video_tutorial_for_Windows_7">
+        Video tutorial for Windows 7
+       </span>
+      </h2>
+      <p>
+       Disclaimer: This is not an EPIC GAMES tutorial.
+       <a class="external free" href="https://www.youtube.com/watch?v=mUDqz17aaJY" rel="nofollow">
+        https://www.youtube.com/watch?v=mUDqz17aaJY
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="On_Windows_10">
+        On Windows 10
+       </span>
+      </h2>
+      <p>
+       You may encounter various errors if you tried using the exact same syntax to use the previous commands, for example:
+      </p>
+      <ul>
+       <li>
+        "cd" doesn't make you change directory, you may use "cd /d" instead.
+       </li>
+      </ul>
+      <pre><b>&gt;</b> Solution regarding this tutorial: <br/><b>Here, you do not need to use "cd" or "cd /d" anymore.</b>
+</pre>
+      <ul>
+       <li>
+        using "mklink" you get the following error:
+        <i>
+         "The syntax of the command is incorrect."
+        </i>
+       </li>
+      </ul>
+      <pre><b>&gt;</b> Solution regarding this tutorial: <br/><b>Try using the following commands which are a bit different.</b>
+</pre>
+      <p>
+       <code>
+        mklink /J " **Original Directory** " " **New Directory** "
+       </code>
+      </p>
+      <p>
+       You need to add quotes
+       <b>
+        ""
+       </b>
+       , then you'll get something like this (version number may vary):
+      </p>
+      <p>
+       <code>
+        mklink /J "D:\Program Files\Epic Games\4.9" "E:\Program Files\Epic Games\4.9"
+       </code>
+      </p>
+      <p>
+       If the junction link has been successfully created, you'll get something like this (again, version number may vary):
+      </p>
+      <p>
+       <code>
+        Junction created for D:\Program Files\Epic Games\4.9 &lt;&lt;===&gt;&gt; E:\Program Files\Epic Games\4.9
+       </code>
+      </p>
+      <p>
+       <br/>
+       <b>
+        Don't forget to do this for the "DirectXRedist" as well as the "Launcher" folder and everything should work correctly.
+       </b>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

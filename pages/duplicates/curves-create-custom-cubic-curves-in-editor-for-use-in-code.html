@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Curves, Create Custom Cubic Curves In Editor For Use In Code - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Curves, Create Custom Cubic Curves In Editor For Use In Code
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#UE4_Curve_Asset">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           UE4 Curve Asset
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#UE4_Curve_Editor">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           UE4 Curve Editor
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#.h">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           .h
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#.cpp">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           .cpp
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Character_BP">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Character BP
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Author:
+       </i>
+       (
+       )
+      </p>
+      <p>
+       This wiki tutorial shows you how to get custom hand crafted curves into C++ !
+      </p>
+      <p>
+       This uses a combination of UE4 blueprints and UE4 c++ to enable you to create custom effects and physics movement curves in pure C++ with the ease of UE4's visual curve editor!
+      </p>
+      <p>
+       Below is a picture of the final result!
+      </p>
+      <p>
+       I draw this curve in the editor and and can now use it in C++ !
+      </p>
+      <p>
+       <img alt="CurveFinal.jpg" class="" height="590" src="../assets/curves-create-custom-cubic-curves-in-editor-for-use-in-code/0.jpg" width="700"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="UE4_Curve_Asset">
+        UE4 Curve Asset
+       </span>
+      </h2>
+      <p>
+       <img alt="MiscCurve.jpg" class="" height="713" src="../assets/curves-create-custom-cubic-curves-in-editor-for-use-in-code/1.jpg" width="700"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="UE4_Curve_Editor">
+        UE4 Curve Editor
+       </span>
+      </h2>
+      <p>
+       <img alt="CurveAuto.jpg" class="" height="413" src="../assets/curves-create-custom-cubic-curves-in-editor-for-use-in-code/2.jpg" width="700"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id=".h">
+        .h
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">AYourCharacter</span> <span class="o">:</span> <span class="k">public</span> <span class="n">ACharacter</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+
+
+	<span class="cm">/** Joy Curve */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="s">"JoyCurve"</span><span class="p">)</span>
+	<span class="n">UCurveFloat</span><span class="o">*</span> <span class="n">JoyCurve</span><span class="p">;</span>    
+	
+	
+	<span class="c1">//Rama's Draw Point wrapper</span>
+	<span class="n">FORCEINLINE</span> <span class="kt">void</span> <span class="nf">DrawPoint</span> 
+	<span class="p">(</span>
+		<span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">Loc</span><span class="p">,</span>
+		<span class="k">const</span> <span class="kt">float</span> <span class="n">Size</span> <span class="o">=</span> <span class="mi">7</span><span class="p">,</span>
+		<span class="k">const</span> <span class="n">FColor</span><span class="o">&amp;</span> <span class="n">Color</span> <span class="o">=</span> <span class="n">FColor</span><span class="o">::</span><span class="n">Red</span><span class="p">,</span>
+		<span class="k">const</span> <span class="kt">float</span> <span class="n">Duration</span><span class="o">=-</span><span class="mf">1.f</span>
+	<span class="p">)</span> <span class="k">const</span> <span class="p">{</span>
+		<span class="n">DrawDebugPoint</span><span class="p">(</span>
+			<span class="n">GetWorld</span><span class="p">(),</span> 
+			<span class="n">Loc</span><span class="p">,</span>  
+			<span class="n">Size</span><span class="p">,</span> <span class="c1">//thickness</span>
+			<span class="n">Color</span><span class="p">,</span> 
+			<span class="nb">false</span><span class="p">,</span>
+			<span class="n">Duration</span>
+		<span class="p">);</span>
+	<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id=".cpp">
+        .cpp
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Tick</span>
+<span class="kt">void</span> <span class="n">AYourCharacter</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaTime</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span><span class="n">DeltaTime</span><span class="p">);</span>
+	<span class="c1">//~~~~~~~~~~~~</span>
+	
+	
+	<span class="c1">//~~~ Draw the Curve! ~~~</span>
+
+	<span class="k">if</span><span class="p">(</span><span class="n">JoyCurve</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">for</span><span class="p">(</span><span class="kt">float</span> <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">;</span> <span class="n">v</span><span class="o">+=</span><span class="mf">0.01</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">DrawPoint</span><span class="p">(</span><span class="n">GetActorLocation</span><span class="p">()</span> <span class="o">+</span> <span class="n">FVector</span><span class="p">(</span><span class="n">v</span> <span class="o">*</span> <span class="mi">128</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">128</span> <span class="o">*</span> <span class="n">JoyCurve</span><span class="o">-&gt;</span><span class="n">GetFloatValue</span><span class="p">(</span><span class="n">v</span><span class="p">))</span> <span class="p">);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">else</span>
+	<span class="p">{</span>
+		<span class="c1">//UE_LOG "Joy CURVE IS INVALID!!!!";</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Character_BP">
+        Character BP
+       </span>
+      </h2>
+      <p>
+       Compile the above addition to your Character class!
+      </p>
+      <p>
+       Now set the asset reference that you made in the code, in the editor in your character BP!
+      </p>
+      <p>
+       <img alt="CharBP.jpg" class="" height="186" src="../assets/curves-create-custom-cubic-curves-in-editor-for-use-in-code/3.jpg" width="700"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

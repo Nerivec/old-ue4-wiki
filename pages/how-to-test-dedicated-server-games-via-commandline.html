@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   How To Test Dedicated Server Games Via Commandline - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    How To Test Dedicated Server Games Via Commandline
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#.bat_files">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           .bat files
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#UE4Editor.exe">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           UE4Editor.exe
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Step_1:_Server_Bat_File">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Step 1: Server Bat File
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#The_Server_IP_Address">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           The Server IP Address
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Step_2:_Client_Bat_Files">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Step 2: Client Bat Files
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Step_3:_All_In_One_Bat_File">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Step 3: All In One Bat File
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Player_Starts">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Player Starts
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           9
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <b>
+        Author
+       </b>
+       (
+       )
+      </p>
+      <p>
+       In this wiki I show you how you can run a dedicated server game with 2 connecting clients from commandline! (editor closed or used for other purposes)
+      </p>
+      <p>
+       All the batch files listed below go in your main project directory where your .uproject is.
+      </p>
+      <p>
+       Steam is disabled via -nosteam because you can't run multiple network instances from the same steam account.
+      </p>
+      <h2>
+       <span class="mw-headline" id=".bat_files">
+        .bat files
+       </span>
+      </h2>
+      <p>
+       Just make a text file and rename it to .bat instead of .txt, make sure file extensions are visible in your operating system or it might be saving to .txt.bat :)
+      </p>
+      <h2>
+       <span class="mw-headline" id="UE4Editor.exe">
+        UE4Editor.exe
+       </span>
+      </h2>
+      <p>
+       Make sure the UE4Editor path is accurate for your machine and is the correct version number.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Step_1:_Server_Bat_File">
+        Step 1: Server Bat File
+       </span>
+      </h2>
+      <p>
+       VictoryCreateDedicatedServer.bat
+      </p>
+      <pre> "C:\Program Files\Epic Games\4.9\Engine\Binaries\Win64\UE4Editor.exe" "%CD%\YourProject.uproject" MapName -server -log -nosteam
+</pre>
+      <p>
+       -server is the main thing to note here :)
+      </p>
+      <h2>
+       <span class="mw-headline" id="The_Server_IP_Address">
+        The Server IP Address
+       </span>
+      </h2>
+      <p>
+       When the Server instance loads you will notice in the log that it lists a WinSock IP address.
+      </p>
+      <p>
+       This is the IP address you use for client .bat files below!
+      </p>
+      <p>
+       <img alt="DedicatedServerWinSockIP.jpg" class="" height="262" src="../assets/how-to-test-dedicated-server-games-via-commandline/0.jpg" width="1134"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Step_2:_Client_Bat_Files">
+        Step 2: Client Bat Files
+       </span>
+      </h2>
+      <p>
+       VictoryCreateClient1.bat
+      </p>
+      <pre> TIMEOUT /T 6
+ "C:\Program Files\Epic Games\4.9\Engine\Binaries\Win64\UE4Editor.exe" "%CD%\YourProject.uproject" 192.168.0.3 -game -ResX=800 -ResY=900 -WinX=0 -WinY=20 -log -nosteam
+</pre>
+      <p>
+       <br/>
+       VictoryCreateClient2.bat
+      </p>
+      <pre> TIMEOUT /T 6
+ "C:\Program Files\Epic Games\4.9\Engine\Binaries\Win64\UE4Editor.exe" "%CD%\YourProject.uproject" 192.168.0.3 -game -ResX=800 -ResY=900 -WinX=800 -WinY=20 -log -nosteam
+</pre>
+      <p>
+       You can use shorter than 6 seconds if your dedicated loads fast :)
+      </p>
+      <h2>
+       <span class="mw-headline" id="Step_3:_All_In_One_Bat_File">
+        Step 3: All In One Bat File
+       </span>
+      </h2>
+      <pre> start VictoryCreateDedicatedServer
+ start VictoryCreateClient1
+ VictoryCreateClient2
+</pre>
+      <p>
+       The start command initiates new process so all three commands run simultaneously.
+      </p>
+      <p>
+       Then you just call this bat file to start the whole process each time!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Player_Starts">
+        Player Starts
+       </span>
+      </h2>
+      <p>
+       Make sure to have enough player starts to support loading in all your clients at the same time, or else some players might not join or end up in the floor or something :)
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       Now you can start Dedicated Server games with 2 clients from commandline with 1 click!
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   List of Key/Gamepad Input Names - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    List of Key/Gamepad Input Names
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Key_Name_List">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Key Name List
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Keyboard">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Keyboard
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-4">
+             <a href="#Character_Keys">
+              <span class="tocnumber">
+               2.1.1
+              </span>
+              <span class="toctext">
+               Character Keys
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-5">
+             <a href="#Arrow_keys">
+              <span class="tocnumber">
+               2.1.2
+              </span>
+              <span class="toctext">
+               Arrow keys
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-6">
+             <a href="#Numbers">
+              <span class="tocnumber">
+               2.1.3
+              </span>
+              <span class="toctext">
+               Numbers
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-7">
+             <a href="#Num_Pad">
+              <span class="tocnumber">
+               2.1.4
+              </span>
+              <span class="toctext">
+               Num Pad
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-8">
+             <a href="#Function_Keys">
+              <span class="tocnumber">
+               2.1.5
+              </span>
+              <span class="toctext">
+               Function Keys
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-9">
+             <a href="#Modifier_Keys">
+              <span class="tocnumber">
+               2.1.6
+              </span>
+              <span class="toctext">
+               Modifier Keys
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-10">
+             <a href="#Misc_Keys">
+              <span class="tocnumber">
+               2.1.7
+              </span>
+              <span class="toctext">
+               Misc Keys
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#Mouse">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             Mouse
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-12">
+             <a href="#Axis">
+              <span class="tocnumber">
+               2.2.1
+              </span>
+              <span class="toctext">
+               Axis
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-13">
+             <a href="#Buttons">
+              <span class="tocnumber">
+               2.2.2
+              </span>
+              <span class="toctext">
+               Buttons
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-14">
+           <a href="#Gamepads">
+            <span class="tocnumber">
+             2.3
+            </span>
+            <span class="toctext">
+             Gamepads
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-15">
+           <a href="#Touch_Devices">
+            <span class="tocnumber">
+             2.4
+            </span>
+            <span class="toctext">
+             Touch Devices
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       This page will detail the internal names used for various keys and gamepad bindings. These are used primarily in the DefaultInput.ini file, as shown in the example below (Taken from the first person shooter template)
+      </p>
+      <pre>+ActionMappings=(ActionName="Jump", Key=SpaceBar)
++ActionMappings=(ActionName="Fire", Key=LeftMouseButton)
+</pre>
+      <p>
+       (Here, SpaceBar and LeftMouseButton are the internal names to bind to the spacebar and left mouse button respectively)
+      </p>
+      <p>
+       For the most part, these bindings will tend to be obvious (A-Z, F1-F12 etc) but some keys may have odd or different names, hence the purpose of this document. This list will also contain gamepad bindings and touch device bindings, which are internally interpreted as 'keys'.
+      </p>
+      <p>
+       This is a reference document and may not be fully up to date with the latest version of Unreal Engine 4.
+      </p>
+      <p>
+       <span style="color:#000000; background:#ffff00">
+        For your most up to date list of these key names, look in the  file: Engine\Source\Runtime\InputCore\Classes\InputCoreTypes.h
+       </span>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Key_Name_List">
+        Key Name List
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Keyboard">
+        Keyboard
+       </span>
+      </h3>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:752px;">
+        <img alt="" class="thumbimage" height="340" src="../assets/list-of-keygamepad-input-names/0.png" width="750"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Default QWERTY UK ISO keyboard layout.
+        </div>
+       </div>
+      </div>
+      <h4>
+       <span class="mw-headline" id="Character_Keys">
+        Character Keys
+       </span>
+      </h4>
+      <ul>
+       <li>
+        A
+       </li>
+       <li>
+        B
+       </li>
+       <li>
+        C
+       </li>
+       <li>
+        D
+       </li>
+       <li>
+        E
+       </li>
+       <li>
+        F
+       </li>
+       <li>
+        G
+       </li>
+       <li>
+        H
+       </li>
+       <li>
+        I
+       </li>
+       <li>
+        J
+       </li>
+       <li>
+        K
+       </li>
+       <li>
+        L
+       </li>
+       <li>
+        M
+       </li>
+       <li>
+        N
+       </li>
+       <li>
+        O
+       </li>
+       <li>
+        P
+       </li>
+       <li>
+        Q
+       </li>
+       <li>
+        R
+       </li>
+       <li>
+        S
+       </li>
+       <li>
+        T
+       </li>
+       <li>
+        U
+       </li>
+       <li>
+        V
+       </li>
+       <li>
+        W
+       </li>
+       <li>
+        X
+       </li>
+       <li>
+        Y
+       </li>
+       <li>
+        Z
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <h4>
+       <span class="mw-headline" id="Arrow_keys">
+        Arrow keys
+       </span>
+      </h4>
+      <ul>
+       <li>
+        Left
+       </li>
+       <li>
+        Up
+       </li>
+       <li>
+        Right
+       </li>
+       <li>
+        Down
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <h4>
+       <span class="mw-headline" id="Numbers">
+        Numbers
+       </span>
+      </h4>
+      <p>
+       <i>
+        Numbers above the alphabet characters, below the functions keys on a traditional QWERTY keyboard'
+       </i>
+      </p>
+      <ul>
+       <li>
+        Zero
+       </li>
+       <li>
+        One
+       </li>
+       <li>
+        Two
+       </li>
+       <li>
+        Three
+       </li>
+       <li>
+        Four
+       </li>
+       <li>
+        Five
+       </li>
+       <li>
+        Six
+       </li>
+       <li>
+        Seven
+       </li>
+       <li>
+        Eight
+       </li>
+       <li>
+        Nine
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <ul>
+       <li>
+        NumPadZero
+       </li>
+       <li>
+        NumPadOne
+       </li>
+       <li>
+        NumPadTwo
+       </li>
+       <li>
+        NumPadThree
+       </li>
+       <li>
+        NumPadFour
+       </li>
+       <li>
+        NumPadFive
+       </li>
+       <li>
+        NumPadSix
+       </li>
+       <li>
+        NumPadSeven
+       </li>
+       <li>
+        NumPadEight
+       </li>
+       <li>
+        NumPadNine
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <h4>
+       <span class="mw-headline" id="Num_Pad">
+        Num Pad
+       </span>
+      </h4>
+      <p>
+       <i>
+        These are on the numpad, not the characters near the main alphabet typing area
+       </i>
+      </p>
+      <ul>
+       <li>
+        Multiply
+       </li>
+       <li>
+        Add
+       </li>
+       <li>
+        Subtract
+       </li>
+       <li>
+        Decimal
+       </li>
+       <li>
+        Divide
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <ul>
+       <li>
+        BackSpace
+       </li>
+       <li>
+        Tab
+       </li>
+       <li>
+        Enter
+       </li>
+       <li>
+        Pause (The pause/break key on some keyboards)
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <ul>
+       <li>
+        NumLock
+       </li>
+       <li>
+        ScrollLock
+       </li>
+       <li>
+        CapsLock
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <ul>
+       <li>
+        Escape
+       </li>
+       <li>
+        SpaceBar
+       </li>
+       <li>
+        PageUp
+       </li>
+       <li>
+        PageDown
+       </li>
+       <li>
+        End
+       </li>
+       <li>
+        Home
+       </li>
+       <li>
+        Insert
+       </li>
+       <li>
+        Delete
+       </li>
+      </ul>
+      <h4>
+       <span class="mw-headline" id="Function_Keys">
+        Function Keys
+       </span>
+      </h4>
+      <ul>
+       <li>
+        F1
+       </li>
+       <li>
+        F2
+       </li>
+       <li>
+        F3
+       </li>
+       <li>
+        F4
+       </li>
+       <li>
+        F5
+       </li>
+       <li>
+        F6
+       </li>
+       <li>
+        F7
+       </li>
+       <li>
+        F8
+       </li>
+       <li>
+        F9
+       </li>
+       <li>
+        F10
+       </li>
+       <li>
+        F11
+       </li>
+       <li>
+        F12
+       </li>
+      </ul>
+      <h4>
+       <span class="mw-headline" id="Modifier_Keys">
+        Modifier Keys
+       </span>
+      </h4>
+      <ul>
+       <li>
+        LeftShift
+       </li>
+       <li>
+        RightShift
+       </li>
+       <li>
+        LeftControl
+       </li>
+       <li>
+        RightControl
+       </li>
+       <li>
+        LeftAlt
+       </li>
+       <li>
+        RightAlt
+       </li>
+       <li>
+        LeftCommand
+       </li>
+       <li>
+        RightCommand
+       </li>
+      </ul>
+      <h4>
+       <span class="mw-headline" id="Misc_Keys">
+        Misc Keys
+       </span>
+      </h4>
+      <ul>
+       <li>
+        Semicolon
+       </li>
+       <li>
+        Equals
+       </li>
+       <li>
+        Comma
+       </li>
+       <li>
+        Underscore
+       </li>
+       <li>
+        Period
+       </li>
+       <li>
+        Slash
+       </li>
+       <li>
+        Tilde
+       </li>
+       <li>
+        LeftBracket
+       </li>
+       <li>
+        Backslash
+       </li>
+       <li>
+        RightBracket
+       </li>
+       <li>
+        Quote
+       </li>
+      </ul>
+      <h3>
+       <span class="mw-headline" id="Mouse">
+        Mouse
+       </span>
+      </h3>
+      <h4>
+       <span class="mw-headline" id="Axis">
+        Axis
+       </span>
+      </h4>
+      <ul>
+       <li>
+        MouseX
+       </li>
+       <li>
+        MouseY
+       </li>
+      </ul>
+      <ul>
+       <li>
+        MouseScrollUp
+       </li>
+       <li>
+        MouseScrollDown
+       </li>
+       <li>
+        MouseWheelSpin
+       </li>
+      </ul>
+      <p>
+       Note: There is a comment in InputCoreTypes stating that the viewport clients use MouseScrollUp and MouseScrollDown while Slate uses MouseWheelSpin. Epic plan to merge these in the future.
+      </p>
+      <h4>
+       <span class="mw-headline" id="Buttons">
+        Buttons
+       </span>
+      </h4>
+      <ul>
+       <li>
+        LeftMouseButton
+       </li>
+       <li>
+        RightMouseButton
+       </li>
+       <li>
+        MiddleMouseButton
+       </li>
+       <li>
+        ThumbMouseButton
+       </li>
+       <li>
+        ThumbMouseButton2
+       </li>
+      </ul>
+      <h3>
+       <span class="mw-headline" id="Gamepads">
+        Gamepads
+       </span>
+      </h3>
+      <ul>
+       <li>
+        Gamepad_LeftX
+       </li>
+       <li>
+        Gamepad_LeftY
+       </li>
+       <li>
+        Gamepad_RightX
+       </li>
+       <li>
+        Gamepad_RightY
+       </li>
+       <li>
+        Gamepad_LeftTriggerAxis
+       </li>
+       <li>
+        Gamepad_RightTriggerAxis
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <ul>
+       <li>
+        Gamepad_LeftThumbstick
+       </li>
+       <li>
+        Gamepad_RightThumbstick
+       </li>
+       <li>
+        Gamepad_Special_Left
+       </li>
+       <li>
+        Gamepad_Special_Right
+       </li>
+       <li>
+        Gamepad_FaceButton_Bottom
+       </li>
+       <li>
+        Gamepad_FaceButton_Right
+       </li>
+       <li>
+        Gamepad_FaceButton_Left
+       </li>
+       <li>
+        Gamepad_FaceButton_Top
+       </li>
+       <li>
+        Gamepad_LeftShoulder
+       </li>
+       <li>
+        Gamepad_RightShoulder
+       </li>
+       <li>
+        Gamepad_LeftTrigger
+       </li>
+       <li>
+        Gamepad_RightTrigger
+       </li>
+       <li>
+        Gamepad_DPad_Up
+       </li>
+       <li>
+        Gamepad_DPad_Down
+       </li>
+       <li>
+        Gamepad_DPad_Right
+       </li>
+       <li>
+        Gamepad_DPad_Left
+       </li>
+      </ul>
+      <p>
+       <br/>
+       <i>
+        Virtual key codes used for input axis button press/release emulation
+       </i>
+      </p>
+      <ul>
+       <li>
+        Gamepad_LeftStick_Up
+       </li>
+       <li>
+        Gamepad_LeftStick_Down
+       </li>
+       <li>
+        Gamepad_LeftStick_Right
+       </li>
+       <li>
+        Gamepad_LeftStick_Left
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <ul>
+       <li>
+        Gamepad_RightStick_Up
+       </li>
+       <li>
+        Gamepad_RightStick_Down
+       </li>
+       <li>
+        Gamepad_RightStick_Right
+       </li>
+       <li>
+        Gamepad_RightStick_Left
+       </li>
+      </ul>
+      <h3>
+       <span class="mw-headline" id="Touch_Devices">
+        Touch Devices
+       </span>
+      </h3>
+      <ul>
+       <li>
+        Tilt
+       </li>
+       <li>
+        RotationRate
+       </li>
+       <li>
+        Gravity
+       </li>
+       <li>
+        Acceleration
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <ul>
+       <li>
+        Gesture_SwipeLeftRight
+       </li>
+       <li>
+        Gesture_SwipeUpDown
+       </li>
+       <li>
+        Gesture_TwoFingerSwipeLeftRight
+       </li>
+       <li>
+        Gesture_TwoFingerSwipeUpDown
+       </li>
+       <li>
+        Gesture_Pinch
+       </li>
+       <li>
+        Gesture_Flick
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <ul>
+       <li>
+        PS4_Special
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <ul>
+       <li>
+        Invalid
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <ul>
+       <li>
+        TouchKeys (Array - defaults to a size of '10' through the constant 'NUM_TOUCH_KEYS')
+       </li>
+      </ul>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

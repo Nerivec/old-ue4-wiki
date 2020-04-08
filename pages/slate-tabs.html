@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Slate Tabs - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Slate Tabs
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Author
+       </i>
+       <a class="external text" href="https://forums.unrealengine.com/member.php?31661-Syntopia" rel="nofollow">
+        Syntopia
+       </a>
+      </p>
+      <p>
+       In this tutorial I show you how to make tabs.
+There are many ways to do this. With a checkbox or button style change, but for me it was the easiest way.
+      </p>
+      <p>
+       <img alt="Tabs.png" class="" height="510" src="../assets/slate-tabs/0.png" width="764"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Code:">
+        Code:
+       </span>
+      </h2>
+      <p>
+       MyStyle.h
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#pragma once</span>
+
+<span class="k">class</span> <span class="nc">FMyStyle</span> 
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="k">static</span> <span class="kt">void</span> <span class="n">Initialize</span><span class="p">();</span>
+	<span class="k">static</span> <span class="kt">void</span> <span class="nf">Shutdown</span><span class="p">();</span>
+
+	<span class="k">static</span> <span class="k">const</span> <span class="n">ISlateStyle</span><span class="o">&amp;</span> <span class="n">Get</span><span class="p">();</span>
+
+	<span class="k">static</span> <span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">ISlateStyle</span><span class="o">&gt;</span> <span class="n">StylePtr</span><span class="p">;</span>
+
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       MyStyle.cpp
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#include</span> <span class="cpf">"TabbedView.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"MyStyle.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Engine.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"SlateBasics.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"SlateStyle.h"</span><span class="cp"></span>
+
+<span class="cp">#define IMAGE_BRUSH(RelativePath, ...)	FSlateImageBrush(Style-&gt;RootToContentDir(RelativePath, TEXT(".png")), __VA_ARGS__)</span>
+
+<span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="n">ISlateStyle</span><span class="o">&gt;</span> <span class="n">CreateStyle</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="n">FSlateStyleSet</span><span class="o">&gt;</span> <span class="n">Style</span> <span class="o">=</span> <span class="n">MakeShareable</span><span class="p">(</span><span class="k">new</span> <span class="n">FSlateStyleSet</span><span class="p">(</span><span class="s">"PreloadStyle"</span><span class="p">));</span>
+	<span class="n">Style</span><span class="o">-&gt;</span><span class="n">SetContentRoot</span><span class="p">(</span><span class="n">FPaths</span><span class="o">::</span><span class="n">GameContentDir</span><span class="p">()</span> <span class="o">/</span> <span class="s">"Slate"</span><span class="p">);</span>
+
+	<span class="n">Style</span><span class="o">-&gt;</span><span class="n">Set</span><span class="p">(</span><span class="s">"tab_normal"</span><span class="p">,</span> <span class="k">new</span> <span class="n">IMAGE_BRUSH</span><span class="p">(</span><span class="s">"tab_normal"</span><span class="p">,</span> <span class="n">FVector2D</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">64</span><span class="p">)));</span>
+	<span class="n">Style</span><span class="o">-&gt;</span><span class="n">Set</span><span class="p">(</span><span class="s">"tab_active"</span><span class="p">,</span> <span class="k">new</span> <span class="n">IMAGE_BRUSH</span><span class="p">(</span><span class="s">"tab_active"</span><span class="p">,</span> <span class="n">FVector2D</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="mi">64</span><span class="p">)));</span>
+
+	<span class="k">return</span> <span class="n">Style</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cp">#undef IMAGE_BRUSH</span>
+
+
+<span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="n">ISlateStyle</span><span class="o">&gt;</span> <span class="n">FMyStyle</span><span class="o">::</span><span class="n">StylePtr</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="n">FMyStyle</span><span class="o">::</span><span class="n">Initialize</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">StylePtr</span><span class="p">.</span><span class="n">IsValid</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="n">StylePtr</span> <span class="o">=</span> <span class="n">CreateStyle</span><span class="p">();</span>
+		<span class="n">FSlateStyleRegistry</span><span class="o">::</span><span class="n">RegisterSlateStyle</span><span class="p">(</span><span class="o">*</span><span class="n">StylePtr</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">FMyStyle</span><span class="o">::</span><span class="n">Shutdown</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">FSlateStyleRegistry</span><span class="o">::</span><span class="n">UnRegisterSlateStyle</span><span class="p">(</span><span class="o">*</span><span class="n">StylePtr</span><span class="p">);</span>
+	<span class="n">ensure</span><span class="p">(</span><span class="n">StylePtr</span><span class="p">.</span><span class="n">IsUnique</span><span class="p">());</span>
+	<span class="n">StylePtr</span><span class="p">.</span><span class="n">Reset</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">const</span> <span class="n">ISlateStyle</span><span class="o">&amp;</span> <span class="n">FMyStyle</span><span class="o">::</span><span class="n">Get</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="o">*</span><span class="n">StylePtr</span><span class="p">;</span>	
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       TabbedView.h
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"Engine.h"</span><span class="cp"></span>
+</pre>
+      </div>
+      <p>
+       TabbedView.cpp
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#include</span> <span class="cpf">"TabbedView.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"MyStyle.h"</span><span class="cp"></span>
+
+<span class="k">class</span> <span class="nc">MyModule</span> <span class="o">:</span> <span class="k">public</span> <span class="n">FDefaultGameModuleImpl</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">StartupModule</span><span class="p">()</span> <span class="k">override</span>
+	<span class="p">{</span>
+		<span class="n">FSlateStyleRegistry</span><span class="o">::</span><span class="n">UnRegisterSlateStyle</span><span class="p">(</span><span class="s">"PreloadStyle"</span><span class="p">);</span>
+		<span class="n">FMyStyle</span><span class="o">::</span><span class="n">Initialize</span><span class="p">();</span>
+	<span class="p">}</span>
+
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">ShutdownModule</span><span class="p">()</span> <span class="k">override</span>
+	<span class="p">{</span>
+		<span class="n">FMyStyle</span><span class="o">::</span><span class="n">Shutdown</span><span class="p">();</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+
+<span class="n">IMPLEMENT_PRIMARY_GAME_MODULE</span><span class="p">(</span><span class="n">MyModule</span><span class="p">,</span> <span class="n">TabbedView</span><span class="p">,</span> <span class="s">"TabbedView"</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       MyGameMode.h
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.</span>
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"MyGameMode.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">(</span><span class="n">minimalapi</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">AMyGameMode</span> <span class="o">:</span> <span class="k">public</span> <span class="n">AGameMode</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       MyGameMode.cpp
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#include</span> <span class="cpf">"TabbedView.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"MyGameMode.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"MyHUD.h"</span><span class="cp"></span>
+
+
+<span class="n">AMyGameMode</span><span class="o">::</span><span class="n">AMyGameMode</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">ObjectInitializer</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// use our custom HUD class</span>
+	<span class="n">HUDClass</span> <span class="o">=</span> <span class="n">AMyHUD</span><span class="o">::</span><span class="n">StaticClass</span><span class="p">();</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       MyHUD.h
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.</span>
+<span class="cp">#pragma once </span>
+
+<span class="cp">#include</span> <span class="cpf">"MyHUD.generated.h"</span><span class="cp"></span>
+
+<span class="k">class</span> <span class="nc">SMyUIWidget</span> <span class="o">:</span> <span class="k">public</span> <span class="n">SCompoundWidget</span>
+<span class="p">{</span>
+	<span class="n">SLATE_BEGIN_ARGS</span><span class="p">(</span><span class="n">SMyUIWidget</span><span class="p">)</span>
+	<span class="p">{}</span>
+    <span class="cm">/*See private declaration of OwnerHUD below.*/</span>
+	<span class="n">SLATE_ARGUMENT</span><span class="p">(</span><span class="n">TWeakObjectPtr</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">AMyHUD</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">OwnerHUD</span><span class="p">)</span>
+	<span class="cm">/** The visual style of the button */</span>
+	<span class="n">SLATE_END_ARGS</span><span class="p">()</span>
+ 
+<span class="k">public</span><span class="o">:</span>
+	<span class="kt">void</span> <span class="n">Construct</span><span class="p">(</span><span class="k">const</span> <span class="n">FArguments</span><span class="o">&amp;</span> <span class="n">InArgs</span><span class="p">);</span>
+
+	<span class="n">FReply</span> <span class="nf">FirstTabClicked</span><span class="p">();</span>
+	<span class="n">FReply</span> <span class="nf">SecondTabClicked</span><span class="p">();</span>
+
+	<span class="k">const</span> <span class="n">FSlateBrush</span><span class="o">*</span> <span class="nf">GetFirstImageBrush</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+	<span class="k">const</span> <span class="n">FSlateBrush</span><span class="o">*</span> <span class="nf">GetSecondImageBrush</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+<span class="k">private</span><span class="o">:</span>
+	<span class="n">TWeakObjectPtr</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">AMyHUD</span><span class="o">&gt;</span> <span class="n">OwnerHUD</span><span class="p">;</span>
+
+	<span class="n">int32</span> <span class="n">TabIndex</span><span class="p">;</span>
+
+	<span class="n">int32</span> <span class="nf">GetCurrentTabIndex</span><span class="p">()</span> <span class="k">const</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="n">TabIndex</span><span class="p">;</span>
+	<span class="p">}</span>
+	
+<span class="p">};</span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">AMyHUD</span> <span class="o">:</span> <span class="k">public</span> <span class="n">AHUD</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+
+<span class="k">public</span><span class="o">:</span>
+	<span class="kt">void</span> <span class="n">BeginPlay</span><span class="p">();</span>
+
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">DrawHUD</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+
+<span class="k">private</span><span class="o">:</span>
+	<span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="n">SMyUIWidget</span><span class="o">&gt;</span> <span class="n">MyUIWidget</span><span class="p">;</span>
+
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       MyHUD.cpp
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#include</span> <span class="cpf">"TabbedView.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"MyHUD.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"SWidgetSwitcher.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"MyStyle.h"</span><span class="cp"></span>
+
+<span class="kt">int</span> <span class="n">FirstTabActive</span>  <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">SecondTabActive</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="kt">int</span> <span class="n">ftClick</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="kt">int</span> <span class="n">stClick</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="n">SMyUIWidget</span><span class="o">::</span><span class="n">Construct</span><span class="p">(</span><span class="k">const</span> <span class="n">FArguments</span><span class="o">&amp;</span> <span class="n">InArgs</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">OwnerHUD</span> <span class="o">=</span> <span class="n">InArgs</span><span class="p">.</span><span class="n">_OwnerHUD</span><span class="p">;</span>
+
+	<span class="n">TabIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+	<span class="n">ChildSlot</span>
+		<span class="p">[</span>
+			<span class="n">SNew</span><span class="p">(</span><span class="n">SVerticalBox</span><span class="p">)</span> 
+			<span class="o">+</span> <span class="n">SVerticalBox</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span>
+			<span class="p">.</span><span class="n">FillHeight</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+
+			<span class="o">+</span> <span class="n">SVerticalBox</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span>
+			<span class="p">.</span><span class="n">FillHeight</span><span class="p">(</span><span class="mf">0.8</span><span class="p">)</span>
+			<span class="p">[</span>
+				<span class="n">SNew</span><span class="p">(</span><span class="n">SHorizontalBox</span><span class="p">)</span>
+
+				<span class="o">+</span> <span class="n">SHorizontalBox</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span>
+				<span class="p">.</span><span class="n">FillWidth</span><span class="p">(</span><span class="mf">0.3</span><span class="p">)</span>
+
+				<span class="o">+</span> <span class="n">SHorizontalBox</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span>
+				<span class="p">.</span><span class="n">FillWidth</span><span class="p">(</span><span class="mf">0.4</span><span class="p">)</span>
+				<span class="p">[</span>
+					<span class="n">SNew</span><span class="p">(</span><span class="n">SVerticalBox</span><span class="p">)</span>
+					<span class="o">+</span> <span class="n">SVerticalBox</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span>
+					<span class="p">.</span><span class="n">FillHeight</span><span class="p">(</span><span class="mf">0.2</span><span class="p">)</span>
+					<span class="p">[</span>
+						<span class="n">SNew</span><span class="p">(</span><span class="n">SHorizontalBox</span><span class="p">)</span>
+						<span class="o">+</span> <span class="n">SHorizontalBox</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span>
+						<span class="p">[</span>
+							<span class="n">SNew</span><span class="p">(</span><span class="n">SButton</span><span class="p">)</span>
+							<span class="p">.</span><span class="n">ContentPadding</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+							<span class="p">.</span><span class="n">OnClicked</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">SMyUIWidget</span><span class="o">::</span><span class="n">FirstTabClicked</span><span class="p">)</span>
+							<span class="p">[</span>
+								<span class="n">SNew</span><span class="p">(</span><span class="n">SVerticalBox</span><span class="p">)</span>
+								<span class="o">+</span> <span class="n">SVerticalBox</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span>
+								<span class="p">.</span><span class="n">HAlign</span><span class="p">(</span><span class="n">HAlign_Fill</span><span class="p">)</span>
+								<span class="p">.</span><span class="n">VAlign</span><span class="p">(</span><span class="n">VAlign_Fill</span><span class="p">)</span>
+								<span class="p">[</span>
+									<span class="n">SNew</span><span class="p">(</span><span class="n">SBorder</span><span class="p">)</span>
+									<span class="p">.</span><span class="n">HAlign</span><span class="p">(</span><span class="n">HAlign_Center</span><span class="p">)</span>
+									<span class="p">.</span><span class="n">VAlign</span><span class="p">(</span><span class="n">VAlign_Center</span><span class="p">)</span>
+									<span class="p">.</span><span class="n">BorderImage</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">SMyUIWidget</span><span class="o">::</span><span class="n">GetFirstImageBrush</span><span class="p">)</span>
+									<span class="p">[</span>
+										<span class="n">SNew</span><span class="p">(</span><span class="n">STextBlock</span><span class="p">)</span>
+										<span class="p">.</span><span class="n">Font</span><span class="p">(</span><span class="n">FSlateFontInfo</span><span class="p">(</span><span class="s">"Veranda"</span><span class="p">,</span> <span class="mi">54</span><span class="p">))</span>
+										<span class="p">.</span><span class="n">ColorAndOpacity</span><span class="p">(</span><span class="n">FLinearColor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+										<span class="p">.</span><span class="n">Text</span><span class="p">(</span><span class="n">FText</span><span class="o">::</span><span class="n">FromString</span><span class="p">(</span><span class="s">"Page One"</span><span class="p">))</span>
+									<span class="p">]</span>
+								<span class="p">]</span>
+							<span class="p">]</span>
+						<span class="p">]</span>
+
+						<span class="o">+</span> <span class="n">SHorizontalBox</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span>
+						<span class="p">.</span><span class="n">FillWidth</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+
+						<span class="o">+</span> <span class="n">SHorizontalBox</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span>
+						<span class="p">[</span>
+							<span class="n">SNew</span><span class="p">(</span><span class="n">SButton</span><span class="p">)</span>
+							<span class="p">.</span><span class="n">ContentPadding</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span>
+							<span class="p">.</span><span class="n">OnClicked</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">SMyUIWidget</span><span class="o">::</span><span class="n">SecondTabClicked</span><span class="p">)</span>
+							<span class="p">[</span>
+								<span class="n">SNew</span><span class="p">(</span><span class="n">SVerticalBox</span><span class="p">)</span>
+								<span class="o">+</span> <span class="n">SVerticalBox</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span>
+								<span class="p">.</span><span class="n">HAlign</span><span class="p">(</span><span class="n">HAlign_Fill</span><span class="p">)</span>
+								<span class="p">.</span><span class="n">VAlign</span><span class="p">(</span><span class="n">VAlign_Fill</span><span class="p">)</span>
+								<span class="p">[</span>
+									<span class="n">SNew</span><span class="p">(</span><span class="n">SBorder</span><span class="p">)</span>
+									<span class="p">.</span><span class="n">HAlign</span><span class="p">(</span><span class="n">HAlign_Center</span><span class="p">)</span>
+									<span class="p">.</span><span class="n">VAlign</span><span class="p">(</span><span class="n">VAlign_Center</span><span class="p">)</span>
+									<span class="p">.</span><span class="n">BorderImage</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">SMyUIWidget</span><span class="o">::</span><span class="n">GetSecondImageBrush</span><span class="p">)</span>
+									<span class="p">[</span>
+										<span class="n">SNew</span><span class="p">(</span><span class="n">STextBlock</span><span class="p">)</span>
+										<span class="p">.</span><span class="n">Font</span><span class="p">(</span><span class="n">FSlateFontInfo</span><span class="p">(</span><span class="s">"Veranda"</span><span class="p">,</span> <span class="mi">54</span><span class="p">))</span>
+										<span class="p">.</span><span class="n">ColorAndOpacity</span><span class="p">(</span><span class="n">FLinearColor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+										<span class="p">.</span><span class="n">Text</span><span class="p">(</span><span class="n">FText</span><span class="o">::</span><span class="n">FromString</span><span class="p">(</span><span class="s">"Page Two"</span><span class="p">))</span>
+									<span class="p">]</span>
+								<span class="p">]</span>
+							<span class="p">]</span>
+						<span class="p">]</span>
+					<span class="p">]</span>
+
+					<span class="o">+</span> <span class="n">SVerticalBox</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span>
+					<span class="p">.</span><span class="n">FillHeight</span><span class="p">(</span><span class="mf">0.8</span><span class="p">)</span>
+					<span class="p">[</span>
+						<span class="n">SNew</span><span class="p">(</span><span class="n">SWidgetSwitcher</span><span class="p">)</span>
+						<span class="p">.</span><span class="n">WidgetIndex</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">SMyUIWidget</span><span class="o">::</span><span class="n">GetCurrentTabIndex</span><span class="p">)</span>
+						<span class="o">+</span> <span class="n">SWidgetSwitcher</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span> 
+						<span class="p">[</span>
+							<span class="n">SNew</span><span class="p">(</span><span class="n">SBorder</span><span class="p">)</span>
+							<span class="p">.</span><span class="n">BorderImage</span><span class="p">(</span><span class="n">FCoreStyle</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">GetBrush</span><span class="p">(</span><span class="s">"ToolPanel.GroupBorder"</span><span class="p">))</span>
+							<span class="p">[</span>
+								<span class="n">SNew</span><span class="p">(</span><span class="n">SVerticalBox</span><span class="p">)</span>
+								<span class="o">+</span> <span class="n">SVerticalBox</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span>
+								<span class="p">.</span><span class="n">HAlign</span><span class="p">(</span><span class="n">HAlign_Center</span><span class="p">)</span>
+								<span class="p">.</span><span class="n">VAlign</span><span class="p">(</span><span class="n">VAlign_Center</span><span class="p">)</span>
+								<span class="p">[</span>
+									<span class="n">SNew</span><span class="p">(</span><span class="n">STextBlock</span><span class="p">)</span>
+									<span class="p">.</span><span class="n">ColorAndOpacity</span><span class="p">(</span><span class="n">FLinearColor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+									<span class="p">.</span><span class="n">Font</span><span class="p">(</span><span class="n">FSlateFontInfo</span><span class="p">(</span><span class="s">"Veranda"</span><span class="p">,</span> <span class="mi">72</span><span class="p">))</span>
+									<span class="p">.</span><span class="n">Text</span><span class="p">(</span><span class="n">FText</span><span class="o">::</span><span class="n">FromString</span><span class="p">(</span><span class="s">"Page One"</span><span class="p">))</span>
+								<span class="p">]</span>
+								<span class="o">+</span> <span class="n">SVerticalBox</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span>
+									<span class="p">.</span><span class="n">HAlign</span><span class="p">(</span><span class="n">HAlign_Center</span><span class="p">)</span>
+									<span class="p">.</span><span class="n">VAlign</span><span class="p">(</span><span class="n">VAlign_Center</span><span class="p">)</span>
+									<span class="p">[</span>
+										<span class="n">SNew</span><span class="p">(</span><span class="n">STextBlock</span><span class="p">)</span>
+										<span class="p">.</span><span class="n">ColorAndOpacity</span><span class="p">(</span><span class="n">FLinearColor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+										<span class="p">.</span><span class="n">Font</span><span class="p">(</span><span class="n">FSlateFontInfo</span><span class="p">(</span><span class="s">"Veranda"</span><span class="p">,</span> <span class="mi">52</span><span class="p">))</span>
+										<span class="p">.</span><span class="n">Text</span><span class="p">(</span><span class="n">FText</span><span class="o">::</span><span class="n">FromString</span><span class="p">(</span><span class="s">"Page One"</span><span class="p">))</span>
+									<span class="p">]</span>
+								<span class="o">+</span> <span class="n">SVerticalBox</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span>
+								<span class="p">.</span><span class="n">HAlign</span><span class="p">(</span><span class="n">HAlign_Center</span><span class="p">)</span>
+								<span class="p">.</span><span class="n">VAlign</span><span class="p">(</span><span class="n">VAlign_Center</span><span class="p">)</span>
+								<span class="p">[</span>
+									<span class="n">SNew</span><span class="p">(</span><span class="n">STextBlock</span><span class="p">)</span>
+									<span class="p">.</span><span class="n">ColorAndOpacity</span><span class="p">(</span><span class="n">FLinearColor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+									<span class="p">.</span><span class="n">Font</span><span class="p">(</span><span class="n">FSlateFontInfo</span><span class="p">(</span><span class="s">"Veranda"</span><span class="p">,</span> <span class="mi">32</span><span class="p">))</span>
+									<span class="p">.</span><span class="n">Text</span><span class="p">(</span><span class="n">FText</span><span class="o">::</span><span class="n">FromString</span><span class="p">(</span><span class="s">"Page One"</span><span class="p">))</span>
+								<span class="p">]</span>
+							<span class="p">]</span>
+						<span class="p">]</span>
+						<span class="o">+</span> <span class="n">SWidgetSwitcher</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span> <span class="c1">// Weapons</span>
+							<span class="p">[</span>
+								<span class="n">SNew</span><span class="p">(</span><span class="n">SBorder</span><span class="p">)</span>
+								<span class="p">.</span><span class="n">BorderImage</span><span class="p">(</span><span class="n">FCoreStyle</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">GetBrush</span><span class="p">(</span><span class="s">"ToolPanel.GroupBorder"</span><span class="p">))</span>
+								<span class="p">[</span>
+									<span class="n">SNew</span><span class="p">(</span><span class="n">SVerticalBox</span><span class="p">)</span>
+									<span class="o">+</span> <span class="n">SVerticalBox</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span>
+									<span class="p">.</span><span class="n">HAlign</span><span class="p">(</span><span class="n">HAlign_Center</span><span class="p">)</span>
+									<span class="p">.</span><span class="n">VAlign</span><span class="p">(</span><span class="n">VAlign_Center</span><span class="p">)</span>
+									<span class="p">[</span>
+										<span class="n">SNew</span><span class="p">(</span><span class="n">STextBlock</span><span class="p">)</span>
+										<span class="p">.</span><span class="n">ColorAndOpacity</span><span class="p">(</span><span class="n">FLinearColor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+										<span class="p">.</span><span class="n">Font</span><span class="p">(</span><span class="n">FSlateFontInfo</span><span class="p">(</span><span class="s">"Veranda"</span><span class="p">,</span> <span class="mi">72</span><span class="p">))</span>
+										<span class="p">.</span><span class="n">Text</span><span class="p">(</span><span class="n">FText</span><span class="o">::</span><span class="n">FromString</span><span class="p">(</span><span class="s">"Page Two"</span><span class="p">))</span>
+									<span class="p">]</span>
+									<span class="o">+</span> <span class="n">SVerticalBox</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span>
+									<span class="p">.</span><span class="n">HAlign</span><span class="p">(</span><span class="n">HAlign_Center</span><span class="p">)</span>
+									<span class="p">.</span><span class="n">VAlign</span><span class="p">(</span><span class="n">VAlign_Center</span><span class="p">)</span>
+									<span class="p">[</span>
+										<span class="n">SNew</span><span class="p">(</span><span class="n">STextBlock</span><span class="p">)</span>
+										<span class="p">.</span><span class="n">ColorAndOpacity</span><span class="p">(</span><span class="n">FLinearColor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+										<span class="p">.</span><span class="n">Font</span><span class="p">(</span><span class="n">FSlateFontInfo</span><span class="p">(</span><span class="s">"Veranda"</span><span class="p">,</span> <span class="mi">52</span><span class="p">))</span>
+										<span class="p">.</span><span class="n">Text</span><span class="p">(</span><span class="n">FText</span><span class="o">::</span><span class="n">FromString</span><span class="p">(</span><span class="s">"Page Two"</span><span class="p">))</span>
+									<span class="p">]</span>
+									<span class="o">+</span> <span class="n">SVerticalBox</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span>
+									<span class="p">.</span><span class="n">HAlign</span><span class="p">(</span><span class="n">HAlign_Center</span><span class="p">)</span>
+									<span class="p">.</span><span class="n">VAlign</span><span class="p">(</span><span class="n">VAlign_Center</span><span class="p">)</span>
+									<span class="p">[</span>
+										<span class="n">SNew</span><span class="p">(</span><span class="n">STextBlock</span><span class="p">)</span>
+										<span class="p">.</span><span class="n">ColorAndOpacity</span><span class="p">(</span><span class="n">FLinearColor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+										<span class="p">.</span><span class="n">Font</span><span class="p">(</span><span class="n">FSlateFontInfo</span><span class="p">(</span><span class="s">"Veranda"</span><span class="p">,</span> <span class="mi">32</span><span class="p">))</span>
+										<span class="p">.</span><span class="n">Text</span><span class="p">(</span><span class="n">FText</span><span class="o">::</span><span class="n">FromString</span><span class="p">(</span><span class="s">"Page Two"</span><span class="p">))</span>
+									<span class="p">]</span>
+								<span class="p">]</span>
+							<span class="p">]</span>
+					<span class="p">]</span>
+				<span class="p">]</span>
+
+				<span class="o">+</span> <span class="n">SHorizontalBox</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span>
+				<span class="p">.</span><span class="n">FillWidth</span><span class="p">(</span><span class="mf">0.3</span><span class="p">)</span>
+			<span class="p">]</span>
+
+			<span class="o">+</span> <span class="n">SVerticalBox</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span>
+			<span class="p">.</span><span class="n">FillHeight</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+		<span class="p">];</span>
+<span class="p">}</span>
+
+<span class="k">const</span> <span class="n">FSlateBrush</span><span class="o">*</span> <span class="n">SMyUIWidget</span><span class="o">::</span><span class="n">GetFirstImageBrush</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="n">FName</span> <span class="n">BrushName</span><span class="p">;</span>
+	<span class="p">(</span><span class="n">FirstTabActive</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">?</span> <span class="n">BrushName</span> <span class="o">=</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"tab_normal"</span><span class="p">)</span> <span class="o">:</span> <span class="n">BrushName</span> <span class="o">=</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"tab_active"</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="n">FMyStyle</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">GetBrush</span><span class="p">(</span><span class="n">BrushName</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">const</span> <span class="n">FSlateBrush</span><span class="o">*</span> <span class="n">SMyUIWidget</span><span class="o">::</span><span class="n">GetSecondImageBrush</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="n">FName</span> <span class="n">BrushName</span><span class="p">;</span>
+	<span class="p">(</span><span class="n">SecondTabActive</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">?</span> <span class="n">BrushName</span> <span class="o">=</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"tab_normal"</span><span class="p">)</span> <span class="o">:</span> <span class="n">BrushName</span> <span class="o">=</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"tab_active"</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="n">FMyStyle</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">GetBrush</span><span class="p">(</span><span class="n">BrushName</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">AMyHUD</span><span class="o">::</span><span class="n">AMyHUD</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">ObjectInitializer</span><span class="p">)</span>
+<span class="p">{</span>
+
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AMyHUD</span><span class="o">::</span><span class="n">BeginPlay</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">SAssignNew</span><span class="p">(</span><span class="n">MyUIWidget</span><span class="p">,</span> <span class="n">SMyUIWidget</span><span class="p">).</span><span class="n">OwnerHUD</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">GEngine</span><span class="o">-&gt;</span><span class="n">IsValidLowLevel</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="n">GEngine</span><span class="o">-&gt;</span><span class="n">GameViewport</span><span class="o">-&gt;</span><span class="n">AddViewportWidgetContent</span><span class="p">(</span><span class="n">SNew</span><span class="p">(</span><span class="n">SWeakWidget</span><span class="p">).</span><span class="n">PossiblyNullContent</span><span class="p">(</span><span class="n">MyUIWidget</span><span class="p">.</span><span class="n">ToSharedRef</span><span class="p">()));</span>
+	<span class="p">}</span>
+ 
+	<span class="k">if</span> <span class="p">(</span><span class="n">MyUIWidget</span><span class="p">.</span><span class="n">IsValid</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="n">MyUIWidget</span><span class="o">-&gt;</span><span class="n">SetVisibility</span><span class="p">(</span><span class="n">EVisibility</span><span class="o">::</span><span class="n">Visible</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AMyHUD</span><span class="o">::</span><span class="n">DrawHUD</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">DrawHUD</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">FReply</span> <span class="n">SMyUIWidget</span><span class="o">::</span><span class="n">FirstTabClicked</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">TabIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+	<span class="n">stClick</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="n">ftClick</span><span class="o">++</span><span class="p">;</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">ftClick</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">FirstTabActive</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">FirstTabActive</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+			<span class="n">SecondTabActive</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+		<span class="p">}</span>
+
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="n">FReply</span><span class="o">::</span><span class="n">Handled</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">FReply</span> <span class="n">SMyUIWidget</span><span class="o">::</span><span class="n">SecondTabClicked</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">TabIndex</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+
+	<span class="n">ftClick</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="n">stClick</span><span class="o">++</span><span class="p">;</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">stClick</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">SecondTabActive</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">FirstTabActive</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+			<span class="n">SecondTabActive</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+		<span class="p">}</span>
+
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="n">FReply</span><span class="o">::</span><span class="n">Handled</span><span class="p">();</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Summary">
+        Summary
+       </span>
+      </h2>
+      <p>
+       Set your level to use your new game mode, and run!
+      </p>
+      <p>
+       Source code:
+     (~67KB)
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

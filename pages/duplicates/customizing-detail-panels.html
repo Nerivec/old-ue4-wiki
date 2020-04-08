@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Customizing detail panels - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Customizing detail panels
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Types_of_specializations">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Types of specializations
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Default_detail_layout">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Default detail layout
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Property_type_customizations">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             Property type customizations
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Object_customizations_.28Details_overrides.29">
+            <span class="tocnumber">
+             2.3
+            </span>
+            <span class="toctext">
+             Object customizations (Details overrides)
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Registering_your_specializations">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Registering your specializations
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Official_resources_on_the_subject">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Official resources on the subject
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Points_to_improve">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Points to improve
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Summary">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Summary
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       This tutorial will discuss customizing both display categories as well as property entries for UE4 types in all editor detail panes.
+For more informations on detail panes and what they are, please refer to this link:
+       <a class="external free" href="https://docs.unrealengine.com/latest/INT/Engine/UI/LevelEditor/Details/index.html" rel="nofollow">
+        https://docs.unrealengine.com/latest/INT/Engine/UI/LevelEditor/Details/index.html
+       </a>
+      </p>
+      <p>
+       If you have questions for me, please ask them in the Discussion Tab.
+I and hopefully others can then answer those questions in this main page.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Types_of_specializations">
+        Types of specializations
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Default_detail_layout">
+        Default detail layout
+       </span>
+      </h3>
+      <p>
+       As long as your UPROPERTY types are value types, the editor system will create a default layout for you.
+If you're happy with this layout, this tutorial is not for you :)
+      </p>
+      <h3>
+       <span class="mw-headline" id="Property_type_customizations">
+        Property type customizations
+       </span>
+      </h3>
+      <p>
+       This type of specialization is useful when you have created a custom struct that you want to change the layout for. This only works for USTRUCT's as far as I know, as the Interface used; IPropertyTypeCustomization's implemented functions all work exclusively with structs.
+      </p>
+      <p>
+       You can basically do anything on the layout callback, the only limitations are the limitations imposed by slate, as all of the layout code is done in this ingenious extension to UE4.
+But the most common usage of these specializations are either to create a better layout than the default display, or to create more intuitive widgets for setting your data. An example of this could be to let the user select a color with a color wheel, instead of directly setting the R, G and B parameters of a color struct.
+      </p>
+      <p>
+       The first step is to create your customization subclass. The important part here is to derive from IPropertyTypeCustomization. Here is an example header file:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"Editor/DetailCustomizations/Private/DetailCustomizationsPrivatePCH.h"</span><span class="cp"></span>
+
+<span class="cp">#pragma once</span>
+
+<span class="k">class</span> <span class="nc">FMyStructCustomization</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IPropertyTypeCustomization</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="k">static</span> <span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">IPropertyTypeCustomization</span><span class="o">&gt;</span> <span class="n">MakeInstance</span><span class="p">();</span>
+
+	<span class="cm">/** IPropertyTypeCustomization interface */</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">CustomizeHeader</span><span class="p">(</span><span class="n">TSharedRef</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">IPropertyHandle</span><span class="o">&gt;</span> <span class="n">StructPropertyHandle</span><span class="p">,</span> <span class="k">class</span> <span class="nc">FDetailWidgetRow</span><span class="o">&amp;</span> <span class="n">HeaderRow</span><span class="p">,</span> <span class="n">IPropertyTypeCustomizationUtils</span><span class="o">&amp;</span> <span class="n">StructCustomizationUtils</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">CustomizeChildren</span><span class="p">(</span><span class="n">TSharedRef</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">IPropertyHandle</span><span class="o">&gt;</span> <span class="n">StructPropertyHandle</span><span class="p">,</span> <span class="k">class</span> <span class="nc">IDetailChildrenBuilder</span><span class="o">&amp;</span> <span class="n">StructBuilder</span><span class="p">,</span> <span class="n">IPropertyTypeCustomizationUtils</span><span class="o">&amp;</span> <span class="n">StructCustomizationUtils</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+
+<span class="k">private</span><span class="o">:</span>
+	<span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="n">IPropertyHandle</span><span class="o">&gt;</span> <span class="n">SomeUPropertyHandle</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       Most of this is simply boilerplate. To create your own file, make sure the classname matches the type you want to customize with the addition of "Customization" at the end. Also, creating handles for any property you want to modify can be made, so for those types you create TSharedPtr&lt;IPropertyHandle&gt; typed fields.
+      </p>
+      <p>
+       And here is an example implementation file.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"MyProjectPCH.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"DetailCustomizations/MyStructCustomization.h"</span><span class="cp"></span>
+
+<span class="cp">#define LOCTEXT_NAMESPACE "MyStructCustomization"</span>
+
+<span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">IPropertyTypeCustomization</span><span class="o">&gt;</span> <span class="n">FMyStructCustomization</span><span class="o">::</span><span class="n">MakeInstance</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">MakeShareable</span><span class="p">(</span><span class="k">new</span> <span class="n">FMyStructCustomization</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">FMyStructCustomization</span><span class="o">::</span><span class="n">CustomizeHeader</span><span class="p">(</span><span class="n">TSharedRef</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">IPropertyHandle</span><span class="o">&gt;</span> <span class="n">StructPropertyHandle</span><span class="p">,</span> <span class="k">class</span> <span class="nc">FDetailWidgetRow</span><span class="o">&amp;</span> <span class="n">HeaderRow</span><span class="p">,</span> <span class="n">IPropertyTypeCustomizationUtils</span><span class="o">&amp;</span> <span class="n">StructCustomizationUtils</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">uint32</span> <span class="n">NumChildren</span><span class="p">;</span>
+	<span class="n">StructPropertyHandle</span><span class="o">-&gt;</span><span class="n">GetNumChildren</span><span class="p">(</span><span class="n">NumChildren</span><span class="p">);</span>
+
+	<span class="k">for</span> <span class="p">(</span><span class="n">uint32</span> <span class="n">ChildIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">ChildIndex</span> <span class="o">&lt;</span> <span class="n">NumChildren</span><span class="p">;</span> <span class="o">++</span><span class="n">ChildIndex</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">const</span> <span class="n">TSharedRef</span><span class="o">&lt;</span> <span class="n">IPropertyHandle</span> <span class="o">&gt;</span> <span class="n">ChildHandle</span> <span class="o">=</span> <span class="n">StructPropertyHandle</span><span class="o">-&gt;</span><span class="n">GetChildHandle</span><span class="p">(</span><span class="n">ChildIndex</span><span class="p">).</span><span class="n">ToSharedRef</span><span class="p">();</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="n">ChildHandle</span><span class="o">-&gt;</span><span class="n">GetProperty</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetName</span><span class="p">()</span> <span class="o">==</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"SomeUProperty"</span><span class="p">))</span>
+		<span class="p">{</span>
+			<span class="n">SomeUPropertyHandle</span> <span class="o">=</span> <span class="n">ChildHandle</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="n">check</span><span class="p">(</span><span class="n">SomeUPropertyHandle</span><span class="p">.</span><span class="n">IsValid</span><span class="p">());</span>
+
+
+	<span class="n">HeaderRow</span><span class="p">.</span><span class="n">NameContent</span><span class="p">()</span>
+		<span class="p">[</span>
+			<span class="n">StructPropertyHandle</span><span class="o">-&gt;</span><span class="n">CreatePropertyNameWidget</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"New property header name"</span><span class="p">),</span> <span class="nb">false</span><span class="p">)</span>
+		<span class="p">]</span>
+	<span class="p">.</span><span class="n">ValueContent</span><span class="p">()</span>
+		<span class="p">.</span><span class="n">MinDesiredWidth</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+		<span class="p">[</span>
+			<span class="n">SNew</span><span class="p">(</span><span class="n">STextBlock</span><span class="p">)</span>
+			<span class="p">.</span><span class="n">Text</span><span class="p">(</span><span class="n">LOCTEXT</span><span class="p">(</span><span class="s">"Extra info"</span><span class="p">,</span> <span class="s">"Some new representation"</span><span class="p">))</span>
+			<span class="p">.</span><span class="n">Font</span><span class="p">(</span><span class="n">IDetailLayoutBuilder</span><span class="o">::</span><span class="n">GetDetailFont</span><span class="p">())</span>
+		<span class="p">];</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">FMyStructCustomization</span><span class="o">::</span><span class="n">CustomizeChildren</span><span class="p">(</span><span class="n">TSharedRef</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">IPropertyHandle</span><span class="o">&gt;</span> <span class="n">StructPropertyHandle</span><span class="p">,</span> <span class="k">class</span> <span class="nc">IDetailChildrenBuilder</span><span class="o">&amp;</span> <span class="n">StructBuilder</span><span class="p">,</span> <span class="n">IPropertyTypeCustomizationUtils</span><span class="o">&amp;</span> <span class="n">StructCustomizationUtils</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">//Create further customization here</span>
+<span class="p">}</span>
+
+<span class="cp">#undef LOCTEXT_NAMESPACE</span>
+</pre>
+      </div>
+      <p>
+       In this example, both of these files are under a project folder called "DetailCustomizations".
+The first part of CustomizeHeader extracts the the UPROPERTY called "SomeUProperty" from the MyStruct struct into the field we declared in our header file (SomeUPropertyHandle). The second part is just normal Slate code to override the display row in the details pane. For more information on how to code Slate, please have a look at one of the Slate tutorials on another part of the wiki.
+      </p>
+      <p>
+       Another thing worth mentioning is how to use the cached property in the code. TODO! :D
+      </p>
+      <p>
+       Finally, don't forget to register your customization(see below).
+      </p>
+      <h3>
+       <span class="mw-headline" id="Object_customizations_.28Details_overrides.29">
+        Object customizations (Details overrides)
+       </span>
+      </h3>
+      <p>
+       If you would not only like to override struct display, but want full control over the rendering of all parts of the pane (customizing the category box, creating new categories, do whatever you like in the categories etc.) the more powerful object customization system is the way to go.
+      </p>
+      <p>
+       For this type of specialization, there is no restriction on the type you want to specialize, except that it should not be a POCO (plain old c++ object) type since it still has to have UPROPERTY's etc for you to access and bind to. I am not sure if it is possible to actually create customizations for POCO's, but in any case I would not recommend it.
+      </p>
+      <p>
+       The first step is to create your detail subclass. The important part here is to derive from IDetailCustomization. Here is an example header file:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"Editor/DetailCustomizations/Private/DetailCustomizationsPrivatePCH.h"</span><span class="cp"></span>
+
+<span class="cp">#pragma once</span>
+
+<span class="k">class</span> <span class="nc">FMyClassDetails</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IDetailCustomization</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="cm">/** Makes a new instance of this detail layout class for a specific detail view requesting it */</span>
+	<span class="k">static</span> <span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">IDetailCustomization</span><span class="o">&gt;</span> <span class="n">MakeInstance</span><span class="p">();</span>
+
+	<span class="cm">/** IDetailCustomization interface */</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">CustomizeDetails</span><span class="p">(</span> <span class="n">IDetailLayoutBuilder</span><span class="o">&amp;</span> <span class="n">DetailBuilder</span> <span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"MyProjectPCH.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"DetailCustomizations/MyClassDetails.h"</span><span class="cp"></span>
+
+<span class="cp">#define LOCTEXT_NAMESPACE "MyClassDetails"</span>
+
+<span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">IDetailCustomization</span><span class="o">&gt;</span> <span class="n">FMyClassDetails</span><span class="o">::</span><span class="n">MakeInstance</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">MakeShareable</span><span class="p">(</span><span class="k">new</span> <span class="n">FMyClassDetails</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">FMyClassDetails</span><span class="o">::</span><span class="n">CustomizeDetails</span><span class="p">(</span><span class="n">IDetailLayoutBuilder</span><span class="o">&amp;</span> <span class="n">DetailBuilder</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// Create a category so this is displayed early in the properties</span>
+	<span class="n">IDetailCategoryBuilder</span><span class="o">&amp;</span> <span class="n">MyCategory</span> <span class="o">=</span> <span class="n">DetailBuilder</span><span class="p">.</span><span class="n">EditCategory</span><span class="p">(</span><span class="s">"CategoryName"</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Extra info"</span><span class="p">),</span> <span class="n">ECategoryPriority</span><span class="o">::</span><span class="n">Important</span><span class="p">);</span>
+
+        <span class="c1">//You can get properties using the detailbuilder</span>
+	<span class="c1">//MyProperty= DetailBuilder.GetProperty(GET_MEMBER_NAME_CHECKED(MyClass, MyClassPropertyName));</span>
+
+	<span class="n">MyCategory</span><span class="p">.</span><span class="n">AddCustomRow</span><span class="p">(</span><span class="n">LOCTEXT</span><span class="p">(</span><span class="s">"Extra info"</span><span class="p">,</span> <span class="s">"Row header name"</span><span class="p">).</span><span class="n">ToString</span><span class="p">())</span>
+		<span class="p">.</span><span class="n">NameContent</span><span class="p">()</span>
+		<span class="p">[</span>
+			<span class="n">SNew</span><span class="p">(</span><span class="n">STextBlock</span><span class="p">)</span>
+			<span class="p">.</span><span class="n">Text</span><span class="p">(</span><span class="n">LOCTEXT</span><span class="p">(</span><span class="s">"Extra info"</span><span class="p">,</span> <span class="s">"Custom row header name"</span><span class="p">))</span>
+			<span class="p">.</span><span class="n">Font</span><span class="p">(</span><span class="n">IDetailLayoutBuilder</span><span class="o">::</span><span class="n">GetDetailFont</span><span class="p">())</span>
+		<span class="p">]</span>
+		<span class="p">.</span><span class="n">ValueContent</span><span class="p">().</span><span class="n">MinDesiredWidth</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+		<span class="p">[</span>
+			<span class="n">SNew</span><span class="p">(</span><span class="n">STextBlock</span><span class="p">)</span>
+			<span class="p">.</span><span class="n">Text</span><span class="p">(</span><span class="n">LOCTEXT</span><span class="p">(</span><span class="s">"Extra info"</span><span class="p">,</span> <span class="s">"Custom row content"</span><span class="p">))</span>
+			<span class="p">.</span><span class="n">Font</span><span class="p">(</span><span class="n">IDetailLayoutBuilder</span><span class="o">::</span><span class="n">GetDetailFont</span><span class="p">())</span>
+		<span class="p">];</span>
+<span class="p">}</span>
+
+<span class="cp">#undef LOCTEXT_NAMESPACE</span>
+</pre>
+      </div>
+      <p>
+       In this example, both of these files are under a project folder called "DetailCustomizations".
+The first part of the CustomizeDetails function here creates a new category called "CategoryName".
+We then proceed to create a new row in that category called "Custom row header name" with the content "Custom row content". The second part that creates the row is just normal Slate code to override the display row in the details pane. For more information on how to code Slate, please have a look at one of the Slate tutorials on another part of the wiki.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Registering_your_specializations">
+        Registering your specializations
+       </span>
+      </h2>
+      <p>
+       Just creating a specialization is not enough. For the editor to know that your specialization exists, you have to register it with the correct module. This can be done in any part of your solution, but to avoid unexpected behavior, I would recommend choosing some piece of code that is only run once, on construction.
+      </p>
+      <p>
+       An ideal spot is your main game module, or your game mode class (I usually use the game mode class since it has a constructor already in place).
+      </p>
+      <p>
+       Note that for both property and object specializations, you will need to include "PropertyEditor" as a private dependency module in your Build.cs file.
+      </p>
+      <p>
+       Depending on the specialization type, you need to use different registration methods. For property type customizations "RegisterCustomPropertyTypeLayout" is used, like so:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>	<span class="n">FPropertyEditorModule</span><span class="o">&amp;</span> <span class="n">PropertyModule</span> <span class="o">=</span> <span class="n">FModuleManager</span><span class="o">::</span><span class="n">LoadModuleChecked</span><span class="o">&lt;</span><span class="n">FPropertyEditorModule</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"PropertyEditor"</span><span class="p">);</span>
+
+	<span class="c1">//Custom properties</span>
+	<span class="n">PropertyModule</span><span class="p">.</span><span class="n">RegisterCustomPropertyTypeLayout</span><span class="p">(</span><span class="s">"MyStruct"</span><span class="p">,</span> <span class="n">FOnGetPropertyTypeCustomizationInstance</span><span class="o">::</span><span class="n">CreateStatic</span><span class="p">(</span><span class="o">&amp;</span><span class="n">FMyStructCustomization</span><span class="o">::</span><span class="n">MakeInstance</span><span class="p">));</span>
+</pre>
+      </div>
+      <p>
+       For object customizations "RegisterCustomClassLayout" is used instead, like so:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>	<span class="n">FPropertyEditorModule</span><span class="o">&amp;</span> <span class="n">PropertyModule</span> <span class="o">=</span> <span class="n">FModuleManager</span><span class="o">::</span><span class="n">LoadModuleChecked</span><span class="o">&lt;</span><span class="n">FPropertyEditorModule</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"PropertyEditor"</span><span class="p">);</span>
+
+	<span class="c1">//Custom detail views</span>
+	<span class="n">PropertyModule</span><span class="p">.</span><span class="n">RegisterCustomClassLayout</span><span class="p">(</span><span class="s">"MyClass"</span><span class="p">,</span> <span class="n">FOnGetDetailCustomizationInstance</span><span class="o">::</span><span class="n">CreateStatic</span><span class="p">(</span><span class="o">&amp;</span><span class="n">FMyClassDetails</span><span class="o">::</span><span class="n">MakeInstance</span><span class="p">));</span>
+</pre>
+      </div>
+      <p>
+       The important point to remember here is that the string should refer to the object you want to specialize, without the class type identifying letter at the start (MyClass instead of UMyClass for example) and the function you want to send to the CreateStatic call is complete class name for the specialization you want to create.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Official_resources_on_the_subject">
+        Official resources on the subject
+       </span>
+      </h2>
+      <p>
+       As far as I know, there is no current official documentation for this by Epic. For more information, I recommend referring to the source code. The best places to look are:
+Source/Editor/DetailCustomizations/Private/DetailCustomizations.cpp for a good starting point.
+      </p>
+      <p>
+       For customizing a category (object details), I recommend:
+Source/Editor/DetailCustomizations/Private/StaticMeshComponentDetails.h
+Source/Editor/DetailCustomizations/Private/StaticMeshComponentDetails.cpp
+      </p>
+      <p>
+       For customizing properties (structs), I found this class to be the best simple reference:
+Source/Editor/DetailCustomizations/Private/SlateColorCustomization.h
+Source/Editor/DetailCustomizations/Private/SlateColorCustomization.cpp
+      </p>
+      <h2>
+       <span class="mw-headline" id="Points_to_improve">
+        Points to improve
+       </span>
+      </h2>
+      <p>
+       This tutorial is by no means complete yet. As I discover new things I will keep improving it, and if you know something I don't, feel free to help out by editing this article!
+      </p>
+      <p>
+       Here are some things that still needs to be done:
+      </p>
+      <ul>
+       <li>
+        More tutorial content on how to use bound properties taken from the context objects
+       </li>
+       <li>
+        Find other wiki links for Slate and other useful articles to link to
+       </li>
+       <li>
+        Provide more in depth help to create certain types of specializations, such as:
+       </li>
+      </ul>
+      <pre>* Customizing the category box
+* Creating nested categories
+* Creating a custom editing widget
+</pre>
+      <h2>
+       <span class="mw-headline" id="Summary">
+        Summary
+       </span>
+      </h2>
+      <p>
+       There are two different types of specializations you can do.
+The first type is called "Customizations" and pertains to customizing the display of any struct UPROPERTY in any editor details pane.
+The second type is called "Details" and pertains to completely creating and customizing detail pane categories and subinformation.
+      </p>
+      <p>
+       There are two steps to performing specializations:
+      </p>
+      <ul>
+       <li>
+        Create the appropriate subclass for the type of specialization you want to do, for the class you want to display.
+       </li>
+       <li>
+        Register the specialization somewhere in your project.
+       </li>
+      </ul>
+      <p>
+       Feel free to post new questions in the Discussion tab!
+      </p>
+      <p>
+       Hopefully this tutorial will save someone else some time when trying to figure this out :)
+      </p>
+      <p>
+       (
+     )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

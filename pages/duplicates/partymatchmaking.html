@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   PartyMatchmaking - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    PartyMatchmaking
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#What.27s_a_party_system_and_how_can_I_use_it.3F">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             What's a party system and how can I use it?
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#The_Lobby">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           The Lobby
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Player_start_the_matchmaking_process">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Player start the matchmaking process
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#The_party_game_search">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           The party game search
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Original Author:
+       </i>
+      </p>
+      <p>
+       <b>
+        This guide is still a WIP so it's incomplete and has a ton of typos xD
+       </b>
+      </p>
+      <h3>
+       <span class="mw-headline" id="What.27s_a_party_system_and_how_can_I_use_it.3F">
+        What's a party system and how can I use it?
+       </span>
+      </h3>
+      <p>
+       The name `Party` in this case comes from the same xbox tearm of building a group of players that play together.
+So it just went from there to the whole engine to make it easier to explain.
+      </p>
+      <p>
+       I guess you all already know that when creating/joining/starting/destroying an online session
+you have to provide a `Session Name`. The name of the session is important intrenaly to handle
+the session state within the whole matchmaking process.
+      </p>
+      <p>
+       There are two main session names that you can use: `party` and `game`. If you would like to use others you might
+have to reimplement some OSS (OnmlineSubsystem) stuff on your own.
+      </p>
+      <p>
+       So how are beacons and sessions related in the whole thingy here? It's failry simple, beacons
+are just simple sockets that you can use to perform fast RPC calls that are not bound to an 
+UConnection. There are two basic types of beacons: `client` and `server`, which in turn get
+specialized as `party` `host`and `client`. Nat negotiation is another important part here
+while both PSN and Live come already with it (if confifgured properly) in Steam you have to
+explicitly use SteamSockets to get nat neg working.
+      </p>
+      <p>
+       So why do we need these beacons? Let me outline you the matchmaking process I used in the game
+Scourge: Outbreak. I will explain it making use of the flow a player would make to start/find a match.
+      </p>
+      <h2>
+       <span class="mw-headline" id="The_Lobby">
+        The Lobby
+       </span>
+      </h2>
+      <p>
+       What we do here is that we just go to a map and start a `party` session, there is no need to
+actually set a listen server because we will just Start an `APartyBeaconHost` later that will be used
+as our server for now (in our PSN version we actually started a listen server but just because we wanted
+to be able to customize the flow further).
+      </p>
+      <p>
+       It's important to note that the `party` session must be advertised and the state of the session
+has to be something that you know it's not in progress. In steam that session is actually a `lobby` session
+in it's backend (they have different types for different purposes) and the amount of `lobby` and advertised ones is limited.
+      </p>
+      <p>
+       Ok so now the player has created a `party` session which is advertised and in a lingering state (idle), we haven't
+stared the `APartyBeaconHost` not yet and are just in idle. It's important to note that the
+session is already registered and published in your backend (Steam master server for example)
+so it's discoverable by others.
+      </p>
+      <p>
+       Note: If you like to be able to invite players to your session prior to actually starting the matchmaking
+process we have to make some changes that I will outline at the end of the doc.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Player_start_the_matchmaking_process">
+        Player start the matchmaking process
+       </span>
+      </h2>
+      <p>
+       Our player just hit the 'find a game' game button and the fun begins! So first things first, we will just search
+for `party` sessions that are not full and are waiting for players (`needplayers` state). The session state is just a flag that you
+set when advertising, the engine comes with some helpers already but it's as simple as setting a parameter
+in the session, I normally use int values that are defined somewhere in my code so I can create a bunch of
+states that my algorithm might need, in UT it's actually the `EUTPartyState` enum through the `PartyProgression` variable of their custom state.
+      </p>
+      <p>
+       Once we found a list of good sessions that could be useable (you can add our own criteria to decide which session is ok or not)
+we will start an `APartyBeaconClient` and connect it to the best session we found. The register process is called `Reservation`,
+so what we do is to send an `RequestReservation` through the beacon using that session.
+      </p>
+      <p>
+       `OnReservationRequestComplete` is called once the request has been sorted, it can return either with an ok or fail. If we get a failure
+either when requesting the reservation or a general conection error we will save the session id into a list of ignored
+sessions and use the second best one to start a new reservation attmpt.
+      </p>
+      <p>
+       If the reservation has been a success we wait for it to be full. Once the reservation has been marked as full
+the host will set the session to be full so no one can join it anymore. I will outline more later on what the host is actually doing. UT has a timer to further process the state.
+      </p>
+      <p>
+       But first we will check what happens if there are no joinable sessions. So once we have tried all available sessions but we
+wasn't able to reserve a slot in any of them we will create a `APartyBeaconHost` our selfs and change our session from `searching` to
+`needplayers` (states are just for convinience you can use your own or check how UT does it). You might have noted
+that our session is now discoverbale by others and they will try to join to our host beacon now. If no players join after a given
+amount of time we will again switch to `searching`.
+      </p>
+      <p>
+       So what we do essentially is to try to `search`, if there is nothing good to join to we `host` a party. To make it a bit more unpredictable
+(which means we get better avaragle matchmaking times, less waiting better player experience) we might perform an initial number of X search attempts
+before we host. A way to achieve that is to implement a simple incremental chance system: after the first search you flip random with 10% chance to host,
+after the next search attempt to increase to an 30% and so forth. I normally host after the forth attempt. If you start your party as to be invitebale (the note bofore xD) you may want to host earlier if your party has already some players, for example it's quite efficient to directly host a team game and not even
+try to search if your own party is a full team already. You can come up with your own fancy logic here ^^.
+      </p>
+      <p>
+       In UT once the sesssion is full they start some timers to actually push the match further, they eventually start the listen server and travel every one to the map, there the client will join/create the actually session in `game` mode etc. Keep in mind that the idea is that we have a `party` and a `game` session.
+      </p>
+      <p>
+       In any case this is the place when the players join the party session so everyone knows where they should be.
+      </p>
+      <p>
+       In Scorge: Outbreak we thought that it's cooler that you play always with your pals and that we should maintain you togther in all cases. So once
+we finished the `party` search we start a `game` search.
+      </p>
+      <h2>
+       <span class="mw-headline" id="The_party_game_search">
+        The party game search
+       </span>
+      </h2>
+      <p>
+       Note: I have not checked UT if they perform the same as we did in Scourge though.
+      </p>
+      <p>
+       So back to when we get a full request in a host beacon on the previous `party` search. Once the server is full we changed the state to `searching other party`, what that meant is that the previous party host creates a new client beacon without destroying it's host beacon that is the bridge to his parties players. You can create as many as you need, just use a different port number. In our case the first step was port 7007 and the second (the party game search) was just a simple +1 7008.
+      </p>
+      <p>
+       The host creates a new online session but this time we will use the `game` session name, that session will be advertised too (in steam the previous one must be set to non advertised because iirc you can only have a single advertised one) and you set it to `searching` (we can reuse the states before).
+      </p>
+      <p>
+       As you might notice we will just repeat the search/host logic we did for the first step but this time we use a second set of beacons. So we actually search and join or host and wait.
+      </p>
+      <p>
+       Once the `game` party is full the host will notify it's own party members (remember that we have muliple hosts now, it's just another layer of hosts and clients) and it's party clients of the `game` party which are hosts itself. After they have been notified just send them a client RPC with the session data (the OSS one) so that everyone can connect to the final master host (the one that reached the full state of it's `game` host beacon).
+      </p>
+      <p>
+       If you where searching and you got the full notify from your `game` host you will wait for the RPC with the session data and send it to your own clients.
+      </p>
+      <p>
+       The idea is that this time everyone will join the `game` online session of the master `game` host beacon. So we will actually end up with 2 beacons and 2 sessions at the same time. This is so that once the match finishes every player can travel back to the lobby map and return to their respective `party` session so we will effectively maintain a party together all the time. In the case of ranked matches it's even mandatory to travel back to the lobby after a ranked match.
+      </p>
+      <p>
+       Holding 2 set's of beacon/sessions is also vital for host migration, every client beacon knows the UniqueId of the players within his host beacon, so you can decide to rehost and try to connect to they session to recreate the match (this is a topic I wont go into but the code is already there ^^)
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

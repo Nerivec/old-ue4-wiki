@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Stereo Rendered VR Crosshair - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Stereo Rendered VR Crosshair
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       Original author:
+       <a class="external text" href="https://twitter.com/HegiDev" rel="nofollow">
+        Michael 'Hegi' Hegemann
+       </a>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Code">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Code
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#VrCrosshairComponent.h">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             VrCrosshairComponent.h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#VrCrosshairComponent.cpp">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             VrCrosshairComponent.cpp
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h1>
+      <p>
+       Hello!
+      </p>
+      <p>
+       VR is now upon us and creating a proper 3D stereo crosshair that is always rendered correctly requires a bit more work than traditional 2D crosshairs. If the crosshair is rendered behind a surface, you get a cross-eyed image, that is why the crosshair always has to be ontop of the closest surface.
+      </p>
+      <p>
+       This code is compatible with all VR headsets. You may have to adjust some properties, though.
+      </p>
+      <p>
+       Here is the code for a component, that can be attached to the Pawn's first person camera. 
+You can use any kind of static mesh as crosshair, for example a plane with an animated circle on it or a simple sphere.
+      </p>
+      <h1>
+       <span class="mw-headline" id="Code">
+        Code
+       </span>
+      </h1>
+      <p>
+       The properties are self-explanatory, except for these.
+      </p>
+      <p>
+       <b>
+        CrosshairScaleOffset :
+       </b>
+       The multiplicator that is applied when the crosshair gets closer to the players view.
+      </p>
+      <p>
+       <b>
+        CrosshairConstSurfaceOffset :
+       </b>
+       This offsets the crosshair towards the players view, it is recommended to change this value instead of disabling depth-test on the crosshair material.
+      </p>
+      <h3>
+       <span class="mw-headline" id="VrCrosshairComponent.h">
+        VrCrosshairComponent.h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"GameFramework/Actor.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Components/StaticMeshComponent.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"VrCrosshairComponent.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">(</span><span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">BlueprintSpawnableComponent</span><span class="p">),</span> <span class="n">ClassGroup</span> <span class="o">=</span> <span class="n">Rendering</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">UVrCrosshairComponent</span> <span class="o">:</span> <span class="k">public</span> <span class="n">UStaticMeshComponent</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+
+	<span class="n">UVrCrosshairComponent</span><span class="p">();</span>
+
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">OnRegister</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">TickComponent</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaTime</span><span class="p">,</span> <span class="k">enum</span> <span class="n">ELevelTick</span> <span class="n">TickType</span><span class="p">,</span> <span class="n">FActorComponentTickFunction</span> <span class="o">*</span><span class="n">ThisTickFunction</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">)</span>
+	<span class="kt">float</span> <span class="n">CrosshairSize</span><span class="p">;</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">)</span>
+	<span class="kt">float</span> <span class="n">CrosshairScreenDistance</span><span class="p">;</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">)</span>
+	<span class="kt">float</span> <span class="n">CrosshairScaleOffset</span><span class="p">;</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">)</span>
+	<span class="kt">float</span> <span class="n">CrosshairConstSurfaceOffset</span><span class="p">;</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">)</span>
+	<span class="kt">float</span> <span class="n">CrosshairMinDist</span><span class="p">;</span>
+
+	<span class="kt">float</span> <span class="n">SavedTraceDist</span><span class="p">;</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintReadOnly</span><span class="p">)</span>
+	<span class="n">FHitResult</span> <span class="n">CrosshairHit</span><span class="p">;</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintReadOnly</span><span class="p">)</span>
+	<span class="kt">bool</span> <span class="n">bReturnHit</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="VrCrosshairComponent.cpp">
+        VrCrosshairComponent.cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"YOURGAME.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"VrCrosshairComponent.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Kismet/KismetSystemLibrary.h"</span><span class="cp"></span>
+
+<span class="n">UVrCrosshairComponent</span><span class="o">::</span><span class="n">UVrCrosshairComponent</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">PrimaryComponentTick</span><span class="p">.</span><span class="n">bCanEverTick</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+	<span class="n">bTickInEditor</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="n">bAutoActivate</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+
+	<span class="n">CrosshairScreenDistance</span> <span class="o">=</span> <span class="mf">1500.0</span><span class="p">;</span>
+	<span class="n">CrosshairSize</span> <span class="o">=</span> <span class="mf">0.15</span><span class="p">;</span>
+	<span class="n">CrosshairScaleOffset</span> <span class="o">=</span> <span class="mf">0.9</span><span class="p">;</span>
+	<span class="n">CrosshairConstSurfaceOffset</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">;</span>
+	<span class="n">CrosshairMinDist</span> <span class="o">=</span> <span class="mf">50.0</span><span class="p">;</span>
+
+	<span class="n">SavedTraceDist</span> <span class="o">=</span> <span class="n">CrosshairScreenDistance</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">UVrCrosshairComponent</span><span class="o">::</span><span class="n">OnRegister</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">OnRegister</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">UVrCrosshairComponent</span><span class="o">::</span><span class="n">TickComponent</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaTime</span><span class="p">,</span> <span class="k">enum</span> <span class="n">ELevelTick</span> <span class="n">TickType</span><span class="p">,</span> <span class="n">FActorComponentTickFunction</span> <span class="o">*</span><span class="n">ThisTickFunction</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">TickComponent</span><span class="p">(</span><span class="n">DeltaTime</span><span class="p">,</span> <span class="n">TickType</span><span class="p">,</span> <span class="n">ThisTickFunction</span><span class="p">);</span>
+
+	<span class="n">APawn</span> <span class="o">*</span><span class="n">VrPawn</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">APawn</span><span class="o">&gt;</span><span class="p">(</span><span class="n">GetOwner</span><span class="p">());</span>
+
+	<span class="c1">//Works only on pawn, parented by a camera</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">VrPawn</span> <span class="o">==</span> <span class="nb">NULL</span><span class="p">)</span>
+		<span class="k">return</span><span class="p">;</span>
+	
+	<span class="n">FVector</span> <span class="n">ViewPoint</span><span class="p">;</span>
+	<span class="n">FRotator</span> <span class="n">ViewRotation</span><span class="p">;</span>
+	<span class="n">VrPawn</span><span class="o">-&gt;</span><span class="n">GetActorEyesViewPoint</span><span class="p">(</span><span class="n">ViewPoint</span><span class="p">,</span> <span class="n">ViewRotation</span><span class="p">);</span>
+	<span class="n">ViewRotation</span><span class="p">.</span><span class="n">Roll</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+	<span class="k">const</span> <span class="n">FVector</span> <span class="n">Start</span> <span class="o">=</span> <span class="n">ViewPoint</span><span class="p">;</span>
+	<span class="k">const</span> <span class="n">FVector</span> <span class="n">End</span> <span class="o">=</span> <span class="n">Start</span> <span class="o">+</span> <span class="n">ViewRotation</span><span class="p">.</span><span class="n">Vector</span><span class="p">()</span> <span class="o">*</span> <span class="n">CrosshairScreenDistance</span><span class="p">;</span>
+
+	<span class="n">FHitResult</span> <span class="n">Hit</span><span class="p">;</span>
+	<span class="n">FCollisionQueryParams</span> <span class="nf">TraceParams</span><span class="p">(</span><span class="n">NAME_None</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="n">VrPawn</span><span class="p">);</span>
+	
+	<span class="k">const</span> <span class="kt">bool</span> <span class="n">bHit</span> <span class="o">=</span> <span class="n">GetWorld</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">LineTraceSingleByChannel</span><span class="p">(</span><span class="n">Hit</span><span class="p">,</span> <span class="n">Start</span><span class="p">,</span> <span class="n">End</span><span class="p">,</span> <span class="n">ECC_Camera</span><span class="p">,</span> <span class="n">TraceParams</span><span class="p">);</span>
+	
+	<span class="kt">float</span> <span class="n">TraceDist</span><span class="p">;</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">bHit</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//UE_LOG(LogTemp, Warning, TEXT("hit"))</span>
+		<span class="k">const</span> <span class="n">FVector</span> <span class="n">TraceToStart</span> <span class="o">=</span> <span class="n">Hit</span><span class="p">.</span><span class="n">Location</span> <span class="o">-</span> <span class="n">Start</span><span class="p">;</span>
+		<span class="n">TraceDist</span> <span class="o">=</span> <span class="n">TraceToStart</span><span class="p">.</span><span class="n">Size</span><span class="p">();</span>
+
+		<span class="c1">//Save the last known hit distance</span>
+		<span class="n">SavedTraceDist</span> <span class="o">=</span> <span class="n">TraceDist</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">else</span>
+	<span class="p">{</span>
+		<span class="c1">//Set to the last known hit distance, otherwise it would just snap back too far</span>
+		<span class="n">TraceDist</span> <span class="o">=</span> <span class="n">SavedTraceDist</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="c1">//Output some values</span>
+	<span class="n">bReturnHit</span> <span class="o">=</span> <span class="n">bHit</span><span class="p">;</span>
+	<span class="n">CrosshairHit</span> <span class="o">=</span> <span class="n">Hit</span><span class="p">;</span>
+
+	<span class="k">const</span> <span class="kt">float</span> <span class="n">Distance</span> <span class="o">=</span> <span class="n">CrosshairScreenDistance</span><span class="p">;</span>
+
+	<span class="n">TraceDist</span> <span class="o">=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Clamp</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">TraceDist</span><span class="p">,</span> <span class="n">CrosshairMinDist</span><span class="p">,</span> <span class="n">Distance</span><span class="p">);</span>
+
+	<span class="c1">//Set Position</span>
+	<span class="k">const</span> <span class="kt">float</span> <span class="n">CrosshairPos</span> <span class="o">=</span> <span class="n">TraceDist</span> <span class="o">-</span> <span class="n">CrosshairConstSurfaceOffset</span><span class="p">;</span> 
+	<span class="n">SetRelativeLocation</span><span class="p">(</span><span class="n">FVector</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="n">CrosshairPos</span><span class="p">);</span>
+
+	<span class="c1">//Set Scale</span>
+	<span class="k">const</span> <span class="kt">float</span> <span class="n">CrosshairDistScale</span> <span class="o">=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Min</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="p">(</span><span class="n">TraceDist</span> <span class="o">*</span> <span class="n">CrosshairScaleOffset</span> <span class="o">/</span> <span class="n">Distance</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span>
+	<span class="k">const</span> <span class="kt">float</span> <span class="n">CrosshairScale</span> <span class="o">=</span> <span class="n">CrosshairDistScale</span> <span class="o">*</span> <span class="n">CrosshairSize</span><span class="p">;</span>
+	<span class="n">SetWorldScale3D</span><span class="p">(</span><span class="n">CrosshairScale</span> <span class="o">*</span> <span class="n">FVector</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">));</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       <b>
+        Afterthought:
+       </b>
+       It would be possible to scale the crosshair with the vertex shader in a custom material, this might even provide a bit
+more accuracy in making it look like the crosshair is rendered in screen space. Another way would be to attach a billboard component to the crosshair. I have not tried these two ways yet.
+      </p>
+      <p>
+       <br/>
+       <b>
+        In other notes:
+       </b>
+       A while ago, John Carmack said that it would be optimal to use four raytraces for checking the crosshair against surfaces.
+       <a class="external text" href="https://www.facebook.com/permalink.php?story_fbid=1717273305173846&amp;id=100006735798590" rel="nofollow">
+        See here
+       </a>
+       . But for most cases one trace should be enough, another option would be to use a spherical trace with a very small radius.
+      </p>
+      <p>
+       <br/>
+       Enjoy! If you have any improvements or suggestions, don't hesitate to edit this page.
+      </p>
+      <p>
+       <br/>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Online-Multiplayer - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Online-Multiplayer
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Unreal_Engine_and_Online_Multiplayer_with_the_OnlineSubSystem">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Unreal Engine and Online Multiplayer with the OnlineSubSystem
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Intro">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Intro
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Part_1_.E2.80.93_Life_Cycle_of_a_Game_Session">
+            <span class="tocnumber">
+             1.2
+            </span>
+            <span class="toctext">
+             Part 1 – Life Cycle of a Game Session
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-4">
+             <a href="#Creating_a_Session">
+              <span class="tocnumber">
+               1.2.1
+              </span>
+              <span class="toctext">
+               Creating a Session
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-5">
+             <a href="#Starting_a_Session">
+              <span class="tocnumber">
+               1.2.2
+              </span>
+              <span class="toctext">
+               Starting a Session
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-6">
+             <a href="#Updating_a_Session.2C_Find_and_Join_a_Session">
+              <span class="tocnumber">
+               1.2.3
+              </span>
+              <span class="toctext">
+               Updating a Session, Find and Join a Session
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-7">
+             <a href="#End_a_Session">
+              <span class="tocnumber">
+               1.2.4
+              </span>
+              <span class="toctext">
+               End a Session
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-8">
+             <a href="#Destroy_a_Session">
+              <span class="tocnumber">
+               1.2.5
+              </span>
+              <span class="toctext">
+               Destroy a Session
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#Part_2_.E2.80.93_Class_and_interface_overview.">
+            <span class="tocnumber">
+             1.3
+            </span>
+            <span class="toctext">
+             Part 2 – Class and interface overview.
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#Part_3_.E2.80.93_An_Implementation">
+            <span class="tocnumber">
+             1.4
+            </span>
+            <span class="toctext">
+             Part 3 – An Implementation
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#Part_4_.E2.80.93_I_want_the_easy_way_out">
+            <span class="tocnumber">
+             1.5
+            </span>
+            <span class="toctext">
+             Part 4 – I want the easy way out
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-12">
+           <a href="#Related_Topics">
+            <span class="tocnumber">
+             1.6
+            </span>
+            <span class="toctext">
+             Related Topics
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Unreal_Engine_and_Online_Multiplayer_with_the_OnlineSubSystem">
+        Unreal Engine and Online Multiplayer with the OnlineSubSystem
+       </span>
+      </h1>
+      <h2>
+       <span class="mw-headline" id="Intro">
+        Intro
+       </span>
+      </h2>
+      <p>
+       Author
+       <a class="external text" href="https://madebykrol.wordpress.com/about/" rel="nofollow">
+        Kristoffer “mbk” Olsson
+       </a>
+       ,
+       <a class="external text" href="https://madebykrol.wordpress.com/2015/05/21/unreal-engine-and-online-multiplayer/" rel="nofollow">
+        link to original article
+       </a>
+       .
+      </p>
+      <p>
+       I have been working on getting Possession up and running for multiplayer testing, so I thought I should cover what I learned while doing that. Basic actor replication and game mechanics is one thing, getting your game to actually run online is by itself a great challenge, and maybe this post will help any one else understanding how Unreal Engine 4 works with online gameplay.
+      </p>
+      <p>
+       This article is written as a brain dump to recall my research on the online subsystem so it might be flawed. Leave a comment and I will try to edit this article if I’ve made errors to keep it relevant.
+      </p>
+      <p>
+       Unreal engine provides all the basics needed to host and join a game out of the box but you will eventually need to get your hands dirty with the Online Sub System. During development you can try out replication and see how your game will run in a multiplayer environment from the editor, just add another player when you run a preview of your game and you can start testing your game with multiplayer features. However, once you are out of the editor the simple action of joining a server is no longer as trivial. Inside the editor unreal engine provides you with a
+       <b>
+        Online Sub System
+       </b>
+       , this system is no longer present once you are in a standalone game instance. What you need to do is implement this on your own, or use one of the provided ones, for development purposes the
+       <b>
+        OnlineSubSystemNull
+       </b>
+       is suggested which  only work for LAN gameplay.
+      </p>
+      <p>
+       he first step from here would be to take a look at how ShooterGame works, especially how it is creating an online session, how to finding and joining a session and once you are finished playing, destroying a session. The second step from that would be to start ripping ShooterGame apart, applying some basic session operations to your game, and testing them with the Null system. When you are ready to ship your game, or want to test out internet gameplay, you can create your own subsystem that enables online multiplayer, which is quite a grand task. Or you have the option to opt in to publish your game on Steam. Then there is not much to it, from the Engines Point of view, you enable the
+       <b>
+        OnlineSubSystemSteam
+       </b>
+       , download and reference the Steamworks SDK. But if your game is not designed to run on a PC or you don’t want to use steam there are other options! UE4 supports Subsystems for; XboxLive, PSN, Google Play, Game Center and more!
+      </p>
+      <p>
+       Let’s begin by taking a look at how to use the OnlineSubSystem in your game to provide online / LAN multiplayer. The first thing that you need to do is enable the OnlineSubSystem module in your project.  Open your
+       <b>
+        .Build.cs
+       </b>
+       and uncomment the line for the OnlineSubsystemNull module. Mine looks like this:
+       <b>
+        DynamicallyLoadedModuleNames.Add(“OnlineSubsystemNull”);
+       </b>
+       There are two ways to approach getting your game to handle game sessions in the next step. One is more involved and complicated, the other very straight forward and easy. One in c++ and one in blueprint (As of
+       <b>
+        UE 4.9
+       </b>
+       )! Let’s go with the hard, complicated and fun option first!
+      </p>
+      <p>
+       Again, here is a good time to start brushing over the ShooterGame example. This complete process is covered with elegance in its source code.
+      </p>
+      <p>
+       Before we dig any deeper in an implementation we need to cover some concepts of how Sessions are handled by the subsystem, this will make it easier to understand how to build it in c++ and the complex code of ShooterGame will seem much more clear and easy to follow.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Part_1_.E2.80.93_Life_Cycle_of_a_Game_Session">
+        Part 1 – Life Cycle of a Game Session
+       </span>
+      </h2>
+      <p>
+       There are two major Interfaces involved
+       <b>
+        IOnlineSubsystem
+       </b>
+       and
+       <b>
+        IOnlineSession
+       </b>
+       each handles crucial parts of integrating your game with the subsystem. Everything is basically driven by sessions, you notify a service about your servers presence, the service is then queried by clients who wish to find active game sessions. A client then requests to join a given session, and then if all is well, the client is allowed to travel to that server.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Creating_a_Session">
+        Creating a Session
+       </span>
+      </h3>
+      <p>
+       When hosting a game you first need to create a session for the online sub system.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">IOnlineSubSystem</span><span class="o">*</span> <span class="n">OnlineSub</span> <span class="o">=</span> <span class="n">IOnlineSubsystem</span><span class="o">::</span><span class="n">Get</span><span class="p">();</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">OnlineSub</span><span class="p">)</span> 
+<span class="p">{</span>
+   <span class="n">IOnlineSessionPtr</span> <span class="n">Session</span> 
+       <span class="o">=</span> <span class="n">OnlineSub</span><span class="o">-&gt;</span><span class="n">GetSessionInterface</span><span class="p">();</span> 
+   <span class="k">if</span> <span class="p">(</span><span class="n">Session</span><span class="p">.</span><span class="n">IsValid</span><span class="p">())</span> <span class="p">{</span>
+      <span class="n">Session</span><span class="o">-&gt;</span><span class="n">CreateSession</span><span class="p">(</span><span class="o">*</span><span class="n">UserId</span><span class="p">,</span> <span class="n">SessionName</span><span class="p">,</span> <span class="o">*</span><span class="n">HostSettings</span><span class="p">);</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       This bit of code is the basic foundation for creating a new session in the subsystem. When a session has been created a delegate is fired which you can opt in to handle. This is done by assigning a delegate like so.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">OnCreateSessionDelegateHandle</span> 
+    <span class="o">=</span> <span class="n">Session</span><span class="o">-&gt;</span><span class="n">AddOnCreateSessionCompleteDelegate_Handle</span><span class="p">(</span><span class="n">FOnCreateSessionCompleteDelegate</span><span class="p">)</span>
+</pre>
+      </div>
+      <p>
+       <b>
+        _Handle
+       </b>
+       and no
+       <b>
+        _Handle
+       </b>
+       It’s worth mentioning why there are two different methods here, one that returns a FDelegateHandle and one that does not. The one without the _handle suffix is deprecated and should not be used. When you assign a Delegate you should always keep a reference to the handle so you can operate on your delegates in a proper way through out the session life cycle.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">ClearOnCreateSessionCompleteDelegate_Handle</span><span class="p">(</span><span class="n">OnCreateSessionDelegateHandle</span><span class="p">)</span>
+</pre>
+      </div>
+      <p>
+       <i>
+        § Pay attention, this is subject to change as the _Handle suffix is added for backwards compatibility while the option to do it without is deprecating.
+       </i>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Starting_a_Session">
+        Starting a Session
+       </span>
+      </h3>
+      <p>
+       You are able to and in general you should signal the subsystem that a match has started, in case you don’t want to list games in progress or maybe only list games in progress.
+      </p>
+      <p>
+       This can be done in the following way.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">Session</span><span class="o">-&gt;</span><span class="n">StartSession</span><span class="p">(</span><span class="n">SessionName</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       This will tell the subsystem that this session and gameplay has started. Take a look at how ShooterGame does this.
+      </p>
+      <p>
+       And as with all other calls to the subsystem you are able to assign delegates and retrieve the handle for them by methods named by convention e.g:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">OnStartSessionCompleteDelegateHandle</span>
+   <span class="o">=</span> <span class="n">Session</span><span class="o">-&gt;</span><span class="n">AddOnstartSessionCompleteDelegate_Handle</span><span class="p">(</span><span class="n">OnStartSessionDelegate</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       This is normally done in a overridden void HandleMatchHasStarted() method in your GameSession Class as this is called when the match has started by the currently active game mode.
+      </p>
+      <p>
+       When the authority has started the session, it should RPC call to a method on all the connected clients so that they also start a online session. In this example the server is doing a RPC to a method called ClientStartOnlineGame
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// tell non-local players to start online game</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">FConstPlayerControllerIterator</span> <span class="n">It</span> 
+   <span class="o">=</span> <span class="n">GetWorld</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetPlayerControllerIterator</span><span class="p">();</span> <span class="n">It</span><span class="p">;</span> <span class="o">++</span><span class="n">It</span><span class="p">)</span>
+<span class="p">{</span>
+   <span class="n">AClientPlayerController</span><span class="o">*</span> <span class="n">PC</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">AClientPlayerController</span><span class="o">&gt;</span><span class="p">(</span><span class="o">*</span><span class="n">It</span><span class="p">);</span>
+   <span class="k">if</span> <span class="p">(</span><span class="n">PC</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">PC</span><span class="o">-&gt;</span><span class="n">IsLocalPlayerController</span><span class="p">())</span>
+   <span class="p">{</span>
+      <span class="n">PC</span><span class="o">-&gt;</span><span class="n">ClientStartOnlineGame</span><span class="p">();</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Updating_a_Session.2C_Find_and_Join_a_Session">
+        Updating a Session, Find and Join a Session
+       </span>
+      </h3>
+      <p>
+       The online subsystem provides a way to find ongoing game sessions. This is a pretty powerful feature that allows to you query the subsystem to retrieve a set of hosts that is currently running a session of your game. The Online sub system interfaces declares methods to do this, however its up to the subsystem itself to allow querying.
+      </p>
+      <p>
+       Once you have a set of sessions you can either create a UI widget that allows players to pick a session and join it. Or you can choose for them by creating a matchmaking system where you put players against each other based on a set of parameters for instance, skill-level
+      </p>
+      <p>
+       When you wish to query the subsystem for sessions to join to need first to create an instance of FOnlineSessionSearch
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">Search</span> <span class="o">=</span> <span class="n">MakeShareable</span><span class="p">(</span><span class="k">new</span> <span class="n">FOnlineSessionSearch</span><span class="p">());</span>
+ 
+<span class="n">OnFindSessionsCompleteDelegateHandle</span> 
+    <span class="o">=</span> <span class="n">Session</span><span class="o">-&gt;</span><span class="n">AddOnFindSessionCompleteDelegate_Handle</span><span class="p">(</span><span class="n">OnFindSessionsCompleteDelegate</span><span class="p">);</span>
+<span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">FOnlineSessionSearch</span><span class="o">&gt;</span> <span class="n">SearchRef</span> <span class="o">=</span> <span class="n">Search</span><span class="p">.</span><span class="n">ToSharedRef</span><span class="p">();</span>
+<span class="n">Session</span><span class="o">-&gt;</span><span class="n">FindSessions</span><span class="p">(</span><span class="o">*</span><span class="n">UserId</span><span class="p">,</span> <span class="n">SearchRef</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       In case we wish to query our subsystem for servers with different options or keywords we can do this by adding queries to our SessionSearch Instance.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">Search</span><span class="o">-&gt;</span><span class="n">QuerySettings</span><span class="p">.</span><span class="n">Set</span><span class="p">(</span><span class="n">SEARCH_KEYWORD</span><span class="p">,</span> <span class="s">"SOME_KEYWORD"</span><span class="p">,</span> <span class="n">EOnlineComparisonOp</span><span class="o">::</span><span class="n">Equals</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       The last bit of the query is a
+       <b>
+        Enum
+       </b>
+       with a collection of comparison operators for instance you have Greater Than, Lesser Than, Near, Not Equals and a few others.
+      </p>
+      <p>
+       I will try to cover querying and matchmaking in deeper detail later on, untill then please look at ShooterGame and how it is using querying.
+      </p>
+      <p>
+       Once you have your results you are able to pick one and join the session.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">SessionToJoin</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="o">&amp;&amp;</span> <span class="n">SessionToJoin</span> <span class="o">&lt;</span> <span class="n">Search</span><span class="p">.</span><span class="n">SearchResults</span><span class="p">.</span><span class="n">Num</span><span class="p">())</span>
+<span class="p">{</span>
+   <span class="k">return</span> <span class="n">Session</span><span class="o">-&gt;</span><span class="n">JoinSession</span><span class="p">(</span><span class="o">*</span><span class="n">UserId</span><span class="p">,</span> <span class="n">SessionName</span><span class="p">,</span> <span class="n">Search</span><span class="p">.</span><span class="n">SearchResults</span><span class="p">[</span><span class="n">SessionToJoin</span><span class="p">]);</span>
+<span class="p">}</span>
+<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       When the OnJoinSessionCompleteDelegate is fired it passes a EOnJoinSessionCompleteResult::Type Enum as parameter to the delegate, this will either tell you that you have successfully joined the session, or that something went wrong and you should handle it accordingly, the delegate also passes a FName with the SessionName in it. If everything went well, we can then proceed to travel to the server. When we want to travel we need to resolve the URL to the server, this is done by passing a FString to contain the resolved URL along with the SessionName as a FName to GetResolvedConnectString
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FString</span> <span class="n">URL</span><span class="p">;</span>
+<span class="n">IOnlineSessionPtr</span> <span class="n">Session</span> <span class="o">=</span> <span class="n">OnlineSub</span><span class="o">-&gt;</span><span class="n">GetSessionInterface</span><span class="p">();</span>
+ 
+<span class="k">if</span> <span class="p">(</span> <span class="n">Session</span><span class="o">-&gt;</span><span class="n">GetResolvedConnectString</span><span class="p">(</span><span class="n">SessionName</span><span class="p">,</span> <span class="n">URL</span><span class="p">))</span>
+<span class="p">{</span>
+   <span class="n">PlayerController</span><span class="o">-&gt;</span><span class="n">ClientTravel</span><span class="p">(</span><span class="n">URL</span><span class="p">,</span> <span class="n">TRAVEL_Absolute</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       This might seem as a bit of magic, but the trick to this resolve is that your Session keeps a state once you have Joined a session, so when you resolve anything with the same session name that you joined with you will resolve the URL to that session.
+      </p>
+      <p>
+       This means that unless you explicitly decides to leave a session, you are not able to Join and travel to another. This also allows you to easily reconnect to a session if you lose the connection temporarily or your game crashed.
+      </p>
+      <p>
+       Be mind full of how you keep your references to the session.
+      </p>
+      <h3>
+       <span class="mw-headline" id="End_a_Session">
+        End a Session
+       </span>
+      </h3>
+      <p>
+       Endning a session is the the operation of notifing the subsystem that the match has ended. Its the opposite of Starting a session in this regard. When the Match has ended, GameMode calls GameSession-&gt;HandleMatchHasEnded();
+This means that in your gamesession subclass you should override void HandleMatchHasEnded().
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">IOnlineSessionPtr</span> <span class="n">Session</span> <span class="o">=</span> <span class="n">OnlineSub</span><span class="o">-&gt;</span><span class="n">GetSessionInterface</span><span class="p">();</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">Session</span><span class="p">.</span><span class="n">IsValid</span><span class="p">())</span> 
+<span class="p">{</span>
+   <span class="n">Session</span><span class="o">-&gt;</span><span class="n">EndSession</span><span class="p">(</span><span class="n">GameSessionName</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       This only shows the subsystem call to EndSession, in reality this is very incomplete. You need to tell the connected clients that your gamesession has ended so that they can gracefully handle that your match is ending so they can end their sessions aswell. Again ShooterGame does this with elegance. When the match is ending the server calls the ClientEndOnlineGame() on connected controllers, this is a replicated RPC which in turn will call this methods implementation on each connected clients controller.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// tell the clients to end</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">FConstPlayerControllerIterator</span> <span class="n">It</span> 
+   <span class="o">=</span> <span class="n">GetWorld</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetPlayerControllerIterator</span><span class="p">();</span> <span class="n">It</span><span class="p">;</span> <span class="o">++</span><span class="n">It</span><span class="p">)</span>
+<span class="p">{</span>
+   <span class="n">AClientPlayerController</span><span class="o">*</span> <span class="n">PC</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">AClientPlayerController</span><span class="o">&gt;</span><span class="p">(</span><span class="o">*</span><span class="n">It</span><span class="p">);</span>
+   <span class="k">if</span> <span class="p">(</span><span class="n">PC</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">PC</span><span class="o">-&gt;</span><span class="n">IsLocalPlayerController</span><span class="p">())</span>
+   <span class="p">{</span>
+      <span class="n">PC</span><span class="o">-&gt;</span><span class="n">ClientEndOnlineGame</span><span class="p">();</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Each client then calls EndSession to end its session!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">IOnlineSessionPtr</span> <span class="n">Session</span> <span class="o">=</span> <span class="n">OnlineSub</span><span class="o">-&gt;</span><span class="n">GetSessionInterface</span><span class="p">();</span>
+<span class="k">if</span><span class="p">(</span><span class="n">Session</span><span class="p">.</span><span class="n">IsValid</span><span class="p">())</span>
+<span class="p">{</span>
+   <span class="n">Session</span><span class="o">-&gt;</span><span class="n">EndSession</span><span class="p">(</span><span class="n">PlayerState</span><span class="o">-&gt;</span><span class="n">SessionName</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Destroy_a_Session">
+        Destroy a Session
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">IOnlineSessionPtr</span> <span class="n">Session</span> <span class="o">=</span> <span class="n">OnlineSub</span><span class="o">-&gt;</span><span class="n">GetSessionInterface</span><span class="p">();</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">Session</span><span class="p">.</span><span class="n">InValid</span><span class="p">())</span>
+<span class="p">{</span>
+   <span class="n">Session</span><span class="o">-&gt;</span><span class="n">DestroySession</span><span class="p">(</span><span class="n">SessionName</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       And as with all other other operations a delegate will be fired, where you can clean up after the session has been destroyed.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Part_2_.E2.80.93_Class_and_interface_overview.">
+        Part 2 – Class and interface overview.
+       </span>
+      </h2>
+      <p>
+       <b>
+        GameInstance
+       </b>
+      </p>
+      <p>
+       <b>
+        GameSession
+       </b>
+      </p>
+      <p>
+       <b>
+        IOnlineSession
+       </b>
+      </p>
+      <p>
+       <b>
+        IOnlineSessionSettings
+       </b>
+      </p>
+      <p>
+       <b>
+        IOnlineSubSystem
+       </b>
+      </p>
+      <p>
+       <b>
+        EOnlineAsyncTaskState
+       </b>
+      </p>
+      <p>
+       The OnlineSubSystem performs some asynchronous task for example searching and each task can be polled for a state. These are the states in which a async task can be in.
+      </p>
+      <p>
+       <b>
+        Done
+       </b>
+      </p>
+      <p>
+       <b>
+        Failed
+       </b>
+      </p>
+      <p>
+       <b>
+        InProgress
+       </b>
+      </p>
+      <p>
+       <b>
+        NotStarted
+       </b>
+      </p>
+      <p>
+       <br/>
+       <b>
+        FDelegateHandle
+       </b>
+      </p>
+      <p>
+       <b>
+        FOnlineSessionSearch
+       </b>
+      </p>
+      <p>
+       This class contains your search results, your search query and properties to set Timeout of your search, and the current search state if you need to poll for it.
+      </p>
+      <p>
+       To query the subsystem for specific fields use the QuerySettings.Set(Field, Value, EOnlineComparisonOp);
+      </p>
+      <p>
+       <b>
+        FOnlineSessionSearchResult
+       </b>
+      </p>
+      <p>
+       Searching for servers is a asynchronous task which starts to run when you call FindSessions. When this task has finished you and if it was successfull in finding any sessions they will be stored as a TArray of
+       <b>
+        FOnlineSessionSearchResult
+       </b>
+       on your
+       <b>
+        FOnlineSessionSearch
+       </b>
+       reference.
+      </p>
+      <p>
+       Here is an example of a method that polls for the async task state for the search.
+And while we are at it we take a snapshot of the current search progress.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">EOnlineAsyncTaskState</span><span class="o">::</span><span class="n">Type</span> <span class="n">APossessionGameSession</span><span class="o">::</span><span class="n">GetSearchResultStatus</span><span class="p">(</span>
+    <span class="n">int32</span><span class="o">&amp;</span> <span class="n">SearchResultIdx</span><span class="p">,</span> 
+    <span class="n">int32</span><span class="o">&amp;</span> <span class="n">NumSearchResults</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">SearchResultIdx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">NumSearchResults</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Search</span><span class="p">.</span><span class="n">IsValid</span><span class="p">())</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">Search</span><span class="o">-&gt;</span><span class="n">SearchState</span> <span class="o">==</span> <span class="n">EOnlineAsyncTaskState</span><span class="o">::</span><span class="n">Done</span><span class="p">)</span>
+        <span class="p">{</span>
+           <span class="n">NumSearchResults</span> <span class="o">=</span> <span class="n">Search</span><span class="o">-&gt;</span><span class="n">SearchResults</span><span class="p">.</span><span class="n">Num</span><span class="p">();</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">Search</span><span class="o">-&gt;</span><span class="n">SearchState</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">EOnlineAsyncTaskState</span><span class="o">::</span><span class="n">NotStarted</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Part_3_.E2.80.93_An_Implementation">
+        Part 3 – An Implementation
+       </span>
+      </h2>
+      <p>
+       With this knowledge it will be easier to follow and understand the code for the online part of ShooterGame. Its quite complex but now you have some basic knowledge of the online subsystem to fall back on when doing further research.
+      </p>
+      <p>
+       When studying the ShooterGame example code you find that working with the subsystem is not a straight procedural line of operations, most things are handled by delegates that has fired when certain events has happened in the subsystem.
+      </p>
+      <p>
+       Things has to work this way by the nature of networks, they are unreliable and, this means that our program cannot halt the frame and wait for the subsystem to respond over the network. The game have to ask to find sessions, and when the subsystem has some sessions to give to us, react then, do some other operations in the meantime.
+      </p>
+      <p>
+       In short, when implementing multiplayer in your game you need to think event-driven-programming where you tell the system to do one thing, and eventually the system will tell you when it has finished performing its task so you can react to the outcome.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Part_4_.E2.80.93_I_want_the_easy_way_out">
+        Part 4 – I want the easy way out
+       </span>
+      </h2>
+      <p>
+       As promised, we will take a look at a “easier” way to integrate the online subsystem into your game.
+In UE &gt;= 4.6 you have access to a set of new Blueprint nodes. CreateSession, FindSession, JoinSession and DestroySession. Take a look at this example on how to integration sessions to your game with blueprints.. It does only provide the basics of the subsystem functionality but you will get up and running in a second with this approach.
+      </p>
+      <p>
+       &lt;youtube&gt;
+       <a class="external free" href="https://youtu.be/4LV7KKtzKs8" rel="nofollow">
+        https://youtu.be/4LV7KKtzKs8
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Related_Topics">
+        Related Topics
+       </span>
+      </h2>
+      <p>
+       <a class="external free" href="./how-to-use-sessions-in-c.html" rel="nofollow">
+        How To Use Sessions In C++
+       </a>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Creating an Editor Module - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Creating an Editor Module
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#What_is_an_editor_module.3F">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           What is an editor module?
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Why_not_a_plugin.3F">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Why not a plugin?
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Creating_an_editor_module">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Creating an editor module
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Module_Folder_Structure">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Module Folder Structure
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Add_Module_Build_Rules">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             Add Module Build Rules
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Editing_Target.cs">
+            <span class="tocnumber">
+             2.3
+            </span>
+            <span class="toctext">
+             Editing Target.cs
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Source_Files">
+            <span class="tocnumber">
+             2.4
+            </span>
+            <span class="toctext">
+             Source Files
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Generate_project_files">
+            <span class="tocnumber">
+             2.5
+            </span>
+            <span class="toctext">
+             Generate project files
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Source_code">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Source code
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-10">
+         <a href="#What_Next.3F">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           What Next?
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-11">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="What_is_an_editor_module.3F">
+        What is an editor module?
+       </span>
+      </h2>
+      <p>
+       An editor module allows you to extend the functionality of the editor for your own custom C++ Actors, Components and other classes. You can do a variety of things such as customize the details panel for UPROPERTYs, add new editor modes, use component visualizers and other exciting things. This tutorial isn't going to discuss how to do any of that though, it aims to fill the gap of actually creating a module to put your customization code into.
+      </p>
+      <p>
+       This might seem like a lot of work just to enable you to do something else but the customization you can perform are very powerful compered to other engines.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Why_not_a_plugin.3F">
+        Why not a plugin?
+       </span>
+      </h3>
+      <p>
+       Whether you should use a plugin or editor module comes down to what your trying to do. If you want to extend the editor in a way that can be used across multiple projects then you probably want a plugin. If you only want to create customization specific to your game and class types then an editor module is a better design choice.
+      </p>
+      <p>
+       Please note that a plugin may also contain multiple modules. It is entirely possible to provide a runtime module in your plugin and accompany it with an editor plugin for convenience of use.
+      </p>
+      <p>
+       An editor module can be kept private from your game code meaning there are no cross dependencies. This vastly reduces the chances of having linking errors and means your editor code will not be included in your packaged application. If it's removed your game will still work fine and the editor will just lose the extended functionality.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Creating_an_editor_module">
+        Creating an editor module
+       </span>
+      </h2>
+      <p>
+       First you will need to edit your .uproject file. It should already have an entry for your main game module:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="p">{</span>
+	<span class="s2">"FileVersion"</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+	<span class="s2">"EngineAssociation"</span><span class="o">:</span> <span class="s2">"4.7"</span><span class="p">,</span>
+	<span class="s2">"Category"</span><span class="o">:</span> <span class="s2">""</span><span class="p">,</span>
+	<span class="s2">"Description"</span><span class="o">:</span> <span class="s2">""</span><span class="p">,</span>
+	<span class="s2">"Modules"</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">"Name"</span><span class="o">:</span> <span class="s2">"MyGame"</span><span class="p">,</span>
+            <span class="s2">"Type"</span><span class="o">:</span> <span class="s2">"Runtime"</span><span class="p">,</span>
+            <span class="s2">"LoadingPhase"</span><span class="o">:</span> <span class="s2">"Default"</span>
+        <span class="p">}</span>
+	<span class="p">]</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Under the existing module add an entry for your new editor module. Name is something sensible such as 'MyGameEditor' if your project is called 'MyGame'. It's important to keep this name consistent for your module to load. The type must be editor. Since we know that nothing will depend on this module we may as well load it as late as possible with 'PostEngineInit'. This is necessary to use component visualizers as of 4.7 and as far as I can tell has no other negative effects.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>        <span class="p">{</span>
+            <span class="s2">"Name"</span><span class="o">:</span> <span class="s2">"MyGameEditor"</span><span class="p">,</span>
+            <span class="s2">"Type"</span><span class="o">:</span> <span class="s2">"Editor"</span><span class="p">,</span>
+            <span class="s2">"LoadingPhase"</span><span class="o">:</span>  <span class="s2">"PostEngineInit"</span>
+        <span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Putting it together:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="p">{</span>
+	<span class="s2">"FileVersion"</span><span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+	<span class="s2">"EngineAssociation"</span><span class="o">:</span> <span class="s2">"4.7"</span><span class="p">,</span>
+	<span class="s2">"Category"</span><span class="o">:</span> <span class="s2">""</span><span class="p">,</span>
+	<span class="s2">"Description"</span><span class="o">:</span> <span class="s2">""</span><span class="p">,</span>
+	<span class="s2">"Modules"</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">"Name"</span><span class="o">:</span> <span class="s2">"MyGame"</span><span class="p">,</span>
+            <span class="s2">"Type"</span><span class="o">:</span> <span class="s2">"Runtime"</span><span class="p">,</span>
+            <span class="s2">"LoadingPhase"</span><span class="o">:</span> <span class="s2">"Default"</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">"Name"</span><span class="o">:</span> <span class="s2">"MyGameEditor"</span><span class="p">,</span>
+            <span class="s2">"Type"</span><span class="o">:</span> <span class="s2">"Editor"</span><span class="p">,</span>
+            <span class="s2">"LoadingPhase"</span><span class="o">:</span>  <span class="s2">"PostEngineInit"</span>
+        <span class="p">}</span>
+	<span class="p">]</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h4>
+       <span class="mw-headline" id="Module_Folder_Structure">
+        Module Folder Structure
+       </span>
+      </h4>
+      <p>
+       Next you will need to add the folder structure for your module. Create a new folder under source with the same name as your new module name (we will assume this is 'MyGameEditor' for the rest of this tutorial). I would suggest creating a Public and Private folder inside this folder to organize your code but it's not strictly speaking necessary.
+      </p>
+      <h4>
+       <span class="mw-headline" id="Add_Module_Build_Rules">
+        Add Module Build Rules
+       </span>
+      </h4>
+      <p>
+       Create a file called 'MyGameEditor.Build.cs' in the Source/MyGameEditor folder, the easiest way to do this is to copy the MyGame.Build.cs and rename it. 
+Make sure you rename any entries inside it as well. If you've used a public/private folder structure add them to the public and private include paths as below:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="p">...</span>
+	<span class="k">public</span> <span class="nf">MyGameEditor</span><span class="p">(</span><span class="n">ReadOnlyTargetRules</span> <span class="n">Target</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">Target</span><span class="p">)</span>
+	<span class="p">{</span>
+        <span class="n">PublicIncludePaths</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span>
+            <span class="k">new</span> <span class="kt">string</span><span class="p">[]</span>
+            <span class="p">{</span>
+                <span class="s">"MyGameEditor/Public"</span>
+            <span class="p">});</span>
+
+        <span class="n">PrivateIncludePaths</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span>
+            <span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> 
+            <span class="p">{</span>
+		<span class="s">"MyGameEditor/Private"</span>
+	    <span class="p">});</span>
+
+        <span class="n">PublicDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span>
+            <span class="k">new</span> <span class="kt">string</span><span class="p">[]</span>
+            <span class="p">{</span>
+                <span class="s">"MyGame"</span>
+            <span class="p">});</span>
+        <span class="n">PrivateDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span>
+            <span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> 
+            <span class="p">{</span>
+            <span class="p">});</span>
+
+        <span class="n">PrivateIncludePathModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span>
+            <span class="k">new</span> <span class="kt">string</span><span class="p">[]</span>
+            <span class="p">{</span>
+            <span class="p">});</span>
+
+        <span class="n">DynamicallyLoadedModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span>
+            <span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> 
+            <span class="p">{</span>
+            <span class="p">});</span>
+
+        <span class="p">}</span>
+<span class="p">...</span>
+</pre>
+      </div>
+      <p>
+       You'll also need to add your game module as a public dependency as displayed abowe:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>        <span class="n">PublicDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span>
+            <span class="k">new</span> <span class="kt">string</span><span class="p">[]</span>
+            <span class="p">{</span>
+                <span class="s">"MyGame"</span>
+            <span class="p">});</span>
+</pre>
+      </div>
+      <p>
+      </p>
+      <p>
+       <br/>
+       You'll also need to add in specific modules that you need to access editor libraries to
+       <b>
+        PrivateDependencyModuleNames
+       </b>
+       . At a minimum you'll want to add 'UnrealEd'. Check the API documentation for what module a class is part of, if your having linking errors it's probably because you haven't added the module in here.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Editing_Target.cs">
+        Editing Target.cs
+       </span>
+      </h3>
+      <p>
+       <b>
+        Note: SetupBinaries was depreciated in 4.16. See
+        <a class="external autonumber" href="https://forums.unrealengine.com/development-discussion/c-gameplay-programming/118722-c-4-16-transition-guide?p=996806#post996806" rel="nofollow">
+         [1]
+        </a>
+        for guidance how to transition to the new system.
+       </b>
+      </p>
+      <p>
+       If you look in the Source folder again you'll see two files, MyGame.Target.cs and MyGameEditor.Target.cs. You'll need to make a small edit to both of these files inside the SetupBinaries function:
+      </p>
+      <p>
+       In MyGame.Target.cs add (the if statement makes sure this only gets included in the editor build):
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>        <span class="k">if</span> <span class="p">(</span><span class="n">bBuildEditor</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">ExtraModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span> 
+                <span class="k">new</span> <span class="kt">string</span><span class="p">[]</span>
+                <span class="p">{</span>
+                    <span class="s">"MyGameEditor"</span>
+                <span class="p">});</span>
+        <span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       In MyGameEditor.Target.cs add:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>        <span class="c1">// Game editor</span>
+        <span class="n">ExtraModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span>
+            <span class="k">new</span> <span class="kt">string</span><span class="p">[]</span>
+            <span class="p">{</span>
+                <span class="s">"MyGameEditor"</span>
+            <span class="p">});</span>
+</pre>
+      </div>
+      <p>
+       <b>
+        4.16+ users (Depreciated use of bBuildEditor in MyGame.Target.cs)
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>        <span class="c1">//if (bBuildEditor) //this will include UnrealEd and will throw errors when packaging</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">Target</span><span class="p">.</span><span class="n">Type</span> <span class="p">==</span> <span class="n">TargetType</span><span class="p">.</span><span class="n">Editor</span><span class="p">)</span><span class="c1">//4.16+</span>
+        <span class="p">{</span>
+            <span class="n">ExtraModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span> 
+                <span class="k">new</span> <span class="kt">string</span><span class="p">[]</span>
+                <span class="p">{</span>
+                    <span class="s">"MyGameEditor"</span>
+                <span class="p">});</span>
+        <span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Source_Files">
+        Source Files
+       </span>
+      </h3>
+      <p>
+       We need a minimum of a header and source file to get the module to compile. Create a file called MyGameEditor.h and place it in the Public folder (if you created one), this is the only file you will need to put in Public, the rest should go in Private.
+      </p>
+      <p>
+       This file will act as the pre compiled header for the module so be sure to include anything that you think you'll need in most files here for faster compilation times.
+      </p>
+      <p>
+       We're also going to create a custom module class so we can load our customization once they're made, this is fairly similar to what you would see in a plugin. To do this create a class that extends
+       <b>
+        IModuleInterface
+       </b>
+       and at minimum override the
+       <b>
+        StartupModule()
+       </b>
+       and
+       <b>
+        ShutdownModule()
+       </b>
+       functions.
+      </p>
+      <p>
+       I also like to declare a log category for use with the module. Since we know that this isn't going to be in the final build we can afford to use verbose log outputs.
+      </p>
+      <p>
+       This will look something like this:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"Engine.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Modules/ModuleInterface.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Modules/ModuleManager.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"UnrealEd.h"</span><span class="cp"></span>
+
+<span class="n">DECLARE_LOG_CATEGORY_EXTERN</span><span class="p">(</span><span class="n">MyGameEditor</span><span class="p">,</span> <span class="n">All</span><span class="p">,</span> <span class="n">All</span><span class="p">)</span>
+
+<span class="k">class</span> <span class="nc">FMyGameEditorModule</span><span class="o">:</span> <span class="k">public</span> <span class="n">IModuleInterface</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">StartupModule</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">ShutdownModule</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       Finally create a file called MyGameEditor.cpp in the private folder. There's a few things to do here.
+      </p>
+      <p>
+       At the top of the file use the
+       <b>
+        IMPLEMENT_GAME_MODULE
+       </b>
+       macro, the first argument is the name of the module class you created in the header file, the second argument is the name of the module as you declared it in the uproject file.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"MyGameEditor.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Modules/ModuleManager.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Modules/ModuleInterface.h"</span><span class="cp"></span>
+
+<span class="n">IMPLEMENT_GAME_MODULE</span><span class="p">(</span><span class="n">FMyGameEditorModule</span><span class="p">,</span> <span class="n">MyGameEditor</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       Under this make a basic implementation of the startup and shutdown functions, if you add in a log call then you can check that the module is being loaded correctly on startup. As you make your editor customizations this is where you will load and unload them. The exact method for this differs depending on the customization type but it usually involves accessing the appropriate module though the module manager and calling a registration function.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">DEFINE_LOG_CATEGORY</span><span class="p">(</span><span class="n">MyGameEditor</span><span class="p">)</span>
+
+<span class="cp">#define LOCTEXT_NAMESPACE "MyGameEditor"</span>
+
+<span class="kt">void</span> <span class="n">FMyGameEditorModule</span><span class="o">::</span><span class="n">StartupModule</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">UE_LOG</span><span class="p">(</span><span class="n">MyGameEditor</span><span class="p">,</span> <span class="n">Warning</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"MyGameEditor: Log Started"</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">FMyGameEditorModule</span><span class="o">::</span><span class="n">ShutdownModule</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">UE_LOG</span><span class="p">(</span><span class="n">MyGameEditor</span><span class="p">,</span> <span class="n">Warning</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"MyGameEditor: Log Ended"</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="cp">#undef LOCTEXT_NAMESPACE</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Generate_project_files">
+        Generate project files
+       </span>
+      </h3>
+      <p>
+       Almost done! Lastly right click on your
+       <i>
+        .uproject
+       </i>
+       file and select generate project files. This will re-generate your project files including your new module. If you get an error you probably have a name inconstancy, make sure your using 'MyGameEditor' or whatever you chose in all the right spots.
+      </p>
+      <p>
+       Compile and run your project. If you check your output log you should see the log output from above. 
+You have now successfully created your editor module!
+      </p>
+      <p>
+       15:44, 18 July 2017 (UTC)15:44, 18 July 2017 (UTC)
+     (
+     )
+Updated for 4.16.2 by VertexSoup
+      </p>
+      <h2>
+       <span class="mw-headline" id="Source_code">
+        Source code
+       </span>
+      </h2>
+      <p>
+       <a class="external free" href="https://github.com/GSAero/Creating-an-Editor-Module" rel="nofollow">
+        https://github.com/GSAero/Creating-an-Editor-Module
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="What_Next.3F">
+        What Next?
+       </span>
+      </h2>
+      <p>
+       Now you actually need to create some customizations and register them in StartupModule(). Here are a few good resources to start with:
+      </p>
+      <ul>
+       <li>
+        by
+      , you can register the customization in the StartupModule() function
+       </li>
+       <li>
+        by me
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       An editor module allows you to easily organize editor only code and separate it from your game code. If you are going to customize the editor for your specific types this is a good starting point. It might seem like a lot of work but you'll be glad you did it later!
+      </p>
+      <p>
+       <br/>
+       (
+     )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

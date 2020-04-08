@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Create An AI Bot in Blueprint - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Create An AI Bot in Blueprint
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Intro">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Intro
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Setup">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Setup
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Series">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Series
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Part_1">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Part 1
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Part_2">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             Part 2
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Part_3">
+            <span class="tocnumber">
+             3.3
+            </span>
+            <span class="toctext">
+             Part 3
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Part_4">
+            <span class="tocnumber">
+             3.4
+            </span>
+            <span class="toctext">
+             Part 4
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Part_5">
+            <span class="tocnumber">
+             3.5
+            </span>
+            <span class="toctext">
+             Part 5
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Outro">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Outro
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Intro">
+        Intro
+       </span>
+      </h1>
+      <p>
+       Hey Everyone Whats Up,
+      </p>
+      <p>
+       I'm Peter L. Newton and I will be your Blueprint
+       <i>
+        Genie
+       </i>
+       today!
+      </p>
+      <p>
+       In this new series on creating an AI Bot we utilize
+       <b>
+        Unreal Engine 4's Blueprint Scripting
+       </b>
+       .
+      </p>
+      <p>
+       We go over each step, creating the navmesh, bot, data-asset, waypoints, behavior tree task/service/decorators, attacking and checking of line of sight.
+      </p>
+      <h1>
+       <span class="mw-headline" id="Setup">
+        Setup
+       </span>
+      </h1>
+      <p>
+       I will list the follow assets used in Tutorial.
+      </p>
+      <ol>
+       <li>
+        Pawn or Character Blueprint Class
+       </li>
+       <li>
+        Attack Sequence for Character (
+        <i>
+         Optional
+        </i>
+        )
+       </li>
+      </ol>
+      <h1>
+       <span class="mw-headline" id="Series">
+        Series
+       </span>
+      </h1>
+      <h2>
+       <span class="mw-headline" id="Part_1">
+        Part 1
+       </span>
+      </h2>
+      <dl>
+       <dt>
+        Youtube Link
+       </dt>
+       <dd>
+        &lt;youtube&gt;
+        <a class="external free" href="https://www.youtube.com/watch?v=VAAHKNoIg0w&amp;index=2&amp;list=PLV0qBSMhzPz4-x3bYt2q01c2PjXmUl1eX" rel="nofollow">
+         https://www.youtube.com/watch?v=VAAHKNoIg0w&amp;index=2&amp;list=PLV0qBSMhzPz4-x3bYt2q01c2PjXmUl1eX
+        </a>
+        <dl>
+         <dd>
+          <b>
+           Description
+          </b>
+          <dl>
+           <dd>
+            In Part 1 of the series we create a NavMesh, setup functions within our AI Bot, touch on the direction of our AI, and create our first Behavior Tree Task.
+           </dd>
+          </dl>
+         </dd>
+        </dl>
+       </dd>
+      </dl>
+      <h2>
+       <span class="mw-headline" id="Part_2">
+        Part 2
+       </span>
+      </h2>
+      <dl>
+       <dt>
+        Youtube Link
+       </dt>
+       <dd>
+        &lt;youtube&gt;
+        <a class="external free" href="https://www.youtube.com/watch?v=UrSxEtOOHy8&amp;list=PLV0qBSMhzPz4-x3bYt2q01c2PjXmUl1eX" rel="nofollow">
+         https://www.youtube.com/watch?v=UrSxEtOOHy8&amp;list=PLV0qBSMhzPz4-x3bYt2q01c2PjXmUl1eX
+        </a>
+        <dl>
+         <dd>
+          <b>
+           Description
+          </b>
+          <dl>
+           <dd>
+            In Part 2 of the series we dive further into Behavior Tree and create Task required to navigate the bot through the waypoints we created earlier.
+           </dd>
+          </dl>
+         </dd>
+        </dl>
+       </dd>
+      </dl>
+      <h2>
+       <span class="mw-headline" id="Part_3">
+        Part 3
+       </span>
+      </h2>
+      <dl>
+       <dt>
+        Youtube Link
+       </dt>
+       <dd>
+        &lt;youtube&gt;
+        <a class="external free" href="https://www.youtube.com/watch?v=_Oll-Cl_JQw&amp;list=PLV0qBSMhzPz4-x3bYt2q01c2PjXmUl1eX" rel="nofollow">
+         https://www.youtube.com/watch?v=_Oll-Cl_JQw&amp;list=PLV0qBSMhzPz4-x3bYt2q01c2PjXmUl1eX
+        </a>
+        <dl>
+         <dd>
+          <b>
+           Description
+          </b>
+          <dl>
+           <dd>
+            In Part 3 of the series we create the task that tells the Bot to attack the enemy Pawn.
+           </dd>
+          </dl>
+         </dd>
+        </dl>
+       </dd>
+      </dl>
+      <h2>
+       <span class="mw-headline" id="Part_4">
+        Part 4
+       </span>
+      </h2>
+      <dl>
+       <dt>
+        Youtube Link
+       </dt>
+       <dd>
+        &lt;youtube&gt;
+        <a class="external free" href="https://www.youtube.com/watch?v=1TWNMkj4FP0&amp;list=PLV0qBSMhzPz4-x3bYt2q01c2PjXmUl1eX" rel="nofollow">
+         https://www.youtube.com/watch?v=1TWNMkj4FP0&amp;list=PLV0qBSMhzPz4-x3bYt2q01c2PjXmUl1eX
+        </a>
+        <dl>
+         <dd>
+          <b>
+           Description
+          </b>
+          <dl>
+           <dd>
+            In Part 4 of the series we create a Service Task which controls the state of the bot by Detecting for Nearby Enemies.
+           </dd>
+          </dl>
+         </dd>
+        </dl>
+       </dd>
+      </dl>
+      <h2>
+       <span class="mw-headline" id="Part_5">
+        Part 5
+       </span>
+      </h2>
+      <dl>
+       <dt>
+        Youtube Link
+       </dt>
+       <dd>
+        &lt;youtube&gt;
+        <a class="external free" href="https://www.youtube.com/watch?v=sr9-w5jiUow&amp;list=PLV0qBSMhzPz4-x3bYt2q01c2PjXmUl1eX" rel="nofollow">
+         https://www.youtube.com/watch?v=sr9-w5jiUow&amp;list=PLV0qBSMhzPz4-x3bYt2q01c2PjXmUl1eX
+        </a>
+        <dl>
+         <dd>
+          <b>
+           Description
+          </b>
+          <dl>
+           <dd>
+            In Part 5 of the series we go back over some modifications. Lastly, we talk further about how the system works.
+           </dd>
+          </dl>
+         </dd>
+        </dl>
+       </dd>
+      </dl>
+      <h1>
+       <span class="mw-headline" id="Outro">
+        Outro
+       </span>
+      </h1>
+      <p>
+       This has been your Blueprint
+       <i>
+        Genie
+       </i>
+       Peter L. Newton! Now that you've finished your own AI Bot. Show me something
+       <b>
+        EPIC
+       </b>
+       !
+      </p>
+      <p>
+       <i>
+        Peace
+       </i>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   SubstancePlugIn - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    SubstancePlugIn
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        <b>
+         Overview
+        </b>
+       </span>
+      </h2>
+      <p>
+       This is a brief tutorial to help users who want to install the Allegorithmic Plug-In for Unreal Engine 4 to allow them to use Substance in UE4. These instructions have been tested and are working as of March 5th 2015 and on versions 4.7.0 + of the Unreal Engine and with Plug-in Version 4.7.0.5.  For earlier versions, these instructions may work but have NOT been tested, please see the forums listed below for precise instructions with earlier versions.
+      </p>
+      <p>
+       <b>
+        Plug-In Referernce Pages on the UE4 and Allegorithmic Forums:
+       </b>
+       <br/>
+      </p>
+      <dl>
+       <dd>
+        <dl>
+         <dd>
+          <a class="external text" href="https://forum.allegorithmic.com/index.php?topic=1223.0" rel="nofollow">
+           <b>
+            Substance plugin for UE4 - How to get it working
+           </b>
+          </a>
+          <br/>
+         </dd>
+         <dd>
+          <a class="external text" href="https://forum.allegorithmic.com/index.php?topic=4147.0" rel="nofollow">
+           <b>
+            4.7.0.5 Plug In Release
+           </b>
+          </a>
+          <br/>
+         </dd>
+         <dd>
+          <a class="external text" href="https://forum.allegorithmic.com/index.php?board=23.0" rel="nofollow">
+           <b>
+            Substance UE4 Forums, for future Plug-In Releases look here
+           </b>
+          </a>
+          <br/>
+         </dd>
+        </dl>
+       </dd>
+      </dl>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="GitHub">
+        <b>
+         GitHub
+        </b>
+       </span>
+      </h2>
+      <p>
+       These instructions assume you want to get the most current version of the Plug-In from a Source Location with the Engine Source.
+      </p>
+      <p>
+       Find the Version of the Plug-In which works with the Engine Version you are using.  Normally there is an updated plug-in version for each Full version of the engine and are denoted by the Engine Version number followed by an iteration number (4.7.0.5).  Follow the Source Link.
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerybox" style="width: 802.66666666667px">
+        <div style="width: 802.66666666667px">
+         <div class="thumb" style="width: 800.66666666667px;">
+          <div style="margin:-0.16666666666667px auto;">
+           <img alt="" class="" height="156" src="../assets/substanceplugin/0.jpg" width="801"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Download Link
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       You will be taken to Allegorithmic's Fork of the Unreal Engine 4, Download the Zip File. (NOTE: You will need to have a GitHub Account)
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerybox" style="width: 802px">
+        <div style="width: 802px">
+         <div class="thumb" style="width: 800px;">
+          <div style="margin:-0.16666666666666px auto;">
+           <img alt="" class="" height="452" src="../assets/substanceplugin/1.jpg" width="800"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           GitHub Download
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       Open your download location and find the downloaded ZIP File.
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerybox" style="width: 343.33333333333px">
+        <div style="width: 343.33333333333px">
+         <div class="thumb" style="width: 341.33333333333px;">
+          <div style="margin:-0.16666666666666px auto;">
+           <img alt="" class="" height="294" src="../assets/substanceplugin/2.jpg" width="342"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Zip File Location
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       Extract the Zip File to where you want your Engine to be installed. (I keep a Directory on a Secondary Drive for GitHub Builds)
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerybox" style="width: 802px">
+        <div style="width: 802px">
+         <div class="thumb" style="width: 800px;">
+          <div style="margin:-0.16666666666666px auto;">
+           <img alt="" class="" height="452" src="../assets/substanceplugin/3.jpg" width="800"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Engine Installation Directory
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       Opening the newly extracted Directory, Run the Setup.bat file to download and Install all Engine Dependencies
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerybox" style="width: 802px">
+        <div style="width: 802px">
+         <div class="thumb" style="width: 800px;">
+          <div style="margin:-0.16666666666666px auto;">
+           <img alt="" class="" height="452" src="../assets/substanceplugin/4.jpg" width="800"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Setup.bat
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       Once Dependencies are downloaded and the CMD window closes, Run the GenerateProjectFiles.bat file
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerybox" style="width: 802px">
+        <div style="width: 802px">
+         <div class="thumb" style="width: 800px;">
+          <div style="margin:-0.16666666666666px auto;">
+           <img alt="" class="" height="452" src="../assets/substanceplugin/5.jpg" width="800"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           GenerateProjectFiles.bat
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       Open the newly created Visual Studio Project Files in VS 2013 and Build Solution(as of 4.7.0 you must compile the engine on Visual Studio 2013)
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerybox" style="width: 802px">
+        <div style="width: 802px">
+         <div class="thumb" style="width: 800px;">
+          <div style="margin:-0.16666666666666px auto;">
+           <img alt="" class="" height="452" src="../assets/substanceplugin/6.jpg" width="800"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Build Solution
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       Once the Build is Complete, Find the UE4Editor.exe file to Open the Editor.
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerybox" style="width: 802px">
+        <div style="width: 802px">
+         <div class="thumb" style="width: 800px;">
+          <div style="margin:-0.16666666666666px auto;">
+           <img alt="" class="" height="452" src="../assets/substanceplugin/7.jpg" width="800"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Build Solution
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       Create a New Project.
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerybox" style="width: 802px">
+        <div style="width: 802px">
+         <div class="thumb" style="width: 800px;">
+          <div style="margin:-0.16666666666666px auto;">
+           <img alt="" class="" height="452" src="../assets/substanceplugin/8.jpg" width="800"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Create a New Project
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       Open Project Settings and insure that the Substance Sub-Section appears.
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerybox" style="width: 802px">
+        <div style="width: 802px">
+         <div class="thumb" style="width: 800px;">
+          <div style="margin:-0.16666666666666px auto;">
+           <img alt="" class="" height="452" src="../assets/substanceplugin/9.jpg" width="800"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Project Settings
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       Enjoy!
+      </p>
+      <ul class="gallery mw-gallery-packed">
+       <li class="gallerybox" style="width: 802px">
+        <div style="width: 802px">
+         <div class="thumb" style="width: 800px;">
+          <div style="margin:-0.16666666666666px auto;">
+           <img alt="" class="" height="452" src="../assets/substanceplugin/10.jpg" width="800"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Working Plug-In
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Custom Context Menu for Actors in Editor - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Custom Context Menu for Actors in Editor
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <h1>
+       <span class="mw-headline" id="Description">
+        Description
+       </span>
+      </h1>
+      <p>
+       This Wiki page will show you how to add a custom context menu for your Actors in the Unreal Editor. 
+Here an example of a menu with a custom entry and tooltip when clicking on a custom Actor in the "Scene Outliner".
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:361px;">
+        <img alt="" class="thumbimage" height="392" src="../assets/custom-context-menu-for-actors-in-editor/0.png" width="359"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         An example image
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Engine_Code_changes">
+        Engine Code changes
+       </span>
+      </h2>
+      <p>
+       Some Engine code changes are required. I will probably submit a code pull request to Epic so they can add this code to the Engine, but for now you should be able to
+simply add this code by yourself. Its not too complicated.
+      </p>
+      <p>
+       First of all we need to add some code that allows us to insert menus into the existing context menu being filled in at engine level. 
+For this purpose in "LevelEditorContextMenu.cpp" you need to add the following struct.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">struct</span> <span class="n">FLevelActorSpecificContextMenu</span>
+<span class="p">{</span>
+	<span class="cm">/**</span>
+<span class="cm">	* Fills in menu options for custom menu entries that can be associated with that actor</span>
+<span class="cm">	*</span>
+<span class="cm">	* @param MenuBuilder	The menu to add items to</span>
+<span class="cm">        * @param InCommandList	The container for all commands</span>
+<span class="cm">        * @param InCommandList	The container for all selected actors</span>
+<span class="cm">	*/</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="n">AddActorSpecificMenu</span><span class="p">(</span><span class="k">class</span> <span class="nc">FMenuBuilder</span><span class="o">&amp;</span> <span class="n">MenuBuilder</span><span class="p">,</span> <span class="k">const</span> <span class="n">TSharedPtr</span><span class="o">&lt;</span> <span class="n">FUICommandList</span> <span class="o">&gt;&amp;</span> <span class="n">InCommandList</span><span class="p">,</span> <span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">AActor</span><span class="o">*&gt;&amp;</span> <span class="n">SelectedActors</span><span class="p">);</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       the function is implemented as follows
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">FLevelActorSpecificContextMenu</span><span class="o">::</span><span class="n">AddActorSpecificMenu</span><span class="p">(</span><span class="k">class</span> <span class="nc">FMenuBuilder</span><span class="o">&amp;</span> <span class="n">MenuBuilder</span><span class="p">,</span> <span class="k">const</span> <span class="n">TSharedPtr</span><span class="o">&lt;</span> <span class="n">FUICommandList</span> <span class="o">&gt;&amp;</span> <span class="n">InCommandList</span><span class="p">,</span> <span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">AActor</span><span class="o">*&gt;&amp;</span> <span class="n">SelectedActors</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">AActor</span><span class="o">*</span> <span class="nl">Actor</span> <span class="p">:</span> <span class="n">SelectedActors</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">Actor</span><span class="p">)</span>
+	<span class="p">{</span>
+	    <span class="n">Actor</span><span class="o">-&gt;</span><span class="n">AddCustomMenuEntries</span><span class="p">(</span><span class="n">MenuBuilder</span><span class="p">,</span> <span class="n">InCommandList</span><span class="p">);</span>
+	<span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       and we need to add the function call inside
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">FLevelEditorContextMenu</span><span class="o">::</span><span class="n">FillMenu</span><span class="p">(</span> <span class="n">FMenuBuilder</span><span class="o">&amp;</span> <span class="n">MenuBuilder</span><span class="p">,</span> <span class="n">TWeakPtr</span><span class="o">&lt;</span><span class="n">SLevelEditor</span><span class="o">&gt;</span> <span class="n">LevelEditor</span><span class="p">,</span> <span class="n">LevelEditorMenuContext</span> <span class="n">ContextType</span><span class="p">,</span> <span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="n">FExtender</span><span class="o">&gt;</span> <span class="n">Extender</span> <span class="p">)</span>
+</pre>
+      </div>
+      <p>
+       at the end of the method you should now see something like this
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>	<span class="n">FLevelScriptEventMenuHelper</span><span class="o">::</span><span class="n">FillLevelBlueprintEventsMenu</span><span class="p">(</span><span class="n">MenuBuilder</span><span class="p">,</span> <span class="n">SelectedActors</span><span class="p">);</span>
+
+        <span class="n">FLevelActorSpecificContextMenu</span><span class="o">::</span><span class="n">AddActorSpecificMenu</span><span class="p">(</span><span class="n">MenuBuilder</span><span class="p">,</span> <span class="n">LevelEditorActions</span><span class="p">,</span> <span class="n">SelectedActors</span><span class="p">);</span>
+
+	<span class="n">MenuBuilder</span><span class="p">.</span><span class="n">PopCommandList</span><span class="p">();</span>
+	<span class="n">MenuBuilder</span><span class="p">.</span><span class="n">PopExtender</span><span class="p">();</span>
+</pre>
+      </div>
+      <p>
+       Last but not least in Actor.h we need to add the virtual method for "AddCustomMenuEntries", like this
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#if WITH_EDITOR</span>
+<span class="k">class</span> <span class="nc">FUICommandList</span><span class="p">;</span>  <span class="c1">// Forward declaration - editor only</span>
+<span class="cp">#endif</span>
+</pre>
+      </div>
+      <p>
+       and add the method in one of the public places within the AActor class
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span> 
+<span class="cp">#if WITH_EDITOR</span>
+    <span class="c1">//Used to add a custom menu for custom actors</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">AddCustomMenuEntries</span><span class="p">(</span><span class="k">class</span> <span class="nc">FMenuBuilder</span><span class="o">&amp;</span> <span class="n">MenuBuilder</span><span class="p">,</span> <span class="k">const</span> <span class="n">TSharedPtr</span><span class="o">&lt;</span> <span class="n">FUICommandList</span> <span class="o">&gt;&amp;</span> <span class="n">InCommandList</span><span class="p">)</span> <span class="p">{</span> <span class="p">}</span>
+<span class="cp">#endif</span>
+</pre>
+      </div>
+      <p>
+       one more ting that needs to be done is add a method to remove existing commands from the list of commands.
+In UICommandList.h you need to add this method declaration in the public scope of the "FUICommandList" class.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>    <span class="kt">bool</span> <span class="nf">RemoveCommandAndAction</span><span class="p">(</span><span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">FUICommandInfo</span><span class="o">&gt;</span> <span class="n">Command</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       and in the FUICommandInfo.cpp add the method implementation.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">bool</span> <span class="n">FUICommandList</span><span class="o">::</span><span class="n">RemoveCommandAndAction</span><span class="p">(</span><span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">FUICommandInfo</span><span class="o">&gt;</span> <span class="n">Command</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">const</span> <span class="n">FUIAction</span><span class="o">*</span> <span class="n">Action</span> <span class="o">=</span> <span class="n">UICommandBindingMap</span><span class="p">.</span><span class="n">Find</span><span class="p">(</span><span class="n">Command</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Action</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">UICommandBindingMap</span><span class="p">.</span><span class="n">Remove</span><span class="p">(</span><span class="n">Command</span><span class="p">);</span>
+        <span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       we are now done modifying the Unreal Engine - lets move on to our own Game code.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Game_code_changes">
+        Game code changes
+       </span>
+      </h2>
+      <p>
+       First of all we need to define a new command class - something like this
+Create a new Header File called "MyEditorCommands.h"
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="cp">#if WITH_EDITOR</span>
+<span class="cp">#include</span> <span class="cpf">"UnrealEd.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Commands.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"UICommandList.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"UICommandInfo.h"</span><span class="cp"></span>
+
+<span class="k">class</span> <span class="nc">FMyEditorCommands</span> <span class="o">:</span> <span class="k">public</span> <span class="n">TCommands</span> <span class="o">&lt;</span> <span class="n">FMyEditorCommands</span> <span class="o">&gt;</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">FMyEditorCommands</span><span class="p">();</span>
+
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">RegisterCommands</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+        <span class="k">static</span> <span class="kt">void</span> <span class="nf">MapActions</span><span class="p">(</span><span class="n">AActor</span><span class="o">*</span> <span class="n">InActor</span><span class="p">,</span> <span class="k">const</span> <span class="n">TSharedPtr</span><span class="o">&lt;</span> <span class="n">FUICommandList</span> <span class="o">&gt;&amp;</span> <span class="n">InCommandList</span><span class="p">);</span>
+	<span class="k">static</span> <span class="kt">void</span> <span class="nf">AddToMenu</span><span class="p">(</span><span class="k">class</span> <span class="nc">FMenuBuilder</span><span class="o">&amp;</span> <span class="n">MenuBuilder</span><span class="p">);</span>
+
+	<span class="n">TSharedPtr</span><span class="o">&lt;</span> <span class="n">FUICommandInfo</span> <span class="o">&gt;</span> <span class="n">SomeCommandData</span><span class="p">;</span>   <span class="c1">//you need one of these for each command you want to execute</span>
+<span class="p">};</span>
+<span class="cp">#endif</span>
+</pre>
+      </div>
+      <p>
+       create a cpp file called "MyEditorCommands.cpp"
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"MyGameProject.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"MyEditorCommands.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"MyCustomActorObject.h"</span><span class="cp"></span>
+
+<span class="cp">#if WITH_EDITOR</span>
+
+<span class="n">FMyEditorCommands</span><span class="o">::</span><span class="n">FMyEditorCommands</span><span class="p">()</span> <span class="o">:</span> 
+<span class="n">TCommands</span><span class="o">&lt;</span><span class="n">FMyEditorCommands</span><span class="o">&gt;</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"MyEditorCommands"</span><span class="p">),</span> <span class="n">NSLOCTEXT</span><span class="p">(</span><span class="s">"MyEditor"</span><span class="p">,</span> <span class="s">"MyEditorCommands"</span><span class="p">,</span> <span class="s">"My-Editor"</span><span class="p">),</span> <span class="n">NAME_None</span><span class="p">,</span> <span class="n">FEditorStyle</span><span class="o">::</span><span class="n">GetStyleSetName</span><span class="p">())</span>
+<span class="p">{</span>
+
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">FMyEditorCommands</span><span class="o">::</span><span class="n">RegisterCommands</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">UI_COMMAND</span><span class="p">(</span><span class="n">SomeCommandData</span><span class="p">,</span> <span class="s">"Do Some stuff"</span><span class="p">,</span> <span class="s">"Description of what my stuff is doing."</span><span class="p">,</span> <span class="n">EUserInterfaceActionType</span><span class="o">::</span><span class="n">Button</span><span class="p">,</span> <span class="n">FInputGesture</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">FMyEditorCommands</span><span class="o">::</span><span class="n">MapActions</span><span class="p">(</span><span class="n">AActor</span><span class="o">*</span> <span class="n">InActor</span><span class="p">,</span> <span class="k">const</span> <span class="n">TSharedPtr</span><span class="o">&lt;</span> <span class="n">FUICommandList</span> <span class="o">&gt;&amp;</span> <span class="n">InCommandList</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Register</span><span class="p">();</span>
+
+	<span class="n">AMyCustomActorObject</span><span class="o">*</span> <span class="n">pMyObject</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">AMyCustomActorObject</span><span class="o">&gt;</span><span class="p">(</span><span class="n">InActor</span><span class="p">);</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">pMyObject</span><span class="p">)</span>
+	<span class="p">{</span>
+        
+        <span class="n">InCommandList</span><span class="o">-&gt;</span><span class="n">RemoveCommandAndAction</span><span class="p">(</span><span class="n">Get</span><span class="p">().</span><span class="n">SomeCommandData</span><span class="p">);</span>
+
+        <span class="n">InCommandList</span><span class="o">-&gt;</span><span class="n">MapAction</span><span class="p">(</span>
+		<span class="n">Get</span><span class="p">().</span><span class="n">SomeCommandData</span><span class="p">,</span>
+		<span class="n">FExecuteAction</span><span class="o">::</span><span class="n">CreateUObject</span><span class="p">(</span><span class="n">pMyObject</span> <span class="p">,</span> <span class="o">&amp;</span><span class="n">AMyCustomActorObject</span><span class="o">::</span><span class="n">MyNonStaticMethod</span><span class="p">));</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">FMyEditorCommands</span><span class="o">::</span><span class="n">AddToMenu</span><span class="p">(</span><span class="k">class</span> <span class="nc">FMenuBuilder</span><span class="o">&amp;</span> <span class="n">MenuBuilder</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">MenuBuilder</span><span class="p">.</span><span class="n">BeginSection</span><span class="p">(</span><span class="s">"MyCustomStuff"</span><span class="p">,</span> <span class="n">FText</span><span class="o">::</span><span class="n">FromString</span><span class="p">(</span><span class="s">"MyCustomActor"</span><span class="p">));</span>
+	<span class="p">{</span>
+		<span class="n">MenuBuilder</span><span class="p">.</span><span class="n">AddMenuEntry</span><span class="p">(</span><span class="n">Get</span><span class="p">().</span><span class="n">SomeCommandData</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="n">MenuBuilder</span><span class="p">.</span><span class="n">EndSection</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="cp">#endif</span>
+</pre>
+      </div>
+      <p>
+       all that is left to do is implement and override the method in your custom actor class like this
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//add these headers to your cpp file</span>
+<span class="cp">#if WITH_EDITOR</span>
+<span class="cp">#include</span> <span class="cpf">"UnrealEd.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"MultiBox.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Commands.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"GlobalEditorCommonCommands.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"UICommandList.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Private/Helpers/Tool/AWEditorCommands.h"</span><span class="cp"></span>
+<span class="cp">#endif</span>
+
+<span class="c1">//and then add the implementation here</span>
+
+<span class="cp">#if WITH_EDITOR</span>
+<span class="kt">void</span> <span class="n">AMyCustomActorObject</span><span class="o">::</span><span class="n">AddCustomMenuEntries</span><span class="p">(</span><span class="k">class</span> <span class="nc">FMenuBuilder</span><span class="o">&amp;</span> <span class="n">MenuBuilder</span><span class="p">,</span> <span class="k">const</span> <span class="n">TSharedPtr</span><span class="o">&lt;</span> <span class="n">FUICommandList</span> <span class="o">&gt;&amp;</span> <span class="n">InCommandList</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">FMyEditorCommands</span><span class="o">::</span><span class="n">MapActions</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">InCommandList</span><span class="p">);</span>
+    <span class="n">FMyEditorCommands</span><span class="o">::</span><span class="n">AddToMenu</span><span class="p">(</span><span class="n">MenuBuilder</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="cp">#endif</span>
+</pre>
+      </div>
+      <p>
+       That's it now you can implement as many context menu entries as you want for your custom objects. 
+If we can get Epic to add the necessary code for the engine side then adding custom context menus is a piece of cake.
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

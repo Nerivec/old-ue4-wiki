@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Html5 - Building On Windows - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Html5 - Building On Windows
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Prerequisites">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Prerequisites
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Disclaimer">
+            <span class="tocnumber">
+             1.2
+            </span>
+            <span class="toctext">
+             Disclaimer
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Requirement">
+            <span class="tocnumber">
+             1.3
+            </span>
+            <span class="toctext">
+             Requirement
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-5">
+             <a href="#Downloading_all_Requirement">
+              <span class="tocnumber">
+               1.3.1
+              </span>
+              <span class="toctext">
+               Downloading all Requirement
+              </span>
+             </a>
+             <ul>
+              <li class="toclevel-4 tocsection-6">
+               <a href="#Links_and_Instructions">
+                <span class="tocnumber">
+                 1.3.1.1
+                </span>
+                <span class="toctext">
+                 Links and Instructions
+                </span>
+               </a>
+               <ul>
+                <li class="toclevel-5 tocsection-7">
+                 <a href="#Firefox_Nightly">
+                  <span class="tocnumber">
+                   1.3.1.1.1
+                  </span>
+                  <span class="toctext">
+                   Firefox Nightly
+                  </span>
+                 </a>
+                </li>
+                <li class="toclevel-5 tocsection-8">
+                 <a href="#Python">
+                  <span class="tocnumber">
+                   1.3.1.1.2
+                  </span>
+                  <span class="toctext">
+                   Python
+                  </span>
+                 </a>
+                </li>
+                <li class="toclevel-5 tocsection-9">
+                 <a href="#Emscripten_SDK">
+                  <span class="tocnumber">
+                   1.3.1.1.3
+                  </span>
+                  <span class="toctext">
+                   Emscripten SDK
+                  </span>
+                 </a>
+                </li>
+               </ul>
+              </li>
+             </ul>
+            </li>
+            <li class="toclevel-3 tocsection-10">
+             <a href="#Configuration_Emscripten_SDK">
+              <span class="tocnumber">
+               1.3.2
+              </span>
+              <span class="toctext">
+               Configuration Emscripten SDK
+              </span>
+             </a>
+             <ul>
+              <li class="toclevel-4 tocsection-11">
+               <a href="#Update_and_activate_SDK_Emscripten">
+                <span class="tocnumber">
+                 1.3.2.1
+                </span>
+                <span class="toctext">
+                 Update and activate SDK Emscripten
+                </span>
+               </a>
+               <ul>
+                <li class="toclevel-5 tocsection-12">
+                 <a href="#Emscripten_folder">
+                  <span class="tocnumber">
+                   1.3.2.1.1
+                  </span>
+                  <span class="toctext">
+                   Emscripten folder
+                  </span>
+                 </a>
+                </li>
+                <li class="toclevel-5 tocsection-13">
+                 <a href="#Open_Command_Window_Here">
+                  <span class="tocnumber">
+                   1.3.2.1.2
+                  </span>
+                  <span class="toctext">
+                   Open Command Window Here
+                  </span>
+                 </a>
+                </li>
+                <li class="toclevel-5 tocsection-14">
+                 <a href="#Typing_Command_Prompt">
+                  <span class="tocnumber">
+                   1.3.2.1.3
+                  </span>
+                  <span class="toctext">
+                   Typing Command Prompt
+                  </span>
+                 </a>
+                </li>
+               </ul>
+              </li>
+             </ul>
+            </li>
+            <li class="toclevel-3 tocsection-15">
+             <a href="#System_Variables">
+              <span class="tocnumber">
+               1.3.3
+              </span>
+              <span class="toctext">
+               System Variables
+              </span>
+             </a>
+             <ul>
+              <li class="toclevel-4 tocsection-16">
+               <a href="#Emscripten">
+                <span class="tocnumber">
+                 1.3.3.1
+                </span>
+                <span class="toctext">
+                 Emscripten
+                </span>
+               </a>
+               <ul>
+                <li class="toclevel-5 tocsection-17">
+                 <a href="#Emscripten_Variable">
+                  <span class="tocnumber">
+                   1.3.3.1.1
+                  </span>
+                  <span class="toctext">
+                   Emscripten Variable
+                  </span>
+                 </a>
+                </li>
+                <li class="toclevel-5 tocsection-18">
+                 <a href="#Path_Variable">
+                  <span class="tocnumber">
+                   1.3.3.1.2
+                  </span>
+                  <span class="toctext">
+                   Path Variable
+                  </span>
+                 </a>
+                </li>
+               </ul>
+              </li>
+             </ul>
+            </li>
+            <li class="toclevel-3 tocsection-19">
+             <a href="#Configuration_Engine">
+              <span class="tocnumber">
+               1.3.4
+              </span>
+              <span class="toctext">
+               Configuration Engine
+              </span>
+             </a>
+             <ul>
+              <li class="toclevel-4 tocsection-20">
+               <a href="#HTML5_.26_Engine">
+                <span class="tocnumber">
+                 1.3.4.1
+                </span>
+                <span class="toctext">
+                 HTML5 &amp; Engine
+                </span>
+               </a>
+               <ul>
+                <li class="toclevel-5 tocsection-21">
+                 <a href="#Open_HTML5Engine.ini">
+                  <span class="tocnumber">
+                   1.3.4.1.1
+                  </span>
+                  <span class="toctext">
+                   Open HTML5Engine.ini
+                  </span>
+                 </a>
+                </li>
+                <li class="toclevel-5 tocsection-22">
+                 <a href="#Firefox_path">
+                  <span class="tocnumber">
+                   1.3.4.1.2
+                  </span>
+                  <span class="toctext">
+                   Firefox path
+                  </span>
+                 </a>
+                </li>
+                <li class="toclevel-5 tocsection-23">
+                 <a href="#Python_path">
+                  <span class="tocnumber">
+                   1.3.4.1.3
+                  </span>
+                  <span class="toctext">
+                   Python path
+                  </span>
+                 </a>
+                </li>
+                <li class="toclevel-5 tocsection-24">
+                 <a href="#Emscripten_2">
+                  <span class="tocnumber">
+                   1.3.4.1.4
+                  </span>
+                  <span class="toctext">
+                   Emscripten
+                  </span>
+                 </a>
+                </li>
+                <li class="toclevel-5 tocsection-25">
+                 <a href="#Before_building">
+                  <span class="tocnumber">
+                   1.3.4.1.5
+                  </span>
+                  <span class="toctext">
+                   Before building
+                  </span>
+                 </a>
+                </li>
+               </ul>
+              </li>
+             </ul>
+            </li>
+            <li class="toclevel-3 tocsection-26">
+             <a href="#Building_on_Windows">
+              <span class="tocnumber">
+               1.3.5
+              </span>
+              <span class="toctext">
+               Building on Windows
+              </span>
+             </a>
+             <ul>
+              <li class="toclevel-4 tocsection-27">
+               <a href="#Tappy_Chicken">
+                <span class="tocnumber">
+                 1.3.5.1
+                </span>
+                <span class="toctext">
+                 Tappy Chicken
+                </span>
+               </a>
+               <ul>
+                <li class="toclevel-5 tocsection-28">
+                 <a href="#Create_a_clean_project">
+                  <span class="tocnumber">
+                   1.3.5.1.1
+                  </span>
+                  <span class="toctext">
+                   Create a clean project
+                  </span>
+                 </a>
+                </li>
+               </ul>
+              </li>
+              <li class="toclevel-4 tocsection-29">
+               <a href="#Unreal_Engine">
+                <span class="tocnumber">
+                 1.3.5.2
+                </span>
+                <span class="toctext">
+                 Unreal Engine
+                </span>
+               </a>
+               <ul>
+                <li class="toclevel-5 tocsection-30">
+                 <a href="#Open_the_project">
+                  <span class="tocnumber">
+                   1.3.5.2.1
+                  </span>
+                  <span class="toctext">
+                   Open the project
+                  </span>
+                 </a>
+                </li>
+                <li class="toclevel-5 tocsection-31">
+                 <a href="#Project_Platforms">
+                  <span class="tocnumber">
+                   1.3.5.2.2
+                  </span>
+                  <span class="toctext">
+                   Project Platforms
+                  </span>
+                 </a>
+                </li>
+                <li class="toclevel-5 tocsection-32">
+                 <a href="#Building_Project">
+                  <span class="tocnumber">
+                   1.3.5.2.3
+                  </span>
+                  <span class="toctext">
+                   Building Project
+                  </span>
+                 </a>
+                </li>
+                <li class="toclevel-5 tocsection-33">
+                 <a href="#Successful_or_not">
+                  <span class="tocnumber">
+                   1.3.5.2.4
+                  </span>
+                  <span class="toctext">
+                   Successful or not
+                  </span>
+                 </a>
+                </li>
+               </ul>
+              </li>
+             </ul>
+            </li>
+            <li class="toclevel-3 tocsection-34">
+             <a href="#Final_Game">
+              <span class="tocnumber">
+               1.3.6
+              </span>
+              <span class="toctext">
+               Final Game
+              </span>
+             </a>
+             <ul>
+              <li class="toclevel-4 tocsection-35">
+               <a href="#Tappy_Chicken_html">
+                <span class="tocnumber">
+                 1.3.6.1
+                </span>
+                <span class="toctext">
+                 Tappy Chicken html
+                </span>
+               </a>
+               <ul>
+                <li class="toclevel-5 tocsection-36">
+                 <a href="#Game_Directory">
+                  <span class="tocnumber">
+                   1.3.6.1.1
+                  </span>
+                  <span class="toctext">
+                   Game Directory
+                  </span>
+                 </a>
+                </li>
+                <li class="toclevel-5 tocsection-37">
+                 <a href="#Play_Tappy_Chicken_Game">
+                  <span class="tocnumber">
+                   1.3.6.1.2
+                  </span>
+                  <span class="toctext">
+                   Play Tappy Chicken Game
+                  </span>
+                 </a>
+                </li>
+                <li class="toclevel-5 tocsection-38">
+                 <a href="#Tappy_Chicken_Firefox_x64">
+                  <span class="tocnumber">
+                   1.3.6.1.3
+                  </span>
+                  <span class="toctext">
+                   Tappy Chicken Firefox x64
+                  </span>
+                 </a>
+                </li>
+               </ul>
+              </li>
+             </ul>
+            </li>
+            <li class="toclevel-3 tocsection-39">
+             <a href="#Final_Note">
+              <span class="tocnumber">
+               1.3.7
+              </span>
+              <span class="toctext">
+               Final Note
+              </span>
+             </a>
+             <ul>
+              <li class="toclevel-4 tocsection-40">
+               <a href="#Tappy_Chicken_Firefox_x32">
+                <span class="tocnumber">
+                 1.3.7.1
+                </span>
+                <span class="toctext">
+                 Tappy Chicken Firefox x32
+                </span>
+               </a>
+              </li>
+             </ul>
+            </li>
+           </ul>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h1>
+      <p>
+       This step by step tutorial used the Unreal Engine &amp; Emscripten documentation, nothing more. For more information, check if the Unreal Engine documentation has been updated. This step by step tutorial has been made on local computer. If you want follow this tutorial with Google Chrome x86 or Google Chromimum x64 , the files need to hosted behind a web server.
+      </p>
+      <p>
+       1. First, sign up for Unreal Engine 4. Download the UE4 tools, and install example content, including Tappy Chicken, from Marketplace.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Prerequisites">
+        Prerequisites
+       </span>
+      </h2>
+      <pre># Windows 7 x64: Updated/Windows Update
+# Unreal Engine 4.7.3:  Binaries/Epic Game Launcher
+# Tappy Chicken 4.7.3 project
+# Small brain
+</pre>
+      <h2>
+       <span class="mw-headline" id="Disclaimer">
+        Disclaimer
+       </span>
+      </h2>
+      <p>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Requirement">
+        Requirement
+       </span>
+      </h2>
+      <pre>1. 64-bit browser
+2. Python 2.7.x
+3. Emscripten + SDK
+</pre>
+      <h3>
+       <span class="mw-headline" id="Downloading_all_Requirement">
+        Downloading all Requirement
+       </span>
+      </h3>
+      <h4>
+       <span class="mw-headline" id="Links_and_Instructions">
+        Links and Instructions
+       </span>
+      </h4>
+      <h5>
+       <span class="mw-headline" id="Firefox_Nightly">
+        Firefox Nightly
+       </span>
+      </h5>
+      <p>
+       1. First step , you need downloading and installing
+       <a class="external text" href="ftp://ftp.mozilla.org/pub/mozilla.org/firefox/nightly/latest-mozilla-central/firefox-39.0a1.en-US.win64.installer.exe" rel="nofollow">
+        Firefox Nightly 64 bits (Tested)
+       </a>
+       <a class="external text" href="ftp://ftp.mozilla.org/pub/mozilla.org/firefox/nightly/latest-mozilla-central/" rel="nofollow">
+        more info
+       </a>
+      </p>
+      <p>
+      </p>
+      <h5>
+       <span class="mw-headline" id="Python">
+        Python
+       </span>
+      </h5>
+      <p>
+       2. Now, you can download and install
+       <a class="external text" href="https://www.python.org/ftp/python/2.7.7/python-2.7.7.amd64.msi" rel="nofollow">
+        Python 2.7.7 x86/x64  (Tested)
+       </a>
+       <a class="external text" href="https://www.python.org/download/releases/2.7/" rel="nofollow">
+        more info
+       </a>
+      </p>
+      <p>
+      </p>
+      <h5>
+       <span class="mw-headline" id="Emscripten_SDK">
+        Emscripten SDK
+       </span>
+      </h5>
+      <p>
+       3. Next, download
+       <a class="external text" href="https://s3.amazonaws.com/mozilla-games/emscripten/releases/emsdk-1.29.0-web-64bit.exeand" rel="nofollow">
+        Emscripten-1.29.0 64bit
+       </a>
+       and open the file, then follow the installer prompts.
+       <a class="external text" href="http://kripken.github.io/emscripten-site/docs/getting_started/downloads.html" rel="nofollow">
+        more info
+       </a>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Configuration_Emscripten_SDK">
+        Configuration Emscripten SDK
+       </span>
+      </h3>
+      <h4>
+       <span class="mw-headline" id="Update_and_activate_SDK_Emscripten">
+        Update and activate SDK Emscripten
+       </span>
+      </h4>
+      <h5>
+       <span class="mw-headline" id="Emscripten_folder">
+        Emscripten folder
+       </span>
+      </h5>
+      <p>
+       1. Go to Emscripten folder installation:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="nl">C</span><span class="p">:</span><span class="err">\</span><span class="n">Program</span> <span class="n">Files</span><span class="err">\</span><span class="n">Emscripten</span>
+</pre>
+      </div>
+      <h5>
+       <span class="mw-headline" id="Open_Command_Window_Here">
+        Open Command Window Here
+       </span>
+      </h5>
+      <p>
+       2. Open a command prompt inside the SDK directory
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">Press</span> <span class="err">'''</span><span class="o">&lt;</span><span class="n">Shift</span><span class="o">&gt;</span><span class="err">'''</span> <span class="n">and</span> <span class="err">'''</span><span class="o">&lt;</span><span class="n">right</span> <span class="n">click</span><span class="o">&gt;</span><span class="err">'''</span> <span class="n">and</span> <span class="n">select</span>  <span class="err">'''</span><span class="n">Open</span> <span class="n">Command</span> <span class="n">Window</span> <span class="n">Here</span><span class="err">'''</span>
+</pre>
+      </div>
+      <h5>
+       <span class="mw-headline" id="Typing_Command_Prompt">
+        Typing Command Prompt
+       </span>
+      </h5>
+      <p>
+       3. Type the following Command Prompt:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>    <span class="n">emsdk</span> <span class="n">update</span>
+    <span class="n">emsdk</span> <span class="n">install</span> <span class="n">latest</span>
+    <span class="n">emsdk</span> <span class="n">activate</span> <span class="n">latest</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="System_Variables">
+        System Variables
+       </span>
+      </h3>
+      <h4>
+       <span class="mw-headline" id="Emscripten">
+        Emscripten
+       </span>
+      </h4>
+      <p>
+      </p>
+      <h5>
+       <span class="mw-headline" id="Emscripten_Variable">
+        Emscripten Variable
+       </span>
+      </h5>
+      <p>
+       1. Check if  the
+       <b>
+        EMSCRIPTEN
+       </b>
+       variable is set correctly.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span> 
+<span class="n">EMSCRIPTEN</span>
+<span class="nl">C</span><span class="p">:</span><span class="err">\</span><span class="n">Program</span> <span class="n">Files</span><span class="err">\</span><span class="n">Emscripten</span><span class="err">\</span><span class="n">emscripten</span><span class="err">\</span><span class="mf">1.29.0</span>
+</pre>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:393px;">
+        <img alt="" class="thumbimage" height="430" src="../assets/html5-building-on-windows/0.png" width="391"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         EMSCRIPTEN Variable
+        </div>
+       </div>
+      </div>
+      <h5>
+       <span class="mw-headline" id="Path_Variable">
+        Path Variable
+       </span>
+      </h5>
+      <p>
+       2. Now , Make sure that these lines have been added in your
+       <b>
+        PATH
+       </b>
+       variable.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">PATH</span>
+<span class="nl">c</span><span class="p">:</span><span class="err">\</span><span class="n">Program</span> <span class="n">Files</span><span class="err">\</span><span class="n">Emscripten</span><span class="p">;</span>
+<span class="nl">c</span><span class="p">:</span><span class="err">\</span><span class="n">Program</span> <span class="n">Files</span><span class="err">\</span><span class="n">Emscripten</span><span class="err">\</span><span class="n">crunch</span><span class="err">\</span><span class="mf">1.03</span><span class="p">;</span>
+<span class="nl">c</span><span class="p">:</span><span class="err">\</span><span class="n">Program</span> <span class="n">Files</span><span class="err">\</span><span class="n">Emscripten</span><span class="err">\</span><span class="n">mingw</span><span class="err">\</span><span class="mf">4.6.2</span><span class="n">_32bit</span><span class="p">;</span>
+<span class="nl">c</span><span class="p">:</span><span class="err">\</span><span class="n">Program</span> <span class="n">Files</span><span class="err">\</span><span class="n">Emscripten</span><span class="err">\</span><span class="n">emscripten</span><span class="err">\</span><span class="mf">1.29.0</span><span class="p">;</span>
+<span class="nl">c</span><span class="p">:</span><span class="err">\</span><span class="n">Program</span> <span class="n">Files</span><span class="err">\</span><span class="n">Emscripten</span><span class="err">\</span><span class="n">clang</span><span class="err">\</span><span class="n">e1</span><span class="mf">.29.0</span><span class="n">_64bit</span>
+</pre>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:390px;">
+        <img alt="" class="thumbimage" height="429" src="../assets/html5-building-on-windows/1.png" width="388"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         PATH Variables
+        </div>
+       </div>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Configuration_Engine">
+        Configuration Engine
+       </span>
+      </h3>
+      <h4>
+       <span class="mw-headline" id="HTML5_.26_Engine">
+        HTML5 &amp; Engine
+       </span>
+      </h4>
+      <h5>
+       <span class="mw-headline" id="Open_HTML5Engine.ini">
+        Open HTML5Engine.ini
+       </span>
+      </h5>
+      <p>
+       Open
+       <b>
+        HTML5Engine.ini
+       </b>
+       in your favorite code editor and edit Path as below :
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="nl">K</span><span class="p">:</span><span class="err">\</span><span class="n">Program</span> <span class="n">Files</span><span class="err">\</span><span class="n">Unreal</span> <span class="n">Engine</span><span class="err">\</span><span class="mf">4.7</span><span class="err">\</span><span class="n">Engine</span><span class="err">\</span><span class="n">Config</span><span class="err">\</span><span class="n">HTML5</span>
+</pre>
+      </div>
+      <h5>
+       <span class="mw-headline" id="Firefox_path">
+        Firefox path
+       </span>
+      </h5>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="p">[</span><span class="n">HTML5DevicesWindows</span><span class="p">]</span>
+<span class="n">Firefox</span> <span class="n">Nightly</span><span class="p">(</span><span class="mi">64</span> <span class="n">bit</span><span class="p">)</span><span class="o">=</span><span class="s">"C:\Program Files\Nightly</span><span class="se">\f</span><span class="s">irefox.exe"</span>
+</pre>
+      </div>
+      <h5>
+       <span class="mw-headline" id="Python_path">
+        Python path
+       </span>
+      </h5>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="p">[</span><span class="n">HTML5SDKPaths</span><span class="p">]</span>
+<span class="n">Python</span><span class="o">=</span><span class="s">"C:/Python27"</span>
+</pre>
+      </div>
+      <h5>
+       <span class="mw-headline" id="Emscripten_2">
+        Emscripten
+       </span>
+      </h5>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="p">[</span><span class="n">HTML5SDKPaths</span><span class="p">]</span>
+<span class="n">Emscripten</span><span class="o">=</span><span class="s">"C:\Program Files\Emscripten\emscripten</span><span class="se">\1</span><span class="s">.29.0"</span>
+</pre>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:487px;">
+        <img alt="" class="thumbimage" height="299" src="../assets/html5-building-on-windows/2.png" width="485"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         HTML5Engine.ini
+        </div>
+       </div>
+      </div>
+      <h5>
+       <span class="mw-headline" id="Before_building">
+        Before building
+       </span>
+      </h5>
+      <p>
+       Very important step ! Restart your computer before building on Windows.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Building_on_Windows">
+        Building on Windows
+       </span>
+      </h3>
+      <h4>
+       <span class="mw-headline" id="Tappy_Chicken">
+        Tappy Chicken
+       </span>
+      </h4>
+      <h5>
+       <span class="mw-headline" id="Create_a_clean_project">
+        Create a clean project
+       </span>
+      </h5>
+      <p>
+       1. Launch the Unreal Engine Launcher.
+       <br/>
+       2. Go to learn Tab.
+       <br/>
+       3. Select Tappy Chicken
+       <br/>
+       4. Click on Create Project [4.7.3] button
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:802px;">
+        <img alt="" class="thumbimage" height="129" src="../assets/html5-building-on-windows/3.png" width="800"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Create Tappy Chicken Project
+        </div>
+       </div>
+      </div>
+      <h4>
+       <span class="mw-headline" id="Unreal_Engine">
+        Unreal Engine
+       </span>
+      </h4>
+      <h5>
+       <span class="mw-headline" id="Open_the_project">
+        Open the project
+       </span>
+      </h5>
+      <p>
+       1. Open Unreal Engine 4.7.3
+       <br/>
+       2. Open Tappy Chicken project
+      </p>
+      <h5>
+       <span class="mw-headline" id="Project_Platforms">
+        Project Platforms
+       </span>
+      </h5>
+      <p>
+       3. Click
+       <b>
+        File &gt; Package Project &gt; Supported Platforms
+       </b>
+       <br/>
+       4. Select
+       <b>
+        HTML5
+       </b>
+       as supported platforms for this project.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:802px;">
+        <img alt="" class="thumbimage" height="314" src="../assets/html5-building-on-windows/4.png" width="800"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         HTML5 Supported Platforms
+        </div>
+       </div>
+      </div>
+      <h5>
+       <span class="mw-headline" id="Building_Project">
+        Building Project
+       </span>
+      </h5>
+      <p>
+       5. Hit
+       <b>
+        File &gt; Package Project &gt; HTML5
+       </b>
+       <br/>
+       6. Choose a directory to save the files to
+      </p>
+      <h5>
+       <span class="mw-headline" id="Successful_or_not">
+        Successful or not
+       </span>
+      </h5>
+      <p>
+       7. you will probably alerted
+       <b>
+        packaging failed
+       </b>
+       ! It's not a problem , i dunno why !
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:270px;">
+        <img alt="" class="thumbimage" height="57" src="../assets/html5-building-on-windows/5.png" width="268"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Packaging failed !
+        </div>
+       </div>
+      </div>
+      <p>
+       8. Open the Output Log Tab
+       <b>
+        Window &gt; Developer Tools &gt; Output Log
+       </b>
+       <br/>
+       9. Check you see Building successful
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:802px;">
+        <img alt="" class="thumbimage" height="232" src="../assets/html5-building-on-windows/6.png" width="800"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         building Successful
+        </div>
+       </div>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Final_Game">
+        Final Game
+       </span>
+      </h3>
+      <h4>
+       <span class="mw-headline" id="Tappy_Chicken_html">
+        Tappy Chicken html
+       </span>
+      </h4>
+      <h5>
+       <span class="mw-headline" id="Game_Directory">
+        Game Directory
+       </span>
+      </h5>
+      <p>
+       1. Open Tappy Chicken directory
+       <br/>
+       2. Check all files as below
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:587px;">
+        <img alt="" class="thumbimage" height="182" src="../assets/html5-building-on-windows/7.png" width="585"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Game Repertory
+        </div>
+       </div>
+      </div>
+      <h5>
+       <span class="mw-headline" id="Play_Tappy_Chicken_Game">
+        Play Tappy Chicken Game
+       </span>
+      </h5>
+      <p>
+       1. Right-Click on
+       <b>
+        TappyChicken-HTML5-Shipping.html
+       </b>
+       or
+       <b>
+        TappyChicken-HTML5.html
+       </b>
+       <br/>
+       2. Select
+       <b>
+        Open With
+       </b>
+       &gt;
+       <b>
+        Nightly
+       </b>
+       (Firefox Nightly x64)
+       <br/>
+       3. Firefox will pre-load &amp; download all data
+       <br/>
+       4. Have fun &amp; Enjoy !
+       <br/>
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:802px;">
+        <img alt="" class="thumbimage" height="262" src="../assets/html5-building-on-windows/8.png" width="800"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Open In Firefox
+        </div>
+       </div>
+      </div>
+      <h5>
+       <span class="mw-headline" id="Tappy_Chicken_Firefox_x64">
+        Tappy Chicken Firefox x64
+       </span>
+      </h5>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:670px;">
+        <img alt="" class="thumbimage" height="781" src="../assets/html5-building-on-windows/9.png" width="668"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Tappy Chicken Firefox x64
+        </div>
+       </div>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Final_Note">
+        Final Note
+       </span>
+      </h3>
+      <p>
+       Game will probably work in Firefox x32 &amp; Firefox x64 .
+At the moment , the game doesn't work in Chrome x32 &amp; Chromium x64 (Error Script &amp; Black Screen)
+      </p>
+      <p>
+      </p>
+      <h4>
+       <span class="mw-headline" id="Tappy_Chicken_Firefox_x32">
+        Tappy Chicken Firefox x32
+       </span>
+      </h4>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:676px;">
+        <img alt="" class="thumbimage" height="781" src="../assets/html5-building-on-windows/10.png" width="674"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Tappy Chicken Firefox x32
+        </div>
+       </div>
+      </div>
+      <p>
+       If you have any question, do not hesitate to ask on the
+       <a class="external text" href="https://forums.unrealengine.com/forumdisplay.php?67-HTML5-Development" rel="nofollow">
+        Unreal Engine forums
+       </a>
+       <br/>
+      </p>
+      <p>
+       (
+     )  20:25, 22 March 2015 (GTM)
+       <br/>
+       <br/>
+       <br/>
+       <br/>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

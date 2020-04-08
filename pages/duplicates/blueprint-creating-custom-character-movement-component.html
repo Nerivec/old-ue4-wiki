@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Blueprint Creating Custom Character Movement Component - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Blueprint Creating Custom Character Movement Component
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Purpose_and_Use">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Purpose and Use
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Assumptions">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Assumptions
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Setup_in_Character_Blueprint_-_Event_Graph">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Setup in Character Blueprint - Event Graph
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Setup_in_Animation_Blueprint_-_AnimGraph">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Setup in Animation Blueprint - AnimGraph
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Purpose_and_Use">
+        Purpose and Use
+       </span>
+      </h2>
+      <p>
+       How to create a custom movement mode so the character can climb a ladder.
+      </p>
+      <p>
+       I tried two separate times to figure out how to use a custom character movement mode in blueprints with no success and ended up just using a workaround with the existing preset modes.  There's very little documentation about how to do this in blueprints and the concept is a bit different using Enumerated types.  I finally figured it out so I decided to do a quick tutorial to hopefully visually bridge the gap of understanding for someone else.  If someone see's a better way to do this then please update.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Assumptions">
+        Assumptions
+       </span>
+      </h2>
+      <ol>
+       <li>
+        You know how to create and edit Persona blueprints.
+       </li>
+      </ol>
+      <h2>
+       <span class="mw-headline" id="Setup_in_Character_Blueprint_-_Event_Graph">
+        Setup in Character Blueprint - Event Graph
+       </span>
+      </h2>
+      <ul class="gallery mw-gallery-traditional">
+       <li class="gallerybox" style="width: 155px">
+        <div style="width: 155px">
+         <div class="thumb" style="width: 150px;">
+          <div style="margin:28px auto;">
+           <img alt="" class="" height="94" src="../assets/blueprint-creating-custom-character-movement-component/0.png" width="120"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Event Graph - Triggering a Custom Movement Mode Change
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 155px">
+        <div style="width: 155px">
+         <div class="thumb" style="width: 150px;">
+          <div style="margin:62px auto;">
+           <img alt="" class="" height="26" src="../assets/blueprint-creating-custom-character-movement-component/1.png" width="120"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           "Calculate Ladder Climbing Position" - Inside macro
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 155px">
+        <div style="width: 155px">
+         <div class="thumb" style="width: 150px;">
+          <div style="margin:60.5px auto;">
+           <img alt="" class="" height="29" src="../assets/blueprint-creating-custom-character-movement-component/2.png" width="120"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           "Player Direction Macro" - Player Direction
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 155px">
+        <div style="width: 155px">
+         <div class="thumb" style="width: 150px;">
+          <div style="margin:59.5px auto;">
+           <img alt="" class="" height="31" src="../assets/blueprint-creating-custom-character-movement-component/3.png" width="120"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           MoveForward Event
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <ol>
+       <li>
+        The "Climbing Ladder" variable in the images is a Byte which I happen to have set to 7 just for the sake of being in order of the different EMovementMode variations already existing although I think you can start at 0.
+       </li>
+       <li>
+        "Can The Player Touch The Ground" is doing a Line Trace to see if the character is close to the ground. (Optional)
+       </li>
+       <li>
+        Using Calc Velocity will affect all the other movement modes so be aware but I adjusted Delta time to 1 to speed up offsets and Braking Deceleration to 40 to give a bit of follow through
+       </li>
+      </ol>
+      <h2>
+       <span class="mw-headline" id="Setup_in_Animation_Blueprint_-_AnimGraph">
+        Setup in Animation Blueprint - AnimGraph
+       </span>
+      </h2>
+      <ul class="gallery mw-gallery-traditional">
+       <li class="gallerybox" style="width: 155px">
+        <div style="width: 155px">
+         <div class="thumb" style="width: 150px;">
+          <div style="margin:64px auto;">
+           <img alt="" class="" height="22" src="../assets/blueprint-creating-custom-character-movement-component/4.png" width="120"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Transition Rule - Moving from Idle to Climbing state within the AnimGraph of the Animation Blueprint
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 155px">
+        <div style="width: 155px">
+         <div class="thumb" style="width: 150px;">
+          <div style="margin:47px auto;">
+           <img alt="" class="" height="56" src="../assets/blueprint-creating-custom-character-movement-component/5.png" width="120"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Climbing State - Looping climbing animation using play rate based on the speed of velocity to keep feet aligned to ladder
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <ol>
+       <li>
+        I had to use Cast to Character in the event graph of the Animation blueprint to transfer the "Climbing Ladder" byte variable over from the Character Blueprint.
+       </li>
+       <li>
+        Some of the wiring like "Getting Direction" could be put into a Macro function
+       </li>
+      </ol>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

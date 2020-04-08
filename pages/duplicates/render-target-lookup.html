@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Render Target Lookup - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Render Target Lookup
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Strategy">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Strategy
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Generating_the_Heightmap">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Generating the Heightmap
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Setting_up_the_Render_Target">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Setting up the Render Target
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Render_Target_Reader">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Render Target Reader
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#.h">
+            <span class="tocnumber">
+             5.1
+            </span>
+            <span class="toctext">
+             .h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#.cpp">
+            <span class="tocnumber">
+             5.2
+            </span>
+            <span class="toctext">
+             .cpp
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Aligning_the_heightmap">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Aligning the heightmap
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Using_the_HeightMapReader">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Using the HeightMapReader
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-10">
+         <a href="#Summary">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Summary
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-11">
+         <a href="#Non-blocking_UpdateBuffer.28.29">
+          <span class="tocnumber">
+           9
+          </span>
+          <span class="toctext">
+           Non-blocking UpdateBuffer()
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       This tutorial covers a mostly blueprint, with a tiny bit of C++, approach to creating a dynamic heightmap that is driven by a
+       <b>
+        material
+       </b>
+       . Keep in mind that as the Unreal Engine evolves there will probably be a better technique for doing this but right now this is targeting version 4.1.
+There are many applications to dynamic heightmaps but this tutorial will focus on making a dynamic ocean.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:642px;">
+        <img alt="" class="thumbimage" height="359" src="../assets/render-target-lookup/0.png" width="640"/>
+        <div class="thumbcaption">
+         Dynamic Ocean
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Strategy">
+        Strategy
+       </span>
+      </h2>
+      <p>
+       The strategy used is:
+      </p>
+      <ol>
+       <li>
+        Create an ocean material and apply to a tessellated plane.
+       </li>
+       <li>
+        Render its displacement to a render target at every frame.
+       </li>
+       <li>
+        Read the render target's values to a buffer at every frame.
+       </li>
+       <li>
+        For every actor affected by the water, look up the current wave height in the buffer.
+       </li>
+       <li>
+        Add appropriate forces to the actor.
+       </li>
+      </ol>
+      <h2>
+       <span class="mw-headline" id="Generating_the_Heightmap">
+        Generating the Heightmap
+       </span>
+      </h2>
+      <p>
+       The heightmap material can be anything, in my case I used a noise normal map and bumpmap blended with itself at two different scales. The coordinates are hooked up to a panner to give the illusion of the waves moving. It is not very sophisticated but for now it does the job.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:2414px;">
+        <img alt="" class="thumbimage" height="1398" src="../assets/render-target-lookup/1.png" width="2412"/>
+        <div class="thumbcaption">
+         Heightmap blueprint
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:258px;">
+        <img alt="" class="thumbimage" height="256" src="../assets/render-target-lookup/2.png" width="256"/>
+        <div class="thumbcaption">
+         Wave Normal Map
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:258px;">
+        <img alt="" class="thumbimage" height="256" src="../assets/render-target-lookup/3.png" width="256"/>
+        <div class="thumbcaption">
+         Wave Bump Map
+        </div>
+       </div>
+      </div>
+      <p>
+       The height map is used twice, once in the ocean material with a Fresnel node connected to the diffuse channel and another material used to fill the render target that only sends the bumpmap to the emmisive channel.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Setting_up_the_Render_Target">
+        Setting up the Render Target
+       </span>
+      </h2>
+      <p>
+       We need to fill a render target with our heightmap. There are multiple ways to do it but I wanted to stay on the blueprint side of things as much as possible so I created an actor blueprint containing a
+       <b>
+        SceneCapture2D
+       </b>
+       and a
+       <b>
+        MaterialBillboard
+       </b>
+       . Align these two components together and and set the render target to the SceneCapture2D and you are good to go.
+      </p>
+      <p>
+       Do not forget to add this actor to your level.
+      </p>
+      <p>
+       <b>
+        *As of 4.13 this step can be replaced by using a "Draw Material to Render Target" node to update the render target.
+       </b>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Render_Target_Reader">
+        Render Target Reader
+       </span>
+      </h2>
+      <p>
+       This is the only C++ part of the whole tutorial. We need to be able to read the values from the render target to be able to return them your actors. The class contains two functions: Update and GetRenderTargetValue.
+      </p>
+      <p>
+       The level contains an instance of the HeightMapReader actor and Update is called at every tick. Beacause Update uses ReadPixel, it is very slow. The larger the render target the slower it gets. To mitigate this Update could not be called every frame with very little impact on the simulation. Also it is possible to only read parts of the render target and thus limit reading to only pixels that are likely to be requested by an actor.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:571px;">
+        <img alt="" class="thumbimage" height="261" src="../assets/render-target-lookup/4.png" width="569"/>
+        <div class="thumbcaption">
+         Level Blueprint
+        </div>
+       </div>
+      </div>
+      <h4>
+       <span class="mw-headline" id=".h">
+        .h
+       </span>
+      </h4>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">AHeightMapReader</span> <span class="o">:</span> <span class="k">public</span> <span class="n">AActor</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+	
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">Category</span> <span class="o">=</span> <span class="n">HeightMap</span><span class="p">,</span> <span class="n">EditAnywhere</span><span class="p">)</span>
+	<span class="n">UTextureRenderTarget2D</span><span class="o">*</span> <span class="n">RenderTarget</span><span class="p">;</span>
+	
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"HeightMap|Update"</span><span class="p">)</span>
+	<span class="kt">void</span> <span class="n">UpdateBuffer</span><span class="p">();</span>
+
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"HeightMap|Texture Helper"</span><span class="p">)</span>
+	<span class="n">FColor</span> <span class="n">GetRenderTargetValue</span><span class="p">(</span><span class="kt">float</span> <span class="n">x</span><span class="p">,</span> <span class="kt">float</span> <span class="n">y</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FColor</span><span class="o">&gt;</span> <span class="n">ColorBuffer</span><span class="p">;</span>
+	
+<span class="p">};</span>
+</pre>
+      </div>
+      <h4>
+       <span class="mw-headline" id=".cpp">
+        .cpp
+       </span>
+      </h4>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">AHeightMapReader</span><span class="o">::</span><span class="n">UpdateBuffer</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">ColorBuffer</span><span class="p">.</span><span class="n">Reset</span><span class="p">();</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">RenderTarget</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+	<span class="p">{</span>
+		
+		<span class="n">FTextureRenderTarget2DResource</span><span class="o">*</span> <span class="n">textureResource</span> <span class="o">=</span> <span class="p">(</span><span class="n">FTextureRenderTarget2DResource</span><span class="o">*</span><span class="p">)</span><span class="n">RenderTarget</span><span class="o">-&gt;</span><span class="n">Resource</span><span class="p">;</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">textureResource</span><span class="o">-&gt;</span><span class="n">ReadPixels</span><span class="p">(</span><span class="n">ColorBuffer</span><span class="p">))</span>
+		<span class="p">{</span>
+
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="n">FColor</span> <span class="n">AHeightMapReader</span><span class="o">::</span><span class="n">GetRenderTargetValue</span><span class="p">(</span><span class="kt">float</span> <span class="n">x</span><span class="p">,</span> <span class="kt">float</span> <span class="n">y</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">float</span> <span class="n">size</span> <span class="o">=</span> <span class="mi">10000</span><span class="p">;</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">RenderTarget</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="o">||</span> <span class="n">ColorBuffer</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+		<span class="k">return</span> <span class="n">FColor</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+			
+	<span class="kt">float</span> <span class="n">width</span> <span class="o">=</span> <span class="n">RenderTarget</span><span class="o">-&gt;</span><span class="n">GetSurfaceWidth</span><span class="p">();</span>
+	<span class="kt">float</span> <span class="n">height</span> <span class="o">=</span> <span class="n">RenderTarget</span><span class="o">-&gt;</span><span class="n">GetSurfaceHeight</span><span class="p">();</span>
+
+	<span class="c1">//Conver coordinates to texture space</span>
+	<span class="kt">float</span> <span class="n">normalizedX</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">/</span> <span class="n">size</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5f</span><span class="p">;</span>
+	<span class="kt">float</span> <span class="n">normalizedY</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span> <span class="o">/</span> <span class="n">size</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5f</span><span class="p">;</span>
+
+	<span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)(</span><span class="n">normalizedX</span> <span class="o">*</span> <span class="n">width</span><span class="p">);</span>
+	<span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="p">(</span><span class="kt">int</span><span class="p">)(</span><span class="n">normalizedY</span> <span class="o">*</span> <span class="n">height</span><span class="p">);</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">i</span> <span class="o">&gt;=</span> <span class="n">width</span><span class="p">)</span> <span class="n">i</span> <span class="o">=</span> <span class="n">width</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">j</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">j</span> <span class="o">&gt;=</span> <span class="n">height</span><span class="p">)</span> <span class="n">j</span> <span class="o">=</span> <span class="n">height</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+
+	<span class="kt">int</span> <span class="n">index</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="n">j</span> <span class="o">*</span> <span class="n">width</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">index</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">index</span> <span class="o">&gt;=</span> <span class="n">ColorBuffer</span><span class="p">.</span><span class="n">Num</span><span class="p">())</span> <span class="n">index</span> <span class="o">=</span> <span class="n">ColorBuffer</span><span class="p">.</span><span class="n">Num</span><span class="p">();</span>
+
+	<span class="k">return</span> <span class="n">ColorBuffer</span><span class="p">[</span><span class="n">index</span><span class="p">];</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <b>
+        *See the section 'Non-blocking UpdateBuffer()' below for a method that is faster (or that at least does not block the game thread).
+       </b>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Aligning_the_heightmap">
+        Aligning the heightmap
+       </span>
+      </h2>
+      <p>
+       This is probably the most tedious part of the implementation. Depending on the mesh used as the water surface and which way the texture is oriented when rendering to render target there will be adjustments to be made to heightmap material. In my case I had to rotate it 90 degrees due to a rendering bug in the MaterialBillboard. I also needed to shift texture coordinates by (0.5,0.5). Take note that the current implementation limits the water plane to the worlds origin and the zone covered by the heightmap is only 10000 units wide.
+      </p>
+      <p>
+       Another useful trick to make sure everything is lined up is to create a simple black and white texture with arrows and words and use it as the bump map in the heightmap material. This allows to easily identify if something is pointing or scaled the wrong way. Also creating a grid of debug spheres set at the height returned by the HeightMapReader allows to quickly line everything up.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Using_the_HeightMapReader">
+        Using the HeightMapReader
+       </span>
+      </h2>
+      <p>
+       To make my boat float, it contains a collection of test points (array of vectors) setup around its hull. I loop through each point and call GetRenderTargetValue from the HeightMapReader at the coordinates of that point transformed by the ship's transform. I then compare the height of each point with the returned height and if the value is above water I apply a downward force (gravity) at that location and if the point is underwater I apply an upward force at that location (buoyancy). These different forces will apply torque to the whole ship and make it sway and bob with the waves. To increase stability of the ship I increase linear and angular dampening based on the number of test points located underwater.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Summary">
+        Summary
+       </span>
+      </h2>
+      <p>
+       With this technique it is easy to make actors react to a dynamic heightmap generated from a material.
+      </p>
+      <p>
+       Here is a video of what was shown in this tutorial
+      </p>
+      <p>
+       &lt;youtube&gt;
+       <a class="external free" href="https://www.youtube.com/watch?v=7_cFo8-RkaA" rel="nofollow">
+        https://www.youtube.com/watch?v=7_cFo8-RkaA
+       </a>
+      </p>
+      <p>
+       Here is a video tutorial to add buoyancy to pawns.
+      </p>
+      <p>
+       &lt;youtube&gt;
+       <a class="external free" href="http://youtu.be/kkxJeyG2whw" rel="nofollow">
+        http://youtu.be/kkxJeyG2whw
+       </a>
+      </p>
+      <p>
+       There are many areas left for improvements:
+      </p>
+      <ul>
+       <li>
+        Using a faster technique to read the render target in code.
+       </li>
+       <li>
+        Allow the water plane to move with the actor instead of staying at the world center.
+       </li>
+       <li>
+        Interpolate the values read from the render target to get a smoother transition when a test point is located between pixels.
+       </li>
+      </ul>
+      <p>
+       Due to requests, here is the water plane model used in the demo:
+      </p>
+      <h2>
+       <span class="mw-headline" id="Non-blocking_UpdateBuffer.28.29">
+        Non-blocking UpdateBuffer()
+       </span>
+      </h2>
+      <p>
+       The above code uses 'FRenderTarget::ReadPixels()', which will block the game thread until the rendering thread has caught up. This caused noticeable hiccups in my project. I worked around this by adding a modified ReadPixels() that does not call 'FlushRenderingCommands()' to my class.
+      </p>
+      <p>
+       Here are the relevant portions of my code. I have not tested it with the rest of the code on this page so you might have to modify it a bit to get it to work for you.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">UTargeterComponent</span><span class="o">::</span><span class="n">ReadPixels</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">//borrowed from RenderTarget::ReadPixels()</span>
+	<span class="n">FTextureRenderTarget2DResource</span><span class="o">*</span> <span class="n">RenderResource</span> <span class="o">=</span> <span class="p">(</span><span class="n">FTextureRenderTarget2DResource</span><span class="o">*</span><span class="p">)</span><span class="n">RenderTarget</span><span class="o">-&gt;</span><span class="n">Resource</span><span class="p">;</span>
+
+	<span class="c1">// Read the render target surface data back.	</span>
+	<span class="k">struct</span> <span class="n">FReadSurfaceContext</span>
+	<span class="p">{</span>
+		<span class="n">FRenderTarget</span><span class="o">*</span> <span class="n">SrcRenderTarget</span><span class="p">;</span>
+		<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FColor</span><span class="o">&gt;*</span> <span class="n">OutData</span><span class="p">;</span>
+		<span class="n">FIntRect</span> <span class="n">Rect</span><span class="p">;</span>
+		<span class="n">FReadSurfaceDataFlags</span> <span class="n">Flags</span><span class="p">;</span>
+	<span class="p">};</span>
+
+	<span class="n">Pixels</span><span class="p">.</span><span class="n">Reset</span><span class="p">();</span>
+	<span class="n">FReadSurfaceContext</span> <span class="n">ReadSurfaceContext</span> <span class="o">=</span>
+	<span class="p">{</span>
+		<span class="n">RenderResource</span><span class="p">,</span>
+		<span class="o">&amp;</span><span class="n">Pixels</span><span class="p">,</span>
+		<span class="n">FIntRect</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">RenderResource</span><span class="o">-&gt;</span><span class="n">GetSizeXY</span><span class="p">().</span><span class="n">X</span><span class="p">,</span> <span class="n">RenderResource</span><span class="o">-&gt;</span><span class="n">GetSizeXY</span><span class="p">().</span><span class="n">Y</span><span class="p">),</span>
+		<span class="n">FReadSurfaceDataFlags</span><span class="p">(</span><span class="n">RCM_UNorm</span><span class="p">,</span> <span class="n">CubeFace_MAX</span><span class="p">)</span>
+	<span class="p">};</span>
+
+	<span class="n">ENQUEUE_UNIQUE_RENDER_COMMAND_ONEPARAMETER</span><span class="p">(</span>
+		<span class="n">ReadSurfaceCommand</span><span class="p">,</span>
+		<span class="n">FReadSurfaceContext</span><span class="p">,</span> <span class="n">Context</span><span class="p">,</span> <span class="n">ReadSurfaceContext</span><span class="p">,</span>
+		<span class="p">{</span>
+			<span class="n">RHICmdList</span><span class="p">.</span><span class="n">ReadSurfaceData</span><span class="p">(</span>
+			<span class="n">Context</span><span class="p">.</span><span class="n">SrcRenderTarget</span><span class="o">-&gt;</span><span class="n">GetRenderTargetTexture</span><span class="p">(),</span>
+				<span class="n">Context</span><span class="p">.</span><span class="n">Rect</span><span class="p">,</span>
+				<span class="o">*</span><span class="n">Context</span><span class="p">.</span><span class="n">OutData</span><span class="p">,</span>
+				<span class="n">Context</span><span class="p">.</span><span class="n">Flags</span>
+				<span class="p">);</span>
+		<span class="p">});</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       A result of this function being non-blocking is that we the result is not immediately available to us. One way to determine if the result is ready is to use a 'FRenderCommandFence'.
+      </p>
+      <p>
+       I added the following members to my class in my header file:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>	<span class="kt">bool</span> <span class="n">bReadPixelsStarted</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="n">FRenderCommandFence</span> <span class="n">ReadPixelFence</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       Then I use them like this:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// to i initiate reading</span>
+	<span class="n">ReadPixels</span><span class="p">();</span>
+	<span class="n">ReadPixelFence</span><span class="p">.</span><span class="n">BeginFence</span><span class="p">();</span>
+	<span class="n">bReadPixelsStarted</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">...</span>
+<span class="c1">// To check if we are done reading: </span>
+<span class="c1">// I do this in my tick function</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">bReadPixelsStarted</span> <span class="o">&amp;&amp;</span> <span class="n">ReadPixelFence</span><span class="p">.</span><span class="n">IsFenceComplete</span><span class="p">())</span>
+	<span class="p">{</span>
+              <span class="c1">// do something with the pixels</span>
+	<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       We need 'bReadPixelsStarted' since 'IsFenceComplete() returns true if it is called before 'BeginFence()'
+      </p>
+      <p>
+       --
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

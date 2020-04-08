@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Steam, Using the Steam SDK During Development - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Steam, Using the Steam SDK During Development
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Steamworks_SDK">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Steamworks SDK
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Github_Engine_Builds_vs_Retail_UE4_Builds">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Github Engine Builds vs Retail UE4 Builds
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Retail_Builds_Skip_to_This_Step">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Retail Builds Skip to This Step
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Engine.2FSource.2FThirdParty.2FSteamworks">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Engine/Source/ThirdParty/Steamworks
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Steam_Build_CS">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Steam Build CS
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Engine.2FBinaries.2FThirdParty.2FSteamworks">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Engine/Binaries/ThirdParty/Steamworks
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Dll_Files">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Dll Files
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#Win64">
+            <span class="tocnumber">
+             7.1
+            </span>
+            <span class="toctext">
+             Win64
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#Win32">
+            <span class="tocnumber">
+             7.2
+            </span>
+            <span class="toctext">
+             Win32
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-11">
+         <a href="#Build.CS">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Build.CS
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-12">
+         <a href="#Target.cs">
+          <span class="tocnumber">
+           9
+          </span>
+          <span class="toctext">
+           Target.cs
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-13">
+         <a href="#Config.2FDefaultEngine.ini">
+          <span class="tocnumber">
+           10
+          </span>
+          <span class="toctext">
+           Config/DefaultEngine.ini
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-14">
+         <a href="#WinPlatform.Automation.cs">
+          <span class="tocnumber">
+           11
+          </span>
+          <span class="toctext">
+           WinPlatform.Automation.cs
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-15">
+         <a href="#OnlineSubsystemPlugin">
+          <span class="tocnumber">
+           12
+          </span>
+          <span class="toctext">
+           OnlineSubsystemPlugin
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-16">
+         <a href="#Some_Tips">
+          <span class="tocnumber">
+           13
+          </span>
+          <span class="toctext">
+           Some Tips
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-17">
+         <a href="#Epic_Tutorial">
+          <span class="tocnumber">
+           14
+          </span>
+          <span class="toctext">
+           Epic Tutorial
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-18">
+         <a href="#Packaging">
+          <span class="tocnumber">
+           15
+          </span>
+          <span class="toctext">
+           Packaging
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-19">
+         <a href="#Packaging_w.2F_Steam_for_Shipping_Builds">
+          <span class="tocnumber">
+           16
+          </span>
+          <span class="toctext">
+           Packaging w/ Steam for Shipping Builds
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-20">
+         <a href="#Running_Steam_on_Mac">
+          <span class="tocnumber">
+           17
+          </span>
+          <span class="toctext">
+           Running Steam on Mac
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-21">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           18
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Original Author:
+       </i>
+       Rama
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       This is my guide to getting Steamworks running with your game!
+      </p>
+      <p>
+       You do not need to have been Greenlit to start using the Steam SDK during your game's development process.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Steamworks_SDK">
+        Steamworks SDK
+       </span>
+      </h2>
+      <p>
+       (in 4.7 and beyond you dont need to do this step, you will find the Steam binaries in Engine/Binaries/ThirdParty/Steamworks)
+      </p>
+      <p>
+       Download the steamworks SDK:
+      </p>
+      <p>
+       <a class="external text" href="https://partner.steamgames.com/%7C" rel="nofollow">
+        Steamworks SDK
+       </a>
+      </p>
+      <p>
+       Identify what the latest version is that you are downloading, such as "v129a"
+      </p>
+      <h2>
+       <span class="mw-headline" id="Github_Engine_Builds_vs_Retail_UE4_Builds">
+        Github Engine Builds vs Retail UE4 Builds
+       </span>
+      </h2>
+      <p>
+       Please note that recompiling the engine and modifying the Steamworks build cs is not required.
+      </p>
+      <p>
+       If you are not using your own locally built verison of the engine you should be able to simply download the Steam SDK and skip to this step:
+      </p>
+      <h3>
+       <span class="mw-headline" id="Retail_Builds_Skip_to_This_Step">
+        Retail Builds Skip to This Step
+       </span>
+      </h3>
+      <p>
+       <b>
+        <a href="#Engine.2FBinaries.2FThirdParty.2FSteamworks">
+         Binaries, DLL copying
+        </a>
+       </b>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Engine.2FSource.2FThirdParty.2FSteamworks">
+        Engine/Source/ThirdParty/Steamworks
+       </span>
+      </h2>
+      <p>
+       Copy the entire contents of the downloaded SDK to
+      </p>
+      <pre> Engine/Source/ThirdParty/Steamworks/Steamv129a
+ 
+or whatever your current version is!
+</pre>
+      <p>
+       So you will end up with folder structure like this
+      </p>
+      <pre> Engine/Source/ThirdParty/Steamworks/Steamv129a/sdk/
+</pre>
+      <h2>
+       <span class="mw-headline" id="Steam_Build_CS">
+        Steam Build CS
+       </span>
+      </h2>
+      <p>
+       Open the Steam Build CS contained in the directory structure
+      </p>
+      <pre> Engine/Source/ThirdParty/Steamworks/
+</pre>
+      <p>
+       Make sure the version number there matches the version you downloaded as the Steam SDK!
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Engine.2FBinaries.2FThirdParty.2FSteamworks">
+        Engine/Binaries/ThirdParty/Steamworks
+       </span>
+      </h2>
+      <p>
+       Now in your UE4 engine's
+       <b>
+        Binaries
+       </b>
+       folder you must create this directory structure
+      </p>
+      <pre> Engine/Binaries/ThirdParty/Steamworks/Steamv129a/Win64
+ Engine/Binaries/ThirdParty/Steamworks/Steamv129a/Win32
+</pre>
+      <p>
+       Remember to use your current steam version as shown in the SDK you downloaded!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Dll_Files">
+        Dll Files
+       </span>
+      </h2>
+      <p>
+       Dlls marked with (
+       <i>
+        Steam Client Install Dir
+       </i>
+       ) are found in your
+       <b>
+        program files x86 / Steam
+       </b>
+       directory (regular steam client)
+      </p>
+      <p>
+       The other 2 dlls are found in the SDK you downloaded in this directory structure
+      </p>
+      <pre> sdk/redistributable_bin
+</pre>
+      <h3>
+       <span class="mw-headline" id="Win64">
+        Win64
+       </span>
+      </h3>
+      <pre> steam_api64.dll	(Downloaded SDK)
+ steamclient64.dll 	(Steam Client Install Dir)
+ tier0_s64.dll		(Steam Client Install Dir)
+ vstdlib_s64.dll 	(Steam Client Install Dir)
+</pre>
+      <h3>
+       <span class="mw-headline" id="Win32">
+        Win32
+       </span>
+      </h3>
+      <pre> steam_api.dll		(Downloaded SDK)
+ steamclient.dll 	(Steam Client Install Dir)
+ tier0_s.dll  		(Steam Client Install Dir)
+ vstdlib_s.dll  	(Steam Client Install Dir)
+</pre>
+      <h2>
+       <span class="mw-headline" id="Build.CS">
+        Build.CS
+       </span>
+      </h2>
+      <p>
+       In your game's build.cs you need to include this:
+      </p>
+      <p>
+       <br/>
+      </p>
+      <pre> PublicDependencyModuleNames.AddRange(new string[] { 
+ 	"OnlineSubsystem",
+ 	"OnlineSubsystemUtils"
+ });
+</pre>
+      <pre> DynamicallyLoadedModuleNames.Add("OnlineSubsystemSteam");
+</pre>
+      <h2>
+       <span class="mw-headline" id="Target.cs">
+        Target.cs
+       </span>
+      </h2>
+      <p>
+       In your game's Target.cs, add
+       <b>
+        bUsesSteam=true
+       </b>
+       in the constructor. Here's an example:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">ShooterGameTarget</span> <span class="o">:</span> <span class="n">TargetRules</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">ShooterGameTarget</span><span class="p">(</span><span class="n">TargetInfo</span> <span class="n">Target</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">Type</span> <span class="o">=</span> <span class="n">TargetType</span><span class="p">.</span><span class="n">Game</span><span class="p">;</span>
+        <span class="n">bUsesSteam</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="p">.....</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Config.2FDefaultEngine.ini">
+        Config/DefaultEngine.ini
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="p">[</span><span class="o">/</span><span class="n">Script</span><span class="o">/</span><span class="n">Engine</span><span class="p">.</span><span class="n">GameEngine</span><span class="p">]</span>
+<span class="o">!</span><span class="n">NetDriverDefinitions</span><span class="o">=</span><span class="n">ClearArray</span>
+<span class="o">+</span><span class="n">NetDriverDefinitions</span><span class="o">=</span><span class="p">(</span><span class="n">DefName</span><span class="o">=</span><span class="s">"GameNetDriver"</span><span class="p">,</span><span class="n">DriverClassName</span><span class="o">=</span><span class="s">"/Script/OnlineSubsystemSteam.SteamNetDriver"</span><span class="p">,</span><span class="n">DriverClassNameFallback</span><span class="o">=</span><span class="s">"/Script/OnlineSubsystemUtils.IpNetDriver"</span><span class="p">)</span>
+
+<span class="p">[</span><span class="n">OnlineSubsystem</span><span class="p">]</span>
+<span class="n">DefaultPlatformService</span><span class="o">=</span><span class="n">Steam</span>
+<span class="n">PollingIntervalInMs</span><span class="o">=</span><span class="mi">20</span>
+
+<span class="p">[</span><span class="n">OnlineSubsystemSteam</span><span class="p">]</span>
+<span class="n">bEnabled</span><span class="o">=</span><span class="nb">true</span>
+<span class="n">SteamDevAppId</span><span class="o">=</span><span class="mi">480</span>
+<span class="n">GameServerQueryPort</span><span class="o">=</span><span class="mi">27015</span>
+<span class="n">bRelaunchInSteam</span><span class="o">=</span><span class="nb">false</span>
+<span class="n">GameVersion</span><span class="o">=</span><span class="mf">1.0.0.0</span>
+<span class="n">bVACEnabled</span><span class="o">=</span><span class="mi">1</span>
+<span class="n">bAllowP2PPacketRelay</span><span class="o">=</span><span class="nb">true</span>
+<span class="n">P2PConnectionTimeout</span><span class="o">=</span><span class="mi">90</span>
+
+<span class="p">[</span><span class="o">/</span><span class="n">Script</span><span class="o">/</span><span class="n">OnlineSubsystemSteam</span><span class="p">.</span><span class="n">SteamNetDriver</span><span class="p">]</span>
+<span class="n">NetConnectionClassName</span><span class="o">=</span><span class="s">"/Script/OnlineSubsystemSteam.SteamNetConnection"</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="WinPlatform.Automation.cs">
+        WinPlatform.Automation.cs
+       </span>
+      </h2>
+      <p>
+       In Visual Studio, this file is in the folder
+       <b>
+        Programs/Automation/Win.Automation/WinPlatform.Automation.cs
+       </b>
+       . Open it, and check that this string has your Steam API version:
+      </p>
+      <pre> string SteamVersion = "Steamv131";
+</pre>
+      <h2>
+       <span class="mw-headline" id="OnlineSubsystemPlugin">
+        OnlineSubsystemPlugin
+       </span>
+      </h2>
+      <p>
+       &gt;Edit from Rumbleball 29.03.2018
+      </p>
+      <p>
+       This Wiki entry seems to be pretty old and there seems to be some changes to the engine.
+UE4.16+ (at least) you will need to enable the OnlinesubSystemSteam Plugin for your game.
+If you don't do that, you will get the following warnings in the output window of the editor:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span> <span class="nl">LogModuleManager</span><span class="p">:</span><span class="nl">Warning</span><span class="p">:</span> <span class="n">No</span> <span class="n">filename</span> <span class="n">provided</span> <span class="k">for</span> <span class="n">module</span> <span class="n">OnlineSubsystemSteam</span>
+ <span class="nl">LogModuleManager</span><span class="p">:</span><span class="nl">Warning</span><span class="p">:</span> <span class="nl">ModuleManager</span><span class="p">:</span> <span class="n">Unable</span> <span class="n">to</span> <span class="n">load</span> <span class="n">module</span> <span class="err">'</span><span class="n">OnlineSubsystemSteam</span><span class="err">'</span> <span class="n">because</span> <span class="n">the</span> <span class="n">file</span> <span class="err">'</span><span class="nl">D</span><span class="p">:</span><span class="o">/</span><span class="n">Programs</span><span class="o">/</span><span class="n">Epic</span> <span class="n">Games</span><span class="o">/</span><span class="mf">4.13</span><span class="o">/</span><span class="n">Engine</span><span class="o">/</span><span class="n">Binaries</span><span class="o">/</span><span class="n">Win64</span><span class="o">/</span><span class="err">'</span> <span class="n">was</span> <span class="n">not</span> <span class="n">found</span><span class="p">.</span>
+</pre>
+      </div>
+      <p>
+       To enable the plugin: Open the editor and go to Edit-&gt;Plugins-&gt;Online Platform and enable 'Online Subsystem Steam'
+      </p>
+      <h2>
+       <span class="mw-headline" id="Some_Tips">
+        Some Tips
+       </span>
+      </h2>
+      <p>
+       1. There is an awesome program written by a community member named Garner. Check it out here:
+      </p>
+      <p>
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?67565-Steam-Setup-Utility" rel="nofollow">
+        Steam Setup Utility by Garner
+       </a>
+      </p>
+      <p>
+       2. Trying to run your game in PIE mode may give you a "Steam API disabled!" Error. Run your game in standalone mode to see if things get better.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Epic_Tutorial">
+        Epic Tutorial
+       </span>
+      </h2>
+      <p>
+       Epic's tutorial on this subject is here:
+      </p>
+      <p>
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Programming/Online/Steam/index.html" rel="nofollow">
+        Online Subsystem Steam
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Packaging">
+        Packaging
+       </span>
+      </h2>
+      <p>
+       (This is not required in more recent engine builds, just check the ThirdParty folder to make sure Steam is there)
+      </p>
+      <p>
+       When packaging your game you must copy the Steam binaries from the engine ThirdParty to your packaged game Engine/ThirdParty
+      </p>
+      <p>
+       Engine/Binaries/ThirdParty/Steamworks
+      </p>
+      <h2>
+       <span class="mw-headline" id="Packaging_w.2F_Steam_for_Shipping_Builds">
+        Packaging w/ Steam for Shipping Builds
+       </span>
+      </h2>
+      <p>
+       For shipping builds you must manually create a file called:
+      </p>
+      <p>
+       steam_appid.txt
+      </p>
+      <p>
+       and in that file put just your app id with no extra whitespaces (spaces or returns or anything like that)
+      </p>
+      <p>
+       to test you could create such a file and put just 480 in it.
+      </p>
+      <p>
+       ♥ Rama
+      </p>
+      <h2>
+       <span class="mw-headline" id="Running_Steam_on_Mac">
+        Running Steam on Mac
+       </span>
+      </h2>
+      <p>
+       Quoting Epic tutorial:
+      </p>
+      <p>
+       Contrary to Windows, Steam Overlay on Mac requires game to be launched using Steam client. For this you first need to add the game to your library using "Add a Non-Steam Game to My Library" option from Steam's Games menu.
+       <a class="external autonumber" href="https://docs.unrealengine.com/latest/INT/Programming/Online/Steam/index.html#steamoverlayonmac" rel="nofollow">
+        [1]
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       If everything works you will see the steam pop up appear in the lower right and you can press SHIFT+TAB to see the Steam overlay!
+      </p>
+      <p>
+       If you see in your log that the .dlls can't be found, check two things
+      </p>
+      <p>
+       1. You put them in
+       <b>
+        Binaries
+       </b>
+       not Source
+      </p>
+      <p>
+       2. and you named the folder appropriately for your version number, ex:
+      </p>
+      <pre> Binaries/ThirdParty/Steamworks/Steamv129
+</pre>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

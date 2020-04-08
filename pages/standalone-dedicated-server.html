@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Standalone Dedicated Server - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Standalone Dedicated Server
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <br/>
+       This guide shows you how to package and compile your game as a standalone dedicated server for both Windows and Linux.
+      </p>
+      <p>
+       <i>
+        This is currently only possible using an engine compiled from source. It is not possible through an engine installed via the Epic Launcher. This was deemed necessary due to the increase in size that would occur if the required files were included in the installed version of the engine.
+       </i>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Packaging_the_Content">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Packaging the Content
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Compiling_the_Server">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Compiling the Server
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Linux_Compiler_Toolchain">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Linux Compiler Toolchain
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Compilation">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             Compilation
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Platform_Specifics">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Platform Specifics
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Windows">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Windows
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Linux">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             Linux
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Packaging_the_Content">
+        Packaging the Content
+       </span>
+      </h2>
+      <p>
+       The dedicated server needs packaged content.
+Go to File -&gt; Package Project -&gt; Packaging Settings. Here you have a few options:
+      </p>
+      <ul>
+       <li>
+        Use Pak File: Pack all the assets into one .pak file - disable if you want to have the regular content structure (e.g. for incremental uploads)
+       </li>
+       <li>
+        Full Rebuild: You might want to disable this to lower packaging times
+       </li>
+      </ul>
+      <p>
+       Then go to File -&gt; Package Project -&gt; Package Windows/Linux and select an output directory.
+The engine will now package the content and compile the standalone client code - this may take some time in case of a full rebuild.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Compiling_the_Server">
+        Compiling the Server
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Linux_Compiler_Toolchain">
+        Linux Compiler Toolchain
+       </span>
+      </h3>
+      <p>
+       Linux compilation is currently only supported on Windows using a cross-compilation toolchain based on
+       <a class="external text" href="http://en.wikipedia.org/wiki/Clang" rel="nofollow">
+        Clang
+       </a>
+       .
+A precompiled toolchain from Epic is available here:
+       <a class="external free" href="https://github.com/EpicGames/UnrealEngine/releases/tag/4.1.0-release" rel="nofollow">
+        https://github.com/EpicGames/UnrealEngine/releases/tag/4.1.0-release
+       </a>
+       .
+       <br/>
+       After you unzipped the toolchain, make sure to add the environment variable LINUX_ROOT and set it to the location of the toolchain (see README.md for details).
+      </p>
+      <h3>
+       <span class="mw-headline" id="Compilation">
+        Compilation
+       </span>
+      </h3>
+      <p>
+       The next step is to compile the server code using Visual Studio.
+First, you need to set up a special server target for UnrealBuildTool.
+      </p>
+      <p>
+       You can use the following template:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2014 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="k">using</span> <span class="nn">UnrealBuildTool</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">GameServerTarget</span> <span class="p">:</span> <span class="n">TargetRules</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="nf">GameServerTarget</span><span class="p">(</span><span class="n">TargetInfo</span> <span class="n">Target</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">Type</span> <span class="p">=</span> <span class="n">TargetType</span><span class="p">.</span><span class="n">Server</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="c1">//</span>
+    <span class="c1">// TargetRules interface.</span>
+    <span class="c1">//</span>
+    <span class="k">public</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">SetupBinaries</span><span class="p">(</span>
+        <span class="n">TargetInfo</span> <span class="n">Target</span><span class="p">,</span>
+        <span class="k">ref</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">UEBuildBinaryConfiguration</span><span class="p">&gt;</span> <span class="n">OutBuildBinaryConfigurations</span><span class="p">,</span>
+        <span class="k">ref</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span> <span class="n">OutExtraModuleNames</span>
+        <span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">base</span><span class="p">.</span><span class="n">SetupBinaries</span><span class="p">(</span><span class="n">Target</span><span class="p">,</span> <span class="k">ref</span> <span class="n">OutBuildBinaryConfigurations</span><span class="p">,</span> <span class="k">ref</span> <span class="n">OutExtraModuleNames</span><span class="p">);</span>
+        <span class="n">OutExtraModuleNames</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s">"Game"</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">override</span> <span class="kt">bool</span> <span class="nf">GetSupportedPlatforms</span><span class="p">(</span><span class="k">ref</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">UnrealTargetPlatform</span><span class="p">&gt;</span> <span class="n">OutPlatforms</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// It is valid for only server platforms</span>
+        <span class="k">return</span> <span class="n">UnrealBuildTool</span><span class="p">.</span><span class="n">UnrealBuildTool</span><span class="p">.</span><span class="n">GetAllServerPlatforms</span><span class="p">(</span><span class="k">ref</span> <span class="n">OutPlatforms</span><span class="p">,</span> <span class="k">false</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">override</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">UnrealTargetPlatform</span><span class="p">&gt;</span> <span class="n">GUBP_GetPlatforms_MonolithicOnly</span><span class="p">(</span><span class="n">UnrealTargetPlatform</span> <span class="n">HostPlatform</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">HostPlatform</span> <span class="p">==</span> <span class="n">UnrealTargetPlatform</span><span class="p">.</span><span class="n">Mac</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">UnrealTargetPlatform</span><span class="p">&gt;();</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">UnrealTargetPlatform</span><span class="p">&gt;</span> <span class="p">{</span> <span class="n">HostPlatform</span><span class="p">,</span> <span class="n">UnrealTargetPlatform</span><span class="p">.</span><span class="n">Win32</span><span class="p">,</span> <span class="n">UnrealTargetPlatform</span><span class="p">.</span><span class="n">Linux</span> <span class="p">};</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">override</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">UnrealTargetConfiguration</span><span class="p">&gt;</span> <span class="n">GUBP_GetConfigs_MonolithicOnly</span><span class="p">(</span><span class="n">UnrealTargetPlatform</span> <span class="n">HostPlatform</span><span class="p">,</span> <span class="n">UnrealTargetPlatform</span> <span class="n">Platform</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">UnrealTargetConfiguration</span><span class="p">&gt;</span> <span class="p">{</span> <span class="n">UnrealTargetConfiguration</span><span class="p">.</span><span class="n">Development</span> <span class="p">};</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Just replace all instances of "Game" with the name of your game project.
+      </p>
+      <p>
+       Its possible that there are no functions to override by the overrides so it will not build. Throw these out aswell if there are problems.
+      </p>
+      <p>
+       Save it as &lt;Game&gt;Server.Target.cs next to the other target files and regenerate the project files.
+      </p>
+      <p>
+       Open Visual Studio, set the configuration to *Server and select the platform target accordingly.
+      </p>
+      <p>
+       Now it's time to build your game project. Using the above UBT target, the executable will end up in &lt;game&gt;/Binaries/&lt;platform&gt;/&lt;Game&gt;Server.
+Move the executable over to &lt;cooked&gt;/&lt;platform&gt;/&lt;game&gt;/binaries/&lt;platform&gt;.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Platform_Specifics">
+        Platform Specifics
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Windows">
+        Windows
+       </span>
+      </h3>
+      <p>
+       Simply execute &lt;Game&gt;Server.exe. If you want a log window, start with -log.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Linux">
+        Linux
+       </span>
+      </h3>
+      <p>
+       The server will listen for UDP packets on port 7777 by default, so make sure to open this port in your firewall.
+      </p>
+      <p>
+       With some Unreal Engine releases (4.2 and below) you can run into this message if you don't pass -pak:
+      </p>
+      <pre>Could not adjust number of file handles, consider changing "nofile" in /etc/security/limits.conf and relogin.
+</pre>
+      <p>
+       The solution is to pass -pak on the command line when starting the server.
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

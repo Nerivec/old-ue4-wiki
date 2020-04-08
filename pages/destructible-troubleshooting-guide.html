@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Destructible Troubleshooting Guide - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Destructible Troubleshooting Guide
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <br/>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#About_This_Guide">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           <b>
+            About This Guide
+           </b>
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Recommendations_.26_Tips">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           <b>
+            Recommendations &amp; Tips
+           </b>
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Documentation_and_Links">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Documentation and Links
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-4">
+             <a href="#NVIDIA_Documentation">
+              <span class="tocnumber">
+               2.1.1
+              </span>
+              <span class="toctext">
+               NVIDIA Documentation
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-5">
+             <a href="#Unreal_Engine_4_Documentation">
+              <span class="tocnumber">
+               2.1.2
+              </span>
+              <span class="toctext">
+               Unreal Engine 4 Documentation
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Limitations">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             Limitations
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Frequently_Asked_Questions">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           <b>
+            Frequently Asked Questions
+           </b>
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Windows.2FOSX.2FLinux.2FConsole">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             <b>
+              Windows/OSX/Linux/Console
+             </b>
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-9">
+             <a href="#Why_is_there_a_hole.2Fmissing_face_in_my_DM.3F">
+              <span class="tocnumber">
+               3.1.1
+              </span>
+              <span class="toctext">
+               Why is there a hole/missing face in my DM?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-10">
+             <a href="#Why_does_my_mesh_fall_completely_apart_when_I_shoot_it.3F_Why_can.E2.80.99t_I_just_shoot_a_hole_in_my_DM.3F_How_to_stop_DM_from_breaking_apart_in_a_single_hit.3F">
+              <span class="tocnumber">
+               3.1.2
+              </span>
+              <span class="toctext">
+               Why does my mesh fall completely apart when I shoot it? Why can’t I just shoot a hole in my DM? How to stop DM from breaking apart in a single hit?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-11">
+             <a href="#Why_doesn.E2.80.99t_my_DM_stick_to_the_ground_when_I_shoot_it.3F_It_just_flys_off_and_bounces_around.">
+              <span class="tocnumber">
+               3.1.3
+              </span>
+              <span class="toctext">
+               Why doesn’t my DM stick to the ground when I shoot it? It just flys off and bounces around.
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-12">
+             <a href="#Why_is_my_DM_floating_above_the_ground.2C_or_why_is_collision_not_matching_the_mesh.3F_Why_doesn.E2.80.99t_the_collision_of_my_DM_match_my_Static_Mesh_where_I_setup_my_collision.3F">
+              <span class="tocnumber">
+               3.1.4
+              </span>
+              <span class="toctext">
+               Why is my DM floating above the ground, or why is collision not matching the mesh? Why doesn’t the collision of my DM match my Static Mesh where I setup my collision?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-13">
+             <a href="#Why_doesn.E2.80.99t_my_mesh_break_when_it_falls.3F">
+              <span class="tocnumber">
+               3.1.5
+              </span>
+              <span class="toctext">
+               Why doesn’t my mesh break when it falls?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-14">
+             <a href="#Why_is_my_collision_wrong_if_I_scale_my_DM.3F">
+              <span class="tocnumber">
+               3.1.6
+              </span>
+              <span class="toctext">
+               Why is my collision wrong if I scale my DM?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-15">
+             <a href="#Why_does_my_projectile_mesh_not_fracture_my_DM.3F_My_bullet_.28mesh.29_doesn.E2.80.99t_fracture_the_destructible._What.E2.80.99s_wrong.3F">
+              <span class="tocnumber">
+               3.1.7
+              </span>
+              <span class="toctext">
+               Why does my projectile mesh not fracture my DM? My bullet (mesh) doesn’t fracture the destructible. What’s wrong?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-16">
+             <a href="#When_I_fracture_my_mesh_why_is_there_not_material_applied_to_the_chunks_on_the_inside.3F">
+              <span class="tocnumber">
+               3.1.8
+              </span>
+              <span class="toctext">
+               When I fracture my mesh why is there not material applied to the chunks on the inside?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-17">
+             <a href="#How_do_I_setup_my_DM_so_that_it_can_receive_different_damage_from_different_weapons_and_not_fracture.3F_How_to_not_receive_damage_if_below_a_certain_amount.3F">
+              <span class="tocnumber">
+               3.1.9
+              </span>
+              <span class="toctext">
+               How do I setup my DM so that it can receive different damage from different weapons and not fracture? How to not receive damage if below a certain amount?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-18">
+             <a href="#Why_are_some_settings_not_honored_when_I_simulate_Physics_on_my_Destructible.3F">
+              <span class="tocnumber">
+               3.1.10
+              </span>
+              <span class="toctext">
+               Why are some settings not honored when I simulate Physics on my Destructible?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-19">
+             <a href="#Why_doesn.E2.80.99t_my_DM_cast_shadows.3F">
+              <span class="tocnumber">
+               3.1.11
+              </span>
+              <span class="toctext">
+               Why doesn’t my DM cast shadows?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-20">
+             <a href="#My_character_is_always_blocked_by_the_chunks._How_can_I_turn_off_collision_for_the_DMs_or_my_character.3F">
+              <span class="tocnumber">
+               3.1.12
+              </span>
+              <span class="toctext">
+               My character is always blocked by the chunks. How can I turn off collision for the DMs or my character?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-21">
+             <a href="#How_do_I_customize_the_shapes_of_the_chunks_in_my_DM.3F">
+              <span class="tocnumber">
+               3.1.13
+              </span>
+              <span class="toctext">
+               How do I customize the shapes of the chunks in my DM?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-22">
+             <a href="#How_do_I_create_more_than_one_destruction_depth.3F">
+              <span class="tocnumber">
+               3.1.14
+              </span>
+              <span class="toctext">
+               How do I create more than one destruction depth?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-23">
+             <a href="#Can_I_change_my_Destructible_meshes_settings_at_run-time.3F">
+              <span class="tocnumber">
+               3.1.15
+              </span>
+              <span class="toctext">
+               Can I change my Destructible meshes settings at run-time?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-24">
+             <a href="#Can_I_fracture_a_mesh_at_run-time.2C_like_fruit_ninja.3F">
+              <span class="tocnumber">
+               3.1.16
+              </span>
+              <span class="toctext">
+               Can I fracture a mesh at run-time, like fruit ninja?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-25">
+             <a href="#When_using_Debris_settings_all_my_chunks_disappear_at_the_same_time.3F">
+              <span class="tocnumber">
+               3.1.17
+              </span>
+              <span class="toctext">
+               When using Debris settings all my chunks disappear at the same time?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-26">
+             <a href="#Why_isn.27t_my_Destructible_meshes_chunks_affecting_my_Nav_Mesh.2C_or_How_do_I_make_my_Nav_Mesh_update_for_my_Destructible.3F">
+              <span class="tocnumber">
+               3.1.18
+              </span>
+              <span class="toctext">
+               Why isn't my Destructible meshes chunks affecting my Nav Mesh, or How do I make my Nav Mesh update for my Destructible?
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-27">
+           <a href="#Mobile:_Android.2FiOS">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             <b>
+              Mobile: Android/iOS
+             </b>
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-28">
+             <a href="#Why_doesn.27t_my_destructible_mesh_work_on_mobile.3F">
+              <span class="tocnumber">
+               3.2.1
+              </span>
+              <span class="toctext">
+               Why doesn't my destructible mesh work on mobile?
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-29">
+           <a href="#Performance">
+            <span class="tocnumber">
+             3.3
+            </span>
+            <span class="toctext">
+             <b>
+              Performance
+             </b>
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-30">
+             <a href="#If_I_use_high_speed_object_why_doesn.E2.80.99t_it_collide_with_my_DM.3F_It_just_goes_right_through.">
+              <span class="tocnumber">
+               3.3.1
+              </span>
+              <span class="toctext">
+               If I use high speed object why doesn’t it collide with my DM? It just goes right through.
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-31">
+             <a href="#Are_Destructible_assets_handled_on_the_CPU_or_GPU.3F_Why.3F">
+              <span class="tocnumber">
+               3.3.2
+              </span>
+              <span class="toctext">
+               Are Destructible assets handled on the CPU or GPU? Why?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-32">
+             <a href="#Why_do_I_get_lag_when_I_fracture_my_Destructible.3F">
+              <span class="tocnumber">
+               3.3.3
+              </span>
+              <span class="toctext">
+               Why do I get lag when I fracture my Destructible?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-33">
+             <a href="#Why_do_my_destructible_chunks.2Fpieces_disappear_if_I_have_a_lot_of_DMs_in_my_scene.3F">
+              <span class="tocnumber">
+               3.3.4
+              </span>
+              <span class="toctext">
+               Why do my destructible chunks/pieces disappear if I have a lot of DMs in my scene?
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="About_This_Guide">
+        <b>
+         About This Guide
+        </b>
+       </span>
+      </h2>
+      <p>
+       This Troubleshooting guide attempts to cover some of the more common problems that people come across when they first dig into using Destructible meshes in Unreal Engine 4. This guide is by no means meant to be completely comprehensive but a living document as the engine changes so too can we add and alter advice presented here. The guide is meant to be a great first step for artist trying to get the most out of the engine's destruction system.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Recommendations_.26_Tips">
+        <b>
+         Recommendations &amp; Tips
+        </b>
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Documentation_and_Links">
+        Documentation and Links
+       </span>
+      </h3>
+      <h4>
+       <span class="mw-headline" id="NVIDIA_Documentation">
+        NVIDIA Documentation
+       </span>
+      </h4>
+      <ul>
+       <li>
+        <a class="external text" href="https://developer.nvidia.com/apex-destruction" rel="nofollow">
+         PhysX Destruction
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://developer.nvidia.com/apex-destruction-physxlab-tutorials" rel="nofollow">
+         APEX Destruction PhysXLab Tutorials
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="http://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/apexsdk/APEX_Destruction/Destruction_Authoring_with_PhysXLab.html" rel="nofollow">
+         Destruction Authoring with PhysXLab
+        </a>
+        (Note: The full documentation for this can ONLY be accessed via PhysXLab)
+       </li>
+      </ul>
+      <h4>
+       <span class="mw-headline" id="Unreal_Engine_4_Documentation">
+        Unreal Engine 4 Documentation
+       </span>
+      </h4>
+      <ul>
+       <li>
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Physics/Apex/index.html" rel="nofollow">
+         APEX Destruction
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Physics/Apex/ApexTypes/index.html" rel="nofollow">
+         APEX Types
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Physics/Destructibles/DestructibleProperties/index.html" rel="nofollow">
+         Destructible Properties Matrix
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/Resources/ContentExamples/Destructables/index.html" rel="nofollow">
+         Content Examples: Destructibles Map
+        </a>
+       </li>
+      </ul>
+      <h3>
+       <span class="mw-headline" id="Limitations">
+        Limitations
+       </span>
+      </h3>
+      <p>
+       As with any system there are limitations that are restricted to how a mesh must be setup or configured to work properly. Destructible meshes are no different they must adhere to their own limitations. NVIDIA's documentation for setting up Destructible meshes would be a good place to start along with this guide that will cover a lot of common issues people run into.
+      </p>
+      <p>
+       ______________________________________________________________________________________________________________
+      </p>
+      <h2>
+       <span class="mw-headline" id="Frequently_Asked_Questions">
+        <b>
+         Frequently Asked Questions
+        </b>
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Windows.2FOSX.2FLinux.2FConsole">
+        <b>
+         Windows/OSX/Linux/Console
+        </b>
+       </span>
+      </h3>
+      <h4>
+       <span class="mw-headline" id="Why_is_there_a_hole.2Fmissing_face_in_my_DM.3F">
+        Why is there a hole/missing face in my DM?
+       </span>
+      </h4>
+      <p>
+       This can happen when a mesh is not properly setup. If you're seeing this happening these are some of the common reasons:
+      </p>
+      <ul>
+       <li>
+        <b>
+         Extremely long thing triangles:
+        </b>
+        add an edge loop to keep the triangles from getting too long.
+       </li>
+       <li>
+        <b>
+         N-sided Polygons:
+        </b>
+        Quads and Tris are best to use. UE4 will do its best to triangulate the mesh for n-sided polygons, but this is sometime inevitable.
+       </li>
+       <li>
+        <b>
+         Planar Assets:
+        </b>
+        Single sided assets are not ideal. These will fracture, but you can sometimes get artifacts, becaues the interior geometry does not know how to build itself in this situation.
+       </li>
+       <li>
+        <b>
+         Non-closed Geometry:
+        </b>
+        Having multiple boxes that are closed overlapping, as an example, will cause holes to be generated. You will need to make theses individual meshes as part of a single closed mesh to get proper results.
+       </li>
+      </ul>
+      <p>
+       Here is an example of holes in a mesh taken directly from NVIDIA's documentation:
+      </p>
+      <p>
+       <img alt="DM Holes.jpg" class="" height="754" src="../assets/destructible-troubleshooting-guide/0.jpg" width="1091"/>
+      </p>
+      <p>
+       This is also covered in NVIDIA's documentation regarding making your Destructible meshes. Currently, this documentation is only available by downloading PhysXLabs standalone application for free from their website. You can find more details by opening PhysXLab &gt; Help &gt; PhsyXLab Help &gt; How to Prep Your Mesh for Destruction tab.
+______________________________________________________________________________________________________________
+      </p>
+      <h4>
+       <span class="mw-headline" id="Why_does_my_mesh_fall_completely_apart_when_I_shoot_it.3F_Why_can.E2.80.99t_I_just_shoot_a_hole_in_my_DM.3F_How_to_stop_DM_from_breaking_apart_in_a_single_hit.3F">
+        Why does my mesh fall completely apart when I shoot it? Why can’t I just shoot a hole in my DM? How to stop DM from breaking apart in a single hit?
+       </span>
+      </h4>
+      <p>
+       Make sure that you've setup the mesh to have a proper
+       <b>
+        Support Depth
+       </b>
+       . This is what allows chunks to stick together until they have received enough damage to break free from the other chunks. Also, depending on the amount of damage being applied you may want to increase the
+       <b>
+        Damage Threshold
+       </b>
+       and adjust the
+       <b>
+        Impact Damage
+       </b>
+       values to get a desired result.
+      </p>
+      <p>
+       If you're creating your destructible in Unreal Engine 4 you'll only be able to set a Support Depth of 1. If you're using PhysXLab you can create up to 5 depths of destruction. 
+______________________________________________________________________________________________________________
+      </p>
+      <h4>
+       <span class="mw-headline" id="Why_doesn.E2.80.99t_my_DM_stick_to_the_ground_when_I_shoot_it.3F_It_just_flys_off_and_bounces_around.">
+        Why doesn’t my DM stick to the ground when I shoot it? It just flys off and bounces around.
+       </span>
+      </h4>
+      <p>
+       You will want to set the flag for
+       <b>
+        Asset Defined Support
+       </b>
+       , with corresponding selected chunks and the Chunk Parameter
+       <b>
+        is Support Chunk
+       </b>
+       set properly, or you can use
+       <b>
+        World Support
+       </b>
+       . When either/both of these are set the destructible will "stick" to any static geometry in your game so long as it has not received enough damage to break free. This also requires that at least a
+       <b>
+        Support Depth
+       </b>
+       of 1 is set to work properly as well.
+      </p>
+      <p>
+       <b>
+        Destructible Mesh Settings:
+       </b>
+      </p>
+      <p>
+       <img alt="DM WorldSupport Settings.jpg" class="" height="347" src="../assets/destructible-troubleshooting-guide/1.jpg" width="306"/>
+      </p>
+      <p>
+       <b>
+        World Support NOT ENABLED
+       </b>
+      </p>
+      <p>
+       <img alt="DM WorldSupport NO.gif" class="" height="360" src="../assets/destructible-troubleshooting-guide/2.gif" width="480"/>
+      </p>
+      <p>
+       <b>
+        World Support ENABLED
+       </b>
+      </p>
+      <p>
+       <img alt="DM WorldSupport YES.gif" class="" height="360" src="../assets/destructible-troubleshooting-guide/3.gif" width="480"/>
+       ______________________________________________________________________________________________________________
+      </p>
+      <h4>
+       <span class="mw-headline" id="Why_is_my_DM_floating_above_the_ground.2C_or_why_is_collision_not_matching_the_mesh.3F_Why_doesn.E2.80.99t_the_collision_of_my_DM_match_my_Static_Mesh_where_I_setup_my_collision.3F">
+        Why is my DM floating above the ground, or why is collision not matching the mesh? Why doesn’t the collision of my DM match my Static Mesh where I setup my collision?
+       </span>
+      </h4>
+      <p>
+       Unlike the Static Meshes you do NOT have the ability to create custom collision for your destructible assets, at the moment. This may change in the future, but is not currently planned.
+      </p>
+      <p>
+       When a destructible asset is created there will be two collision sets created, if you're using Unreal Engine 4 to create your DM, but more if you're using more destruction depths from an asset created in PhysXLab. The first collision depth will be a Single Convex Hull that will be around you mesh. The second set of collisions will be for the fracture depth. A Single Convex Hull will be created around each chunks.
+      </p>
+      <p>
+       These collision hulls may or may not always tightly bound the graphics mesh. Because of this, there can be inconsistencies in what you see with the graphics mesh and the collision mesh in your game. See the images below for more details.
+      </p>
+      <p>
+       To see the collision representation in your game of your destructible, and all other PhysX collisions you can use the Console Command "PXVIS COLLISION". (See image below)
+      </p>
+      <ul class="gallery mw-gallery-packed-hover">
+       <li class="gallerycaption">
+        PXVIS Collision
+       </li>
+       <li class="gallerybox" style="width: 176px">
+        <div style="width: 176px">
+         <div class="thumb" style="width: 174px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="120" src="../assets/destructible-troubleshooting-guide/4.jpg" width="174"/>
+          </div>
+         </div>
+         <div class="gallerytextwrapper" style="width: 154px">
+          <div class="gallerytext">
+           <p>
+            Unfractured
+           </p>
+          </div>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 192px">
+        <div style="width: 192px">
+         <div class="thumb" style="width: 190px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="120" src="../assets/destructible-troubleshooting-guide/5.jpg" width="190"/>
+          </div>
+         </div>
+         <div class="gallerytextwrapper" style="width: 170px">
+          <div class="gallerytext">
+           <p>
+            Fractured
+           </p>
+          </div>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 172px">
+        <div style="width: 172px">
+         <div class="thumb" style="width: 170px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="120" src="../assets/destructible-troubleshooting-guide/6.jpg" width="170"/>
+          </div>
+         </div>
+         <div class="gallerytextwrapper" style="width: 150px">
+          <div class="gallerytext">
+           <p>
+            Fractured Non-Uniform Scale
+           </p>
+          </div>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       As you'll see in the last image, the collision hull does not match exactly for the chunks that were broken off. This is to be expected since only a single convex hull is generated for each chunk that is created. 
+______________________________________________________________________________________________________________
+      </p>
+      <h4>
+       <span class="mw-headline" id="Why_doesn.E2.80.99t_my_mesh_break_when_it_falls.3F">
+        Why doesn’t my mesh break when it falls?
+       </span>
+      </h4>
+      <p>
+       Make sure you have
+       <b>
+        Enable Impact Damage
+       </b>
+       in the Destructible Settings panel checked. You will need to have this set and to make sure that you have at least fractured the mesh with a
+       <b>
+        Cell Site Count
+       </b>
+       of 2 or more.  
+______________________________________________________________________________________________________________
+      </p>
+      <h4>
+       <span class="mw-headline" id="Why_is_my_collision_wrong_if_I_scale_my_DM.3F">
+        Why is my collision wrong if I scale my DM?
+       </span>
+      </h4>
+      <p>
+       A limitation of destruction meshes is that you cannot scale them non-uniformly. Scaling them in this manner will cause erratic physics simulations and the collision mesh will often not match the graphics mesh. (See images below)
+      </p>
+      <p>
+       When you scale a destructible mesh make sure that you are scaling evenly on the XYZ axis.
+      </p>
+      <p>
+       Left: Original Mesh Scales
+Right: Mesh Scaled on the Y-Axis
+      </p>
+      <p>
+       <img alt="DM ScaleMesh 1.jpg" class="" height="404" src="../assets/destructible-troubleshooting-guide/7.jpg" width="1089"/>
+      </p>
+      <p>
+       With the non-uniformly scaled mesh the collision and the graphics mesh will often not line up. You can clearly see in this scene using the console command PXVIS COLLISION that this is the case. The collision hulls are not lining up with their graphics mesh. Physics will not act accordingly either.
+      </p>
+      <p>
+       <img alt="DM ScaleMesh 2.jpg" class="" height="664" src="../assets/destructible-troubleshooting-guide/8.jpg" width="973"/>
+       ______________________________________________________________________________________________________________
+      </p>
+      <h4>
+       <span class="mw-headline" id="Why_does_my_projectile_mesh_not_fracture_my_DM.3F_My_bullet_.28mesh.29_doesn.E2.80.99t_fracture_the_destructible._What.E2.80.99s_wrong.3F">
+        Why does my projectile mesh not fracture my DM? My bullet (mesh) doesn’t fracture the destructible. What’s wrong?
+       </span>
+      </h4>
+      <p>
+       If you want use a mesh as your collision, you will need to setup the Collision Presets to get this working correctly.
+      </p>
+      <p>
+       You will want to setup a Custom Collision channel called Projectile in your Project Settings &gt; Collision tab. This should be set like so:
+      </p>
+      <p>
+       <img alt="Collision Channel Presets" class="" height="574" src="../assets/destructible-troubleshooting-guide/9.png" width="310"/>
+      </p>
+      <p>
+       Once you've set this up you can open your projectile BP and set the CollisionComponent's Collision Presets to be the following:
+      </p>
+      <ul>
+       <li>
+        <b>
+         Collision Preset:
+        </b>
+        Custom
+       </li>
+       <li>
+        <b>
+         Collision Enabled:
+        </b>
+        Collision Enabled (Query and Physics)
+       </li>
+       <li>
+        <b>
+         Object Type:
+        </b>
+        Projectile
+       </li>
+       <li>
+        <b>
+         Destructible:
+        </b>
+        Overlap
+       </li>
+      </ul>
+      <p>
+       Now that you've set up the Projectile BP you will now need to set the Destructible.
+      </p>
+      <p>
+       Select the Destructible in the scene and in the Details panel locate the Collision Presets and set them to the following:
+      </p>
+      <ul>
+       <li>
+        <b>
+         Collision Preset:
+        </b>
+        Custom
+       </li>
+       <li>
+        <b>
+         Collision Enabled:
+        </b>
+        Collision Enabled (Query and Physics)
+       </li>
+       <li>
+        <b>
+         Object Type:
+        </b>
+        Destructible
+       </li>
+       <li>
+        <b>
+         Projectile:
+        </b>
+        Overlap
+       </li>
+      </ul>
+      <p>
+       ______________________________________________________________________________________________________________
+      </p>
+      <h4>
+       <span class="mw-headline" id="When_I_fracture_my_mesh_why_is_there_not_material_applied_to_the_chunks_on_the_inside.3F">
+        When I fracture my mesh why is there not material applied to the chunks on the inside?
+       </span>
+      </h4>
+      <p>
+       When the mesh is fractured it will create geometry that will represent your interior faces. There are two ways to apply materials to these interior faces on your mesh.
+      </p>
+      <ul>
+       <li>
+        In the Destructible Mesh Editor &gt; Skeletal Mesh tab &gt; Materials
+       </li>
+      </ul>
+      <p>
+       <img alt="DM Material 1.jpg" class="" height="609" src="../assets/destructible-troubleshooting-guide/10.jpg" width="391"/>
+      </p>
+      <ul>
+       <li>
+        Select the Destructible in your viewport then assign the material via the Details panel.
+       </li>
+      </ul>
+      <p>
+       <img alt="DM Material 2.jpg" class="" height="489" src="../assets/destructible-troubleshooting-guide/11.jpg" width="393"/>
+       ______________________________________________________________________________________________________________
+      </p>
+      <h4>
+       <span class="mw-headline" id="How_do_I_setup_my_DM_so_that_it_can_receive_different_damage_from_different_weapons_and_not_fracture.3F_How_to_not_receive_damage_if_below_a_certain_amount.3F">
+        How do I setup my DM so that it can receive different damage from different weapons and not fracture? How to not receive damage if below a certain amount?
+       </span>
+      </h4>
+      <p>
+       This can be done by adjusting a couple of values in your Destructible meshes
+       <b>
+        Damage
+       </b>
+       settings tab.
+      </p>
+      <p>
+       Some of the values that you'll want to tweak are here:
+      </p>
+      <ul>
+       <li>
+        <b>
+         Damage Threshold:
+        </b>
+        This is the maximum amount of damage needed to break a chunk free
+       </li>
+       <li>
+        <b>
+         Damage Spread:
+        </b>
+        How easily the damage applied at the hit location can radiate to surrounding chunks.
+       </li>
+       <li>
+        <b>
+         (Optional) Impact Damage:
+        </b>
+        How much damage is applied with an impact.
+       </li>
+       <li>
+        <b>
+         Damage Cap:
+        </b>
+        Limits the amount of damage a single hit can have.
+       </li>
+       <li>
+        <b>
+         Accumulate Damage:
+        </b>
+        If a chunk doesn't receive the full damage amount to break it free it will "remember" what amount of damage has been applied.
+       </li>
+      </ul>
+      <p>
+       By using a combination of the settings above you can control how your DM will be affected by multiple objects. With this type of setup as well, you can now just setup the amount of damage to apply in your weapons to hopefully get a result that fits your needs. 
+______________________________________________________________________________________________________________
+      </p>
+      <h4>
+       <span class="mw-headline" id="Why_are_some_settings_not_honored_when_I_simulate_Physics_on_my_Destructible.3F">
+        Why are some settings not honored when I simulate Physics on my Destructible?
+       </span>
+      </h4>
+      <p>
+       When using a mesh that is using the option "Simulate Physics" enabled this mesh will not use some settings that are set in the destructible. Settings like World Support or Asset Defined Support would not be used in this instance since the mesh is going to simulate physics since it would not be initially static. Even using the option for Start Awake would not make this setting be honored. 
+______________________________________________________________________________________________________________
+      </p>
+      <h4>
+       <span class="mw-headline" id="Why_doesn.E2.80.99t_my_DM_cast_shadows.3F">
+        Why doesn’t my DM cast shadows?
+       </span>
+      </h4>
+      <p>
+       This is commonly an issue when bringing in a Destructible mesh that was created using PhysXLab.
+      </p>
+      <p>
+       Open Destructible Mesh Editor &gt; Skeletal Mesh tab &gt; select a specific material &gt; set Enable Shadow Casting to TRUE(checked).
+      </p>
+      <p>
+       <img alt="DM CastShadow 1.jpg" class="" height="609" src="../assets/destructible-troubleshooting-guide/12.jpg" width="391"/>
+      </p>
+      <p>
+       By default, on all destructible meshes created in Unreal Engine 4 this will be enabled by default. For meshes crated in PhysXLab this is not the case. This will need to be enabled by using the settings above.
+      </p>
+      <p>
+       If you're still not seeing shadows being cast for your destruction mesh you can also try looking at the settings in the Details panel when you select your destructible in your scene.
+      </p>
+      <p>
+       <img alt="DM CastShadow 2.jpg" class="" height="555" src="../assets/destructible-troubleshooting-guide/13.jpg" width="393"/>
+      </p>
+      <p>
+       ______________________________________________________________________________________________________________
+      </p>
+      <h4>
+       <span class="mw-headline" id="My_character_is_always_blocked_by_the_chunks._How_can_I_turn_off_collision_for_the_DMs_or_my_character.3F">
+        My character is always blocked by the chunks. How can I turn off collision for the DMs or my character?
+       </span>
+      </h4>
+      <p>
+       Depending on how you've got your destructible mesh setup, you can run into problems where your character may be blocked by a small to moderately sized chunks. This can be problematic for gameplay in some instances. To get around this there is an option called
+       <b>
+        Large Chunk Threshold
+       </b>
+       that can be adjusted to prevent just this.
+      </p>
+      <p>
+       This is a mesh specific setting, meaning that you can only change this for the mesh in the scene viewport and not in the Destruction Mesh Editor's settings.
+      </p>
+      <p>
+       Select your mesh and in the
+       <b>
+        Details
+       </b>
+       panel look for the option
+       <i>
+        Large Chunk Threshold
+       </i>
+       . By default this will be set to 25. Depending on your mesh you will want to set this to a higher size to prevent larger chunks from impeding the player or any other gameplay. 
+______________________________________________________________________________________________________________
+      </p>
+      <h4>
+       <span class="mw-headline" id="How_do_I_customize_the_shapes_of_the_chunks_in_my_DM.3F">
+        How do I customize the shapes of the chunks in my DM?
+       </span>
+      </h4>
+      <p>
+       In Unreal Engine 4 you cannot customize specific chunks in this manner. You will need to use NVIDIA's PhysXLab to access their Slice and Cut Out methods to do this.
+      </p>
+      <p>
+       If you want to try different variations of the default (Voronoi) fracture method in the Destruction Mesh Editor you can adjust the
+       <b>
+        Random Seed
+       </b>
+       value to try different patterns. The benefit of the Random Seed as well is that anytime you want to get that same pattern again you can just enter that number to get the same exact pattern.
+      </p>
+      <ul class="gallery mw-gallery-packed-hover">
+       <li class="gallerybox" style="width: 222.66666666667px">
+        <div style="width: 222.66666666667px">
+         <div class="thumb" style="width: 220.66666666667px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="120" src="../assets/destructible-troubleshooting-guide/14.jpg" width="221"/>
+          </div>
+         </div>
+         <div class="gallerytextwrapper" style="width: 201px">
+          <div class="gallerytext">
+           <p>
+            Random Seed: 1
+           </p>
+          </div>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 222.66666666667px">
+        <div style="width: 222.66666666667px">
+         <div class="thumb" style="width: 220.66666666667px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="120" src="../assets/destructible-troubleshooting-guide/15.jpg" width="221"/>
+          </div>
+         </div>
+         <div class="gallerytextwrapper" style="width: 201px">
+          <div class="gallerytext">
+           <p>
+            Random Seed: 2
+           </p>
+          </div>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 222.66666666667px">
+        <div style="width: 222.66666666667px">
+         <div class="thumb" style="width: 220.66666666667px;">
+          <div style="margin:0px auto;">
+           <img alt="" class="" height="120" src="../assets/destructible-troubleshooting-guide/16.jpg" width="221"/>
+          </div>
+         </div>
+         <div class="gallerytextwrapper" style="width: 201px">
+          <div class="gallerytext">
+           <p>
+            Random Seed: 112
+           </p>
+          </div>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       ______________________________________________________________________________________________________________
+      </p>
+      <h4>
+       <span class="mw-headline" id="How_do_I_create_more_than_one_destruction_depth.3F">
+        How do I create more than one destruction depth?
+       </span>
+      </h4>
+      <p>
+       Currently, you can only create a single destruction depth in Unreal Engine 4 using the Voronoi fracture method.
+      </p>
+      <p>
+       In NVIDIA's PhysXLab you can use the Slice or Cut Out method with up to 5 destruction depths. 
+______________________________________________________________________________________________________________
+      </p>
+      <h4>
+       <span class="mw-headline" id="Can_I_change_my_Destructible_meshes_settings_at_run-time.3F">
+        Can I change my Destructible meshes settings at run-time?
+       </span>
+      </h4>
+      <p>
+       Currently you cannot change any settings in the Destruction Mesh Editor Settings via Blueprints or at run-time. 
+______________________________________________________________________________________________________________
+      </p>
+      <h4>
+       <span class="mw-headline" id="Can_I_fracture_a_mesh_at_run-time.2C_like_fruit_ninja.3F">
+        Can I fracture a mesh at run-time, like fruit ninja?
+       </span>
+      </h4>
+      <p>
+       While this is a feature that we would like to support in the future, it is currently not planned at the moment out of the box. 
+______________________________________________________________________________________________________________
+      </p>
+      <h4>
+       <span class="mw-headline" id="When_using_Debris_settings_all_my_chunks_disappear_at_the_same_time.3F">
+        When using Debris settings all my chunks disappear at the same time?
+       </span>
+      </h4>
+      <p>
+       The chunks that are broken free will be destroyed based on these time variables that are set for Debris Lifetime. The Min and Max values will average between the two times to destroy the chunks. If you're not using at least a Support Depth of 1 all chunks will be broken free at the same time and cause all chunks to be destroyed accordingly. 
+______________________________________________________________________________________________________________
+      </p>
+      <h4>
+       <span class="mw-headline" id="Why_isn.27t_my_Destructible_meshes_chunks_affecting_my_Nav_Mesh.2C_or_How_do_I_make_my_Nav_Mesh_update_for_my_Destructible.3F">
+        Why isn't my Destructible meshes chunks affecting my Nav Mesh, or How do I make my Nav Mesh update for my Destructible?
+       </span>
+      </h4>
+      <p>
+       This will need to be enabled on a per-instance basis. You can select your destructible, then in the Details panel locate the tab for
+       <b>
+        Navigation
+       </b>
+       . Under this tab you will see the option for
+       <b>
+        Affect Navigation
+       </b>
+       . Once this is enabled this will allow your destructible mesh to update the Nav Mesh at runtime.
+      </p>
+      <p>
+       <img alt="Affect Navigation" class="" height="497" src="../assets/destructible-troubleshooting-guide/17.png" width="392"/>
+       ______________________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="Mobile:_Android.2FiOS">
+        <b>
+         Mobile: Android/iOS
+        </b>
+       </span>
+      </h3>
+      <p>
+       ______________________________________________________________________________________________________________
+      </p>
+      <h4>
+       <span class="mw-headline" id="Why_doesn.27t_my_destructible_mesh_work_on_mobile.3F">
+        Why doesn't my destructible mesh work on mobile?
+       </span>
+      </h4>
+      <p>
+       This is currently not support for mobile devices in any form.
+      </p>
+      <p>
+       Destructible and Cloth assets depends on APEX to work. There are performance reasons that this must be considered when using. This may be supported in the future, but it is not currently planned.
+      </p>
+      <p>
+       Instead of relying on APEX for destruction it would be better to author pre-fragmented meshes that you can then switch to them to simulate the same type of effect. It will also have a much lighter processor load.
+______________________________________________________________________________________________________________
+      </p>
+      <h3>
+       <span class="mw-headline" id="Performance">
+        <b>
+         Performance
+        </b>
+       </span>
+      </h3>
+      <h4>
+       <span class="mw-headline" id="If_I_use_high_speed_object_why_doesn.E2.80.99t_it_collide_with_my_DM.3F_It_just_goes_right_through.">
+        If I use high speed object why doesn’t it collide with my DM? It just goes right through.
+       </span>
+      </h4>
+      <p>
+       With any game or project that is using real-time simulations you'll probably run into something like this at some point. There is a limitation of how accurate a simulation can be without sacrificing performance for accuracy or accepting that some things will not be as accurate to get better performance.
+      </p>
+      <p>
+       As an example, if we were to create a mesh to represent the bull of a gun it would be improbable to expect the small bullet mesh to react like the real world. Scale and speed play a big factor in the physics simulation that would happen.
+      </p>
+      <p>
+       Let's say the bullet is moving at a very high velocity when it is at the point of impact for the destructible. The bullet would simply pass through and not affect our destructible at all.
+      </p>
+      <p>
+       You can improve physics simulations though, within reason, by going to the Project Settings &gt; Physics &gt; enabling and using Sub-Stepping. For more information see the links below.
+      </p>
+      <p>
+       <a class="external free" href="https://docs.unrealengine.com/latest/INT/Engine/Physics/Substepping/index.html" rel="nofollow">
+        https://docs.unrealengine.com/latest/INT/Engine/Physics/Substepping/index.html
+       </a>
+       <a class="external free" href="https://www.unrealengine.com/blog/physics-sub-stepping" rel="nofollow">
+        https://www.unrealengine.com/blog/physics-sub-stepping
+       </a>
+       ______________________________________________________________________________________________________________
+      </p>
+      <h4>
+       <span class="mw-headline" id="Are_Destructible_assets_handled_on_the_CPU_or_GPU.3F_Why.3F">
+        Are Destructible assets handled on the CPU or GPU? Why?
+       </span>
+      </h4>
+      <p>
+       NVIDIA's APEX Destruction and Cloth are both handled on the CPU. While this is NVIDIA tech that has been included with the engine, it has to be GPU agnostic so that anyone using the Unreal Engine 4 has access to use them.
+      </p>
+      <p>
+       There is currently no option in the Out-of-the-Box version of Unreal Engine 4 that allows those with NVIDIA GPU's to load these on the GPU rather than the CPU. 
+______________________________________________________________________________________________________________
+      </p>
+      <h4>
+       <span class="mw-headline" id="Why_do_I_get_lag_when_I_fracture_my_Destructible.3F">
+        Why do I get lag when I fracture my Destructible?
+       </span>
+      </h4>
+      <p>
+       Using a lot of Destructible assets in your scene will cause this to happen. Even using a few Destructibles with a lot of fracture chunks will cause this to happen. This is because NVIDIA APEX Destruction is handled on the CPU rather than the GPU. Depending on your system specs this can cause a bottle-neck in performance.
+      </p>
+      <p>
+       When a destructible is fractured, depending on the number of chunks you've chosen to use, these are all simulating physics bodies. If you are simulating a lot of physics objects you are more likely to see these types of performance issues. You can try using fewer destructible assets, reduce the number of fracture chunks for each mesh, or using some of the settings in the Destructible Mesh Editor Settings panel to remove chunks from the scene more quickly to free up the CPU usage.
+      </p>
+      <p>
+       If you're seeing performance issues that you're not sure you should first start by having a look at how to profile your game for these types of issues. Take a look at the following links for more information and demonstrations of profiling.
+      </p>
+      <p>
+       Performance and Profiling:
+       <a class="external free" href="https://docs.unrealengine.com/latest/INT/Engine/Performance/index.html" rel="nofollow">
+        https://docs.unrealengine.com/latest/INT/Engine/Performance/index.html
+       </a>
+      </p>
+      <p>
+       GPU Profiling:
+       <a class="external free" href="https://docs.unrealengine.com/latest/INT/Engine/Performance/GPU/" rel="nofollow">
+        https://docs.unrealengine.com/latest/INT/Engine/Performance/GPU/
+       </a>
+      </p>
+      <p>
+       Support Stream Video "Rendering Best Practices":
+       <a class="external free" href="https://www.youtube.com/watch?v=-csRxRj_zcw" rel="nofollow">
+        https://www.youtube.com/watch?v=-csRxRj_zcw
+       </a>
+       ______________________________________________________________________________________________________________
+      </p>
+      <h4>
+       <span class="mw-headline" id="Why_do_my_destructible_chunks.2Fpieces_disappear_if_I_have_a_lot_of_DMs_in_my_scene.3F">
+        Why do my destructible chunks/pieces disappear if I have a lot of DMs in my scene?
+       </span>
+      </h4>
+      <p>
+       There is a hard-coded value of 2000 chunks that can be present in a scene at a single time. This is done to keep the CPU from being overloaded and killing the FPS completely.
+      </p>
+      <p>
+       This limit is for all destructible assets in the scene and not specific to each mesh. As an example, if you have 4 meshes with 500 chunks each you have reached the cap of 2000 chunks per scene. Anything over this amount all the chunks would be removed/destroyed immediately.
+      </p>
+      <p>
+       You can change by adding adding the following to your ConsoleVariables.ini file located in Engine\Config\ConsoleVariables.ini
+      </p>
+      <ul>
+       <li>
+        p.APEXMaxDestructibleDynamicChunkIslandCount= [enter value (default is 2000)]
+       </li>
+       <li>
+        p.APEXMaxDestructibleDynamicChunkCount= [enter value (Default is 2000)]
+       </li>
+      </ul>
+      <p>
+       These values cannot be changed dynamically in the editor and will require a restart of the engine to take effect. Consider these settings for advanced users and with specific design considerations since they will have a significant impact on performance!
+______________________________________________________________________________________________________________
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

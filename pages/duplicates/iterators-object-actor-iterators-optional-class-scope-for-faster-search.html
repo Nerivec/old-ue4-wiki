@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Iterators: Object &amp; Actor Iterators, Optional Class Scope For Faster Search - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Iterators: Object &amp; Actor Iterators, Optional Class Scope For Faster Search
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Technical">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Technical
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Include">
+            <span class="tocnumber">
+             1.2
+            </span>
+            <span class="toctext">
+             Include
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Object_Iterator">
+            <span class="tocnumber">
+             1.3
+            </span>
+            <span class="toctext">
+             Object Iterator
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Actor_Iterator">
+            <span class="tocnumber">
+             1.4
+            </span>
+            <span class="toctext">
+             Actor Iterator
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Object_Iterator_.26_Actor_Iterator_Comparison">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Object Iterator &amp; Actor Iterator Comparison
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#A_Caveat_regarding_the_Object_Iterator">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             A Caveat regarding the Object Iterator
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Advantage_of_Actor_Iterator">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             Advantage of Actor Iterator
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Examples">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Examples
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#World_Filter_with_Object_Iterator_to_Mimic_Actor_Iterator">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             World Filter with Object Iterator to Mimic Actor Iterator
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-11">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <b>
+        Author
+       </b>
+       (
+       )
+      </p>
+      <p>
+       <b>
+        Contributing Author
+       </b>
+       (
+     )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       In the UE4 engine two of the most powerful tools I use constantly are the Object and the Actor Iterators.
+      </p>
+      <p>
+       You can use these functions to search for all Run-Time instances of actors and objects, or only specific classes!
+      </p>
+      <p>
+       The advantage of using the UE4 iterators is that they are always accurate!
+      </p>
+      <p>
+       You dont have to maintain dynamic arrays of actors, and then remember to remove actors when they are destroyed!
+      </p>
+      <p>
+       The Actor and Object Iterators always give you the real and accurate list of all actors / objects currently still active in your game world
+      </p>
+      <p>
+       Yay!
+      </p>
+      <h3>
+       <span class="mw-headline" id="Technical">
+        Technical
+       </span>
+      </h3>
+      <p>
+       These functions can be used to search for all instances of actors and objects, or only specific sub-classes, at runtime, removing the need to maintain dynamic arrays of actors and having to remember to remove actors upon destruction.
+      </p>
+      <p>
+       As with all other instance iterators in UE4, both the Object and the Actor Iterators are capable of limiting the scope of search to a chosen UClass.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Include">
+        Include
+       </span>
+      </h3>
+      <p>
+       Both functions are global and can be included in your code through:
+      </p>
+      <p>
+       <b>
+        #include "EngineUtils.h"
+       </b>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Object_Iterator">
+        Object Iterator
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">for</span> <span class="p">(</span> <span class="n">TObjectIterator</span><span class="o">&lt;</span><span class="n">USkeletalMeshComponent</span><span class="o">&gt;</span> <span class="n">Itr</span><span class="p">;</span> <span class="n">Itr</span><span class="p">;</span> <span class="o">++</span><span class="n">Itr</span> <span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// Access the subclass instance with the * or -&gt; operators.</span>
+	<span class="n">USkeletalMeshComponent</span> <span class="o">*</span><span class="n">Component</span> <span class="o">=</span> <span class="o">*</span><span class="n">Itr</span><span class="p">;</span>
+	<span class="n">ClientMessage</span><span class="p">(</span><span class="n">Itr</span><span class="o">-&gt;</span><span class="n">GetName</span><span class="p">());</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Actor_Iterator">
+        Actor Iterator
+       </span>
+      </h3>
+      <p>
+       Note that
+       <i>
+        GetWorld()
+       </i>
+       will have to be somehow provided, it is not a global function.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">for</span> <span class="p">(</span><span class="n">TActorIterator</span><span class="o">&lt;</span><span class="n">AStaticMeshActor</span><span class="o">&gt;</span> <span class="n">ActorItr</span><span class="p">(</span><span class="n">GetWorld</span><span class="p">());</span> <span class="n">ActorItr</span><span class="p">;</span> <span class="o">++</span><span class="n">ActorItr</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// Same as with the Object Iterator, access the subclass instance with the * or -&gt; operators.</span>
+	<span class="n">AStaticMeshActor</span> <span class="o">*</span><span class="n">Mesh</span> <span class="o">=</span> <span class="o">*</span><span class="n">ActorItr</span><span class="p">;</span>
+	<span class="n">ClientMessage</span><span class="p">(</span><span class="n">ActorItr</span><span class="o">-&gt;</span><span class="n">GetName</span><span class="p">());</span>
+	<span class="n">ClientMessage</span><span class="p">(</span><span class="n">ActorItr</span><span class="o">-&gt;</span><span class="n">GetActorLocation</span><span class="p">().</span><span class="n">ToString</span><span class="p">());</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Object_Iterator_.26_Actor_Iterator_Comparison">
+        Object Iterator &amp; Actor Iterator Comparison
+       </span>
+      </h2>
+      <p>
+       Because AActor extends UObject, the Object Iterator can search for AActors while the Actor Iterator cannot search for instances of UObjects that do not extend AActor at some point. Thus the Object Iterator can search for all UStaticMeshComponents as well as all ACharacters:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">TObjectIterator</span><span class="o">&lt;</span><span class="n">UStaticMeshComponent</span><span class="o">&gt;</span> <span class="n">Itr</span><span class="p">;</span>
+<span class="n">TObjectIterator</span><span class="o">&lt;</span><span class="n">ACharacter</span><span class="o">&gt;</span> <span class="n">Itr</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       Generally the Actor Iterator can be seen as a specialized case of the Object Iterator which can only iterate over AActors of a specific UWorld*.
+      </p>
+      <h3>
+       <span class="mw-headline" id="A_Caveat_regarding_the_Object_Iterator">
+        A Caveat regarding the Object Iterator
+       </span>
+      </h3>
+      <p>
+       Unlike the Actor Iterator, the Object iterator can iterate over objects in the Pre-PIE world / the Editor World. This can lead to unexpected results.
+      </p>
+      <p>
+       I recommend using the ActorIterator anywhere you can because it provides the safety of not accessing actors that are pending kill in the UE4 ObjectArray and guarantees the actors are in the same world as your calling context (the UWorld you supply to the Iterator). -
+       (
+       )
+      </p>
+      <h3>
+       <span class="mw-headline" id="Advantage_of_Actor_Iterator">
+        Advantage of Actor Iterator
+       </span>
+      </h3>
+      <p>
+       As noted above the Actor Iterator is a special case Object Iterator. Given a UWorld* context it saves you checking the world of the actors as one would need to when using the Object Iterator directly:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">TActorIterator</span> <span class="n">ActorItr</span><span class="o">&lt;</span><span class="n">AStaticMeshActor</span><span class="o">&gt;</span><span class="p">(</span><span class="n">GetWorld</span><span class="p">());</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Examples">
+        Examples
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="World_Filter_with_Object_Iterator_to_Mimic_Actor_Iterator">
+        World Filter with Object Iterator to Mimic Actor Iterator
+       </span>
+      </h3>
+      <p>
+       The Object Iterator can and will return editor-instance / default objects. The editor uses these defaults objects to copy default values over to new instances of the class and thus should not be edited at runtime. To filter out such objects a world check can be performed.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UWorld</span><span class="o">*</span> <span class="n">YourGameWorld</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span> <span class="c1">// Set this somehow from another UObject or pass it in as an argument or parameter</span>
+
+<span class="k">for</span> <span class="p">(</span><span class="n">TObjectIterator</span><span class="o">&lt;</span><span class="n">UYourObject</span><span class="o">&gt;</span> <span class="n">Itr</span><span class="p">;</span> <span class="n">Itr</span><span class="p">;</span> <span class="o">++</span><span class="n">Itr</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// Filter out objects not contained in the target world.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Itr</span><span class="o">-&gt;</span><span class="n">GetWorld</span><span class="p">()</span> <span class="o">!=</span> <span class="n">YourGameWorld</span><span class="p">)</span>
+    <span class="p">{</span>
+       <span class="k">continue</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="c1">// Do stuff</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       I have now shared with you two of my absolute favorite tools in the UE4 Engine!
+      </p>
+      <p>
+       With ActorIterator and ObjectIterator you can accurately lookup and modify actors or objects anywhere in your game world at any time!
+      </p>
+      <p>
+       &lt;3
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

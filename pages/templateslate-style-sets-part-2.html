@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Template:Slate Style Sets Part 2 - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Template:Slate Style Sets Part 2
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Creating_In-Game_Menus_with_Slate.2FC.2B.2B.2C_Part_2">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Creating In-Game Menus with Slate/C++, Part 2
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Overview">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Overview
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Step_1:_Style_Set.21">
+            <span class="tocnumber">
+             1.2
+            </span>
+            <span class="toctext">
+             Step 1: Style Set!
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-4">
+             <a href="#MenuStyles.h">
+              <span class="tocnumber">
+               1.2.1
+              </span>
+              <span class="toctext">
+               MenuStyles.h
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-5">
+             <a href="#MenuStyles.cpp">
+              <span class="tocnumber">
+               1.2.2
+              </span>
+              <span class="toctext">
+               MenuStyles.cpp
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Step_2:_Tying_into_your_Game_Module">
+            <span class="tocnumber">
+             1.3
+            </span>
+            <span class="toctext">
+             Step 2: Tying into your Game Module
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Step_3:_Creating_a_Style_class.21">
+            <span class="tocnumber">
+             1.4
+            </span>
+            <span class="toctext">
+             Step 3: Creating a Style class!
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-8">
+             <a href="#GlobalMenuStyle.h">
+              <span class="tocnumber">
+               1.4.1
+              </span>
+              <span class="toctext">
+               GlobalMenuStyle.h
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-9">
+             <a href="#GlobalMenuStyle.cpp">
+              <span class="tocnumber">
+               1.4.2
+              </span>
+              <span class="toctext">
+               GlobalMenuStyle.cpp
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#Step_4:_Defining_your_Style">
+            <span class="tocnumber">
+             1.5
+            </span>
+            <span class="toctext">
+             Step 4: Defining your Style
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#Using_your_Style.21">
+            <span class="tocnumber">
+             1.6
+            </span>
+            <span class="toctext">
+             Using your Style!
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-12">
+             <a href="#MainMenuUI.h">
+              <span class="tocnumber">
+               1.6.1
+              </span>
+              <span class="toctext">
+               MainMenuUI.h
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-13">
+             <a href="#MainMenuUI.cpp">
+              <span class="tocnumber">
+               1.6.2
+              </span>
+              <span class="toctext">
+               MainMenuUI.cpp
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-14">
+           <a href="#Summary">
+            <span class="tocnumber">
+             1.7
+            </span>
+            <span class="toctext">
+             Summary
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Creating_In-Game_Menus_with_Slate.2FC.2B.2B.2C_Part_2">
+        Creating In-Game Menus with Slate/C++, Part 2
+       </span>
+      </h1>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Original Author
+       </i>
+       <a class="external text" href="https://forums.unrealengine.com/member.php?1034-Minalien" rel="nofollow">
+        Minalien
+       </a>
+      </p>
+      <p>
+       Welcome to the second part of my tutorial series on creating game menus with Slate &amp; C++ in Unreal Engine 4! If you’re just joining us, you can catch up with the first tutorial here. In the last tutorial, we created a very simple and rather… bland title screen/main menu for our game using Slate. A lot of you may have been put off, as I was, toward this form of menu creation because the menus at the moment really look more like an application on our system, rather than the type of beautiful interface that should accompany a game! Today, we’re going to solve that problem by introducing Styles! Using these, we can change our generic “application buttons” to look like the types of weapons we want to see in our game! For this tutorial, I am going to use textures from the UI Pack: RPG Extension by Kenney.nl, available over at one of my favorite resources for game art: OpenGameArt.org. Please note that much of what I present here is based heavily on how Epic Games handled things in the Strategy Game sample. You can download the project files here
+     (~209KB).
+      </p>
+      <ul>
+       <li>
+       </li>
+       <li>
+       </li>
+       <li>
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="Step_1:_Style_Set.21">
+        Step 1: Style Set!
+       </span>
+      </h2>
+      <p>
+       The first thing that we’re going to set up is a Style Set, which will be used to load and reference our styles. The styles themselves will be specified within the Unreal Editor, giving us a lot of control over the designs without having to recompile the code (which we currently have to do for both style and layout changes). The Style Set we set up, which I will call MenuStyles, will be a purely static class.
+      </p>
+      <h3>
+       <span class="mw-headline" id="MenuStyles.h">
+        MenuStyles.h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.</span>
+<span class="c1">// MenuStyles.h - Provides our Style Set and allows us to load and reference UI Styles specified in-editor. </span>
+
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"SlateBasics.h"</span><span class="cp"></span>
+
+<span class="k">class</span> <span class="nc">FMenuStyles</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="c1">// Initializes the value of MenuStyleInstance and registers it with the Slate Style Registry.</span>
+	<span class="k">static</span> <span class="kt">void</span> <span class="n">Initialize</span><span class="p">();</span>
+
+	<span class="c1">// Unregisters the Slate Style Set and then resets the MenuStyleInstance pointer.</span>
+	<span class="k">static</span> <span class="kt">void</span> <span class="nf">Shutdown</span><span class="p">();</span>
+
+	<span class="c1">// Retrieves a reference to the Slate Style pointed to by MenuStyleInstance.</span>
+	<span class="k">static</span> <span class="k">const</span> <span class="k">class</span> <span class="nc">ISlateStyle</span><span class="o">&amp;</span> <span class="n">Get</span><span class="p">();</span>
+
+	<span class="c1">// Retrieves the name of the Style Set.</span>
+	<span class="k">static</span> <span class="n">FName</span> <span class="nf">GetStyleSetName</span><span class="p">();</span>
+
+<span class="k">private</span><span class="o">:</span>
+	<span class="c1">// Creates the Style Set.</span>
+	<span class="k">static</span> <span class="n">TSharedRef</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">FSlateStyleSet</span><span class="o">&gt;</span> <span class="n">Create</span><span class="p">();</span> 
+
+	<span class="c1">// Singleton instance used for our Style Set.</span>
+	<span class="k">static</span> <span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">FSlateStyleSet</span><span class="o">&gt;</span> <span class="n">MenuStyleInstance</span><span class="p">;</span>
+
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       The methods here are fairly self-explanatory (when aren’t they?). In a minute, we will add to our Game Module (don’t worry, it’s not as scary as it sounds!) to call our Initialize and Shutdown methods. Get() will be used later when we actually need to use the Style Set to load a particular Style, while GetStyleSetName is used to retrieve the name of our style set for use by the engine. The implementation for these methods is equally simple:
+      </p>
+      <h3>
+       <span class="mw-headline" id="MenuStyles.cpp">
+        MenuStyles.cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#include</span> <span class="cpf">"SlateTutorials.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"MenuStyles.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"SlateGameResources.h" </span><span class="cp"></span>
+
+<span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="n">FSlateStyleSet</span><span class="o">&gt;</span> <span class="n">FMenuStyles</span><span class="o">::</span><span class="n">MenuStyleInstance</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="n">FMenuStyles</span><span class="o">::</span><span class="n">Initialize</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">MenuStyleInstance</span><span class="p">.</span><span class="n">IsValid</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="n">MenuStyleInstance</span> <span class="o">=</span> <span class="n">Create</span><span class="p">();</span>
+		<span class="n">FSlateStyleRegistry</span><span class="o">::</span><span class="n">RegisterSlateStyle</span><span class="p">(</span><span class="o">*</span><span class="n">MenuStyleInstance</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">FMenuStyles</span><span class="o">::</span><span class="n">Shutdown</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">FSlateStyleRegistry</span><span class="o">::</span><span class="n">UnRegisterSlateStyle</span><span class="p">(</span><span class="o">*</span><span class="n">MenuStyleInstance</span><span class="p">);</span>
+	<span class="n">ensure</span><span class="p">(</span><span class="n">MenuStyleInstance</span><span class="p">.</span><span class="n">IsUnique</span><span class="p">());</span> 
+	<span class="n">MenuStyleInstance</span><span class="p">.</span><span class="n">Reset</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">FName</span> <span class="n">FMenuStyles</span><span class="o">::</span><span class="n">GetStyleSetName</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">static</span> <span class="n">FName</span> <span class="n">StyleSetName</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"MenuStyles"</span><span class="p">));</span>
+	<span class="k">return</span> <span class="n">StyleSetName</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">FSlateStyleSet</span><span class="o">&gt;</span> <span class="n">FMenuStyles</span><span class="o">::</span><span class="n">Create</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">FSlateStyleSet</span><span class="o">&gt;</span> <span class="n">StyleRef</span> <span class="o">=</span> <span class="n">FSlateGameResources</span><span class="o">::</span><span class="n">New</span><span class="p">(</span><span class="n">FMenuStyles</span><span class="o">::</span><span class="n">GetStyleSetName</span><span class="p">(),</span> <span class="s">"/Game/UI/Styles"</span><span class="p">,</span> <span class="s">"/Game/UI/Styles"</span><span class="p">);</span>
+	<span class="k">return</span> <span class="n">StyleRef</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">const</span> <span class="n">ISlateStyle</span><span class="o">&amp;</span> <span class="n">FMenuStyles</span><span class="o">::</span><span class="n">Get</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="o">*</span><span class="n">MenuStyleInstance</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       During Initialize(), we determine if the MenuStyleInstance (our singleton pointer) is valid (that is, not null). If it isn’t valid, we instantiate it and then register the style set with the Slate Style Set Registry. Then, in Shutdown() we do the opposite – we un-register the style, make sure our pointer is unique (it should always be unique, in this case), and then we reset it (setting the pointer to null). For GetStyleSetName, we simply cache an FName for our style as a static variable, and always return that value. Finally, we have a simple accessor method for getting our style set singleton.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Step_2:_Tying_into_your_Game_Module">
+        Step 2: Tying into your Game Module
+       </span>
+      </h2>
+      <p>
+       While your code now compiles, it isn’t quite operational yet. We never made calls to our static methods! If you’ve never had reasons to make changes to your game module, you may never even have known you could, but bear with me for a moment – it’s really easy. Jump into your game module’s source file (SlateTutorials.cpp in my case), and you should really only have two lines: one that includes your module’s header and something akin to the following: IMPLEMENT_PRIMARY_GAME_MODULE( FDefaultGameModuleImpl, SlateTutorials, "SlateTutorials" ); Notice the FDefaultGameModuleImpl? That’s the class being used for your game module. Many people will never have to deal with anything else – but we need to tie into the game module to initialize our style set! How do we do this? Well, Epic’s practice (and therefore the one I’m going with) seems to be simply defining the module class right in here – but bear in mind that it will almost always be a better idea to split your class into the header &amp; source file if you’re doing anything more complex than what we’re doing here.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"SlateTutorials.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"MenuStyles.h" </span><span class="cp"></span>
+
+<span class="c1">//Custom implementation of the Default Game Module. </span>
+<span class="k">class</span> <span class="nc">FSlateTutorialsGameModule</span> <span class="o">:</span> <span class="k">public</span> <span class="n">FDefaultGameModuleImpl</span>
+<span class="p">{</span>
+        <span class="c1">// Called whenever the module is starting up. In here, we unregister any style sets </span>
+        <span class="c1">// (which may have been added by other modules) sharing our </span>
+	<span class="c1">// style set's name, then initialize our style set. </span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">StartupModule</span><span class="p">()</span> <span class="k">override</span>
+	<span class="p">{</span>
+		<span class="c1">//Hot reload hack</span>
+		<span class="n">FSlateStyleRegistry</span><span class="o">::</span><span class="n">UnRegisterSlateStyle</span><span class="p">(</span><span class="n">FMenuStyles</span><span class="o">::</span><span class="n">GetStyleSetName</span><span class="p">());</span>
+		<span class="n">FMenuStyles</span><span class="o">::</span><span class="n">Initialize</span><span class="p">();</span>
+	<span class="p">}</span>
+
+        <span class="c1">// Called whenever the module is shutting down. Here, we simply tell our MenuStyles to shut down.</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">ShutdownModule</span><span class="p">()</span> <span class="k">override</span>
+	<span class="p">{</span>
+		<span class="n">FMenuStyles</span><span class="o">::</span><span class="n">Shutdown</span><span class="p">();</span>
+	<span class="p">}</span>
+
+<span class="p">};</span>
+
+<span class="n">IMPLEMENT_PRIMARY_GAME_MODULE</span><span class="p">(</span><span class="n">FSlateTutorialsGameModule</span><span class="p">,</span> <span class="n">SlateTutorials</span><span class="p">,</span> <span class="s">"SlateTutorials"</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       Nothing too crazy here, right? We’re simply defining a custom module class that simply extends what we had before, and add in some necessary calls to initialize and shut down our game module. Note that we take the time to un-register any slate styles that share our Style Set’s name — just in case any other modules introduced one with the same name (I… don’t know how necessary that is, to be honest, but it was in the Strategy sample – better to have and not need, I suppose).
+      </p>
+      <h2>
+       <span class="mw-headline" id="Step_3:_Creating_a_Style_class.21">
+        Step 3: Creating a Style class!
+       </span>
+      </h2>
+      <p>
+       Now that we have our style set, let’s go ahead and create a class that we can use to establish and customize our menu styles. There are many, many ways you can do this to suit your layout needs. I tend to have a single “global” style that defines things such as standard button styles, then create widget-specific style sets if a custom widget (such as our Main Menu UI) only exists in one or two spaces. So how do we do this? Simple! We’ll create a new GlobalMenuStyle class (and a GlobalStyle struct… you’ll see in a minute).
+      </p>
+      <h3>
+       <span class="mw-headline" id="GlobalMenuStyle.h">
+        GlobalMenuStyle.h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.</span>
+<span class="c1">// GlobalMenuStyle.h - Provides a global menu style! </span>
+
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"SlateWidgetStyleContainerBase.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"SlateWidgetStyle.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"SlateBasics.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"GlobalMenuStyle.generated.h" </span><span class="cp"></span>
+
+<span class="c1">// Provides a group of global style settings for our game menus! </span>
+<span class="n">USTRUCT</span><span class="p">()</span>
+<span class="k">struct</span> <span class="nl">FGlobalStyle</span> <span class="p">:</span> <span class="k">public</span> <span class="n">FSlateWidgetStyle</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_USTRUCT_BODY</span><span class="p">()</span>
+        <span class="c1">// Stores a list of Brushes we are using (we aren't using any) into OutBrushes.</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">GetResources</span><span class="p">(</span><span class="n">TArray</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">FSlateBrush</span><span class="o">*&gt;&amp;</span> <span class="n">OutBrushes</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+
+        <span class="c1">// Stores the TypeName for our widget style.</span>
+	<span class="k">static</span> <span class="k">const</span> <span class="n">FName</span> <span class="n">TypeName</span><span class="p">;</span>
+
+        <span class="c1">// Retrieves the type name for our global style, which will be used by our Style Set to load the right file. </span>
+	<span class="k">virtual</span> <span class="k">const</span> <span class="n">FName</span> <span class="nf">GetTypeName</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+        
+        <span class="c1">// Allows us to set default values for our various styles. </span>
+	<span class="k">static</span> <span class="k">const</span> <span class="n">FGlobalStyle</span><span class="o">&amp;</span> <span class="n">GetDefault</span><span class="p">();</span> 
+
+        <span class="c1">// Style that define the appearance of all menu buttons. </span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Appearance</span><span class="p">)</span>
+	<span class="n">FButtonStyle</span> <span class="n">MenuButtonStyle</span><span class="p">;</span>
+
+        <span class="c1">// Style that defines the text on all of our menu buttons. </span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Appearance</span><span class="p">)</span>
+	<span class="n">FTextBlockStyle</span> <span class="n">MenuButtonTextStyle</span><span class="p">;</span>
+
+        <span class="c1">// Style that defines the text for our menu title. </span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Appearance</span><span class="p">)</span>
+	<span class="n">FTextBlockStyle</span> <span class="n">MenuTitleStyle</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="c1">// Provides a widget style container to allow us to edit properties in-editor</span>
+<span class="n">UCLASS</span><span class="p">(</span><span class="n">hidecategories</span> <span class="o">=</span> <span class="n">Object</span><span class="p">,</span> <span class="n">MinimalAPI</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">UGlobalMenuStyle</span> <span class="o">:</span> <span class="k">public</span> <span class="n">USlateWidgetStyleContainerBase</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+
+<span class="k">public</span><span class="o">:</span>
+        <span class="c1">// This is our actual Style object. </span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Appearance</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">ShowOnlyInnerProperties</span><span class="p">))</span>
+	<span class="n">FGlobalStyle</span> <span class="n">MenuStyle</span><span class="p">;</span>
+
+        <span class="c1">// Retrievs the style that this container manages. </span>
+	<span class="k">virtual</span> <span class="k">const</span> <span class="k">struct</span> <span class="n">FSlateWidgetStyle</span><span class="o">*</span> <span class="k">const</span> <span class="nf">GetStyle</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="k">static_cast</span><span class="o">&lt;</span><span class="k">const</span> <span class="k">struct</span> <span class="n">FSlateWidgetStyle</span><span class="o">*&gt;</span><span class="p">(</span><span class="o">&amp;</span><span class="n">MenuStyle</span><span class="p">);</span>
+	<span class="p">}</span>
+
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       This one is a little bit lengthy, but (like all of them) isn’t overly complicated. First, we’ve got the GetResources method – if you are using any Slate Brushes (for example, to define properties of an SImage widget), you want to register these with OutBrushes. In our case, our Button &amp; Text Block styles aren’t brushes, so we don’t have to do anything within this method. Next, we have the GetTypeName method – this method gives the name of the type, which should match the actual type name. This is used to reference what type, exactly, this widget is. The GetDefault() method allows us to set some defaults – for example, we could set the default font or size for our title screen, if we wanted. Finally, we have three properties. The first and second both relate to buttons – Buttons (the SButton widget) actually take two styles – one for the button itself, and one for the text block representing the text on the button. The third property, then is, our menu title text. However, this one struct isn’t enough! We actually have a class that acts as the container base – this is what allows us to expose the slate style’s properties as an asset in the editor. Even simpler than the definition is the implementation:
+      </p>
+      <h3>
+       <span class="mw-headline" id="GlobalMenuStyle.cpp">
+        GlobalMenuStyle.cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#include</span> <span class="cpf">"SlateTutorials.h" </span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"GlobalMenuStyle.h" </span><span class="cp"></span>
+
+<span class="kt">void</span> <span class="n">FGlobalStyle</span><span class="o">::</span><span class="n">GetResources</span><span class="p">(</span><span class="n">TArray</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">FSlateBrush</span><span class="o">*&gt;&amp;</span> <span class="n">OutBrushes</span><span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+<span class="p">}</span>
+
+<span class="k">const</span> <span class="n">FName</span> <span class="n">FGlobalStyle</span><span class="o">::</span><span class="n">TypeName</span> <span class="o">=</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"FGlobalStyle"</span><span class="p">);</span>
+
+<span class="k">const</span> <span class="n">FName</span> <span class="n">FGlobalStyle</span><span class="o">::</span><span class="n">GetTypeName</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="k">static</span> <span class="k">const</span> <span class="n">FName</span> <span class="n">TypeName</span> <span class="o">=</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"FGlobalStyle"</span><span class="p">);</span>
+	<span class="k">return</span> <span class="n">TypeName</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">const</span> <span class="n">FGlobalStyle</span><span class="o">&amp;</span> <span class="n">FGlobalStyle</span><span class="o">::</span><span class="n">GetDefault</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">static</span> <span class="n">FGlobalStyle</span> <span class="n">Default</span><span class="p">;</span>
+	<span class="k">return</span> <span class="n">Default</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">UGlobalMenuStyle</span><span class="o">::</span><span class="n">UGlobalMenuStyle</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">ObjectInitializer</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Most of these methods are empty – after all, we don’t have any brushes to register and I’m not going to get into setting defaults (it’s literally as easy as changing the properties on your styles within the GetDefault() method). Just make sure that your GetTypeName() returns an FName that matches your style struct’s name!
+      </p>
+      <p>
+       <img alt="Скриншот 2015-03-17 17.20.36.png" class="" height="442" src="../assets/templateslate-style-sets-part-2/0.png" width="1346"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Step_4:_Defining_your_Style">
+        Step 4: Defining your Style
+       </span>
+      </h2>
+      <p>
+       Now that we’ve got our styles set up, don’t you think it’s time to go in and define them? It is! Start up Unreal, and create a new folder in your Asset Browser called UI, and then a new folder called Styles inside there. To create the actual Style definition, create a new Slate Widget Style asset (User Interface -&gt; Slate Widget Style). You’ll be prompted to select the widget style container – choose GlobalMenuStyle, and name your new asset Global (if you name it something else, remember the name you use for later). Go ahead and open it up, and adjust your properties to something you like – feel free to import some images to use for your buttons! That’s what I’ve done for the sample code available with this tutorial. Don’t get too caught up in it yet, however, as we aren’t actually using our style yet! Which brings us to…
+      </p>
+      <p>
+       <img alt="Скриншот 2015-03-17 17.18.21.png" class="" height="392" src="../assets/templateslate-style-sets-part-2/1.png" width="860"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Using_your_Style.21">
+        Using your Style!
+       </span>
+      </h2>
+      <p>
+       So we’ve defined our style, set up some pretty settings, but how do we actually use this!? Prepare yourselves… for difficult, arduous challenges await! But only once you’ve finished making your UIs and get started on your gameplay, because assigning styles for your UI is trivial. First, add the following member variable to your Main Menu UI widget: const struct FGlobalStyle* MenuStyle; Then, go into your source file, and add two headers inclusions:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"GlobalMenuStyle.h" </span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"MenuStyles.h"</span><span class="cp"></span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="MainMenuUI.h">
+        MainMenuUI.h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"SlateBasics.h"</span><span class="cp"></span>
+
+<span class="k">class</span> <span class="nc">SLATETUTORIALS_API</span> <span class="nl">SMainMenuUI</span> <span class="p">:</span> <span class="k">public</span> <span class="n">SCompoundWidget</span>
+<span class="p">{</span>
+
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">SLATE_BEGIN_ARGS</span><span class="p">(</span><span class="n">SMainMenuUI</span><span class="p">)</span>
+	<span class="p">{}</span>
+	<span class="n">SLATE_ARGUMENT</span><span class="p">(</span><span class="n">TWeakObjectPtr</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">AMainMenuHUD</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">MainMenuHUD</span><span class="p">)</span>
+	<span class="n">SLATE_END_ARGS</span><span class="p">()</span>
+
+	<span class="kt">void</span> <span class="n">Construct</span><span class="p">(</span><span class="k">const</span> <span class="n">FArguments</span><span class="o">&amp;</span> <span class="n">InArgs</span><span class="p">);</span>
+
+	<span class="cm">/**</span>
+<span class="cm">	* Click handler for the Play Game! button – Calls MenuHUD’s PlayGameClicked() event.</span>
+<span class="cm">	*/</span>
+	<span class="n">FReply</span> <span class="nf">PlayGameClicked</span><span class="p">();</span>
+	<span class="cm">/**</span>
+<span class="cm">	* Click handler for the Quit Game button – Calls MenuHUD’s QuitGameClicked() event.</span>
+<span class="cm">	*/</span>
+	<span class="n">FReply</span> <span class="nf">QuitGameClicked</span><span class="p">();</span>
+
+	<span class="n">TWeakObjectPtr</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">AMainMenuHUD</span><span class="o">&gt;</span> <span class="n">MainMenuHUD</span><span class="p">;</span>
+
+	<span class="k">const</span> <span class="k">struct</span> <span class="n">FGlobalStyle</span><span class="o">*</span> <span class="n">MenuStyle</span><span class="p">;</span>
+
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="MainMenuUI.cpp">
+        MainMenuUI.cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.</span>
+
+
+<span class="cp">#include</span> <span class="cpf">"SlateTutorials.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"MainMenuUI.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"GlobalMenuStyle.h" </span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"MenuStyles.h" </span><span class="cp"></span>
+
+
+<span class="n">BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION</span>
+<span class="kt">void</span> <span class="n">SMainMenuUI</span><span class="o">::</span><span class="n">Construct</span><span class="p">(</span><span class="k">const</span> <span class="n">FArguments</span><span class="o">&amp;</span> <span class="n">args</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">MainMenuHUD</span> <span class="o">=</span> <span class="n">args</span><span class="p">.</span><span class="n">_MainMenuHUD</span><span class="p">;</span>
+	<span class="n">MenuStyle</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">FMenuStyles</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">GetWidgetStyle</span><span class="o">&lt;</span><span class="n">FGlobalStyle</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"Global"</span><span class="p">);</span>
+
+	<span class="n">ChildSlot</span>
+		<span class="p">[</span>
+			<span class="n">SNew</span><span class="p">(</span><span class="n">SOverlay</span><span class="p">)</span>
+			<span class="o">+</span> <span class="n">SOverlay</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span>
+			<span class="p">.</span><span class="n">HAlign</span><span class="p">(</span><span class="n">HAlign_Center</span><span class="p">)</span>
+			<span class="p">.</span><span class="n">VAlign</span><span class="p">(</span><span class="n">VAlign_Top</span><span class="p">)</span>
+			<span class="p">[</span>
+				<span class="n">SNew</span><span class="p">(</span><span class="n">STextBlock</span><span class="p">)</span>
+				<span class="p">.</span><span class="n">TextStyle</span><span class="p">(</span><span class="o">&amp;</span><span class="n">MenuStyle</span><span class="o">-&gt;</span><span class="n">MenuTitleStyle</span><span class="p">)</span>
+				<span class="p">.</span><span class="n">Text</span><span class="p">(</span><span class="n">FText</span><span class="o">::</span><span class="n">FromString</span><span class="p">(</span><span class="s">"Main Menu"</span><span class="p">))</span>
+			<span class="p">]</span>
+			<span class="o">+</span> <span class="n">SOverlay</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span>
+				<span class="p">.</span><span class="n">HAlign</span><span class="p">(</span><span class="n">HAlign_Right</span><span class="p">)</span>
+				<span class="p">.</span><span class="n">VAlign</span><span class="p">(</span><span class="n">VAlign_Bottom</span><span class="p">)</span>
+				<span class="p">[</span>
+					<span class="n">SNew</span><span class="p">(</span><span class="n">SVerticalBox</span><span class="p">)</span>
+					<span class="o">+</span> <span class="n">SVerticalBox</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span>
+					<span class="p">[</span>
+						<span class="n">SNew</span><span class="p">(</span><span class="n">SButton</span><span class="p">)</span>
+						<span class="p">.</span><span class="n">ButtonStyle</span><span class="p">(</span><span class="o">&amp;</span><span class="n">MenuStyle</span><span class="o">-&gt;</span><span class="n">MenuButtonStyle</span><span class="p">)</span>
+						<span class="p">.</span><span class="n">TextStyle</span><span class="p">(</span><span class="o">&amp;</span><span class="n">MenuStyle</span><span class="o">-&gt;</span><span class="n">MenuButtonTextStyle</span><span class="p">)</span>
+						<span class="p">.</span><span class="n">Text</span><span class="p">(</span><span class="n">FText</span><span class="o">::</span><span class="n">FromString</span><span class="p">(</span><span class="s">"Play Game!"</span><span class="p">))</span>
+						<span class="p">.</span><span class="n">OnClicked</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">SMainMenuUI</span><span class="o">::</span><span class="n">PlayGameClicked</span><span class="p">)</span>
+					<span class="p">]</span>
+					<span class="o">+</span> <span class="n">SVerticalBox</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span>
+						<span class="p">[</span>
+							<span class="n">SNew</span><span class="p">(</span><span class="n">SButton</span><span class="p">)</span>
+							<span class="p">.</span><span class="n">ButtonStyle</span><span class="p">(</span><span class="o">&amp;</span><span class="n">MenuStyle</span><span class="o">-&gt;</span><span class="n">MenuButtonStyle</span><span class="p">)</span>
+							<span class="p">.</span><span class="n">TextStyle</span><span class="p">(</span><span class="o">&amp;</span><span class="n">MenuStyle</span><span class="o">-&gt;</span><span class="n">MenuButtonTextStyle</span><span class="p">)</span>
+							<span class="p">.</span><span class="n">Text</span><span class="p">(</span><span class="n">FText</span><span class="o">::</span><span class="n">FromString</span><span class="p">(</span><span class="s">"Quit Game"</span><span class="p">))</span>
+							<span class="p">.</span><span class="n">OnClicked</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">SMainMenuUI</span><span class="o">::</span><span class="n">QuitGameClicked</span><span class="p">)</span>
+						<span class="p">]</span>
+				<span class="p">]</span>
+		<span class="p">];</span>
+
+<span class="p">}</span>
+<span class="n">END_SLATE_FUNCTION_BUILD_OPTIMIZATION</span>
+
+
+<span class="n">FReply</span> <span class="n">SMainMenuUI</span><span class="o">::</span><span class="n">PlayGameClicked</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">GEngine</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">GEngine</span><span class="o">-&gt;</span><span class="n">AddOnScreenDebugMessage</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mf">3.f</span><span class="p">,</span> <span class="n">FColor</span><span class="o">::</span><span class="n">Yellow</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"PlayGameClicked"</span><span class="p">));</span>
+	<span class="p">}</span>
+
+	<span class="c1">// actually the BlueprintImplementable function of the HUD is not called; uncomment if you want to handle the OnClick via Blueprint</span>
+	<span class="c1">//MainMenuHUD-&gt;PlayGameClicked();</span>
+	<span class="k">return</span> <span class="n">FReply</span><span class="o">::</span><span class="n">Handled</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">FReply</span> <span class="n">SMainMenuUI</span><span class="o">::</span><span class="n">QuitGameClicked</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">GEngine</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">GEngine</span><span class="o">-&gt;</span><span class="n">AddOnScreenDebugMessage</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mf">3.f</span><span class="p">,</span> <span class="n">FColor</span><span class="o">::</span><span class="n">Yellow</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"QuitGameClicked"</span><span class="p">));</span>
+	<span class="p">}</span>
+	<span class="c1">// actually the BlueprintImplementable function of the HUD is not called; uncomment if you want to handle the OnClick via Blueprint</span>
+	<span class="c1">//MainMenuHUD-&gt;QuitGameClicked();</span>
+	<span class="k">return</span> <span class="n">FReply</span><span class="o">::</span><span class="n">Handled</span><span class="p">();</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Summary">
+        Summary
+       </span>
+      </h2>
+      <p>
+       And voila! Your menu is now styled! Here’s a breakdown of what we’ve done. First, after binding our HUD we actually load the Slate Widget style through our FMenuStyles class from earlier. Next, we adjust the STextBlock that represents our game’s title to add a call to TextStyle(), passing the address of our Title text style. This is exactly the same as property adjustments in Slate! For our two buttons, we actually assign two styles. First, we assign our button style, then we assign the text style – not too much to worry about here, right? MainMenu-Styled Congratulations! You now have a menu with some stylized buttons! Compile and load up your game, then test your main menu!
+      </p>
+      <p>
+       <img alt="Скриншот 2015-03-17 17.49.48.png" class="" height="377" src="../assets/templateslate-style-sets-part-2/2.png" width="860"/>
+      </p>
+      <p>
+       Source code:
+     (~709KB)
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

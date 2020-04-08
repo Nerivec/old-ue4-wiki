@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Component Visualizers - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Component Visualizers
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Setting_Up">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Setting Up
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Laser_Cannon_Class_Example">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Laser Cannon Class Example
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Creating_a_Visualization_Class">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Creating a Visualization Class
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Hit_Proxies">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             Hit Proxies
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-6">
+             <a href="#Implement_Hit_Proxy_Macro">
+              <span class="tocnumber">
+               4.1.1
+              </span>
+              <span class="toctext">
+               Implement Hit Proxy Macro
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Drawing_our_Visualization">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             Drawing our Visualization
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Receiving_Clicks">
+            <span class="tocnumber">
+             4.3
+            </span>
+            <span class="toctext">
+             Receiving Clicks
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#Set_Widget_Location">
+            <span class="tocnumber">
+             4.4
+            </span>
+            <span class="toctext">
+             Set Widget Location
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#Handle_Input_Delta">
+            <span class="tocnumber">
+             4.5
+            </span>
+            <span class="toctext">
+             Handle Input Delta
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#Receiving_Key_Input">
+            <span class="tocnumber">
+             4.6
+            </span>
+            <span class="toctext">
+             Receiving Key Input
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-12">
+           <a href="#Generate_a_Context_Menu">
+            <span class="tocnumber">
+             4.7
+            </span>
+            <span class="toctext">
+             Generate a Context Menu
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-13">
+         <a href="#Registering_Your_Visualizer">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Registering Your Visualizer
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-14">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       Component visualizers are a good way to visualize non-rendering component data in the editor viewport. You can even make the visualizer interactive, you can right click and get a context menu, capture mouse input and create keyboard commands.
+      </p>
+      <p>
+       A good example of this in the engine is the spline component. When you click on a spline, the spline path, points and handles are all visualized and interactive.
+      </p>
+      <p>
+       This is good if you have light weight structs or data types in your component that need to be easily edited in the viewport. For example you might have a laser cannon with a set of target points, you can store the target point as a FVector and use a visualizer to make a line going from the cannon to the target and draw a point at the target. The alternative would be using a separate component for the target which would use up a lot more memory and increase code complexity.
+      </p>
+      <p>
+       Disclaimer: The code provided is not a full working example. It is only supposed to illustrate what can be done.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Setting_Up">
+        Setting Up
+       </span>
+      </h2>
+      <p>
+       Before you can use a component visualizer you will need to create an editor module for your game. This separates out the editor only functionality from your game module reducing the size of your cooked game and preventing linking errors when the editor module isn't included.
+      </p>
+      <p>
+       Start by following the instructions on
+       to create an editor module for your game. Once you've got it all working come back to this page. Make sure you add the components visualizer module to the dependencies in your Build.cs file.
+      </p>
+      <p>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Laser_Cannon_Class_Example">
+        Laser Cannon Class Example
+       </span>
+      </h2>
+      <p>
+       Lets continue with the laser cannon example from above for this tutorial. The cannon is probably an actor that has a Targeting Component which other actors can use as well. Lets say we have a class that looks like this in our game module:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">class</span> <span class="nc">MYGAME_API</span> <span class="nl">UTargetingComponent</span> <span class="p">:</span> <span class="k">public</span> <span class="n">ActorComponent</span>
+<span class="p">{</span>
+<span class="p">...</span>
+    <span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Cannon</span><span class="p">)</span>
+    <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FVector</span><span class="o">&gt;</span> <span class="n">Targets</span><span class="p">;</span>
+
+    <span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Cannon</span><span class="p">)</span>
+    <span class="kt">float</span> <span class="n">TimeBetweenAttacks</span><span class="p">;</span>
+
+    <span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Cannon</span><span class="p">)</span>
+    <span class="n">int32</span> <span class="n">CurrentAttackIndex</span><span class="p">;</span>
+<span class="p">...</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       To edit this component effectively we're going to want to be able to:
+      </p>
+      <ul>
+       <li>
+        Add and remove target points
+       </li>
+       <li>
+        Move the target points in the world
+       </li>
+      </ul>
+      <p>
+       Since the property is exposed this can be done in the details panel but it's hard to visualize where in the world it will be targeting just by looking at a row of numbers. It would be better if we could draw this information in the viewport end edit it using a translation widget. Well with component visualizers we can!
+      </p>
+      <p>
+       Of course this example is a little contrived since we could simply make this in a blueprint and show the widget for the vector array. But it will work as an example to illustrate what can be done.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Creating_a_Visualization_Class">
+        Creating a Visualization Class
+       </span>
+      </h2>
+      <p>
+       Create a new class in your editor module. This class will need to extend
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/API/Editor/UnrealEd/FComponentVisualizer/index.html" rel="nofollow">
+        FComponentVisualizer
+       </a>
+       . We'll call it something sensible such as 'FTargetingComponentVisualizer' when it's visualising 'UTargetingComponent'. A minimum header will look something like this. It's probably best to copy in all the override method stubs and comment them out until you need them.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"ComponentVisualizer.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"TargetComponent.h"</span><span class="cp"></span>
+
+<span class="k">class</span> <span class="nc">FTargetingComponentVisualizer</span> <span class="o">:</span> <span class="k">public</span> <span class="n">FComponentVisualizer</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">FTargetingComponentVisualizer</span><span class="p">();</span>
+	<span class="k">virtual</span> <span class="o">~</span><span class="n">FTargetingComponentVisualizer</span><span class="p">();</span>
+
+	<span class="c1">// Begin FComponentVisualizer interface</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">OnRegister</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">DrawVisualization</span><span class="p">(</span><span class="k">const</span> <span class="n">UActorComponent</span><span class="o">*</span> <span class="n">Component</span><span class="p">,</span> <span class="k">const</span> <span class="n">FSceneView</span><span class="o">*</span> <span class="n">View</span><span class="p">,</span> <span class="n">FPrimitiveDrawInterface</span><span class="o">*</span> <span class="n">PDI</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">VisProxyHandleClick</span><span class="p">(</span><span class="n">FLevelEditorViewportClient</span><span class="o">*</span> <span class="n">InViewportClient</span><span class="p">,</span> <span class="n">HComponentVisProxy</span><span class="o">*</span> <span class="n">VisProxy</span><span class="p">,</span> <span class="k">const</span> <span class="n">FViewportClick</span><span class="o">&amp;</span> <span class="n">Click</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">EndEditing</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">GetWidgetLocation</span><span class="p">(</span><span class="k">const</span> <span class="n">FEditorViewportClient</span><span class="o">*</span> <span class="n">ViewportClient</span><span class="p">,</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">OutLocation</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">GetCustomInputCoordinateSystem</span><span class="p">(</span><span class="k">const</span> <span class="n">FEditorViewportClient</span><span class="o">*</span> <span class="n">ViewportClient</span><span class="p">,</span> <span class="n">FMatrix</span><span class="o">&amp;</span> <span class="n">OutMatrix</span><span class="p">)</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">HandleInputDelta</span><span class="p">(</span><span class="n">FEditorViewportClient</span><span class="o">*</span> <span class="n">ViewportClient</span><span class="p">,</span> <span class="n">FViewport</span><span class="o">*</span> <span class="n">Viewport</span><span class="p">,</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">DeltaTranslate</span><span class="p">,</span> <span class="n">FRotator</span><span class="o">&amp;</span> <span class="n">DeltaRotate</span><span class="p">,</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">DeltaScale</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">HandleInputKey</span><span class="p">(</span><span class="n">FEditorViewportClient</span><span class="o">*</span> <span class="n">ViewportClient</span><span class="p">,</span> <span class="n">FViewport</span><span class="o">*</span> <span class="n">Viewport</span><span class="p">,</span> <span class="n">FKey</span> <span class="n">Key</span><span class="p">,</span> <span class="n">EInputEvent</span> <span class="n">Event</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="n">SWidget</span><span class="o">&gt;</span> <span class="n">GenerateContextMenu</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+	<span class="c1">// End FComponentVisualizer interface</span>
+
+	<span class="cm">/** Get the target component we are currently editing */</span>
+	<span class="n">UTargetingComponent</span><span class="o">*</span> <span class="nf">GetEditedTargetingComponent</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+<span class="k">private</span><span class="o">:</span>
+        <span class="cm">/**Index of target in selected component*/</span>
+        <span class="n">int32</span> <span class="n">CurrentlySelectedTarget</span><span class="p">;</span>
+
+	<span class="cm">/**Output log commands*/</span>
+	<span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="n">FUICommandList</span><span class="o">&gt;</span> <span class="n">TargetingComponentVisualizerActions</span><span class="p">;</span>
+<span class="p">...</span>
+</pre>
+      </div>
+      <p>
+       Note by
+     (
+     ): As for version 4.18, these changes have been made to the interface:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// New available methods</span>
+<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">DrawVisualizationHUD</span><span class="p">(</span><span class="k">const</span> <span class="n">UActorComponent</span><span class="o">*</span> <span class="n">Component</span><span class="p">,</span> <span class="k">const</span> <span class="n">FViewport</span><span class="o">*</span> <span class="n">Viewport</span><span class="p">,</span> <span class="k">const</span> <span class="n">FSceneView</span><span class="o">*</span> <span class="n">View</span><span class="p">,</span> <span class="n">FCanvas</span><span class="o">*</span> <span class="n">Canvas</span><span class="p">);</span>
+<span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">IsVisualizingArchetype</span><span class="p">();</span><span class="err">*/</span>
+	
+<span class="c1">//Changed method: InViewportClient is now FEditorViewportClient, instead of FLevelEditorViewportClient</span>
+<span class="k">virtual</span> <span class="kt">bool</span> <span class="n">VisProxyHandleClick</span><span class="p">(</span><span class="n">FEditorViewportClient</span><span class="o">*</span> <span class="n">InViewportClient</span><span class="p">,</span> <span class="n">HComponentVisProxy</span><span class="o">*</span> <span class="n">VisProxy</span><span class="p">,</span> <span class="k">const</span> <span class="n">FViewportClick</span><span class="o">&amp;</span> <span class="n">Click</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       To achieve full functionality we'll need to override most of the functions of the base class. We've also created a variable storing the index of the target from the Targets array in the currently selected component. How do we work out what target is selected? Using hit proxies!
+      </p>
+      <h3>
+       <span class="mw-headline" id="Hit_Proxies">
+        Hit Proxies
+       </span>
+      </h3>
+      <p>
+       Hit proxies are a way of collecting data about what was clicked on in the viewport. If a hit proxy that we drew into the viewport is clicked on the VisProxyHandleClick() function in our class will be called passing in that hit proxy. We can then collect data that we wrote into the hit proxy when we drew it. If you only want to draw things to the view port and not interact with them you can skip this section.
+      </p>
+      <p>
+       First declare a base struct for all your hit proxies to extend from. Even though we only have one in this instance this is still a good idea in case we want to add more later. This base will extend HComponentVisProxy and then we can extend our base for different proxies:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/**Base class for clickable targeting editing proxies*/</span>
+<span class="k">struct</span> <span class="nl">HTargetingVisProxy</span> <span class="p">:</span> <span class="k">public</span> <span class="n">HComponentVisProxy</span>
+<span class="p">{</span>
+	<span class="n">DECLARE_HIT_PROXY</span><span class="p">();</span>
+
+	<span class="n">HTargetingVisProxy</span> <span class="p">(</span><span class="k">const</span> <span class="n">UActorComponent</span><span class="o">*</span> <span class="n">InComponent</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">HComponentVisProxy</span><span class="p">(</span><span class="n">InComponent</span><span class="p">,</span> <span class="n">HPP_Wireframe</span><span class="p">)</span>
+	<span class="p">{}</span>
+<span class="p">};</span>
+
+<span class="cm">/**Proxy for target*/</span>
+<span class="k">struct</span> <span class="nl">HTargetProxy</span> <span class="p">:</span> <span class="k">public</span> <span class="n">HTargetingVisProxy</span> 
+<span class="p">{</span>
+	<span class="n">DECLARE_HIT_PROXY</span><span class="p">();</span>
+
+	<span class="n">HTargetProxy</span> <span class="p">(</span><span class="k">const</span> <span class="n">UActorComponent</span><span class="o">*</span> <span class="n">InComponent</span><span class="p">,</span> <span class="n">int32</span> <span class="n">InTargetIndex</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">HTargetingVisProxy</span> <span class="p">(</span><span class="n">InComponent</span><span class="p">)</span>
+	<span class="p">,</span> <span class="n">TargetIndex</span><span class="p">(</span><span class="n">InTargetIndex</span><span class="p">)</span>
+	<span class="p">{}</span>
+
+	<span class="n">int32</span> <span class="n">TargetIndex</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       As you can see the base HComponentVisProxy takes the component that's being edited as an argument. Our target sub struct will also store the index of the target point so we know which one has been selected.
+      </p>
+      <h4>
+       <span class="mw-headline" id="Implement_Hit_Proxy_Macro">
+        Implement Hit Proxy Macro
+       </span>
+      </h4>
+      <p>
+       Another important thing is to use the the IMPLEMENT_HIT_PROXY macro at the top of your .cpp file. For this example it would look like this:
+      </p>
+      <p>
+       IMPLEMENT_HIT_PROXY(HTargetingVisProxy,  HComponentVisProxy)
+      </p>
+      <p>
+       IMPLEMENT_HIT_PROXY(HTargetProxy, HTargetingVisProxy )
+      </p>
+      <p>
+       The first argument is the sub type and the second is the base.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Drawing_our_Visualization">
+        Drawing our Visualization
+       </span>
+      </h3>
+      <p>
+       Drawing is done in the DrawVisualization function. As parameters for this function we get the component being edited, a scene view and a primitive draw interface. Check out the documentation for each of these if you want more info. For this example let's just draw a line from our component to each target and a point where the target is.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">FTargetingComponentVisualiser</span><span class="o">::</span><span class="n">DrawVisualization</span><span class="p">(</span><span class="k">const</span> <span class="n">UActorComponent</span><span class="o">*</span> <span class="n">Component</span><span class="p">,</span> <span class="k">const</span> <span class="n">FSceneView</span><span class="o">*</span> <span class="n">View</span><span class="p">,</span> <span class="n">FPrimitiveDrawInterface</span><span class="o">*</span> <span class="n">PDI</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">//cast the component into the expected component type</span>
+	<span class="k">if</span><span class="p">(</span><span class="k">const</span> <span class="n">UTargetingComponent</span><span class="o">*</span> <span class="n">TargetingComponent</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">UTargetingComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Component</span><span class="p">))</span>
+	<span class="p">{</span>
+		<span class="c1">//get colors for selected and unselected targets</span>
+		<span class="c1">//This is an editor only uproperty of our targeting component, that way we can change the colors if we can't see them against the background</span>
+		<span class="k">const</span> <span class="n">FLinearColor</span> <span class="n">SelectedColor</span> <span class="o">=</span> <span class="n">TargetingComponent</span><span class="o">-&gt;</span><span class="n">EditorSelectedColor</span><span class="p">;</span>
+		<span class="k">const</span> <span class="n">FLinearColor</span> <span class="n">UnselectedColor</span> <span class="o">=</span> <span class="n">TargetingComponent</span><span class="o">-&gt;</span><span class="n">EditorUnselectedColor</span><span class="p">;</span>
+
+		<span class="k">const</span> <span class="n">FVector</span> <span class="n">Locaction</span> <span class="o">=</span> <span class="n">TargetingComponent</span><span class="o">-&gt;</span><span class="n">GetComponentLocaction</span><span class="p">();</span>
+
+		<span class="c1">//Iterate over each target drawing a line and dot</span>
+		<span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">TargetingComponent</span><span class="o">-&gt;</span><span class="n">Targets</span><span class="p">.</span><span class="n">Num</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">FLinearColor</span> <span class="n">Color</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">==</span> <span class="n">SelectedTargetIndex</span><span class="p">)</span> <span class="o">?</span> <span class="nl">SelectedColor</span> <span class="p">:</span> <span class="n">UnselectedColor</span><span class="p">;</span>
+
+			<span class="c1">//Set our hit proxy</span>
+			<span class="n">PDI</span><span class="o">-&gt;</span><span class="n">SetHitProxy</span><span class="p">(</span><span class="k">new</span> <span class="n">HTargetProxy</span><span class="p">(</span><span class="n">Component</span><span class="p">,</span> <span class="n">i</span><span class="p">));</span>
+			<span class="n">PDI</span><span class="o">-&gt;</span><span class="n">DrawLine</span><span class="p">(</span><span class="n">Locaction</span><span class="p">,</span> <span class="n">TargetingComponent</span><span class="o">-&gt;</span><span class="n">Targets</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">Color</span><span class="p">,</span> <span class="n">SDPG_Foreground</span><span class="p">);</span>
+			<span class="n">PDI</span><span class="o">-&gt;</span><span class="n">DrawPoint</span><span class="p">(</span><span class="n">TargetingComponent</span><span class="o">-&gt;</span><span class="n">Targets</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">Color</span><span class="p">,</span> <span class="mf">20.f</span><span class="p">,</span> <span class="n">SDPG_Foreground</span><span class="p">);</span>
+			<span class="n">PDI</span><span class="o">-&gt;</span><span class="n">SetHitProxy</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       A couple things to note here, firstly we're getting a color out of the component. By allowing designers to change the color of the visualization we can allow for a case where the default color is blending with the background. Also note how we set and unset the hit proxy before and after drawing, this means that if either the line or point is clicked we can receive the click.
+      </p>
+      <p>
+       If all you wanted to do was draw your components you can probably skip to the bottom at
+       <a href="#Registering_Your_Visualizer">
+        #Registering Your Visualizer
+       </a>
+       . Checkout the primitive draw interface documentation for other draw commands.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Receiving_Clicks">
+        Receiving Clicks
+       </span>
+      </h3>
+      <p>
+       You can receive hits from your hit proxy by overriding the VisProxyHandleClick() function. This function receives the viewport client and the clicked vis proxy as parameters. It returns a bool indicating whether you have handled the click or not. For our simple example we just want to set our SelectedTargetIndex proxy to the clicked target.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">bool</span> <span class="n">FTargetingComponentVisualiser</span><span class="o">::</span><span class="n">VisProxyHandleClick</span><span class="p">(</span><span class="n">FLevelEditorViewportClient</span><span class="o">*</span> <span class="n">InViewportClient</span><span class="p">,</span> <span class="n">HComponentVisProxy</span><span class="o">*</span> <span class="n">VisProxy</span><span class="p">,</span> <span class="k">const</span> <span class="n">FViewportClick</span><span class="o">&amp;</span> <span class="n">Click</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">bool</span> <span class="n">bEditing</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">VisProxy</span> <span class="o">&amp;&amp;</span> <span class="n">VisProxy</span><span class="o">-&gt;</span><span class="n">Component</span><span class="o">-&gt;</span><span class="n">IsValid</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="n">bEditing</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+
+		<span class="k">if</span><span class="p">(</span><span class="n">VisProxy</span><span class="o">-&gt;</span><span class="n">IsA</span><span class="p">(</span><span class="n">HTargetProxy</span><span class="o">::</span><span class="n">StaticGetType</span><span class="p">()))</span>
+		<span class="p">{</span>
+			<span class="n">HTargetProxy</span><span class="o">*</span> <span class="n">Proxy</span> <span class="o">=</span> <span class="p">(</span><span class="n">HTargetProxy</span><span class="o">*</span><span class="p">)</span> <span class="n">VisProxy</span><span class="p">;</span>
+
+			<span class="n">SelectedTargetIndex</span> <span class="o">=</span> <span class="n">VisProxy</span><span class="o">-&gt;</span><span class="n">TargetIndex</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">else</span>
+	<span class="p">{</span>
+		<span class="n">SelectedTargetIndex</span> <span class="o">=</span> <span class="n">INDEX_NONE</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="n">bEditing</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       All we need to do is make sure that all our data is valid, a bit of casting and then we can access the data we stored in the hit proxy we created in a draw function above.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Set_Widget_Location">
+        Set Widget Location
+       </span>
+      </h3>
+      <p>
+       Earlier I mentioned that we want to be able to interact with our targets in the view port. So far we are drawing our targets on the view port, we can select a target and see which is selected, but we can't interact with them at all. What would be nice is to be able to move our targets with a translation widget like we would with a normal actor or component.
+      </p>
+      <p>
+       The first step to doing this is overriding the widget location so it appears on our target instead of the selected actor/component. This can be done overriding the GetWidgetLocation() method. This method returns a bool to indicate if it's provided the location and has an FVector out parameter for providing it.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">bool</span> <span class="n">FTargetingComponentVisualiser</span><span class="o">::</span><span class="n">GetWidgetLocation</span><span class="p">(</span><span class="k">const</span> <span class="n">FEditorViewportClient</span><span class="o">*</span> <span class="n">ViewportClient</span><span class="p">,</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">OutLocaction</span><span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">GetEditedTargetingComponent</span><span class="p">().</span><span class="n">IsValid</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">SelectedTargetIndex</span> <span class="o">!=</span> <span class="n">INDEX_NONE</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">OutLocaction</span> <span class="o">=</span> <span class="n">GetEditedTargetingComponent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">Targets</span><span class="p">[</span><span class="n">SelectedTargetIndex</span><span class="p">];</span>
+		
+		<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       We simply check our selected component and selected index are valid and then set the out location to that target. We really should check that our index is valid in the targeting array before accessing it as well.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Handle_Input_Delta">
+        Handle Input Delta
+       </span>
+      </h3>
+      <p>
+       We can also override the behavior of the widget by receiving it's input in HandleInputDelta. This function gives us a delta translation, scale and rotation that we can use as we will to edit our components. Once again we need to return a bool to indicate whether or not we handled this input. For our example lets just move the selected target by the delta translation.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">bool</span> <span class="n">FTargetingComponentVisualiser</span><span class="o">::</span><span class="n">HandleInputDelta</span><span class="p">(</span><span class="n">FEditorViewportClient</span><span class="o">*</span> <span class="n">ViewportClient</span><span class="p">,</span>
+	<span class="n">FViewport</span><span class="o">*</span> <span class="n">Viewport</span><span class="p">,</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">DeltaTranslate</span><span class="p">,</span> <span class="n">FRotator</span><span class="o">&amp;</span> <span class="n">DeltaRotate</span><span class="p">,</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">DeltaScale</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">bool</span> <span class="n">bHandled</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">GetEditedTargetingComponent</span><span class="p">().</span><span class="n">IsValid</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">SelectedTargetIndex</span> <span class="o">!=</span> <span class="n">INDEX_NONE</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">GetEditedTargetingComponent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">Targets</span><span class="p">[</span><span class="n">SelectedTargetIndex</span><span class="p">]</span> <span class="o">+=</span> <span class="n">DeltaTranslate</span><span class="p">;</span>
+		<span class="n">bHandled</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="n">bHandled</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       What makes this really useful is that we can restrict the effect of the widget. For example if you want to make sure that the target can't move more than 1000 units away from the cannon you can check for this and simply set the Target to an appropriate value. If you try to move the target further than this in the editor the widget and your cursor just won't move.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Receiving_Key_Input">
+        Receiving Key Input
+       </span>
+      </h3>
+      <p>
+       You can also receive key input with your visualizer. For example we can make it so that the delete key deletes the selected target with some callback function in our component.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">bool</span> <span class="n">FTargetingComponentVisualiser</span><span class="o">::</span><span class="n">HandleInputKey</span><span class="p">(</span><span class="n">FEditorViewportClient</span><span class="o">*</span> <span class="n">ViewportClient</span><span class="p">,</span> <span class="n">FViewport</span><span class="o">*</span> <span class="n">Viewport</span><span class="p">,</span> <span class="n">FKey</span> <span class="n">Key</span><span class="p">,</span> <span class="n">EInputEvent</span> <span class="n">Event</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">bool</span> <span class="n">bHandled</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">Key</span> <span class="o">==</span> <span class="n">EKeys</span><span class="o">::</span><span class="n">Delete</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">GetEditedTargetingComponent</span><span class="p">().</span><span class="n">IsValid</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">SelectedTargetIndex</span> <span class="o">!=</span> <span class="n">INDEX_NONE</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">GetEditedTargetingComponent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">DeleteTarget</span><span class="p">(</span><span class="n">SelectedTargetIndex</span><span class="p">);</span>
+			<span class="n">bHandled</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Generate_a_Context_Menu">
+        Generate a Context Menu
+       </span>
+      </h3>
+      <p>
+       One last really useful thing we can do is generate a context menu if one of our hit proxies is right clicked. This is a bit more complicated but lets make it so we can right click on a target and selected 'duplicate' to create a new target in the same spot. Be sure to read up on slate if you want to create more complex menus.
+      </p>
+      <p>
+       First we need to make a commands class to hold our command list, this should go at the top of your .cpp file:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">class</span> <span class="nc">FTargetingVisualizerCommands</span> <span class="o">:</span> <span class="k">public</span> <span class="n">TCommands</span> <span class="o">&lt;</span> <span class="n">FTargetingVisualizerCommands</span> <span class="o">&gt;</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">FTargetingVisualizerCommands</span><span class="p">()</span> <span class="o">:</span> <span class="n">TCommands</span> <span class="o">&lt;</span><span class="n">FTargetingVisualizerCommands</span><span class="o">&gt;</span>
+	<span class="p">(</span>
+		<span class="s">"TargetingComponentVisualizer"</span><span class="p">,</span>
+		<span class="n">LOCTEXT</span><span class="p">(</span><span class="s">"TagetingComponentVisualizer"</span><span class="p">,</span> <span class="s">"Targeting Component Visualizer"</span><span class="p">),</span>
+		<span class="n">NAME_None</span><span class="p">,</span>
+		<span class="n">FEditorStyle</span><span class="o">::</span><span class="n">GetStyleSetName</span><span class="p">()</span>
+	<span class="p">){}</span>
+
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">RegisterCommands</span><span class="p">()</span> <span class="k">override</span>
+	<span class="p">{</span>
+		<span class="n">UI_COMMAND</span><span class="p">(</span><span class="n">Duplicate</span><span class="p">,</span> <span class="s">"Duplicate Target"</span><span class="p">,</span> <span class="s">"Duplicate the current target."</span><span class="p">,</span> <span class="n">EUserInterfaceActionType</span><span class="o">::</span><span class="n">Button</span><span class="p">,</span> <span class="n">FInputGesture</span><span class="p">());</span>
+	<span class="p">}</span>
+
+<span class="k">public</span><span class="o">:</span>
+	<span class="cm">/** Duplicate Target */</span>
+	<span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="n">FUICommandInfo</span><span class="o">&gt;</span> <span class="n">Duplicate</span><span class="p">;</span>
+
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       Don't worry to much about the syntax of this, if all you want to do is create clickable buttons on the menu simply create a new TSharedPtr&lt;FUICommandInfo&gt; member to hold the command and add a new call to the UI_COMMAND macro in RegisterCommands changing the first 3 arguments appropriately. These arguments are, the command, the text that will appear on the menu, and long text for the command.
+      </p>
+      <p>
+       We also need to bind our commands to a function that will get called when selected. Do this in the OnRegister function of the visualizer.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">FTargetingComponentVisualiser</span><span class="o">::</span><span class="n">OnRegister</span><span class="p">()</span>
+<span class="p">{</span>
+
+        <span class="n">TargetingComponentVisualizerActions</span> <span class="o">=</span> <span class="n">MakeSharable</span><span class="o">&lt;</span><span class="k">new</span> <span class="n">FUICommandList</span><span class="o">&gt;</span>
+
+	<span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">Commands</span> <span class="o">=</span> <span class="n">FTargetingVisualizerCommands</span><span class="o">::</span><span class="n">Get</span><span class="p">();</span>
+
+	<span class="n">TargetingComponentVisualizerActions</span><span class="o">-&gt;</span><span class="n">MapAction</span><span class="p">(</span>
+		<span class="n">Commands</span><span class="p">.</span><span class="n">Duplicate</span><span class="p">,</span>
+		<span class="n">FExecuteAction</span><span class="o">::</span><span class="n">CreateSP</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">FTargetingComponentVisualizer</span><span class="o">::</span><span class="n">OnDuplicateTarget</span><span class="p">),</span>
+		<span class="nb">true</span><span class="p">));</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       You will need to call MapAction for every command you declared above. The parameters are: The command you are mapping, a binding to a function to call when the command is selected and if the action can be performed. That last one really should be another function pointer so we can dynamically determine this.
+      </p>
+      <p>
+       Lastly we have to generate the context menu in the GenerateContextMenu() function.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="n">SWidget</span><span class="o">&gt;</span> <span class="n">FTargetingComponentVisualiser</span><span class="o">::</span><span class="n">GenerateContextMenu</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="n">FMenuBuilder</span> <span class="n">MenuBuilder</span><span class="p">(</span><span class="nb">true</span><span class="p">,</span> <span class="n">TargetingComponentVisualizerActions</span><span class="p">);</span>
+	<span class="p">{</span>
+		<span class="n">MenuBuilder</span><span class="p">.</span><span class="n">BeginSection</span><span class="p">(</span><span class="s">"Target Actions"</span><span class="p">);</span>
+		<span class="p">{</span>
+			<span class="n">MenuBuilder</span><span class="p">.</span><span class="n">AddMenuEntry</span><span class="p">(</span><span class="n">FTargetingVisualizerCommands</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">Duplicate</span><span class="p">);</span>
+		<span class="p">}</span>
+		<span class="n">MenuBuilder</span><span class="p">.</span><span class="n">EndSection</span><span class="p">();</span>
+	<span class="p">}</span>
+
+	<span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="n">SWidget</span><span class="o">&gt;</span> <span class="n">MenuWidget</span> <span class="o">=</span> <span class="n">MenuBuilder</span><span class="p">.</span><span class="n">MakeWidget</span><span class="p">();</span>
+	<span class="k">return</span> <span class="n">MenuWidget</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       Now when a hit proxy is right clicked we can select a duplicate option. When this is clicked the function we bound above, OnDuplicateTarget, will be called. This function can call a callback function in the targeting component to duplicate the target and create a new one.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Registering_Your_Visualizer">
+        Registering Your Visualizer
+       </span>
+      </h2>
+      <p>
+       That's all the code you need for a basic visualizer! Before you can use it you need to register it. This tutorial assumes that you've set up an editor module and overridden the startup and shutdown module function. If not go back to
+       <a href="#Setting_Up">
+        #Setting Up
+       </a>
+       and do so.
+      </p>
+      <p>
+       As of 4.7 there is a bug in the component visualizer module that prevents you from registering it in the 'correct' way. We'll need to use a work around which may break in a future release. In your startup module function add the following code:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">GUnrealEd</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="n">FComponentVisualizer</span><span class="o">&gt;</span> <span class="n">Visualizer</span> <span class="o">=</span> <span class="n">MakeShareable</span><span class="p">(</span><span class="k">new</span> <span class="n">FTargetingComponentVisualizer</span><span class="p">());</span>
+	
+	<span class="k">if</span> <span class="p">(</span><span class="n">Visualizer</span><span class="p">.</span><span class="n">IsValid</span><span class="p">())</span>
+	<span class="p">{</span>
+	        <span class="n">GUnrealEd</span><span class="o">-&gt;</span><span class="n">RegisterComponentVisualizer</span><span class="p">(</span><span class="n">UTargetingComponent</span><span class="o">::</span><span class="n">StaticClass</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetFName</span><span class="p">(),</span> <span class="n">Visualizer</span><span class="p">);</span>
+		<span class="n">Visualizer</span><span class="o">-&gt;</span><span class="n">OnRegister</span><span class="p">();</span>
+	<span class="p">}</span>
+
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       And in shutdown module add:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">GUnrealEd</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">GUnrealEd</span><span class="o">-&gt;</span><span class="n">UnregisterComponentVisualizer</span><span class="p">(</span><span class="n">UTargetingComponent</span><span class="o">::</span><span class="n">StaticClass</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetFName</span><span class="p">());</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       The unreal devs have indicated in the past that you really shouldn't access GUnrealEd directly. They may remove support for this in the future but hopefully if they do they'll fix the bug that prevents the correct method of registering.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       Component visualizers are a great way to add functionality to the editor. You can quickly set up powerful editing systems for your components without adding lots of unnecessary metadata to your component classes.
+      </p>
+      <p>
+       (
+     )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   C++ Troubleshooting Guide - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    C++ Troubleshooting Guide
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <br/>
+       This page will hold a collection of common code issues that users run into, and steps that can be taken to resolve the issues. It is by no means an exhaustive list of issues, just a list of the ones that come up most frequently. We will be adding to this page as needed in the future. If the issue you are experiencing is not listed here, please visit the
+       <a class="external text" href="https://answers.unrealengine.com/index.html" rel="nofollow">
+        AnswerHub
+       </a>
+       or
+       <a class="external text" href="https://forums.unrealengine.com/" rel="nofollow">
+        Forums
+       </a>
+       for additional assistance. This page is currently only for issues with Windows and Visual Studio.
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Cannot_Build_Engine_from_Source">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Cannot Build Engine from Source
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Build_Error_Codes">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Build Error Codes
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#C1069">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             C1069
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#C1083">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             C1083
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#RC1015">
+            <span class="tocnumber">
+             2.3
+            </span>
+            <span class="toctext">
+             RC1015
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#OtherCompilerError.28.23.29">
+            <span class="tocnumber">
+             2.4
+            </span>
+            <span class="toctext">
+             OtherCompilerError(#)
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#UnrealBuildTool_Errors">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           UnrealBuildTool Errors
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#FAQ">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           FAQ
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#Where_is_RegisterShellCommands.bat.3F">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             Where is RegisterShellCommands.bat?
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Cannot_Build_Engine_from_Source">
+        Cannot Build Engine from Source
+       </span>
+      </h1>
+      <p>
+       This section is meant to encompass a variety of build errors that could prevent the Engine from being built. The solutions here should work in most instances, starting with the most common.
+      </p>
+      <ul>
+       <li>
+        Make sure you have the correct dependencies for the version you are trying to build.
+       </li>
+      </ul>
+      <dl>
+       <dd>
+        <ul>
+         <li>
+          If you're building a version on or past 4.6, you should run the Setup.bat (Setup.command for Mac) to download the dependencies. Earlier versions will need to download them separately from Github. These can be found in the readme on the Github page.
+         </li>
+         <li>
+          Dependencies for 4.3.0 will not work when trying to build 4.4.0, or vice versa.
+         </li>
+         <li>
+          Dependency zip files all have the same name regardless of Engine version, so it may be less confusing to download the correct dependencies again if there is any question about which version they are for.
+         </li>
+         <li>
+          If you are using Visual Studio 2012, be sure to also download the Optional dependency file.
+         </li>
+        </ul>
+       </dd>
+      </dl>
+      <ul>
+       <li>
+        If you are using Visual Studio 2013 for any version on 4.10 or higher, you'll need to add the
+        <b>
+         -2013
+        </b>
+        argument to your GenerateProjectFiles.bat to build the project files for 2013.
+        <dl>
+         <dd>
+          You can add it on this line: "call "%~dp0Engine\Build\BatchFiles\GenerateProjectFiles.bat"
+          <b>
+           -2013
+          </b>
+          %*
+         </dd>
+        </dl>
+       </li>
+       <li>
+        Make sure your VS140COMNTOOLS environment variable is correct.
+       </li>
+      </ul>
+      <dl>
+       <dd>
+        <ul>
+         <li>
+          You can find your environment variables at
+         </li>
+        </ul>
+       </dd>
+      </dl>
+      <pre> Control Panel\System and Security\System -&gt; Advanced System Settings -&gt; Environment Variables
+</pre>
+      <dl>
+       <dd>
+        <ul>
+         <li>
+          This should point to the Tools folder in your Visual Studio 2013/2015 installation.
+         </li>
+        </ul>
+        <dl>
+         <dd>
+          <ul>
+           <li>
+            eg. C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\Tools\
+           </li>
+          </ul>
+         </dd>
+        </dl>
+        <ul>
+         <li>
+          If you are using Visual Studio 2013, this variable will be named VS120COMNTOOLS, and will point to your Visual Studio 2013 Tools folder.
+         </li>
+         <li>
+          If you are using Visual Studio 2012, this variable will be named VS110COMNTOOLS, and will point to your Visual Studio 2012 Tools folder.
+         </li>
+        </ul>
+       </dd>
+      </dl>
+      <ul>
+       <li>
+        Make sure you have the correct version of Visual Studio Express installed, if you are using Express.
+       </li>
+      </ul>
+      <dl>
+       <dd>
+        <ul>
+         <li>
+          Microsoft has several different versions of Visual Studio Express 2015 available.
+         </li>
+         <li>
+          The current version supported with Unreal Engine 4 is Visual Studio Express 2015 for Desktop (2013 for versions prior to 4.10)
+          <a class="external text" href="https://www.visualstudio.com/en-us/products/visual-studio-express-vs.aspx" rel="nofollow">
+           here
+          </a>
+          .
+         </li>
+        </ul>
+       </dd>
+      </dl>
+      <ul>
+       <li>
+        Make sure you have the June 2010 DirectX Runtimes installed.
+       </li>
+      </ul>
+      <dl>
+       <dd>
+        <ul>
+         <li>
+          These are required for Unreal Engine 4.
+         </li>
+         <li>
+          Download the Runtimes
+          <a class="external text" href="http://www.microsoft.com/en-us/download/details.aspx?id=8109" rel="nofollow">
+           here
+          </a>
+          .
+         </li>
+        </ul>
+       </dd>
+      </dl>
+      <ul>
+       <li>
+        Make sure only one version of Visual Studio is installed.
+       </li>
+      </ul>
+      <dl>
+       <dd>
+        <ul>
+         <li>
+          Having multiple installations of Visual Studio has caused problems for some users.
+         </li>
+         <li>
+          Uninstall any unneeded versions of Visual Studio.
+         </li>
+        </ul>
+       </dd>
+      </dl>
+      <ul>
+       <li>
+        Make sure there are no special characters in any Engine file paths (such as é or ô).
+       </li>
+      </ul>
+      <dl>
+       <dd>
+        <ul>
+         <li>
+          This is a limitation internal to Visual Studio that affects how Visual Studio communicates with the UnrealBuildTool.
+         </li>
+         <li>
+          Install UE4 (and preferably Visual Studio as well) to a location that does not have any special characters in the file path.
+         </li>
+         <li>
+          Ensure projects are not created in locations containing special characters in the file path.
+         </li>
+        </ul>
+       </dd>
+      </dl>
+      <h1>
+       <span class="mw-headline" id="Build_Error_Codes">
+        Build Error Codes
+       </span>
+      </h1>
+      <h2>
+       <span class="mw-headline" id="C1069">
+        C1069
+       </span>
+      </h2>
+      <pre> fatal error C1069: cannot read compiler command line
+</pre>
+      <ul>
+       <li>
+        Check the TMP and TEMP environment variables and make sure there are no spaces in the paths.
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="C1083">
+        C1083
+       </span>
+      </h2>
+      <pre> fatal error C1083: Cannot open include file: 'new': No such file or directory
+</pre>
+      <ul>
+       <li>
+        Often paired with error RC1015.
+       </li>
+       <li>
+        Ensure Windows SDK is installed.
+       </li>
+      </ul>
+      <dl>
+       <dd>
+        <ul>
+         <li>
+          Download
+          <a class="external text" href="http://www.microsoft.com/en-us/download/details.aspx?id=8279" rel="nofollow">
+           here
+          </a>
+          for Windows 7.
+         </li>
+        </ul>
+       </dd>
+      </dl>
+      <ul>
+       <li>
+        If building the Engine, ensure correct dependencies have been downloaded and extracted.
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="RC1015">
+        RC1015
+       </span>
+      </h2>
+      <pre> fatal error RC1015: cannot open include file 'windows.h'
+</pre>
+      <ul>
+       <li>
+        Often paired with error C1083.
+       </li>
+       <li>
+        Ensure Windows SDK is installed.
+       </li>
+      </ul>
+      <dl>
+       <dd>
+        <ul>
+         <li>
+          Download
+          <a class="external text" href="http://www.microsoft.com/en-us/download/details.aspx?id=8279" rel="nofollow">
+           here
+          </a>
+          for Windows 7.
+         </li>
+        </ul>
+       </dd>
+      </dl>
+      <ul>
+       <li>
+        Check anti-virus software to make sure it is not interfering.
+       </li>
+       <li>
+        As a last resort, as editing Environment Variables can be risky, if you're sure that your Windows SDK is installed but Visual Studio isn't seeing it, you can follow these steps to ensure that the Environment Variables are set up correctly:
+       </li>
+      </ul>
+      <ol>
+       <li>
+        Find "My Computer" (Or "Computer" in the Start Menu), right-click it, and select Properties.
+       </li>
+       <li>
+        Select "Advanced System Settings"
+       </li>
+       <li>
+        Under the "Advanced" tab, select "Environment Variables"
+       </li>
+       <li>
+        Find the variable labeled "Path" under "System Variables", select it, and then hit Edit
+       </li>
+       <li>
+        Note that there are multiple file paths listed here, all separated by a semi-colon (;)
+       </li>
+       <li>
+        Look for the following path "C:\Program Files (x86)\Windows Kits\8.1\Windows Performance Toolkit\". or the version you're looking for. Please note that the path may change based off the drive you're using and 32-bit vs 64-bit
+       </li>
+       <li>
+        If it does not exist, add it to the end (Add a semicolon prior to the entry but not after it)
+       </li>
+      </ol>
+      <h2>
+       <span class="mw-headline" id="OtherCompilerError.28.23.29">
+        OtherCompilerError(#)
+       </span>
+      </h2>
+      <ul>
+       <li>
+        This line means that the error that occurred isn't something that has an error code related to it. You can check the Output log for more information in the majority of situations that involve this message.
+       </li>
+      </ul>
+      <h1>
+       <span class="mw-headline" id="UnrealBuildTool_Errors">
+        UnrealBuildTool Errors
+       </span>
+      </h1>
+      <pre> UnrealBuildTool Exception: ERROR: Windows SDK v8.1 must be installed in order to build this target.
+</pre>
+      <ul>
+       <li>
+        Windows SDK 8.1 is missing.
+       </li>
+      </ul>
+      <dl>
+       <dd>
+        <ul>
+         <li>
+          Download
+          <a class="external text" href="http://msdn.microsoft.com/en-us/windows/desktop/bg162891.aspx" rel="nofollow">
+           here
+          </a>
+          .
+         </li>
+        </ul>
+       </dd>
+      </dl>
+      <pre> UnrealHeaderTool failed for target 'UE4Editor'
+</pre>
+      <ul>
+       <li>
+        DirectX June 2010 Runtimes are missing.
+       </li>
+      </ul>
+      <dl>
+       <dd>
+        <ul>
+         <li>
+          Download
+          <a class="external text" href="http://www.microsoft.com/en-us/download/details.aspx?id=8109" rel="nofollow">
+           here
+          </a>
+          .
+         </li>
+        </ul>
+       </dd>
+      </dl>
+      <h1>
+       <span class="mw-headline" id="FAQ">
+        FAQ
+       </span>
+      </h1>
+      <h2>
+       <span class="mw-headline" id="Where_is_RegisterShellCommands.bat.3F">
+        Where is RegisterShellCommands.bat?
+       </span>
+      </h2>
+      <p>
+       This file was removed starting in version 4.1. To update a project to a new Engine version:
+      </p>
+      <ul>
+       <li>
+        Right-click on the .uproject file.
+       </li>
+       <li>
+        Select "Switch Unreal Engine Version..."
+       </li>
+       <li>
+        Choose the version of the Engine you would like to associate the project with.
+       </li>
+       <li>
+        Right-click on the .uproject file.
+       </li>
+       <li>
+        Select "Generate Visual Studio project files".
+       </li>
+       <li>
+        Open the solution in Visual Studio.
+       </li>
+       <li>
+        Build the project.
+       </li>
+      </ul>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

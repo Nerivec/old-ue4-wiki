@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Timeline in c++ - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Timeline in c++
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <h2>
+       <span class="mw-headline" id="How_to_use_Timeline_in_C.2B.2B">
+        How to use Timeline in C++
+       </span>
+      </h2>
+      <p>
+       This example gives an idea about how to use timelines in C++.
+      </p>
+      <p>
+       YourClass.h
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">YOURGAME_API</span> <span class="nl">AYourClass</span><span class="p">:</span> <span class="k">public</span> <span class="n">AActor</span> <span class="p">{</span>
+
+<span class="k">protected</span><span class="o">:</span>
+    <span class="n">UPROPERTY</span><span class="p">()</span>
+    <span class="n">UTimelineComponent</span><span class="o">*</span> <span class="n">MyTimeline</span><span class="p">;</span>
+ 
+    <span class="n">UPROPERTY</span><span class="p">()</span>
+    <span class="n">UCurveFloat</span><span class="o">*</span> <span class="n">FloatCurve</span><span class="p">;</span>
+
+    <span class="n">UFUNCTION</span><span class="p">()</span>
+    <span class="kt">void</span> <span class="n">TimelineCallback</span><span class="p">(</span><span class="kt">float</span> <span class="n">val</span><span class="p">);</span>
+    
+    <span class="n">UFUNCTION</span><span class="p">()</span>
+    <span class="kt">void</span> <span class="n">TimelineFinishedCallback</span><span class="p">();</span>
+
+    <span class="kt">void</span> <span class="nf">PlayTimeline</span><span class="p">();</span>
+
+    <span class="n">UPROPERTY</span><span class="p">()</span>
+    <span class="n">TEnumAsByte</span><span class="o">&lt;</span><span class="n">ETimelineDirection</span><span class="o">::</span><span class="n">Type</span><span class="o">&gt;</span> <span class="n">TimelineDirection</span><span class="p">;</span>   
+
+<span class="k">public</span><span class="o">:</span>
+
+    <span class="n">AYourClass</span><span class="p">();</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       YourClass.cpp
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">AYourClass</span><span class="o">::</span><span class="n">AYourClass</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">static</span> <span class="n">ConstructorHelpers</span><span class="o">::</span><span class="n">FObjectFinder</span><span class="o">&lt;</span><span class="n">UCurveFloat</span><span class="o">&gt;</span> <span class="n">Curve</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"/Game/Curves/C_MyCurve"</span><span class="p">));</span>
+    <span class="n">check</span><span class="p">(</span><span class="n">Curve</span><span class="p">.</span><span class="n">Succeeded</span><span class="p">());</span>
+    
+    <span class="n">FloatCurve</span> <span class="o">=</span> <span class="n">Curve</span><span class="p">.</span><span class="n">Object</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AYourClass</span><span class="o">::</span><span class="n">BeginPlay</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">FOnTimelineFloat</span> <span class="n">onTimelineCallback</span><span class="p">;</span>
+	<span class="n">FOnTimelineEventStatic</span> <span class="n">onTimelineFinishedCallback</span><span class="p">;</span>
+
+	<span class="n">Super</span><span class="o">::</span><span class="n">BeginPlay</span><span class="p">();</span>
+        
+	<span class="k">if</span> <span class="p">(</span><span class="n">FloatCurve</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">MyTimeline</span> <span class="o">=</span> <span class="n">NewObject</span><span class="o">&lt;</span><span class="n">UTimelineComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">FName</span><span class="p">(</span><span class="s">"TimelineAnimation"</span><span class="p">));</span>
+		<span class="n">MyTimeline</span><span class="o">-&gt;</span><span class="n">CreationMethod</span> <span class="o">=</span> <span class="n">EComponentCreationMethod</span><span class="o">::</span><span class="n">UserConstructionScript</span><span class="p">;</span> <span class="c1">// Indicate it comes from a blueprint so it gets cleared when we rerun construction scripts</span>
+		<span class="k">this</span><span class="o">-&gt;</span><span class="n">BlueprintCreatedComponents</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">MyTimeline</span><span class="p">);</span> <span class="c1">// Add to array so it gets saved</span>
+		<span class="n">MyTimeline</span><span class="o">-&gt;</span><span class="n">SetNetAddressable</span><span class="p">();</span>	<span class="c1">// This component has a stable name that can be referenced for replication</span>
+
+		<span class="n">MyTimeline</span><span class="o">-&gt;</span><span class="n">SetPropertySetObject</span><span class="p">(</span><span class="k">this</span><span class="p">);</span> <span class="c1">// Set which object the timeline should drive properties on</span>
+		<span class="n">MyTimeline</span><span class="o">-&gt;</span><span class="n">SetDirectionPropertyName</span><span class="p">(</span><span class="n">FName</span><span class="p">(</span><span class="s">"TimelineDirection"</span><span class="p">));</span>
+
+		<span class="n">MyTimeline</span><span class="o">-&gt;</span><span class="n">SetLooping</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
+		<span class="n">MyTimeline</span><span class="o">-&gt;</span><span class="n">SetTimelineLength</span><span class="p">(</span><span class="mf">5.0f</span><span class="p">);</span>
+		<span class="n">MyTimeline</span><span class="o">-&gt;</span><span class="n">SetTimelineLengthMode</span><span class="p">(</span><span class="n">ETimelineLengthMode</span><span class="o">::</span><span class="n">TL_LastKeyFrame</span><span class="p">);</span>
+
+		<span class="n">MyTimeline</span><span class="o">-&gt;</span><span class="n">SetPlaybackPosition</span><span class="p">(</span><span class="mf">0.0f</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
+
+		<span class="c1">//Add the float curve to the timeline and connect it to your timelines's interpolation function</span>
+		<span class="n">onTimelineCallback</span><span class="p">.</span><span class="n">BindUFunction</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">FName</span><span class="p">{</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"TimelineCallback"</span><span class="p">)</span> <span class="p">});</span>
+		<span class="n">onTimelineFinishedCallback</span><span class="p">.</span><span class="n">BindUFunction</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">FName</span><span class="p">{</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"TimelineFinishedCallback"</span><span class="p">)</span> <span class="p">});</span>
+		<span class="n">MyTimeline</span><span class="o">-&gt;</span><span class="n">AddInterpFloat</span><span class="p">(</span><span class="n">FloatCurve</span><span class="p">,</span> <span class="n">onTimelineCallback</span><span class="p">);</span>
+		<span class="n">MyTimeline</span><span class="o">-&gt;</span><span class="n">SetTimelineFinishedFunc</span><span class="p">(</span><span class="n">onTimelineFinishedCallback</span><span class="p">);</span>
+
+		<span class="n">MyTimeline</span><span class="o">-&gt;</span><span class="n">RegisterComponent</span><span class="p">();</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AYourClass</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span><span class="kt">float</span> <span class="n">deltaTime</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span><span class="n">deltaTime</span><span class="p">);</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">MyTimeline</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">MyTimeline</span><span class="o">-&gt;</span><span class="n">TickComponent</span><span class="p">(</span><span class="n">deltaTime</span><span class="p">,</span> <span class="n">ELevelTick</span><span class="o">::</span><span class="n">LEVELTICK_TimeOnly</span><span class="p">,</span> <span class="nb">NULL</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AYourClass</span><span class="o">::</span><span class="n">TimelineCallback</span><span class="p">(</span><span class="kt">float</span> <span class="n">interpolatedVal</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// This function is called for every tick in the timeline.</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AYourClass</span><span class="o">::</span><span class="n">TimelineFinishedCallback</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="c1">// This function is called when the timeline finishes playing.</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AYourClass</span><span class="o">::</span><span class="n">PlayTimeline</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">MyTimeline</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">MyTimeline</span><span class="o">-&gt;</span><span class="n">PlayFromStart</span><span class="p">();</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       If you need to get the value of another curve in your callback function, get the playback position of the timeline and use it to get the corresponding value on the other curve.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">OtherFloatCurve</span><span class="o">-&gt;</span><span class="n">GetFloatValue</span><span class="p">(</span><span class="n">MyTimeline</span><span class="o">-&gt;</span><span class="n">GetPlaybackPosition</span><span class="p">());</span>
+<span class="n">OtherVectorCurve</span><span class="o">-&gt;</span><span class="n">GetVectorValue</span><span class="p">(</span><span class="mf">42.0f</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       You may want to add the curves to your existing timeline and bind a function to be called back instead.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Relevant_API_Documentation">
+        Relevant API Documentation
+       </span>
+      </h2>
+      <ul>
+       <li>
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Components/UTimelineComponent/index.html" rel="nofollow">
+         UTimelineComponent
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Curves/UFloatVector/index.html" rel="nofollow">
+         UFloatVector
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Curves/UCurveVector/index.html" rel="nofollow">
+         UCurveVector
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/Curves/UCurveLinearColor/index.html" rel="nofollow">
+         UCurveLinearColor
+        </a>
+       </li>
+      </ul>
+      <p>
+       (
+     ),
+     ,
+     (
+     )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

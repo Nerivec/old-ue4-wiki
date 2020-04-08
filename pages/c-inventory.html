@@ -1,0 +1,2158 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   C++ Inventory - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    C++ Inventory
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Preparation">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Preparation
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Source_Code">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Source Code
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Character">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Character
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Player_Controller">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             Player Controller
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Game_State">
+            <span class="tocnumber">
+             3.3
+            </span>
+            <span class="toctext">
+             Game State
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Inventory_system">
+            <span class="tocnumber">
+             3.4
+            </span>
+            <span class="toctext">
+             Inventory system
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-8">
+             <a href="#Interactable">
+              <span class="tocnumber">
+               3.4.1
+              </span>
+              <span class="toctext">
+               Interactable
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-9">
+             <a href="#Manual_Pickup">
+              <span class="tocnumber">
+               3.4.2
+              </span>
+              <span class="toctext">
+               Manual Pickup
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-10">
+             <a href="#Automatic_Pickup">
+              <span class="tocnumber">
+               3.4.3
+              </span>
+              <span class="toctext">
+               Automatic Pickup
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-11">
+             <a href="#Money_Automatic_Pickup">
+              <span class="tocnumber">
+               3.4.4
+              </span>
+              <span class="toctext">
+               Money Automatic Pickup
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-12">
+             <a href="#Inventory_Item">
+              <span class="tocnumber">
+               3.4.5
+              </span>
+              <span class="toctext">
+               Inventory Item
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-13">
+         <a href="#Input">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Input
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-14">
+         <a href="#Graphical_User_Interface">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Graphical User Interface
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-15">
+           <a href="#Interact_Text_Overlay">
+            <span class="tocnumber">
+             5.1
+            </span>
+            <span class="toctext">
+             Interact Text Overlay
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-16">
+           <a href="#Inventory_Slot_Tooltip">
+            <span class="tocnumber">
+             5.2
+            </span>
+            <span class="toctext">
+             Inventory Slot Tooltip
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-17">
+           <a href="#Inventory_Slot">
+            <span class="tocnumber">
+             5.3
+            </span>
+            <span class="toctext">
+             Inventory Slot
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-18">
+           <a href="#Inventory">
+            <span class="tocnumber">
+             5.4
+            </span>
+            <span class="toctext">
+             Inventory
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-19">
+         <a href="#Blueprints">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Blueprints
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-20">
+         <a href="#Assets.2C_Pickups_and_Database">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Assets, Pickups and Database
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-21">
+         <a href="#On_Your_Own.21">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           On Your Own!
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Original Author
+       </i>
+      </p>
+      <p>
+       This wiki page will show how to implement a simple inventory system with C++ instead of blueprints. The initial work is based on the video tutorial series
+       <a class="external text" href="https://www.youtube.com/watch?v=BQ6Eu3QM7Lg" rel="nofollow">
+        <b>
+         Crafting/Inventory System Tutorial in Unreal Engine
+        </b>
+       </a>
+       by Reuben Ward and
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Videos/PLZlv_N0_O1gYup-gvJtMsgJqnEB_dGiM4/index.html" rel="nofollow">
+        <b>
+         C++ 3rd Person Battery Collector Power Up Game
+        </b>
+       </a>
+       by Lauren Ridge.
+Most games have some sort of inventory system and one or more pickup mechanisms. This tutorial covers the implementation of one inventory and two pickup systems. One of the pickup systems is based on sight. If the player is looking at a pickupable item and if it's in range the player can press a button to pick up the item. The other system doesn't require sight or input. The player automatically picks up everything close to him.
+      </p>
+      <p>
+       Systems like these are used in many games like Borderlands, Diablo, Skyrim or Witcher 3.
+      </p>
+      <p>
+       The core features of this system are:
+      </p>
+      <ul>
+       <li>
+        Extendible Inventory
+        <ul>
+         <li>
+          Weight or slot limit (optional)
+         </li>
+        </ul>
+       </li>
+       <li>
+        Extendible Item class
+        <ul>
+         <li>
+          Item weight
+         </li>
+        </ul>
+       </li>
+       <li>
+        Extendible automatic Pickup class (AutoPickup)
+       </li>
+       <li>
+        Extendible Interactable class
+        <ul>
+         <li>
+          Extendible manual Pickup class (ManPickup)
+         </li>
+        </ul>
+       </li>
+       <li>
+        A database for every existing item
+       </li>
+       <li>
+        A simple GUI for keyboard and mouse
+       </li>
+      </ul>
+      <p>
+       It is not necessary to implement both the automatic and the manual
+       <b>
+        Pickup
+       </b>
+       class, each class works independently.
+This wiki article does not cover controls for gamepads, touchscreens and VR.
+      </p>
+      <p>
+       The following video shows the system in action.
+      </p>
+      <p>
+       &lt;youtube&gt;(
+       <a class="external free" href="https://youtu.be/hjhull5Rn5U" rel="nofollow">
+        https://youtu.be/hjhull5Rn5U
+       </a>
+       )
+      </p>
+      <h2>
+       <span class="mw-headline" id="Preparation">
+        Preparation
+       </span>
+      </h2>
+      <p>
+       The Third Person C++ Template is used. It should also work similarly with the First Person Template. The project name used in this tutorial is
+       <b>
+        Inventory
+       </b>
+       .
+The complete project is availabe on
+       <a class="external text" href="https://github.com/Heite92/UE4_InventorySystem" rel="nofollow">
+        GitHub
+       </a>
+       .
+      </p>
+      <h2>
+       <span class="mw-headline" id="Source_Code">
+        Source Code
+       </span>
+      </h2>
+      <p>
+       After creating the project there will be the following C++ classes:
+      </p>
+      <ul>
+       <li>
+        <b>
+         &lt;project_name&gt;
+        </b>
+       </li>
+       <li>
+        <b>
+         &lt;project_name&gt;
+        </b>
+        Character
+       </li>
+       <li>
+        <b>
+         &lt;project_name&gt;
+        </b>
+        GameMode
+       </li>
+      </ul>
+      <p>
+       The next step is to add the these C++ classes to the project. That needs to be done with the UE4 Editor.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="CppInventory newCppClass.png" class="thumbimage" height="368" src="../assets/c-inventory/0.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <ul>
+       <li>
+        <b>
+         &lt;project_name&gt;
+        </b>
+        Controller derived from APlayerController
+        <ul>
+         <li>
+          The player controller will store the inventory
+         </li>
+        </ul>
+       </li>
+       <li>
+        <b>
+         &lt;project_name&gt;
+        </b>
+        GameState derived from AGameStateBase
+        <ul>
+         <li>
+          the game state will hold a database for all existing items
+         </li>
+        </ul>
+       </li>
+       <li>
+        <b>
+         Interactable
+        </b>
+        derived from AActor
+        <ul>
+         <li>
+          Works as base class for every interactable actor
+         </li>
+        </ul>
+       </li>
+       <li>
+        <b>
+         InventoryItem
+        </b>
+        derived from FTableRowBase
+        <ul>
+         <li>
+          It represents picked up items in the player’s inventory
+         </li>
+         <li>
+          It is not possible to pick FTableRowBase as the parent class inside the editor. Pick something else and change it later.
+         </li>
+        </ul>
+       </li>
+       <li>
+        <b>
+         ManPickup
+        </b>
+        derived from AInteractable
+        <ul>
+         <li>
+          ManPickup is short for manual pickup. A different name can be used, but the source code has to be refactored. Same applies to the other classes
+         </li>
+        </ul>
+       </li>
+       <li>
+        <b>
+         AutoPickup
+        </b>
+        derived from AActor
+        <ul>
+         <li>
+          AutoPickup means automatic pickup
+         </li>
+        </ul>
+       </li>
+       <li>
+        <b>
+         MoneyAutoPickup
+        </b>
+        derived from AAutoPickup
+       </li>
+      </ul>
+      <p>
+       It is also possible to add a
+       <b>
+        MoneyManPickup
+       </b>
+       class which derives from
+       <b>
+        ManPickup
+       </b>
+       for large occurrences of money.
+      </p>
+      <p>
+       Here is a class diagram for the inventory system.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:824px;">
+        <img alt="CppInventory inventoryClassDiagram.png" class="thumbimage" height="732" src="../assets/c-inventory/1.png" width="822"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Character">
+        Character
+       </span>
+      </h3>
+      <p>
+       First edit
+       <b>
+        &lt;project_name&gt;
+       </b>
+       Character.h.
+      </p>
+      <p>
+       <i>
+        <b>
+         InventoryCharacter.h
+        </b>
+       </i>
+      </p>
+      <p>
+       The character class needs functionality from Engine.h, change
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"CoreMinimal.h"</span><span class="cp"></span>
+</pre>
+      </div>
+      <p>
+       to
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"Engine.h"</span><span class="cp"></span>
+</pre>
+      </div>
+      <p>
+       The next source code is only needed for
+       <b>
+        AutoPickups
+       </b>
+       , it is a collision sphere which is needed to check for overlapping
+       <b>
+        AutoPickups
+       </b>
+       . Add the code snippet to the character class, directly after the UCameraComponent.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/** Collection sphere */</span>
+<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">VisibleAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadOnly</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Camera</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">AllowPrivateAccess</span> <span class="o">=</span> <span class="s">"true"</span><span class="p">))</span>
+<span class="k">class</span> <span class="nc">USphereComponent</span><span class="o">*</span> <span class="n">CollectionSphere</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       The
+       <b>
+        Tick
+       </b>
+       method is required to collect any pickup. Place it in the public section of the class.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">virtual</span> <span class="kt">void</span> <span class="nf">Tick</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaTime</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       The following methods are needed to collect the pickups. Add the ones needed to the protected section of the character.
+      </p>
+      <p>
+       Needed to collect
+       <b>
+        AutoPickups
+       </b>
+       :
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/** Function to collect every AutoPickup in range. */</span>
+<span class="kt">void</span> <span class="nf">CollectAutoPickups</span><span class="p">();</span>
+</pre>
+      </div>
+      <p>
+       Needed to collect
+       <b>
+        ManPickups
+       </b>
+       :
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/** Function to check for the closest Interactable in sight and in range. */</span>
+<span class="kt">void</span> <span class="nf">CheckForInteractables</span><span class="p">();</span>
+</pre>
+      </div>
+      <p>
+       The next step is to edit the cpp file of the character:
+      </p>
+      <p>
+       <i>
+        <b>
+         InventoryCharacter.cpp
+        </b>
+       </i>
+      </p>
+      <p>
+       Add these includes:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"Interactable.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"AutoPickup.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"InventoryItem.h"</span><span class="cp"></span>
+</pre>
+      </div>
+      <p>
+       Also add an include for the player controller, in this project that is
+       <b>
+        InventoryController
+       </b>
+       .
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"InventoryController.h"</span><span class="cp"></span>
+</pre>
+      </div>
+      <p>
+       Add the initialization of the collection sphere to the constructor of the character. The sphere is used by the player to pickup
+       <b>
+        AutoPickups
+       </b>
+       . Every
+       <b>
+        AutoPickup
+       </b>
+       inside the sphere will be picked up automatically. Alter the
+       <b>
+        sphere radius
+       </b>
+       if needed.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Create the collection sphere</span>
+<span class="n">CollectionSphere</span> <span class="o">=</span> <span class="n">CreateDefaultSubobject</span><span class="o">&lt;</span><span class="n">USphereComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"CollectionSphere"</span><span class="p">));</span>
+<span class="n">CollectionSphere</span><span class="o">-&gt;</span><span class="n">SetupAttachment</span><span class="p">(</span><span class="n">RootComponent</span><span class="p">);</span>
+<span class="n">CollectionSphere</span><span class="o">-&gt;</span><span class="n">SetSphereRadius</span><span class="p">(</span><span class="mf">200.f</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       Add the methods. They can be placed anywhere in the cpp file after the includes. Beginning with the Tick method.
+      </p>
+      <p>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">AInventoryCharacter</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span><span class="kt">float</span> <span class="n">Deltatime</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span><span class="n">Deltatime</span><span class="p">);</span>
+
+	<span class="n">CollectAutoPickups</span><span class="p">();</span>
+	<span class="n">CheckForInteractables</span><span class="p">();</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       The next method is
+       <b>
+        CollectAutoPickups
+       </b>
+       , it can be skipped if the project does not use
+       <b>
+        AutoPickups
+       </b>
+       .
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">AInventoryCharacter</span><span class="o">::</span><span class="n">CollectAutoPickups</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">// Get all overlapping Actors and store them in an array</span>
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">AActor</span><span class="o">*&gt;</span> <span class="n">CollectedActors</span><span class="p">;</span>
+	<span class="n">CollectionSphere</span><span class="o">-&gt;</span><span class="n">GetOverlappingActors</span><span class="p">(</span><span class="n">CollectedActors</span><span class="p">);</span>
+
+	<span class="n">AInventoryController</span><span class="o">*</span> <span class="n">IController</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">AInventoryController</span><span class="o">&gt;</span><span class="p">(</span><span class="n">GetController</span><span class="p">());</span>
+
+	<span class="c1">// For each collected Actor</span>
+	<span class="k">for</span> <span class="p">(</span><span class="n">int32</span> <span class="n">iCollected</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">iCollected</span> <span class="o">&lt;</span> <span class="n">CollectedActors</span><span class="p">.</span><span class="n">Num</span><span class="p">();</span> <span class="o">++</span><span class="n">iCollected</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">// Cast the actor to AAutoPickup</span>
+		<span class="n">AAutoPickup</span><span class="o">*</span> <span class="k">const</span> <span class="n">TestPickup</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">AAutoPickup</span><span class="o">&gt;</span><span class="p">(</span><span class="n">CollectedActors</span><span class="p">[</span><span class="n">iCollected</span><span class="p">]);</span>
+		<span class="c1">// If the cast is successful and the pickup is valid and active </span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">TestPickup</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">TestPickup</span><span class="o">-&gt;</span><span class="n">IsPendingKill</span><span class="p">())</span>
+		<span class="p">{</span>
+			<span class="n">TestPickup</span><span class="o">-&gt;</span><span class="n">Collect</span><span class="p">(</span><span class="n">IController</span><span class="p">);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       The last method left ist
+       <b>
+        CheckForInteractables
+       </b>
+       , it is only needed to collect
+       <b>
+        ManPickups
+       </b>
+       . The
+       <b>
+        range
+       </b>
+       value defines how close a player has to be to pick up the item.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">AInventoryCharacter</span><span class="o">::</span><span class="n">CheckForInteractables</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">// Create a LineTrace to check for a hit</span>
+	<span class="n">FHitResult</span> <span class="n">HitResult</span><span class="p">;</span>
+
+	<span class="n">int32</span> <span class="n">Range</span> <span class="o">=</span> <span class="mi">500</span><span class="p">;</span>
+	<span class="n">FVector</span> <span class="n">StartTrace</span> <span class="o">=</span> <span class="n">FollowCamera</span><span class="o">-&gt;</span><span class="n">GetComponentLocation</span><span class="p">();</span>
+	<span class="n">FVector</span> <span class="n">EndTrace</span> <span class="o">=</span> <span class="p">(</span><span class="n">FollowCamera</span><span class="o">-&gt;</span><span class="n">GetForwardVector</span><span class="p">()</span> <span class="o">*</span> <span class="n">Range</span><span class="p">)</span> <span class="o">+</span> <span class="n">StartTrace</span><span class="p">;</span>
+
+	<span class="n">FCollisionQueryParams</span> <span class="n">QueryParams</span><span class="p">;</span>
+	<span class="n">QueryParams</span><span class="p">.</span><span class="n">AddIgnoredActor</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+
+	<span class="n">AInventoryController</span><span class="o">*</span> <span class="n">IController</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">AInventoryController</span><span class="o">&gt;</span><span class="p">(</span><span class="n">GetController</span><span class="p">());</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">IController</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">// Check if something is hit</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">GetWorld</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">LineTraceSingleByChannel</span><span class="p">(</span><span class="n">HitResult</span><span class="p">,</span> <span class="n">StartTrace</span><span class="p">,</span> <span class="n">EndTrace</span><span class="p">,</span> <span class="n">ECC_Visibility</span><span class="p">,</span> <span class="n">QueryParams</span><span class="p">))</span>
+		<span class="p">{</span>
+			<span class="c1">// Cast the actor to AInteractable</span>
+			<span class="n">AInteractable</span><span class="o">*</span> <span class="n">Interactable</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">AInteractable</span><span class="o">&gt;</span><span class="p">(</span><span class="n">HitResult</span><span class="p">.</span><span class="n">GetActor</span><span class="p">());</span>
+			<span class="c1">// If the cast is successful</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">Interactable</span><span class="p">)</span>
+			<span class="p">{</span>
+				<span class="n">IController</span><span class="o">-&gt;</span><span class="n">CurrentInteractable</span> <span class="o">=</span> <span class="n">Interactable</span><span class="p">;</span>
+				<span class="k">return</span><span class="p">;</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+
+		<span class="n">IController</span><span class="o">-&gt;</span><span class="n">CurrentInteractable</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Player_Controller">
+        Player Controller
+       </span>
+      </h3>
+      <p>
+       The player controller will store the player’s inventory and money.
+      </p>
+      <p>
+       <i>
+        <b>
+         InventoryController.h
+        </b>
+       </i>
+      </p>
+      <p>
+       First include the
+       <b>
+        Interactable
+       </b>
+       and
+       <b>
+        InventoryItem
+       </b>
+       classes.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"Interactable.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"InventoryItem.h"</span><span class="cp"></span>
+</pre>
+      </div>
+      <p>
+       The player controller needs some methods and properties. These should be pretty self-explanatory.
+       <b>
+        InventorySlotLimit
+       </b>
+       ,
+       <b>
+        InventoryWeightLimit
+       </b>
+       ,
+       <b>
+        GetInventoryWeight
+       </b>
+       and
+       <b>
+        Money
+       </b>
+       aren't needed for the basic inventory system. Leave them for the additional functionality or remove them from the controller.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">public</span><span class="o">:</span>
+	<span class="n">AInventoryController</span><span class="p">();</span>
+
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintImplementableEvent</span><span class="p">)</span>
+	<span class="kt">void</span> <span class="n">ReloadInventory</span><span class="p">();</span>
+
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Utils"</span><span class="p">)</span>
+	<span class="n">int32</span> <span class="n">GetInventoryWeight</span><span class="p">();</span>
+
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Utils"</span><span class="p">)</span>
+	<span class="kt">bool</span> <span class="n">AddItemToInventoryByID</span><span class="p">(</span><span class="n">FName</span> <span class="n">ID</span><span class="p">);</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">VisibleAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">)</span>
+	<span class="k">class</span> <span class="nc">AInteractable</span><span class="o">*</span> <span class="n">CurrentInteractable</span><span class="p">;</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">VisibleAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">)</span>
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FInventoryItem</span><span class="o">&gt;</span> <span class="n">Inventory</span><span class="p">;</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">VisibleAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">)</span>
+	<span class="n">int32</span> <span class="n">Money</span><span class="p">;</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">)</span>
+	<span class="n">int32</span> <span class="n">InventorySlotLimit</span><span class="p">;</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">)</span>
+	<span class="n">int32</span> <span class="n">InventoryWeightLimit</span><span class="p">;</span>
+
+<span class="k">protected</span><span class="o">:</span>
+	<span class="kt">void</span> <span class="n">Interact</span><span class="p">();</span>
+
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">SetupInputComponent</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       <i>
+        <b>
+         InventoryController.cpp
+        </b>
+       </i>
+      </p>
+      <p>
+       Include the created game state and character. Do not forget to refactor the filenames to the specific project name.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"InventoryGameState.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"InventoryCharacter.h"</span><span class="cp"></span>
+</pre>
+      </div>
+      <p>
+       Also add the definitions of the methods and the constructor to the cpp file.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">AInventoryController</span><span class="o">::</span><span class="n">AInventoryController</span><span class="p">()</span> 
+<span class="p">{</span>
+	<span class="n">InventorySlotLimit</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>
+	<span class="n">InventoryWeightLimit</span> <span class="o">=</span> <span class="mi">500</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">int32</span> <span class="n">AInventoryController</span><span class="o">::</span><span class="n">GetInventoryWeight</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">int32</span> <span class="n">Weight</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="k">for</span> <span class="p">(</span><span class="k">auto</span><span class="o">&amp;</span> <span class="nl">Item</span> <span class="p">:</span> <span class="n">Inventory</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">Weight</span> <span class="o">+=</span> <span class="n">Item</span><span class="p">.</span><span class="n">Weight</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="n">Weight</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">AInventoryController</span><span class="o">::</span><span class="n">AddItemToInventoryByID</span><span class="p">(</span><span class="n">FName</span> <span class="n">ID</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">AInventoryGameState</span><span class="o">*</span> <span class="n">GameState</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">AInventoryGameState</span><span class="o">&gt;</span><span class="p">(</span><span class="n">GetWorld</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetGameState</span><span class="p">());</span>
+	<span class="n">UDataTable</span><span class="o">*</span> <span class="n">ItemTable</span> <span class="o">=</span> <span class="n">GameState</span><span class="o">-&gt;</span><span class="n">GetItemDB</span><span class="p">();</span>
+	<span class="n">FInventoryItem</span><span class="o">*</span> <span class="n">ItemToAdd</span> <span class="o">=</span> <span class="n">ItemTable</span><span class="o">-&gt;</span><span class="n">FindRow</span><span class="o">&lt;</span><span class="n">FInventoryItem</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ID</span><span class="p">,</span> <span class="s">""</span><span class="p">);</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">ItemToAdd</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">// If a Slot- or WeightLimit are not needed remove them in this line</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">Inventory</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">InventorySlotLimit</span> <span class="o">&amp;&amp;</span> <span class="n">GetInventoryWeight</span><span class="p">()</span> <span class="o">+</span> <span class="n">ItemToAdd</span><span class="o">-&gt;</span><span class="n">Weight</span> <span class="o">&lt;=</span> <span class="n">InventoryWeightLimit</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">Inventory</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="o">*</span><span class="n">ItemToAdd</span><span class="p">);</span>
+			<span class="n">ReloadInventory</span><span class="p">();</span>
+			<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AInventoryController</span><span class="o">::</span><span class="n">SetupInputComponent</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">SetupInputComponent</span><span class="p">();</span>
+
+	<span class="n">InputComponent</span><span class="o">-&gt;</span><span class="n">BindAction</span><span class="p">(</span><span class="s">"Interact"</span><span class="p">,</span> <span class="n">IE_Pressed</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">AInventoryController</span><span class="o">::</span><span class="n">Interact</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AInventoryController</span><span class="o">::</span><span class="n">Interact</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">CurrentInteractable</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">CurrentInteractable</span><span class="o">-&gt;</span><span class="n">Interact</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Game_State">
+        Game State
+       </span>
+      </h3>
+      <p>
+       The game state will hold the database for all existing items.
+      </p>
+      <p>
+       <i>
+        <b>
+         InventoryGameState.h
+        </b>
+       </i>
+      </p>
+      <p>
+       CoreMinimal.h does not cover everything needed by the game state class, change
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"CoreMinimal.h"</span><span class="cp"></span>
+</pre>
+      </div>
+      <p>
+       to
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"Engine.h"</span><span class="cp"></span>
+</pre>
+      </div>
+      <p>
+       The next step is to add the
+       <b>
+        ItemDB
+       </b>
+       as a property to the game state.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">public</span><span class="o">:</span>
+	<span class="n">AInventoryGameState</span><span class="p">();</span>
+
+	<span class="n">UDataTable</span><span class="o">*</span> <span class="nf">GetItemDB</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+<span class="k">protected</span><span class="o">:</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditDefaultsOnly</span><span class="p">)</span>
+	<span class="k">class</span> <span class="nc">UDataTable</span><span class="o">*</span> <span class="n">ItemDB</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       <i>
+        <b>
+         InventoryGameState.cpp
+        </b>
+       </i>
+      </p>
+      <p>
+       The constructor loads the database and the get method returns it. The
+       <b>
+        ItemDB
+       </b>
+       can be created after the source code is compiled.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">AInventoryGameState</span><span class="o">::</span><span class="n">AInventoryGameState</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">static</span> <span class="n">ConstructorHelpers</span><span class="o">::</span><span class="n">FObjectFinder</span><span class="o">&lt;</span><span class="n">UDataTable</span><span class="o">&gt;</span> <span class="n">BP_ItemDB</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"DataTable'/Game/Data/ItemDB.ItemDB'"</span><span class="p">));</span>
+	<span class="n">ItemDB</span> <span class="o">=</span> <span class="n">BP_ItemDB</span><span class="p">.</span><span class="n">Object</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">UDataTable</span><span class="o">*</span> <span class="n">AInventoryGameState</span><span class="o">::</span><span class="n">GetItemDB</span><span class="p">()</span> <span class="k">const</span> 
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">ItemDB</span><span class="p">;</span> 
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Inventory_system">
+        Inventory system
+       </span>
+      </h3>
+      <p>
+       Most of the implementation of the inventory system can be copied. AInventoryController has to be changed at a few points to A
+       <b>
+        &lt;project_name&gt;
+       </b>
+       controller but that is it. Every parameter is exposed to blueprints and even the
+       <b>
+        Collect
+       </b>
+       and
+       <b>
+        Interact
+       </b>
+       methods can be overwritten by blueprints if wanted. This enables designers without C++ knowledge to implement functionality.
+      </p>
+      <h4>
+       <span class="mw-headline" id="Interactable">
+        Interactable
+       </span>
+      </h4>
+      <p>
+       The Interactable class serves as base class for every interactable actor in the game. In this tutorial the only interactable actors are manual pickup items. But it can also be used as base class for interactable chests, Non-player characters(NPCs) and much more.
+      </p>
+      <p>
+       <i>
+        <b>
+         Interactable.h
+        </b>
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"CoreMinimal.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"GameFramework/Actor.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Interactable.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">INVENTORY_API</span> <span class="nl">AInteractable</span> <span class="p">:</span> <span class="k">public</span> <span class="n">AActor</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">AInteractable</span><span class="p">();</span>
+
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintNativeEvent</span><span class="p">)</span>
+	<span class="kt">void</span> <span class="n">Interact</span><span class="p">(</span><span class="n">APlayerController</span><span class="o">*</span> <span class="n">Controller</span><span class="p">);</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">Interact_Implementation</span><span class="p">(</span><span class="n">APlayerController</span><span class="o">*</span> <span class="n">Controller</span><span class="p">);</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditDefaultsOnly</span><span class="p">)</span>
+	<span class="n">FString</span> <span class="n">Name</span><span class="p">;</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditDefaultsOnly</span><span class="p">)</span>
+	<span class="n">FString</span> <span class="n">Action</span><span class="p">;</span>
+
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Pickup"</span><span class="p">)</span>
+	<span class="n">FString</span> <span class="n">GetInteractText</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <i>
+        <b>
+         Interactable.cpp
+        </b>
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"Interactable.h"</span><span class="cp"></span>
+
+<span class="n">AInteractable</span><span class="o">::</span><span class="n">AInteractable</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Name</span> <span class="o">=</span> <span class="s">"Interactable"</span><span class="p">;</span>
+	<span class="n">Action</span> <span class="o">=</span> <span class="s">"interact"</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AInteractable</span><span class="o">::</span><span class="n">Interact_Implementation</span><span class="p">(</span><span class="n">APlayerController</span><span class="o">*</span> <span class="n">Controller</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">FString</span> <span class="n">AInteractable</span><span class="o">::</span><span class="n">GetInteractText</span><span class="p">()</span> <span class="k">const</span> 
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">FString</span><span class="o">::</span><span class="n">Printf</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"%s: Press F to %s"</span><span class="p">),</span> <span class="o">*</span><span class="n">Name</span><span class="p">,</span> <span class="o">*</span><span class="n">Action</span><span class="p">);</span> 
+<span class="p">}</span>
+</pre>
+      </div>
+      <h4>
+       <span class="mw-headline" id="Manual_Pickup">
+        Manual Pickup
+       </span>
+      </h4>
+      <p>
+       The ManPickup class uses
+       <b>
+        Interactable
+       </b>
+       as base class. It is used to implement items which can be picked up manually by the player. The player has to be in pickup range, has to look directly at the item and he has to press a specific button to pick up the item. The button will be defined in the input section of this tutorial.
+      </p>
+      <p>
+       <i>
+        <b>
+         ManPickup.h
+        </b>
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"CoreMinimal.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Interactable.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"ManPickup.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">INVENTORY_API</span> <span class="nl">AManPickup</span> <span class="p">:</span> <span class="k">public</span> <span class="n">AInteractable</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+	
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">AManPickup</span><span class="p">();</span>
+	
+	<span class="kt">void</span> <span class="nf">Interact_Implementation</span><span class="p">(</span><span class="n">APlayerController</span><span class="o">*</span> <span class="n">Controller</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+
+<span class="k">protected</span><span class="o">:</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">)</span>
+	<span class="n">UStaticMeshComponent</span><span class="o">*</span> <span class="n">PickupMesh</span><span class="p">;</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">)</span>
+	<span class="n">FName</span> <span class="n">ItemID</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <i>
+        <b>
+         ManPickup.cpp
+        </b>
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"ManPickup.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"InventoryController.h"</span><span class="cp"></span>
+
+<span class="n">AManPickup</span><span class="o">::</span><span class="n">AManPickup</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">PickupMesh</span> <span class="o">=</span> <span class="n">CreateDefaultSubobject</span><span class="o">&lt;</span><span class="n">UStaticMeshComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"PickupMesh"</span><span class="p">);</span>
+	<span class="n">RootComponent</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">USceneComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="n">PickupMesh</span><span class="p">);</span>
+
+	<span class="n">ItemID</span> <span class="o">=</span> <span class="n">FName</span><span class="p">(</span><span class="s">"No ID"</span><span class="p">);</span>
+
+	<span class="n">Super</span><span class="o">::</span><span class="n">Name</span> <span class="o">=</span> <span class="s">"Item"</span><span class="p">;</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">Action</span> <span class="o">=</span> <span class="s">"pickup"</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AManPickup</span><span class="o">::</span><span class="n">Interact_Implementation</span><span class="p">(</span><span class="n">APlayerController</span><span class="o">*</span> <span class="n">Controller</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">Interact_Implementation</span><span class="p">(</span><span class="n">Controller</span><span class="p">);</span>
+
+	<span class="n">AInventoryController</span><span class="o">*</span> <span class="n">IController</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">AInventoryController</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Controller</span><span class="p">);</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">IController</span><span class="o">-&gt;</span><span class="n">AddItemToInventoryByID</span><span class="p">(</span><span class="n">ItemID</span><span class="p">))</span>
+		<span class="n">Destroy</span><span class="p">();</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h4>
+       <span class="mw-headline" id="Automatic_Pickup">
+        Automatic Pickup
+       </span>
+      </h4>
+      <p>
+       This class is used to implement items which are picked up automatically when the player is in pickup range to the actors.
+      </p>
+      <p>
+       <i>
+        <b>
+         AutoPickup.h
+        </b>
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"CoreMinimal.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"GameFramework/Actor.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"AutoPickup.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">INVENTORY_API</span> <span class="nl">AAutoPickup</span> <span class="p">:</span> <span class="k">public</span> <span class="n">AActor</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+
+<span class="k">public</span><span class="o">:</span>
+
+	<span class="n">AAutoPickup</span><span class="p">();</span>
+
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintNativeEvent</span><span class="p">)</span>
+	<span class="kt">void</span> <span class="n">Collect</span><span class="p">(</span><span class="n">APlayerController</span><span class="o">*</span> <span class="n">Controller</span><span class="p">);</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">Collect_Implementation</span><span class="p">(</span><span class="n">APlayerController</span><span class="o">*</span> <span class="n">Controller</span><span class="p">);</span>
+
+	<span class="n">FName</span> <span class="nf">GetItemID</span><span class="p">();</span>
+
+<span class="k">protected</span><span class="o">:</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">)</span>
+	<span class="n">UStaticMeshComponent</span><span class="o">*</span> <span class="n">PickupMesh</span><span class="p">;</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">)</span>
+	<span class="n">FName</span> <span class="n">ItemID</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <i>
+        <b>
+         AutoPickup.cpp
+        </b>
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"AutoPickup.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"InventoryController.h"</span><span class="cp"></span>
+
+<span class="n">AAutoPickup</span><span class="o">::</span><span class="n">AAutoPickup</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">PickupMesh</span> <span class="o">=</span> <span class="n">CreateDefaultSubobject</span><span class="o">&lt;</span><span class="n">UStaticMeshComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"PickupMesh"</span><span class="p">);</span>
+	<span class="n">RootComponent</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">USceneComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="n">PickupMesh</span><span class="p">);</span>
+
+	<span class="n">ItemID</span> <span class="o">=</span> <span class="n">FName</span><span class="p">(</span><span class="s">"No ID"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AAutoPickup</span><span class="o">::</span><span class="n">Collect_Implementation</span><span class="p">(</span><span class="n">APlayerController</span><span class="o">*</span> <span class="n">Controller</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">AInventoryController</span><span class="o">*</span> <span class="n">IController</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">AInventoryController</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Controller</span><span class="p">);</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">IController</span><span class="o">-&gt;</span><span class="n">AddItemToInventoryByID</span><span class="p">(</span><span class="n">ItemID</span><span class="p">))</span>
+		<span class="n">Destroy</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">FName</span> <span class="n">AAutoPickup</span><span class="o">::</span><span class="n">GetItemID</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">ItemID</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h4>
+       <span class="mw-headline" id="Money_Automatic_Pickup">
+        Money Automatic Pickup
+       </span>
+      </h4>
+      <p>
+       The class MoneyAutoPickup is a special form of
+       <b>
+        AutoPickup
+       </b>
+       . It overrides the
+       <b>
+        Collect
+       </b>
+       method and it also adds the attribute
+       <b>
+        Value
+       </b>
+       . The player’s money is not stored in the inventory. So instead of calling
+       <b>
+        AddItemToInventoryByID
+       </b>
+       , which is done by AutoPickups, the money will be directly added to the money attribute.
+      </p>
+      <p>
+       <i>
+        <b>
+         MoneyAutoPickup.h
+        </b>
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"CoreMinimal.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"AutoPickup.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"MoneyAutoPickup.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">INVENTORY_API</span> <span class="nl">AMoneyAutoPickup</span> <span class="p">:</span> <span class="k">public</span> <span class="n">AAutoPickup</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+	
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">AMoneyAutoPickup</span><span class="p">();</span>
+	
+	<span class="kt">void</span> <span class="nf">Collect_Implementation</span><span class="p">(</span><span class="n">APlayerController</span><span class="o">*</span> <span class="n">Controller</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+
+<span class="k">protected</span><span class="o">:</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">)</span>
+	<span class="n">int32</span> <span class="n">Value</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <i>
+        <b>
+         MoneyAutoPickup.cpp
+        </b>
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"MoneyAutoPickup.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"InventoryController.h"</span><span class="cp"></span>
+
+<span class="n">AMoneyAutoPickup</span><span class="o">::</span><span class="n">AMoneyAutoPickup</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">ItemID</span> <span class="o">=</span> <span class="n">FName</span><span class="p">(</span><span class="s">"money"</span><span class="p">);</span>
+	<span class="n">Value</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AMoneyAutoPickup</span><span class="o">::</span><span class="n">Collect_Implementation</span><span class="p">(</span><span class="n">APlayerController</span><span class="o">*</span> <span class="n">Controller</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">AInventoryController</span><span class="o">*</span> <span class="n">IController</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">AInventoryController</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Controller</span><span class="p">);</span>
+	<span class="n">IController</span><span class="o">-&gt;</span><span class="n">Money</span> <span class="o">+=</span> <span class="n">Value</span><span class="p">;</span>
+	<span class="n">Destroy</span><span class="p">();</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h4>
+       <span class="mw-headline" id="Inventory_Item">
+        Inventory Item
+       </span>
+      </h4>
+      <p>
+       This class represents the picked up items in the player’s inventory.
+Depending on the needs a few adjustments can be done. If the
+       <b>
+        weight
+       </b>
+       attribute is not needed it can ne removed from the inventory item. Also if a rarity system (as seen in World of Warcraft, Borderlands, Diablo...) is wanted a property can be added for that.
+      </p>
+      <p>
+       <i>
+        <b>
+         InventoryItem.h
+        </b>
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"CoreMinimal.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"GameFramework/Actor.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Engine/DataTable.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"InventoryItem.generated.h"</span><span class="cp"></span>
+
+<span class="n">USTRUCT</span><span class="p">(</span><span class="n">BlueprintType</span><span class="p">)</span>
+<span class="k">struct</span> <span class="nl">FInventoryItem</span> <span class="p">:</span> <span class="k">public</span> <span class="n">FTableRowBase</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">FInventoryItem</span><span class="p">();</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">)</span>
+	<span class="n">FName</span> <span class="n">ItemID</span><span class="p">;</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">)</span>
+	<span class="n">FText</span> <span class="n">Name</span><span class="p">;</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">)</span>
+	<span class="n">int32</span> <span class="n">Weight</span><span class="p">;</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">)</span>
+	<span class="n">int32</span> <span class="n">Value</span><span class="p">;</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">)</span>
+	<span class="n">UTexture2D</span><span class="o">*</span> <span class="n">Thumbnail</span><span class="p">;</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">)</span>
+	<span class="n">FText</span> <span class="n">Description</span><span class="p">;</span>
+
+	<span class="kt">bool</span> <span class="k">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span> <span class="n">FInventoryItem</span><span class="o">&amp;</span> <span class="n">OtherItem</span><span class="p">)</span> <span class="k">const</span>
+	<span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">ItemID</span> <span class="o">==</span> <span class="n">OtherItem</span><span class="p">.</span><span class="n">ItemID</span><span class="p">)</span>
+			<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <i>
+        <b>
+         InventoryItem.cpp
+        </b>
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"InventoryItem.h"</span><span class="cp"></span>
+
+<span class="n">FInventoryItem</span><span class="o">::</span><span class="n">FInventoryItem</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">this</span><span class="o">-&gt;</span><span class="n">Name</span> <span class="o">=</span> <span class="n">FText</span><span class="o">::</span><span class="n">FromString</span><span class="p">(</span><span class="s">"No Name"</span><span class="p">);</span>
+	<span class="k">this</span><span class="o">-&gt;</span><span class="n">Weight</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+	<span class="k">this</span><span class="o">-&gt;</span><span class="n">Value</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+	<span class="k">this</span><span class="o">-&gt;</span><span class="n">Description</span> <span class="o">=</span> <span class="n">FText</span><span class="o">::</span><span class="n">FromString</span><span class="p">(</span><span class="s">"No Description"</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       At this point the project should be compiled. Otherwise it will not be possible to complete all left steps.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Input">
+        Input
+       </span>
+      </h2>
+      <p>
+       A few additional keybindings are needed:
+      </p>
+      <ul>
+       <li>
+        Toggle the inventory
+       </li>
+       <li>
+        Interact with interactables
+       </li>
+       <li>
+        Delete items from the inventory
+       </li>
+      </ul>
+      <p>
+       Open the project settings with
+       <b>
+        Edit -&gt; Project Settings...
+       </b>
+       and navigate to
+       <b>
+        Engine -&gt; Input
+       </b>
+       . There add mappings for
+       <b>
+        Interact
+       </b>
+       ,
+       <b>
+        OpenInventory
+       </b>
+       and
+       <b>
+        Remove
+       </b>
+       as shown in the picture below.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="CppInventory input.png" class="thumbimage" height="590" src="../assets/c-inventory/2.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       Also it could be useful to add an additional mapping for
+       <b>
+        RemoveMouseButton (Right Mouse Button)
+       </b>
+       instead of defining the binding inside a blueprint.
+      </p>
+      <p>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Graphical_User_Interface">
+        Graphical User Interface
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Interact_Text_Overlay">
+        Interact Text Overlay
+       </span>
+      </h3>
+      <p>
+       Create the folder
+       <b>
+        UI
+       </b>
+       inside
+       <b>
+        Content
+       </b>
+       and create a new
+       <b>
+        User Interface -&gt; Widget Blueprint
+       </b>
+       . Name it
+       <b>
+        WB_Ingame
+       </b>
+       . The widget is required to show the player the interact text for the current
+       <b>
+        Interactable
+       </b>
+       , something like
+       <b>
+        Teapot: Press f to pickup
+       </b>
+       for a receivable teapot.
+First switch from
+       <b>
+        Designer
+       </b>
+       to
+       <b>
+        Graph
+       </b>
+       and create the function
+       <b>
+        GetInteractText
+       </b>
+       .
+      </p>
+      <p>
+       GetInteractText
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="CppInventory ingameGetInteractText.png" class="thumbimage" height="495" src="../assets/c-inventory/3.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       Switch back to the designer and add a static text field to the middle of the screen. Set the text alignment to center and bind the text to
+       <b>
+        GetInteractText
+       </b>
+       .
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:925px;">
+        <img alt="CppInventory ingameWB.png" class="thumbimage" height="430" src="../assets/c-inventory/4.png" width="923"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       Open the level blueprint as seen in the screenshot below.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="CppInventory openLevelBP.png" class="thumbimage" height="528" src="../assets/c-inventory/5.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       Add the following to the level blueprint to show the interact text on the screen.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:182px;">
+        <div class="thumbcaption">
+        </div>
+       </div>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Inventory_Slot_Tooltip">
+        Inventory Slot Tooltip
+       </span>
+      </h3>
+      <p>
+       Create the blueprint
+       <b>
+        C_InventorySlot_Tooltip
+       </b>
+       in the
+       <b>
+        UI
+       </b>
+       folder.
+First add a variable to store an inventory item.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:290px;">
+        <img alt="CppInventory itemVariable.png" class="thumbimage" height="316" src="../assets/c-inventory/6.png" width="288"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       The next step is to design the tooltip.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="CppInventory tooltipDesigner.png" class="thumbimage" height="498" src="../assets/c-inventory/7.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       Bind all
+       <b>
+        FText
+       </b>
+       attributes of the item to the specific fields. To bind other attributes like
+       <b>
+        int32
+       </b>
+       it is required to create functions. This is the case for
+       <b>
+        value
+       </b>
+       and
+       <b>
+        weight
+       </b>
+       , which are both
+       <b>
+        int32
+       </b>
+       .
+      </p>
+      <p>
+       <i>
+        <b>
+         GetValueText
+        </b>
+       </i>
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:904px;">
+        <img alt="CppInventory tooltipGetValueText.png" class="thumbimage" height="542" src="../assets/c-inventory/8.png" width="902"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <i>
+        <b>
+         GetWeightText
+        </b>
+       </i>
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:904px;">
+        <img alt="CppInventory tooltipGetWeightText.png" class="thumbimage" height="543" src="../assets/c-inventory/9.png" width="902"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       The final step is to add the binding to the value and weight field.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Inventory_Slot">
+        Inventory Slot
+       </span>
+      </h3>
+      <p>
+       Create the blueprint
+       <b>
+        C_InventorySlot
+       </b>
+       in the
+       <b>
+        UI
+       </b>
+       folder.
+The same variable as used in the tooltip is necessary.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:290px;">
+        <img alt="CppInventory itemVariable.png" class="thumbimage" height="316" src="../assets/c-inventory/10.png" width="288"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       Design the inventory slot and bind the attributes of the inventory item. The design in this tutorial is a minimalistic design by showing only the thumbnail. The thumbnail is stored inside a size box to make sure every thumbnail has the same size.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:690px;">
+        <img alt="CppInventory inventoryslotThumbnail.png" class="thumbimage" height="484" src="../assets/c-inventory/11.png" width="688"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+      </p>
+      <p>
+       Add the function
+       <i>
+        <b>
+         GetToolTipWidget
+        </b>
+       </i>
+       .
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="CppInventory inventoryslotGetTooltip.png" class="thumbimage" height="513" src="../assets/c-inventory/12.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       Also the function has to be bound to the canvas panel.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:691px;">
+        <img alt="CppInventory inventoryslotCanvas.png" class="thumbimage" height="487" src="../assets/c-inventory/13.png" width="689"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       Add the
+       <i>
+        <b>
+         RemoveItemFromInventory
+        </b>
+       </i>
+       function.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="CppInventory inventoryslotRemoveItemFromInventory.png" class="thumbimage" height="390" src="../assets/c-inventory/14.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       Override the function
+       <b>
+        OnMouseButtonDown
+       </b>
+       with the following blueprint.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="CppInventory inventoryslotOnMouseButtonDown.png" class="thumbimage" height="514" src="../assets/c-inventory/15.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Inventory">
+        Inventory
+       </span>
+      </h3>
+      <p>
+       Create the widget blueprint
+       <b>
+        WB_Inventory
+       </b>
+       .
+      </p>
+      <p>
+       Design the inventory. If it needs to be scrollable the inventory slot container has to be wrapped by a
+       <b>
+        ScrollBox
+       </b>
+       .
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="CppInventory inventoryDesigner.png" class="thumbimage" height="755" src="../assets/c-inventory/16.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       Add the
+       <i>
+        <b>
+         LoadInventoryItems
+        </b>
+       </i>
+       function.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="CppInventory inventoryLoadInventoryItems.png" class="thumbimage" height="331" src="../assets/c-inventory/17.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <i>
+        <b>
+         GetMoneyText
+        </b>
+       </i>
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:909px;">
+        <img alt="CppInventory inventoryGetMoneyText.png" class="thumbimage" height="454" src="../assets/c-inventory/18.png" width="907"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <i>
+        <b>
+         GetWeightText
+        </b>
+       </i>
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:909px;">
+        <img alt="CppInventory inventoryGetWeightText.png" class="thumbimage" height="451" src="../assets/c-inventory/19.png" width="907"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <i>
+        <b>
+         GetWeightLimitText
+        </b>
+       </i>
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:908px;">
+        <img alt="CppInventory inventoryGetWeightLimitText.png" class="thumbimage" height="452" src="../assets/c-inventory/20.png" width="906"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       Assign the bindings in the designer to the
+       <b>
+        weight
+       </b>
+       ,
+       <b>
+        weight limit
+       </b>
+       and
+       <b>
+        money field
+       </b>
+       .
+      </p>
+      <p>
+       The last step to finish the inventory is to add functionality to the event graph. On construct the system shows the mouse cursor and sets the input mode to game and UI. On destruct the mouse cursor is hidden and the input mode is set to game only. Also the onclick event on the close button removes the widget from the view.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="CppInventory inventoryEventGraph.png" class="thumbimage" height="757" src="../assets/c-inventory/21.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Blueprints">
+        Blueprints
+       </span>
+      </h2>
+      <p>
+       First create the folder
+       <b>
+        Content-&gt;Blueprints
+       </b>
+       to hold the blueprints. Next create blueprints based on the player controller and the game mode. Go to the C++ classes and do a right click on
+       <b>
+        &lt;project_name&gt;
+       </b>
+       Controller. Select
+       <b>
+        Create Blueprint class based on...
+       </b>
+       and create BP_
+       <b>
+        &lt;project_name&gt;
+       </b>
+       Controller in the blueprints folder. Now do the same for
+       <b>
+        &lt;project_name&gt;
+       </b>
+       GameMode.
+The next step is to go to the project settings. Then go to
+       <b>
+        Project-&gt;Maps&amp;Modes
+       </b>
+       and select the BP_
+       <b>
+        &lt;project_name&gt;
+       </b>
+       GameMode. Also set the following:
+      </p>
+      <ul>
+       <li>
+        Default Pawn Class =
+        <b>
+         &lt;project_name&gt;
+        </b>
+        Character
+       </li>
+       <li>
+        Player Controller Class =  BP_
+        <b>
+         &lt;project_name&gt;
+        </b>
+        Controller
+       </li>
+       <li>
+        Game State Class =
+        <b>
+         &lt;project_name&gt;
+        </b>
+        GameState
+       </li>
+      </ul>
+      <p>
+       These steps are necessary to tell the game to load the custom game mode, character, player ontroller and game state.
+Now open  BP_
+       <b>
+        &lt;project_name&gt;
+       </b>
+       Controller in the blueprint editor. First add this variable to the blueprint to store the inventory widget.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:277px;">
+        <img alt="CppInventory controllerInventoryWidget.png" class="thumbimage" height="321" src="../assets/c-inventory/22.png" width="275"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       Then add these blueprints to the event graph:
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="CppInventory controllerToggleInventory.png" class="thumbimage" height="292" src="../assets/c-inventory/23.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:883px;">
+        <img alt="CppInventory controllerEventGraph.png" class="thumbimage" height="523" src="../assets/c-inventory/24.png" width="881"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Assets.2C_Pickups_and_Database">
+        Assets, Pickups and Database
+       </span>
+      </h2>
+      <p>
+       Create the folder
+       <b>
+        Assets
+       </b>
+       inside the
+       <b>
+        Content
+       </b>
+       folder. Then create the folders
+       <b>
+        Materials
+       </b>
+       ,
+       <b>
+        Models
+       </b>
+       and
+       <b>
+        Thumbnails
+       </b>
+       inside it. Place everything need for the pickups in these folders.
+      </p>
+      <p>
+      </p>
+      <p>
+       The next step is to create the actual pickups. Create the folder
+       <b>
+        Content-&gt;Blueprints-&gt;Pickups
+       </b>
+       . Navigate to the C++ classes and do a right click on
+       <b>
+        AutoPickup
+       </b>
+       ,
+       <b>
+        ManPickup
+       </b>
+       or
+       <b>
+        MoneyAutoPickup
+       </b>
+       and select
+       <b>
+        Create Blueprint class based on...
+       </b>
+       pick the
+       <b>
+        Pickups
+       </b>
+       folder as destination. Assign the static mesh, the itemID, the value (MoneyAutoPickup only), the name and the action (ManPickup only) in the blueprint.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="CppInventory teapotBP.png" class="thumbimage" height="853" src="../assets/c-inventory/25.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       At this point it is already possible to place the pickups in the map and the player can collect them. But the items will not be added to the inventory because they do not refer to items in the item database.
+      </p>
+      <p>
+       Create the folder
+       <b>
+        Data
+       </b>
+       inside Content and create a new
+       <b>
+        Miscellaeneous-&gt;Data Table
+       </b>
+       . Select
+       <b>
+        Inventory Item
+       </b>
+       as pick structure and name it
+       <b>
+        ItemDB
+       </b>
+       .
+      </p>
+      <p>
+      </p>
+      <p>
+       Add items to the database. The row name of every entry should be the same as the
+       <b>
+        ItemID
+       </b>
+       , the
+       <b>
+        ItemID
+       </b>
+       is the same assigned in the pickup blueprints. The next picture shows a sample database with three entries.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:882px;">
+        <img alt="CppInventory itemDB.png" class="thumbimage" height="573" src="../assets/c-inventory/26.png" width="880"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       Finally the items are added to the player’s inventory.
+      </p>
+      <h2>
+       <span class="mw-headline" id="On_Your_Own.21">
+        On Your Own!
+       </span>
+      </h2>
+      <p>
+       There are many ways to improve and extend this system. These are a few ideas.
+      </p>
+      <ul>
+       <li>
+        Implement a PickupComponent for the shared functionality between Auto- and ManPickup
+       </li>
+       <li>
+        Add support for stackable items
+        <ul>
+         <li>
+          The Player also needs to be able to separate and combine stacks
+         </li>
+        </ul>
+       </li>
+       <li>
+        Add drag &amp; drop to delete, drop or swap items
+       </li>
+       <li>
+        Load the ItemDB from an external database
+       </li>
+       <li>
+        Persistence for the player inventory
+       </li>
+       <li>
+        Use a database to save different Pickups
+        <ul>
+         <li>
+          Also use an additional database to save spawn points for the Pickups
+         </li>
+        </ul>
+       </li>
+       <li>
+        A crafting system
+        <ul>
+         <li>
+          4 piles of wood can be crafted to a wall etc.
+         </li>
+        </ul>
+       </li>
+       <li>
+        Loot chests with multiple different items which can be looted
+       </li>
+       <li>
+        Chests which have to be destroyed in order to loot them
+       </li>
+       <li>
+        NPCs who sell and buy items
+       </li>
+       <li>
+        NPCs who can be looted after the player killed them
+       </li>
+       <li>
+        A clothing system to equip the player character with items
+        <ul>
+         <li>
+          Use the clothing system for NPCs (as seen in Skyrim)
+         </li>
+        </ul>
+       </li>
+       <li>
+        Multiplayer functionality
+        <ul>
+         <li>
+          Direct Trading between two players
+         </li>
+         <li>
+          An auction house
+         </li>
+         <li>
+          A mailing system
+         </li>
+        </ul>
+       </li>
+      </ul>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,977 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   An Introduction to UE4 Plugins - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    An Introduction to UE4 Plugins
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <table align="right">
+       <tbody>
+        <tr>
+         <td>
+          <div class="toc" id="toc">
+           <div class="toctitle">
+            <h2>
+             Contents
+            </h2>
+           </div>
+           <ul>
+            <li class="toclevel-1 tocsection-1">
+             <a href="#Overview">
+              <span class="tocnumber">
+               1
+              </span>
+              <span class="toctext">
+               Overview
+              </span>
+             </a>
+             <ul>
+              <li class="toclevel-2 tocsection-2">
+               <a href="#Scope_.26_Notes">
+                <span class="tocnumber">
+                 1.1
+                </span>
+                <span class="toctext">
+                 Scope &amp; Notes
+                </span>
+               </a>
+              </li>
+             </ul>
+            </li>
+            <li class="toclevel-1 tocsection-3">
+             <a href="#Concepts_.26_Limitations">
+              <span class="tocnumber">
+               2
+              </span>
+              <span class="toctext">
+               Concepts &amp; Limitations
+              </span>
+             </a>
+             <ul>
+              <li class="toclevel-2 tocsection-4">
+               <a href="#Engine_vs._Installed">
+                <span class="tocnumber">
+                 2.1
+                </span>
+                <span class="toctext">
+                 Engine vs. Installed
+                </span>
+               </a>
+              </li>
+             </ul>
+            </li>
+            <li class="toclevel-1 tocsection-5">
+             <a href="#First_Steps">
+              <span class="tocnumber">
+               3
+              </span>
+              <span class="toctext">
+               First Steps
+              </span>
+             </a>
+             <ul>
+              <li class="toclevel-2 tocsection-6">
+               <a href="#File_Structure">
+                <span class="tocnumber">
+                 3.1
+                </span>
+                <span class="toctext">
+                 File Structure
+                </span>
+               </a>
+              </li>
+             </ul>
+            </li>
+            <li class="toclevel-1 tocsection-7">
+             <a href="#Content_Module">
+              <span class="tocnumber">
+               4
+              </span>
+              <span class="toctext">
+               Content Module
+              </span>
+             </a>
+             <ul>
+              <li class="toclevel-2 tocsection-8">
+               <a href="#Archive_Manifest">
+                <span class="tocnumber">
+                 4.1
+                </span>
+                <span class="toctext">
+                 Archive Manifest
+                </span>
+               </a>
+              </li>
+             </ul>
+            </li>
+            <li class="toclevel-1 tocsection-9">
+             <a href="#Stand_Alone_Plugin">
+              <span class="tocnumber">
+               5
+              </span>
+              <span class="toctext">
+               Stand Alone Plugin
+              </span>
+             </a>
+             <ul>
+              <li class="toclevel-2 tocsection-10">
+               <a href="#File_Structure_2">
+                <span class="tocnumber">
+                 5.1
+                </span>
+                <span class="toctext">
+                 File Structure
+                </span>
+               </a>
+              </li>
+              <li class="toclevel-2 tocsection-11">
+               <a href="#Archive_Manifest_2">
+                <span class="tocnumber">
+                 5.2
+                </span>
+                <span class="toctext">
+                 Archive Manifest
+                </span>
+               </a>
+              </li>
+             </ul>
+            </li>
+            <li class="toclevel-1 tocsection-12">
+             <a href="#Non-Game_Module">
+              <span class="tocnumber">
+               6
+              </span>
+              <span class="toctext">
+               Non-Game Module
+              </span>
+             </a>
+             <ul>
+              <li class="toclevel-2 tocsection-13">
+               <a href="#Archive_Manifest_3">
+                <span class="tocnumber">
+                 6.1
+                </span>
+                <span class="toctext">
+                 Archive Manifest
+                </span>
+               </a>
+              </li>
+             </ul>
+            </li>
+            <li class="toclevel-1 tocsection-14">
+             <a href="#Distribution">
+              <span class="tocnumber">
+               7
+              </span>
+              <span class="toctext">
+               Distribution
+              </span>
+             </a>
+             <ul>
+              <li class="toclevel-2 tocsection-15">
+               <a href="#Sample_ReadMe.md">
+                <span class="tocnumber">
+                 7.1
+                </span>
+                <span class="toctext">
+                 Sample ReadMe.md
+                </span>
+               </a>
+              </li>
+             </ul>
+            </li>
+            <li class="toclevel-1 tocsection-16">
+             <a href="#More_Information">
+              <span class="tocnumber">
+               8
+              </span>
+              <span class="toctext">
+               More Information
+              </span>
+             </a>
+            </li>
+           </ul>
+          </div>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <h1>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h1>
+      <p>
+       The goal of this tutorial is to show you how to create a new plugin, exercising the basic concepts and giving you a platform on which you can build your own projects out.
+      </p>
+      <p>
+       For examples sake, I will be creating a bundle called "Bob's Bundle" and it will do little more than expose an interface to call into a protected method that will output to the console.
+      </p>
+      <p>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Scope_.26_Notes">
+        Scope &amp; Notes
+       </span>
+      </h2>
+      <ul>
+       <li>
+        A "Plugin" is the wrong term to use in describing what we are doing. Instead we will refer to it as a bundle from now on. This is discussed in the next section - Concepts and Limitations.
+       </li>
+       <li>
+        You will be able to create a new bundle of your own by the end
+       </li>
+       <li>
+        I expect you to have, at the very least, a more than cursory level of knowledge about C++, and the UE4 Build System
+       </li>
+       <li>
+        All Code paths provided, unless noted otherwise, are from the UE4 Project's base directory.
+       </li>
+       <li>
+        Any time a file is added to the project, you should regenerate your project files.
+       </li>
+      </ul>
+      <h1>
+       <span class="mw-headline" id="Concepts_.26_Limitations">
+        Concepts &amp; Limitations
+       </span>
+      </h1>
+      <p>
+       The general idea behind a bundle is to wrap up a set of functionality that can be treated as a self contained group, transplanted as needed, adding functionality to UE4. There are three types of bundle:
+      </p>
+      <ol>
+       <li>
+        <b>
+         Non-Game Module
+        </b>
+        - Extension or Creation of a set of code that exposes an interface to internal code, allowing other modules and game modules to depend upon its functionality.
+       </li>
+       <li>
+        <b>
+         Stand Alone Plugin
+        </b>
+        - Extension or Creation of a set of code that does not allow exterior modules to modify its contents.
+       </li>
+       <li>
+        <b>
+         Content Module
+        </b>
+        - Contains content that is available to developers in the editor, as well as in the game.
+       </li>
+      </ol>
+      <p>
+       As the designer you are free to include any number of these you wish in your bundle, and in fact - you can include them all in the same bundle. They are simply used as encapsulation tools.
+      </p>
+      <p>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Engine_vs._Installed">
+        Engine vs. Installed
+       </span>
+      </h2>
+      <p>
+       An engine plugin is one that resides in the Plugin directory of your UE4 install. It will show up as
+       <b>
+        Built In
+       </b>
+       when looking at the plugin listing in the editor. An
+       <b>
+        Installed
+       </b>
+       plugin is only available or loaded for a particular Project.
+      </p>
+      <p>
+       To see a list of the plugins that are already available to you (Enabled and Disabled) open the editor and in the menu bar, select
+       <b>
+        Window
+       </b>
+       &gt;
+       <b>
+        Plugins
+       </b>
+       <sup>
+        1
+       </sup>
+       . From here you can load or unload any plugins by checking the
+       <b>
+        Enabled
+       </b>
+       checkbox.
+      </p>
+      <p>
+       If you wish to see any of the modules, including your game and plugins, that are available, select
+       <b>
+        Window
+       </b>
+       &gt;
+       <b>
+        Developer Tools
+       </b>
+       &gt;
+       <b>
+        Modules
+       </b>
+       . From here you can load, unload, reload and or recompile any of the modules currently available to the editor.
+      </p>
+      <hr/>
+      <p>
+       <sup>
+        1
+       </sup>
+       In recent versions, this menu has been moved to
+       <b>
+        Edit
+       </b>
+       &gt;
+       <b>
+        Plugins
+       </b>
+      </p>
+      <h1>
+       <span class="mw-headline" id="First_Steps">
+        First Steps
+       </span>
+      </h1>
+      <p>
+       To begin, you will need to create a new project from the UE4 Editor. I recommend a
+       <b>
+        C++ → Basic code
+       </b>
+       project, so you are able to exercise the interface of your module, given that you create one. I am exporting a
+       <b>
+        Basic Code
+       </b>
+       project called BobsPlayground.
+      </p>
+      <h2>
+       <span class="mw-headline" id="File_Structure">
+        File Structure
+       </span>
+      </h2>
+      <p>
+       Once Visual Studio (VS) has finished spinning up open up the project path in the windows file explorer. Here, create a new folder - Plugins, which should reside at MyProject/Plugins. In my example it is called BobsPlayground/Plugins.
+      </p>
+      <p>
+       This is the directory that will house all of our further development, until we return to UE4 to confirm that we have the ability to add a dependency between our project and our plugin.
+      </p>
+      <h1>
+       <span class="mw-headline" id="Content_Module">
+        Content Module
+       </span>
+      </h1>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="" class="thumbimage" height="181" src="../assets/an-introduction-to-ue4-plugins/0.png" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Figure 1. A peek into the plugin UI in the UE4 editor.
+        </div>
+       </div>
+      </div>
+      <p>
+       Within the Plugins directory, add a new folder - Content. This will house our Content modules assets. Within this directory add a ""Content.uplugin"" file. This will be the
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Programming/Plugins/index.html#plugindescriptorfiles" rel="nofollow">
+        descriptor for our plugin
+       </a>
+       , so UE4 can find it, load it up and knows what to do with it.
+      </p>
+      <p>
+       Here is the sample I am using for my content module. Feel free to copy it.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="p">{</span>
+    <span class="s2">"FileVersion"</span> <span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s2">"FriendlyName"</span> <span class="o">:</span> <span class="s2">"Bob's Content"</span><span class="p">,</span>
+    <span class="s2">"Version"</span> <span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">"VersionName"</span><span class="o">:</span> <span class="s2">"1.0"</span><span class="p">,</span>
+    <span class="s2">"Description"</span> <span class="o">:</span> <span class="s2">"Here I describe the content."</span><span class="p">,</span>
+    <span class="s2">"Category"</span> <span class="o">:</span> <span class="s2">"Bobs.Content"</span><span class="p">,</span>
+    <span class="s2">"CreatedBy"</span> <span class="o">:</span> <span class="s2">"Bob Chatman"</span><span class="p">,</span>
+    <span class="s2">"CreatedByURL"</span> <span class="o">:</span> <span class="s2">"http://gneu.org"</span><span class="p">,</span>
+    <span class="s2">"CanContainContent"</span> <span class="o">:</span> <span class="s2">"true"</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       This provides the plugin system with everything short of an icon to show in the UI View. To add an icon, create a Resources directory within your plugin folder, and create a PNG in there called Icon128.png.
+      </p>
+      <p>
+      </p>
+      <p>
+       You should also be aware of the Category. It provides a way for you to filter your plugins by type, developer or whatever you choose. Each sub category is separated by a period character. Above, Bobs.Content becomes Bobs &gt; Content in the plugin listing in the editor, as shows in Figure 1, above.
+      </p>
+      <p>
+      </p>
+      <p>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Archive_Manifest">
+        Archive Manifest
+       </span>
+      </h2>
+      <ul>
+       <li>
+        Content/*
+       </li>
+       <li>
+        Resources/Icon128.png
+       </li>
+       <li>
+        Content.uplugin
+       </li>
+      </ul>
+      <h1>
+       <span class="mw-headline" id="Stand_Alone_Plugin">
+        Stand Alone Plugin
+       </span>
+      </h1>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:202px;">
+        <img alt="Solution-Explorer - Plugins Generated.png" class="thumbimage" height="493" src="../assets/an-introduction-to-ue4-plugins/1.png" width="200"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       Although not quite as straight forward as content, the Stand Alone plugin is a hundred times more interesting, technically speaking. These plugins exist for no other purpose than to extend and create new unreal editor classes. A prime example of such a plugin is the
+       by
+       , which adds the ability for you to vertex snap meshes together, but also details out how his plugin works. Seeing as this is an introduction to plugins, I will only show you how to configure your plugin, what you do with it afterwards is on you =).
+      </p>
+      <h2>
+       <span class="mw-headline" id="File_Structure_2">
+        File Structure
+       </span>
+      </h2>
+      <p>
+       We will, once again, add a uplugin plugin descriptor. This time we will make a modification to it though, adding in a modules listing parameter to allow us to configure the plugin and the declare the contexts that we wish for our standalone plugin to be loaded.
+      </p>
+      <p>
+       Inside
+       <b>
+        /Plugins/StandAlone/StandAlone.uplugin
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="p">{</span>
+    <span class="s2">"FileVersion"</span> <span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+
+    <span class="s2">"FriendlyName"</span> <span class="o">:</span> <span class="s2">"Bob's Plugin"</span><span class="p">,</span>
+    <span class="s2">"Version"</span> <span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">"VersionName"</span><span class="o">:</span> <span class="s2">"1.0"</span><span class="p">,</span>
+    <span class="s2">"Description"</span> <span class="o">:</span> <span class="s2">"Here I describe the capabilities of the plugin."</span><span class="p">,</span>
+    <span class="s2">"Category"</span> <span class="o">:</span> <span class="s2">"Bobs.Stand Alone"</span><span class="p">,</span>
+    <span class="s2">"CreatedBy"</span> <span class="o">:</span> <span class="s2">"Bob Chatman"</span><span class="p">,</span>
+    <span class="s2">"CreatedByURL"</span> <span class="o">:</span> <span class="s2">"http://gneu.org"</span><span class="p">,</span>
+
+    <span class="s2">"Modules"</span> <span class="o">:</span>
+    <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">"Name"</span> <span class="o">:</span> <span class="s2">"StandAlone"</span><span class="p">,</span>
+            <span class="s2">"Type"</span> <span class="o">:</span> <span class="s2">"Developer"</span>
+        <span class="p">}</span> 
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <p>
+       <br/>
+       The modules section accepts any number of entries, as a JSON array of objects. Name is the name of the module you are creating - this is likely to be same as the folder you put your module into. Type is one of three values, Developer, Runtime or Editor. Editor is loaded at editor load time, Runtime is loaded in all contexts, and Developer is loaded at any time where you are loading a Development build and never for Shipping builds. There is one final optional parameter to include, but it doesn't exactly mean much in a stand alone plugin. We will return to it in the next section.
+      </p>
+      <p>
+       With the descriptor in place, we can dive into the guts.
+      </p>
+      <p>
+      </p>
+      <p>
+       Create the following path:
+       <b>
+        /Plugins/StandAlone/Source/StandAlone/
+       </b>
+      </p>
+      <p>
+       Within this directory you will begin working on your plugin. You will need a Build.cs file to declare dependencies, include paths or handle linking of an external library.
+      </p>
+      <p>
+       inside
+       <b>
+        /Plugins/StandAlone/Source/StandAlone/StandAlone.Build.cs
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">using</span> <span class="nn">UnrealBuildTool</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.IO</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">StandAlone</span> <span class="p">:</span> <span class="n">ModuleRules</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="nf">StandAlone</span><span class="p">(</span><span class="n">ReadOnlyTargetRules</span> <span class="n">Target</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">Target</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">PrivateIncludePaths</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"StandAlone/Private"</span> <span class="p">});</span>
+        <span class="n">PublicIncludePaths</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"StandAlone/Public"</span> <span class="p">});</span>
+
+        <span class="n">PublicDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"Engine"</span><span class="p">,</span> <span class="s">"Core"</span> <span class="p">});</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Yep, at this point everything you see will be very similar to what you have already seen. I try to stick to the standard folder structure for my files, so I am following the coding guidelines that Epic has set out for us. In this directory you will want to create a Classes directory, for your UE4 related header files, and a Private folder to house your plugins implementations. There is no need for a public folder, as there is no public API to your plugin to be providing.
+      </p>
+      <p>
+       inside
+       <b>
+        /Plugins/StandAlone/Source/StandAlone/Public/StandAlone.h
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"ModuleManager.h"</span><span class="cp"></span>
+
+<span class="k">class</span> <span class="nc">StandAloneImpl</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IModuleInterface</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="cm">/** IModuleInterface implementation */</span>
+	<span class="kt">void</span> <span class="n">StartupModule</span><span class="p">();</span>
+	<span class="kt">void</span> <span class="nf">ShutdownModule</span><span class="p">();</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       inside
+       <b>
+        /Plugins/StandAlone/Source/StandAlone/Private/StandAlone.cpp
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"StandAlonePrivatePCH.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"StandAlone.h"</span><span class="cp"></span>
+
+<span class="kt">void</span> <span class="n">StandAloneImpl</span><span class="o">::</span><span class="n">StartupModule</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">StandAloneImpl</span><span class="o">::</span><span class="n">ShutdownModule</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="p">}</span>
+
+<span class="n">IMPLEMENT_MODULE</span><span class="p">(</span><span class="n">StandAloneImpl</span><span class="p">,</span> <span class="n">Module</span><span class="p">)</span>
+</pre>
+      </div>
+      <p>
+       inside
+       <b>
+        /Plugins/StandAlone/Source/StandAlone/Private/StandAlonePrivatePCH.cpp
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>
+</pre>
+      </div>
+      <p>
+       <b>
+        StandAlonePrivatePCH.h
+       </b>
+       is an empty file, currently. It is there for you to stick your own PreCompiled Header references and include them in one lump, as you do with the
+       <b>
+        MyProject.h
+       </b>
+       file in your standard game.
+      </p>
+      <p>
+       The startup and shutdown module methods are available for you to be able to hook in and handle events that come with the loading of and unloading of the modules. This is likely a good place to handle opening or closing of data stores, handles and the like. I use this as the point when my V8 plugin is initialized to ensure that it is available globally.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Archive_Manifest_2">
+        Archive Manifest
+       </span>
+      </h2>
+      <ul>
+       <li>
+        Binaries/Win64/UE4Editor-StandAlone.dll
+       </li>
+       <li>
+        Resources/Icon128.png
+       </li>
+       <li>
+        StandAlone.uplugin
+       </li>
+      </ul>
+      <h1>
+       <span class="mw-headline" id="Non-Game_Module">
+        Non-Game Module
+       </span>
+      </h1>
+      <p>
+       And finally, the pièce de résistance, a module exposing functionality. When this type of bundle comes into a party, everyone turns to look. There is one key element of this module, and that is the public facing interface and the importance of the load time. Everything else is as it was with a stand alone plugin. First, lets examine the addition to our plugin descriptor.
+      </p>
+      <p>
+       Inside
+       <b>
+        /Plugins/Module/Module.uplugin
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="p">{</span>
+    <span class="s2">"FileVersion"</span> <span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+
+    <span class="s2">"FriendlyName"</span> <span class="o">:</span> <span class="s2">"Bob's Module"</span><span class="p">,</span>
+    <span class="s2">"Version"</span> <span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">"VersionName"</span><span class="o">:</span> <span class="s2">"1.0"</span><span class="p">,</span>
+    <span class="s2">"Description"</span> <span class="o">:</span> <span class="s2">"Here I describe the capabilities of the module."</span><span class="p">,</span>
+    <span class="s2">"Category"</span> <span class="o">:</span> <span class="s2">"Bobs.Module"</span><span class="p">,</span>
+    <span class="s2">"CreatedBy"</span> <span class="o">:</span> <span class="s2">"Bob Chatman"</span><span class="p">,</span>
+    <span class="s2">"CreatedByURL"</span> <span class="o">:</span> <span class="s2">"http://gneu.org"</span><span class="p">,</span>
+    <span class="s2">"CanContainContent"</span> <span class="o">:</span> <span class="s2">"true"</span><span class="p">,</span>
+
+    <span class="s2">"Modules"</span> <span class="o">:</span>
+    <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">"Name"</span> <span class="o">:</span> <span class="s2">"Module"</span><span class="p">,</span>
+            <span class="s2">"Type"</span> <span class="o">:</span> <span class="s2">"Developer"</span><span class="p">,</span>
+            <span class="s2">"LoadingPhase"</span> <span class="o">:</span> <span class="s2">"PreDefault"</span>
+        <span class="p">}</span> 
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       The addition of the LoadingPhase allows our module to be loaded prior to the standard load time, which would allow any module that is loaded afterwards to be able to include it as a dependency. Let's look at what options we have for that.
+      </p>
+      <p>
+       Inside
+       <b>
+        /Source/BobsPlayground/BobsPlayground.Build.cs
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">using</span> <span class="nn">UnrealBuildTool</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">BobsPlayground</span> <span class="p">:</span> <span class="n">ModuleRules</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="nf">BobsPlayground</span><span class="p">(</span><span class="n">ReadOnlyTargetRules</span> <span class="n">Target</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">Target</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">PublicDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"Core"</span><span class="p">,</span> <span class="s">"CoreUObject"</span><span class="p">,</span> <span class="s">"Engine"</span><span class="p">,</span> <span class="s">"InputCore"</span><span class="p">});</span>
+
+        <span class="n">PrivateDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"Module"</span> <span class="p">});</span>
+
+        <span class="n">DynamicallyLoadedModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"StandAlone"</span> <span class="p">});</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       There are three noteworthy ways to declare a dependency.
+       <b>
+        Public and Private dependencies are staticly linked into your project and visible to public and or private code, respectively
+       </b>
+       . Public implies that you may also expose such functionality to whatever tools, editors or plugins are dependent on your game/module. It is also important to keep in mind that with the static linking, the header files are included. Dynamically loaded modules do not include the header files at link time, and instead should be treated as an external dll, loaded when needed. The key difference is that because of the static linking, if the module is missing your code will fail out.
+       <i>
+        If you are using a dynamic link your code will be able to recover, in the event that the module is not found.
+       </i>
+      </p>
+      <p>
+       With this, all that remains is exposing our interface and writing a short test to confirm that it works. Create ""Module.Build.cs"", so your build system knows where to find the sources and how to build them:
+      </p>
+      <p>
+       inside
+       <b>
+        /Plugins/Module/Source/Module/Module.Build.cs
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">using</span> <span class="nn">UnrealBuildTool</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.IO</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">Module</span> <span class="p">:</span> <span class="n">ModuleRules</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="nf">Module</span><span class="p">(</span><span class="n">ReadOnlyTargetRules</span> <span class="n">Target</span><span class="p">)</span> <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">Target</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">PrivateIncludePaths</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"Module/Private"</span> <span class="p">});</span>
+        <span class="n">PublicIncludePaths</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"Module/Public"</span> <span class="p">});</span>
+
+        <span class="n">PublicDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"Engine"</span><span class="p">,</span> <span class="s">"Core"</span> <span class="p">});</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Now we are able to create the public interface:
+       <b>
+        /Plugins/Module/Source/Module/Public/IModule.h
+       </b>
+      </p>
+      <p>
+       Inside
+       <b>
+        /Plugins/Module/Source/Module/Public/IModule.h
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"ModuleManager.h"</span><span class="cp"></span>
+
+<span class="cm">/**</span>
+<span class="cm">* The public interface to this module.  In most cases, this interface is only public to sibling modules</span>
+<span class="cm">* within this plugin.</span>
+<span class="cm">*/</span>
+<span class="k">class</span> <span class="nc">IModule</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IModuleInterface</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="cm">/**</span>
+<span class="cm">	* Singleton-like access to this module's interface.  This is just for convenience!</span>
+<span class="cm">	* Beware of calling this during the shutdown phase, though.  Your module might have been unloaded already.</span>
+<span class="cm">	*</span>
+<span class="cm">	* @return Returns singleton instance, loading the module on demand if needed</span>
+<span class="cm">	*/</span>
+	<span class="k">static</span> <span class="kr">inline</span> <span class="n">IModule</span><span class="o">&amp;</span> <span class="n">Get</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="n">FModuleManager</span><span class="o">::</span><span class="n">LoadModuleChecked</span><span class="o">&lt;</span> <span class="n">IModule</span> <span class="o">&gt;</span><span class="p">(</span><span class="s">"Module"</span><span class="p">);</span>
+	<span class="p">}</span>
+
+	<span class="cm">/**</span>
+<span class="cm">	* Checks to see if this module is loaded and ready.  It is only valid to call Get() if IsAvailable() returns true.</span>
+<span class="cm">	*</span>
+<span class="cm">	* @return True if the module is loaded and ready to use</span>
+<span class="cm">	*/</span>
+	<span class="k">static</span> <span class="kr">inline</span> <span class="kt">bool</span> <span class="n">IsAvailable</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="n">FModuleManager</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">IsModuleLoaded</span><span class="p">(</span><span class="s">"Module"</span><span class="p">);</span>
+	<span class="p">}</span>
+
+	<span class="k">virtual</span> <span class="kt">bool</span> <span class="n">IsThisNumber42</span><span class="p">(</span><span class="n">int32</span> <span class="n">num</span><span class="p">)</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       There are two static methods, and an instance method to test that a number is 42. The two methods provide us the ability to 1) Confirm that the module is loaded and available, and 2) get a reference to the plugin to be referenced in our game/module. Note the use of a pure virtual function here. Unreal uses classes and multiple inheritance to provide the contract of an interface, but that doesn't mean you have to provide implementations for your functions/methods.
+       <i>
+        I prefer to keep my interfaces pure virtual because it ensures that I have to implement methods
+       </i>
+       .
+      </p>
+      <p>
+       Add to
+       <b>
+        /Source/BobsPlayground/BobsPlayground.h
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">DECLARE_LOG_CATEGORY_EXTERN</span><span class="p">(</span><span class="n">BobsPlayground</span><span class="p">,</span> <span class="n">Log</span><span class="p">,</span> <span class="n">All</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       Add to
+       <b>
+        /Source/BobsPlayground/BobsPlayground.cpp
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"IModule.h"</span><span class="cp"></span>
+
+<span class="n">DEFINE_LOG_CATEGORY</span><span class="p">(</span><span class="n">BobsPlayground</span><span class="p">);</span>
+
+<span class="k">class</span> <span class="nc">FBobsPlaygroundModule</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IModule</span>
+<span class="p">{</span>
+	<span class="cm">/** IModuleInterface implementation */</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">StartupModule</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">ShutdownModule</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">void</span> <span class="n">FBobsPlaygroundModule</span><span class="o">::</span><span class="n">StartupModule</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">IModule</span><span class="o">::</span><span class="n">IsAvailable</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="n">UE_LOG</span><span class="p">(</span><span class="n">BobsPlayground</span><span class="p">,</span> <span class="n">Log</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"%s"</span><span class="p">),</span> <span class="n">IModule</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">IsThisNumber42</span><span class="p">(</span><span class="mi">42</span><span class="p">)</span> <span class="o">?</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"True"</span><span class="p">)</span> <span class="o">:</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"False"</span><span class="p">));</span>
+		<span class="n">UE_LOG</span><span class="p">(</span><span class="n">BobsPlayground</span><span class="p">,</span> <span class="n">Log</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"%s"</span><span class="p">),</span> <span class="n">IModule</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">IsThisNumber42</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">?</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"True"</span><span class="p">)</span> <span class="o">:</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"False"</span><span class="p">));</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Lastly, we will need to define our module implementation, defining our pure virtual function above.
+      </p>
+      <p>
+       Inside
+       <b>
+        /Plugins/Module/Source/Module/Private/Module.h
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="k">class</span> <span class="nc">ModuleImpl</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IModule</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="cm">/** IModuleInterface implementation */</span>
+	<span class="kt">void</span> <span class="n">StartupModule</span><span class="p">();</span>
+	<span class="kt">void</span> <span class="nf">ShutdownModule</span><span class="p">();</span>
+	
+	<span class="kt">bool</span> <span class="nf">IsThisNumber42</span><span class="p">(</span><span class="n">int32</span> <span class="n">num</span><span class="p">);</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       Inside
+       <b>
+        /Plugins/Module/Source/Module/Private/Module.cpp
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"ModulePrivatePCH.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"Module.h"</span><span class="cp"></span>
+
+<span class="kt">void</span> <span class="n">ModuleImpl</span><span class="o">::</span><span class="n">StartupModule</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">ModuleImpl</span><span class="o">::</span><span class="n">ShutdownModule</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">ModuleImpl</span><span class="o">::</span><span class="n">IsThisNumber42</span><span class="p">(</span><span class="n">int32</span> <span class="n">num</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">num</span> <span class="o">==</span> <span class="mi">42</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">IMPLEMENT_MODULE</span><span class="p">(</span><span class="n">ModuleImpl</span><span class="p">,</span> <span class="n">Module</span><span class="p">)</span>
+</pre>
+      </div>
+      <p>
+       Note the reference to the header here. It is convenient for a complicated plugin to include it because common header files are able to be used there.
+      </p>
+      <p>
+       Inside
+       <b>
+        /Plugins/Module/Source/Module/Private/ModulePrivatePCH.h
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"IModule.h"</span><span class="cp"></span>
+
+<span class="c1">// You should place include statements to your module's private header files here.  You only need to</span>
+<span class="c1">// add includes for headers that are used in most of your module's source files though.</span>
+</pre>
+      </div>
+      <p>
+      </p>
+      <p>
+       If you compile this out, drop a break point in the startmodule routine for your game you will be able to step through and see the something like the following output to your logs.
+      </p>
+      <pre>[2095.04.01-06.15.29:347][  0]BobsPlayground: True
+[2095.04.01-06.15.30:290][  0]BobsPlayground: False
+</pre>
+      <h2>
+       <span class="mw-headline" id="Archive_Manifest_3">
+        Archive Manifest
+       </span>
+      </h2>
+      <ul>
+       <li>
+        Binaries/Win64/UE4Editor-Module.dll
+       </li>
+       <li>
+        Source/Module/Public/IModule.h
+       </li>
+       <li>
+        Resources/Icon128.png
+       </li>
+       <li>
+        Module.uplugin
+       </li>
+      </ul>
+      <h1>
+       <span class="mw-headline" id="Distribution">
+        Distribution
+       </span>
+      </h1>
+      <p>
+       Now that we have completely built a new bundle, the question is - how do we get it into the hands of a developer interested in its cause? Until the market place is here and we have firm details on EULAs and such, the following will be of great help.
+      </p>
+      <p>
+       We are going to create an archive, zip or 7zip if you wish. It is likely easier for you to make a zip as that is a default tool in the windows file explorer.
+      </p>
+      <p>
+       In each of the above sections an Archive Manifest section has been included, listing important or key files to be included for distribution.
+      </p>
+      <p>
+       Within each archive it is a good idea to include a Readme.md file to detail out the Installation, Contact and key elements of your bundle. This would also be a good place to include any licensing or changelog information that an interested party could review before installation.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Sample_ReadMe.md">
+        Sample ReadMe.md
+       </span>
+      </h2>
+      <pre style="white-space: pre-wrap;">Installation
+-------------
+Unzip the package into the Plugins directory of your game. To add it as an engine plugin you will need to unzip the module into the plugin directory under where you installed UE4.
+
+
+Contact
+-------------
+</pre>
+      <h1>
+       <span class="mw-headline" id="More_Information">
+        More Information
+       </span>
+      </h1>
+      <p>
+       If you are interested in the plugin system, its capabilites or the descriptor file standard, details can be found in the
+       <b>
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/Programming/Plugins/index.html" rel="nofollow">
+         UE4 Documentation
+        </a>
+       </b>
+       . There are a hundred examples you can pull from, included in the source, under the plugins directory of the UE4 project.
+      </p>
+      <p>
+       If you found this tutorial useful, you may also find the
+       beneficial, as it walks through how to load and link a static library. I am using a derivative of these two as the base for my V8 Plugin.
+      </p>
+      <p>
+       You can read more about me on my
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

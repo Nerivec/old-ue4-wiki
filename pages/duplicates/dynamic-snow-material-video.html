@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Dynamic snow material - Video - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Dynamic snow material - Video
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:202px;">
+        <img alt="" class="thumbimage" height="221" src="../assets/dynamic-snow-material-video/0.png" width="200"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         A resulting material, applied on a rock mesh
+        </div>
+       </div>
+      </div>
+      <p>
+       In this tutorial we will be working on the dynamic snow material, which can either be used with material instances or in more complex way, with blueprints. The page will be extending, when new tutorials for the material would be published.
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#End_result">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           End result
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Tutorials">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Tutorials
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Basic_snow_material_tutorial">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Basic snow material tutorial
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Basic_blueprint_snow_tutorial">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             Basic blueprint snow tutorial
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Tesselated_snow_tutorial_part_1">
+            <span class="tocnumber">
+             2.3
+            </span>
+            <span class="toctext">
+             Tesselated snow tutorial part 1
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Tesselated_snow_tutorial_part_2">
+            <span class="tocnumber">
+             2.4
+            </span>
+            <span class="toctext">
+             Tesselated snow tutorial part 2
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="End_result">
+        End result
+       </span>
+      </h2>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:202px;">
+        <img alt="" class="thumbimage" height="181" src="../assets/dynamic-snow-material-video/1.png" width="200"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Tessellated snow material
+        </div>
+       </div>
+      </div>
+      <p>
+       Some of the material features can be seen in these videos:
+      </p>
+      <ul>
+       <li>
+        <a class="external text" href="https://www.youtube.com/watch?v=R3CJbbodKeE" rel="nofollow">
+         Tessellated material version
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://www.youtube.com/watch?v=zOrgI-avLfI" rel="nofollow">
+         Basic material with blueprints
+        </a>
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="Tutorials">
+        Tutorials
+       </span>
+      </h2>
+      <p>
+       All the tutorials made will be posted here.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Basic_snow_material_tutorial">
+        <a class="external text" href="https://www.youtube.com/watch?v=IqqzKvBc9hc" rel="nofollow">
+         Basic snow material tutorial
+        </a>
+       </span>
+      </h3>
+      <p>
+       &lt;youtube&gt;
+       <a class="external free" href="https://www.youtube.com/watch?v=IqqzKvBc9hc" rel="nofollow">
+        https://www.youtube.com/watch?v=IqqzKvBc9hc
+       </a>
+      </p>
+      <p>
+       In this tutorial you will create the snow material with some basic functionality:
+      </p>
+      <ul>
+       <li>
+        Adjustable snow amount
+       </li>
+       <li>
+        Custom normal&amp;diffuse maps
+       </li>
+       <li>
+        Full parameters exposure to dynamic material instances and blueprints
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Basic_blueprint_snow_tutorial">
+        <a class="external text" href="http://youtu.be/hUBDq5nyoY0" rel="nofollow">
+         Basic blueprint snow tutorial
+        </a>
+       </span>
+      </h3>
+      <p>
+       &lt;youtube&gt;
+       <a class="external free" href="http://youtu.be/hUBDq5nyoY0" rel="nofollow">
+        http://youtu.be/hUBDq5nyoY0
+       </a>
+      </p>
+      <p>
+       In this tutorial you will learn how to use basic snow material in the Blueprints.
+      </p>
+      <ul>
+       <li>
+        Dynamic material instancing
+       </li>
+       <li>
+        Proximity-based blueprint
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Tesselated_snow_tutorial_part_1">
+        <a class="external text" href="http://youtu.be/-8pv6QLLTjM" rel="nofollow">
+         Tesselated snow tutorial part 1
+        </a>
+       </span>
+      </h3>
+      <p>
+       &lt;youtube&gt;
+       <a class="external free" href="http://youtu.be/-8pv6QLLTjM" rel="nofollow">
+        http://youtu.be/-8pv6QLLTjM
+       </a>
+      </p>
+      <p>
+       In this tutorial you will prepare your material for the tessellation, making the snow effect appear primarily on the top of a mesh.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Tesselated_snow_tutorial_part_2">
+        <a class="external text" href="http://youtu.be/ItnbR1-gHQw" rel="nofollow">
+         Tesselated snow tutorial part 2
+        </a>
+       </span>
+      </h3>
+      <p>
+       &lt;youtube&gt;
+       <a class="external free" href="http://youtu.be/ItnbR1-gHQw" rel="nofollow">
+        http://youtu.be/ItnbR1-gHQw
+       </a>
+      </p>
+      <p>
+       In this tutorial we will apply basic tessellation to our material, making sure it appears properly on the top and is fully adjustable from material instances.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <p>
+       <br clear="all"/>
+      </p>
+      <ul class="gallery mw-gallery-traditional">
+       <li class="gallerybox" style="width: 155px">
+        <div style="width: 155px">
+         <div class="thumb" style="width: 150px;">
+          <div style="margin:15px auto;">
+           <img alt="" class="" height="120" src="../assets/dynamic-snow-material-video/2.png" width="110"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Basic material used with brick texture
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 155px">
+        <div style="width: 155px">
+         <div class="thumb" style="width: 150px;">
+          <div style="margin:18px auto;">
+           <img alt="" class="" height="114" src="../assets/dynamic-snow-material-video/3.png" width="120"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Slightly tessellated snow on the mesh
+          </p>
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 155px">
+        <div style="width: 155px">
+         <div class="thumb" style="width: 150px;">
+          <div style="margin:18px auto;">
+           <img alt="" class="" height="114" src="../assets/dynamic-snow-material-video/4.png" width="120"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Heavily tessellated snow on the mesh
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       --
+     (
+     ) 22:43, 11 June 2014 (UTC)
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

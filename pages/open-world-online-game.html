@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Open-world online game - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Open-world online game
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <i>
+        Author:
+       </i>
+       (
+     )
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Open-World_Online_Game_in_Unreal_Engine">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Open-World Online Game in Unreal Engine
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#What_is_a_multiplayer_game.3F">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           What is a multiplayer game?
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Physics_and_Illusion">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Physics and Illusion
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#The_authoritative_server">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           The authoritative server
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#World_Size">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           World Size
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#A_bit_of_a_conclusion">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           A bit of a conclusion
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Links">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Links
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Open-World_Online_Game_in_Unreal_Engine">
+        Open-World Online Game in Unreal Engine
+       </span>
+      </h2>
+      <p>
+       <i>
+        This post is about answering question of the nature “Can I make an open-world online game in Unreal Engine?” and “Can I make an MMO in UE?” Note, it’s about answering if you can, not how. I would like to answer this as well, but that would need to be a different article, or book. This article will be, what you can call high-level. I hope it will give you a bit more understanding of how things work, so you can ask more specific questions and begin to think about how to solve the problems you will encounter.
+       </i>
+      </p>
+      <p>
+       <i>
+        Warning: this will be a long post; it will not be very technical, I will use a language and form that’s easy to understand. It’s not about dumbing it down, I know people way more experienced and smarter than me will read this (and I encourage you to edit and add to this article), it’s just that I want everything to be understood by as many as possible, including non-native English speakers.''
+       </i>
+      </p>
+      <p>
+       I dare say that you can make any type of game you want using Unreal Engine (UE) - within the boundaries of hardware and laws of physics. Whether that be an MMO or an Open World Online Game (OWOG – yes, I just coined that).
+What you have to understand from the beginning is that you don’t need to rely on features currently included in the engine, not solely. Complex problems often require custom solutions and implementations. For exactly your needs, you might get away with using just what’s provided in UE, but if you have big ambitions for your game – and most who ask these questions have – you probably need a few more features.
+      </p>
+      <p>
+       You’re in luck, because the source code is available and you are free to modify it and implement anything you might need. I see people sometimes answer these questions with “No, you cannot make &lt;insert certain type of game&gt; in UE”, and their reasoning is that the features you need are not in the engine. Guess what, as soon as you need a feature that is not common, you usually have to implement it yourself, this goes for any engine available.
+      </p>
+      <p>
+       I have also seen mentioned multiple times that the dedicated server functionality in UE is not up to par for certain things, whether that’s number of players or number and size of maps to load or the lack of support for world origin shifting (you could make this work for MP, but it’s on you). This does not matter, much, for large online games you often need to create your own infrastructure - this includes writing your own dedicated server, or adding to the one provided. For some games the server itself does not even need to be that complicated, but of course you can end up with that, if the feature you require necessitates a complex solution, and multiplayer games are by nature complex.
+      </p>
+      <h2>
+       <span class="mw-headline" id="What_is_a_multiplayer_game.3F">
+        What is a multiplayer game?
+       </span>
+      </h2>
+      <p>
+       In a multiplayer game, players aren’t actually in the same world, but they share this illusion. This is the same for every multiplayer game. The game is actually solely taking place on each player’s computer. The world player1 sees on his screen, is not the world player2 sees. Sure, it looks about the same, but because of issues inherent to networking any system, and other things - like non-determinism in your games’ simulation - things won’t look exactly the same for every player. When we are talking about real-time multiplayer games the majority of your simulations will take place on each client’s computer, not on the server. Real-time multiplayer games are games where things happen fast, in real-time. Games like Unreal Tournament and Counter-Strike.
+      </p>
+      <p>
+       Since I used the word determinism I have to explain, in a simplified manner, what that actually means for us. If Unreal Engine had deterministic physics, every time you ran a simulation, like dropping cube on multiple other cubes, the result of this simulation would be the same every time. Meaning, after the simulation had completed, you could check the position (X,Y,Z) of every object and confirm it was the same each time. Even if you ran this same simulation one million times, it would never change. I could have explained this in one sentence: Given the same input, you always end up with the same output. But Unreal Engine does not have this. What we have is non-determinism, so things do not end up in the exact same place every time. There are things you can do to increase accuracy, you can even create deterministic physics, but that’s another post (and it’s not recommended when talking about Unreal Engine, but you can read about it (lock-step determinism)), I have however included links at the bottom, for more information regarding this topic.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Physics_and_Illusion">
+        Physics and Illusion
+       </span>
+      </h2>
+      <p>
+       You now understand why things don’t look exactly the same for every player (hereafter player is referred to as ‘client’). This is partly why I say multiplayer games are an illusion, and it’s important you understand this, if you don’t, the task of creating networked games would be too daunting. The other part of this illusion is that most of your games’ simulations will run on the client, not the server.
+      </p>
+      <p>
+       In general, it’s a good idea to do as much on each individual client as possible, to lessen demands of your server. Imagine the power it would take to calculate complex physics for 5000 players on the server. That’s why, if you need physics on the server, they are extremely simplified. You may need physics on the server for collision checks. You want to know if players are touching, you don’t want them overlapping or occupying the same space.
+      </p>
+      <p>
+       Let’s think about the implications of not having deterministic physics, is it a problem? The short answer is, usually not. Take a game like World of Warcraft, if it even had physics for crates and explosions, an explosion goes off and crates are thrown in the air. Does it matter if they land at the exact same spot on every client? No. No one cares, and no one will notice. What if you could take damage if a crate landed on your head? Now you’ve added a feature that adds complexity.
+Well, the server will know (and decide if valid) what your exact position is. And the exact position of every other player – that’s what the authoritative server does. For the server to know where every crate was going to land, it would need to run its own physics calculation, which you can choose to do. It could be a very simple calculation, so it’s less taxing. Or, you could leave it up to the client to decide where each damage-causing crate lands, but that could open you up to cheating problems.
+      </p>
+      <p>
+       Even from this simple example, I think you see that there’s a lot of challenges in multiplayer games, and a lot of solutions and compromises to be made. For every feature you want, there’s a set of unique issues. That’s why it’s hard to give definite answers to questions about this topic: the answer will always be, “it depends.”
+      </p>
+      <h2>
+       <span class="mw-headline" id="The_authoritative_server">
+        The authoritative server
+       </span>
+      </h2>
+      <p>
+       There are many ways to do multiplayer architecture. The most common today is Client/Server with the server being what’s known as authoritative. I briefly mentioned this in a paragraph above; here I will explain further. Again, I will skip over some things, and you’ll have to read through the links at the bottom to get the complete picture.
+      </p>
+      <p>
+       The most important thing to understand is that the server decides what goes. It sets the rules, it decides how fast or far a player can move, and if a player’s position is valid. It knows the location of every player. When you move your player forward, the move happens instantly on your client, but the server hasn’t actually decided if your move was valid (legal) yet. If it were to decide that your move was indeed invalid, it would be corrected (on your client) in hindsight.
+      </p>
+      <p>
+       The reason you can move freely without lag, before the server has had time to validate your move is because of what’s called client-side prediction. You should google and read more about this, ways to implement it, and also lag compensation. There’s again, different ways to solve these problems, what you want to end up with is of course, smooth movement, and no to minimal lag perceived on the client. When it comes to the implementation of these things, a good way to go is to do it incrementally and see what you actually need. This is something that can be felt, and measured.
+      </p>
+      <p>
+       Now remember, that UE4 has great networking code, a lot of things are already implemented, so much of the heavy lifting is done for you, and it has great support for the network architecture of Client/Authoritative Server.
+Whatever your server solution, the one thing the server needs to know is the position of each client, it will then communicate this to every other connected client.
+      </p>
+      <p>
+       Clients communicate only with the server, not directly with each other.
+      </p>
+      <p>
+       - Sample user input
+      </p>
+      <p>
+       - Send data to server
+      </p>
+      <p>
+       - Server processes data received and validates, sends data to client
+      </p>
+      <p>
+       - Receives response and determines game state
+      </p>
+      <p>
+       - Correct any discrepancies (if server says a move was not valid)
+      </p>
+      <h2>
+       <span class="mw-headline" id="World_Size">
+        World Size
+       </span>
+      </h2>
+      <p>
+       UE has many features that makes it quite possible to have infinitely big worlds. Read the docs on World Composition for more on that. Like discussed above, the fact that some features are not supported on multiplayer out of the box is not a problem. There are ways around this, but you need to come up with what those ways are. A game developer always need to create ingenious solutions.
+      </p>
+      <p>
+       Let’s just say, and it’s a fact, you can have bigger worlds in UE than you would ever care to travel across. What will you actually fill it with? Are you going to create all that content? Navigating empty worlds is not what most gamers find fun. This is something you should give careful thought to, there are ways, sure, you can have procedural content. But will it be interesting and meaningful? You can leave it up to your players to create the content, through user stories and mod support.
+      </p>
+      <p>
+       With that said, here you have some numbers:
+      </p>
+      <p>
+       ARMA 3 has a map size of about 270km2
+      </p>
+      <p>
+       ARK: Survival Evolved - about 36km2
+      </p>
+      <p>
+       Fuel – about 14 440km2
+      </p>
+      <p>
+       Grand Theft Auto V - about 81km2
+      </p>
+      <p>
+       Just Cause 3 about 1000km2
+      </p>
+      <p>
+       Witcher 3: Wild Hunt - about 135km2
+      </p>
+      <h2>
+       <span class="mw-headline" id="A_bit_of_a_conclusion">
+        A bit of a conclusion
+       </span>
+      </h2>
+      <p>
+       In conclusion, to answer two questions: “Can I make an open world, online game with UE?” and “Can I make an MMO with UE?” – the short answer is yes, that’s absolutely possible. The longer answer is this article – countless others - and, boy, do you have a lot to learn.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Links">
+        Links
+       </span>
+      </h2>
+      <p>
+       Use these links to learn the technical details of networking and multiplayer games.
+      </p>
+      <p>
+       <a class="external free" href="http://www.gamedev.net/index.php?app=forums&amp;module=forums&amp;section=rules&amp;f=15" rel="nofollow">
+        http://www.gamedev.net/index.php?app=forums&amp;module=forums&amp;section=rules&amp;f=15
+       </a>
+      </p>
+      <p>
+       <a class="external free" href="https://developer.valvesoftware.com/wiki/Source_Multiplayer_Networking" rel="nofollow">
+        https://developer.valvesoftware.com/wiki/Source_Multiplayer_Networking
+       </a>
+      </p>
+      <p>
+       <a class="external free" href="http://fabiensanglard.net/quake3/network.php" rel="nofollow">
+        http://fabiensanglard.net/quake3/network.php
+       </a>
+      </p>
+      <p>
+       <a class="external free" href="http://www.gabrielgambetta.com/fpm1.html" rel="nofollow">
+        http://www.gabrielgambetta.com/fpm1.html
+       </a>
+      </p>
+      <p>
+       <a class="external free" href="http://udn.epicgames.com/Three/NetworkingOverview.html" rel="nofollow">
+        http://udn.epicgames.com/Three/NetworkingOverview.html
+       </a>
+      </p>
+      <p>
+       <a class="external free" href="http://gafferongames.com/networking-for-game-programmers/what-every-programmer-needs-to-know-about-game-networking/" rel="nofollow">
+        http://gafferongames.com/networking-for-game-programmers/what-every-programmer-needs-to-know-about-game-networking/
+       </a>
+      </p>
+      <p>
+       <a class="external free" href="http://gafferongames.com/game-physics/fix-your-timestep/" rel="nofollow">
+        http://gafferongames.com/game-physics/fix-your-timestep/
+       </a>
+      </p>
+      <p>
+       <a class="external free" href="http://gafferongames.com/networking-for-game-programmers/floating-point-determinism/" rel="nofollow">
+        http://gafferongames.com/networking-for-game-programmers/floating-point-determinism/
+       </a>
+      </p>
+      <p>
+       <a class="external free" href="https://docs.unrealengine.com/latest/INT/Engine/LevelStreaming/WorldBrowser/" rel="nofollow">
+        https://docs.unrealengine.com/latest/INT/Engine/LevelStreaming/WorldBrowser/
+       </a>
+      </p>
+      <p>
+       Please feel free to edit and add to this article to make it better. Or suggest how I should improve the article.
+      </p>
+      <p>
+       <br/>
+       (
+     )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

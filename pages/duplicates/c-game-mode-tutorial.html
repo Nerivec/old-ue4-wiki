@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   C++ Game Mode Tutorial - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    C++ Game Mode Tutorial
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#C.2B.2B_Game_Mode_Tutorial">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           C++ Game Mode Tutorial
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Requirements">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Requirements
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Directory_Structure">
+            <span class="tocnumber">
+             1.2
+            </span>
+            <span class="toctext">
+             Directory Structure
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#UPlugin_File">
+            <span class="tocnumber">
+             1.3
+            </span>
+            <span class="toctext">
+             UPlugin File
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Build.cs_File">
+            <span class="tocnumber">
+             1.4
+            </span>
+            <span class="toctext">
+             Build.cs File
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Header_File">
+            <span class="tocnumber">
+             1.5
+            </span>
+            <span class="toctext">
+             Header File
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Plugin_Module_Interface">
+            <span class="tocnumber">
+             1.6
+            </span>
+            <span class="toctext">
+             Plugin Module Interface
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#The_Game_Mode_.28C.2B.2B.29">
+            <span class="tocnumber">
+             1.7
+            </span>
+            <span class="toctext">
+             The Game Mode (C++)
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#Editor_Setup">
+            <span class="tocnumber">
+             1.8
+            </span>
+            <span class="toctext">
+             Editor Setup
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#Mutator_Blueprint">
+            <span class="tocnumber">
+             1.9
+            </span>
+            <span class="toctext">
+             Mutator Blueprint
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#Game_Mode_Blueprint">
+            <span class="tocnumber">
+             1.10
+            </span>
+            <span class="toctext">
+             Game Mode Blueprint
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-12">
+           <a href="#Testing">
+            <span class="tocnumber">
+             1.11
+            </span>
+            <span class="toctext">
+             Testing
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h1>
+       <span class="mw-headline" id="C.2B.2B_Game_Mode_Tutorial">
+        C++ Game Mode Tutorial
+       </span>
+      </h1>
+      <p>
+       This tutorial will teach you how to make a simple Gun Game mode for UT using C++. We'll be making a UE4 plugin that defines a child class of AUTGameMode. I recommend reading the
+       ,
+       and
+       first. I will be glossing over things covered in depth in other tutorials.
+      </p>
+      <p>
+       <b>
+        This tutorial is out of date and does not compile in 4.14, working version can be found within Plugins/SampleGameMode
+       </b>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Requirements">
+        Requirements
+       </span>
+      </h2>
+      <ul>
+       <li>
+        Engine version: 4.3
+       </li>
+       <li>
+        Skill level: intermediate C++ and blueprint knowledge
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="Directory_Structure">
+        Directory Structure
+       </span>
+      </h2>
+      <ul>
+       <li>
+        If UnrealTournament\Plugins does not already exist, create it
+       </li>
+       <li>
+        Create a directory inside of UnrealTournament\Plugins to hold our game mode, in this case it would be "SampleGameMode"
+       </li>
+       <li>
+        Create "Source" and "Content" directories inside of the SampleGameMode directory
+       </li>
+       <li>
+        Create a "Public" directory and a "Private" directory inside of the last "Source" directory that we made
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="UPlugin_File">
+        UPlugin File
+       </span>
+      </h2>
+      <ul>
+       <li>
+        We need to create SampleGameMode.uplugin to let UE4 know we have a plugin it should load
+       </li>
+       <li>
+        It should live at the same level that the Source directory does
+       </li>
+       <li>
+        The key difference between this .uplugin and the one in the mutator sample is that EnabledByDefault and CanContainContent are set
+       </li>
+      </ul>
+      <div class="toccolours mw-collapsible mw-collapsed">
+       <p>
+        <b>
+         SampleGameMode.uplugin
+        </b>
+        - Plugin defintion
+       </p>
+       <div class="mw-collapsible-content">
+        <div class="mw-highlight mw-content-ltr" dir="ltr">
+         <pre><span></span><span class="lineno"> 1 </span><span class="p">{</span>
+<span class="lineno"> 2 </span>	<span class="s">"FileVersion"</span> <span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+<span class="lineno"> 3 </span>	
+<span class="lineno"> 4 </span>	<span class="s">"FriendlyName"</span> <span class="o">:</span> <span class="s">"Sample Game Mode"</span><span class="p">,</span>
+<span class="lineno"> 5 </span>	<span class="s">"Version"</span> <span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+<span class="lineno"> 6 </span>	<span class="s">"VersionName"</span> <span class="o">:</span> <span class="s">"1.0"</span><span class="p">,</span>
+<span class="lineno"> 7 </span>	<span class="s">"CreatedBy"</span> <span class="o">:</span> <span class="s">"Epic Games, Inc."</span><span class="p">,</span>
+<span class="lineno"> 8 </span>	<span class="s">"CreatedByURL"</span> <span class="o">:</span> <span class="s">"http://epicgames.com"</span><span class="p">,</span>
+<span class="lineno"> 9 </span>	<span class="s">"EngineVersion"</span> <span class="o">:</span> <span class="s">"4.3.0"</span><span class="p">,</span>
+<span class="lineno">10 </span>	<span class="s">"Description"</span> <span class="o">:</span> <span class="s">"Sample Game Mode"</span><span class="p">,</span>
+<span class="lineno">11 </span>	<span class="s">"Category"</span> <span class="o">:</span> <span class="s">"UnrealTournament.GameMode"</span><span class="p">,</span>
+<span class="lineno">12 </span>	<span class="s">"EnabledByDefault"</span> <span class="o">:</span> <span class="nb">true</span><span class="p">,</span>
+<span class="lineno">13 </span>	<span class="s">"CanContainContent"</span> <span class="o">:</span> <span class="nb">true</span><span class="p">,</span>
+<span class="lineno">14 </span>	
+<span class="lineno">15 </span>	<span class="s">"Modules"</span> <span class="o">:</span>
+<span class="lineno">16 </span>	<span class="p">[</span>
+<span class="lineno">17 </span>		<span class="p">{</span>
+<span class="lineno">18 </span>			<span class="s">"Name"</span> <span class="o">:</span> <span class="s">"SampleGameMode"</span><span class="p">,</span>
+<span class="lineno">19 </span>			<span class="s">"Type"</span> <span class="o">:</span> <span class="s">"Runtime"</span><span class="p">,</span>
+<span class="lineno">20 </span>			<span class="s">"WhitelistPlatforms"</span> <span class="o">:</span> <span class="p">[</span> <span class="s">"Win32"</span><span class="p">,</span> <span class="s">"Win64"</span> <span class="p">]</span>
+<span class="lineno">21 </span>		<span class="p">}</span>
+<span class="lineno">22 </span>	<span class="p">]</span>
+<span class="lineno">23 </span><span class="p">}</span>
+</pre>
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Build.cs_File">
+        Build.cs File
+       </span>
+      </h2>
+      <ul>
+       <li>
+        We need to create SampleGameMode.Build.cs so that Unreal Build tool knows how to generate our dll file
+       </li>
+       <li>
+        It should live at the same level that the Public and Private directories do
+       </li>
+       <li>
+        We'll use the PrivateIncludesPaths array to make #include cleaner throughout our source files
+       </li>
+      </ul>
+      <div class="toccolours mw-collapsible mw-collapsed">
+       <p>
+        <b>
+         SampleGameMode.Build.cs
+        </b>
+        - Unreal Build Tool definitions
+       </p>
+       <div class="mw-collapsible-content">
+        <div class="mw-highlight mw-content-ltr" dir="ltr">
+         <pre><span></span><span class="lineno"> 1 </span><span class="k">namespace</span> <span class="n">UnrealBuildTool</span><span class="p">.</span><span class="n">Rules</span>
+<span class="lineno"> 2 </span><span class="p">{</span>
+<span class="lineno"> 3 </span>	<span class="k">public</span> <span class="k">class</span> <span class="nc">SampleGameMode</span> <span class="o">:</span> <span class="n">ModuleRules</span>
+<span class="lineno"> 4 </span>	<span class="p">{</span>
+<span class="lineno"> 5 </span>		<span class="k">public</span> <span class="n">SampleGameMode</span><span class="p">(</span><span class="n">TargetInfo</span> <span class="n">Target</span><span class="p">)</span>
+<span class="lineno"> 6 </span>		<span class="p">{</span>
+<span class="lineno"> 7 </span>			<span class="n">PrivateIncludePaths</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s">"SampleGameMode/Private"</span><span class="p">);</span>
+<span class="lineno"> 8 </span>
+<span class="lineno"> 9 </span>			<span class="n">PublicDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span>
+<span class="lineno">10 </span>				<span class="k">new</span> <span class="n">string</span><span class="p">[]</span>
+<span class="lineno">11 </span>				<span class="p">{</span>
+<span class="lineno">12 </span>					<span class="s">"Core"</span><span class="p">,</span>
+<span class="lineno">13 </span>					<span class="s">"CoreUObject"</span><span class="p">,</span>
+<span class="lineno">14 </span>					<span class="s">"Engine"</span><span class="p">,</span>
+<span class="lineno">15 </span>					<span class="s">"UnrealTournament"</span><span class="p">,</span>
+<span class="lineno">16 </span>				<span class="p">}</span>
+<span class="lineno">17 </span>				<span class="p">);</span>
+<span class="lineno">18 </span>		<span class="p">}</span>
+<span class="lineno">19 </span>	<span class="p">}</span>
+<span class="lineno">20 </span><span class="p">}</span>
+</pre>
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Header_File">
+        Header File
+       </span>
+      </h2>
+      <ul>
+       <li>
+        Unreal Build Tool requires that we have a shared header file as the first include in every cpp source file in the plugin.
+       </li>
+       <li>
+        We'll put the SampleGameMode.h header file inside of the Public directory
+        <ol>
+         <li>
+          include "SampleGameMode.generated.h" is required by Unreal Header Tool
+         </li>
+        </ol>
+       </li>
+       <li>
+        Our header is a bit more complex than the mutator one. We've defined two custom structs that we've made BlueprintType so they'll be visible when we're in the editor.
+       </li>
+       <li>
+        You'll notice that each of the structs is just a TArray and their usage in the ASampleGameMode is just a TArray. UE4 does not currently support TArrays of TArrays so we work around that by housing the inner array inside of a structure.
+       </li>
+       <li>
+        We've exposed the StartingInventories and ScoringDamageTypes TArrays to blueprints so they can be filled with content references later. In order for the editor to see them, we made them UPROPERTYs with BlueprintReadWrite markup
+       </li>
+      </ul>
+      <div class="toccolours mw-collapsible mw-collapsed">
+       <p>
+        <b>
+         SampleGameMode.h
+        </b>
+        - Sample Mutator class definition
+       </p>
+       <div class="mw-collapsible-content">
+        <div class="mw-highlight mw-content-ltr" dir="ltr">
+         <pre><span></span><span class="lineno"> 1 </span><span class="c1">// Copyright 1998-2014 Epic Games, Inc. All Rights Reserved.</span>
+<span class="lineno"> 2 </span><span class="cp">#pragma once</span>
+<span class="lineno"> 3 </span>
+<span class="lineno"> 4 </span><span class="cp">#include</span> <span class="cpf">"Core.h"</span><span class="cp"></span>
+<span class="lineno"> 5 </span><span class="cp">#include</span> <span class="cpf">"Engine.h"</span><span class="cp"></span>
+<span class="lineno"> 6 </span><span class="cp">#include</span> <span class="cpf">"UTWeapon.h"</span><span class="cp"></span>
+<span class="lineno"> 7 </span><span class="cp">#include</span> <span class="cpf">"UTGameMode.h"</span><span class="cp"></span>
+<span class="lineno"> 8 </span>
+<span class="lineno"> 9 </span><span class="cp">#include</span> <span class="cpf">"SampleGameMode.generated.h"</span><span class="cp"></span>
+<span class="lineno">10 </span>
+<span class="lineno">11 </span><span class="n">USTRUCT</span><span class="p">(</span><span class="n">BlueprintType</span><span class="p">)</span>
+<span class="lineno">12 </span><span class="k">struct</span> <span class="n">FStartingInventory</span>
+<span class="lineno">13 </span><span class="p">{</span>
+<span class="lineno">14 </span>	<span class="n">GENERATED_USTRUCT_BODY</span><span class="p">()</span>
+<span class="lineno">15 </span>
+<span class="lineno">16 </span>	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="s">"GameMode"</span><span class="p">)</span>
+<span class="lineno">17 </span>	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">TSubclassOf</span><span class="o">&lt;</span><span class="n">AUTInventory</span><span class="o">&gt;&gt;</span> <span class="n">Inventory</span><span class="p">;</span>
+<span class="lineno">18 </span><span class="p">};</span>
+<span class="lineno">19 </span>
+<span class="lineno">20 </span><span class="n">USTRUCT</span><span class="p">(</span><span class="n">BlueprintType</span><span class="p">)</span>
+<span class="lineno">21 </span><span class="k">struct</span> <span class="n">FDamageTypeToProgess</span>
+<span class="lineno">22 </span><span class="p">{</span>
+<span class="lineno">23 </span>	<span class="n">GENERATED_USTRUCT_BODY</span><span class="p">()</span>
+<span class="lineno">24 </span>
+<span class="lineno">25 </span>	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"GameMode"</span><span class="p">)</span>
+<span class="lineno">26 </span>	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">TSubclassOf</span><span class="o">&lt;</span><span class="n">UDamageType</span><span class="o">&gt;&gt;</span> <span class="n">DamageType</span><span class="p">;</span>
+<span class="lineno">27 </span><span class="p">};</span>
+<span class="lineno">28 </span>
+<span class="lineno">29 </span><span class="n">UCLASS</span><span class="p">(</span><span class="n">Blueprintable</span><span class="p">,</span> <span class="n">Meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">ChildCanTick</span><span class="p">))</span>
+<span class="lineno">30 </span><span class="k">class</span> <span class="nc">ASampleGameMode</span> <span class="o">:</span> <span class="k">public</span> <span class="n">AUTGameMode</span>
+<span class="lineno">31 </span><span class="p">{</span>
+<span class="lineno">32 </span>	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+<span class="lineno">33 </span>
+<span class="lineno">34 </span>	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="s">"GameMode"</span><span class="p">)</span>
+<span class="lineno">35 </span>	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FStartingInventory</span><span class="o">&gt;</span> <span class="n">StartingInventories</span><span class="p">;</span>
+<span class="lineno">36 </span>
+<span class="lineno">37 </span>	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"GameMode"</span><span class="p">)</span>
+<span class="lineno">38 </span>	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FDamageTypeToProgess</span><span class="o">&gt;</span> <span class="n">ScoringDamageTypes</span><span class="p">;</span>
+<span class="lineno">39 </span>
+<span class="lineno">40 </span>	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">GiveDefaultInventory</span><span class="p">(</span><span class="n">APawn</span><span class="o">*</span> <span class="n">PlayerPawn</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+<span class="lineno">41 </span>	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">ScoreKill</span><span class="p">(</span><span class="n">AController</span><span class="o">*</span> <span class="n">Killer</span><span class="p">,</span> <span class="n">AController</span><span class="o">*</span> <span class="n">Other</span><span class="p">,</span> <span class="n">TSubclassOf</span><span class="o">&lt;</span><span class="n">UDamageType</span><span class="o">&gt;</span> <span class="n">DamageType</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+<span class="lineno">42 </span>	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">GiveNewGun</span><span class="p">(</span><span class="n">AUTCharacter</span> <span class="o">*</span><span class="n">UTCharacter</span><span class="p">);</span>
+<span class="lineno">43 </span><span class="p">};</span>
+</pre>
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Plugin_Module_Interface">
+        Plugin Module Interface
+       </span>
+      </h2>
+      <ul>
+       <li>
+        Very similar to the mutator sample here, just some name changes
+       </li>
+      </ul>
+      <div class="toccolours mw-collapsible mw-collapsed">
+       <p>
+        <b>
+         SampleGameModePlugin.cpp
+        </b>
+        - Plugin Module Interface
+       </p>
+       <div class="mw-collapsible-content">
+        <div class="mw-highlight mw-content-ltr" dir="ltr">
+         <pre><span></span><span class="lineno"> 1 </span><span class="c1">// Copyright 1998-2014 Epic Games, Inc. All Rights Reserved.</span>
+<span class="lineno"> 2 </span>
+<span class="lineno"> 3 </span><span class="cp">#include</span> <span class="cpf">"SampleGameMode.h"</span><span class="cp"></span>
+<span class="lineno"> 4 </span>
+<span class="lineno"> 5 </span><span class="cp">#include</span> <span class="cpf">"Core.h"</span><span class="cp"></span>
+<span class="lineno"> 6 </span><span class="cp">#include</span> <span class="cpf">"Engine.h"</span><span class="cp"></span>
+<span class="lineno"> 7 </span><span class="cp">#include</span> <span class="cpf">"ModuleManager.h"</span><span class="cp"></span>
+<span class="lineno"> 8 </span><span class="cp">#include</span> <span class="cpf">"ModuleInterface.h"</span><span class="cp"></span>
+<span class="lineno"> 9 </span>
+<span class="lineno">10 </span><span class="k">class</span> <span class="nc">FSampleGameModePlugin</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IModuleInterface</span>
+<span class="lineno">11 </span><span class="p">{</span>
+<span class="lineno">12 </span>	<span class="cm">/** IModuleInterface implementation */</span>
+<span class="lineno">13 </span>	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">StartupModule</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+<span class="lineno">14 </span>	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">ShutdownModule</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+<span class="lineno">15 </span><span class="p">};</span>
+<span class="lineno">16 </span>
+<span class="lineno">17 </span><span class="n">IMPLEMENT_MODULE</span><span class="p">(</span> <span class="n">FSampleGameModePlugin</span><span class="p">,</span> <span class="n">SampleGameMode</span> <span class="p">)</span>
+<span class="lineno">18 </span>
+<span class="lineno">19 </span><span class="kt">void</span> <span class="n">FSampleGameModePlugin</span><span class="o">::</span><span class="n">StartupModule</span><span class="p">()</span>
+<span class="lineno">20 </span><span class="p">{</span>
+<span class="lineno">21 </span>	
+<span class="lineno">22 </span><span class="p">}</span>
+<span class="lineno">23 </span>
+<span class="lineno">24 </span>
+<span class="lineno">25 </span><span class="kt">void</span> <span class="n">FSampleGameModePlugin</span><span class="o">::</span><span class="n">ShutdownModule</span><span class="p">()</span>
+<span class="lineno">26 </span><span class="p">{</span>
+<span class="lineno">27 </span>	
+<span class="lineno">28 </span><span class="p">}</span>
+</pre>
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="The_Game_Mode_.28C.2B.2B.29">
+        The Game Mode (C++)
+       </span>
+      </h2>
+      <ul>
+       <li>
+        Our aim with this tutorial is to make a game mode that functions like "Gun Game", you start with a weapon according to your score and going up in score gives you the next gun in the sequence. Pickups are disabled and so are weapon drops.
+       </li>
+       <li>
+        We'll use C++ to handle giving players the right guns on spawn and giving them the right guns after scoring.
+       </li>
+       <li>
+        We'll use Blueprints to handle disabling weapon drops and pickups.
+       </li>
+       <li>
+        Blueprints will also be used to get content references to weapons and damagetypes as hard coding them in C++ can be brittle.
+       </li>
+       <li>
+        ASampleGameMode::GiveDefaultInventory reads the content reference from StartingInventories that we'll set later in blueprints and spawns that inventory for the spawning player
+       </li>
+       <li>
+        ASampleGameMode::ScoreKill verifies that the killing damage type is equal to the content reference from ScoringDamageTypes and then calls GiveNewGun on the killer
+       </li>
+       <li>
+        ASampleGameMode::GiveNewGun will discard the character's current inventory and give them the proper gun by reading a content reference from StartingInventories
+       </li>
+      </ul>
+      <div class="toccolours mw-collapsible mw-collapsed">
+       <p>
+        <b>
+         SampleGameMode.cpp
+        </b>
+       </p>
+       <div class="mw-collapsible-content">
+        <div class="mw-highlight mw-content-ltr" dir="ltr">
+         <pre><span></span><span class="lineno"> 1 </span><span class="c1">// Copyright 1998-2014 Epic Games, Inc. All Rights Reserved.</span>
+<span class="lineno"> 2 </span>
+<span class="lineno"> 3 </span><span class="cp">#include</span> <span class="cpf">"SampleGameMode.h"</span><span class="cp"></span>
+<span class="lineno"> 4 </span>
+<span class="lineno"> 5 </span><span class="n">ASampleGameMode</span><span class="o">::</span><span class="n">ASampleGameMode</span><span class="p">(</span><span class="k">const</span> <span class="n">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span>
+<span class="lineno"> 6 </span>	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="lineno"> 7 </span><span class="p">{</span>
+<span class="lineno"> 8 </span><span class="p">}</span>
+<span class="lineno"> 9 </span>
+<span class="lineno">10 </span><span class="kt">void</span> <span class="n">ASampleGameMode</span><span class="o">::</span><span class="n">GiveDefaultInventory</span><span class="p">(</span><span class="n">APawn</span><span class="o">*</span> <span class="n">PlayerPawn</span><span class="p">)</span>
+<span class="lineno">11 </span><span class="p">{</span>
+<span class="lineno">12 </span>	<span class="c1">// Don't call Super</span>
+<span class="lineno">13 </span>		
+<span class="lineno">14 </span>	<span class="n">AUTCharacter</span><span class="o">*</span> <span class="n">UTCharacter</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">AUTCharacter</span><span class="o">&gt;</span><span class="p">(</span><span class="n">PlayerPawn</span><span class="p">);</span>
+<span class="lineno">15 </span>	<span class="k">if</span> <span class="p">(</span><span class="n">UTCharacter</span> <span class="o">!=</span> <span class="k">nullptr</span> <span class="o">&amp;&amp;</span> <span class="n">UTCharacter</span><span class="o">-&gt;</span><span class="n">GetInventory</span><span class="p">()</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span>
+<span class="lineno">16 </span>	<span class="p">{</span>
+<span class="lineno">17 </span>		<span class="n">int32</span> <span class="n">InventoryIndex</span> <span class="o">=</span> <span class="n">PlayerPawn</span><span class="o">-&gt;</span><span class="n">PlayerState</span><span class="o">-&gt;</span><span class="n">Score</span><span class="p">;</span>
+<span class="lineno">18 </span>		<span class="k">if</span> <span class="p">(</span><span class="n">InventoryIndex</span> <span class="o">&gt;=</span> <span class="n">StartingInventories</span><span class="p">.</span><span class="n">Num</span><span class="p">())</span>
+<span class="lineno">19 </span>		<span class="p">{</span>
+<span class="lineno">20 </span>			<span class="n">InventoryIndex</span> <span class="o">=</span> <span class="n">StartingInventories</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+<span class="lineno">21 </span>		<span class="p">}</span>
+<span class="lineno">22 </span>		
+<span class="lineno">23 </span>		<span class="k">if</span> <span class="p">(</span><span class="n">StartingInventories</span><span class="p">.</span><span class="n">IsValidIndex</span><span class="p">(</span><span class="n">InventoryIndex</span><span class="p">))</span>
+<span class="lineno">24 </span>		<span class="p">{</span>
+<span class="lineno">25 </span>			<span class="k">for</span> <span class="p">(</span><span class="n">int32</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">StartingInventories</span><span class="p">[</span><span class="n">InventoryIndex</span><span class="p">].</span><span class="n">Inventory</span><span class="p">.</span><span class="n">Num</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="lineno">26 </span>			<span class="p">{</span>
+<span class="lineno">27 </span>				<span class="k">if</span> <span class="p">(</span><span class="n">StartingInventories</span><span class="p">[</span><span class="n">InventoryIndex</span><span class="p">].</span><span class="n">Inventory</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span>
+<span class="lineno">28 </span>				<span class="p">{</span>
+<span class="lineno">29 </span>					<span class="n">UTCharacter</span><span class="o">-&gt;</span><span class="n">AddInventory</span><span class="p">(</span><span class="n">GetWorld</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SpawnActor</span><span class="o">&lt;</span><span class="n">AUTInventory</span><span class="o">&gt;</span><span class="p">(</span><span class="n">StartingInventories</span><span class="p">[</span><span class="n">InventoryIndex</span><span class="p">].</span><span class="n">Inventory</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">FVector</span><span class="p">(</span><span class="mf">0.0f</span><span class="p">),</span> <span class="n">FRotator</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span> <span class="nb">true</span><span class="p">);</span>
+<span class="lineno">30 </span>				<span class="p">}</span>
+<span class="lineno">31 </span>			<span class="p">}</span>
+<span class="lineno">32 </span>		<span class="p">}</span>
+<span class="lineno">33 </span>	<span class="p">}</span>
+<span class="lineno">34 </span><span class="p">}</span>
+<span class="lineno">35 </span>
+<span class="lineno">36 </span><span class="kt">void</span> <span class="n">ASampleGameMode</span><span class="o">::</span><span class="n">ScoreKill</span><span class="p">(</span><span class="n">AController</span><span class="o">*</span> <span class="n">Killer</span><span class="p">,</span> <span class="n">AController</span><span class="o">*</span> <span class="n">Other</span><span class="p">,</span> <span class="n">TSubclassOf</span><span class="o">&lt;</span><span class="n">UDamageType</span><span class="o">&gt;</span> <span class="n">DamageType</span><span class="p">)</span>
+<span class="lineno">37 </span><span class="p">{</span>
+<span class="lineno">38 </span>	<span class="c1">// Just a suicide, pass it through</span>
+<span class="lineno">39 </span>	<span class="k">if</span> <span class="p">(</span><span class="n">Killer</span> <span class="o">==</span> <span class="n">Other</span> <span class="o">||</span> <span class="n">Killer</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span>
+<span class="lineno">40 </span>	<span class="p">{</span>
+<span class="lineno">41 </span>		<span class="n">Super</span><span class="o">::</span><span class="n">ScoreKill</span><span class="p">(</span><span class="n">Killer</span><span class="p">,</span> <span class="n">Other</span><span class="p">,</span> <span class="n">DamageType</span><span class="p">);</span>
+<span class="lineno">42 </span>		<span class="k">return</span><span class="p">;</span>
+<span class="lineno">43 </span>	<span class="p">}</span>
+<span class="lineno">44 </span>
+<span class="lineno">45 </span>	<span class="n">APlayerState</span><span class="o">*</span> <span class="n">KillerPlayerState</span> <span class="o">=</span> <span class="n">Killer</span><span class="o">-&gt;</span><span class="n">PlayerState</span><span class="p">;</span>
+<span class="lineno">46 </span>	<span class="k">if</span> <span class="p">(</span><span class="n">KillerPlayerState</span><span class="p">)</span>
+<span class="lineno">47 </span>	<span class="p">{</span>
+<span class="lineno">48 </span>		<span class="n">int32</span> <span class="n">DamageIndex</span> <span class="o">=</span> <span class="n">KillerPlayerState</span><span class="o">-&gt;</span><span class="n">Score</span><span class="p">;</span>
+<span class="lineno">49 </span>		<span class="k">if</span> <span class="p">(</span><span class="n">DamageIndex</span> <span class="o">&gt;=</span> <span class="n">ScoringDamageTypes</span><span class="p">.</span><span class="n">Num</span><span class="p">())</span>
+<span class="lineno">50 </span>		<span class="p">{</span>
+<span class="lineno">51 </span>			<span class="n">DamageIndex</span> <span class="o">=</span> <span class="n">ScoringDamageTypes</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+<span class="lineno">52 </span>		<span class="p">}</span>
+<span class="lineno">53 </span>
+<span class="lineno">54 </span>		<span class="k">for</span> <span class="p">(</span><span class="n">int32</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">ScoringDamageTypes</span><span class="p">[</span><span class="n">DamageIndex</span><span class="p">].</span><span class="n">DamageType</span><span class="p">.</span><span class="n">Num</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="lineno">55 </span>		<span class="p">{</span>
+<span class="lineno">56 </span>			<span class="k">if</span> <span class="p">(</span><span class="n">DamageType</span> <span class="o">==</span> <span class="n">ScoringDamageTypes</span><span class="p">[</span><span class="n">DamageIndex</span><span class="p">].</span><span class="n">DamageType</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+<span class="lineno">57 </span>			<span class="p">{</span>
+<span class="lineno">58 </span>				<span class="n">Super</span><span class="o">::</span><span class="n">ScoreKill</span><span class="p">(</span><span class="n">Killer</span><span class="p">,</span> <span class="n">Other</span><span class="p">,</span> <span class="n">DamageType</span><span class="p">);</span>
+<span class="lineno">59 </span>				
+<span class="lineno">60 </span>				<span class="c1">// If we changed score, give player a new gun</span>
+<span class="lineno">61 </span>				<span class="k">if</span> <span class="p">(</span><span class="n">DamageIndex</span> <span class="o">!=</span> <span class="n">KillerPlayerState</span><span class="o">-&gt;</span><span class="n">Score</span><span class="p">)</span>
+<span class="lineno">62 </span>				<span class="p">{</span>
+<span class="lineno">63 </span>					<span class="n">AUTCharacter</span><span class="o">*</span> <span class="n">UTCharacter</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">AUTCharacter</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Killer</span><span class="o">-&gt;</span><span class="n">GetPawn</span><span class="p">());</span>
+<span class="lineno">64 </span>					<span class="k">if</span> <span class="p">(</span><span class="n">UTCharacter</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span>
+<span class="lineno">65 </span>					<span class="p">{</span>
+<span class="lineno">66 </span>						<span class="n">GiveNewGun</span><span class="p">(</span><span class="n">UTCharacter</span><span class="p">);</span>
+<span class="lineno">67 </span>					<span class="p">}</span>
+<span class="lineno">68 </span>				<span class="p">}</span>
+<span class="lineno">69 </span>
+<span class="lineno">70 </span>				<span class="k">break</span><span class="p">;</span>
+<span class="lineno">71 </span>			<span class="p">}</span>
+<span class="lineno">72 </span>		<span class="p">}</span>
+<span class="lineno">73 </span>	<span class="p">}</span>
+<span class="lineno">74 </span><span class="p">}</span>
+<span class="lineno">75 </span>
+<span class="lineno">76 </span><span class="kt">void</span> <span class="n">ASampleGameMode</span><span class="o">::</span><span class="n">GiveNewGun</span><span class="p">(</span><span class="n">AUTCharacter</span> <span class="o">*</span><span class="n">UTCharacter</span><span class="p">)</span>
+<span class="lineno">77 </span><span class="p">{</span>
+<span class="lineno">78 </span>	<span class="n">UTCharacter</span><span class="o">-&gt;</span><span class="n">DiscardAllInventory</span><span class="p">();</span>
+<span class="lineno">79 </span>
+<span class="lineno">80 </span>	<span class="n">int32</span> <span class="n">InventoryIndex</span> <span class="o">=</span> <span class="n">UTCharacter</span><span class="o">-&gt;</span><span class="n">PlayerState</span><span class="o">-&gt;</span><span class="n">Score</span><span class="p">;</span>
+<span class="lineno">81 </span>	<span class="k">if</span> <span class="p">(</span><span class="n">InventoryIndex</span> <span class="o">&gt;=</span> <span class="n">StartingInventories</span><span class="p">.</span><span class="n">Num</span><span class="p">())</span>
+<span class="lineno">82 </span>	<span class="p">{</span>
+<span class="lineno">83 </span>		<span class="n">InventoryIndex</span> <span class="o">=</span> <span class="n">StartingInventories</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">;</span>
+<span class="lineno">84 </span>	<span class="p">}</span>
+<span class="lineno">85 </span>
+<span class="lineno">86 </span>	<span class="k">if</span> <span class="p">(</span><span class="n">StartingInventories</span><span class="p">.</span><span class="n">IsValidIndex</span><span class="p">(</span><span class="n">InventoryIndex</span><span class="p">))</span>
+<span class="lineno">87 </span>	<span class="p">{</span>
+<span class="lineno">88 </span>		<span class="k">for</span> <span class="p">(</span><span class="n">int32</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">StartingInventories</span><span class="p">[</span><span class="n">InventoryIndex</span><span class="p">].</span><span class="n">Inventory</span><span class="p">.</span><span class="n">Num</span><span class="p">();</span> <span class="n">i</span><span class="o">++</span><span class="p">)</span>
+<span class="lineno">89 </span>		<span class="p">{</span>
+<span class="lineno">90 </span>			<span class="k">if</span> <span class="p">(</span><span class="n">StartingInventories</span><span class="p">[</span><span class="n">InventoryIndex</span><span class="p">].</span><span class="n">Inventory</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span>
+<span class="lineno">91 </span>			<span class="p">{</span>
+<span class="lineno">92 </span>				<span class="n">UTCharacter</span><span class="o">-&gt;</span><span class="n">AddInventory</span><span class="p">(</span><span class="n">GetWorld</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">SpawnActor</span><span class="o">&lt;</span><span class="n">AUTInventory</span><span class="o">&gt;</span><span class="p">(</span><span class="n">StartingInventories</span><span class="p">[</span><span class="n">InventoryIndex</span><span class="p">].</span><span class="n">Inventory</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">FVector</span><span class="p">(</span><span class="mf">0.0f</span><span class="p">),</span> <span class="n">FRotator</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span> <span class="nb">true</span><span class="p">);</span>
+<span class="lineno">93 </span>			<span class="p">}</span>
+<span class="lineno">94 </span>		<span class="p">}</span>
+<span class="lineno">95 </span>	<span class="p">}</span>
+<span class="lineno">96 </span><span class="p">}</span>
+</pre>
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Editor_Setup">
+        Editor Setup
+       </span>
+      </h2>
+      <ul>
+       <li>
+        You'll need to enable "Show Plugin Content" in the Content Browser's "View Options" menu
+       </li>
+      </ul>
+      <p>
+       <img alt="Gamemodetutorial viewplugincontent.png" class="" height="768" src="../assets/c-game-mode-tutorial/0.png" width="927"/>
+      </p>
+      <ul>
+       <li>
+        Inside the SampleGameMode folder, make two new blueprints: BP_SampleGameBuiltinMutator with parent UTMutator and BP_SampleGameMode with parent SampleGameMode. Make sure to check out
+        and
+        for more information on blueprints.
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="Mutator_Blueprint">
+        Mutator Blueprint
+       </span>
+      </h2>
+      <ul>
+       <li>
+        We want to use a mutator to destroy all map pickups and all dropped pickups similar to
+       </li>
+       <li>
+        We'll override the Check Relevance function as seen below
+       </li>
+      </ul>
+      <p>
+       <img alt="Gamemodetutorial mutator.png" class="" height="484" src="../assets/c-game-mode-tutorial/1.png" width="1213"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Game_Mode_Blueprint">
+        Game Mode Blueprint
+       </span>
+      </h2>
+      <ul>
+       <li>
+        Open up BP_SampleGameMode and go to the default properties tab
+       </li>
+       <li>
+        First, we'll set the Built in Mutators array to reference BP_SampleGameBuiltinMutator
+       </li>
+      </ul>
+      <p>
+       <img alt="Gamemodetutorial builtin.png" class="" height="91" src="../assets/c-game-mode-tutorial/2.png" width="961"/>
+      </p>
+      <ul>
+       <li>
+        Next, we'll set the HUD Class to UTHUD_DM
+       </li>
+      </ul>
+      <p>
+       <img alt="Gamemodetutorial hudclass.png" class="" height="31" src="../assets/c-game-mode-tutorial/3.png" width="803"/>
+      </p>
+      <ul>
+       <li>
+        Third, we'll set up the content references to our guns in the StartingInventories array
+       </li>
+      </ul>
+      <p>
+       <img alt="Gamemodetutorial startinginventory.png" class="" height="774" src="../assets/c-game-mode-tutorial/4.png" width="908"/>
+      </p>
+      <ul>
+       <li>
+        Finally, we'll set up the content references to our damage types in the ScoringDamageTypes array
+       </li>
+      </ul>
+      <p>
+       <img alt="Gamemodetutorial damagetypes.png" class="" height="969" src="../assets/c-game-mode-tutorial/5.png" width="931"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Testing">
+        Testing
+       </span>
+      </h2>
+      <ul>
+       <li>
+        To make typing our command line easier, you should add a game mode alias to DefaultGame.ini
+       </li>
+       <li>
+        Under [/Script/Engine.GameMode] put +GameModeClassAliases=(ShortName="Sample",GameClassName="/SampleGameMode/BP_SampleGameMode.BP_SampleGameMode_C")
+       </li>
+       <li>
+        The game type can now be tested by using ?game=sample instead of ?game=/SampleGameMode/BP_SampleGameMode.BP_SampleGameMode_C
+       </li>
+       <li>
+        Make sure to restart the editor after putting that in the ini
+       </li>
+       <li>
+        I prefer to test in PIE by setting the number of clients to 2, but you can also test via commandline by running a server with "ue4editor unrealtournament -game example_map?game=sample?listen" and a client with "ue4editor unrealtournament -game 127.0.0.1"
+       </li>
+      </ul>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

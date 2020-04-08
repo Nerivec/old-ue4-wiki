@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Gameplay Debugger: Quick, simple, re-usable - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Gameplay Debugger: Quick, simple, re-usable
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Introduction">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Introduction
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Overview">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Requirements">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Requirements
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Engine_Version">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Engine Version
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Getting_Started">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Getting Started
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#GameplayDebuggerCategoryT.h">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             GameplayDebuggerCategoryT.h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#GameplayDebuggerCategoryT.inl">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             GameplayDebuggerCategoryT.inl
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Use_the_new_Gameplay_Debugger_Category_class">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Use the new
+           <b>
+            Gameplay Debugger Category
+           </b>
+           class
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#Implement_GetDebugInfoString_on_your_Actor_Component">
+            <span class="tocnumber">
+             5.1
+            </span>
+            <span class="toctext">
+             Implement
+             <b>
+              GetDebugInfoString
+             </b>
+             on your
+             <b>
+              Actor Component
+             </b>
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#Registration">
+            <span class="tocnumber">
+             5.2
+            </span>
+            <span class="toctext">
+             Registration
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-11">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Introduction">
+        Introduction
+       </span>
+      </h2>
+      <p>
+       This tutorial will help you quickly set up a re-usable C++
+       <b>
+        Gameplay Debugger Category
+       </b>
+       , which can be used against any
+       <b>
+        Actor Component
+       </b>
+       without the need to rewrite code.
+      </p>
+      <p>
+       Once you've copied and pasted the new class into your game, you'll need to type one line in your
+       <b>
+        Game Instance
+       </b>
+       class to register your new category, and one function to spit out text from your
+       <b>
+        Actor Component
+       </b>
+       .
+      </p>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       The UE4 Gameplay debugger provides a powerful real-time visual debugging layer to be overlayed on top of your game:
+       <a class="external free" href="https://docs.unrealengine.com/latest/INT/Gameplay/Tools/GameplayDebugger" rel="nofollow">
+        https://docs.unrealengine.com/latest/INT/Gameplay/Tools/GameplayDebugger
+       </a>
+      </p>
+      <p>
+       You bring it up by pressing the apostrophe character ('). You've probably used it already to take advantage of the in-built gameplay debugger categories, such as
+       <b>
+        NavMesh
+       </b>
+       ,
+       <b>
+        Behaviour
+       </b>
+       or
+       <b>
+        EQS Queries
+       </b>
+       .
+      </p>
+      <p>
+       However the Gameplay Debugger becomes really useful when instructed how to visualise your own proprietary classes. If you've read the page above, or looked at the source code, chances are it seems a bit heavy-going (and out-of-date!). Sure you can copy and paste all that code, switching out what you need. Sure you can do this for every single actor component you want to debug. But you'd much rather have something that works out of the box, typing a few lines of code right?
+      </p>
+      <p>
+       This implementation helps you do just that. In a minimum of two lines, you can have a new Gameplay Debugger Category set up and associated with a hotkey.
+      </p>
+      <p>
+       <img alt="GameplayDebuggerCategory.png" class="" height="565" src="../assets/gameplay-debugger-quick-simple-re-usable/0.png" width="893"/>
+      </p>
+      <p>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Requirements">
+        Requirements
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Engine_Version">
+        Engine Version
+       </span>
+      </h3>
+      <p>
+       Requires Unreal Engine
+       <b>
+        4.12
+       </b>
+       . The code below has been tested on version
+       <b>
+        4.14.3
+       </b>
+       ,
+       <b>
+        4.15.3
+       </b>
+       &amp;
+       <b>
+        4.16.2
+       </b>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Getting_Started">
+        Getting Started
+       </span>
+      </h2>
+      <p>
+       Copy the two files below to create the new
+       <b>
+        FGameplayDebuggerCategory
+       </b>
+       class. Register and define your debug function and you're all set up.
+      </p>
+      <h4>
+       <span class="mw-headline" id="GameplayDebuggerCategoryT.h">
+        GameplayDebuggerCategoryT.h
+       </span>
+      </h4>
+      <p>
+       Copy and paste the following code and make a new file called
+       <b>
+        GameplayDebuggerCategoryT.h
+       </b>
+       . Ensure it's included in your UE4 game project (or in a library).
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// GameplayDebuggerCategoryT.h</span>
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"GameplayDebuggerCategory.h"</span><span class="cp"></span>
+
+<span class="c1">// Gameplay debugger category to show information when the gameplay debugger is shown in game</span>
+<span class="c1">// (apostrophe hotkey). This templatised class can be used for debugging any Actor Component.</span>
+<span class="c1">// Instantiate this class by calling the static Register function from your GameInstance,</span>
+<span class="c1">// implement a new function on your actor component with the signature: </span>
+<span class="c1">// FString GetDebugInfoString()</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="k">class</span> <span class="nc">FGameplayDebuggerCategoryT</span> <span class="o">:</span> <span class="k">public</span> <span class="n">FGameplayDebuggerCategory</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+   <span class="n">FGameplayDebuggerCategoryT</span><span class="p">();</span>
+
+   <span class="c1">// Call this to register your category in the Gameplay Debugger</span>
+   <span class="k">static</span> <span class="kt">void</span> <span class="nf">Register</span><span class="p">(</span><span class="k">const</span> <span class="n">FName</span><span class="o">&amp;</span> <span class="n">Name</span><span class="p">,</span> <span class="kt">int</span> <span class="n">Hotkey</span><span class="p">);</span>
+
+   <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">CollectData</span><span class="p">(</span><span class="n">APlayerController</span><span class="o">*</span> <span class="n">OwnerPC</span><span class="p">,</span> <span class="n">AActor</span><span class="o">*</span> <span class="n">DebugActor</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+   <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">DrawData</span><span class="p">(</span><span class="n">APlayerController</span><span class="o">*</span> <span class="n">OwnerPC</span><span class="p">,</span> <span class="n">FGameplayDebuggerCanvasContext</span><span class="o">&amp;</span> <span class="n">CanvasContext</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+   <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">OnDataPackReplicated</span><span class="p">(</span><span class="n">int32</span> <span class="n">DataPackId</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+
+<span class="k">protected</span><span class="o">:</span>
+   <span class="k">static</span> <span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">FGameplayDebuggerCategory</span><span class="o">&gt;</span> <span class="n">MakeInstance</span><span class="p">();</span>
+
+   <span class="k">struct</span> <span class="n">FDebugData</span>
+   <span class="p">{</span>
+      <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FString</span><span class="o">&gt;</span> <span class="n">DebugStrings</span><span class="p">;</span>
+      <span class="kt">void</span> <span class="nf">Serialize</span><span class="p">(</span><span class="n">FArchive</span><span class="o">&amp;</span> <span class="n">archive</span><span class="p">);</span>
+   <span class="p">}</span> 
+   <span class="n">DebugData</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="cp">#include</span> <span class="cpf">"GameplayDebuggerCategoryT.inl"</span><span class="cp"></span>
+</pre>
+      </div>
+      <h4>
+       <span class="mw-headline" id="GameplayDebuggerCategoryT.inl">
+        GameplayDebuggerCategoryT.inl
+       </span>
+      </h4>
+      <p>
+       Copy and paste the following code and make a new file called
+       <b>
+        GameplayDebuggerCategoryT.inl
+       </b>
+       . Ensure it's included in your UE4 game project (or in a library).
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// GameplayDebuggerCategoryT.inl</span>
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"GameplayDebuggerCategoryT.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"GameUtils.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"GameplayDebugger.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"SharedPointerInternals.h"</span><span class="cp"></span>
+
+<span class="c1">///////////////////////////////////////////////////////////////////////////////</span>
+<span class="c1">// FGameplayDebuggerCategoryT factory instantiation</span>
+<span class="c1">///////////////////////////////////////////////////////////////////////////////</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="kr">inline</span> <span class="n">FGameplayDebuggerCategoryT</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">FGameplayDebuggerCategoryT</span><span class="p">()</span>
+<span class="p">{</span>
+   <span class="n">SetDataPackReplication</span><span class="p">(</span><span class="o">&amp;</span><span class="n">DebugData</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="kr">inline</span> <span class="kt">void</span> <span class="n">FGameplayDebuggerCategoryT</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">Register</span><span class="p">(</span><span class="k">const</span> <span class="n">FName</span><span class="o">&amp;</span> <span class="n">Name</span><span class="p">,</span> <span class="kt">int</span> <span class="n">Hotkey</span><span class="p">)</span>
+<span class="p">{</span>
+   <span class="k">const</span> <span class="k">auto</span> <span class="n">STATE_FLAGS</span> <span class="o">=</span> <span class="n">EGameplayDebuggerCategoryState</span><span class="o">::</span><span class="n">EnabledInGame</span><span class="p">;</span>
+
+   <span class="k">auto</span><span class="o">&amp;</span> <span class="n">debugger</span> <span class="o">=</span> <span class="n">IGameplayDebugger</span><span class="o">::</span><span class="n">Get</span><span class="p">();</span>
+   <span class="k">auto</span> <span class="n">creationDelegate</span> <span class="o">=</span> <span class="n">IGameplayDebugger</span><span class="o">::</span><span class="n">FOnGetCategory</span><span class="o">::</span><span class="n">CreateStatic</span><span class="p">(</span><span class="o">&amp;</span><span class="n">FGameplayDebuggerCategoryT</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">MakeInstance</span><span class="p">);</span>
+
+   <span class="n">debugger</span><span class="p">.</span><span class="n">RegisterCategory</span><span class="p">(</span><span class="n">Name</span><span class="p">,</span> <span class="n">creationDelegate</span><span class="p">,</span> <span class="n">STATE_FLAGS</span><span class="p">,</span> <span class="n">Hotkey</span><span class="p">);</span>
+   <span class="n">debugger</span><span class="p">.</span><span class="n">NotifyCategoriesChanged</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="kr">inline</span> <span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">FGameplayDebuggerCategory</span><span class="o">&gt;</span> <span class="n">FGameplayDebuggerCategoryT</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">MakeInstance</span><span class="p">()</span>
+<span class="p">{</span>
+   <span class="k">return</span> <span class="n">MakeShareable</span><span class="p">(</span><span class="k">new</span> <span class="n">FGameplayDebuggerCategoryT</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">());</span>
+<span class="p">}</span>
+
+<span class="c1">///////////////////////////////////////////////////////////////////////////////</span>
+<span class="c1">// FGameplayDebuggerCategoryT</span>
+<span class="c1">///////////////////////////////////////////////////////////////////////////////</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="kr">inline</span> <span class="kt">void</span> <span class="n">FGameplayDebuggerCategoryT</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">CollectData</span><span class="p">(</span><span class="n">APlayerController</span><span class="o">*</span> <span class="n">Owner</span><span class="p">,</span> <span class="n">AActor</span><span class="o">*</span> <span class="n">DebugActor</span><span class="p">)</span>
+<span class="p">{</span>
+   <span class="n">DebugData</span><span class="p">.</span><span class="n">DebugStrings</span><span class="p">.</span><span class="n">Empty</span><span class="p">();</span>
+   <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">DebugActor</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+
+   <span class="k">for</span> <span class="p">(</span><span class="n">UActorComponent</span><span class="o">*</span> <span class="nl">component</span> <span class="p">:</span> <span class="n">DebugActor</span><span class="o">-&gt;</span><span class="n">GetComponents</span><span class="p">())</span>
+   <span class="p">{</span>
+      <span class="n">T</span><span class="o">*</span> <span class="n">componentCasted</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">component</span><span class="p">);</span>
+      <span class="k">if</span> <span class="p">(</span><span class="n">componentCasted</span><span class="p">)</span>
+      <span class="p">{</span>
+         <span class="n">DebugData</span><span class="p">.</span><span class="n">DebugStrings</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">componentCasted</span><span class="o">-&gt;</span><span class="n">GetDebugInfoString</span><span class="p">());</span>
+      <span class="p">}</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="kr">inline</span> <span class="kt">void</span> <span class="n">FGameplayDebuggerCategoryT</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">OnDataPackReplicated</span><span class="p">(</span><span class="n">int32</span> <span class="n">DataPackId</span><span class="p">)</span>
+<span class="p">{</span>
+   <span class="n">MarkRenderStateDirty</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="kr">inline</span> <span class="kt">void</span> <span class="n">FGameplayDebuggerCategoryT</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">DrawData</span><span class="p">(</span><span class="n">APlayerController</span><span class="o">*</span> <span class="n">OwnerPC</span><span class="p">,</span> <span class="n">FGameplayDebuggerCanvasContext</span><span class="o">&amp;</span> <span class="n">CanvasContext</span><span class="p">)</span>
+<span class="p">{</span>
+   <span class="k">for</span><span class="p">(</span><span class="k">const</span> <span class="n">FString</span><span class="o">&amp;</span> <span class="nl">debugInfoString</span> <span class="p">:</span> <span class="n">DebugData</span><span class="p">.</span><span class="n">DebugStrings</span><span class="p">)</span>
+   <span class="p">{</span>
+      <span class="n">CanvasContext</span><span class="p">.</span><span class="n">Printf</span><span class="p">(</span><span class="o">*</span><span class="n">debugInfoString</span><span class="p">);</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">///////////////////////////////////////////////////////////////////////////////</span>
+<span class="c1">// FGameplayDebuggerCategoryT::FDebugData</span>
+<span class="c1">///////////////////////////////////////////////////////////////////////////////</span>
+<span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+<span class="kr">inline</span> <span class="kt">void</span> <span class="n">FGameplayDebuggerCategoryT</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;::</span><span class="n">FDebugData</span><span class="o">::</span><span class="n">Serialize</span><span class="p">(</span><span class="n">FArchive</span><span class="o">&amp;</span> <span class="n">archive</span><span class="p">)</span>
+<span class="p">{</span>
+   <span class="k">for</span> <span class="p">(</span><span class="k">auto</span> <span class="nl">debugString</span> <span class="p">:</span> <span class="n">DebugStrings</span><span class="p">)</span>
+   <span class="p">{</span>
+      <span class="n">archive</span> <span class="o">&lt;&lt;</span> <span class="n">debugString</span><span class="p">;</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Use_the_new_Gameplay_Debugger_Category_class">
+        Use the new
+        <b>
+         Gameplay Debugger Category
+        </b>
+        class
+       </span>
+      </h2>
+      <h4>
+       <span class="mw-headline" id="Implement_GetDebugInfoString_on_your_Actor_Component">
+        Implement
+        <b>
+         GetDebugInfoString
+        </b>
+        on your
+        <b>
+         Actor Component
+        </b>
+       </span>
+      </h4>
+      <p>
+       This is where the magic happens. You'll of course have to write your own
+       <b>
+        GetDebugInfoString
+       </b>
+       function on your own specialised
+       <b>
+        Actor Component
+       </b>
+       . A real-world example of how to use is however provided.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FString</span> <span class="n">UVehicleMovementComponent</span><span class="o">::</span><span class="n">GetDebugInfoString</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+   <span class="n">check</span><span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">MoveState</span> <span class="o">&amp;&amp;</span> <span class="n">MoveState</span> <span class="o">&lt;</span> <span class="n">eMoveState</span><span class="o">::</span><span class="n">MOVE_STATE_COUNT</span><span class="p">);</span>
+
+   <span class="k">const</span> <span class="n">FString</span> <span class="n">FORMAT_STRING</span> <span class="o">=</span> <span class="n">TEXT</span><span class="p">(</span>
+      <span class="s">"{white}MoveState: {yellow}%s</span><span class="se">\n</span><span class="s">"</span>
+      <span class="s">"{white}Speed: {yellow}%.1f{white}ms¯¹ (target {yellow}%.1f{white}ms¯¹)</span><span class="se">\n</span><span class="s">"</span>
+      <span class="s">"{white}Yaw: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+
+   <span class="n">FString</span> <span class="n">DebugString</span> <span class="o">=</span> <span class="n">FString</span><span class="o">::</span><span class="n">Printf</span><span class="p">(</span><span class="o">*</span><span class="n">FORMAT_STRING</span><span class="p">,</span> 
+      <span class="o">*</span><span class="n">MoveStateNames</span><span class="p">[</span><span class="n">MoveState</span><span class="p">],</span> 
+      <span class="n">Speed</span><span class="p">,</span> <span class="n">TargetSpeed</span><span class="p">,</span>
+      <span class="o">*</span><span class="n">Yaw</span><span class="p">.</span><span class="n">GetDebugInfoString</span><span class="p">());</span>
+
+   <span class="k">return</span> <span class="n">DebugString</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h4>
+       <span class="mw-headline" id="Registration">
+        Registration
+       </span>
+      </h4>
+      <p>
+       All you've got to do now is template-instantiate your
+       <b>
+        Gameplay Debugger Category
+       </b>
+       , supplying your
+       <b>
+        Actor Component
+       </b>
+       as a template argument. Supply a
+       <b>
+        Name
+       </b>
+       and a
+       <b>
+        Hotkey Assignment
+       </b>
+       number for your new Gameplay Debugger Category. The example below puts this registration code into the constructor of your specialised
+       <b>
+        GameInstance
+       </b>
+       class, for simplicity. You might want to move this to a separate function, especially if you build up several categories.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UMyGameInstance</span><span class="o">::</span><span class="n">UMyGameInstance</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="cp">#if WITH_GAMEPLAY_DEBUGGER</span>
+   <span class="n">FGameplayDebuggerCategoryT</span><span class="o">&lt;</span><span class="n">UVehicleMovementComponent</span><span class="o">&gt;::</span><span class="n">Register</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"Vehicle Movement"</span><span class="p">),</span> <span class="mi">6</span><span class="p">);</span>
+<span class="cp">#endif</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       Once you have this set up in your project, to repeat for new debugger categories, you'll just have to implement a new
+       <b>
+        GetDebugInfoString
+       </b>
+       on your latest
+       <b>
+        Actor Component
+       </b>
+       , and write a new line of registration in your
+       <b>
+        GameInstance
+       </b>
+       . If you're like us, you'll find yourself using it again and again, simply because it's so easy when you need to quickly get some feedback from some erring logic.
+      </p>
+      <p>
+       The code provided in this tutorial is my own work, based on the existing engine classes; adhering to their conventions where possible. I place this in the public domain: you're welcome to use the code in your own codebase, without affiliation.
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

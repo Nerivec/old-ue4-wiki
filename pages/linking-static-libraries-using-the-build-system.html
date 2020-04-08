@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Linking Static Libraries Using The Build System - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Linking Static Libraries Using The Build System
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <table align="right">
+       <tbody>
+        <tr>
+         <td>
+          <div class="toc" id="toc">
+           <div class="toctitle">
+            <h2>
+             Contents
+            </h2>
+           </div>
+           <ul>
+            <li class="toclevel-1 tocsection-1">
+             <a href="#Overview">
+              <span class="tocnumber">
+               1
+              </span>
+              <span class="toctext">
+               Overview
+              </span>
+             </a>
+             <ul>
+              <li class="toclevel-2 tocsection-2">
+               <a href="#Scope_.26_Notes">
+                <span class="tocnumber">
+                 1.1
+                </span>
+                <span class="toctext">
+                 Scope &amp; Notes
+                </span>
+               </a>
+              </li>
+             </ul>
+            </li>
+            <li class="toclevel-1 tocsection-3">
+             <a href="#Visual_Studio_2013.2F2015_-_Library_Configuration">
+              <span class="tocnumber">
+               2
+              </span>
+              <span class="toctext">
+               Visual Studio 2013/2015 - Library Configuration
+              </span>
+             </a>
+             <ul>
+              <li class="toclevel-2 tocsection-4">
+               <a href="#Creating_the_project">
+                <span class="tocnumber">
+                 2.1
+                </span>
+                <span class="toctext">
+                 Creating the project
+                </span>
+               </a>
+              </li>
+              <li class="toclevel-2 tocsection-5">
+               <a href="#Updating_another_Project">
+                <span class="tocnumber">
+                 2.2
+                </span>
+                <span class="toctext">
+                 Updating another Project
+                </span>
+               </a>
+              </li>
+              <li class="toclevel-2 tocsection-6">
+               <a href="#Customizations_for_Targeting_UE4_Modules">
+                <span class="tocnumber">
+                 2.3
+                </span>
+                <span class="toctext">
+                 Customizations for Targeting UE4 Modules
+                </span>
+               </a>
+               <ul>
+                <li class="toclevel-3 tocsection-7">
+                 <a href="#Targeting_64_bit_platforms">
+                  <span class="tocnumber">
+                   2.3.1
+                  </span>
+                  <span class="toctext">
+                   Targeting 64 bit platforms
+                  </span>
+                 </a>
+                </li>
+                <li class="toclevel-3 tocsection-8">
+                 <a href="#Multi_Threaded_DLL">
+                  <span class="tocnumber">
+                   2.3.2
+                  </span>
+                  <span class="toctext">
+                   Multi Threaded DLL
+                  </span>
+                 </a>
+                </li>
+               </ul>
+              </li>
+              <li class="toclevel-2 tocsection-9">
+               <a href="#Third_Party_Directory">
+                <span class="tocnumber">
+                 2.4
+                </span>
+                <span class="toctext">
+                 Third Party Directory
+                </span>
+               </a>
+              </li>
+             </ul>
+            </li>
+            <li class="toclevel-1 tocsection-10">
+             <a href="#UE4_-_Build_System">
+              <span class="tocnumber">
+               3
+              </span>
+              <span class="toctext">
+               UE4 - Build System
+              </span>
+             </a>
+             <ul>
+              <li class="toclevel-2 tocsection-11">
+               <a href="#Extending_the_Base_ModuleRules_class">
+                <span class="tocnumber">
+                 3.1
+                </span>
+                <span class="toctext">
+                 Extending the Base ModuleRules class
+                </span>
+               </a>
+              </li>
+              <li class="toclevel-2 tocsection-12">
+               <a href="#Loading_Our_Libraries">
+                <span class="tocnumber">
+                 3.2
+                </span>
+                <span class="toctext">
+                 Loading Our Libraries
+                </span>
+               </a>
+              </li>
+             </ul>
+            </li>
+            <li class="toclevel-1 tocsection-13">
+             <a href="#Visual_Studio_2013.2F2015_-_Linking_Our_Library">
+              <span class="tocnumber">
+               4
+              </span>
+              <span class="toctext">
+               Visual Studio 2013/2015 - Linking Our Library
+              </span>
+             </a>
+             <ul>
+              <li class="toclevel-2 tocsection-14">
+               <a href="#Startup_Module">
+                <span class="tocnumber">
+                 4.1
+                </span>
+                <span class="toctext">
+                 Startup Module
+                </span>
+               </a>
+              </li>
+              <li class="toclevel-2 tocsection-15">
+               <a href="#Marshalling">
+                <span class="tocnumber">
+                 4.2
+                </span>
+                <span class="toctext">
+                 Marshalling
+                </span>
+               </a>
+              </li>
+             </ul>
+            </li>
+            <li class="toclevel-1 tocsection-16">
+             <a href="#More_Information">
+              <span class="tocnumber">
+               5
+              </span>
+              <span class="toctext">
+               More Information
+              </span>
+             </a>
+            </li>
+           </ul>
+          </div>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <h1>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h1>
+      <p>
+       The goal of this tutorial is to show you how to link a
+       <i>
+        static library
+       </i>
+       into UE4 using the
+       <b>
+        Build System
+       </b>
+       . This is primarily targeted at developers that are not intending to make engine level modification, but still want to extend the capabilities of UE4 with a library that provides such capabilities.
+      </p>
+      <p>
+       For examples sake, I will be creating a library called
+       <b>
+        BobsMagic
+       </b>
+       and linking into a UE4 project called
+       <b>
+        UE4Magic
+       </b>
+       .
+      </p>
+      <h2>
+       <span class="mw-headline" id="Scope_.26_Notes">
+        Scope &amp; Notes
+       </span>
+      </h2>
+      <ul>
+       <li>
+        You will be able to link in a library of your own design by the end
+       </li>
+       <li>
+        I will not go too deeply into exposing functions or defining any API
+       </li>
+       <li>
+        I expect you to have, at the very least, a more than cursory level of knowledge about C++, C# and MS Visual Studio 2013
+       </li>
+       <li>
+        All Code paths provided are from the UE4 Project's base directory.
+       </li>
+      </ul>
+      <h1>
+       <span class="mw-headline" id="Visual_Studio_2013.2F2015_-_Library_Configuration">
+        Visual Studio 2013/2015 - Library Configuration
+       </span>
+      </h1>
+      <p>
+       <i>
+        It is important that you compile out your static libraries with the same version of MS Visual Studio as you are using to work with UE4. This is because each edition of Visual Studio comes with a different compiler, leading to incompatibilities in the binaries. Rest assured if you cross into this realm you will get a warning when you attempt to compile the library in.
+       </i>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Creating_the_project">
+        Creating the project
+       </span>
+      </h2>
+      <p>
+       Please go to the
+       <a class="external text" href="http://msdn.microsoft.com/en-us/library/ms235627.aspx#BKMK_CreateLibProject" rel="nofollow">
+        MSDN
+       </a>
+       and follow the steps there in order to create a new Static library. Once you have finished, please return, as we have to make a couple of modifications to be able to get things working.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Updating_another_Project">
+        Updating another Project
+       </span>
+      </h2>
+      <p>
+       When you open up a project with Project or solution files targeted at an earlier edition of Visual Studio you are asked to upgrade. Allowing this to proceed will address the point at the beginning of this section. If you missed that dialog, or by chance it was not shown to you, it is possible to upgrade by going to the menu bar Project &gt; Update VC++ project when it is selected in your solution explorer.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Customizations_for_Targeting_UE4_Modules">
+        Customizations for Targeting UE4 Modules
+       </span>
+      </h2>
+      <p>
+       We will need to make a few other modifications to ensure that our libraries are able to be linked in easily.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Targeting_64_bit_platforms">
+        Targeting 64 bit platforms
+       </span>
+      </h3>
+      <p>
+       With a standard Static Library project we will be targeting x86 (32 bit) machines, which wont work for the UE4 toolset.
+      </p>
+      <ol>
+       <li>
+        Open the Project Properties page.
+       </li>
+       <li>
+        Choose Configuration Manager
+       </li>
+       <li>
+        Open the
+        <b>
+         Active Solution Platform
+        </b>
+        drop down list and select
+        <b>
+         &lt;New...&gt;
+        </b>
+       </li>
+       <li>
+        Type in or select
+        <b>
+         x64
+        </b>
+        if it is there
+       </li>
+       <li>
+        Save it by clicking OK
+       </li>
+      </ol>
+      <p>
+       You should be able to close out your project at this point. You should see it in the drop down at the top of Visual Studio.
+      </p>
+      <p>
+       <a class="external text" href="http://msdn.microsoft.com/en-us/library/h2k70f3s.aspx" rel="nofollow">
+        More Info on targeting x64
+       </a>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Multi_Threaded_DLL">
+        Multi Threaded DLL
+       </span>
+      </h3>
+      <p>
+       The unreal build system expects you to be providing a static library that is then linked into a DLL, so we have to ensure that our project does this as well.
+      </p>
+      <ol>
+       <li>
+        Open the Project Properties Page
+       </li>
+       <li>
+        Filter through to Configuration Properties &gt; C/C++ &gt; Code Generation &gt; Runtime Library
+       </li>
+       <li>
+        From the drop down list select Multi-threaded DLL (/MD)
+       </li>
+       <li>
+        Save it by clicking OK
+       </li>
+      </ol>
+      <h2>
+       <span class="mw-headline" id="Third_Party_Directory">
+        Third Party Directory
+       </span>
+      </h2>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:202px;">
+        <img alt="" class="thumbimage" height="277" src="../assets/linking-static-libraries-using-the-build-system/0.jpg" width="200"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         sample directory layout
+        </div>
+       </div>
+      </div>
+      <p>
+       Build your project and note the location that the libraries are output to. Your lib file(s) should be in /bin/Debug or /bin/Release depending on the mode you built your project with, unless you changed them before hand. We will be moving them from here into our UE4 project directory, for ease of reference and later packaging.
+      </p>
+      <p>
+       Open up a new explorer window and navigate to your Project directory. Once there, create a new path for your library -
+       <b>
+        /ThirdParty/BobsMagic
+       </b>
+      </p>
+      <p>
+       You will want to follow this step for each library you wish to reference, if I were to be adding in the V8 library I would create /ThirdParty/V8
+      </p>
+      <p>
+       Within this directory we will be adding two new folders - Libraries and Includes - to house their respective files. Includes are the header files that come with your library, used to define the API (Application Programming Interface) for you to reference in UE4. You should copy your *.lib file(s) into the Libraries directory.
+      </p>
+      <p>
+       <b>
+        Note
+       </b>
+       : This is an arbitrary directory. It is only important to note its path so you can reference it in the build system later.
+      </p>
+      <h1>
+       <span class="mw-headline" id="UE4_-_Build_System">
+        UE4 - Build System
+       </span>
+      </h1>
+      <p>
+       Now we are going to step into the UnrealEngine and actually address the binding of our library to the engine.
+      </p>
+      <p>
+       The build system requires some C# code, but you shouldn't fret. Our example is going to be pretty simple and so you should be alright to copy and paste the majority of the following code.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Extending_the_Base_ModuleRules_class">
+        Extending the Base ModuleRules class
+       </span>
+      </h3>
+      <p>
+       For anyone doing this as more than a one off you can, and probably should, add in a couple of properties to the ModuleRules class. The two I will be noting here are convenience properties to ensure that we always know where our Module and ThirdParty directories are. These two properties will leverage the System.IO namespace, to utilize a couple of the Path static methods.
+      </p>
+      <p>
+       inside
+       <b>
+        /Source/UE4Magic/UE4Magic.Build.cs
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">using</span> <span class="nn">System.IO</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">UnrealBuildTool</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">UE4Magic</span> <span class="p">:</span> <span class="n">ModuleRules</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="kt">string</span> <span class="n">ModulePath</span>
+    <span class="p">{</span>
+        <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ModuleDirectory</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="kt">string</span> <span class="n">ThirdPartyPath</span>
+    <span class="p">{</span>
+        <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">Path</span><span class="p">.</span><span class="n">GetFullPath</span><span class="p">(</span> <span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span> <span class="n">ModulePath</span><span class="p">,</span> <span class="s">"../../ThirdParty/"</span> <span class="p">)</span> <span class="p">);</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+<span class="na">    [Constructor]</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Loading_Our_Libraries">
+        Loading Our Libraries
+       </span>
+      </h3>
+      <p>
+       Next we will dive into our modules constructor, where we will create a new method to be called to configure the build system to load our libraries.
+      </p>
+      <p>
+       inside
+       <b>
+        /Source/UE4Magic/UE4Magic.Build.cs
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">UE4Magic</span> <span class="p">:</span> <span class="n">ModuleRules</span>
+<span class="p">{</span>
+<span class="na">    [Convenience Properties]</span>
+
+    <span class="k">public</span> <span class="nf">UE4Magic</span><span class="p">(</span><span class="n">TargetInfo</span> <span class="n">Target</span><span class="p">)</span>
+    <span class="p">{</span>
+<span class="na">        [Standard Module Initialization]</span>
+
+        <span class="n">LoadBobsMagic</span><span class="p">(</span><span class="n">Target</span><span class="p">);</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       LoadBobsMagic accepts a TargetInfo object, which holds a number of configuration elements for the build system, allowing you to customize the build at compilation time. It is passed in to allow us to load in the libs for windows targeting, and can be used later to target other platforms. It also allows you to see if 64 or 32 bit platforms are being targeted, which is gold for our circumstances. If you remember, above I mentioned that we will be targeting x64 machines, but you can use this opportunity to compile out 32bit (x86) libraries as well.
+      </p>
+      <p>
+       Next we will define a constant to be passed in with the name of the library to link.
+      </p>
+      <p>
+       inside
+       <b>
+        /Source/UE4Magic/UE4Magic.Build.cs
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">UE4Magic</span> <span class="p">:</span> <span class="n">ModuleRules</span>
+<span class="p">{</span>
+<span class="na">    [Convenience Properties]</span>
+
+<span class="na">    [Constructor]</span>
+
+    <span class="k">public</span> <span class="kt">bool</span> <span class="nf">LoadBobsMagic</span><span class="p">(</span><span class="n">TargetInfo</span> <span class="n">Target</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">bool</span> <span class="n">isLibrarySupported</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+
+        <span class="k">if</span> <span class="p">((</span><span class="n">Target</span><span class="p">.</span><span class="n">Platform</span> <span class="p">==</span> <span class="n">UnrealTargetPlatform</span><span class="p">.</span><span class="n">Win64</span><span class="p">)</span> <span class="p">||</span> <span class="p">(</span><span class="n">Target</span><span class="p">.</span><span class="n">Platform</span> <span class="p">==</span> <span class="n">UnrealTargetPlatform</span><span class="p">.</span><span class="n">Win32</span><span class="p">))</span>
+        <span class="p">{</span>
+            <span class="n">isLibrarySupported</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+
+            <span class="kt">string</span> <span class="n">PlatformString</span> <span class="p">=</span> <span class="p">(</span><span class="n">Target</span><span class="p">.</span><span class="n">Platform</span> <span class="p">==</span> <span class="n">UnrealTargetPlatform</span><span class="p">.</span><span class="n">Win64</span><span class="p">)</span> <span class="p">?</span> <span class="s">"x64"</span> <span class="p">:</span> <span class="s">"x86"</span><span class="p">;</span>
+            <span class="kt">string</span> <span class="n">LibrariesPath</span> <span class="p">=</span> <span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">ThirdPartyPath</span><span class="p">,</span> <span class="s">"BobsMagic"</span><span class="p">,</span> <span class="s">"Libraries"</span><span class="p">);</span>
+
+            <span class="cm">/*</span>
+<span class="cm">            test your path with:</span>
+<span class="cm">            using System; // Console.WriteLine("");</span>
+<span class="cm">            Console.WriteLine("... LibrariesPath -&gt; " + LibrariesPath);</span>
+<span class="cm">            */</span>
+
+            <span class="n">PublicAdditionalLibraries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">LibrariesPath</span><span class="p">,</span> <span class="s">"BobsMagic."</span> <span class="p">+</span> <span class="n">PlatformString</span> <span class="p">+</span> <span class="s">".lib"</span><span class="p">));</span> 
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">isLibrarySupported</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="c1">// Include path</span>
+            <span class="n">PublicIncludePaths</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span> <span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span> <span class="n">ThirdPartyPath</span><span class="p">,</span> <span class="s">"BobsMagic"</span><span class="p">,</span> <span class="s">"Includes"</span> <span class="p">)</span> <span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="n">Definitions</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="n">Format</span><span class="p">(</span> <span class="s">"WITH_BOBS_MAGIC_BINDING={0}"</span><span class="p">,</span> <span class="n">isLibrarySupported</span> <span class="p">?</span> <span class="m">1</span> <span class="p">:</span> <span class="m">0</span> <span class="p">)</span> <span class="p">);</span>
+
+        <span class="k">return</span> <span class="n">isLibrarySupported</span><span class="p">;</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       This is an exceptionally straight forward setup, and not likely to be representative of a fully cross platform build. What we have done is to create the constant WITH_BOBS_MAGIC_BINDING to be passed in at compile time, it is set to 1 (or true).
+      </p>
+      <h1>
+       <span class="mw-headline" id="Visual_Studio_2013.2F2015_-_Linking_Our_Library">
+        Visual Studio 2013/2015 - Linking Our Library
+       </span>
+      </h1>
+      <p>
+       All of the UE4 goodies are taken care of at this point. You can now include your header files and start executing code.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Startup_Module">
+        Startup Module
+       </span>
+      </h2>
+      <p>
+       A little known detail of working with unreal is that you can overwrite the default game implementation and get access to a method executed when your module is started/shutdown, similar to loaded/unloaded. This is not exactly build system related but a common thing that plugin deveopers are likely to be looking for is an initialization point.
+      </p>
+      <p>
+       inside
+       <b>
+        /Source/UE4Magic/UE4Magic.cpp
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="p">[</span><span class="n">Header</span> <span class="n">Comment</span><span class="p">]</span>
+
+<span class="cp">#include</span> <span class="cpf">"Welcome/to/bobsmagic.h"</span><span class="cp"></span>
+
+<span class="p">[</span><span class="n">Standard</span> <span class="n">Includes</span><span class="p">]</span>
+
+<span class="k">class</span> <span class="nc">FUE4MagicGameModule</span> <span class="o">:</span> <span class="k">public</span> <span class="n">FDefaultGameModuleImpl</span>
+<span class="p">{</span>
+    <span class="n">BobsMagic</span><span class="o">::</span><span class="n">MagicalBob</span> <span class="o">*</span><span class="n">PointerToBobsMagic</span><span class="p">;</span>
+    
+    <span class="cm">/**</span>
+<span class="cm">    * Called right after the module DLL has been loaded and the module object has been created</span>
+<span class="cm">    */</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">StartupModule</span><span class="p">()</span> <span class="k">override</span>
+    <span class="p">{</span>
+        <span class="n">PointerToBobsMagic</span> <span class="o">=</span> <span class="k">new</span> <span class="n">BobsMagic</span><span class="o">::</span><span class="n">MagicalBob</span><span class="p">();</span>
+
+        <span class="n">PointerToBobsMagic</span><span class="o">-&gt;</span><span class="n">ThankEveryoneForReading</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">    * Called before the module is unloaded, right before the module object is destroyed.</span>
+<span class="cm">    */</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">ShutdownModule</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="n">PointerToBobsMagic</span><span class="o">-&gt;</span><span class="n">Dispose</span><span class="p">();</span>
+        <span class="n">PointerToBobsMagic</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">// Override the default implementation with ours implementation =)</span>
+<span class="n">IMPLEMENT_PRIMARY_GAME_MODULE</span><span class="p">(</span><span class="n">FUE4MagicGameModule</span><span class="p">,</span> <span class="n">UE4Magic</span><span class="p">,</span> <span class="s">"UE4Magic"</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       You can start the Visual Studio Debugger at this point and step through your code, even into the library you compiled, if you linked to a debug build. It will load in the header file from ThirdParty/BobsMagic/Includes/Welcome/to and allow the Libraries to execute as we all expect.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Marshalling">
+        Marshalling
+       </span>
+      </h2>
+      <p>
+       As you will likely find out quickly, your Library wont be using the same types as in UE4. It is important that you marshall your data between these two in a meaningful and well thought out way. Changing it later may lead to complications.
+      </p>
+      <p>
+       When binding V8 into UE4 I uncovered a couple of macros in
+       <b>
+        StringConv.h
+       </b>
+       that are used in converting between, Wide Character, Unicode, Strings and C style Character Strings and I recommend you look around for other useful conversions. You may also end up having to create Wrapper objects.
+      </p>
+      <h1>
+       <span class="mw-headline" id="More_Information">
+        More Information
+       </span>
+      </h1>
+      <p>
+       I have successfully linked V8 into UE4 and am authoring a module allowing you to use JavaScript as a scripting language to use in your own projects. You can follow development on the
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?254-Linking-V8-(JavaScript)-to-UE4" rel="nofollow">
+        forums
+       </a>
+       .
+      </p>
+      <p>
+       If you are interested in doing something similar I would recommend you look at the
+       <a class="external text" href="https://developers.google.com/v8/embed" rel="nofollow">
+        V8 Embedders Guide
+       </a>
+       or the source for
+       <a class="external text" href="https://github.com/joyent/node" rel="nofollow">
+        Node.js
+       </a>
+       .
+      </p>
+      <p>
+       You can read more about me on my
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

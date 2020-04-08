@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Local Vector Fields (Tutorial) - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Local Vector Fields (Tutorial)
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       Local Vector Fields are inherent to a GPU sprites particle system, as opposed to being separate from it, as in the case of global vector fields. Once added, they can be rotated, repositioned, and edited to create a variety of motion styles.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Setup">
+        Setup
+       </span>
+      </h2>
+      <p>
+       Setting up a Local Vector Field simply requires the Local Vector Field module to be in place within your GPU Sprites particle system. Make sure the desired vector field asset is placed in the module's Vector Field property:
+      </p>
+      <p>
+       <img alt="VectorFieldProperty LVF.png" class="" height="214" src="../assets/local-vector-fields-tutorial/0.png" width="480"/>
+       <br clear="all"/>
+      </p>
+      <p>
+       In this example there are 2 emitters. Each one is a GPU emitter with a local vector field in place. A VF Rotation Rate module slowly rotates the local vector field, creating much more interesting motion.
+      </p>
+      <p>
+       <img alt="Magic fire LVF.png" class="" height="470" src="../assets/local-vector-fields-tutorial/1.png" width="879"/>
+       <br clear="all"/>
+      </p>
+      <blockquote>
+       <p>
+        When setting up a local vector field within your particle system, it is extremely useful to turn on Vector Fields within the Cascade Preview Pane. This is done by clicking
+        <i>
+         View &gt; Vector Fields
+        </i>
+        within the Preview Pane.
+       </p>
+      </blockquote>
+      <p>
+       <img alt="VisVectorFields LVF.png" class="" height="460" src="../assets/local-vector-fields-tutorial/2.png" width="477"/>
+       <br clear="all"/>
+      </p>
+      <blockquote>
+       <p>
+        While the Local Vector Field module is selected in the Emitter List, the vector field can be moved around intuitively in the Preview Pane by using its Move widget!
+       </p>
+      </blockquote>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

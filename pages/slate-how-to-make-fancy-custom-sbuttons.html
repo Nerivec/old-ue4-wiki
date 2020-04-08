@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Slate, How to Make Fancy Custom SButtons - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Slate, How to Make Fancy Custom SButtons
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Video">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Video
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#.H">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           .H
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#.CPP">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           .CPP
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#FButtonStyle">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             FButtonStyle
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Rainbow_Background_Button">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             Rainbow Background Button
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Trash_Can_Button">
+            <span class="tocnumber">
+             4.3
+            </span>
+            <span class="toctext">
+             Trash Can Button
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Setting_The_Cursors">
+            <span class="tocnumber">
+             4.4
+            </span>
+            <span class="toctext">
+             Setting The Cursors
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#Setting_the_Custom_Tooltips">
+            <span class="tocnumber">
+             4.5
+            </span>
+            <span class="toctext">
+             Setting the Custom Tooltips
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#Updating_the_Text_When_Highlighted">
+            <span class="tocnumber">
+             4.6
+            </span>
+            <span class="toctext">
+             Updating the Text When Highlighted
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-11">
+         <a href="#Summary">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Summary
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Author:
+       </i>
+       (
+       )
+      </p>
+      <p>
+       In this tutorial I show you how to make some fancy custom buttons!
+      </p>
+      <p>
+       I show you how to use
+       <b>
+        images
+       </b>
+       as button background, or as the entire button!
+      </p>
+      <p>
+       I also show you how to use custom color and font text!
+      </p>
+      <p>
+       I also give you the code for how to make
+       <b>
+        custom Tool Tips
+       </b>
+      </p>
+      <p>
+       Lastly I show how to make text highlight when it is hovered over :)
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Video">
+        Video
+       </span>
+      </h2>
+      <p>
+       Here's a video demoing what I am showing you in this tutorial!
+      </p>
+      <p>
+       &lt;youtube&gt;
+       <a class="external free" href="https://www.youtube.com/watch?v=OfA0jTeqb0A" rel="nofollow">
+        https://www.youtube.com/watch?v=OfA0jTeqb0A
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id=".H">
+        .H
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Buttons</span>
+  <span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="n">SButton</span><span class="o">&gt;</span> <span class="n">RefreshButton</span><span class="p">;</span>
+  <span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="n">STextBlock</span><span class="o">&gt;</span> <span class="n">RefreshButtonText</span><span class="p">;</span>
+  <span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="n">SButton</span><span class="o">&gt;</span> <span class="n">ClearTileButton</span><span class="p">;</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id=".CPP">
+        .CPP
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="FButtonStyle">
+        FButtonStyle
+       </span>
+      </h3>
+      <p>
+       Both of my example buttons use a special Slate Core Style.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="p">.</span><span class="n">ButtonStyle</span><span class="p">(</span> <span class="n">FCoreStyle</span><span class="o">::</span><span class="n">Get</span><span class="p">(),</span> <span class="s">"NoBorder"</span> <span class="p">)</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Rainbow_Background_Button">
+        Rainbow Background Button
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//The button!</span>
+<span class="n">SAssignNew</span><span class="p">(</span> <span class="n">RefreshButton</span><span class="p">,</span> <span class="n">SButton</span> <span class="p">)</span>
+	<span class="p">.</span><span class="n">ButtonStyle</span><span class="p">(</span> <span class="n">FCoreStyle</span><span class="o">::</span><span class="n">Get</span><span class="p">(),</span> <span class="s">"NoBorder"</span> <span class="p">)</span> 
+	<span class="p">.</span><span class="n">OnClicked</span><span class="p">(</span> <span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">SDDFileTree</span><span class="o">::</span><span class="n">RefreshButtonPressed</span> <span class="p">)</span>
+	<span class="p">.</span><span class="n">HAlign</span><span class="p">(</span> <span class="n">HAlign_Center</span> <span class="p">)</span>
+	<span class="p">.</span><span class="n">VAlign</span><span class="p">(</span> <span class="n">VAlign_Center</span> <span class="p">)</span>
+	<span class="p">.</span><span class="n">ForegroundColor</span><span class="p">(</span> <span class="n">FSlateColor</span><span class="o">::</span><span class="n">UseForeground</span><span class="p">()</span> <span class="p">)</span>
+	<span class="p">[</span>
+		<span class="c1">//Colored Background</span>
+		<span class="n">SNew</span><span class="p">(</span><span class="n">SBorder</span><span class="p">)</span>
+		  <span class="p">.</span><span class="n">Padding</span><span class="p">(</span><span class="n">FMargin</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+			
+		  <span class="c1">//~~~ Rainbow Image for Button!!! ~~~</span>
+		  <span class="p">.</span><span class="n">BorderImage</span><span class="p">(</span> <span class="n">FCoreStyle</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">GetBrush</span><span class="p">(</span><span class="s">"ColorSpectrum.Spectrum"</span><span class="p">)</span> <span class="p">)</span>
+		  <span class="p">[</span>
+			<span class="c1">//Button Text!! AssignNew so can change color later</span>
+			<span class="n">SAssignNew</span><span class="p">(</span><span class="n">RefreshButtonText</span> <span class="p">,</span> <span class="n">STextBlock</span><span class="p">)</span>
+			  <span class="p">.</span><span class="n">Text</span><span class="p">(</span> <span class="n">FString</span><span class="p">(</span><span class="s">"Refresh (F5) "</span><span class="p">)</span> <span class="p">)</span>
+			  <span class="p">.</span><span class="n">Font</span><span class="p">(</span><span class="n">FSlateFontInfo</span><span class="p">(</span><span class="n">FPaths</span><span class="o">::</span><span class="n">EngineContentDir</span><span class="p">()</span> <span class="o">/</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Slate/Fonts/Roboto-Bold.ttf"</span><span class="p">),</span> <span class="mi">16</span><span class="p">))</span>
+			  <span class="p">.</span><span class="n">ColorAndOpacity</span><span class="p">(</span><span class="n">FLinearColor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+			  <span class="p">.</span><span class="n">HighlightColor</span><span class="p">(</span><span class="n">FLinearColor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+			  <span class="p">.</span><span class="n">ShadowColorAndOpacity</span><span class="p">(</span><span class="n">FLinearColor</span><span class="o">::</span><span class="n">Black</span><span class="p">)</span>
+			  <span class="p">.</span><span class="n">ShadowOffset</span><span class="p">(</span><span class="n">FIntPoint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+		  <span class="p">]</span>
+	<span class="p">]</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Trash_Can_Button">
+        Trash Can Button
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Resizes the image</span>
+<span class="n">SNew</span><span class="p">(</span><span class="n">SBox</span><span class="p">)</span>
+	<span class="p">.</span><span class="n">WidthOverride</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span>
+	<span class="p">.</span><span class="n">HeightOverride</span><span class="p">(</span><span class="mi">64</span><span class="p">)</span>
+	<span class="p">[</span>
+	  <span class="c1">//~~~ Clear Button / Trash Can ~~~</span>
+	  <span class="n">SAssignNew</span><span class="p">(</span> <span class="n">ClearTileButton</span><span class="p">,</span> <span class="n">SButton</span> <span class="p">)</span>
+		<span class="p">.</span><span class="n">ButtonStyle</span><span class="p">(</span> <span class="n">FCoreStyle</span><span class="o">::</span><span class="n">Get</span><span class="p">(),</span> <span class="s">"NoBorder"</span> <span class="p">)</span> 
+		<span class="p">.</span><span class="n">OnClicked</span><span class="p">(</span> <span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">SDDFileTree</span><span class="o">::</span><span class="n">ClearButtonPressed</span> <span class="p">)</span>
+		<span class="p">.</span><span class="n">HAlign</span><span class="p">(</span> <span class="n">HAlign_Center</span> <span class="p">)</span>
+		<span class="p">.</span><span class="n">VAlign</span><span class="p">(</span> <span class="n">VAlign_Center</span> <span class="p">)</span>
+		<span class="p">.</span><span class="n">ForegroundColor</span><span class="p">(</span> <span class="n">FSlateColor</span><span class="o">::</span><span class="n">UseForeground</span><span class="p">()</span> <span class="p">)</span>
+		<span class="p">[</span>
+			<span class="c1">//Button Content Image</span>
+			<span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">SWidget</span><span class="o">&gt;</span><span class="p">(</span> <span class="n">SNew</span><span class="p">(</span> <span class="n">SImage</span> <span class="p">)</span> <span class="p">.</span><span class="n">Image</span><span class="p">(</span> 
+				<span class="n">FCoreStyle</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">GetBrush</span><span class="p">(</span><span class="s">"TrashCan"</span><span class="p">)</span>
+			<span class="p">))</span>
+		<span class="p">]</span>
+	<span class="p">]</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Setting_The_Cursors">
+        Setting The Cursors
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Set Cursors</span>
+<span class="n">ClearTileButton</span><span class="o">-&gt;</span><span class="n">SetCursor</span><span class="p">(</span><span class="n">EMouseCursor</span><span class="o">::</span><span class="n">SlashedCircle</span><span class="p">);</span>
+<span class="n">RefreshButton</span><span class="o">-&gt;</span><span class="n">SetCursor</span><span class="p">(</span><span class="n">EMouseCursor</span><span class="o">::</span><span class="n">Hand</span><span class="p">);</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Setting_the_Custom_Tooltips">
+        Setting the Custom Tooltips
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">ClearTileButton</span><span class="o">-&gt;</span><span class="n">SetToolTip</span><span class="p">(</span> 
+		<span class="n">SNew</span><span class="p">(</span><span class="n">SToolTip</span><span class="p">)</span>
+		<span class="p">[</span>
+			<span class="n">SNew</span><span class="p">(</span><span class="n">STextBlock</span><span class="p">)</span>
+			  <span class="p">.</span><span class="n">Text</span><span class="p">(</span><span class="n">NSLOCTEXT</span><span class="p">(</span><span class="s">"FileTree"</span><span class="p">,</span> <span class="s">"Clear"</span><span class="p">,</span> <span class="s">"Clear any currently Loaded Preview Tile!  -Rama"</span><span class="p">))</span>
+			  <span class="p">.</span><span class="n">Font</span><span class="p">(</span><span class="n">FSlateFontInfo</span><span class="p">(</span><span class="n">FPaths</span><span class="o">::</span><span class="n">EngineContentDir</span><span class="p">()</span> <span class="o">/</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Slate/Fonts/Roboto-Bold.ttf"</span><span class="p">),</span> <span class="mi">12</span><span class="p">))</span>
+			  <span class="p">.</span><span class="n">ColorAndOpacity</span><span class="p">(</span><span class="n">FLinearColor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+			  <span class="p">.</span><span class="n">HighlightColor</span><span class="p">(</span><span class="n">FLinearColor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+			  <span class="p">.</span><span class="n">ShadowColorAndOpacity</span><span class="p">(</span><span class="n">FLinearColor</span><span class="o">::</span><span class="n">Black</span><span class="p">)</span>
+			  <span class="p">.</span><span class="n">ShadowOffset</span><span class="p">(</span><span class="n">FIntPoint</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+		<span class="p">]</span>
+	<span class="p">);</span>
+
+<span class="n">RefreshButton</span><span class="o">-&gt;</span><span class="n">SetToolTip</span><span class="p">(</span>	
+		<span class="n">SNew</span><span class="p">(</span><span class="n">SToolTip</span><span class="p">)</span>
+		<span class="p">[</span>
+			<span class="n">SNew</span><span class="p">(</span><span class="n">STextBlock</span><span class="p">)</span>
+			  <span class="p">.</span><span class="n">Text</span><span class="p">(</span> <span class="n">NSLOCTEXT</span><span class="p">(</span><span class="s">"FileTree"</span><span class="p">,</span> <span class="s">"Refresh"</span><span class="p">,</span> <span class="s">"Refresh Directory and File Listing, updating to hard drive contents! -Rama"</span><span class="p">)</span> <span class="p">)</span>
+			  <span class="p">.</span><span class="n">Font</span><span class="p">(</span><span class="n">FSlateFontInfo</span><span class="p">(</span><span class="n">FPaths</span><span class="o">::</span><span class="n">EngineContentDir</span><span class="p">()</span> <span class="o">/</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Slate/Fonts/Roboto-Bold.ttf"</span><span class="p">),</span> <span class="mi">12</span><span class="p">))</span>
+			  <span class="p">.</span><span class="n">ColorAndOpacity</span><span class="p">(</span><span class="n">FLinearColor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+			  <span class="p">.</span><span class="n">HighlightColor</span><span class="p">(</span><span class="n">FLinearColor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+			  <span class="p">.</span><span class="n">ShadowColorAndOpacity</span><span class="p">(</span><span class="n">FLinearColor</span><span class="o">::</span><span class="n">Black</span><span class="p">)</span>
+			  <span class="p">.</span><span class="n">ShadowOffset</span><span class="p">(</span><span class="n">FIntPoint</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+		<span class="p">]</span>
+	<span class="p">);</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Updating_the_Text_When_Highlighted">
+        Updating the Text When Highlighted
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">SDDFileTree</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span> <span class="k">const</span> <span class="n">FGeometry</span><span class="o">&amp;</span> <span class="n">AllottedGeometry</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">InCurrentTime</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span> <span class="n">InDeltaTime</span> <span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// Call parent implementation</span>
+	<span class="n">SCompoundWidget</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span> <span class="n">AllottedGeometry</span><span class="p">,</span> <span class="n">InCurrentTime</span><span class="p">,</span> <span class="n">InDeltaTime</span> <span class="p">);</span>
+
+	
+	<span class="c1">//~~~~~~~~~~~~</span>
+	<span class="c1">// Button Hovering</span>
+	<span class="c1">//~~~~~~~~~~~~</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">RefreshButtonText</span><span class="o">-&gt;</span><span class="n">IsHovered</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="n">SetRainbowGlowColor</span><span class="p">();</span>
+		<span class="n">RefreshButtonText</span><span class="o">-&gt;</span><span class="n">SetForegroundColor</span><span class="p">(</span> <span class="n">RainbowGlowingColor</span> <span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">else</span>
+	<span class="p">{</span>
+		<span class="n">RefreshButtonText</span><span class="o">-&gt;</span><span class="n">SetForegroundColor</span><span class="p">(</span> <span class="n">FLinearColor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span> <span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Summary">
+        Summary
+       </span>
+      </h2>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

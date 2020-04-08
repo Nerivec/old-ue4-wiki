@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   UMG Mini-Map - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    UMG Mini-Map
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <br/>
+      </p>
+      <p>
+       <b>
+        Authored by:
+       </b>
+       Rudy Triplett
+      </p>
+      <h1>
+       <span class="mw-headline" id="Introduction">
+        Introduction
+       </span>
+      </h1>
+      <div>
+       <p>
+        Maybe you need to know where you are, or maybe you need to know where that assassin might be that is sneaking up on you. In either case you are going to need a mini-map. Well the following tutorial will allow you to setup and implement a simple UMG based top down mini-map that will track your player ( don't get lost :-) ).
+       </p>
+       <p>
+        <br/>
+        Simple UMG MiniMap Tutorial
+(In almost 50 steps)
+       </p>
+       <p>
+        <br/>
+       </p>
+       <p>
+        1.	Open a new 4.6 project
+       </p>
+       <p>
+        2.	Make a new
+        <b>
+         SceneCapture2D blueprint
+        </b>
+       </p>
+       <pre>       a.	<b>Right click</b> in the Content Broswer &gt; Select <b>Blueprint</b>&gt;  type SceneCapture2D &gt; Select <b>SceneCapture2D</b> in the dropdown menu &gt;  Click the Select button
+</pre>
+       <pre><img alt="MMapTutorial1.png" class="" height="596" src="../assets/umg-mini-map/0.png" width="888"/>
+
+</pre>
+       <p>
+        3.	Name the new blueprint something appropriate (I named mine “MiniCam”)
+       </p>
+       <p>
+        4.	Open your SceneCapture2D blueprint (MiniCam)
+       </p>
+       <p>
+        5.	Go to the components tab
+       </p>
+       <p>
+        6.	In the
+        <b>
+         Components Panel
+        </b>
+        in the upper left of the window select
+        <b>
+         CaptureComponent2D
+        </b>
+       </p>
+       <p>
+        7.	With the CaptureComponent2D selected go to the
+        <b>
+         Details panel
+        </b>
+        and change the
+        <b>
+         rotation
+        </b>
+        of the
+        <b>
+         Y axis to -90
+        </b>
+        (NOTE: If the camera does not appear to rotate, take a breath. It’s ok, it still rotated. Don’t let it fool you)
+       </p>
+       <p>
+        <img alt="MMapTutorial2.png" class="" height="503" src="../assets/umg-mini-map/1.png" width="874"/>
+       </p>
+       <p>
+        8.
+        <b>
+         Click
+        </b>
+        on the
+        <b>
+         Graph tab
+        </b>
+        in the upper right corner of the window
+       </p>
+       <p>
+        9.
+        <b>
+         Right click
+        </b>
+        in the event graph &gt;  type
+        <b>
+         Custom Event
+        </b>
+        &gt; name this OutSideTick &gt; complete the picture below. This sets up the camera to follow the player without taking into account the player rotation or Z axis. (
+        <b>
+         NOTE:
+        </b>
+        I have used the Right Click &gt; Split Pins function to expose the x,y,z values of the nodes below)
+       </p>
+       <p>
+        <img alt="MMapTutorial3.png" class="" height="426" src="../assets/umg-mini-map/2.png" width="839"/>
+       </p>
+       <p>
+        10.
+        <b>
+         Compile and Save
+        </b>
+        SceneCapture2D blueprint (MiniCam)
+       </p>
+       <p>
+        11.
+        <b>
+         Close
+        </b>
+        SceneCapture2D blueprint (MiniCam)
+       </p>
+       <p>
+        12.	Make a new
+        <b>
+         Widget blueprint
+        </b>
+       </p>
+       <pre>       a.	<b>Right click</b> in the Content Broswer &gt;  Select <b>User Interface</b> &gt;  Select <b>Widget blueprint</b>
+</pre>
+       <p>
+        <img alt="MMapTutorial4.png" class="" height="683" src="../assets/umg-mini-map/3.png" width="535"/>
+       </p>
+       <p>
+        13.	 Name the new blueprint something appropriate (I named mine “MiniMapWidget”)
+       </p>
+       <p>
+        14.	Open your Widget blueprint (MiniMapWidget)
+       </p>
+       <p>
+        15.	Go to the Palette panel
+       </p>
+       <p>
+        16.	Type
+        <b>
+         image
+        </b>
+        into the search field
+       </p>
+       <p>
+        17.
+        <b>
+         Drag and drop
+        </b>
+        an image into your
+        <b>
+         Designer graph
+        </b>
+       </p>
+       <p>
+        18.	Scale the image to a size that you would like to use
+       </p>
+       <p>
+        19.
+        <b>
+         Drag
+        </b>
+        the
+        <b>
+         image
+        </b>
+        into the
+        <b>
+         lower right corner
+        </b>
+        of your canvas panel (the canvas panel is the default root in a widget. It shows up as a green outline)
+       </p>
+       <p>
+        <img alt="MMapTutorial5.png" class="" height="466" src="../assets/umg-mini-map/4.png" width="925"/>
+       </p>
+       <p>
+        20.
+        <b>
+         Compile and save
+        </b>
+        Widget blueprint (MiniMapWidget)
+       </p>
+       <p>
+        21.
+        <b>
+         Close
+        </b>
+        Widget blueprint (MiniMapWidget)
+       </p>
+       <p>
+        22.	Make a new
+        <b>
+         TextureRender2D
+        </b>
+       </p>
+       <pre>       a.	<b>Right click</b> in the Content Broswer &gt;  Select <b>Materials &amp; Textures</b> &gt; Select <b>Render Target</b>
+</pre>
+       <p>
+        <img alt="MMapTutorial6.png" class="" height="685" src="../assets/umg-mini-map/5.png" width="625"/>
+       </p>
+       <p>
+        23.	Name the new TextureRender2D something appropriate (“MapRendering”)
+       </p>
+       <p>
+        24.	Open your TextureRender2D (MapRendering)
+       </p>
+       <p>
+        25.	Go to the
+        <b>
+         Details panel
+        </b>
+        and under compression set the
+        <b>
+         compression settings
+        </b>
+        to
+        <b>
+         TC_UserInterface2D
+        </b>
+       </p>
+       <p>
+        26.	Just below the Compression section you will see the
+        <b>
+         Level of Detail
+        </b>
+        section. Change the
+        <b>
+         Texture Group
+        </b>
+        to
+        <b>
+         UI
+        </b>
+       </p>
+       <p>
+        <img alt="MMapTutorial7.png" class="" height="755" src="../assets/umg-mini-map/6.png" width="1195"/>
+       </p>
+       <p>
+        27.
+        <b>
+         Save
+        </b>
+        your TextureRender2D (MapRendering)
+       </p>
+       <p>
+        28.
+        <b>
+         Close
+        </b>
+        your TextureRender2D (MapRendering)
+       </p>
+       <p>
+        29.	 Go back to the
+        <b>
+         content browser
+        </b>
+        and select your
+        <b>
+         SceneCapture2D blueprint
+        </b>
+        (MiniCam).
+        <b>
+         Drag
+        </b>
+        this into the level and place it directly
+        <b>
+         above the player
+        </b>
+        spawn. You can set it to any height (Mine is set to 2400 on the z axis)
+       </p>
+       <p>
+        <img alt="MMapTutorial8.png" class="" height="454" src="../assets/umg-mini-map/7.png" width="573"/>
+       </p>
+       <p>
+        30.	With your
+        <b>
+         SceneCapture2D blueprint
+        </b>
+        (MiniCam) selected go to the
+        <b>
+         Details panel
+        </b>
+        to the right of the viewport. Under
+        <b>
+         Scene Capture
+        </b>
+        set the
+        <b>
+         Texture Target
+        </b>
+        to your
+        <b>
+         TextureRender2D
+        </b>
+        (MapRendering)
+       </p>
+       <p>
+        <img alt="MMapTutorial9.png" class="" height="601" src="../assets/umg-mini-map/8.png" width="1039"/>
+       </p>
+       <p>
+        31.
+        <b>
+         Right click
+        </b>
+        your
+        <b>
+         TextureRender2D
+        </b>
+        (MapRendering) &gt; Select
+        <b>
+         Create Material
+        </b>
+       </p>
+       <p>
+        <img alt="MMapTutorial10.png" class="" height="563" src="../assets/umg-mini-map/9.png" width="404"/>
+       </p>
+       <p>
+        32.	Name your new Material something appropriate (I named mine “MiniMap_Mat”)
+       </p>
+       <p>
+        33.	Open your New Material (MiniMap_Mat)
+       </p>
+       <p>
+        34.	Set the
+        <b>
+         Texture sample
+        </b>
+        to drive the
+        <b>
+         Emissive Color
+        </b>
+        of the material
+       </p>
+       <p>
+        <img alt="MMapTutorial11.png" class="" height="730" src="../assets/umg-mini-map/10.png" width="864"/>
+       </p>
+       <p>
+        35.
+        <b>
+         Compile and Save
+        </b>
+        Material (MiniMap_Mat)
+       </p>
+       <p>
+        36.
+        <b>
+         Close
+        </b>
+        Material (MiniMap_Mat)
+       </p>
+       <p>
+        37.	Go to the Content browser open
+        <b>
+         MyCharacter
+        </b>
+        and complete the following picture. This will cast the tick to the SceneCapture2D blueprint and add the Widget blueprint to the viewport.
+       </p>
+       <p>
+        <img alt="MMapTutorial12.png" class="" height="391" src="../assets/umg-mini-map/11.png" width="860"/>
+       </p>
+       <p>
+        38.
+        <b>
+         Compile and Save
+        </b>
+        MyCharacter
+       </p>
+       <p>
+        39.
+        <b>
+         Close
+        </b>
+        MyCharacter
+       </p>
+       <p>
+        40.	Go to the
+        <b>
+         content browser
+        </b>
+        and open your
+        <b>
+         Widget blueprint
+        </b>
+        (MiniMapWidget)
+       </p>
+       <p>
+        41.	Select the
+        <b>
+         image
+        </b>
+        and in the
+        <b>
+         details panel
+        </b>
+        set it’s anchor to the
+        <b>
+         bottom right
+        </b>
+        corner
+       </p>
+       <p>
+        <img alt="MMapTutorial13.png" class="" height="548" src="../assets/umg-mini-map/12.png" width="1568"/>
+       </p>
+       <p>
+        42.	Continuing in the
+        <b>
+         Details panel
+        </b>
+        under
+        <b>
+         appearance
+        </b>
+        expand the
+        <b>
+         Brush
+        </b>
+        section and change the
+        <b>
+         image
+        </b>
+        to your Material (MiniMap_Mat)
+       </p>
+       <p>
+        43.	In the
+        <b>
+         Palette panel
+        </b>
+        type
+        <b>
+         Throbber
+        </b>
+        (NOT the circular throbber)
+       </p>
+       <p>
+        44.
+        <b>
+         Drag and drop
+        </b>
+        a
+        <b>
+         Throbber
+        </b>
+        into the Designer tab
+       </p>
+       <p>
+        45.
+        <b>
+         Re-size
+        </b>
+        the
+        <b>
+         Throbber
+        </b>
+        so that only one dot can be seen
+       </p>
+       <p>
+        46.	In the
+        <b>
+         Details panel
+        </b>
+        under appearance change its
+        <b>
+         tint
+        </b>
+        to an easy to see color (I chose a dark green)
+       </p>
+       <p>
+        47.	Set the throbber’s
+        <b>
+         Zorder
+        </b>
+        to
+        <b>
+         1
+        </b>
+        (Can be found under the slot section)
+       </p>
+       <p>
+        48.	Set the throbber’s
+        <b>
+         anchor
+        </b>
+        to the
+        <b>
+         bottom right
+        </b>
+       </p>
+       <p>
+        49.	Place the throbber over the minimap in the spot that the character will be spawning (this may take some adjusting to get just right)
+       </p>
+       <p>
+        <img alt="MMapTutorial14.png" class="" height="611" src="../assets/umg-mini-map/13.png" width="1194"/>
+       </p>
+       <p>
+        50.
+        <b>
+         Compile and save
+        </b>
+        Widget blueprint
+       </p>
+       <p>
+        51.
+        <b>
+         Close
+        </b>
+        Widget blueprint
+       </p>
+       <p>
+        52.
+        <b>
+         Launch game
+        </b>
+       </p>
+       <p>
+        <br/>
+       </p>
+       <p>
+        <br/>
+       </p>
+       <h1>
+        <span class="mw-headline" id="Addition:_Rotating_Throbber_with_Character_Rotation">
+         Addition: Rotating Throbber with Character Rotation
+        </span>
+       </h1>
+       - Using version 4.8.1
+       <div>
+        <p>
+         <b>
+          Addition by:
+         </b>
+         Will Rivendell(thankstipscom)
+        </p>
+        <h1>
+         <span class="mw-headline" id="Summary">
+          Summary
+         </span>
+        </h1>
+        <div>
+         <p>
+          This tutorial is awesome. You'll have a minimap and your real-time character location in no time. I wanted to also be able to show where the character was facing when it rotates in game. It's a simple few steps and since this helped me I figured I'd add those additional steps in case anyone wants to do the same.
+         </p>
+         <p>
+          1.	In the UMG, select the Throbber and under 'appearance' change number of pieces to 2.
+         </p>
+         <p>
+          2.	Now resize the throbber so that the first piece is fully visible but the second is cut off by half. (the half piece will show where the character is facing)
+         </p>
+         <p>
+          <img alt="Minimapaddition 01 pointer.png" class="" height="251" src="../assets/umg-mini-map/14.png" width="710"/>
+         </p>
+         <p>
+          <b>
+           Note: you can probably just use your own image like an arrow in place of the actual default throbber icon
+          </b>
+         </p>
+         <p>
+          3.	With the throbber selected, under 'behaviour', click on BIND on the 'is enabled' line
+         </p>
+         <p>
+          <img alt="MMapTutorial addition 02 createbind.png" class="" height="194" src="../assets/umg-mini-map/15.png" width="565"/>
+         </p>
+         <p>
+          4.	Make your bind function look like this:
+         </p>
+         <p>
+          <img alt="MMapTutorial addition 03 function.png" class="" height="792" src="../assets/umg-mini-map/16.png" width="1856"/>
+         </p>
+         <p>
+          5.	Compile and save.
+         </p>
+         <b>
+          Note: If your rotation is not facing the right way, simple modify the 'PLUS -90' node in the bind function until you have the correct angle. 90, -90, 180, -180 etc...
+         </b>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

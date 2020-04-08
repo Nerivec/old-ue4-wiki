@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Modular Pawn - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Modular Pawn
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#MyCharacter.h">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           MyCharacter.h
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#MyCharacter.cpp">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           MyCharacter.cpp
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Usage">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Usage
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       Contains code to create a basic modular pawn/character with separate head, body &amp; legs.
+      </p>
+      <p>
+       NOTE: Created with &amp; tested on UE4 beta. May be slight difference between it and public build.
+      </p>
+      <h2>
+       <span class="mw-headline" id="MyCharacter.h">
+        MyCharacter.h
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">class</span> <span class="nc">AMyCharacter</span> <span class="o">:</span> <span class="k">public</span> <span class="n">AMyCharacter</span>
+<span class="p">{</span>
+    <span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+
+    <span class="cm">/** </span>
+<span class="cm">     *  The skeletal mesh used for the body.</span>
+<span class="cm">     *  Mesh (inherited from ACharacter) will act as characters head.</span>
+<span class="cm">     */</span>
+    <span class="n">UPROPERTY</span><span class="p">(</span><span class="n">Category</span><span class="o">=</span><span class="n">Character</span><span class="p">,</span> <span class="n">VisibleAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadOnly</span><span class="p">)</span>
+    <span class="n">TSubobjectPtr</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">USkeletalMeshComponent</span><span class="o">&gt;</span> <span class="n">Body</span><span class="p">;</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     *  Name of the BodyComponentName.</span>
+<span class="cm">     *  Use this name if you want to prevent creation of the component (with PCIP.DoNotCreateDefaultSubobject).</span>
+<span class="cm">     */</span>
+    <span class="k">static</span> <span class="n">FName</span> <span class="n">BodyComponentName</span><span class="p">;</span>
+
+    <span class="cm">/** </span>
+<span class="cm">     *  The skeletal mesh used for the legs.</span>
+<span class="cm">     *  Mesh (inherited from ACharacter) will act as characters head.</span>
+<span class="cm">     */</span>
+    <span class="n">UPROPERTY</span><span class="p">(</span><span class="n">Category</span><span class="o">=</span><span class="n">Character</span><span class="p">,</span> <span class="n">VisibleAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadOnly</span><span class="p">)</span>
+    <span class="n">TSubobjectPtr</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">USkeletalMeshComponent</span><span class="o">&gt;</span> <span class="n">Legs</span><span class="p">;</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     *  Name of the BodyComponentName.</span>
+<span class="cm">     *  Use this name if you want to prevent creation of the component (with PCIP.DoNotCreateDefaultSubobject).</span>
+<span class="cm">     */</span>
+    <span class="k">static</span> <span class="n">FName</span> <span class="n">LegsComponentName</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="MyCharacter.cpp">
+        MyCharacter.cpp
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FName</span> <span class="n">AMyCharacter</span><span class="o">::</span><span class="n">BodyComponentName</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"CharacterBody0"</span><span class="p">));</span>
+<span class="n">FName</span> <span class="n">AMyCharacter</span><span class="o">::</span><span class="n">LegsComponentName</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"CharacterLegs0"</span><span class="p">));</span>
+
+<span class="n">AMyCharacter</span><span class="o">::</span><span class="n">AMyCharacter</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span>
+    <span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">static</span> <span class="n">FName</span> <span class="n">CollisionProfileName</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"IgnoreOnlyPawn"</span><span class="p">));</span>
+    
+    <span class="n">Body</span> <span class="o">=</span> <span class="n">PCIP</span><span class="p">.</span><span class="n">CreateOptionalDefaultSubobject</span><span class="o">&lt;</span><span class="n">USkeletalMeshComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">AMyCharacter</span><span class="o">::</span><span class="n">BodyComponentName</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Body</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">Body</span><span class="o">-&gt;</span><span class="n">AlwaysLoadOnClient</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="n">Body</span><span class="o">-&gt;</span><span class="n">AlwaysLoadOnServer</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="n">Body</span><span class="o">-&gt;</span><span class="n">bOwnerNoSee</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">Body</span><span class="o">-&gt;</span><span class="n">MeshComponentUpdateFlag</span> <span class="o">=</span> <span class="n">EMeshComponentUpdateFlag</span><span class="o">::</span><span class="n">AlwaysTickPose</span><span class="p">;</span>
+        <span class="n">Body</span><span class="o">-&gt;</span><span class="n">bCastDynamicShadow</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="n">Body</span><span class="o">-&gt;</span><span class="n">PrimaryComponentTick</span><span class="p">.</span><span class="n">TickGroup</span> <span class="o">=</span> <span class="n">TG_PrePhysics</span><span class="p">;</span>
+        <span class="n">Body</span><span class="o">-&gt;</span><span class="n">bChartDistanceFactor</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="n">Body</span><span class="o">-&gt;</span><span class="n">SetCollisionProfileName</span><span class="p">(</span><span class="n">CollisionProfileName</span><span class="p">);</span>
+        <span class="n">Body</span><span class="o">-&gt;</span><span class="n">bGenerateOverlapEvents</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+
+        <span class="c1">// Mesh acts as the head, as well as the parent for both animation and attachment.</span>
+        <span class="n">Body</span><span class="o">-&gt;</span><span class="n">AttachParent</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">;</span>
+        <span class="n">Body</span><span class="o">-&gt;</span><span class="n">SetMasterPoseComponent</span><span class="p">(</span><span class="n">Mesh</span><span class="p">);</span>
+
+        <span class="n">Components</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">Body</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">Legs</span> <span class="o">=</span> <span class="n">PCIP</span><span class="p">.</span><span class="n">CreateOptionalDefaultSubobject</span><span class="o">&lt;</span><span class="n">USkeletalMeshComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">AMyCharacter</span><span class="o">::</span><span class="n">LegsComponentName</span><span class="p">);</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Legs</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">Legs</span><span class="o">-&gt;</span><span class="n">AlwaysLoadOnClient</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="n">Legs</span><span class="o">-&gt;</span><span class="n">AlwaysLoadOnServer</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="n">Legs</span><span class="o">-&gt;</span><span class="n">bOwnerNoSee</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+        <span class="n">Legs</span><span class="o">-&gt;</span><span class="n">MeshComponentUpdateFlag</span> <span class="o">=</span> <span class="n">EMeshComponentUpdateFlag</span><span class="o">::</span><span class="n">AlwaysTickPose</span><span class="p">;</span>
+        <span class="n">Legs</span><span class="o">-&gt;</span><span class="n">bCastDynamicShadow</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="n">Legs</span><span class="o">-&gt;</span><span class="n">PrimaryComponentTick</span><span class="p">.</span><span class="n">TickGroup</span> <span class="o">=</span> <span class="n">TG_PrePhysics</span><span class="p">;</span>
+        <span class="n">Legs</span><span class="o">-&gt;</span><span class="n">bChartDistanceFactor</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="n">Legs</span><span class="o">-&gt;</span><span class="n">SetCollisionProfileName</span><span class="p">(</span><span class="n">CollisionProfileName</span><span class="p">);</span>
+        <span class="n">Legs</span><span class="o">-&gt;</span><span class="n">bGenerateOverlapEvents</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+
+        <span class="c1">// Mesh acts as the head, as well as the parent for both animation and attachment.</span>
+        <span class="n">Legs</span><span class="o">-&gt;</span><span class="n">AttachParent</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">;</span>
+        <span class="n">Legs</span><span class="o">-&gt;</span><span class="n">SetMasterPoseComponent</span><span class="p">(</span><span class="n">Mesh</span><span class="p">);</span>
+
+        <span class="n">Components</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">Legs</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Usage">
+        Usage
+       </span>
+      </h2>
+      <ul>
+       <li>
+        Create a blueprint based on this character.
+       </li>
+       <li>
+        Under the components tab, find the body &amp; legs components
+       </li>
+       <li>
+        Set the skeletal meshes the body &amp; legs should use.
+       </li>
+      </ul>
+      <p>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

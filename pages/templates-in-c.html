@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Templates in C++ - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Templates in C++
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Example:_Spawn_Actor_From_Blueprint">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Example: Spawn Actor From Blueprint
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Calling_SpawnBP_Function">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Calling SpawnBP Function
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#In-Engine_Example:_Min.2FMax_of_Array">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           In-Engine Example: Min/Max of Array
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <b>
+        Author:
+       </b>
+       (
+       )
+      </p>
+      <p>
+       In C++, template classes and functions are a powerful and versatile tool but can be a bit daunting to understand at first. For short functions and classes, using FORCEINLINE can be a great optimization. Look up "c++ inline functions" for a deeper insight on the topic.
+      </p>
+      <p>
+       The basic pattern is as follows:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">YourTemplateType</span><span class="o">&gt;</span>
+<span class="n">FORCEINLINE</span> <span class="kt">void</span> <span class="n">YourFunction</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="c1">// function body</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <i>
+        typename
+       </i>
+       may also be replaced with
+       <i>
+        class
+       </i>
+       depending on your use of the templated function.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Example:_Spawn_Actor_From_Blueprint">
+        Example: Spawn Actor From Blueprint
+       </span>
+      </h2>
+      <p>
+       I wrote a templated SpawnBP function to simplify and streamline the process of spawning actors from a blueprint!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">VictoryObjType</span><span class="o">&gt;</span>
+<span class="k">static</span> <span class="n">FORCEINLINE</span> <span class="n">VictoryObjType</span><span class="o">*</span> <span class="n">SpawnBP</span><span class="p">(</span>
+	<span class="n">UWorld</span><span class="o">*</span>         <span class="n">TheWorld</span><span class="p">,</span> 
+	<span class="n">UClass</span><span class="o">*</span>         <span class="n">TheBP</span><span class="p">,</span>
+	<span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span>  <span class="n">Loc</span><span class="p">,</span>
+	<span class="k">const</span> <span class="n">FRotator</span><span class="o">&amp;</span> <span class="n">Rot</span><span class="p">,</span>
+	<span class="k">const</span> <span class="kt">bool</span>      <span class="n">bNoCollisionFail</span> <span class="o">=</span> <span class="nb">true</span><span class="p">,</span>
+	<span class="n">AActor</span><span class="o">*</span>         <span class="n">Owner</span>            <span class="o">=</span> <span class="nb">NULL</span><span class="p">,</span>
+	<span class="n">APawn</span><span class="o">*</span>          <span class="n">Instigator</span>       <span class="o">=</span> <span class="nb">NULL</span>
+<span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">TheWorld</span><span class="p">)</span> <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">TheBP</span><span class="p">)</span> <span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+	
+	<span class="n">FActorSpawnParameters</span> <span class="n">SpawnInfo</span><span class="p">;</span>
+	<span class="n">SpawnInfo</span><span class="p">.</span><span class="n">bNoCollisionFail</span>   <span class="o">=</span> <span class="n">bNoCollisionFail</span><span class="p">;</span>
+	<span class="n">SpawnInfo</span><span class="p">.</span><span class="n">Owner</span>              <span class="o">=</span> <span class="n">Owner</span><span class="p">;</span>
+	<span class="n">SpawnInfo</span><span class="p">.</span><span class="n">Instigator</span>         <span class="o">=</span> <span class="n">Instigator</span><span class="p">;</span>
+	<span class="n">SpawnInfo</span><span class="p">.</span><span class="n">bDeferConstruction</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+	
+	<span class="k">return</span> <span class="n">TheWorld</span><span class="o">-&gt;</span><span class="n">SpawnActor</span><span class="o">&lt;</span><span class="n">VictoryObjType</span><span class="o">&gt;</span><span class="p">(</span><span class="n">TheBP</span><span class="p">,</span> <span class="n">Loc</span><span class="p">,</span> <span class="n">Rot</span><span class="p">,</span> <span class="n">SpawnInfo</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Notice it is possible to return a pointer of the template type!
+      </p>
+      <h3>
+       <span class="mw-headline" id="Calling_SpawnBP_Function">
+        Calling SpawnBP Function
+       </span>
+      </h3>
+      <p>
+       From a Static Library, in an actor class (for use of GetWorld()).
+       <i>
+        SpawnLoc
+       </i>
+       and
+       <i>
+        SpawnRot
+       </i>
+       are calculated by you based on your needs.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">AActorBaseClass</span><span class="o">*</span> <span class="n">NewActor</span> <span class="o">=</span> <span class="n">UFunctionLibrary</span><span class="o">::</span><span class="n">SpawnBP</span><span class="o">&lt;</span><span class="n">AActorBaseClass</span><span class="o">&gt;</span><span class="p">(</span><span class="n">GetWorld</span><span class="p">(),</span> <span class="n">TheActorBluePrint</span><span class="p">,</span> <span class="n">SpawnLoc</span><span class="p">,</span> <span class="n">SpawnRot</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       From an instanced Actor class:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">AActorBaseClass</span><span class="o">*</span> <span class="n">NewActor</span> <span class="o">=</span> <span class="n">SpawnBP</span><span class="o">&lt;</span><span class="n">AActorBaseClass</span><span class="o">&gt;</span><span class="p">(</span><span class="n">GetWorld</span><span class="p">(),</span> <span class="n">TheActorBluePrint</span><span class="p">,</span> <span class="n">SpawnLoc</span><span class="p">,</span> <span class="n">SpawnRot</span><span class="p">);</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="In-Engine_Example:_Min.2FMax_of_Array">
+        In-Engine Example: Min/Max of Array
+       </span>
+      </h2>
+      <p>
+       In Unreal Engine Version 4.3, Epic accepted my github pull request functions to determine the minimum / maximum values of an array.
+      </p>
+      <p>
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?20212-Two-new-Math-functions-for-you-from-me-in-4-3-Template-Min-Max-of-Array&amp;p=98583&amp;viewfull=1#post98583" rel="nofollow">
+        Full code samples can be found here
+       </a>
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

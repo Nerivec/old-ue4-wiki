@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Creating heightmaps with Krita - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Creating heightmaps with Krita
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Create_a_New_Document">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Create a New Document
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Interface">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Interface
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Painting">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Painting
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Saving">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Saving
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Importing_into_Unreal_Editor_4">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Importing into Unreal Editor 4
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Previewing_Changes_in_Unreal_Editor_4">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Previewing Changes in Unreal Editor 4
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Create_a_New_Document">
+        Create a New Document
+       </span>
+      </h2>
+      <p>
+       Create a new document in Krita. The dimensions of the image should match one of the
+       <b>
+        Overall size (vertices)
+       </b>
+       of UE4’s
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Landscape/Creation/index.html#recommendedlandscapesizes" rel="nofollow">
+        Recommended Landscape Sizes
+       </a>
+       .
+      </p>
+      <p>
+       Set the
+       <b>
+        Model
+       </b>
+       to
+       <i>
+        Grayscale
+       </i>
+       ,
+       <b>
+        Depth
+       </b>
+       to
+       <i>
+        16 Bits
+       </i>
+       , and
+       <b>
+        Profile
+       </b>
+       to “
+       <i>
+        gray built-in
+       </i>
+       ”.
+      </p>
+      <p>
+       <img alt="Krita New File.PNG" class="" height="664" src="../assets/creating-heightmaps-with-krita/0.PNG" width="809"/>
+      </p>
+      <p>
+       Click the bar next to
+       <b>
+        Canvas Color
+       </b>
+       and set the
+       <b>
+        Value
+       </b>
+       field to
+       <i>
+        128
+       </i>
+       . This will make the background color of the image equal to the default actor’s height in UE4 (Z=0). Click the
+       <b>
+        Add to Custom Colors
+       </b>
+       button so you can easily access this important color value.
+      </p>
+      <p>
+       <img alt="2 Canvas Color.PNG" class="" height="440" src="../assets/creating-heightmaps-with-krita/1.PNG" width="596"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Interface">
+        Interface
+       </span>
+      </h2>
+      <p>
+       Change the color selector to make it easier to select finer shades of gray. Click the wrench under
+       <b>
+        Advanced Color Selector
+       </b>
+       .
+      </p>
+      <p>
+       <img alt="3 Advanced Color Selector.PNG" class="" height="165" src="../assets/creating-heightmaps-with-krita/2.PNG" width="283"/>
+      </p>
+      <p>
+       Update your settings to match the following screenshots. Under
+       <b>
+        Zoom selectors
+       </b>
+       , the
+       <b>
+        zoom to size
+       </b>
+       should be set to a large value. On my 1920x1080 monitor, I’ve set the value to
+       <i>
+        600px
+       </i>
+       .
+      </p>
+      <p>
+       <img alt="4 Color Selector.PNG" class="" height="445" src="../assets/creating-heightmaps-with-krita/3.PNG" width="547"/>
+      </p>
+      <p>
+       Change the settings to match the
+       <b>
+        Shade Selector
+       </b>
+       tab as well.
+      </p>
+      <p>
+       <img alt="5 Shade Selector.PNG" class="" height="445" src="../assets/creating-heightmaps-with-krita/4.PNG" width="547"/>
+      </p>
+      <p>
+       Now when you hover the mouse over the gray cross, a larger version will appear. Hover your mouse over the center of that larger cross and you’ll be able to select subtle variations of the currently selected color.
+      </p>
+      <p>
+       Next click on the
+       <b>
+        Layers
+       </b>
+       tab which may be hidden behind the
+       <b>
+        Brush Presets
+       </b>
+       tab. Click the lock icon under
+       <i>
+        Layer 1
+       </i>
+       . This is your background, and it is good practice to make any changes to additional layers on top of it. Press the
+       <b>
+        Insert
+       </b>
+       key to add a new layer, or select
+       <i>
+        Paint Layer
+       </i>
+       from the add layer drop-down icon.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Painting">
+        Painting
+       </span>
+      </h2>
+      <p>
+       Lighter colors increase the height of the terrain, darker colors lower the terrain. Remember that the neutral gray color is equal to Z=0 in UE4. Black will be the bottom of a Grand Canyon and solid white the summit of Mt. Everest.
+      </p>
+      <p>
+       You want to use brushes that have
+       <i>
+        soft falloffs
+       </i>
+       and
+       <i>
+        no noise
+       </i>
+       unless you happen to be making unnatural cliffs or a field of volcanic glass.
+      </p>
+      <p>
+       You can quickly change the size of the brush using
+       <b>
+        [
+       </b>
+       and
+       <b>
+        ]
+       </b>
+       .
+      </p>
+      <p>
+       If you find the changes to your canvas are so slight you cannot see them, change the layer you are editing to
+       <i>
+        Color Dodge
+       </i>
+       or
+       <i>
+        Burn
+       </i>
+       . Just remember to change it back to
+       <i>
+        Normal
+       </i>
+       before you save it.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Saving">
+        Saving
+       </span>
+      </h2>
+      <p>
+       <i>
+        Krita will not warn or stop you from saving in a format where it cannot preserve layer information.
+       </i>
+       Specifically, if you save your file as a PNG for export to UE4 and exit Krita, you will have lost all the fancy data such as layers and strokes that are normally included in an image-editing file. For this reason it is recommended that you
+       <b>
+        Save
+       </b>
+       as a Krita file (.kra) and
+       <b>
+        Export
+       </b>
+       as a PNG.
+      </p>
+      <p>
+       When exporting, after choosing a filename and location, change
+       <b>
+        Save as type:
+       </b>
+       to
+       <i>
+        PNG image
+       </i>
+       and click
+       <b>
+        Save
+       </b>
+       . Slide the
+       <b>
+        Compress
+       </b>
+       slider to
+       <i>
+        Fast
+       </i>
+       and be sure
+       <b>
+        Interlacing
+       </b>
+       is unchecked.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Importing_into_Unreal_Editor_4">
+        Importing into Unreal Editor 4
+       </span>
+      </h2>
+      <p>
+       In UE4, press
+       <b>
+        Shift-3
+       </b>
+       to open the Landscape editor. Assuming you don’t already have a landscape imported, select the
+       <b>
+        Import from File
+       </b>
+       radio button under the
+       <b>
+        New Landscape
+       </b>
+       section and select the PNG you exported. Further assuming you created an image that matches one of the recommended landscape sizes, all of the additional information will be correctly filled in. Optionally assign a material,
+       <i>
+        M_Ground_Gravel
+       </i>
+       from the Starter Assets is a fine choice. Press the
+       <b>
+        Import
+       </b>
+       button.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Previewing_Changes_in_Unreal_Editor_4">
+        Previewing Changes in Unreal Editor 4
+       </span>
+      </h2>
+      <p>
+       You can preview changes you make in Krita by first saving your document as a PNG (and breaking the rule above). Then to preview, press CTRL-S to save, tab to UE4, undo the previous import with CTRL-Z, and clicking the import button. This can be automated with a simple script.
+      </p>
+      <p>
+       <br/>
+       Started by:
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

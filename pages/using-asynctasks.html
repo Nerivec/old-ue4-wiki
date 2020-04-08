@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Using AsyncTasks - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Using AsyncTasks
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#What_You_Will_Learn">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             What You Will Learn
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Async_Tasks_Explained">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Async Tasks Explained
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Why_is_this_helpful.3F">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Why is this helpful?
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Types_of_Async_Tasks">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Types of Async Tasks
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#FAsyncTask">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             FAsyncTask
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#FAutoDeleteAsyncTask">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             FAutoDeleteAsyncTask
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#How_to_Declare_and_Define_an_Async_Task">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           How to Declare and Define an Async Task
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#Organization">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             Organization
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#The_Actual_Code">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             The Actual Code
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-11">
+         <a href="#How_to_Instantiate_and_Run_an_Async_Task">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           How to Instantiate and Run an Async Task
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-12">
+         <a href="#Advanced_Topics">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Advanced Topics
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-13">
+           <a href="#Returning_Data">
+            <span class="tocnumber">
+             6.1
+            </span>
+            <span class="toctext">
+             Returning Data
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h1>
+      <p>
+       I have been asked about my work with successfully creating FAsyncTasks.  It has come up enough in Slack chat that I finally broke down and I want to make a really fantastic article about it.  Hopefully I will succeed.
+      </p>
+      <h2>
+       <span class="mw-headline" id="What_You_Will_Learn">
+        What You Will Learn
+       </span>
+      </h2>
+      <ol>
+       <li>
+        What Async Tasks are
+       </li>
+       <li>
+        Types of Async Tasks
+       </li>
+       <li>
+        How to Declare and Define an Async Task
+       </li>
+       <li>
+        How to Instantiate and Run an Async Task
+       </li>
+      </ol>
+      <h1>
+       <span class="mw-headline" id="Async_Tasks_Explained">
+        Async Tasks Explained
+       </span>
+      </h1>
+      <p>
+       A so called
+       <b>
+        Async Task
+       </b>
+       is a way of running non-blocking asynchronous code on a thread which is removed from the main 'Game Thread'
+      </p>
+      <h2>
+       <span class="mw-headline" id="Why_is_this_helpful.3F">
+        Why is this helpful?
+       </span>
+      </h2>
+      <p>
+       Well, if you need to take a long time to complete a task, chunk something up into multiple parts, or generally not interfere with the regular tick and render cycle of a game for any reason, then this is one of the best methods available to you in Unreal Engine.
+      </p>
+      <p>
+       If you run the same code
+       <b>
+        Synchronously
+       </b>
+       or have it
+       <b>
+        Blocking
+       </b>
+       , it will generally halt your game logic and rendering and cause major performance issues!  No fun.
+      </p>
+      <p>
+       Also, you can
+       <i>
+        vastly
+       </i>
+       increase performance for Asynchronous tasks that can make use of multi-threaded systems.
+      </p>
+      <h1>
+       <span class="mw-headline" id="Types_of_Async_Tasks">
+        Types of Async Tasks
+       </span>
+      </h1>
+      <p>
+       The classes that are referred to as Async Tasks are 'friend' classes used in conjunction with FNonAbandonableTask and come in two flavors: FAsyncTask and FAutoDeleteAsyncTask.
+      </p>
+      <h2>
+       <span class="mw-headline" id="FAsyncTask">
+        FAsyncTask
+       </span>
+      </h2>
+      <p>
+       This task type requires some manual attention in order to stop, or delete the task.  Other than that, both flavors are fairly identical.
+      </p>
+      <p>
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/API/Runtime/Core/Async/FAsyncTask/index.html" rel="nofollow">
+        UE4 Documentation on FAsyncTask
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="FAutoDeleteAsyncTask">
+        FAutoDeleteAsyncTask
+       </span>
+      </h2>
+      <p>
+       This task type requires
+       <i>
+        zero
+       </i>
+       attention in order to stop, or delete the task.  Other than that, both flavors are fairly identical.
+      </p>
+      <p>
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/API/Runtime/Core/Async/FAutoDeleteAsyncTask/index.html" rel="nofollow">
+        UE4 Documentation on FAutoDeleteAsyncTask
+       </a>
+      </p>
+      <h1>
+       <span class="mw-headline" id="How_to_Declare_and_Define_an_Async_Task">
+        How to Declare and Define an Async Task
+       </span>
+      </h1>
+      <p>
+       Although there are multiple ways to accomplish this, I will show you the way in which I handle Async Tasks personally, which should accommodate most uses.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Organization">
+        Organization
+       </span>
+      </h2>
+      <p>
+       The method I use to organize my code is to create a C++ Component that handles the types of Tasks I want to create.  That way, I can invoke the tasks from Blueprints very easily, and yet have all of the speed of C++.  I'm going to focus a lot more on the Async Task code itself, so don't worry about that too much.
+      </p>
+      <h2>
+       <span class="mw-headline" id="The_Actual_Code">
+        The Actual Code
+       </span>
+      </h2>
+      <p>
+       Just below my Component class body in my component's Header file, I add all of my FAsyncTask and FAutoDeleteAsyncTask classes.
+      </p>
+      <p>
+       They are declared like so:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">class</span> <span class="nc">FMyTaskName</span> <span class="o">:</span> <span class="k">public</span> <span class="n">FNonAbandonableTask</span>
+<span class="p">{</span>
+	<span class="k">friend</span> <span class="k">class</span> <span class="nc">FAutoDeleteAsyncTask</span><span class="o">&lt;</span><span class="n">FMyTaskName</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">FMyTaskName</span><span class="p">(</span><span class="n">int32</span> <span class="n">Input</span><span class="p">,</span> <span class="n">int32</span> <span class="n">Input2</span><span class="p">)</span> <span class="o">:</span>
+		<span class="n">MyInput</span><span class="p">(</span><span class="n">Input</span><span class="p">),</span>
+		<span class="n">MyInput2</span><span class="p">(</span><span class="n">Input2</span><span class="p">)</span>
+	<span class="p">{}</span>
+
+<span class="k">protected</span><span class="o">:</span>
+	<span class="n">int32</span> <span class="n">MyInput</span><span class="p">;</span>
+	<span class="n">int32</span> <span class="n">MyInput2</span><span class="p">;</span>
+
+	<span class="kt">void</span> <span class="nf">DoWork</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="c1">// Place the Async Code here.  This function runs automatically.</span>
+	<span class="p">}</span>
+
+	<span class="c1">// This next section of code needs to be here.  Not important as to why.</span>
+
+	<span class="n">FORCEINLINE</span> <span class="n">TStatId</span> <span class="nf">GetStatId</span><span class="p">()</span> <span class="k">const</span>
+	<span class="p">{</span>
+		<span class="n">RETURN_QUICK_DECLARE_CYCLE_STAT</span><span class="p">(</span><span class="n">FMyTaskName</span><span class="p">,</span> <span class="n">STATGROUP_ThreadPoolAsyncTasks</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       The preceding code is valid, although it won't actually perform a task.  It is up to you to define what this class actually does.
+      </p>
+      <p>
+       Also realize that you can and should change the instances of
+       <b>
+        FMyTaskName
+       </b>
+       with something unique and meaningful for each Task.
+      </p>
+      <p>
+       <b>
+        DoWork()
+       </b>
+       will execute one time automatically once the task is started.  I'll go into a little more detail later.
+      </p>
+      <p>
+      </p>
+      <p>
+      </p>
+      <h1>
+       <span class="mw-headline" id="How_to_Instantiate_and_Run_an_Async_Task">
+        How to Instantiate and Run an Async Task
+       </span>
+      </h1>
+      <p>
+       Heading back into the .cpp side of things, I'll show you the proper method for instantiating and executing the actual task itself.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Instantiate a copy of the actual task, and queue the task for execution with StartBackgroundTask()</span>
+<span class="p">(</span><span class="k">new</span> <span class="n">FAutoDeleteAsyncTask</span><span class="o">&lt;</span><span class="n">FMyTaskName</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span><span class="o">-&gt;</span><span class="n">StartBackgroundTask</span><span class="p">();</span>
+</pre>
+      </div>
+      <p>
+       As soon as the task is Started, it will be whisked away to the default Thread Pool and queued up for execution.  Once a thread is available, it will immediately run the DoWork() function until that function is complete.  Once that function is complete, the task will either Auto Delete or become Idle, depending on what type of task was used.
+      </p>
+      <p>
+       The speed of assigning a Task to a queue is remarkably fast.  Other forms of thread management, such as FRunnable, tend to have more delays and overhead surrounding them, and are better suited for certain types of continuous operations.
+      </p>
+      <p>
+      </p>
+      <p>
+      </p>
+      <h1>
+       <span class="mw-headline" id="Advanced_Topics">
+        Advanced Topics
+       </span>
+      </h1>
+      <h2>
+       <span class="mw-headline" id="Returning_Data">
+        Returning Data
+       </span>
+      </h2>
+      <p>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

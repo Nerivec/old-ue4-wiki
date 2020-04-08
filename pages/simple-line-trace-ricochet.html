@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Simple Line Trace Ricochet - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Simple Line Trace Ricochet
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <br/>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Setting_up_the_blueprint">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Setting up the blueprint
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       This tutorial will show you how to create a blueprint that will allow the player to shoot a line trace (ray trace) that will ricochet off of surfaces.  More line traces can be strung together to ricochet as many times as needed.
+      </p>
+      <p>
+       <br/>
+       To do this you will need to follow this logic:
+      </p>
+      <p>
+       1. On key press, trace a line from the player until an object is hit
+      </p>
+      <p>
+       2. If an object is hit, get the Impact Point and Impact Normal
+      </p>
+      <p>
+       3. Mirror the vector of the original line trace
+      </p>
+      <p>
+       4. Then create another line trace from the Normal and Impact Point
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="Ricochet BP.png" class="thumbimage" height="269" src="../assets/simple-line-trace-ricochet/0.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Setting_up_the_blueprint">
+        Setting up the blueprint
+       </span>
+      </h2>
+      <p>
+       1. Open the Character blueprint and go to the Event Graph
+      </p>
+      <pre>    a. Right-click and create a <b>Line Trace by Channel</b> node &amp; set the <b>Draw Debug Type</b> to <b>For Duration</b>.
+</pre>
+      <p>
+       2. Getting the player info
+      </p>
+      <pre>    a. In the bottom of the <b>MyBlueprint</b> panel, check <b>Show Inherited Variables</b>.
+    b. Find the <b>FirstPersonCamera</b> and drag a <b>Get</b> variable into the graph.
+    c. Drag off of the camera variable and find the <b>Get World Location</b> node (<b>Context Sensitivity</b> may need to be off).
+    d. Plug the return value into the <b>Start</b> pin of the line trace.
+    e. Drag off of the camera variable and find the <b>Get Forward Vector</b> node.
+    f. Multiply the forward vector by 5000 (or any other value you like, this is the distance the line trace will go).
+    g. Add the vectors from the world location and the multiplied value.  Plug the result into the <b>End</b> pin of the line trace.
+    h. Subtract the <b>Return Value</b> from the <b>Get World Location</b> node from the value from the previous added node (End - Start in the picture above.)
+</pre>
+      <p>
+       3. Getting the hit infomation and the second line trace
+      </p>
+      <pre>    a. Drag off of the <b>Out Hit</b> pin of the line trace &amp; create a <b>Break Hit Result</b> node.
+    b. Create another <b>Line Trace by Channel</b> node and set it <b>For Duration</b>.
+    c. Drag off of the <b>Impact Point</b> pin of the break hit and create an <b>Add</b> node for Vector + Vector.
+       (Note: Attempting to reflect 'exactly' off of a normal will sometimes have errors. This adds 1, depending on normal direction, to the next line trace to make sure it is not inside of the object.)
+    d. Connect the <b>Normal</b> to the <b>Add</b> node and connect the output to the Start pin of the next line trace.
+    e. Drag off of the result from the End - Start calculation from earlier &amp; get a <b>Mirror Vector by Normal</b> node.
+    f. Connect the <b>Impact Normal</b> pin of the break hit to the <b>In Normal</b> pin of the mirror vector.
+    g. Drag off of the <b>Impact Point</b> pin of the break hit and create another <b>Add</b> node for Vector + Vector
+    h. Connect the <b>Return Value</b> pin of the <b>Mirror Vector by Normal</b> node to the <b>Add</b> node that was just created and plug the result into the <b>End</b> pin
+</pre>
+      <p>
+       4. Stringing more line traces together
+      </p>
+      <pre>    a. Select the last 3 nodes (<b>Break Hit Result</b>, <b>Mirror Vector by Normal</b>, and <b>Line Trace by Channel</b>).
+    b. Copy them to the end of the blueprint.
+</pre>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="Ricochet BP2.png" class="thumbimage" height="364" src="../assets/simple-line-trace-ricochet/1.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <pre>    c. Connect the <b>Execute</b> pins for the line traces.
+    d. Connect the <b>Out Hit</b> pin to the new <b>Break Hit Result</b>.
+    e. Create another End - Start calculation with the values from the previous line trace and connect the output to the new <b>Mirror Vector by Normal</b> node.
+    f. Follow the steps above to set up the same line trace again as many time as needed
+</pre>
+      <p>
+       <b>
+        NOTE:
+       </b>
+       <i>
+        This tutorial has been tested and works correctly with version 4.10.4 of the editor.
+       </i>
+      </p>
+      <p>
+       Cheers,
+      </p>
+      <p>
+       TJ Ballard &amp; Matthew Clark
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

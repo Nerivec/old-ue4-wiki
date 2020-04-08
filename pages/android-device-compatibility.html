@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Android Device Compatibility - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Android Device Compatibility
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <pre> This page is a place for the community to view and provide data on Android devices that have run UE4. Please add devices under the appropriate GPU family or add one if it doesn't exist. Even without know the GPU your phone has, if you provide the specific model number someone else may be able to fill in that data. Please be sure to include the OS version of your device.
+</pre>
+      <p>
+       <big>
+        <big>
+         Legend:
+        </big>
+       </big>
+      </p>
+      <p>
+       <b>
+        LDR
+       </b>
+       (Match3) - Low Dynamic Range. The highest performance tier supported in UE4 and is recommended for games that do not require lighting or postprocessing features
+       <br/>
+       <b>
+        Basic Lighting
+       </b>
+       (StrategyGame) - Leverages static lighting and fully rough Materials to create levels with interesting lighting while maximizing performance to reach a broader range of mobile devices
+       <br/>
+       <b>
+        Full HDR w/ Sun
+       </b>
+       (SunTemple) - This tier is the same as the 'Full HDR' tier and has the same advantages and recommendations except that a single directional light is rendered at much higher quality
+      </p>
+      <pre> For detailed information on the Rendering Features in the table, see our <a class="external text" href="https://docs.unrealengine.com/latest/INT/Platforms/Mobile/Performance/index.html" rel="nofollow">Performance Guidelines for Mobile Devices</a> page.
+</pre>
+      <p>
+       <b>
+        Supported
+       </b>
+       - Device passed basic compatibility testing and is expected to work, barring minor issues that may need to be fixed for certain features, or low performance
+       <br/>
+       <b>
+        Expected
+       </b>
+       - Device was not fully tested but the hardware is expected to be supported, barring any unique software/driver implementation
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Customer_Device_List">
+        Customer Device List
+       </span>
+      </h2>
+      <table class="wikitable">
+       <tbody>
+        <tr>
+         <th>
+          Device
+         </th>
+         <th>
+          LDR (Match3)
+         </th>
+         <th>
+          Basic (StrategyGame)
+         </th>
+         <th>
+          Full HDR (SunTemple)
+         </th>
+         <th>
+          UE4 Tested
+         </th>
+         <th>
+          OS version
+         </th>
+        </tr>
+       </tbody>
+      </table>
+      <h2>
+       <span class="mw-headline" id="Epic_Games_Currently_Tested_Device_List">
+        <span class="mw-headline">
+         Epic Games Currently Tested Device List
+        </span>
+       </span>
+      </h2>
+      <table class="wikitable">
+       <tbody>
+        <tr>
+         <th>
+          Device
+         </th>
+         <th>
+          LDR (Match3)
+         </th>
+         <th>
+          Basic (StrategyGame)
+         </th>
+         <th>
+          Full HDR (SunTemple)
+         </th>
+         <th>
+          UE4 Tested
+         </th>
+         <th>
+          OS version
+         </th>
+        </tr>
+        <tr>
+         <td>
+          Samsung Galaxy S2
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(40fps)
+         </td>
+         <td>
+          Supported(5fps)
+         </td>
+         <td>
+          4.15
+         </td>
+         <td>
+          4.04
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Samsung Galaxy S3(Mali)
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(10fps)
+         </td>
+         <td>
+          4.15
+         </td>
+         <td>
+          4.30
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Samsung Galaxy S4
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(46fps)
+         </td>
+         <td>
+          Supported(13fps)
+         </td>
+         <td>
+          4.15
+         </td>
+         <td>
+          4.4.2
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Samsung Galaxy S4 Mini
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(38fps)
+         </td>
+         <td>
+          Supported(7fps)
+         </td>
+         <td>
+          4.15
+         </td>
+         <td>
+          4.4.2
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Samsung Galaxy S5
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(50fps)
+         </td>
+         <td>
+          Supported(16fps)
+         </td>
+         <td>
+          4.15
+         </td>
+         <td>
+          5.0
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Samsung Galaxy S6
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(42fps)
+         </td>
+         <td>
+          4.15
+         </td>
+         <td>
+          5.1.1
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Samsung Galaxy S6 Edge+
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(46fps)
+         </td>
+         <td>
+          4.15
+         </td>
+         <td>
+          5.1.1
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Samsung Galaxy S7 Edge
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(39fps)
+         </td>
+         <td>
+          4.15
+         </td>
+         <td>
+          6.0.1
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Samsung Galaxy Note 4
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(48fps)
+         </td>
+         <td>
+          Supported(33fps)
+         </td>
+         <td>
+          4.15
+         </td>
+         <td>
+          4.4.4
+         </td>
+        </tr>
+        <tr>
+         <td>
+          LG G Pro 2
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(51fps)
+         </td>
+         <td>
+          Supported(25fps)
+         </td>
+         <td>
+          4.15
+         </td>
+         <td>
+          4.4.2
+         </td>
+        </tr>
+        <tr>
+         <td>
+          LG G5
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(33fps)
+         </td>
+         <td>
+          4.15
+         </td>
+         <td>
+          6.0.1
+         </td>
+        </tr>
+        <tr>
+         <td>
+          LG Nexus 5
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(43fps)
+         </td>
+         <td>
+          Supported(22fps)
+         </td>
+         <td>
+          4.15
+         </td>
+         <td>
+          5.0.1
+         </td>
+        </tr>
+        <tr>
+         <td>
+          LG Nexus 5
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(50fps)
+         </td>
+         <td>
+          Supported(22fps)
+         </td>
+         <td>
+          4.15
+         </td>
+         <td>
+          6.0.1
+         </td>
+        </tr>
+        <tr>
+         <td>
+          LG Nexus 5X
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(24fps)
+         </td>
+         <td>
+          4.15
+         </td>
+         <td>
+          7.1.1
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Sony Xperia Z2
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(57fps)
+         </td>
+         <td>
+          Supported(25fps)
+         </td>
+         <td>
+          4.15
+         </td>
+         <td>
+          4.4.4
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Sony Xperia M4 Aqua
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(42fps)
+         </td>
+         <td>
+          Supported(12fps)
+         </td>
+         <td>
+          4.15
+         </td>
+         <td>
+          5.0
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Asus Zenfone 2
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(22fps)
+         </td>
+         <td>
+          4.15
+         </td>
+         <td>
+          5.0
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Motorola Nexus 6
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(30fps)
+         </td>
+         <td>
+          4.15
+         </td>
+         <td>
+          6.0.1
+         </td>
+        </tr>
+        <tr>
+         <td>
+          HTC Nexus 9
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          4.15
+         </td>
+         <td>
+          6.0.1
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Huawei Nexus 6P
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(36fps)
+         </td>
+         <td>
+          4.15
+         </td>
+         <td>
+          6.0.1
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Huawei Nexus 6P
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(45fps)
+         </td>
+         <td>
+          4.15
+         </td>
+         <td>
+          7.1.1
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Huawei P9 Plus
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(50fps)
+         </td>
+         <td>
+          Supported(41fps)
+         </td>
+         <td>
+          4.15
+         </td>
+         <td>
+          6.0.1
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Nvidia SHIELD
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(56fps)
+         </td>
+         <td>
+          4.15
+         </td>
+         <td>
+          6.0.1
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Google Pixel
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(60fps)
+         </td>
+         <td>
+          Supported(58fps)
+         </td>
+         <td>
+          4.15
+         </td>
+         <td>
+          7.1.1
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

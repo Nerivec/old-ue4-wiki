@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Distance Based DX11 Tesselation - Video - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Distance Based DX11 Tesselation - Video
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Setup">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Setup
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Tutorial">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Tutorial
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Material_Composition">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Material Composition
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Project_Source">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Project Source
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Additional_Tutorials">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Additional Tutorials
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Credits">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Credits
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       This tutorial covers how to create a distance based tessellation material being driven by 6 changeable parameters.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Setup">
+        Setup
+       </span>
+      </h2>
+      <p>
+       Before you start you should have a basic knowledge of the Material Editor being used within the Unreal Engine 4. Also recommended but not mandatory is an understanding
+       <a class="external text" href="http://www.nvidia.com/object/tessellation.html" rel="nofollow">
+        what Tessellation is
+       </a>
+       especially and what it does and how it's being used. If you're not sure check out other tutorials before going ahead or simply check the
+       chapter.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Tutorial">
+        Tutorial
+       </span>
+      </h2>
+      <p>
+       Due to the fact that it's a complicated material function I created two video tutorials that offer step by step explanations.
+Please use any material of your choice ( that has a
+       <i>
+        Base Color
+       </i>
+       texture, a
+       <i>
+        Normal
+       </i>
+       texture and a
+       <i>
+        Displacement
+       </i>
+       texture ) as a base for the video tutorials below. First you'll add a basic and then dynamic tesselation to this material. Check out the
+       chapter to download the whole UE4 project if you don't have a proper material and / or textures.
+       <br/>
+       <br/>
+       Basic DX11 Tessellation ( 2 / 3 )
+       <br/>
+       &lt;youtube&gt;
+       <a class="external free" href="https://www.youtube.com/watch?v=o3L-GlYWmpc" rel="nofollow">
+        https://www.youtube.com/watch?v=o3L-GlYWmpc
+       </a>
+       <br/>
+       Distance Based DX11 Tessellation ( 3 / 3 )
+       <br/>
+       &lt;youtube&gt;
+       <a class="external free" href="https://www.youtube.com/watch?v=D6zyUI33FqA" rel="nofollow">
+        https://www.youtube.com/watch?v=D6zyUI33FqA
+       </a>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Material_Composition">
+        Material Composition
+       </span>
+      </h2>
+      <p>
+       Even though I'd still suggest watching the tutorial, here is an image of the final material.
+       <br/>
+       <br/>
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:802px;">
+        <img alt="" class="thumbimage" height="455" src="../assets/distance-based-dx11-tesselation-video/0.jpg" width="800"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Distance Based Tessellation Material
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+       To understand what the Param Values mean here is a screen illustrating the situation.
+       <br/>
+       <br/>
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:802px;">
+        <img alt="" class="thumbimage" height="450" src="../assets/distance-based-dx11-tesselation-video/1.jpg" width="800"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Distance Based Tessellation Explanation
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+       Minimal Distance = Distance from OBJECT to A, "Max Height" and "Iterations" with the predefined value
+       <br/>
+       Maximal Distance ( Fade Distance ) = Distance from A to B, at B "Max Height" and "Iterations" value is 0, transitioning/fading from A to B
+       <br/>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Project_Source">
+        Project Source
+       </span>
+      </h2>
+      <p>
+       You can download the materials of
+       <b>
+        this and other
+       </b>
+       tesselation tutorials listed below in an UE4
+       <a class="external text" href="https://github.com/XenoEgger/DynamicTesselation" rel="nofollow">
+        project from GitHub
+       </a>
+       .
+      </p>
+      <h2>
+       <span class="mw-headline" id="Additional_Tutorials">
+        Additional Tutorials
+       </span>
+      </h2>
+      <ul>
+       <li>
+        <a class="external text" href="https://www.youtube.com/watch?v=NX-NNyGV3oQ" rel="nofollow">
+         Advanced Materials (Instancing) Video ( 1 / 3 of
+         <b>
+          this
+         </b>
+         tutorial )
+        </a>
+       </li>
+       <li>
+       </li>
+       <li>
+        <a class="external text" href="https://www.youtube.com/watch?v=oMKHfiFD9Js" rel="nofollow">
+         Texture Packed Material Setup Video ( 1 / 2 with basic tesselation )
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://www.youtube.com/watch?v=_Xmxt1wv1SE" rel="nofollow">
+         Advanced Tessellated Displaced Material Setup Video ( 2 / 2 with advanced tesselation )
+        </a>
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="Credits">
+        Credits
+       </span>
+      </h2>
+      <p>
+       <i>
+        Material created by DaveTheFreak aka David Scholze
+       </i>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

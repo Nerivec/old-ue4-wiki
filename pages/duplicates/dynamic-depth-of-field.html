@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Dynamic Depth of Field - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Dynamic Depth of Field
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Blueprint_Setup">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Blueprint Setup
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Events">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Events
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Trace_Hit_Result_and_Focus_Distance">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             Trace Hit Result and Focus Distance
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Post_Process_Settings">
+            <span class="tocnumber">
+             2.3
+            </span>
+            <span class="toctext">
+             Post Process Settings
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Final_Result_and_Notes">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Final Result and Notes
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:568px;">
+         <img alt="DoF 5.jpg" class="thumbimage" height="285" src="../assets/dynamic-depth-of-field/0.jpg" width="566"/>
+         <div class="thumbcaption">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       Dynamic depth of field is an effect that can be used in FPS games to blur the background while reloading a weapon or focusing on the target as the player aims through iron sights of their weapon while blurring the rest of the screen. It can also be used to create a camera that you can use for taking screenshots for portfolio or any other reason you would want DoF effect without bothering with all the post process adjustments every time.
+      </p>
+      <p>
+       Here I'll give you the bare bones of how to implement this effect to a player camera using
+       <b>
+        TP_FirstPersonBP
+       </b>
+       template project, which later on you can implement on any camera and change the settings depending on your needs.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Blueprint_Setup">
+        Blueprint Setup
+       </span>
+      </h2>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:362px;">
+        <img alt="DoF 6.JPG" class="thumbimage" height="131" src="../assets/dynamic-depth-of-field/1.JPG" width="360"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       Here you can see the overall network inside the character blueprint's Event graph, if you have experience with Blueprints and just want to get the network and recreate it right away.
+Now more details.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Events">
+        Events
+       </span>
+      </h3>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:921px;">
+        <img alt="DoF 7.JPG" class="thumbimage" height="592" src="../assets/dynamic-depth-of-field/2.JPG" width="919"/>
+        <div class="thumbcaption">
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       We are going to be using two events,
+       <b>
+        Event Tick
+       </b>
+       and an
+       <b>
+        Input
+       </b>
+       event. We don't want to have this effect all the time in this case, so we use
+       <b>
+        Right Mouse Button
+       </b>
+       to enable Tick to fire a
+       <i>
+        line trace
+       </i>
+       from the camera which will tell us if/where/which object is the center of focus. And when we release the input, it will reverse the Timeline and stop the effect. Event Tick will also update the camera's post process settings as we will see in the following sections.
+      </p>
+      <p>
+       Trace Distance node is a collapsed graph to reduce the crowd in the network. You can see the expanded view down below:
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:722px;">
+        <img alt="Collapsed TraceDistance.JPG" class="thumbimage" height="315" src="../assets/dynamic-depth-of-field/3.JPG" width="720"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       Return Value 1 is the camera's location and 5000 is the distance we are going to be tracing.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Trace_Hit_Result_and_Focus_Distance">
+        Trace Hit Result and Focus Distance
+       </span>
+      </h3>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:605px;">
+        <img alt="DoF 8.JPG" class="thumbimage" height="543" src="../assets/dynamic-depth-of-field/4.JPG" width="603"/>
+        <div class="thumbcaption">
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       We are going to use a 1 second long
+       <b>
+        Timeline
+       </b>
+       track going from 0.0 to 0.5 to set the intensity of depth of field effect(which basically activates/deactivates the effect)
+After a trace happens every tick we check the return value(boolean).If it is true then it continues the rest of the calculations. If not, it reverses the Timeline to stop the effect.
+      </p>
+      <p>
+       Considering the trace hit an object, we break that result so that we can get the
+       <b>
+        Hit Location
+       </b>
+       . And to get the distance between the camera and the hit location we will use a macro like this:
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:722px;">
+        <img alt="FocusDistance Macro.JPG" class="thumbimage" height="361" src="../assets/dynamic-depth-of-field/5.JPG" width="720"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       Or, you can use Vector Length node instead if you prefer. Subtract location of the camera from focus location and get the length of that output, and you will get the distance.
+      </p>
+      <p>
+       <br/>
+       Now that we have the information we need we can use it to manipulate our camera's depth of field settings.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Post_Process_Settings">
+        Post Process Settings
+       </span>
+      </h3>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:1183px;">
+        <img alt="DoF 9.JPG" class="thumbimage" height="692" src="../assets/dynamic-depth-of-field/6.JPG" width="1181"/>
+        <div class="thumbcaption">
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       First we get the post process settings of the camera, which will give us the last focal distance so that we can use it for a soft blend when the trace hits points too far from each other.
+      </p>
+      <p>
+       To get the Break/Make post process nodes;
+      </p>
+      <ol>
+       <li>
+        <b>
+         Get First Person Camera
+        </b>
+       </li>
+       <li>
+        Drag from first person camera and
+        <b>
+         Get Post Process Settings
+        </b>
+       </li>
+       <li>
+        Drag from post process settings and you'll see
+        <b>
+         Break and Make PostProcessSettings
+        </b>
+        nodes
+       </li>
+      </ol>
+      <p>
+       Now in the details panel of Break Postprocesssettings node enable only Depth of Field Focal Distance setting. Currently(version 4.1.1) post process setting nodes are a little messy so you'll have to turn all of the rest of the settings manually for easier control. When we drag from Depth of Field Focal Distance and
+       <b>
+        Set
+       </b>
+       the variable(named
+       <i>
+        Last Focus
+       </i>
+       ) it gets stored as the last focal distance.
+And finally in order to get a smooth blend between the last focus distance and the current hit location we use
+       <b>
+        FInterp To
+       </b>
+       node.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Final_Result_and_Notes">
+        Final Result and Notes
+       </span>
+      </h2>
+      <p>
+       When it's all done, this is what you will get every time you press and hold the right mouse button:
+      </p>
+      <p>
+       <a class="external text" href="https://www.youtube.com/watch?v=rEargI8dNFk" rel="nofollow">
+        Final Result
+       </a>
+      </p>
+      <p>
+       <br/>
+       You can download a sample project icluding a character BP with this function
+       <a class="external text" href="https://drive.google.com/file/d/0B0LlbsIm3HuuTzNQZUJSQmkzR0k/view?usp=sharing" rel="nofollow">
+        <b>
+         here
+        </b>
+       </a>
+       .
+      </p>
+      <p>
+       <br/>
+       <b>
+        Notes:
+       </b>
+      </p>
+      <ul>
+       <li>
+        Setting the interp speed depending on the distance is optional, but highly suggested.
+       </li>
+       <li>
+        You can adjust Near and Far Transition depending on how you want it to look like. Add distance for softer transition / Subtract distance for sharper transition.
+       </li>
+      </ul>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

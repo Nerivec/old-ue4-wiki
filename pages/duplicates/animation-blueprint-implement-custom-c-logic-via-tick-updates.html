@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Animation Blueprint, Implement Custom C++ Logic Via Tick Updates - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Animation Blueprint, Implement Custom C++ Logic Via Tick Updates
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Example:_An_Anim-BP-Accessible_Variable:_IsMoving">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Example: An Anim-BP-Accessible Variable: IsMoving
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#.h">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             .h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#.cpp">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             .cpp
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Final_Step:_Reparenting_your_Character.27s_Anim_Blueprint">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Final Step: Reparenting your Character's Anim Blueprint
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       Extending AnimInstance is a wonderful way to create all sorts of custom animation systems and also efficiently utilize the existing UE4 anim blueprint functions.
+      </p>
+      <p>
+       It's very useful to know how you can do certain actions when the Anim Instance for a Character is first created, and how to do actions every tick while the anim instance exists!
+      </p>
+      <p>
+       Below are the two Anim Instance functions that are similar to PostInitializeComponents and Tick(DeltaTime) for Actors
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">virtual</span> <span class="kt">void</span> <span class="nf">NativeInitializeAnimation</span><span class="p">()</span> <span class="n">OVERRIDE</span><span class="p">;</span> 
+	
+<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">NativeUpdateAnimation</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaTimeX</span><span class="p">)</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Example:_An_Anim-BP-Accessible_Variable:_IsMoving">
+        Example: An Anim-BP-Accessible Variable: IsMoving
+       </span>
+      </h2>
+      <p>
+       Here is a complete example that obtains the Owning Pawn in the Init function (to avoid reobtaining the reference every tick).
+      </p>
+      <p>
+       Then, every tick / moment of the anim instance's existance, the boolean variable IsMoving is updated to reflect the velocity of the Owning pawn.
+      </p>
+      <p>
+       IsMoving can now be obtained from within the Anim Blueprint because of its UPROPERTY settings, and used in your animation blueprint logic.
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id=".h">
+        .h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/*</span>
+<span class="cm">  By Rama</span>
+<span class="cm">*/</span>
+
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"VictoryAnimInstance.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">(</span><span class="n">transient</span><span class="p">,</span> <span class="n">Blueprintable</span><span class="p">,</span> <span class="n">hideCategories</span><span class="o">=</span><span class="n">AnimInstance</span><span class="p">,</span> <span class="n">BlueprintType</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">UVictoryAnimInstance</span> <span class="o">:</span> <span class="k">public</span> <span class="n">UAnimInstance</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+<span class="k">public</span><span class="o">:</span>
+        <span class="cm">/** Is Moving */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">Movement</span><span class="p">)</span>
+	<span class="kt">bool</span> <span class="n">IsMoving</span><span class="p">;</span>
+
+<span class="c1">//init and tick</span>
+<span class="k">public</span><span class="o">:</span>
+	
+	<span class="n">APawn</span> <span class="o">*</span> <span class="n">OwningPawn</span><span class="p">;</span>
+	
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">NativeInitializeAnimation</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+	
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">NativeUpdateAnimation</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaTimeX</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+	
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id=".cpp">
+        .cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"VictoryGame.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"VictoryAnimInstance.h"</span><span class="cp"></span>
+
+<span class="c1">//////////////////////////////////////////////////////////////////////////</span>
+<span class="c1">// UVictoryAnimInstance</span>
+
+<span class="c1">//This function is like PostInitAnimtree in UE3</span>
+<span class="kt">void</span> <span class="n">UVictoryAnimInstance</span><span class="o">::</span><span class="n">NativeInitializeAnimation</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">//Very Important Line</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">NativeInitializeAnimation</span><span class="p">();</span>
+	
+	<span class="c1">//Cache the owning pawn for use in Tick</span>
+	<span class="n">OwningPawn</span> <span class="o">=</span> <span class="n">TryGetPawnOwner</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">//Tick</span>
+<span class="kt">void</span> <span class="n">UVictoryAnimInstance</span><span class="o">::</span><span class="n">NativeUpdateAnimation</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaTimeX</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">//Very Important Line</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">NativeUpdateAnimation</span><span class="p">(</span><span class="n">DeltaTimeX</span><span class="p">);</span>
+	
+	<span class="c1">//Always Check Pointers</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">OwningPawn</span><span class="p">)</span> 
+        <span class="p">{</span>
+          <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+	
+	<span class="c1">//Set whether moving or not</span>
+	<span class="n">IsMoving</span> <span class="o">=</span> <span class="p">(</span><span class="n">OwningPawn</span><span class="o">-&gt;</span><span class="n">GetVelocity</span><span class="p">().</span><span class="n">SizeSquared</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">25</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Final_Step:_Reparenting_your_Character.27s_Anim_Blueprint">
+        Final Step: Reparenting your Character's Anim Blueprint
+       </span>
+      </h2>
+      <p>
+       You need to make sure your Character is using your extended version of AnimInstance :)
+      </p>
+      <p>
+       For more information on reparenting Anim BPs, and making custom Animation Blueprint classes, see this code sample:
+      </p>
+      <p>
+       <b>
+       </b>
+      </p>
+      <p>
+       <img alt="Reparentbp.jpg" class="" height="650" src="../assets/animation-blueprint-implement-custom-c-logic-via-tick-updates/0.jpg" width="637"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       Now you know what functions to override to create complicated Anim Blueprint logic with assistance from the C++ code,
+      </p>
+      <p>
+       or run your anim instance mostly from the C++ code (especially the event graph part)!
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Line Traces / RayCasts How To Get UV Info From Hits - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Line Traces / RayCasts How To Get UV Info From Hits
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Github_Engine_Version">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Github Engine Version
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#My_PhysX_C.2B.2B_Code_For_You.21">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           My PhysX C++ Code For You!
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#EngineTypes.h">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             EngineTypes.h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#CollisionQueryParams.h">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             CollisionQueryParams.h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#PhysXCollision.cpp">
+            <span class="tocnumber">
+             3.3
+            </span>
+            <span class="toctext">
+             PhysXCollision.cpp
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#PrimitiveComponent.cpp">
+            <span class="tocnumber">
+             3.4
+            </span>
+            <span class="toctext">
+             PrimitiveComponent.cpp
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#BodyInstance.h">
+            <span class="tocnumber">
+             3.5
+            </span>
+            <span class="toctext">
+             BodyInstance.h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#BodyInstance.cpp">
+            <span class="tocnumber">
+             3.6
+            </span>
+            <span class="toctext">
+             BodyInstance.cpp
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-10">
+         <a href="#Currently_Supported_Line_Trace_Functions">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Currently Supported Line Trace Functions
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-11">
+         <a href="#Sample_Usage_Code">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Sample Usage Code
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-12">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <b>
+        Author:
+       </b>
+       (
+       )
+      </p>
+      <p>
+       In this wiki I provide you with the code to add the option to return UV information about raycast hits (PhysX) / Line Traces (UE4) !
+      </p>
+      <p>
+       This is an optional flag that you can set, that does not affect performance or change UE4 behavior at all until it is turned on.
+      </p>
+      <p>
+       Even when turned on I have not noticed any performance impact, but if you examine my code you will see that performance of UE4 and the internal works of the PhysX code are entirely unchanged unless the optional flag is enabled.
+      </p>
+      <p>
+       <img alt="PxUV.jpg" class="" height="675" src="../assets/line-traces-raycasts-how-to-get-uv-info-from-hits/0.jpg" width="900"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Github_Engine_Version">
+        Github Engine Version
+       </span>
+      </h2>
+      <p>
+       You must be using a Github version of UE4 in order to change these files below and recompile the engine.
+      </p>
+      <p>
+       Using a github version of UE4 you can add your own code to the engine and really make UE4 your own!
+      </p>
+      <p>
+       You can follow the steps here to obtain a github version of UE4!
+      </p>
+      <p>
+       <b>
+        How to get Github Version of UE4
+       </b>
+      </p>
+      <p>
+       <a class="external free" href="https://www.unrealengine.com/ue4-on-github" rel="nofollow">
+        https://www.unrealengine.com/ue4-on-github
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="My_PhysX_C.2B.2B_Code_For_You.21">
+        My PhysX C++ Code For You!
+       </span>
+      </h2>
+      <p>
+       I am using line numbers for the .cpp files especially to avoid posting any UE4 engine code publicaly.
+      </p>
+      <p>
+       Please note my line numbers are subject to change as more code is added to the engine.
+      </p>
+      <p>
+       <b>
+        The line numbers below are accurate to version 4.7.3 of UE4
+       </b>
+       . So you can always download 4.7.3 source code from Github to ensure you are seeing the larger context of my cpp code changes.
+      </p>
+      <p>
+       The code you do see here are my additions to the UE4 engine code to support returning UV information from PhysX
+       <a class="external text" href="http://docs.nvidia.com/gameworks/content/gameworkslibrary/physx/apireference/files/structPxRaycastHit.html" rel="nofollow">
+        PxRaycastHits
+       </a>
+       .
+      </p>
+      <h3>
+       <span class="mw-headline" id="EngineTypes.h">
+        EngineTypes.h
+       </span>
+      </h3>
+      <p>
+       Around line
+       <b>
+        1485
+       </b>
+       , in FHitResult, add this
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/** If CollisionQueryParams has bReturnUV set to true and the trace is a ray cast / line trace, then this value will be filled with the uv of the hit component at the point of impact */</span>
+<span class="n">UPROPERTY</span><span class="p">()</span>
+<span class="n">FVector2D</span> <span class="n">UV</span><span class="p">;</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="CollisionQueryParams.h">
+        CollisionQueryParams.h
+       </span>
+      </h3>
+      <p>
+       Starting around line
+       <b>
+        38
+       </b>
+       , make these two changes (emphasized with arrows)
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/** Whether we want to return the UV at the hit location. Only valid for Line Traces / Ray casts */</span>
+<span class="kt">bool</span> <span class="n">bReturnUV</span><span class="p">;</span>       					<span class="c1">//&lt;~~~~~~~~~~~~</span>
+
+<span class="cm">/** Set of components to ignore during the trace */</span>
+<span class="n">TArray</span><span class="o">&lt;</span><span class="n">uint32</span><span class="p">,</span> <span class="n">TInlineAllocator</span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span> <span class="o">&gt;</span> <span class="n">IgnoreComponents</span><span class="p">;</span>
+
+<span class="c1">// Constructors</span>
+<span class="n">FCollisionQueryParams</span><span class="p">(</span><span class="kt">bool</span> <span class="n">bInTraceComplex</span><span class="o">=</span><span class="nb">false</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">bTraceComplex</span> <span class="o">=</span> <span class="n">bInTraceComplex</span><span class="p">;</span>
+	<span class="n">TraceTag</span> <span class="o">=</span> <span class="n">NAME_None</span><span class="p">;</span>
+	<span class="n">bTraceAsyncScene</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="n">bFindInitialOverlaps</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+	<span class="n">bReturnFaceIndex</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="n">bReturnPhysicalMaterial</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="n">bReturnUV</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>				<span class="c1">//&lt;~~~~~~~~~~~~</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="PhysXCollision.cpp">
+        PhysXCollision.cpp
+       </span>
+      </h3>
+      <p>
+       Around line
+       <b>
+        858
+       </b>
+       , add this
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">if</span><span class="p">(</span><span class="n">Params</span><span class="p">.</span><span class="n">bReturnUV</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">POutputFlags</span> <span class="o">|=</span> <span class="n">PxSceneQueryFlag</span><span class="o">::</span><span class="n">eUV</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       then around line
+       <b>
+        900
+       </b>
+       add this:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">if</span><span class="p">(</span><span class="n">Params</span><span class="p">.</span><span class="n">bReturnUV</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">OutHit</span><span class="p">.</span><span class="n">UV</span> <span class="o">=</span> <span class="n">FVector2D</span><span class="p">(</span><span class="n">PHit</span><span class="p">.</span><span class="n">u</span><span class="p">,</span><span class="n">PHit</span><span class="p">.</span><span class="n">v</span><span class="p">);</span> <span class="c1">//u and v are exclusive to PxRaycastHit</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="PrimitiveComponent.cpp">
+        PrimitiveComponent.cpp
+       </span>
+      </h3>
+      <p>
+       Around line
+       <b>
+        1700
+       </b>
+       :
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">bool</span> <span class="n">UPrimitiveComponent</span><span class="o">::</span><span class="n">LineTraceComponent</span><span class="p">(</span><span class="k">struct</span> <span class="n">FHitResult</span><span class="o">&amp;</span> <span class="n">OutHit</span><span class="p">,</span> <span class="k">const</span> <span class="n">FVector</span> <span class="n">Start</span><span class="p">,</span> <span class="k">const</span> <span class="n">FVector</span> <span class="n">End</span><span class="p">,</span> <span class="k">const</span> <span class="k">struct</span> <span class="n">FCollisionQueryParams</span><span class="o">&amp;</span> <span class="n">Params</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">bool</span> <span class="n">bHaveHit</span> <span class="o">=</span> <span class="n">BodyInstance</span><span class="p">.</span><span class="n">LineTrace</span><span class="p">(</span><span class="n">OutHit</span><span class="p">,</span> <span class="n">Start</span><span class="p">,</span> <span class="n">End</span><span class="p">,</span> <span class="n">Params</span><span class="p">.</span><span class="n">bTraceComplex</span><span class="p">,</span> <span class="n">Params</span><span class="p">.</span><span class="n">bReturnPhysicalMaterial</span><span class="p">,</span> <span class="n">Params</span><span class="p">.</span><span class="n">bReturnUV</span><span class="p">);</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="BodyInstance.h">
+        BodyInstance.h
+       </span>
+      </h3>
+      <p>
+       Modify this function
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/** </span>
+<span class="cm"> *  Trace a ray against just this bodyinstance</span>
+<span class="cm"> *  @param  OutHit					Information about hit against this component, if true is returned</span>
+<span class="cm"> *  @param  Start					Start location of the ray</span>
+<span class="cm"> *  @param  End						End location of the ray</span>
+<span class="cm"> *	@param	bTraceComplex			Should we trace against complex or simple collision of this body</span>
+<span class="cm"> *  @param bReturnPhysicalMaterial	Fill in the PhysMaterial field of OutHit</span>
+<span class="cm"> *  @param bReturnUV					Fill in the UV field of OutHit</span>
+<span class="cm"> *  @return true if a hit is found</span>
+<span class="cm"> */</span>
+<span class="kt">bool</span> <span class="nf">LineTrace</span><span class="p">(</span><span class="k">struct</span> <span class="n">FHitResult</span><span class="o">&amp;</span> <span class="n">OutHit</span><span class="p">,</span> <span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">Start</span><span class="p">,</span> <span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">End</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bTraceComplex</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bReturnPhysicalMaterial</span> <span class="o">=</span> <span class="nb">false</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bReturnUV</span> <span class="o">=</span> <span class="nb">false</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="BodyInstance.cpp">
+        BodyInstance.cpp
+       </span>
+      </h3>
+      <p>
+       around line
+       <b>
+        3383
+       </b>
+       add this
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">if</span><span class="p">(</span><span class="n">bReturnUV</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">POutputFlags</span> <span class="o">|=</span> <span class="n">PxSceneQueryFlag</span><span class="o">::</span><span class="n">eUV</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       then around line
+       <b>
+        3348
+       </b>
+       add this
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">if</span><span class="p">(</span><span class="n">bReturnUV</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">OutHit</span><span class="p">.</span><span class="n">UV</span> <span class="o">=</span> <span class="n">FVector2D</span><span class="p">(</span><span class="n">BestHit</span><span class="p">.</span><span class="n">u</span><span class="p">,</span><span class="n">BestHit</span><span class="p">.</span><span class="n">v</span><span class="p">);</span> <span class="c1">//u and v are exclusive to PxRaycastHit</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Currently_Supported_Line_Trace_Functions">
+        Currently Supported Line Trace Functions
+       </span>
+      </h2>
+      <p>
+       With the above changes you can retrieve hit information from:
+      </p>
+      <pre> UWorld::LineTraceSingle
+</pre>
+      <p>
+       and
+      </p>
+      <pre> UPrimitiveComponent::LineTraceComponent.
+</pre>
+      <p>
+       Other line traces that use PxRaycastHit could be altered in similar fashion to support returning UV information.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Sample_Usage_Code">
+        Sample Usage Code
+       </span>
+      </h2>
+      <p>
+       Once you've made the above changes and recompiled your UE4 Engine, you can use this code to get UV information from raycasts!
+      </p>
+      <p>
+       I used this code at the
+       <b>
+        project-level
+       </b>
+       in the tick function of my sample character:
+      </p>
+      <p>
+       The results of this code are shown in my picture above (except I am using a screen message)
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">AISMCharacter</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaTime</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span><span class="n">DeltaTime</span><span class="p">);</span>
+	<span class="c1">//~~~~~~~~~~~~</span>
+
+	<span class="n">FVector</span> <span class="n">Start</span>	<span class="o">=</span> <span class="n">GetActorLocation</span><span class="p">();</span>
+	<span class="n">FVector</span> <span class="n">End</span> 	<span class="o">=</span> <span class="n">Start</span> <span class="o">+</span> <span class="n">GetActorRotation</span><span class="p">().</span><span class="n">Vector</span><span class="p">()</span> <span class="o">*</span> <span class="mi">10240</span><span class="p">;</span>
+	
+	<span class="n">FCollisionQueryParams</span> <span class="nf">TraceParams</span><span class="p">(</span><span class="n">FName</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"VictoreCore Trace"</span><span class="p">)),</span> <span class="nb">true</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
+	<span class="n">TraceParams</span><span class="p">.</span><span class="n">bTraceComplex</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+	<span class="c1">// Focus of this wiki, telling UE4 we want the UV info!</span>
+	<span class="n">TraceParams</span><span class="p">.</span><span class="n">bReturnUV</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+	
+	<span class="c1">//Ignore Actors</span>
+	<span class="n">TraceParams</span><span class="p">.</span><span class="n">AddIgnoredActor</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+	
+	<span class="c1">//Trace!</span>
+        <span class="n">FHitResult</span> <span class="n">HitOut</span><span class="p">;</span>
+	<span class="n">GetWorld</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">LineTraceSingle</span><span class="p">(</span>
+		<span class="n">HitOut</span><span class="p">,</span>		<span class="c1">//result</span>
+		<span class="n">Start</span><span class="p">,</span>	<span class="c1">//start</span>
+		<span class="n">End</span> <span class="p">,</span> <span class="c1">//end</span>
+		<span class="n">ECC_Pawn</span><span class="p">,</span> <span class="c1">//collision channel</span>
+		<span class="n">TraceParams</span>
+	<span class="p">);</span>
+	 
+	<span class="n">VSCREENMSG2</span><span class="p">(</span><span class="s">"UV!"</span><span class="p">,</span> <span class="n">HitOut</span><span class="p">.</span><span class="n">UV</span><span class="p">.</span><span class="n">ToString</span><span class="p">());</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       With these changes to the UE4 engine you can now get UV information back from line traces!
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

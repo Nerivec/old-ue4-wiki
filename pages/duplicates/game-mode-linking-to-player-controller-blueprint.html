@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Game Mode, Linking to Player Controller Blueprint - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Game Mode, Linking to Player Controller Blueprint
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <b>
+        Original Author:
+       </b>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       If anyone is doing any fancy experiments, or cannot figure out how to get their custom player controller class to be used, here is the basic setup!
+      </p>
+      <p>
+       If you start a new UE4 code-based project,
+      </p>
+      <p>
+       the player controller and Game Mode classes should be set up for you,
+      </p>
+      <p>
+       but
+       <b>
+        here are the inner workings just in case you need to re-link something manually.
+       </b>
+      </p>
+      <p>
+       <br/>
+       What I am explaining here could also be applied to the Character and HUD classes, which are also set in GameMode class.
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Blueprinted_Base_C.2B.2B_Class">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Blueprinted Base C++ Class
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#YourPlayerController">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           YourPlayerController
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#YourPlayerController.h">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             YourPlayerController.h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#YourPlayerController.cpp">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             YourPlayerController.cpp
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Blueprinted_Player_Controller">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Blueprinted Player Controller
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#GameMode">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           GameMode
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Copy_Reference">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Copy Reference
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Summary">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Summary
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Blueprinted_Base_C.2B.2B_Class">
+        Blueprinted Base C++ Class
+       </span>
+      </h2>
+      <p>
+       Also this code sample is showing you how to use the Blueprinted version of your base C++ player controller class
+      </p>
+      <h2>
+       <span class="mw-headline" id="YourPlayerController">
+        YourPlayerController
+       </span>
+      </h2>
+      <p>
+       Here is the essential skeleton you need to create your own player controller class :)
+      </p>
+      <h3>
+       <span class="mw-headline" id="YourPlayerController.h">
+        YourPlayerController.h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="c1">//Input</span>
+<span class="cp">#include</span> <span class="cpf">"InputCoreTypes.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"YourPlayerController.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">Game</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">AYourPlayerController</span> <span class="o">:</span> <span class="k">public</span> <span class="n">APlayerController</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">AYourPlayerController</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">);</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="YourPlayerController.cpp">
+        YourPlayerController.cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"YourGame.h"</span><span class="cp"></span>
+<span class="n">AYourPlayerController</span><span class="o">::</span><span class="n">AYourPlayerController</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">ObjectInitializer</span><span class="p">)</span>
+<span class="p">{</span>
+	
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Blueprinted_Player_Controller">
+        Blueprinted Player Controller
+       </span>
+      </h2>
+      <p>
+       If your project did not start with one, make sure to make a blueprint of your game's player controller class!
+      </p>
+      <p>
+       Then you can add properties to your C++ controller class, but make updates easily in the Editor using blueprints :)
+      </p>
+      <h2>
+       <span class="mw-headline" id="GameMode">
+        GameMode
+       </span>
+      </h2>
+      <p>
+       You need to tell your GameMode class to use your custom player controller.
+      </p>
+      <p>
+       GameMode itself should be properly setup for you if you start a new Code-based UE4 project!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Failsafe</span>
+<span class="n">PlayerControllerClass</span> <span class="o">=</span> <span class="n">AYourPlayerController</span><span class="o">::</span><span class="n">StaticClass</span><span class="p">();</span>
+
+<span class="c1">// Blueprinted Version, relies on the asset path obtained from the editor</span>
+<span class="k">static</span> <span class="n">ConstructorHelpers</span><span class="o">::</span><span class="n">FClassFinder</span><span class="o">&lt;</span><span class="n">AYourPlayerController</span><span class="o">&gt;</span> <span class="n">VictoryPCOb</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"AYourPlayerController'/Game/VictoryEditor/VictoryPlayerControllerBP.VictoryPlayerControllerBP_C'"</span><span class="p">));</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">VictoryPCOb</span><span class="p">.</span><span class="n">Class</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">PlayerControllerClass</span> <span class="o">=</span> <span class="n">VictoryPCOb</span><span class="p">.</span><span class="n">Class</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Copy_Reference">
+        Copy Reference
+       </span>
+      </h2>
+      <p>
+       You can obtain the path of your blueprinted controller by right clicking on its blueprint in the editor and choosing "Copy Reference". You should then edit the path obtained by adding the "_C" suffix, which distinguishes the actual class used by the game from the Blueprint asset, which is an editor-only concept.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">static</span> <span class="n">ConstructorHelpers</span><span class="o">::</span><span class="n">FClassFinder</span><span class="o">&lt;</span><span class="n">AYourPlayerController</span><span class="o">&gt;</span> <span class="n">VictoryPCOb</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"AYourPlayerController'/Game/VictoryEditor/VictoryPlayerControllerBP.VictoryPlayerControllerBP_C'"</span><span class="p">));</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Summary">
+        Summary
+       </span>
+      </h2>
+      <p>
+       In case your project's core blueprints ever get miswired with your c++ Game Mode,
+      </p>
+      <p>
+       here is all the info you needed to know!
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

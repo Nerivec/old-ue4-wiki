@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Assets Naming Convention - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Assets Naming Convention
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Basics">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Basics
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Assets_folders">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Assets folders
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Folders_by_categories">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Folders by categories
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Assets_names">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Assets names
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Texture_Masks">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Texture Masks
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       This article contains ideas for assets naming convention and content folders structure.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Basics">
+        Basics
+       </span>
+      </h2>
+      <p>
+       1. All names in
+       <b>
+        English
+       </b>
+       .
+       <br/>
+       2. All asset dependencies should be in its folder (instead of some shared assets).
+       <br/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Assets_folders">
+        Assets folders
+       </span>
+      </h2>
+      <p>
+       (maps)
+      </p>
+      <table class="wikitable">
+       <tbody>
+        <tr>
+         <td>
+          <b>
+           Content\Maps
+          </b>
+         </td>
+         <td>
+          parent maps folder
+         </td>
+        </tr>
+        <tr>
+         <td>
+          ............
+          <b>
+           Maps\Episode(_Number)
+          </b>
+         </td>
+         <td>
+          game episodes, where (_Number) is 01, 02, 03, etc
+         </td>
+        </tr>
+        <tr>
+         <td>
+          ............
+          <b>
+           Maps\TestMaps
+          </b>
+         </td>
+         <td>
+          test maps, maps prototypes and other levels not for production
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       (assets)
+      </p>
+      <table class="wikitable">
+       <tbody>
+        <tr>
+         <td>
+          <b>
+           Content\Base
+          </b>
+         </td>
+         <td>
+          basic materials, material functions and other “foundation” assets
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <b>
+           Content\Characters
+          </b>
+         </td>
+         <td>
+          folder for characters
+         </td>
+        </tr>
+        <tr>
+         <td>
+          ............
+          <b>
+           Characters\NPC
+          </b>
+         </td>
+         <td>
+          NPCs
+         </td>
+        </tr>
+        <tr>
+         <td>
+          ............
+          <b>
+           Characters\Player
+          </b>
+         </td>
+         <td>
+          player character(s)
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <b>
+           Content\Dev
+          </b>
+         </td>
+         <td>
+          development assets, like objects icons, special meshes and textures, etc
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <b>
+           Content\Effects
+          </b>
+         </td>
+         <td>
+          various shared effects
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <b>
+           Content\Environment
+          </b>
+         </td>
+         <td>
+          environment assets
+         </td>
+        </tr>
+        <tr>
+         <td>
+          ............
+          <b>
+           Environment\Background
+          </b>
+         </td>
+         <td>
+          backgrounds
+         </td>
+        </tr>
+        <tr>
+         <td>
+          ............
+          <b>
+           Environment\Buildings
+          </b>
+         </td>
+         <td>
+          buildings (simple or procedural)
+         </td>
+        </tr>
+        <tr>
+         <td>
+          ............
+          <b>
+           Environment\Foliage
+          </b>
+         </td>
+         <td>
+          foliage
+         </td>
+        </tr>
+        <tr>
+         <td>
+          ............
+          <b>
+           Environment\Props
+          </b>
+         </td>
+         <td>
+          various props
+         </td>
+        </tr>
+        <tr>
+         <td>
+          ............
+          <b>
+           Environment\Sky
+          </b>
+         </td>
+         <td>
+          skies
+         </td>
+        </tr>
+        <tr>
+         <td>
+          ............
+          <b>
+           Environment\Landscape
+          </b>
+         </td>
+         <td>
+          terrains assets
+         </td>
+        </tr>
+        <tr>
+         <td>
+          ............
+          <b>
+           Environment\Water
+          </b>
+         </td>
+         <td>
+          water meshes and materials
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <b>
+           Content\Gameplay
+          </b>
+         </td>
+         <td>
+          assets for various gameplay purposes
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <b>
+           Content\PostProcess
+          </b>
+         </td>
+         <td>
+          post process chains and it’s assets
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <b>
+           Content\Sound
+          </b>
+         </td>
+         <td>
+          sounds and sound cues
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <b>
+           Content\UI
+          </b>
+         </td>
+         <td>
+          UI assets
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <b>
+           Content\Vehicles
+          </b>
+         </td>
+         <td>
+          vehicles with effects
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <b>
+           Content\Weapons
+          </b>
+         </td>
+         <td>
+          weapons with effects
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Folders_by_categories">
+        Folders by categories
+       </span>
+      </h2>
+      <table class="wikitable">
+       <tbody>
+        <tr>
+         <td>
+          <b>
+           Blueprints
+          </b>
+         </td>
+         <td>
+          blueprints
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <b>
+           Meshes
+          </b>
+         </td>
+         <td>
+          static and skeletal meshes, physical assets
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <b>
+           Materials
+          </b>
+         </td>
+         <td>
+          materials and instances
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <b>
+           Textures
+          </b>
+         </td>
+         <td>
+          textures
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <b>
+           Animations
+          </b>
+         </td>
+         <td>
+          animations
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <b>
+           Particles
+          </b>
+         </td>
+         <td>
+          particle systems
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <b>
+           LensFlares
+          </b>
+         </td>
+         <td>
+          flares
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <b>
+           Sounds
+          </b>
+         </td>
+         <td>
+          sounds + cues
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <b>
+           Morphs
+          </b>
+         </td>
+         <td>
+          morphs
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <b>
+           FaceFX
+          </b>
+         </td>
+         <td>
+          FaceFX assets
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Assets_names">
+        Assets names
+       </span>
+      </h2>
+      <p>
+       <b>
+        Form:
+       </b>
+       <br/>
+       (Prefix_)AssetName(_Number)(_Suffix)
+       <br/>
+      </p>
+      <p>
+       Example:
+       <br/>
+       T_Rock_01_D
+       <br/>
+      </p>
+      <p>
+       <br/>
+       <b>
+        Prefixes:
+       </b>
+       (optional because of filters in content browser)
+      </p>
+      <p>
+       (by usage)
+      </p>
+      <table class="wikitable">
+       <tbody>
+        <tr>
+         <td>
+          CH_
+         </td>
+         <td>
+          Characters
+         </td>
+        </tr>
+        <tr>
+         <td>
+          UI_
+         </td>
+         <td>
+          User Interface
+         </td>
+        </tr>
+        <tr>
+         <td>
+          VH_
+         </td>
+         <td>
+          Vehicles
+         </td>
+        </tr>
+        <tr>
+         <td>
+          WP_
+         </td>
+         <td>
+          Weapons
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       (by type)
+      </p>
+      <table class="wikitable">
+       <tbody>
+        <tr>
+         <td>
+          BP_
+         </td>
+         <td>
+          Blueprint
+         </td>
+        </tr>
+        <tr>
+         <td>
+         </td>
+         <td>
+         </td>
+        </tr>
+        <tr>
+         <td>
+          SK_
+         </td>
+         <td>
+          Skeletal Mesh
+         </td>
+        </tr>
+        <tr>
+         <td>
+          SM_
+         </td>
+         <td>
+          Static Mesh
+         </td>
+        </tr>
+        <tr>
+         <td>
+         </td>
+         <td>
+         </td>
+        </tr>
+        <tr>
+         <td>
+          AD_
+         </td>
+         <td>
+          Apex Destructible Asset
+         </td>
+        </tr>
+        <tr>
+         <td>
+          AC_
+         </td>
+         <td>
+          Apex Cloth Asset
+         </td>
+        </tr>
+        <tr>
+         <td>
+         </td>
+         <td>
+         </td>
+        </tr>
+        <tr>
+         <td>
+          MT_
+         </td>
+         <td>
+          Morph Target
+         </td>
+        </tr>
+        <tr>
+         <td>
+         </td>
+         <td>
+         </td>
+        </tr>
+        <tr>
+         <td>
+          ST_
+         </td>
+         <td>
+          Speed Tree
+         </td>
+        </tr>
+        <tr>
+         <td>
+         </td>
+         <td>
+         </td>
+        </tr>
+        <tr>
+         <td>
+          PS_
+         </td>
+         <td>
+          Particle System
+         </td>
+        </tr>
+        <tr>
+         <td>
+         </td>
+         <td>
+         </td>
+        </tr>
+        <tr>
+         <td>
+          LF_
+         </td>
+         <td>
+          Lens Flare
+         </td>
+        </tr>
+        <tr>
+         <td>
+         </td>
+         <td>
+         </td>
+        </tr>
+        <tr>
+         <td>
+          VF_
+         </td>
+         <td>
+          Vector Field
+         </td>
+        </tr>
+        <tr>
+         <td>
+         </td>
+         <td>
+         </td>
+        </tr>
+        <tr>
+         <td>
+          S_
+         </td>
+         <td>
+          Sound
+         </td>
+        </tr>
+        <tr>
+         <td>
+          SC_
+         </td>
+         <td>
+          Sound Cue
+         </td>
+        </tr>
+        <tr>
+         <td>
+         </td>
+         <td>
+         </td>
+        </tr>
+        <tr>
+         <td>
+          M_
+         </td>
+         <td>
+          Material
+         </td>
+        </tr>
+        <tr>
+         <td>
+          MI_
+         </td>
+         <td>
+          Material Instance
+         </td>
+        </tr>
+        <tr>
+         <td>
+          MITV_
+         </td>
+         <td>
+          Material Instance Time Varying
+         </td>
+        </tr>
+        <tr>
+         <td>
+          MF_
+         </td>
+         <td>
+          Material Function
+         </td>
+        </tr>
+        <tr>
+         <td>
+          MPC_
+         </td>
+         <td>
+          Material Parameter Collection
+         </td>
+        </tr>
+        <tr>
+         <td>
+         </td>
+         <td>
+         </td>
+        </tr>
+        <tr>
+         <td>
+          T_
+         </td>
+         <td>
+          Texture
+         </td>
+        </tr>
+        <tr>
+         <td>
+          SP_
+         </td>
+         <td>
+          Sprite
+         </td>
+        </tr>
+        <tr>
+         <td>
+          SS_
+         </td>
+         <td>
+          Sprite Sheet
+         </td>
+        </tr>
+        <tr>
+         <td>
+          TC_
+         </td>
+         <td>
+          Texture Cube
+         </td>
+        </tr>
+        <tr>
+         <td>
+          RT_
+         </td>
+         <td>
+          Render Target
+         </td>
+        </tr>
+        <tr>
+         <td>
+         </td>
+         <td>
+         </td>
+        </tr>
+        <tr>
+         <td>
+          PM_
+         </td>
+         <td>
+          Physical Material
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       <br/>
+       <b>
+        Suffixes:
+       </b>
+       <br/>
+      </p>
+      <p>
+       (textures)
+      </p>
+      <table class="wikitable">
+       <tbody>
+        <tr>
+         <td>
+          _BC
+         </td>
+         <td>
+          Base color
+         </td>
+        </tr>
+        <tr>
+         <td>
+          _MT
+         </td>
+         <td>
+          Metallic
+         </td>
+        </tr>
+        <tr>
+         <td>
+          _S
+         </td>
+         <td>
+          Specular
+         </td>
+        </tr>
+        <tr>
+         <td>
+          _R
+         </td>
+         <td>
+          Roughness
+         </td>
+        </tr>
+        <tr>
+         <td>
+          _N
+         </td>
+         <td>
+          Normal
+         </td>
+        </tr>
+        <tr>
+         <td>
+          _DP
+         </td>
+         <td>
+          Displacement
+         </td>
+        </tr>
+        <tr>
+         <td>
+          _AO
+         </td>
+         <td>
+          Ambient Occlusion
+         </td>
+        </tr>
+        <tr>
+         <td>
+          _H
+         </td>
+         <td>
+          Height Map
+         </td>
+        </tr>
+        <tr>
+         <td>
+          _FM
+         </td>
+         <td>
+          Flow Map
+         </td>
+        </tr>
+        <tr>
+         <td>
+          _L
+         </td>
+         <td>
+          Light Map (fake)
+         </td>
+        </tr>
+        <tr>
+         <td>
+          _M
+         </td>
+         <td>
+          Mask
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       (meshes)
+      </p>
+      <table class="wikitable">
+       <tbody>
+        <tr>
+         <td>
+          _Physics
+         </td>
+         <td>
+          physics assets (generated name)
+         </td>
+        </tr>
+        <tr>
+         <td>
+          _FaceFX
+         </td>
+         <td>
+          FaceFx assets
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       (animations)
+      </p>
+      <table class="wikitable">
+       <tbody>
+        <tr>
+         <td>
+          _BlendSpace
+         </td>
+         <td>
+          blend space (generated name)
+         </td>
+        </tr>
+        <tr>
+         <td>
+          _AnimBlueprint
+         </td>
+         <td>
+          animation blueprint (generated name)
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <h2>
+       <span class="mw-headline" id="Texture_Masks">
+        Texture Masks
+       </span>
+      </h2>
+      <p>
+       RGB Mask for characters:
+       <br/>
+      </p>
+      <ul>
+       <li>
+        R = Metallic
+        <br/>
+       </li>
+       <li>
+        G = Roughness
+        <br/>
+       </li>
+       <li>
+        B = Subsurface Opacity
+        <br/>
+       </li>
+      </ul>
+      <p>
+       <br/>
+       RGB Mask for character's Hair:
+       <br/>
+      </p>
+      <ul>
+       <li>
+        R = Hair Alpha
+        <br/>
+       </li>
+       <li>
+        G = Specular/Roughness map
+        <br/>
+       </li>
+       <li>
+        B = Anisotropic direction map
+        <br/>
+       </li>
+      </ul>
+      <p>
+       <br/>
+       RGB Mask for environment:
+       <br/>
+      </p>
+      <ul>
+       <li>
+        R = Metallic
+        <br/>
+       </li>
+       <li>
+        G = Roughness
+        <br/>
+       </li>
+       <li>
+        B = Ambient Occlusion
+        <br/>
+       </li>
+      </ul>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

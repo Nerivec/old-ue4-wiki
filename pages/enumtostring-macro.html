@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   EnumToString Macro - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    EnumToString Macro
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#YourProject.h">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           YourProject.h
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Usage">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Usage
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#YourClass.h">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             YourClass.h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#YourClass.cpp">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             YourClass.cpp
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Credits">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Credits
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       Macro that lets you quickly get an enum value as a FString for use in logging etc.
+       <br/>
+       Caveat - only works with enumerators defined using UENUM() macro.
+      </p>
+      <h2>
+       <span class="mw-headline" id="YourProject.h">
+        YourProject.h
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#define GETENUMSTRING(etype, evalue) ( (FindObject&lt;UEnum&gt;(ANY_PACKAGE, TEXT(etype), true) != nullptr) ? FindObject&lt;UEnum&gt;(ANY_PACKAGE, TEXT(etype), true)-&gt;GetEnumName((int32)evalue) : FString("Invalid - are you sure enum uses UENUM() macro?") )</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Usage">
+        Usage
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="YourClass.h">
+        YourClass.h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UENUM</span><span class="p">()</span>
+<span class="k">enum</span> <span class="k">class</span> <span class="nc">EUsesEnum</span> <span class="o">:</span> <span class="n">uint8</span>
+<span class="p">{</span>
+    <span class="n">UseEnum_Bad</span><span class="p">,</span>
+    <span class="n">UseEnum_Good</span><span class="p">,</span>
+    <span class="n">UseEnum_Nice</span><span class="p">,</span>
+    <span class="n">UseEnum_Naughty</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="YourClass.cpp">
+        YourClass.cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">AYourClass</span><span class="o">::</span><span class="n">SomeFunction</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">EUsesEnum</span> <span class="n">UseEnumValue</span> <span class="o">=</span> <span class="n">EUsesEnum</span><span class="o">::</span><span class="n">UseEnum_Good</span><span class="p">;</span>
+    <span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogSomething</span><span class="p">,</span> <span class="n">Log</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"UseEnumValue as string : %s"</span><span class="p">),</span> <span class="o">*</span><span class="n">GETENUMSTRING</span><span class="p">(</span><span class="s">"EUsesEnum"</span><span class="p">,</span> <span class="n">UseEnumValue</span><span class="p">));</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Output:
+       <span style="color:#FFFFFF; background:#000000">
+        <br/>
+        LogYourCategory: UseEnumValue as string : UseEnum_Good
+       </span>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Credits">
+        Credits
+       </span>
+      </h2>
+      <p>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

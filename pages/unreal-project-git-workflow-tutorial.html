@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Unreal Project Git Workflow (Tutorial) - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Unreal Project Git Workflow (Tutorial)
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#The_Git_Editor_Plugin">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           The Git Editor Plugin
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Expanding_Git_outside_the_editor">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Expanding Git outside the editor
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Connecting_your_local_git_repo_up_to_remote_repo">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Connecting your local git repo up to remote repo
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#After_pulling_a_project_down_for_the_first_time">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           After pulling a project down for the first time
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="The_Git_Editor_Plugin">
+        The Git Editor Plugin
+       </span>
+      </h2>
+      <p>
+       Start with a project you want to use Git with and review
+       . This will help you get Git up and running in the editor. When done with that, come back here.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Expanding_Git_outside_the_editor">
+        Expanding Git outside the editor
+       </span>
+      </h2>
+      <p>
+       While the editor Git plugin works great for content, that is only one part of what makes up a project. Other things will need to be checked into git, so knowing what should and shouldn't be checked in is very helpful.
+      </p>
+      <p>
+       Your .gitignore file should be set to ignore the following:
+      </p>
+      <p>
+       /Binaries
+      </p>
+      <p>
+       /DerivedDataCache
+      </p>
+      <p>
+       /Intermediate
+      </p>
+      <p>
+       /Saved
+      </p>
+      <p>
+       *.sln
+      </p>
+      <p>
+       *.sdf
+      </p>
+      <p>
+       *.suo
+      </p>
+      <p>
+       The following folders should be committed:
+      </p>
+      <p>
+       /Content (could be handled by the editor plugin if you have that set up)
+      </p>
+      <p>
+       /Config
+      </p>
+      <p>
+       /Build
+      </p>
+      <p>
+       /Source
+      </p>
+      <p>
+       Don't forget to check in your .uproject file as well.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Connecting_your_local_git_repo_up_to_remote_repo">
+        Connecting your local git repo up to remote repo
+       </span>
+      </h2>
+      <p>
+       'git init' only stores files into a local git repository. To store them on a remote service you have to issue the command line command:
+      </p>
+      <p>
+       git remote add origin &lt;remote url&gt;
+      </p>
+      <p>
+       The editor plugin does not handle pushes and pulls, so you will need to use an external tool to keep your project's remote repo up to date.
+      </p>
+      <h2>
+       <span class="mw-headline" id="After_pulling_a_project_down_for_the_first_time">
+        After pulling a project down for the first time
+       </span>
+      </h2>
+      <p>
+       Once you have pulled a committed project down from some remote git repository there are couple of things to be aware of.
+      </p>
+      <p>
+       1. If the project is a C++ project, find the .uproject file in explorer, right click and 'Generate Visual Studio project files'. Until you do this (or create a new code class from the editor) you will not have any visual studio solution to access.
+      </p>
+      <p>
+       2. Open the Epic Launcher and launch unreal. When you get the project selector click Browse and find your .uproject file.
+      </p>
+      <p>
+       3. Unreal will then prompt you to rebuild binaries. This will take a few minutes.
+      </p>
+      <p>
+       Once the binaries are built (and your solution files are generated if it is a C++ project) you should be good to start developing.
+      </p>
+      <p>
+       Note: While the editor plugin will continue to handle your content for you, if you are changing source files, creating new C++ classes, etc, you will need to have an external tool installed to check those files in. See
+       for links to external tools.
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

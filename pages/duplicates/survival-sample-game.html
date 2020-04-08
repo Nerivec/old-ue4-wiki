@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Survival sample game - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Survival sample game
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <i>
+        C++ Sample project covering common gameplay concepts packed in a small survival game.
+       </i>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Introduction">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Introduction
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Game_Premise">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Game Premise
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Before_you_get_started">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Before you get started
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Sections_Overview">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Sections Overview
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Section_1_-_Character_Setup">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             Section 1 - Character Setup
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Section_2_-_Weapons.2C_Death_.26_Inventory">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             Section 2 - Weapons, Death &amp; Inventory
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Section_3_-_Zombie_AI">
+            <span class="tocnumber">
+             4.3
+            </span>
+            <span class="toctext">
+             Section 3 - Zombie AI
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Section_4_-_Dynamic_Time_of_Day_.26_Game_loop">
+            <span class="tocnumber">
+             4.4
+            </span>
+            <span class="toctext">
+             Section 4 - Dynamic Time of Day &amp; Game loop
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#Section_5_-_Networking">
+            <span class="tocnumber">
+             4.5
+            </span>
+            <span class="toctext">
+             Section 5 - Networking
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#Section_6_-_Polish_.26_Review">
+            <span class="tocnumber">
+             4.6
+            </span>
+            <span class="toctext">
+             Section 6 - Polish &amp; Review
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Introduction">
+        Introduction
+       </span>
+      </h1>
+      <p>
+       This series focuses on the C++ aspect of Unreal Engine 4. The goal is to introduce a variety of gameplay concepts written in C++, with some Blueprint interaction to get you more comfortable using C++ for your projects by using practical examples instead of relying on theory.
+      </p>
+      <p>
+       It’s important to note that this series is not a step-by-step tutorial. Instead each two weeks a new section is published, with all source and assets and associated documentation to explain concepts and the “why” behind some of the code. You can leave questions &amp; feedback on the
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?63678-Upcoming-C-Gameplay-Example-Series-Making-a-Survival-Game" rel="nofollow">
+        official forum thread
+       </a>
+       and I will try to integrate user questions back into the source and documentation for future reference.
+      </p>
+      <p>
+       <img alt="Section6 coopoverview.jpg" class="" height="741" src="../assets/survival-sample-game/0.jpg" width="1280"/>
+      </p>
+      <h1>
+       <span class="mw-headline" id="Game_Premise">
+        Game Premise
+       </span>
+      </h1>
+      <p>
+       <i>
+        The game is a third person survival game focusing on familiar mechanics from games in this genre.
+       </i>
+      </p>
+      <p>
+       <i>
+        You'll have to find a weapon to defend yourself. Food and ammunition are spread throughout the level and so you are constantly on the search for resources. Enemies may be anywhere, making too much noise while scavenging to survive will attract attention. The environment will have interactive objects to help your defence. The game will support coop play with a buddy. Survive as many days/nights as possible.
+       </i>
+      </p>
+      <p>
+       <i>
+        You will end up with a basic third person game, fully networked and a small environment with interactive objects that you may use as a base for your own survival game.
+       </i>
+      </p>
+      <p>
+       &lt;youtube&gt;
+       <a class="external free" href="https://www.youtube.com/watch?v=UHPAmfHlYOA" rel="nofollow">
+        https://www.youtube.com/watch?v=UHPAmfHlYOA
+       </a>
+      </p>
+      <h1>
+       <span class="mw-headline" id="Before_you_get_started">
+        Before you get started
+       </span>
+      </h1>
+      <p>
+       It’s not recommended to immediately dive into this sample game if you have no prior C++ experience. There are a few good places to get comfortable with the basics of C++ before moving into more complex concepts such as replication (networking) that are covered in this project.
+      </p>
+      <ul>
+       <li>
+        <a class="external text" href="./entry-level-guide-to-ue4-c.html" rel="nofollow">
+         Entry level guide to UE4 C++
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="http://www.gamasutra.com/blogs/DanielAdamitskiy/20150112/233926/Unreal_Engine_4_Programming_API_Fundamentals.php" rel="nofollow">
+         Unreal Engine 4 Programming API Fundamentals
+        </a>
+       </li>
+      </ul>
+      <p>
+       If you are completely new to Unreal Engine 4 I recommend you first get yourself comfortable with the editor instead. Have a look at the official
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/GettingStarted/index.html" rel="nofollow">
+        Getting Started page
+       </a>
+       to get you up to speed or use this
+       <a class="external text" href="http://www.tomlooman.com/unreal-engine-4-resource-collection/" rel="nofollow">
+        collection of links at ZEEF.com
+       </a>
+       for a variety of tutorials and places to learn. And finally, to understand what Actors, PlayerControllers and Pawns represent I recommend reading up on them in the
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Gameplay/Framework/index.html" rel="nofollow">
+        Gameplay Framework
+       </a>
+       section of the docs.
+      </p>
+      <p>
+       While not required before following this series, I do recommend have a good look at
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Programming/Development/CodingStandard/index.html" rel="nofollow">
+        Epic’s Coding Standards for C++
+       </a>
+       . I try to keep to this standard throughout the series and it’s good to maintain this standard in your own projects to more easily work with the Engine’s source and public samples which most of the time hold to this standard.
+      </p>
+      <p>
+       That is a lot to read up on, but again - I highly recommend doing so before dropping yourself into the survival game project.
+      </p>
+      <p>
+       If you feel you are ready to get started then go ahead and
+       <a class="external text" href="https://github.com/tomlooman/EpicSurvivalGameSeries" rel="nofollow">
+        download the project source at GitHub
+       </a>
+       . There is a release branch available for each Section that is complete, or simply get the latest through the master-branch. You can play the game, look through the code and change/add features, if you’re looking for additional information look for the associated Section. If there is no additional info to be found, be sure to grab me on the forums of each individual Section and I’ll be happy to answer your questions!
+      </p>
+      <h1>
+       <span class="mw-headline" id="Sections_Overview">
+        Sections Overview
+       </span>
+      </h1>
+      <p>
+       The project is split into 6 sections. Each covering one or more gameplay features or other C++ oriented concepts. You can skip to whatever section you find most interesting as the documentation pages have no dependencies between them.
+      </p>
+      <p>
+       <big>
+        <a class="external text" href="https://forums.unrealengine.com/showthread.php?63678-Upcoming-C-Gameplay-Example-Series-Making-a-Survival-Game" rel="nofollow">
+         Project Forum Thread
+        </a>
+       </big>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Section_1_-_Character_Setup">
+        Section 1 - Character Setup
+       </span>
+      </h2>
+      <p>
+       <img alt="Section6 advancedanimbp03.jpg" class="" height="506" src="../assets/survival-sample-game/1.jpg" width="1273"/>
+      </p>
+      <p>
+       Sets up the third-person character movement with animation, object interaction, simple hunger system, all with networking support.
+      </p>
+      <ul>
+       <li>
+       </li>
+       <li>
+        <a class="external text" href="https://forums.unrealengine.com/showthread.php?64833-Announcing-Section-1-for-Survival-Game" rel="nofollow">
+         Section forum thread
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://github.com/tomlooman/EpicSurvivalGameSeries/tree/Section-1" rel="nofollow">
+         View this branch on GitHub
+        </a>
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="Section_2_-_Weapons.2C_Death_.26_Inventory">
+        Section 2 - Weapons, Death &amp; Inventory
+       </span>
+      </h2>
+      <p>
+       <img alt="Section6 equipment03.jpg" class="" height="691" src="../assets/survival-sample-game/2.jpg" width="1764"/>
+      </p>
+      <p>
+       Adds weapon support for the character, a flashlight, UT-style inventory with on-character visual representation of the carried items and deals with damage, death and respawns for players.
+      </p>
+      <ul>
+       <li>
+       </li>
+       <li>
+        <a class="external text" href="https://forums.unrealengine.com/showthread.php?66263-Announcing-Section-2-for-Survival-Game" rel="nofollow">
+         Section forum thread
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://github.com/tomlooman/EpicSurvivalGameSeries/tree/Section-2" rel="nofollow">
+         View this branch on GitHub
+        </a>
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="Section_3_-_Zombie_AI">
+        Section 3 - Zombie AI
+       </span>
+      </h2>
+      <p>
+       <img alt="Section6 zombieattacking01.jpg" class="" height="479" src="../assets/survival-sample-game/3.jpg" width="1280"/>
+      </p>
+      <p>
+       Introduces AI "Zombie" enemy to our game using PawnSensing and Behavior Tree.
+      </p>
+      <ul>
+       <li>
+       </li>
+       <li>
+        <a class="external text" href="https://forums.unrealengine.com/showthread.php?67859-Announcing-Section-3-for-Survival-Game" rel="nofollow">
+         Section forum thread
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://github.com/tomlooman/EpicSurvivalGameSeries/tree/Section-3" rel="nofollow">
+         View this branch on GitHub
+        </a>
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="Section_4_-_Dynamic_Time_of_Day_.26_Game_loop">
+        Section 4 - Dynamic Time of Day &amp; Game loop
+       </span>
+      </h2>
+      <p>
+       <img alt="Section6 timeofday combined.jpg" class="" height="716" src="../assets/survival-sample-game/4.jpg" width="1718"/>
+      </p>
+      <p>
+       Introduces a dynamic time of day, advanced player spawning and a basic game loop.
+      </p>
+      <ul>
+       <li>
+       </li>
+       <li>
+        <a class="external text" href="https://forums.unrealengine.com/showthread.php?69308-Announcing-Section-4-for-Survival-Game-Setting-up-the-survival-game-loop" rel="nofollow">
+         Section forum thread
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://github.com/tomlooman/EpicSurvivalGameSeries/tree/Section-4" rel="nofollow">
+         View this branch on GitHub
+        </a>
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="Section_5_-_Networking">
+        Section 5 - Networking
+       </span>
+      </h2>
+      <p>
+       <img alt="Section6 coop02.jpg" class="" height="749" src="../assets/survival-sample-game/5.jpg" width="1280"/>
+      </p>
+      <p>
+       Introduces game networking and the ability to carry around objects like barriers and bombs.
+      </p>
+      <ul>
+       <li>
+       </li>
+       <li>
+        <a class="external text" href="https://forums.unrealengine.com/showthread.php?71057-Announcing-Section-5-of-Survival-Game-Networking-your-game" rel="nofollow">
+         Section forum thread
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://github.com/tomlooman/EpicSurvivalGameSeries/tree/Section-5" rel="nofollow">
+         View this branch on GitHub
+        </a>
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="Section_6_-_Polish_.26_Review">
+        Section 6 - Polish &amp; Review
+       </span>
+      </h2>
+      <p>
+       <img alt="Section openworldscenery01.jpg" class="" height="547" src="../assets/survival-sample-game/6.jpg" width="1280"/>
+      </p>
+      <p>
+       The final section in the series focuses on bug fixing and a bit of polish to the existing features. This section is compatible with the 4.8 release.
+      </p>
+      <ul>
+       <li>
+       </li>
+       <li>
+        <a class="external text" href="https://forums.unrealengine.com/showthread.php?72313-Announcing-Section-6-of-Survival-Game-Adding-some-polish" rel="nofollow">
+         Section forum thread
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://github.com/tomlooman/EpicSurvivalGameSeries/tree/Section-6" rel="nofollow">
+         View this branch on GitHub
+        </a>
+       </li>
+      </ul>
+      <p>
+       <b>
+        Project &amp; Wiki by
+        <a class="external text" href="http://www.tomlooman.com/" rel="nofollow">
+         Tom Looman
+        </a>
+       </b>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

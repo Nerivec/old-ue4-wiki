@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Game User Settings - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Game User Settings
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <p>
+       In this guide we will look at the options for changing game settings, such as whether or not to use fullscreen, the window or fullscreen resolution used, the position of the window, and scalability/graphics settings.
+      </p>
+      <p>
+       This is a guide written by
+     .
+      </p>
+      <h2>
+       <span class="mw-headline" id="The_UGameUserSettings_class">
+        The UGameUserSettings class
+       </span>
+      </h2>
+      <p>
+       API documentation:
+      </p>
+      <p>
+       Since version 4.11 of UE this class is also exposed to Blueprints, but in this guide we will work with it via a game code module (C++). A pointer to the global
+       <code>
+        UGameUserSettings
+       </code>
+       can be found in the global
+       <code>
+        GEngine
+       </code>
+       .
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UGameUserSettings</span><span class="o">*</span> <span class="nf">GetGameUserSettings</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">GEngine</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">GEngine</span><span class="o">-&gt;</span><span class="n">GameUserSettings</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="k">nullptr</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Several of the values used internally by this class are saved to the GameUserSettings.ini config file. If you have external automation needs, this would be the place to start.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Setting_the_mode">
+        Setting the mode
+       </span>
+      </h2>
+      <p>
+       When you use the various mode setting functions, the mode is not immediately applied, much like you would expect from a PC game settings menu. Instead, the value is saved to the Game config. To set up a mode test flow (e.g. user selects mode, clicks apply, and is prompted to confirm if the mode is worked), you should use the following:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">int32</span> <span class="n">Width</span> <span class="o">=</span> <span class="mi">1280</span><span class="p">,</span> <span class="n">Height</span> <span class="o">=</span> <span class="mi">720</span><span class="p">;</span>
+<span class="n">UGameUserSettings</span><span class="o">*</span> <span class="n">Settings</span> <span class="o">=</span> <span class="n">GetGameUserSettings</span><span class="p">();</span> <span class="c1">// note we are using the function defined above</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">Settings</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Settings</span><span class="o">-&gt;</span><span class="n">RequestResolutionChange</span><span class="p">(</span><span class="n">Width</span><span class="p">,</span> <span class="n">Height</span><span class="p">,</span> <span class="n">EWindowMode</span><span class="o">::</span><span class="n">Type</span><span class="o">::</span><span class="n">Windowed</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span> <span class="c1">// we can choose to ignore the command line arguments, this is probably best when the game UI sets the mode after startup</span>
+<span class="p">}</span>
+
+<span class="c1">// ...</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">UserConfirmed</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Settings</span><span class="o">-&gt;</span><span class="n">ConfirmVideoMode</span><span class="p">();</span>
+
+    <span class="c1">// Save the requested settings to our local data now</span>
+    <span class="n">Settings</span><span class="o">-&gt;</span><span class="n">SetScreenResolution</span><span class="p">(</span><span class="n">Settings</span><span class="o">-&gt;</span><span class="n">GetLastConfirmedScreenResolution</span><span class="p">());</span>
+    <span class="n">Settings</span><span class="o">-&gt;</span><span class="n">SetFullscreenMode</span><span class="p">(</span><span class="n">Settings</span><span class="o">-&gt;</span><span class="n">GetLastConfirmedFullscreenMode</span><span class="p">());</span>
+    <span class="n">Settings</span><span class="o">-&gt;</span><span class="n">SaveSettings</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="k">else</span>
+<span class="p">{</span>
+    <span class="n">Settings</span><span class="o">-&gt;</span><span class="n">RevertVideoMode</span><span class="p">();</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Setting_the_scalability_settings">
+        Setting the scalability settings
+       </span>
+      </h2>
+      <p>
+       The
+       <code>
+        UGameUserSettings
+       </code>
+       class provides access to a
+     instance which it refers to when using the
+       <code>
+        ApplySettings(bool)
+       </code>
+       and
+       <code>
+        ApplyNonResolutionSettings()
+       </code>
+       functions. It is very simple to set these. Note that a
+       <code>
+        GetQualityLevels()
+       </code>
+       function exists in
+       <code>
+        GEngine
+       </code>
+       to obtain the
+       <i>
+        current
+       </i>
+       quality levels, unrelated to the quality levels in the user settings (these can diverge for the purposes of easy settings dialog implementations).
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">Settings</span><span class="o">-&gt;</span><span class="n">ScalabilityQuality</span><span class="p">.</span><span class="n">AntiAliasingQuality</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// Use "Low" AA quality</span>
+<span class="n">Settings</span><span class="o">-&gt;</span><span class="n">ScalabilityQuality</span><span class="p">.</span><span class="n">ResolutionQuality</span>   <span class="o">=</span> <span class="mi">3</span><span class="p">;</span> <span class="c1">// Use "Epic" resolution quality</span>
+
+<span class="n">Settings</span><span class="o">-&gt;</span><span class="n">ApplyNonResolutionSettings</span><span class="p">();</span>
+<span class="n">Settings</span><span class="o">-&gt;</span><span class="n">SaveSettings</span><span class="p">();</span>
+</pre>
+      </div>
+      <p>
+       The values range from 0 to 3 and correspond to "Low", "Medium", "High" and "Epic" as in the editor quick settings dialog and in the scalability cvars. The actual meaning of these (e.g. the cvar presets to use) can be set in Scalability.ini (some sane defaults are copied to your Saved/CleanSourceConfigs and are a good basis for your own).
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Performance/Scalability/ScalabilityReference/index.html" rel="nofollow">
+        More info on Scalability from UE4 documentation
+       </a>
+       .
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

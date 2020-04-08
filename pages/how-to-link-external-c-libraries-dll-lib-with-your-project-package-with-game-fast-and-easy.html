@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   How to Link External C Libraries .dll .lib With Your Project &amp; Package With Game, Fast And Easy - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    How to Link External C Libraries .dll .lib With Your Project &amp; Package With Game, Fast And Easy
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Special_Thanks">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Special Thanks
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Step_1:_Put_in_YourGame.2FBinaries.2FWin64">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Step 1: Put in YourGame/Binaries/Win64
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Step_2:_Build_cs">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Step 2: Build cs
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Step_3:_Extern_C">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Step 3: Extern C
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Step_4:_Calling_your_extern_c_functions">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Step 4: Calling your extern c functions
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#using_namespace_std.3B">
+            <span class="tocnumber">
+             5.1
+            </span>
+            <span class="toctext">
+             using namespace std;
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Step_5:_Packaging_With_Your_Game">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Step 5: Packaging With Your Game
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <b>
+        Author:
+       </b>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       In this wiki I show you an utterly simple and fast way to get your external .lib working in UE4! My method has been tested and satisfies the following three requirements:
+      </p>
+      <p>
+       a. The external lib functions can be called in a WITH_EDITOR build, when run from commandline (UE4 Editor is closed).
+      </p>
+      <p>
+       b. The lib functions can be called from within the Editor in PIE, and the editor will actually load properly (Yay!).
+      </p>
+      <p>
+       <b>
+        c. The external lib functions will work in a packaged game!!!
+       </b>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Special_Thanks">
+        Special Thanks
+       </span>
+      </h3>
+      <p>
+       Special thanks go to my friend Greg who shared his research as well as the build.cs portion of this wiki!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Step_1:_Put_in_YourGame.2FBinaries.2FWin64">
+        Step 1: Put in YourGame/Binaries/Win64
+       </span>
+      </h2>
+      <p>
+       Step 1 is to place your .lib and .dll files in
+      </p>
+      <pre> YourProject/Binaries/Win64
+</pre>
+      <p>
+       next to your project's binaries.
+      </p>
+      <p>
+       Please note if you are packaging for win32 your external lib and dll files will need to go in your packaged Binaries/Win32 directory (see packaging step).
+      </p>
+      <h2>
+       <span class="mw-headline" id="Step_2:_Build_cs">
+        Step 2: Build cs
+       </span>
+      </h2>
+      <p>
+       In your build cs you must tell UE4 where your .lib file is:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//In your build.cs</span>
+<span class="n">PublicAdditionalLibraries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="err">@</span><span class="s">"c:/YourProject/Binaries/Win64/YourLib.lib"</span><span class="p">);</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Step_3:_Extern_C">
+        Step 3: Extern C
+       </span>
+      </h2>
+      <p>
+       You must include the extern C block for your external .lib function definitions if they are in regular C, to prevent name mangling.
+      </p>
+      <p>
+       If you are trying to call C++ functions you do not need to do this :)
+      </p>
+      <p>
+       Please note this should usually be put inside of a #prama once .h file and #include in your relevant .cpp file
+      </p>
+      <p>
+       During testing you could place this at the top of the relevant .cpp file, but I would only recommend that for simple testing.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Binaries/Win64/addtwo.lib</span>
+<span class="k">extern</span> <span class="s">"C"</span>
+<span class="p">{</span>
+ <span class="kr">__declspec</span><span class="p">(</span><span class="n">dllexport</span><span class="p">)</span> <span class="kt">int</span> <span class="n">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Step_4:_Calling_your_extern_c_functions">
+        Step 4: Calling your extern c functions
+       </span>
+      </h2>
+      <p>
+       Now you simply call the function without any namespace:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>	
+<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogTemp</span><span class="p">,</span><span class="n">Warning</span><span class="p">,</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"static lib add %d"</span><span class="p">),</span> <span class="n">add</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">));</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="using_namespace_std.3B">
+        using namespace std;
+       </span>
+      </h3>
+      <p>
+       If you are getting weird compile errors like fundamental c/c++ types missing, make sure to include this above your extern c block:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="c1">//Binaries/Win64/addtwo.lib</span>
+<span class="k">extern</span> <span class="s">"C"</span>
+<span class="p">{</span>
+ <span class="kr">__declspec</span><span class="p">(</span><span class="n">dllexport</span><span class="p">)</span> <span class="kt">int</span> <span class="n">add</span><span class="p">(</span><span class="kt">int</span> <span class="n">x</span><span class="p">,</span> <span class="kt">int</span> <span class="n">y</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Step_5:_Packaging_With_Your_Game">
+        Step 5: Packaging With Your Game
+       </span>
+      </h2>
+      <p>
+       When you package the game make sure to add the .dll and .lib files to:
+      </p>
+      <pre> PackagedGameDir/YourGame/Binaries/Win64 or Win32
+</pre>
+      <p>
+       next to your game's packaged binary!
+      </p>
+      <p>
+       You pick Win64 or Win32 based on whichever one has your game's files in them, so this means you must have a version of your .lib that is appropriate for your build type. (ie, you need Win32 version of your external .lib if packaging a Win32 game).
+      </p>
+      <p>
+       Please do not confuse your project's actual .exe with the .exe that is placed in YourGame dir, your static libs must be placed inside of the
+       <b>
+        Binaries
+       </b>
+       folder structure.
+      </p>
+      <p>
+       Each time you package your game, if overwriting an existing packaged game, make sure your .dll and .lib files are still there!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       This is the utterly simple way to get up and running with external libraries that will allow the editor to load, for you to test during development from commandline, and also works in packaged games!
+      </p>
+      <p>
+       My whole method revolves around learning that UE4 knows how to do all the linking properly when the .dll and .lib files are placed in the binaries folder along with your game's .exe / editor binaries.
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

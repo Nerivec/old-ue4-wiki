@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Blueprint Extendable Item System - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Blueprint Extendable Item System
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Extendable_Item_System_in_Blueprints">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           <b>
+            Extendable Item System in Blueprints
+           </b>
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Forward">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Forward
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-3">
+             <a href="#Author.27s_Note:">
+              <span class="tocnumber">
+               1.1.1
+              </span>
+              <span class="toctext">
+               Author's Note:
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Overview">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Starting_out">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Starting out
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Extendable_Item_System_in_Blueprints">
+        <b>
+         Extendable Item System in Blueprints
+        </b>
+       </span>
+      </h2>
+      <p>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Forward">
+        Forward
+       </span>
+      </h3>
+      <p>
+       I would like to thank
+       <a class="external text" href="http://www.tomlooman.com/" rel="nofollow">
+        Tom Looman
+       </a>
+       and
+       <a class="external text" href="https://forums.unrealengine.com/member.php?2225-alvarofer0020" rel="nofollow">
+        alvarofer0020
+       </a>
+       for their wonderful item systems.  You can find alvarofer0020's system
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?3289-Tutorial-Basic-Inventory-Item-System" rel="nofollow">
+        here
+       </a>
+       , and Tom's
+       <a class="external text" href="http://www.tomlooman.com/tutorial-usableactor-system-in-c/" rel="nofollow">
+        here
+       </a>
+       and
+       <a class="external text" href="http://www.tomlooman.com/tutorial-basic-inventory-system-in-blueprint/" rel="nofollow">
+        here
+       </a>
+       .  They were a great help in developing my own.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <p>
+       However, one of the biggest challenges with either of their systems was that both of them relied upon C++ as an integral part.  Another challenge was that alvarofer's system had no definition on what should happen when the item was dropped. For that matter, when it was picked up, it would destroy the mesh component which would cause issues when dropping it back into the world.
+And Tom's system relied upon creating two classes for each and every item.  Not very easy to extend, right?
+      </p>
+      <p>
+       These issues are what this tutorial hopes to solve, by creating a system
+       <b>
+        entirely in blueprints
+       </b>
+       that is both
+       <b>
+        cohesive
+       </b>
+       and
+       <b>
+        extendable
+       </b>
+       .
+      </p>
+      <h4>
+       <span class="mw-headline" id="Author.27s_Note:">
+        Author's Note:
+       </span>
+      </h4>
+      <p>
+       I am writing this in the style of a survival game.  It may be a little confusing at times, but to alleviate that, I will format all
+       <b>
+        necessary instructions
+       </b>
+       in bold.
+      </p>
+      <p>
+       Example: "Done!  Your chest is built.  Now to add stuff to it.  Create a new
+       <b>
+        Function
+       </b>
+       called
+       <b>
+        AddItem
+       </b>
+       .
+      </p>
+      <dl>
+       <dd>
+        -
+      (
+      )
+       </dd>
+      </dl>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       In most big games today, there is some form of an item system at it's core.  In a FPS?  How do you think they manage per-weapon ammo?  In a RPG?  Should be self-explanatory.  If you seriously don't know how RPGs use item systems, I fear for the safety of your gaming soul.  Puzzle games?  Depends on the game.  The list goes on and on.
+      </p>
+      <p>
+       But we are not here to talk about the prominence of certain systems in game genres.  If for some reason you are, please use the talk page or at least read the page title.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <p>
+       What we
+       <i>
+        are
+       </i>
+       here for is to learn how to create an extensible item system, with your choice of two inventory systems.  I will attempt to break down the necessary steps to create these systems into instructions understandable by all.
+      </p>
+      <p>
+       If I fail, feel free to rail on me and/or offer constructive criticism in the talk page.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <p>
+       But enough of that.  Let's get started.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Starting_out">
+        Starting out
+       </span>
+      </h2>
+      <p>
+       It's a new game.  You just got dropped off in the wilderness with nothing but the clothes on your back and the knowledge in your head.
+      </p>
+      <p>
+       (If you have completed this step already, feel free to
+       <b>
+        Load a Saved Game
+       </b>
+       and skip to the next section.)
+      </p>
+      <p>
+       Let's lay the foundations.  Create a
+       <b>
+        New Project
+       </b>
+       based on the
+       <b>
+        Blueprint First Person
+       </b>
+       template with
+       <b>
+        Starter Content
+       </b>
+       unchecked.  Call it whatever you please.  I chose to call mine
+       <b>
+        ItemSystem
+       </b>
+       .
+      </p>
+      <p>
+       <img alt="New Project" class="" height="734" src="../assets/blueprint-extendable-item-system/0.png" width="930"/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <p>
+       Once that is complete, open
+       <b>
+        My Character
+       </b>
+       in the
+       <b>
+        Blueprints
+       </b>
+       folder of the
+       <b>
+        Content Browser
+       </b>
+       .  We are going to create a interaction framework, which will be the basis for the item system's pick-up behavior.
+      </p>
+      <p>
+       <img alt="Content Browser" class="" height="748" src="../assets/blueprint-extendable-item-system/1.png" width="402"/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <p>
+       We create a
+       <b>
+        Single Line Trace by Channel
+       </b>
+       node from a input of your choice.  We get the camera's
+       <b>
+        World Location
+       </b>
+       and
+       <b>
+        Forward Vector
+       </b>
+       , multiplying the
+       <b>
+        forward vector
+       </b>
+       by the
+       <b>
+        distance
+       </b>
+       (in this case 300 units or 3 meters) we want the trace to go.  This limits how far away we can grab objects.  We plug the camera's
+       <b>
+        world location
+       </b>
+       into the start position of the
+       <b>
+        line trace
+       </b>
+       node, and the
+       <b>
+        forward vector * distance + world location
+       </b>
+       into the end node.  You can optionally set the debug visibility to duration if you want.
+      </p>
+      <p>
+       <img alt="Trace Graph" class="" height="1080" src="../assets/blueprint-extendable-item-system/2.png" width="1928"/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <p>
+       <img alt="Trace Test" class="" height="912" src="../assets/blueprint-extendable-item-system/3.png" width="1159"/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <p>
+       Next, we will need to create a
+       <b>
+        Blueprint Interface
+       </b>
+       .
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

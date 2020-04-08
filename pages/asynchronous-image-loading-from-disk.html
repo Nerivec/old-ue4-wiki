@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Asynchronous Image Loading from Disk - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Asynchronous Image Loading from Disk
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Setup">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Setup
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#The_Code">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           The Code
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Usage">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Usage
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Author:
+       </i>
+      </p>
+      <p>
+       Sometimes you may need to load textures from disk that are not part of your Unreal project, and thus are not packaged along with your game.
+Perhaps you need to load photos created by an external application, or perhaps you want to recreate
+       <a class="external text" href="https://en.wikipedia.org/wiki/Virus:_The_Game" rel="nofollow">
+        the 1997 game Virus
+       </a>
+       where images found on your hard drive were used as textures in the game.
+The regular
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Programming/Assets/AsyncLoading/" rel="nofollow">
+        asset streaming systems
+       </a>
+       in UE4 will only load packaged assets, so those cannot be used for this purpose.
+      </p>
+      <p>
+       I found myself in one such situation, so I wrote a small utility class that can load images from any location on your computer and convert them into Unreal textures at run-time.
+What's more, when loading images from disk you don't want the game to stutter from having to wait for the data to load, so loading is done asynchronously using a background task.
+Because it's fairly generic and might be useful to others, I decided to share the code for this utility on the wiki here.
+      </p>
+      <p>
+       The code for this class demonstrates the following:
+      </p>
+      <ul>
+       <li>
+        Loading from disk arbitrary files that were not packaged along with the game
+       </li>
+       <li>
+        Converting compressed image data to a texture using the ImageWrapper module
+       </li>
+       <li>
+        Creating and uploading textures at run-time
+       </li>
+       <li>
+        Asynchronous programming using the Async API and Futures
+       </li>
+       <li>
+        Using lambda expressions with variable capturing (i.e. closures) for callbacks
+       </li>
+       <li>
+        Exposing an event to Blueprint and binding a custom event
+       </li>
+      </ul>
+      <p>
+       <br/>
+       Loaded textures are assigned an owner, which by default is the object that initiates the image load. This ties the lifecycle of each texture to the object that loaded it, meaning these textures won't get lost in the ether, taking up precious memory long after they served their use.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Setup">
+        Setup
+       </span>
+      </h2>
+      <p>
+       To get the UImageLoader class to compile, you need to add the following line to your project's .Build.cs file:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">PrivateDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"ImageWrapper"</span><span class="p">,</span> <span class="s">"RenderCore"</span> <span class="p">});</span>
+</pre>
+      </div>
+      <p>
+       ImageWrapper is required for identifying image formats and decompressing them to raw pixel data. RenderCore is required for creating textures at run-time, specifically so we can link against the GPixelFormats global variable.
+      </p>
+      <h2>
+       <span class="mw-headline" id="The_Code">
+        The Code
+       </span>
+      </h2>
+      <p>
+       Add the following code files to the Source folder of your project. You should modify the precompiled header include directive and log category to fit your project.
+      </p>
+      <p>
+       <b>
+        ImageLoader.h
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"PixelFormat.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"ImageLoader.generated.h"</span><span class="cp"></span>
+
+<span class="c1">// Forward declarations</span>
+<span class="k">class</span> <span class="nc">UTexture2D</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm">Utility class for asynchronously loading an image into a texture.</span>
+<span class="cm">Allows Blueprint scripts to request asynchronous loading of an image and be notified when loading is complete.</span>
+<span class="cm">*/</span>
+<span class="n">UCLASS</span><span class="p">(</span><span class="n">BlueprintType</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">UImageLoader</span> <span class="o">:</span> <span class="k">public</span> <span class="n">UObject</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+
+<span class="k">public</span><span class="o">:</span>
+	<span class="cm">/** </span>
+<span class="cm">	Loads an image file from disk into a texture on a worker thread. This will not block the calling thread. </span>
+<span class="cm">	@return An image loader object with an OnLoadCompleted event that users can bind to, to get notified when loading is done.</span>
+<span class="cm">	*/</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">ImageLoader</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">HidePin</span> <span class="o">=</span> <span class="s">"Outer"</span><span class="p">,</span> <span class="n">DefaultToSelf</span> <span class="o">=</span> <span class="s">"Outer"</span><span class="p">))</span>
+	<span class="k">static</span> <span class="n">UImageLoader</span><span class="o">*</span> <span class="n">LoadImageFromDiskAsync</span><span class="p">(</span><span class="n">UObject</span><span class="o">*</span> <span class="n">Outer</span><span class="p">,</span> <span class="k">const</span> <span class="n">FString</span><span class="o">&amp;</span> <span class="n">ImagePath</span><span class="p">);</span>
+
+	<span class="cm">/**</span>
+<span class="cm">	Loads an image file from disk into a texture on a worker thread. This will not block the calling thread.</span>
+<span class="cm">	@return A future object which will hold the image texture once loading is done.</span>
+<span class="cm">	*/</span>
+	<span class="k">static</span> <span class="n">TFuture</span><span class="o">&lt;</span><span class="n">UTexture2D</span><span class="o">*&gt;</span> <span class="n">LoadImageFromDiskAsync</span><span class="p">(</span><span class="n">UObject</span><span class="o">*</span> <span class="n">Outer</span><span class="p">,</span> <span class="k">const</span> <span class="n">FString</span><span class="o">&amp;</span> <span class="n">ImagePath</span><span class="p">,</span> <span class="n">TFunction</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">()</span><span class="o">&gt;</span> <span class="n">CompletionCallback</span><span class="p">);</span>
+
+	<span class="cm">/**</span>
+<span class="cm">	Loads an image file from disk into a texture. This will block the calling thread until completed.</span>
+<span class="cm">	@return A texture created from the loaded image file.</span>
+<span class="cm">	*/</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">ImageLoader</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">HidePin</span> <span class="o">=</span> <span class="s">"Outer"</span><span class="p">,</span> <span class="n">DefaultToSelf</span> <span class="o">=</span> <span class="s">"Outer"</span><span class="p">))</span>
+	<span class="k">static</span> <span class="n">UTexture2D</span><span class="o">*</span> <span class="n">LoadImageFromDisk</span><span class="p">(</span><span class="n">UObject</span><span class="o">*</span> <span class="n">Outer</span><span class="p">,</span> <span class="k">const</span> <span class="n">FString</span><span class="o">&amp;</span> <span class="n">ImagePath</span><span class="p">);</span>
+
+<span class="k">public</span><span class="o">:</span>
+	<span class="cm">/**</span>
+<span class="cm">	Declare a broadcast-style delegate type, which is used for the load completed event.</span>
+<span class="cm">	Dynamic multicast delegates are the only type of event delegates that Blueprint scripts can bind to.</span>
+<span class="cm">	*/</span>
+	<span class="n">DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam</span><span class="p">(</span><span class="n">FOnImageLoadCompleted</span><span class="p">,</span> <span class="n">UTexture2D</span><span class="o">*</span><span class="p">,</span> <span class="n">Texture</span><span class="p">);</span>
+
+	<span class="cm">/** This accessor function allows C++ code to bind to the event. */</span>
+	<span class="n">FOnImageLoadCompleted</span><span class="o">&amp;</span> <span class="n">OnLoadCompleted</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="n">LoadCompleted</span><span class="p">;</span>
+	<span class="p">}</span>
+
+<span class="k">private</span><span class="o">:</span>
+	<span class="cm">/** Helper function that initiates the loading operation and fires the event when loading is done. */</span>
+	<span class="kt">void</span> <span class="n">LoadImageAsync</span><span class="p">(</span><span class="n">UObject</span><span class="o">*</span> <span class="n">Outer</span><span class="p">,</span> <span class="k">const</span> <span class="n">FString</span><span class="o">&amp;</span> <span class="n">ImagePath</span><span class="p">);</span>
+
+	<span class="cm">/** Helper function to dynamically create a new texture from raw pixel data. */</span>
+	<span class="k">static</span> <span class="n">UTexture2D</span><span class="o">*</span> <span class="nf">CreateTexture</span><span class="p">(</span><span class="n">UObject</span><span class="o">*</span> <span class="n">Outer</span><span class="p">,</span> <span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">uint8</span><span class="o">&gt;&amp;</span> <span class="n">PixelData</span><span class="p">,</span> <span class="n">int32</span> <span class="n">InSizeX</span><span class="p">,</span> <span class="n">int32</span> <span class="n">InSizeY</span><span class="p">,</span> <span class="n">EPixelFormat</span> <span class="n">PixelFormat</span> <span class="o">=</span> <span class="n">EPixelFormat</span><span class="o">::</span><span class="n">PF_B8G8R8A8</span><span class="p">,</span> <span class="n">FName</span> <span class="n">BaseName</span> <span class="o">=</span> <span class="n">NAME_None</span><span class="p">);</span>
+
+<span class="k">private</span><span class="o">:</span>
+	<span class="cm">/**</span>
+<span class="cm">	Holds the load completed event delegate.</span>
+<span class="cm">	Giving Blueprint access to this private variable allows Blueprint scripts to bind to the event.</span>
+<span class="cm">	*/</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintAssignable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">ImageLoader</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">AllowPrivateAccess</span> <span class="o">=</span> <span class="nb">true</span><span class="p">))</span>
+	<span class="n">FOnImageLoadCompleted</span> <span class="n">LoadCompleted</span><span class="p">;</span>
+
+	<span class="cm">/** Holds the future value which represents the asynchronous loading operation. */</span>
+	<span class="n">TFuture</span><span class="o">&lt;</span><span class="n">UTexture2D</span><span class="o">*&gt;</span> <span class="n">Future</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       <b>
+        ImageLoader.cpp
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// This includes the precompiled header. Change this to whatever is relevant for your project.</span>
+<span class="cp">#include</span> <span class="cpf">"TestProject.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"ImageLoader.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"ImageWrapper.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"RenderUtils.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Engine/Texture2D.h"</span><span class="cp"></span>
+
+<span class="c1">// Change the UE_LOG log category name below to whichever log category you want to use.</span>
+<span class="cp">#define UIL_LOG(Verbosity, Format, ...)	UE_LOG(LogTemp, Verbosity, Format, __VA_ARGS__)</span>
+
+<span class="c1">// Module loading is not allowed outside of the main thread, so we load the ImageWrapper module ahead of time.</span>
+<span class="k">static</span> <span class="n">IImageWrapperModule</span><span class="o">&amp;</span> <span class="n">ImageWrapperModule</span> <span class="o">=</span> <span class="n">FModuleManager</span><span class="o">::</span><span class="n">LoadModuleChecked</span><span class="o">&lt;</span><span class="n">IImageWrapperModule</span><span class="o">&gt;</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"ImageWrapper"</span><span class="p">));</span>
+
+<span class="n">UImageLoader</span><span class="o">*</span> <span class="n">UImageLoader</span><span class="o">::</span><span class="n">LoadImageFromDiskAsync</span><span class="p">(</span><span class="n">UObject</span><span class="o">*</span> <span class="n">Outer</span><span class="p">,</span> <span class="k">const</span> <span class="n">FString</span><span class="o">&amp;</span> <span class="n">ImagePath</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// This simply creates a new ImageLoader object and starts an asynchronous load.</span>
+	<span class="n">UImageLoader</span><span class="o">*</span> <span class="n">Loader</span> <span class="o">=</span> <span class="n">NewObject</span><span class="o">&lt;</span><span class="n">UImageLoader</span><span class="o">&gt;</span><span class="p">();</span>
+	<span class="n">Loader</span><span class="o">-&gt;</span><span class="n">LoadImageAsync</span><span class="p">(</span><span class="n">Outer</span><span class="p">,</span> <span class="n">ImagePath</span><span class="p">);</span>
+	<span class="k">return</span> <span class="n">Loader</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">UImageLoader</span><span class="o">::</span><span class="n">LoadImageAsync</span><span class="p">(</span><span class="n">UObject</span><span class="o">*</span> <span class="n">Outer</span><span class="p">,</span> <span class="k">const</span> <span class="n">FString</span><span class="o">&amp;</span> <span class="n">ImagePath</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// The asynchronous loading operation is represented by a Future, which will contain the result value once the operation is done.</span>
+	<span class="c1">// We store the Future in this object, so we can retrieve the result value in the completion callback below.</span>
+	<span class="n">Future</span> <span class="o">=</span> <span class="n">LoadImageFromDiskAsync</span><span class="p">(</span><span class="n">Outer</span><span class="p">,</span> <span class="n">ImagePath</span><span class="p">,</span> <span class="p">[</span><span class="k">this</span><span class="p">]()</span>
+	<span class="p">{</span>
+		<span class="c1">// This is the same Future object that we assigned above, but later in time.</span>
+		<span class="c1">// At this point, loading is done and the Future contains a value.</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">Future</span><span class="p">.</span><span class="n">IsValid</span><span class="p">())</span>
+		<span class="p">{</span>
+			<span class="c1">// Notify listeners about the loaded texture on the game thread.</span>
+			<span class="n">AsyncTask</span><span class="p">(</span><span class="n">ENamedThreads</span><span class="o">::</span><span class="n">GameThread</span><span class="p">,</span> <span class="p">[</span><span class="k">this</span><span class="p">]()</span> <span class="p">{</span> <span class="n">LoadCompleted</span><span class="p">.</span><span class="n">Broadcast</span><span class="p">(</span><span class="n">Future</span><span class="p">.</span><span class="n">Get</span><span class="p">());</span> <span class="p">});</span>
+		<span class="p">}</span>
+	<span class="p">});</span>
+<span class="p">}</span>
+
+<span class="n">TFuture</span><span class="o">&lt;</span><span class="n">UTexture2D</span><span class="o">*&gt;</span> <span class="n">UImageLoader</span><span class="o">::</span><span class="n">LoadImageFromDiskAsync</span><span class="p">(</span><span class="n">UObject</span><span class="o">*</span> <span class="n">Outer</span><span class="p">,</span> <span class="k">const</span> <span class="n">FString</span><span class="o">&amp;</span> <span class="n">ImagePath</span><span class="p">,</span> <span class="n">TFunction</span><span class="o">&lt;</span><span class="kt">void</span><span class="p">()</span><span class="o">&gt;</span> <span class="n">CompletionCallback</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// Run the image loading function asynchronously through a lambda expression, capturing the ImagePath string by value.</span>
+	<span class="c1">// Run it on the thread pool, so we can load multiple images simultaneously without interrupting other tasks.</span>
+	<span class="k">return</span> <span class="n">Async</span><span class="o">&lt;</span><span class="n">UTexture2D</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">EAsyncExecution</span><span class="o">::</span><span class="n">ThreadPool</span><span class="p">,</span> <span class="p">[</span><span class="o">=</span><span class="p">]()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">LoadImageFromDisk</span><span class="p">(</span><span class="n">Outer</span><span class="p">,</span> <span class="n">ImagePath</span><span class="p">);</span> <span class="p">},</span> <span class="n">CompletionCallback</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">UTexture2D</span><span class="o">*</span> <span class="n">UImageLoader</span><span class="o">::</span><span class="n">LoadImageFromDisk</span><span class="p">(</span><span class="n">UObject</span><span class="o">*</span> <span class="n">Outer</span><span class="p">,</span> <span class="k">const</span> <span class="n">FString</span><span class="o">&amp;</span> <span class="n">ImagePath</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// Check if the file exists first</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">FPaths</span><span class="o">::</span><span class="n">FileExists</span><span class="p">(</span><span class="n">ImagePath</span><span class="p">))</span>
+	<span class="p">{</span>
+		<span class="n">UIL_LOG</span><span class="p">(</span><span class="n">Error</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"File not found: %s"</span><span class="p">),</span> <span class="o">*</span><span class="n">ImagePath</span><span class="p">);</span>
+		<span class="k">return</span> <span class="k">nullptr</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="c1">// Load the compressed byte data from the file</span>
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">uint8</span><span class="o">&gt;</span> <span class="n">FileData</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">FFileHelper</span><span class="o">::</span><span class="n">LoadFileToArray</span><span class="p">(</span><span class="n">FileData</span><span class="p">,</span> <span class="o">*</span><span class="n">ImagePath</span><span class="p">))</span>
+	<span class="p">{</span>
+		<span class="n">UIL_LOG</span><span class="p">(</span><span class="n">Error</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Failed to load file: %s"</span><span class="p">),</span> <span class="o">*</span><span class="n">ImagePath</span><span class="p">);</span>
+		<span class="k">return</span> <span class="k">nullptr</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="c1">// Detect the image type using the ImageWrapper module</span>
+	<span class="n">EImageFormat</span><span class="o">::</span><span class="n">Type</span> <span class="n">ImageFormat</span> <span class="o">=</span> <span class="n">ImageWrapperModule</span><span class="p">.</span><span class="n">DetectImageFormat</span><span class="p">(</span><span class="n">FileData</span><span class="p">.</span><span class="n">GetData</span><span class="p">(),</span> <span class="n">FileData</span><span class="p">.</span><span class="n">Num</span><span class="p">());</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">ImageFormat</span> <span class="o">==</span> <span class="n">EImageFormat</span><span class="o">::</span><span class="n">Invalid</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">UIL_LOG</span><span class="p">(</span><span class="n">Error</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Unrecognized image file format: %s"</span><span class="p">),</span> <span class="o">*</span><span class="n">ImagePath</span><span class="p">);</span>
+		<span class="k">return</span> <span class="k">nullptr</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="c1">// Create an image wrapper for the detected image format</span>
+	<span class="n">IImageWrapperPtr</span> <span class="n">ImageWrapper</span> <span class="o">=</span> <span class="n">ImageWrapperModule</span><span class="p">.</span><span class="n">CreateImageWrapper</span><span class="p">(</span><span class="n">ImageFormat</span><span class="p">);</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">ImageWrapper</span><span class="p">.</span><span class="n">IsValid</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="n">UIL_LOG</span><span class="p">(</span><span class="n">Error</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Failed to create image wrapper for file: %s"</span><span class="p">),</span> <span class="o">*</span><span class="n">ImagePath</span><span class="p">);</span>
+		<span class="k">return</span> <span class="k">nullptr</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="c1">// Decompress the image data</span>
+	<span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">uint8</span><span class="o">&gt;*</span> <span class="n">RawData</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+	<span class="n">ImageWrapper</span><span class="o">-&gt;</span><span class="n">SetCompressed</span><span class="p">(</span><span class="n">FileData</span><span class="p">.</span><span class="n">GetData</span><span class="p">(),</span> <span class="n">FileData</span><span class="p">.</span><span class="n">Num</span><span class="p">());</span>
+	<span class="n">ImageWrapper</span><span class="o">-&gt;</span><span class="n">GetRaw</span><span class="p">(</span><span class="n">ERGBFormat</span><span class="o">::</span><span class="n">BGRA</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">RawData</span><span class="p">);</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">RawData</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">UIL_LOG</span><span class="p">(</span><span class="n">Error</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Failed to decompress image file: %s"</span><span class="p">),</span> <span class="o">*</span><span class="n">ImagePath</span><span class="p">);</span>
+		<span class="k">return</span> <span class="k">nullptr</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="c1">// Create the texture and upload the uncompressed image data</span>
+	<span class="n">FString</span> <span class="n">TextureBaseName</span> <span class="o">=</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Texture_"</span><span class="p">)</span> <span class="o">+</span> <span class="n">FPaths</span><span class="o">::</span><span class="n">GetBaseFilename</span><span class="p">(</span><span class="n">ImagePath</span><span class="p">);</span>
+	<span class="k">return</span> <span class="nf">CreateTexture</span><span class="p">(</span><span class="n">Outer</span><span class="p">,</span> <span class="o">*</span><span class="n">RawData</span><span class="p">,</span> <span class="n">ImageWrapper</span><span class="o">-&gt;</span><span class="n">GetWidth</span><span class="p">(),</span> <span class="n">ImageWrapper</span><span class="o">-&gt;</span><span class="n">GetHeight</span><span class="p">(),</span> <span class="n">EPixelFormat</span><span class="o">::</span><span class="n">PF_B8G8R8A8</span><span class="p">,</span> <span class="n">FName</span><span class="p">(</span><span class="o">*</span><span class="n">TextureBaseName</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="n">UTexture2D</span><span class="o">*</span> <span class="n">UImageLoader</span><span class="o">::</span><span class="n">CreateTexture</span><span class="p">(</span><span class="n">UObject</span><span class="o">*</span> <span class="n">Outer</span><span class="p">,</span> <span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">uint8</span><span class="o">&gt;&amp;</span> <span class="n">PixelData</span><span class="p">,</span> <span class="n">int32</span> <span class="n">InSizeX</span><span class="p">,</span> <span class="n">int32</span> <span class="n">InSizeY</span><span class="p">,</span> <span class="n">EPixelFormat</span> <span class="n">InFormat</span><span class="p">,</span> <span class="n">FName</span> <span class="n">BaseName</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// Shamelessly copied from UTexture2D::CreateTransient with a few modifications</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">InSizeX</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="o">||</span> <span class="n">InSizeY</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="o">||</span>
+		<span class="p">(</span><span class="n">InSizeX</span> <span class="o">%</span> <span class="n">GPixelFormats</span><span class="p">[</span><span class="n">InFormat</span><span class="p">].</span><span class="n">BlockSizeX</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span> <span class="o">||</span>
+		<span class="p">(</span><span class="n">InSizeY</span> <span class="o">%</span> <span class="n">GPixelFormats</span><span class="p">[</span><span class="n">InFormat</span><span class="p">].</span><span class="n">BlockSizeY</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">UIL_LOG</span><span class="p">(</span><span class="n">Warning</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Invalid parameters specified for UImageLoader::CreateTexture()"</span><span class="p">));</span>
+		<span class="k">return</span> <span class="k">nullptr</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="c1">// Most important difference with UTexture2D::CreateTransient: we provide the new texture with a name and an owner</span>
+	<span class="n">FName</span> <span class="n">TextureName</span> <span class="o">=</span> <span class="n">MakeUniqueObjectName</span><span class="p">(</span><span class="n">Outer</span><span class="p">,</span> <span class="n">UTexture2D</span><span class="o">::</span><span class="n">StaticClass</span><span class="p">(),</span> <span class="n">BaseName</span><span class="p">);</span>
+	<span class="n">UTexture2D</span><span class="o">*</span> <span class="n">NewTexture</span> <span class="o">=</span> <span class="n">NewObject</span><span class="o">&lt;</span><span class="n">UTexture2D</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Outer</span><span class="p">,</span> <span class="n">TextureName</span><span class="p">,</span> <span class="n">RF_Transient</span><span class="p">);</span>
+
+	<span class="n">NewTexture</span><span class="o">-&gt;</span><span class="n">PlatformData</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FTexturePlatformData</span><span class="p">();</span>
+	<span class="n">NewTexture</span><span class="o">-&gt;</span><span class="n">PlatformData</span><span class="o">-&gt;</span><span class="n">SizeX</span> <span class="o">=</span> <span class="n">InSizeX</span><span class="p">;</span>
+	<span class="n">NewTexture</span><span class="o">-&gt;</span><span class="n">PlatformData</span><span class="o">-&gt;</span><span class="n">SizeY</span> <span class="o">=</span> <span class="n">InSizeY</span><span class="p">;</span>
+	<span class="n">NewTexture</span><span class="o">-&gt;</span><span class="n">PlatformData</span><span class="o">-&gt;</span><span class="n">PixelFormat</span> <span class="o">=</span> <span class="n">InFormat</span><span class="p">;</span>
+
+	<span class="c1">// Allocate first mipmap and upload the pixel data</span>
+	<span class="n">int32</span> <span class="n">NumBlocksX</span> <span class="o">=</span> <span class="n">InSizeX</span> <span class="o">/</span> <span class="n">GPixelFormats</span><span class="p">[</span><span class="n">InFormat</span><span class="p">].</span><span class="n">BlockSizeX</span><span class="p">;</span>
+	<span class="n">int32</span> <span class="n">NumBlocksY</span> <span class="o">=</span> <span class="n">InSizeY</span> <span class="o">/</span> <span class="n">GPixelFormats</span><span class="p">[</span><span class="n">InFormat</span><span class="p">].</span><span class="n">BlockSizeY</span><span class="p">;</span>
+	<span class="n">FTexture2DMipMap</span><span class="o">*</span> <span class="n">Mip</span> <span class="o">=</span> <span class="k">new</span><span class="p">(</span><span class="n">NewTexture</span><span class="o">-&gt;</span><span class="n">PlatformData</span><span class="o">-&gt;</span><span class="n">Mips</span><span class="p">)</span> <span class="n">FTexture2DMipMap</span><span class="p">();</span>
+	<span class="n">Mip</span><span class="o">-&gt;</span><span class="n">SizeX</span> <span class="o">=</span> <span class="n">InSizeX</span><span class="p">;</span>
+	<span class="n">Mip</span><span class="o">-&gt;</span><span class="n">SizeY</span> <span class="o">=</span> <span class="n">InSizeY</span><span class="p">;</span>
+	<span class="n">Mip</span><span class="o">-&gt;</span><span class="n">BulkData</span><span class="p">.</span><span class="n">Lock</span><span class="p">(</span><span class="n">LOCK_READ_WRITE</span><span class="p">);</span>
+	<span class="kt">void</span><span class="o">*</span> <span class="n">TextureData</span> <span class="o">=</span> <span class="n">Mip</span><span class="o">-&gt;</span><span class="n">BulkData</span><span class="p">.</span><span class="n">Realloc</span><span class="p">(</span><span class="n">NumBlocksX</span> <span class="o">*</span> <span class="n">NumBlocksY</span> <span class="o">*</span> <span class="n">GPixelFormats</span><span class="p">[</span><span class="n">InFormat</span><span class="p">].</span><span class="n">BlockBytes</span><span class="p">);</span>
+	<span class="n">FMemory</span><span class="o">::</span><span class="n">Memcpy</span><span class="p">(</span><span class="n">TextureData</span><span class="p">,</span> <span class="n">PixelData</span><span class="p">.</span><span class="n">GetData</span><span class="p">(),</span> <span class="n">PixelData</span><span class="p">.</span><span class="n">Num</span><span class="p">());</span>
+	<span class="n">Mip</span><span class="o">-&gt;</span><span class="n">BulkData</span><span class="p">.</span><span class="n">Unlock</span><span class="p">();</span>
+
+	<span class="n">NewTexture</span><span class="o">-&gt;</span><span class="n">UpdateResource</span><span class="p">();</span>
+	<span class="k">return</span> <span class="n">NewTexture</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Usage">
+        Usage
+       </span>
+      </h2>
+      <p>
+       Adding the above code to your project will add a new category called "Image Loader" to your arsenal of Blueprint actions. In here, you will find a function "Load Image from Disk", which will block the calling thread, and "Load Image from Disk Async", which does not block the calling thread.
+Below you see an example Blueprint graph that demonstrates the latter function:
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="ImageLoaderBlueprint.png" class="thumbimage" height="349" src="../assets/asynchronous-image-loading-from-disk/0.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br/>
+       Running this script will load the default Windows wallpaper into a texture and assign it to a variable. Open this texture in the inspector and you will see it looks like this:
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="ImageLoaderTexture.png" class="thumbimage" height="580" src="../assets/asynchronous-image-loading-from-disk/1.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Function Pointers - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Function Pointers
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#My_Example:_30_Behavior_Functions">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           My Example: 30 Behavior Functions
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Special_Thanks_and_C.2B.2B_Note">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Special Thanks and C++ Note
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#C.2B.2B_Code_for_UCLASS.28.29_Function_Pointers">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           C++ Code for UCLASS() Function Pointers
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#YourClass.h">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             YourClass.h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#YourClass.cpp">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             YourClass.cpp
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Syntax_Complexity_Comparison">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Syntax Complexity Comparison
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Summary">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Summary
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Original Author:
+       </i>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       When you have a whole bunch of functions that you want to call, that are all related in some way,
+      </p>
+      <p>
+       you can make a function pointer array to quickly access and call a specific function by index!
+      </p>
+      <h2>
+       <span class="mw-headline" id="My_Example:_30_Behavior_Functions">
+        My Example: 30 Behavior Functions
+       </span>
+      </h2>
+      <p>
+       In my example, I have 30 behaviors that are all virtual functions as part of an AI system.
+      </p>
+      <p>
+       Each creature needs to implement the behavior in its own way, so the functions are virtual.
+      </p>
+      <p>
+       But in the AI class, I need to be able to say "run this behavior function" quickly and easily.
+      </p>
+      <p>
+       That's what function pointers enable you to do!
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Special_Thanks_and_C.2B.2B_Note">
+        Special Thanks and C++ Note
+       </span>
+      </h2>
+      <p>
+       You can easily find info on function pointers on the internet, but in UE4 classes you need to also specify the namespace, and I was having trouble with that part
+      </p>
+      <p>
+       Special thanks go to Steve Allison and other Epic Devs for offering the correct syntax!
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="C.2B.2B_Code_for_UCLASS.28.29_Function_Pointers">
+        C++ Code for UCLASS() Function Pointers
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="YourClass.h">
+        YourClass.h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"YourClass.generated.h"</span><span class="cp"></span>
+
+<span class="cp">#define BEHAVIORS_MAX 30</span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">AYourClass</span> <span class="o">:</span> <span class="n">AActor</span> <span class="c1">//or any other class setup</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+	
+<span class="k">public</span><span class="o">:</span>
+	
+	<span class="c1">//The Function Pointer Variable Type</span>
+	<span class="c1">//Functions take in 0 parameters and return void</span>
+	<span class="k">typedef</span> <span class="kt">void</span> <span class="p">(</span><span class="n">AYourClass</span><span class="o">::*</span><span class="n">FunctionPtrType</span><span class="p">)(</span><span class="kt">void</span><span class="p">);</span>
+	
+	<span class="c1">//A static array of 30 Function Pointers</span>
+	<span class="n">FunctionPtrType</span> <span class="n">BehaviorFunctions</span><span class="p">[</span><span class="n">BEHAVIORS_MAX</span><span class="p">];</span>
+	
+	<span class="c1">//Play a Behavior from the Function Pointer Array</span>
+	<span class="c1">//	implementation does not vary in subclasses, so not virtual</span>
+	<span class="kt">void</span> <span class="nf">PlayBehavior</span><span class="p">(</span><span class="n">int32</span> <span class="n">BehaviorIndex</span> <span class="p">);</span>
+	
+	<span class="c1">//Initialize the array</span>
+	<span class="kt">void</span> <span class="nf">InitBehaviors</span><span class="p">();</span>
+	
+	<span class="c1">//The actual functions which are implemented in subclasses</span>
+	<span class="c1">//or this class itself</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">PlayBehavior_Idle_LookLeftToRight</span><span class="p">();</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">PlayBehavior_Idle_LookFullCircle</span><span class="p">();</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">PlayBehavior_Idle_ScanUpDown</span><span class="p">();</span>
+	<span class="c1">//...more functions</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="YourClass.cpp">
+        YourClass.cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#define LOOK_FULL_CIRCLE 0</span>
+
+<span class="cp">#define SCAN_LEFT_TO_RIGHT 1</span>
+
+<span class="cp">#define SCAN_UP_DOWN	  2</span>
+<span class="c1">//... more function index defines to 29</span>
+
+<span class="kt">void</span> <span class="n">AYourClass</span><span class="o">::</span><span class="n">InitBehaviors</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">BehaviorFunctions</span><span class="p">[</span><span class="n">LOOK_FULL_CIRCLE</span><span class="p">]</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">AYourClass</span><span class="o">::</span><span class="n">PlayBehavior_Idle_LookFullCircle</span><span class="p">;</span>
+	<span class="n">BehaviorFunctions</span><span class="p">[</span><span class="n">SCAN_LEFT_TO_RIGHT</span><span class="p">]</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">AYourClass</span><span class="o">::</span><span class="n">PlayBehavior_Idle_LookLeftToRight</span><span class="p">;</span>
+	<span class="n">BehaviorFunctions</span><span class="p">[</span><span class="n">SCAN_UP_DOWN</span><span class="p">]</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">AYourClass</span><span class="o">::</span><span class="n">PlayBehavior_Idle_ScanUpDown</span><span class="p">;</span>
+	<span class="c1">//...more functions</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AYourClass</span><span class="o">::</span><span class="n">PlayBehavior_Idle_LookLeftToRight</span><span class="p">(){}</span>
+<span class="kt">void</span> <span class="n">AYourClass</span><span class="o">::</span><span class="n">PlayBehavior_Idle_LookFullCircle</span><span class="p">(){}</span>
+<span class="kt">void</span> <span class="n">AYourClass</span><span class="o">::</span><span class="n">PlayBehavior_Idle_ScanUpDown</span><span class="p">(){}</span>
+<span class="c1">//...rest of functions</span>
+
+
+<span class="kt">void</span> <span class="n">AYourClass</span><span class="o">::</span><span class="n">PlayBehavior</span><span class="p">(</span><span class="n">int32</span> <span class="n">BehaviorIndex</span> <span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">//valid range check</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">BehaviorIndex</span> <span class="o">&gt;=</span> <span class="n">BEHAVIORS_MAX</span> <span class="o">||</span> <span class="n">BehaviorIndex</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+	<span class="c1">//~~</span>
+	
+	<span class="c1">//Special Thanks to Epic for this Syntax</span>
+	<span class="p">(</span><span class="k">this</span><span class="o">-&gt;*</span> <span class="p">(</span><span class="n">BehaviorFunctions</span><span class="p">[</span><span class="n">BehaviorIndex</span><span class="p">]))();</span>
+	
+	<span class="c1">//the above line plays the appropriate function based on the passed in index!</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Syntax_Complexity_Comparison">
+        Syntax Complexity Comparison
+       </span>
+      </h2>
+      <p>
+       this same sort of setup, without function pointers, would either have been a switch statement,
+or a series of if elses.
+      </p>
+      <p>
+       Supposing there were actually 30 entries you can see why a function pointer array simplifies all this!
+      </p>
+      <p>
+       this
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Without function pointers</span>
+<span class="k">if</span><span class="p">(</span><span class="n">BehaviorIndex</span> <span class="o">==</span> <span class="n">SCAN_LEFT_TO_RIGHT</span><span class="p">)</span>
+	<span class="n">PlayBehavior_Idle_LookLeftToRight</span><span class="p">();</span>
+	
+<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">BehaviorIndex</span> <span class="o">==</span> <span class="n">LOOK_FULL_CIRCLE</span><span class="p">)</span>
+	<span class="n">PlayBehavior_Idle_LookFullCircle</span><span class="p">();</span>
+	
+<span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">BehaviorIndex</span> <span class="o">==</span> <span class="n">SCAN_UP_DOWN</span><span class="p">)</span>
+	<span class="n">PlayBehavior_Idle_ScanUpDown</span><span class="p">();</span>
+<span class="c1">//...</span>
+<span class="c1">//...</span>
+<span class="c1">//and much much more ...</span>
+</pre>
+      </div>
+      <p>
+       becomes this!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//With Function Pointers</span>
+<span class="c1">//Special Thanks to Epic for this Syntax</span>
+<span class="p">(</span><span class="k">this</span><span class="o">-&gt;*</span> <span class="p">(</span><span class="n">BehaviorFunctions</span><span class="p">[</span><span class="n">BehaviorIndex</span><span class="p">]))();</span>
+
+<span class="c1">//that's it! nothing else!!!!</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Summary">
+        Summary
+       </span>
+      </h2>
+      <p>
+       Thanks to Epic I can now present to you the correct C++ syntax for using UCLASS-specific function pointers!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

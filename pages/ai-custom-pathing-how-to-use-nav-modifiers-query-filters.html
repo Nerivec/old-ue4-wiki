@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   AI Custom Pathing, How To Use Nav Modifiers Query Filters - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    AI Custom Pathing, How To Use Nav Modifiers Query Filters
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Video">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Video
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Nav_Area_Class">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Nav Area Class
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Nav_Modifier_Volume">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Nav Modifier Volume
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Navigation_Query_Filters">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Navigation Query Filters
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Use_Case:_Electric_Currents_and_2_Types_of_Characters">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Use Case: Electric Currents and 2 Types of Characters
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Custom_BP_Node">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Custom BP Node
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Changes_Nav_Behavior_Filters_.7E_Per_Move_.7E_If_You_Want_To.21">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Changes Nav Behavior Filters  ~ Per Move ~  If You Want To!
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Project_Download_Link">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Project Download Link
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-10">
+         <a href="#Victory_Plugin.2C_100.2B_Custom_BP_Nodes_For_You.21">
+          <span class="tocnumber">
+           9
+          </span>
+          <span class="toctext">
+           Victory Plugin, 100+ Custom BP Nodes For You!
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-11">
+         <a href="#Don.27t_Entirely_Exclude_Areas.2C_But_Have_AI_Prefer_Certain_Paths">
+          <span class="tocnumber">
+           10
+          </span>
+          <span class="toctext">
+           Don't Entirely Exclude Areas, But Have AI Prefer Certain Paths
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-12">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           11
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <b>
+        Author:
+       </b>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       I've created a video and a sample BP-Only project (+ my Victory Plugin)  that shows you how to use Nav Modifier Volumes and Navigation Query Filters to create custom pathing for your units!
+      </p>
+      <h3>
+       <span class="mw-headline" id="Video">
+        Video
+       </span>
+      </h3>
+      <p>
+       &lt;youtube&gt;
+       <a class="external free" href="https://www.youtube.com/watch?v=xwdVQQtQa8s" rel="nofollow">
+        https://www.youtube.com/watch?v=xwdVQQtQa8s
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Nav_Area_Class">
+        Nav Area Class
+       </span>
+      </h2>
+      <p>
+       A Nav Area Class is created like any custom Blueprint class, and you can specify a custom color as well as custom navigation costs for the area.
+      </p>
+      <p>
+       <img alt="NavAreaClass.jpg" class="" height="323" src="../assets/ai-custom-pathing-how-to-use-nav-modifiers-query-filters/0.jpg" width="800"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Nav_Modifier_Volume">
+        Nav Modifier Volume
+       </span>
+      </h2>
+      <p>
+       A Nav Modifier Volume uses a custom Nav Area Class to specify certain areas of the UE4 Nav Mesh to take on the attributes of your custom Nav Area class.
+      </p>
+      <p>
+       So using a Nav Modifier Volume, you can tell AI units to completely ignore certain sections of the nav mesh, or prefer those areas while still using other routes if they are shorter.
+      </p>
+      <p>
+       Using custom nav area costs you can really fine tune the behavior of different AI units!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Navigation_Query_Filters">
+        Navigation Query Filters
+       </span>
+      </h2>
+      <p>
+       A Navigation Query Filter is used by the AI unit and also my Victory BP Node to tell the unit to have a certain relationship to different Nav Area Classes.
+      </p>
+      <p>
+       You can create 1 filter that tells a unit to avoid Nav Area Red, while telling another unit to specifcy prefer travelling in Nav Area Red.
+      </p>
+      <p>
+       A Navigation Filter lets you override the costs associated with each Nav Area class, so you can tell 1 unit to absolutely prefer a Blue Nav Area, while telling another unit to avoid Blue as much as possible.
+      </p>
+      <p>
+       See my video above for an example usage!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Use_Case:_Electric_Currents_and_2_Types_of_Characters">
+        Use Case: Electric Currents and 2 Types of Characters
+       </span>
+      </h2>
+      <p>
+       In my example, I have two types of units.
+      </p>
+      <p>
+       The
+       <b>
+        blue unit
+       </b>
+       is immune to electricity, and does not need to path around electric currents.
+      </p>
+      <p>
+       The
+       <b>
+        red unit
+       </b>
+       bids us all a fond farewell if it passes thruogh an electric current.
+      </p>
+      <p>
+       So in this case I can't just block of areas that have electric currents completely from the nav mesh, or else the blue unit cannot pass through freely as it should be able to, taking a shortcut as a result.
+      </p>
+      <p>
+       This is a case where
+       <b>
+        Nav Modifiers
+       </b>
+       and
+       <b>
+        Query Filters
+       </b>
+       really shine!
+      </p>
+      <p>
+       I only want to filter out certain sections of the nav mesh for the red unit, while still allowing the blue unit to pass through those areas freely.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Custom_BP_Node">
+        Custom BP Node
+       </span>
+      </h2>
+      <p>
+       In order to actually be able to use query filters and nav modifiers in a BP only project effectively, I made a custom BP node, AI Move To With Filter.
+      </p>
+      <p>
+       This node allows me to tell the unit to move to a certain location, while using a query filter, only in Blueprints!
+      </p>
+      <p>
+       <img alt="MoveToWithFilter.jpg" class="" height="469" src="../assets/ai-custom-pathing-how-to-use-nav-modifiers-query-filters/1.jpg" width="800"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Changes_Nav_Behavior_Filters_.7E_Per_Move_.7E_If_You_Want_To.21">
+        Changes Nav Behavior Filters  ~ Per Move ~  If You Want To!
+       </span>
+      </h2>
+      <p>
+       Using my Victory BP Library node, you can actually have a unit changes its navigation filter per move if you want to!
+      </p>
+      <p>
+       This enables you to have the AI respond to dynamic level conditions (like if the electricity in my example gets turned off), or if you just want the AI to confuse the player by randomly switching its pathing preferences!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Project_Download_Link">
+        Project Download Link
+       </span>
+      </h2>
+      <p>
+       I'm giving you the entire project as shown in the video above, so you can poke around in hands-on fashion!
+      </p>
+      <p>
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?79533-Complete-Sample-Project-AI-Navigation-Create-Custom-Pathing-Using-Nav-Modifiers-Query-Filters&amp;p=350700&amp;viewfull=1#post350700%7C" rel="nofollow">
+        UE4 Forum Link ~ Visit my UE4 Community Content Thread for full download details and updates
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Victory_Plugin.2C_100.2B_Custom_BP_Nodes_For_You.21">
+        Victory Plugin, 100+ Custom BP Nodes For You!
+       </span>
+      </h2>
+      <p>
+       If you're not familiar with all the complimentary custom nodes I am offering to you such as drawing vertices of static and skeletal meshes, tons of extra math and geometry analysis nodes, and randomization features, check out my Victory BP Library Plugin!
+      </p>
+      <p>
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?3851-(39)-Rama-s-Extra-Blueprint-Nodes-for-You-as-a-Plugin-No-C-Required!" rel="nofollow">
+        UE4 Forum Link ~ Victory BP Library ~ Extra BP Nodes For you!
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Don.27t_Entirely_Exclude_Areas.2C_But_Have_AI_Prefer_Certain_Paths">
+        Don't Entirely Exclude Areas, But Have AI Prefer Certain Paths
+       </span>
+      </h2>
+      <p>
+       If you dont want to entirely exclude areas for an AI unit, but really want them to prefer or avoid a certain section of the nav mesh, you can create Nav Areas with custom costs!
+      </p>
+      <p>
+       Then you can use filters to override those costs for different types of units!
+      </p>
+      <p>
+       So please note that you dont have to always go all or nothing in terms of nav modifiers, they can simply dissuade or encourage an AI unit with a particular filter. This allows you to create really dynamic AI pathing quite easily, and with the help of my Victory BP Library node you can change filters per move if you want to!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       Now you know how you can create custom pathing behaviors for specific types of units, while not having to reshape/obstruct the entire nav mesh!
+      </p>
+      <p>
+       Now some units can go where others cant, or prefer certain paths!
+      </p>
+      <p>
+       I hope you enjoy my sample project and video!
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

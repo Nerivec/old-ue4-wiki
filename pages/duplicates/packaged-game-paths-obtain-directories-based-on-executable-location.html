@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Packaged Game Paths, Obtain Directories Based on Executable Location - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Packaged Game Paths, Obtain Directories Based on Executable Location
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#How_It_Works">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           How It Works
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#InstallDir.2FWindowsNoEditor.2FGameName.2FBinaries.2FWin64">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           InstallDir/WindowsNoEditor/GameName/Binaries/Win64
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#InstallDir.2FWindowsNoEditor.2F_.28or_other_OS.29">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           InstallDir/WindowsNoEditor/      (or other OS)
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#InstallDir.2FWindowsNoEditor.2FGameName">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           InstallDir/WindowsNoEditor/GameName
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#InstallDir.2FWindowsNoEditor.2FGameName.2FContent">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           InstallDir/WindowsNoEditor/GameName/Content
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#InstallDir.2FWindowsNoEditor.2FGameName.2FSaved">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           InstallDir/WindowsNoEditor/GameName/Saved
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#InstallDir.2FWindowsNoEditor.2FGameName.2FSaved.2FLogs">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           InstallDir/WindowsNoEditor/GameName/Saved/Logs
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Sandbox_File_Path">
+          <span class="tocnumber">
+           9
+          </span>
+          <span class="toctext">
+           Sandbox File Path
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-10">
+         <a href="#Dynamic_Relocation_of_Project">
+          <span class="tocnumber">
+           10
+          </span>
+          <span class="toctext">
+           Dynamic Relocation of Project
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-11">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           11
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <b>
+        Author:
+       </b>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       <b>
+        Here is how you get access to various parts of the directory structure of a Packaged game!
+       </b>
+      </p>
+      <p>
+       You do not need to use ConverRelativePathToFull while testing WITH_EDITOR builds, though it will still work correctly.
+      </p>
+      <p>
+       But it is essential to include in packaged builds!
+      </p>
+      <p>
+       <b>
+        Below are the directories that get returned for each of several different UE4 C++ FPath:: functions!
+       </b>
+      </p>
+      <p>
+       You can use pretty much any one of these to then create your own directory structure all inside of wherever your game's packaged binary is running from.
+      </p>
+      <h2>
+       <span class="mw-headline" id="How_It_Works">
+        How It Works
+       </span>
+      </h2>
+      <p>
+       All the other paths are found by using the BaseDir, where the exe is running from.
+      </p>
+      <p>
+       This is determined at runtime, so if the entire project is moved, all the paths below will still work correctly!
+      </p>
+      <h2>
+       <span class="mw-headline" id="InstallDir.2FWindowsNoEditor.2FGameName.2FBinaries.2FWin64">
+        InstallDir/WindowsNoEditor/GameName/Binaries/Win64
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//InstallDir/WindowsNoEditor/GameName/Binaries/Win64</span>
+<span class="n">FString</span> <span class="n">ThePath</span> <span class="o">=</span> <span class="n">FString</span><span class="p">(</span><span class="n">FPlatformProcess</span><span class="o">::</span><span class="n">BaseDir</span><span class="p">());</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="InstallDir.2FWindowsNoEditor.2F_.28or_other_OS.29">
+        InstallDir/WindowsNoEditor/      (or other OS)
+       </span>
+      </h2>
+      <p>
+       Please note this will differ based on the OS you are packaging the game for :)
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//InstallDir/WindowsNoEditor/</span>
+<span class="n">FString</span> <span class="n">ThePath</span> <span class="o">=</span> <span class="n">FPaths</span><span class="o">::</span><span class="n">ConvertRelativePathToFull</span><span class="p">(</span><span class="n">FPaths</span><span class="o">::</span><span class="n">RootDir</span><span class="p">());</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="InstallDir.2FWindowsNoEditor.2FGameName">
+        InstallDir/WindowsNoEditor/GameName
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//InstallDir/WindowsNoEditor/GameName</span>
+<span class="n">FString</span> <span class="n">ThePath</span> <span class="o">=</span> <span class="n">FPaths</span><span class="o">::</span><span class="n">ConvertRelativePathToFull</span><span class="p">(</span><span class="n">FPaths</span><span class="o">::</span><span class="n">GameDir</span><span class="p">());</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="InstallDir.2FWindowsNoEditor.2FGameName.2FContent">
+        InstallDir/WindowsNoEditor/GameName/Content
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//InstallDir/WindowsNoEditor/GameName/Content</span>
+<span class="n">FString</span> <span class="n">ThePath</span> <span class="o">=</span> <span class="n">FPaths</span><span class="o">::</span><span class="n">ConvertRelativePathToFull</span><span class="p">(</span><span class="n">FPaths</span><span class="o">::</span><span class="n">GameContentDir</span><span class="p">());</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="InstallDir.2FWindowsNoEditor.2FGameName.2FSaved">
+        InstallDir/WindowsNoEditor/GameName/Saved
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//InstallDir/WindowsNoEditor/GameName/Saved</span>
+<span class="n">FString</span> <span class="n">ThePath</span> <span class="o">=</span> <span class="n">FPaths</span><span class="o">::</span><span class="n">ConvertRelativePathToFull</span><span class="p">(</span><span class="n">FPaths</span><span class="o">::</span><span class="n">GameSavedDir</span><span class="p">());</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="InstallDir.2FWindowsNoEditor.2FGameName.2FSaved.2FLogs">
+        InstallDir/WindowsNoEditor/GameName/Saved/Logs
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//InstallDir/WindowsNoEditor/GameName/Saved/Logs</span>
+<span class="n">FString</span> <span class="n">ThePath</span> <span class="o">=</span> <span class="n">FPaths</span><span class="o">::</span><span class="n">ConvertRelativePathToFull</span><span class="p">(</span><span class="n">FPaths</span><span class="o">::</span><span class="n">GameLogDir</span><span class="p">());</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Sandbox_File_Path">
+        Sandbox File Path
+       </span>
+      </h2>
+      <p>
+       When run the program in WindowsNoEditor mode. All file I/O will be saved to a Sandbox folder.
+      </p>
+      <p>
+       In this case, the real path on the disk is wrapped by ConvertToSandboxPath, defined in IPlatformFileSandboxWrapper.cpp. This ConvertToSandboxPath is different from FPaths::ConvertToSandboxPath.
+      </p>
+      <p>
+       To get the real filename on the disk. You need to call GetFilenameOnDisk to get the real filename. Notice: The file must has been written to the disk. Otherwise the GetFilenameOnDisk will only return the directory name.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">IFileManager</span><span class="o">&amp;</span> <span class="n">FileManager</span> <span class="o">=</span> <span class="n">IFileManager</span><span class="o">::</span><span class="n">Get</span><span class="p">();</span>
+<span class="n">FString</span> <span class="n">DiskFilename</span> <span class="o">=</span> <span class="n">FileManager</span><span class="p">.</span><span class="n">GetFilenameOnDisk</span><span class="p">(</span><span class="o">*</span><span class="n">FullFilename</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       (
+     )
+      </p>
+      <h2>
+       <span class="mw-headline" id="Dynamic_Relocation_of_Project">
+        Dynamic Relocation of Project
+       </span>
+      </h2>
+      <p>
+       The above code I am sharing with you will work even if you change the location of your packaged game after packaging!
+      </p>
+      <p>
+       Try it!
+      </p>
+      <p>
+       I added many many subdirectories between my InstallDir and WindowsNoEditor and it still worked perfectly!
+      </p>
+      <p>
+       So even if the end user moves everything starting with WindowsNoEditor around, the above code will still generate the correct and updated directory structure!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       Now you know how to create your own directory structures relative to the installation directory of your packaged game!
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Blueprints, Creating Variables in C++ For Use In BP - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Blueprints, Creating Variables in C++ For Use In BP
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Example:_PlayerMusicSkillLevel">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Example: PlayerMusicSkillLevel
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Why_Create_a_Variable_in_C.2B.2B_When_It_Is_Used_in_BP.3F">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Why Create a Variable in C++ When It Is Used in BP?
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Core_Syntax">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Core Syntax
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Comments">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Comments
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Restricting_Variable_Access">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Restricting Variable Access
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#EditDefaultsOnly">
+            <span class="tocnumber">
+             5.1
+            </span>
+            <span class="toctext">
+             EditDefaultsOnly
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#BlueprintReadOnly">
+            <span class="tocnumber">
+             5.2
+            </span>
+            <span class="toctext">
+             BlueprintReadOnly
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#VisibleAnywhere">
+            <span class="tocnumber">
+             5.3
+            </span>
+            <span class="toctext">
+             VisibleAnywhere
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-10">
+         <a href="#Fancier_Naming">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Fancier Naming
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#Category_Name">
+            <span class="tocnumber">
+             6.1
+            </span>
+            <span class="toctext">
+             Category Name
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-12">
+         <a href="#Summary">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Summary
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Original Author:
+       </i>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       Here is how you create a property in a c++ base class,
+      </p>
+      <p>
+       so that it can be accessed in the blueprinted version of your base class that you see in the Editor!
+      </p>
+      <h3>
+       <span class="mw-headline" id="Example:_PlayerMusicSkillLevel">
+        Example: PlayerMusicSkillLevel
+       </span>
+      </h3>
+      <p>
+       Let's say you have a blueprinted player controller class,
+      </p>
+      <p>
+       and you want to add a variable: PlayerMusicSkillLevel
+      </p>
+      <p>
+       <br/>
+       <b>
+        This is a variable that other project members want to be able to read and write to from blueprints!
+       </b>
+      </p>
+      <p>
+       <img alt="Varbpcppnew.jpg" class="" height="411" src="../assets/blueprints-creating-variables-in-c-for-use-in-bp/0.jpg" width="700"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Why_Create_a_Variable_in_C.2B.2B_When_It_Is_Used_in_BP.3F">
+        Why Create a Variable in C++ When It Is Used in BP?
+       </span>
+      </h2>
+      <p>
+       Not everyone in the project will be working in C++, and not everyone will be working all the time in blueprints!
+      </p>
+      <p>
+       To easily have access to variables in both C++ and blueprints, the variables should be created in the C++ base class, which is then blueprinted.
+      </p>
+      <p>
+       Then both the C++ programmers and the blueprint programmers can access the variable data any time!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Core_Syntax">
+        Core Syntax
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/** What is the Player's current musical skill level? */</span>
+<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">PlayerMusicSkill</span><span class="p">)</span>
+<span class="n">int32</span> <span class="n">MusicSkillLevel</span><span class="p">;</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Comments">
+        Comments
+       </span>
+      </h2>
+      <p>
+       Comments that you write as shown will be very neatly and wonderfully shown when the user hovers the mouse over the variable name in the Editor!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/** What is the Player's current musical skill level? */</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Restricting_Variable_Access">
+        Restricting Variable Access
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="EditDefaultsOnly">
+        EditDefaultsOnly
+       </span>
+      </h3>
+      <p>
+       If you want team members to be able to access and edit a C++ variable, but only prior to runtime, use EditDefaultsOnly
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditDefaultsOnly</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">PlayerMusicSkill</span><span class="p">)</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="BlueprintReadOnly">
+        BlueprintReadOnly
+       </span>
+      </h3>
+      <p>
+       If you do not ever want a variable to be modified via blueprints, but it should be easily read from, use BlueprintReadOnly.
+      </p>
+      <p>
+       This is important if a variable is part of a system, and a function should be used to modify the variable.
+      </p>
+      <p>
+       For example, if the blueprint user wants to increase the MusicSkillLevel,
+      </p>
+      <p>
+       but in the game,
+       <b>
+        the player can only increase their MusicSkillLevel under certain conditions that are only checked in C++
+       </b>
+       ,
+      </p>
+      <p>
+       then you do not want the blueprint user to just directly increment the MusicSkillLevel,
+      </p>
+      <p>
+       and they should instead use your C++ function IncreaseMusicSkillLevel().
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditDefaultsOnly</span><span class="p">,</span> <span class="n">BlueprintReadOnly</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">PlayerMusicSkill</span><span class="p">)</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="VisibleAnywhere">
+        VisibleAnywhere
+       </span>
+      </h3>
+      <p>
+       If you want a value to be visible in blueprint default properties, but not editable,
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UPROPERTY</span><span class="p">(</span><span class="n">VisibleAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadOnly</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">PlayerMusicSkill</span><span class="p">)</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Fancier_Naming">
+        Fancier Naming
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Category_Name">
+        Category Name
+       </span>
+      </h3>
+      <p>
+       If you use quotation marks you can create fancier category names!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditDefaultsOnly</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="s">"PlayerMusicSkill ~ Yay!"</span><span class="p">)</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Summary">
+        Summary
+       </span>
+      </h2>
+      <p>
+       Now you know how to enable both C++ and Blueprints to access custom variable data specific to your project!
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

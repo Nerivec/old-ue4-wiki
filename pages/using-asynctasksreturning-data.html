@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Using AsyncTasks/Returning Data - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Using AsyncTasks/Returning Data
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       Input a Delegate function as a parameter for the FAsyncTask, and execute it from within the Task.  Delegates are thread-safe, but editing values, spawning Actors or Objects, or making almost any write of any kind is generally going to result in crashes or, at the very least, inconsistent behavior.
+      </p>
+      <p>
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Programming/UnrealArchitecture/Delegates/" rel="nofollow">
+        UE4 Documentation on Delegates
+       </a>
+      </p>
+      <p>
+       <br/>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

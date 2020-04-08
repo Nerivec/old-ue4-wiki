@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Detailed Account Of Integrating OpenCV Into UE4 With VS2017 - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Detailed Account Of Integrating OpenCV Into UE4 With VS2017
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <table align="right">
+       <tbody>
+        <tr>
+         <td>
+          <div class="toc" id="toc">
+           <div class="toctitle">
+            <h2>
+             Contents
+            </h2>
+           </div>
+           <ul>
+            <li class="toclevel-1 tocsection-1">
+             <a href="#Overview">
+              <span class="tocnumber">
+               1
+              </span>
+              <span class="toctext">
+               Overview
+              </span>
+             </a>
+             <ul>
+              <li class="toclevel-2 tocsection-2">
+               <a href="#Scope_.26_Notes">
+                <span class="tocnumber">
+                 1.1
+                </span>
+                <span class="toctext">
+                 Scope &amp; Notes
+                </span>
+               </a>
+              </li>
+              <li class="toclevel-2 tocsection-3">
+               <a href="#Linking_OpenCV_in_Visual_Studios">
+                <span class="tocnumber">
+                 1.2
+                </span>
+                <span class="toctext">
+                 Linking OpenCV in Visual Studios
+                </span>
+               </a>
+               <ul>
+                <li class="toclevel-3 tocsection-4">
+                 <a href="#Downloading_OpenCV_3.2.0">
+                  <span class="tocnumber">
+                   1.2.1
+                  </span>
+                  <span class="toctext">
+                   Downloading OpenCV 3.2.0
+                  </span>
+                 </a>
+                </li>
+                <li class="toclevel-3 tocsection-5">
+                 <a href="#Copying_the_OpenCV_Files">
+                  <span class="tocnumber">
+                   1.2.2
+                  </span>
+                  <span class="toctext">
+                   Copying the OpenCV Files
+                  </span>
+                 </a>
+                </li>
+                <li class="toclevel-3 tocsection-6">
+                 <a href="#Adding_OpenCV_Dependencies">
+                  <span class="tocnumber">
+                   1.2.3
+                  </span>
+                  <span class="toctext">
+                   Adding OpenCV Dependencies
+                  </span>
+                 </a>
+                </li>
+                <li class="toclevel-3 tocsection-7">
+                 <a href="#Copying_the_DLL.27s_to_the_Build">
+                  <span class="tocnumber">
+                   1.2.4
+                  </span>
+                  <span class="toctext">
+                   Copying the DLL's to the Build
+                  </span>
+                 </a>
+                </li>
+                <li class="toclevel-3 tocsection-8">
+                 <a href="#Fixing_Library_Collisions">
+                  <span class="tocnumber">
+                   1.2.5
+                  </span>
+                  <span class="toctext">
+                   Fixing Library Collisions
+                  </span>
+                 </a>
+                </li>
+                <li class="toclevel-3 tocsection-9">
+                 <a href="#Configuring_Include_Directory">
+                  <span class="tocnumber">
+                   1.2.6
+                  </span>
+                  <span class="toctext">
+                   Configuring Include Directory
+                  </span>
+                 </a>
+                </li>
+               </ul>
+              </li>
+              <li class="toclevel-2 tocsection-10">
+               <a href="#Adding_a_WebcamReader_Class">
+                <span class="tocnumber">
+                 1.3
+                </span>
+                <span class="toctext">
+                 Adding a WebcamReader Class
+                </span>
+               </a>
+               <ul>
+                <li class="toclevel-3 tocsection-11">
+                 <a href="#Header">
+                  <span class="tocnumber">
+                   1.3.1
+                  </span>
+                  <span class="toctext">
+                   Header
+                  </span>
+                 </a>
+                </li>
+                <li class="toclevel-3 tocsection-12">
+                 <a href="#Source">
+                  <span class="tocnumber">
+                   1.3.2
+                  </span>
+                  <span class="toctext">
+                   Source
+                  </span>
+                 </a>
+                </li>
+               </ul>
+              </li>
+              <li class="toclevel-2 tocsection-13">
+               <a href="#Moving_to_Blueprints">
+                <span class="tocnumber">
+                 1.4
+                </span>
+                <span class="toctext">
+                 Moving to Blueprints
+                </span>
+               </a>
+               <ul>
+                <li class="toclevel-3 tocsection-14">
+                 <a href="#Adding_the_WebcamBillboard_Actor">
+                  <span class="tocnumber">
+                   1.4.1
+                  </span>
+                  <span class="toctext">
+                   Adding the WebcamBillboard Actor
+                  </span>
+                 </a>
+                </li>
+                <li class="toclevel-3 tocsection-15">
+                 <a href="#Adding_the_WebcamBillboard_to_a_Level">
+                  <span class="tocnumber">
+                   1.4.2
+                  </span>
+                  <span class="toctext">
+                   Adding the WebcamBillboard to a Level
+                  </span>
+                 </a>
+                </li>
+                <li class="toclevel-3 tocsection-16">
+                 <a href="#Adding_More_Functions_to_the_Blueprint">
+                  <span class="tocnumber">
+                   1.4.3
+                  </span>
+                  <span class="toctext">
+                   Adding More Functions to the Blueprint
+                  </span>
+                 </a>
+                </li>
+                <li class="toclevel-3 tocsection-17">
+                 <a href="#Enjoying_New_Function.21">
+                  <span class="tocnumber">
+                   1.4.4
+                  </span>
+                  <span class="toctext">
+                   Enjoying New Function!
+                  </span>
+                 </a>
+                </li>
+               </ul>
+              </li>
+             </ul>
+            </li>
+            <li class="toclevel-1 tocsection-18">
+             <a href="#More_Information">
+              <span class="tocnumber">
+               2
+              </span>
+              <span class="toctext">
+               More Information
+              </span>
+             </a>
+            </li>
+           </ul>
+          </div>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <h1>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h1>
+      <p>
+       The goal of this tutorial is to illustrate in detail about how to integrate
+       <b>
+        OpenCV
+       </b>
+       into
+       <b>
+        UE 4.17
+       </b>
+       using the
+       <b>
+        Visual Studio 2017
+       </b>
+       . This tutorial is mainly based on the great tutorial of
+       <a class="external text" href="./integrating-opencv-into-unreal-engine-4.html" rel="nofollow">
+        Ginku
+       </a>
+       .
+      </p>
+      <p>
+       I wrote this because I want to give some help to newbies like me, who have difficulty following Ginku's tutorial, and those who want to integrate OpenCV into UE 4.17 using Visual Studio 2017. Also, this tutorial can be useful to those who want to add more functions using OpenCV. I strongly recommend you to read my previous
+       about linking static library to UE4 because it offers an insight into the integration of external library into UE4. Also, my previous
+       deals with many errors you might face, which can be helpful.
+      </p>
+      <p>
+       <b>
+        Caution:
+       </b>
+       To follow this tutorial, please use
+       <b>
+        OpenCV 3.2.0
+       </b>
+       and
+       <b>
+        UE4.17
+       </b>
+       and
+       <b>
+        VS2017
+       </b>
+       . UE4.17 supports VS2017. The version number of VS2017 is VC15. OpenCV 3.2.0 is compiled with VC14, which is binary-compatible with VC15. Therefore, using other versions of OpenCV, Unreal Engine or Visual Studio might cause error.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Scope_.26_Notes">
+        Scope &amp; Notes
+       </span>
+      </h2>
+      <ul>
+       <li>
+        You will be able to integrate OpenCV into UE 4.17 and make blueprint node using OpenCV by the end
+       </li>
+       <li>
+        I expect you to have, at the very least, a more than cursory level of knowledge about C++, C# and MS Visual Studio 2017
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="Linking_OpenCV_in_Visual_Studios">
+        Linking OpenCV in Visual Studios
+       </span>
+      </h2>
+      <p>
+       Before you continue, make sure you are starting from a code project. Go start your UE4 launcher. In your project browser, click
+       <b>
+        new project
+       </b>
+       and select
+       <b>
+        C++ tab
+       </b>
+       . Choose the
+       <b>
+        basic code
+       </b>
+       template. Name your project
+       <b>
+        CV1
+       </b>
+       . Now
+       <b>
+        generate
+       </b>
+       the project. When your project opens up, go to
+       <b>
+        content browser
+       </b>
+       and right-click the mouse, select
+       <b>
+        new c++ class
+       </b>
+       . An window will open up. Choose
+       <b>
+        Actor
+       </b>
+       as parent class. Name the Actor as 'MyActor'. Unreal Engine will create Binaries folder in your project folder automatically.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Downloading_OpenCV_3.2.0">
+        Downloading OpenCV 3.2.0
+       </span>
+      </h3>
+      <p>
+       Click
+       <a class="external text" href="http://opencv.org/releases.html" rel="nofollow">
+        here
+       </a>
+       and download
+       <b>
+        OpenCV 3.2.0
+       </b>
+       . I'm using Windows operating system, so I chose
+       <b>
+        Win pack
+       </b>
+       . Extract the compressed OpenCV file to wherever you want. I did it on my
+       <b>
+        C drive
+       </b>
+       .
+      </p>
+      <h3>
+       <span class="mw-headline" id="Copying_the_OpenCV_Files">
+        Copying the OpenCV Files
+       </span>
+      </h3>
+      <p>
+       In order to begin, all of OpenCV's header files and library files will need to be added to your project’s ‘/ThirdParty’ directory. Do the following:
+      </p>
+      <ul>
+       <li>
+        Inside the OpenCV install directory you will find the ‘/build/include’ directory. Copy all of the contents of this directory into the ‘[UE4 ProjectRootDirectory]/ThirdParty/OpenCV/Includes’ directory.
+       </li>
+      </ul>
+      <p>
+       <b>
+        Caution:
+       </b>
+       You don't have
+       <b>
+        ThirParty
+       </b>
+       folder by default. So you should create the folders needed by yourself.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:502px;">
+        <img alt="" class="thumbimage" height="189" src="../assets/detailed-account-of-integrating-opencv-into-ue4-with-vs2017/0.jpg" width="500"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Create folders following this picture
+        </div>
+       </div>
+      </div>
+      <ul>
+       <li>
+        Next, copy the 'opencv_world320.dll' and 'opencv_ffmpeg320_64.dll' files in the ‘/build/x64/vc14/bin’ folder and the 'opencv_world320.lib', files in the ‘/build/x64/vc14/lib’ folder to the ‘[ProjectRootDirectory]/ThirdParty/OpenCV/Libraries/Win64/’ directory.
+       </li>
+      </ul>
+      <p>
+       Note: This process is similar for any version of OpenCV or any third party library. You only need the runtime libraries (not the debug ones with a 'd' appended, such as 'opencv_world320d.dll' unless you need the debug versions).
+      </p>
+      <h3>
+       <span class="mw-headline" id="Adding_OpenCV_Dependencies">
+        Adding OpenCV Dependencies
+       </span>
+      </h3>
+      <p>
+       Locate and open your
+       <b>
+        projects module rules file
+       </b>
+       , which should be in your projects ‘Source/[Project Name]’ directory. (It will be in the format of
+       <b>
+        ProjectName.Build.cs
+       </b>
+       ) In this file, we will add the necessary code so that the unreal build tool will include all of the necessary dependencies during build time.
+      </p>
+      <p>
+       First, be sure to add the following include at the top of the file:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">using</span> <span class="n">System</span><span class="p">.</span><span class="n">IO</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       This lets you use the Path helper class, which is very useful for assembling directory paths!
+      </p>
+      <p>
+       Inside your ModuleRules class and before the constructor, add the following getter:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">private</span> <span class="n">string</span> <span class="n">ModulePath</span>
+    <span class="p">{</span>
+        <span class="n">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ModuleDirectory</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="n">string</span> <span class="n">ThirdPartyPath</span>
+    <span class="p">{</span>
+        <span class="n">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">Path</span><span class="p">.</span><span class="n">GetFullPath</span><span class="p">(</span><span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">ModuleDirectory</span><span class="p">,</span> <span class="s">"../../ThirdParty/"</span><span class="p">));</span> <span class="p">}</span>
+    <span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       This is a helpful little function for retrieving the /ThirdParty/ path, and can be very convenient when including more than one third party dependency to a project. Now, add the following function after the constructor:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">public</span> <span class="kt">bool</span> <span class="nf">LoadOpenCV</span><span class="p">(</span><span class="n">TargetInfo</span> <span class="n">Target</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// Start OpenCV linking here!</span>
+    <span class="kt">bool</span> <span class="n">isLibrarySupported</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+
+    <span class="c1">// Create OpenCV Path </span>
+    <span class="n">string</span> <span class="n">OpenCVPath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">ThirdPartyPath</span><span class="p">,</span> <span class="s">"OpenCV"</span><span class="p">);</span>
+
+    <span class="c1">// Get Library Path </span>
+    <span class="n">string</span> <span class="n">LibPath</span> <span class="o">=</span> <span class="s">""</span><span class="p">;</span>
+    <span class="kt">bool</span> <span class="n">isdebug</span> <span class="o">=</span> <span class="n">Target</span><span class="p">.</span><span class="n">Configuration</span> <span class="o">==</span> <span class="n">UnrealTargetConfiguration</span><span class="p">.</span><span class="n">Debug</span> <span class="o">&amp;&amp;</span> <span class="n">BuildConfiguration</span><span class="p">.</span><span class="n">bDebugBuildsActuallyUseDebugCRT</span><span class="p">;</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">Target</span><span class="p">.</span><span class="n">Platform</span> <span class="o">==</span> <span class="n">UnrealTargetPlatform</span><span class="p">.</span><span class="n">Win64</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">LibPath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">OpenCVPath</span><span class="p">,</span> <span class="s">"Libraries"</span><span class="p">,</span> <span class="s">"Win64"</span><span class="p">);</span>
+        <span class="n">isLibrarySupported</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+    <span class="p">}</span>
+    <span class="k">else</span>
+    <span class="p">{</span>
+        <span class="n">string</span> <span class="n">Err</span> <span class="o">=</span> <span class="n">string</span><span class="p">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"{0} dedicated server is made to depend on {1}. We want to avoid this, please correct module dependencies."</span><span class="p">,</span> <span class="n">Target</span><span class="p">.</span><span class="n">Platform</span><span class="p">.</span><span class="n">ToString</span><span class="p">(),</span> <span class="k">this</span><span class="p">.</span><span class="n">ToString</span><span class="p">());</span> <span class="n">System</span><span class="p">.</span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">Err</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">isLibrarySupported</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">//Add Include path </span>
+        <span class="n">PublicIncludePaths</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">[]</span> <span class="p">{</span> <span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">OpenCVPath</span><span class="p">,</span> <span class="s">"Includes"</span><span class="p">)</span> <span class="p">});</span>
+
+        <span class="c1">// Add Library Path </span>
+        <span class="n">PublicLibraryPaths</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">LibPath</span><span class="p">);</span>
+
+        <span class="c1">//Add Static Libraries</span>
+        <span class="n">PublicAdditionalLibraries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s">"opencv_world320.lib"</span><span class="p">);</span>
+
+        <span class="c1">//Add Dynamic Libraries</span>
+        <span class="n">PublicDelayLoadDLLs</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s">"opencv_world320.dll"</span><span class="p">);</span>
+        <span class="n">PublicDelayLoadDLLs</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s">"opencv_ffmpeg320_64.dll"</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">Definitions</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">string</span><span class="p">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"WITH_OPENCV_BINDING={0}"</span><span class="p">,</span> <span class="n">isLibrarySupported</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="mi">0</span><span class="p">));</span>
+
+    <span class="k">return</span> <span class="n">isLibrarySupported</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       This function includes all of the required includes and libraries for OpenCV. Now, edit your constructor as follows:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">public</span> <span class="nf">CV0</span><span class="p">(</span><span class="n">TargetInfo</span> <span class="n">Target</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">PCHUsage</span> <span class="o">=</span> <span class="n">PCHUsageMode</span><span class="p">.</span><span class="n">UseExplicitOrSharedPCHs</span><span class="p">;</span>
+
+        <span class="n">PublicDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"Core"</span><span class="p">,</span> <span class="s">"CoreUObject"</span><span class="p">,</span> <span class="s">"Engine"</span><span class="p">,</span> <span class="s">"InputCore"</span><span class="p">,</span> <span class="s">"RHI"</span><span class="p">,</span> <span class="s">"RenderCore"</span><span class="p">,</span> <span class="s">"ShaderCore"</span> <span class="p">});</span>
+
+        <span class="n">LoadOpenCV</span><span class="p">(</span><span class="n">Target</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Be sure to add the InputCore, RHI, and RenderCore engine modules to the public dependency list, we will use these later to create a dynamic texture from the camera feed. The PrivateIncludePaths will allow you to include the OpenCV header files without full paths.
+      </p>
+      <p>
+       The full code of CV1.Build.cs is as follows:
+      </p>
+      <p>
+       (You can just copy and paste it in your CV1.Build.cs file. However, if your project name is different from me (CV1), be sure to make your class name and constructor name match your project name.)
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">using</span> <span class="n">System</span><span class="p">.</span><span class="n">IO</span><span class="p">;</span>
+<span class="k">using</span> <span class="n">UnrealBuildTool</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">CV1</span> <span class="o">:</span> <span class="n">ModuleRules</span>
+<span class="p">{</span>
+
+    <span class="k">private</span> <span class="n">string</span> <span class="n">ModulePath</span>
+    <span class="p">{</span>
+        <span class="n">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ModuleDirectory</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="n">string</span> <span class="n">ThirdPartyPath</span>
+    <span class="p">{</span>
+        <span class="n">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">Path</span><span class="p">.</span><span class="n">GetFullPath</span><span class="p">(</span><span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">ModuleDirectory</span><span class="p">,</span> <span class="s">"../../ThirdParty/"</span><span class="p">));</span> <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="c1">//constructor</span>
+    <span class="k">public</span> <span class="n">CV1</span><span class="p">(</span><span class="n">TargetInfo</span> <span class="n">Target</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">PCHUsage</span> <span class="o">=</span> <span class="n">PCHUsageMode</span><span class="p">.</span><span class="n">UseExplicitOrSharedPCHs</span><span class="p">;</span>
+
+        <span class="n">PublicDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"Core"</span><span class="p">,</span> <span class="s">"CoreUObject"</span><span class="p">,</span> <span class="s">"Engine"</span><span class="p">,</span> <span class="s">"InputCore"</span><span class="p">,</span> <span class="s">"RHI"</span><span class="p">,</span> <span class="s">"RenderCore"</span><span class="p">,</span> <span class="s">"ShaderCore"</span> <span class="p">});</span>
+
+        <span class="n">LoadOpenCV</span><span class="p">(</span><span class="n">Target</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="kt">bool</span> <span class="n">LoadOpenCV</span><span class="p">(</span><span class="n">TargetInfo</span> <span class="n">Target</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// Start OpenCV linking here!</span>
+        <span class="kt">bool</span> <span class="n">isLibrarySupported</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+
+        <span class="c1">// Create OpenCV Path </span>
+        <span class="n">string</span> <span class="n">OpenCVPath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">ThirdPartyPath</span><span class="p">,</span> <span class="s">"OpenCV"</span><span class="p">);</span>
+
+        <span class="c1">// Get Library Path </span>
+        <span class="n">string</span> <span class="n">LibPath</span> <span class="o">=</span> <span class="s">""</span><span class="p">;</span>
+        <span class="kt">bool</span> <span class="n">isdebug</span> <span class="o">=</span> <span class="n">Target</span><span class="p">.</span><span class="n">Configuration</span> <span class="o">==</span> <span class="n">UnrealTargetConfiguration</span><span class="p">.</span><span class="n">Debug</span> <span class="o">&amp;&amp;</span> <span class="n">BuildConfiguration</span><span class="p">.</span><span class="n">bDebugBuildsActuallyUseDebugCRT</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">Target</span><span class="p">.</span><span class="n">Platform</span> <span class="o">==</span> <span class="n">UnrealTargetPlatform</span><span class="p">.</span><span class="n">Win64</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">LibPath</span> <span class="o">=</span> <span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">OpenCVPath</span><span class="p">,</span> <span class="s">"Libraries"</span><span class="p">,</span> <span class="s">"Win64"</span><span class="p">);</span>
+            <span class="n">isLibrarySupported</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">else</span>
+        <span class="p">{</span>
+            <span class="n">string</span> <span class="n">Err</span> <span class="o">=</span> <span class="n">string</span><span class="p">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"{0} dedicated server is made to depend on {1}. We want to avoid this, please correct module dependencies."</span><span class="p">,</span> <span class="n">Target</span><span class="p">.</span><span class="n">Platform</span><span class="p">.</span><span class="n">ToString</span><span class="p">(),</span> <span class="k">this</span><span class="p">.</span><span class="n">ToString</span><span class="p">());</span> <span class="n">System</span><span class="p">.</span><span class="n">Console</span><span class="p">.</span><span class="n">WriteLine</span><span class="p">(</span><span class="n">Err</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">isLibrarySupported</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="c1">//Add Include path </span>
+            <span class="n">PublicIncludePaths</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">[]</span> <span class="p">{</span> <span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">OpenCVPath</span><span class="p">,</span> <span class="s">"Includes"</span><span class="p">)</span> <span class="p">});</span>
+
+            <span class="c1">// Add Library Path </span>
+            <span class="n">PublicLibraryPaths</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">LibPath</span><span class="p">);</span>
+
+            <span class="c1">//Add Static Libraries</span>
+            <span class="n">PublicAdditionalLibraries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s">"opencv_world320.lib"</span><span class="p">);</span>
+
+            <span class="c1">//Add Dynamic Libraries</span>
+            <span class="n">PublicDelayLoadDLLs</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s">"opencv_world320.dll"</span><span class="p">);</span>
+            <span class="n">PublicDelayLoadDLLs</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s">"opencv_ffmpeg320_64.dll"</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="n">Definitions</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">string</span><span class="p">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"WITH_OPENCV_BINDING={0}"</span><span class="p">,</span> <span class="n">isLibrarySupported</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="mi">0</span><span class="p">));</span>
+
+        <span class="k">return</span> <span class="n">isLibrarySupported</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Right-click your project on your solution explorer, click Debug - Start new instance. Now, your project should successfully compile with OpenCV included within the engine build! However, there is one more thing that needs to be included before you can use OpenCV's function inside your UE4 editor.
+      </p>
+      <p>
+       <b>
+        Caution:
+       </b>
+       If your build fails with 'cannot open opencv_world320.lib' error, please make sure that you have made correct folder structure and included all the header files and library files as I mentioned above. In my case, I forgot to make 'Win64' folder under the 'Libraries' folder. After I created 'Win64' folder under 'Libraries' folder and included all the dlls and libs, I was able to solve my problem.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Copying_the_DLL.27s_to_the_Build">
+        Copying the DLL's to the Build
+       </span>
+      </h3>
+      <p>
+       This stage is very important! So don't forget to follow this stage, unless you can't make your UE4 work with OpenCV.
+      </p>
+      <p>
+       Before your project will run with any OpenCV code, you will first need to add all of the dynamically linked library (.dll) files that you use to your editor’s bin folder. Your editor will typically be a 64-bit application, so copy all of the .dll files (opencv_world320.dll and opencv_ffmpeg320_64.dll) from the OpenCV’s 64 bit bin folder (full directory shown above) and paste them inside the ‘[ProjectRootDirectory]/Binaries/Win64’ directory.
+      </p>
+      <p>
+       Note: These DLL's should also be included with any distributions of the project (such as when packaging your game/project), by including them in the same directory as the project's executable (MY_PROJECT.exe).
+      </p>
+      <h3>
+       <span class="mw-headline" id="Fixing_Library_Collisions">
+        Fixing Library Collisions
+       </span>
+      </h3>
+      <p>
+       There is a collision between the OpenCV3 library and UE4.  To fix this, comment out lines ~51 to ~55 and line ~852 of the utility.hpp header file in the '[ProjectRootDirectory]\ThirdParty\OpenCV\Includes\opencv2\core' directory.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// NOTE: The OpenCV 'check' function has been commented out, as it conflicts with UE4 check - see line ~852</span>
+<span class="c1">//#if defined(check)</span>
+<span class="c1">//#  warning Detected Apple 'check' macro definition, it can cause build conflicts. Please, include this header before any Apple headers.</span>
+<span class="c1">//#endif</span>
+
+<span class="p">...</span>
+
+<span class="c1">//bool check() const;</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Configuring_Include_Directory">
+        Configuring Include Directory
+       </span>
+      </h3>
+      <p>
+       Open your
+       <b>
+        Project Properties
+       </b>
+       and go to
+       <b>
+        Configuration Properties
+       </b>
+       -&gt;
+       <b>
+        VC++ Directories
+       </b>
+       section. Add
+       <b>
+        ..\..\ThirdParty\OpenCV\Includes
+       </b>
+       to Include Directories tab.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Adding_a_WebcamReader_Class">
+        Adding a WebcamReader Class
+       </span>
+      </h2>
+      <p>
+       You are now ready to launch an instance of your editor and start using OpenCV! Right click the project name in your solution explorer, and select Debug &gt; Start new instance. If you get an error about the os being unable to load your dll, check out the discussion page. Once the editor loads, select File &gt; New C++ Class… and select the ‘Actor’ parent class. Press Next, name the actor ‘WebcamReader’ and press Create Class. Once Unreal has finished adding the new actor, the new header and source files will be opened inside Visual Studios. Add the following code to each of them:
+      </p>
+      <h3>
+       <span class="mw-headline" id="Header">
+        Header
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// A simple webcam reader using the OpenCV library</span>
+<span class="c1">// Author: The UE4 community &amp; Ginku &amp; Mintchococookie</span>
+ 
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"opencv2/core.hpp"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"opencv2/highgui.hpp"	</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"opencv2/imgproc.hpp"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"opencv2/videoio.hpp"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"CoreMinimal.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"GameFramework/Actor.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Runtime/Engine/Classes/Engine/Texture2D.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"WebcamReader.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">CV1_API</span> <span class="nl">AWebcamReader</span> <span class="p">:</span> <span class="k">public</span> <span class="n">AActor</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+
+<span class="k">public</span><span class="o">:</span>
+	<span class="c1">// Sets default values for this actor's properties</span>
+	<span class="n">AWebcamReader</span><span class="p">();</span>
+
+	<span class="c1">// Called when the game starts or when spawned</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">BeginPlay</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+
+	<span class="c1">// Called every frame</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">Tick</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaSeconds</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+
+	<span class="c1">// The device ID opened by the Video Stream</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Webcam</span><span class="p">)</span>
+		<span class="n">int32</span> <span class="n">CameraID</span><span class="p">;</span>
+
+	<span class="c1">// The operation that will be applied to every frame</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Webcam</span><span class="p">)</span>
+		<span class="n">int32</span> <span class="n">OperationMode</span><span class="p">;</span>
+
+	<span class="c1">// If the webcam images should be resized every frame</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Webcam</span><span class="p">)</span>
+		<span class="kt">bool</span> <span class="n">ShouldResize</span><span class="p">;</span>
+
+	<span class="c1">// The targeted resize width and height (width, height)</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Webcam</span><span class="p">)</span>
+		<span class="n">FVector2D</span> <span class="n">ResizeDeminsions</span><span class="p">;</span>
+
+	<span class="c1">// The rate at which the color data array and video texture is updated (in frames per second)</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Webcam</span><span class="p">)</span>
+		<span class="kt">float</span> <span class="n">RefreshRate</span><span class="p">;</span>
+
+	<span class="c1">// The refresh timer</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Webcam</span><span class="p">)</span>
+		<span class="kt">float</span> <span class="n">RefreshTimer</span><span class="p">;</span>
+
+	<span class="c1">// Blueprint Event called every time the video frame is updated</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintImplementableEvent</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Webcam</span><span class="p">)</span>
+		<span class="kt">void</span> <span class="n">OnNextVideoFrame</span><span class="p">();</span>
+
+	<span class="c1">// Change OpenCV operation that will be applied to every frame</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">DisplayName</span> <span class="o">=</span> <span class="s">"Change Operations"</span><span class="p">,</span> <span class="n">Keywords</span> <span class="o">=</span> <span class="s">"Change Operation"</span><span class="p">),</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Webcam</span><span class="p">)</span>
+		<span class="kt">void</span> <span class="n">ChangeOperation</span><span class="p">();</span>
+
+
+	<span class="c1">// OpenCV fields</span>
+	<span class="n">cv</span><span class="o">::</span><span class="n">Mat</span> <span class="n">frame</span><span class="p">;</span>
+	<span class="n">cv</span><span class="o">::</span><span class="n">VideoCapture</span> <span class="n">stream</span><span class="p">;</span>
+	<span class="n">cv</span><span class="o">::</span><span class="n">Size</span> <span class="n">size</span><span class="p">;</span>
+
+	<span class="c1">// OpenCV prototypes</span>
+	<span class="kt">void</span> <span class="nf">UpdateFrame</span><span class="p">();</span>
+	<span class="kt">void</span> <span class="nf">DoProcessing</span><span class="p">();</span>
+	<span class="kt">void</span> <span class="nf">UpdateTexture</span><span class="p">();</span>
+
+	<span class="c1">// If the stream has succesfully opened yet</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintReadOnly</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Webcam</span><span class="p">)</span>
+		<span class="kt">bool</span> <span class="n">isStreamOpen</span><span class="p">;</span>
+
+	<span class="c1">// The videos width and height (width, height)</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Webcam</span><span class="p">)</span>
+		<span class="n">FVector2D</span> <span class="n">VideoSize</span><span class="p">;</span>
+
+	<span class="c1">// The current video frame's corresponding texture</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintReadOnly</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Webcam</span><span class="p">)</span>
+		<span class="n">UTexture2D</span><span class="o">*</span> <span class="n">VideoTexture</span><span class="p">;</span>
+
+	<span class="c1">// The current data array</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintReadOnly</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Webcam</span><span class="p">)</span>
+		<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FColor</span><span class="o">&gt;</span> <span class="n">Data</span><span class="p">;</span>
+
+<span class="k">protected</span><span class="o">:</span>
+
+	<span class="c1">// Use this function to update the texture rects you want to change:</span>
+	<span class="c1">// NOTE: There is a method called UpdateTextureRegions in UTexture2D but it is compiled WITH_EDITOR and is not marked as ENGINE_API so it cannot be linked</span>
+	<span class="c1">// from plugins.</span>
+	<span class="c1">// FROM: Dynamic Textures</span>
+	<span class="kt">void</span> <span class="n">UpdateTextureRegions</span><span class="p">(</span><span class="n">UTexture2D</span><span class="o">*</span> <span class="n">Texture</span><span class="p">,</span> <span class="n">int32</span> <span class="n">MipIndex</span><span class="p">,</span> <span class="n">uint32</span> <span class="n">NumRegions</span><span class="p">,</span> <span class="n">FUpdateTextureRegion2D</span><span class="o">*</span> <span class="n">Regions</span><span class="p">,</span> <span class="n">uint32</span> <span class="n">SrcPitch</span><span class="p">,</span> <span class="n">uint32</span> <span class="n">SrcBpp</span><span class="p">,</span> <span class="n">uint8</span><span class="o">*</span> <span class="n">SrcData</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bFreeData</span><span class="p">);</span>
+
+	<span class="c1">// Pointer to update texture region 2D struct</span>
+	<span class="n">FUpdateTextureRegion2D</span><span class="o">*</span> <span class="n">VideoUpdateTextureRegion</span><span class="p">;</span>
+
+
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Source">
+        Source
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// A simple webcam reader using the OpenCV library</span>
+<span class="c1">// Author: The UE4 community &amp; Ginku &amp; Mintchococookie</span>
+
+<span class="cp">#include</span> <span class="cpf">"WebcamReader.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"CV1.h" //don't forget to include this!</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">&lt;iostream&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">cv</span><span class="p">;</span>
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="n">AWebcamReader</span><span class="o">::</span><span class="n">AWebcamReader</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.</span>
+	<span class="n">PrimaryActorTick</span><span class="p">.</span><span class="n">bCanEverTick</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+
+	<span class="c1">// Initialize OpenCV and webcam properties</span>
+	<span class="n">CameraID</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="n">OperationMode</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="n">RefreshRate</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span>
+	<span class="n">isStreamOpen</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="n">VideoSize</span> <span class="o">=</span> <span class="n">FVector2D</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+	<span class="n">ShouldResize</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="n">ResizeDeminsions</span> <span class="o">=</span> <span class="n">FVector2D</span><span class="p">(</span><span class="mi">320</span><span class="p">,</span> <span class="mi">240</span><span class="p">);</span>
+	<span class="n">RefreshTimer</span> <span class="o">=</span> <span class="mf">0.0f</span><span class="p">;</span>
+	<span class="n">stream</span> <span class="o">=</span> <span class="n">cv</span><span class="o">::</span><span class="n">VideoCapture</span><span class="p">();</span>
+	<span class="n">frame</span> <span class="o">=</span> <span class="n">cv</span><span class="o">::</span><span class="n">Mat</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">// Called when the game starts or when spawned</span>
+<span class="kt">void</span> <span class="n">AWebcamReader</span><span class="o">::</span><span class="n">BeginPlay</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">BeginPlay</span><span class="p">();</span>
+
+	<span class="c1">// Open the stream</span>
+	<span class="n">stream</span><span class="p">.</span><span class="n">open</span><span class="p">(</span><span class="n">CameraID</span><span class="p">);</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">stream</span><span class="p">.</span><span class="n">isOpened</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="c1">// Initialize stream</span>
+		<span class="n">isStreamOpen</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+		<span class="n">UpdateFrame</span><span class="p">();</span>
+		<span class="n">VideoSize</span> <span class="o">=</span> <span class="n">FVector2D</span><span class="p">(</span><span class="n">frame</span><span class="p">.</span><span class="n">cols</span><span class="p">,</span> <span class="n">frame</span><span class="p">.</span><span class="n">rows</span><span class="p">);</span>
+		<span class="n">size</span> <span class="o">=</span> <span class="n">cv</span><span class="o">::</span><span class="n">Size</span><span class="p">(</span><span class="n">ResizeDeminsions</span><span class="p">.</span><span class="n">X</span><span class="p">,</span> <span class="n">ResizeDeminsions</span><span class="p">.</span><span class="n">Y</span><span class="p">);</span>
+		<span class="n">VideoTexture</span> <span class="o">=</span> <span class="n">UTexture2D</span><span class="o">::</span><span class="n">CreateTransient</span><span class="p">(</span><span class="n">VideoSize</span><span class="p">.</span><span class="n">X</span><span class="p">,</span> <span class="n">VideoSize</span><span class="p">.</span><span class="n">Y</span><span class="p">);</span>
+		<span class="n">VideoTexture</span><span class="o">-&gt;</span><span class="n">UpdateResource</span><span class="p">();</span>
+		<span class="n">VideoUpdateTextureRegion</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FUpdateTextureRegion2D</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">VideoSize</span><span class="p">.</span><span class="n">X</span><span class="p">,</span> <span class="n">VideoSize</span><span class="p">.</span><span class="n">Y</span><span class="p">);</span>
+
+		<span class="c1">// Initialize data array</span>
+		<span class="n">Data</span><span class="p">.</span><span class="n">Init</span><span class="p">(</span><span class="n">FColor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span> <span class="n">VideoSize</span><span class="p">.</span><span class="n">X</span> <span class="o">*</span> <span class="n">VideoSize</span><span class="p">.</span><span class="n">Y</span><span class="p">);</span>
+
+		<span class="c1">// Do first frame</span>
+		<span class="n">DoProcessing</span><span class="p">();</span>
+		<span class="n">UpdateTexture</span><span class="p">();</span>
+		<span class="n">OnNextVideoFrame</span><span class="p">();</span>
+	<span class="p">}</span>
+
+<span class="p">}</span>
+
+<span class="c1">// Called every frame</span>
+<span class="kt">void</span> <span class="n">AWebcamReader</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaTime</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span><span class="n">DeltaTime</span><span class="p">);</span>
+
+	<span class="n">RefreshTimer</span> <span class="o">+=</span> <span class="n">DeltaTime</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">isStreamOpen</span> <span class="o">&amp;&amp;</span> <span class="n">RefreshTimer</span> <span class="o">&gt;=</span> <span class="mf">1.0f</span> <span class="o">/</span> <span class="n">RefreshRate</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">RefreshTimer</span> <span class="o">-=</span> <span class="mf">1.0f</span> <span class="o">/</span> <span class="n">RefreshRate</span><span class="p">;</span>
+		<span class="n">UpdateFrame</span><span class="p">();</span>
+		<span class="n">DoProcessing</span><span class="p">();</span>
+		<span class="n">UpdateTexture</span><span class="p">();</span>
+		<span class="n">OnNextVideoFrame</span><span class="p">();</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AWebcamReader</span><span class="o">::</span><span class="n">ChangeOperation</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">OperationMode</span><span class="o">++</span><span class="p">;</span>
+	<span class="n">OperationMode</span> <span class="o">%=</span> <span class="mi">3</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AWebcamReader</span><span class="o">::</span><span class="n">UpdateFrame</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">stream</span><span class="p">.</span><span class="n">isOpened</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="n">stream</span><span class="p">.</span><span class="n">read</span><span class="p">(</span><span class="n">frame</span><span class="p">);</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">ShouldResize</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">cv</span><span class="o">::</span><span class="n">resize</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">size</span><span class="p">);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">else</span> <span class="p">{</span>
+		<span class="n">isStreamOpen</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AWebcamReader</span><span class="o">::</span><span class="n">DoProcessing</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">// TODO: Do any processing with frame here!</span>
+	
+	<span class="k">if</span> <span class="p">(</span><span class="n">OperationMode</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+		<span class="c1">// Apply nothing</span>
+	<span class="p">}</span>
+	<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">OperationMode</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="p">{</span>
+		<span class="c1">// Apply median blur</span>
+		<span class="n">cv</span><span class="o">::</span><span class="n">Mat</span> <span class="n">src</span> <span class="o">=</span> <span class="n">frame</span><span class="p">.</span><span class="n">clone</span><span class="p">();</span>
+		<span class="n">cv</span><span class="o">::</span><span class="n">medianBlur</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="mi">7</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">OperationMode</span> <span class="o">==</span> <span class="mi">2</span><span class="p">)</span> <span class="p">{</span>
+		<span class="n">cv</span><span class="o">::</span><span class="n">Mat</span> <span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">;</span>
+		<span class="n">cv</span><span class="o">::</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">cv</span><span class="o">::</span><span class="n">COLOR_RGB2GRAY</span><span class="p">);</span>
+
+		<span class="kt">int</span> <span class="n">thresh</span> <span class="o">=</span> <span class="mi">50</span><span class="p">;</span>
+
+		<span class="n">Canny</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="n">dst</span><span class="p">,</span> <span class="n">thresh</span><span class="p">,</span> <span class="n">thresh</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span>
+		<span class="n">cv</span><span class="o">::</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">dst</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">cv</span><span class="o">::</span><span class="n">COLOR_GRAY2BGR</span><span class="p">);</span>
+	<span class="p">}</span>
+
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AWebcamReader</span><span class="o">::</span><span class="n">UpdateTexture</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">isStreamOpen</span> <span class="o">&amp;&amp;</span> <span class="n">frame</span><span class="p">.</span><span class="n">data</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">// Copy Mat data to Data array</span>
+		<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">y</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">y</span> <span class="o">&lt;</span> <span class="n">VideoSize</span><span class="p">.</span><span class="n">Y</span><span class="p">;</span> <span class="n">y</span><span class="o">++</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">x</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">x</span> <span class="o">&lt;</span> <span class="n">VideoSize</span><span class="p">.</span><span class="n">X</span><span class="p">;</span> <span class="n">x</span><span class="o">++</span><span class="p">)</span>
+			<span class="p">{</span>
+				<span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="p">(</span><span class="n">y</span> <span class="o">*</span> <span class="n">VideoSize</span><span class="p">.</span><span class="n">X</span><span class="p">);</span>
+				<span class="n">Data</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">B</span> <span class="o">=</span> <span class="n">frame</span><span class="p">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">0</span><span class="p">];</span>
+				<span class="n">Data</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">G</span> <span class="o">=</span> <span class="n">frame</span><span class="p">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">1</span><span class="p">];</span>
+				<span class="n">Data</span><span class="p">[</span><span class="n">i</span><span class="p">].</span><span class="n">R</span> <span class="o">=</span> <span class="n">frame</span><span class="p">.</span><span class="n">data</span><span class="p">[</span><span class="n">i</span> <span class="o">*</span> <span class="mi">3</span> <span class="o">+</span> <span class="mi">2</span><span class="p">];</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+
+		<span class="c1">// Update texture 2D</span>
+		<span class="n">UpdateTextureRegions</span><span class="p">(</span><span class="n">VideoTexture</span><span class="p">,</span> <span class="p">(</span><span class="n">int32</span><span class="p">)</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="n">uint32</span><span class="p">)</span><span class="mi">1</span><span class="p">,</span> <span class="n">VideoUpdateTextureRegion</span><span class="p">,</span> <span class="p">(</span><span class="n">uint32</span><span class="p">)(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">VideoSize</span><span class="p">.</span><span class="n">X</span><span class="p">),</span> <span class="p">(</span><span class="n">uint32</span><span class="p">)</span><span class="mi">4</span><span class="p">,</span> <span class="p">(</span><span class="n">uint8</span><span class="o">*</span><span class="p">)</span><span class="n">Data</span><span class="p">.</span><span class="n">GetData</span><span class="p">(),</span> <span class="nb">false</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AWebcamReader</span><span class="o">::</span><span class="n">UpdateTextureRegions</span><span class="p">(</span><span class="n">UTexture2D</span><span class="o">*</span> <span class="n">Texture</span><span class="p">,</span> <span class="n">int32</span> <span class="n">MipIndex</span><span class="p">,</span> <span class="n">uint32</span> <span class="n">NumRegions</span><span class="p">,</span> <span class="n">FUpdateTextureRegion2D</span><span class="o">*</span> <span class="n">Regions</span><span class="p">,</span> <span class="n">uint32</span> <span class="n">SrcPitch</span><span class="p">,</span> <span class="n">uint32</span> <span class="n">SrcBpp</span><span class="p">,</span> <span class="n">uint8</span><span class="o">*</span> <span class="n">SrcData</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bFreeData</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">Texture</span><span class="o">-&gt;</span><span class="n">Resource</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">struct</span> <span class="n">FUpdateTextureRegionsData</span>
+		<span class="p">{</span>
+			<span class="n">FTexture2DResource</span><span class="o">*</span> <span class="n">Texture2DResource</span><span class="p">;</span>
+			<span class="n">int32</span> <span class="n">MipIndex</span><span class="p">;</span>
+			<span class="n">uint32</span> <span class="n">NumRegions</span><span class="p">;</span>
+			<span class="n">FUpdateTextureRegion2D</span><span class="o">*</span> <span class="n">Regions</span><span class="p">;</span>
+			<span class="n">uint32</span> <span class="n">SrcPitch</span><span class="p">;</span>
+			<span class="n">uint32</span> <span class="n">SrcBpp</span><span class="p">;</span>
+			<span class="n">uint8</span><span class="o">*</span> <span class="n">SrcData</span><span class="p">;</span>
+		<span class="p">};</span>
+
+		<span class="n">FUpdateTextureRegionsData</span><span class="o">*</span> <span class="n">RegionData</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FUpdateTextureRegionsData</span><span class="p">;</span>
+
+		<span class="n">RegionData</span><span class="o">-&gt;</span><span class="n">Texture2DResource</span> <span class="o">=</span> <span class="p">(</span><span class="n">FTexture2DResource</span><span class="o">*</span><span class="p">)</span><span class="n">Texture</span><span class="o">-&gt;</span><span class="n">Resource</span><span class="p">;</span>
+		<span class="n">RegionData</span><span class="o">-&gt;</span><span class="n">MipIndex</span> <span class="o">=</span> <span class="n">MipIndex</span><span class="p">;</span>
+		<span class="n">RegionData</span><span class="o">-&gt;</span><span class="n">NumRegions</span> <span class="o">=</span> <span class="n">NumRegions</span><span class="p">;</span>
+		<span class="n">RegionData</span><span class="o">-&gt;</span><span class="n">Regions</span> <span class="o">=</span> <span class="n">Regions</span><span class="p">;</span>
+		<span class="n">RegionData</span><span class="o">-&gt;</span><span class="n">SrcPitch</span> <span class="o">=</span> <span class="n">SrcPitch</span><span class="p">;</span>
+		<span class="n">RegionData</span><span class="o">-&gt;</span><span class="n">SrcBpp</span> <span class="o">=</span> <span class="n">SrcBpp</span><span class="p">;</span>
+		<span class="n">RegionData</span><span class="o">-&gt;</span><span class="n">SrcData</span> <span class="o">=</span> <span class="n">SrcData</span><span class="p">;</span>
+
+		<span class="n">ENQUEUE_UNIQUE_RENDER_COMMAND_TWOPARAMETER</span><span class="p">(</span>
+			<span class="n">UpdateTextureRegionsData</span><span class="p">,</span>
+			<span class="n">FUpdateTextureRegionsData</span><span class="o">*</span><span class="p">,</span> <span class="n">RegionData</span><span class="p">,</span> <span class="n">RegionData</span><span class="p">,</span>
+			<span class="kt">bool</span><span class="p">,</span> <span class="n">bFreeData</span><span class="p">,</span> <span class="n">bFreeData</span><span class="p">,</span>
+			<span class="p">{</span>
+				<span class="k">for</span> <span class="p">(</span><span class="n">uint32</span> <span class="n">RegionIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">RegionIndex</span> <span class="o">&lt;</span> <span class="n">RegionData</span><span class="o">-&gt;</span><span class="n">NumRegions</span><span class="p">;</span> <span class="o">++</span><span class="n">RegionIndex</span><span class="p">)</span>
+				<span class="p">{</span>
+					<span class="n">int32</span> <span class="n">CurrentFirstMip</span> <span class="o">=</span> <span class="n">RegionData</span><span class="o">-&gt;</span><span class="n">Texture2DResource</span><span class="o">-&gt;</span><span class="n">GetCurrentFirstMip</span><span class="p">();</span>
+					<span class="k">if</span> <span class="p">(</span><span class="n">RegionData</span><span class="o">-&gt;</span><span class="n">MipIndex</span> <span class="o">&gt;=</span> <span class="n">CurrentFirstMip</span><span class="p">)</span>
+					<span class="p">{</span>
+						<span class="n">RHIUpdateTexture2D</span><span class="p">(</span>
+							<span class="n">RegionData</span><span class="o">-&gt;</span><span class="n">Texture2DResource</span><span class="o">-&gt;</span><span class="n">GetTexture2DRHI</span><span class="p">(),</span>
+							<span class="n">RegionData</span><span class="o">-&gt;</span><span class="n">MipIndex</span> <span class="o">-</span> <span class="n">CurrentFirstMip</span><span class="p">,</span>
+							<span class="n">RegionData</span><span class="o">-&gt;</span><span class="n">Regions</span><span class="p">[</span><span class="n">RegionIndex</span><span class="p">],</span>
+							<span class="n">RegionData</span><span class="o">-&gt;</span><span class="n">SrcPitch</span><span class="p">,</span>
+							<span class="n">RegionData</span><span class="o">-&gt;</span><span class="n">SrcData</span>
+							<span class="o">+</span> <span class="n">RegionData</span><span class="o">-&gt;</span><span class="n">Regions</span><span class="p">[</span><span class="n">RegionIndex</span><span class="p">].</span><span class="n">SrcY</span> <span class="o">*</span> <span class="n">RegionData</span><span class="o">-&gt;</span><span class="n">SrcPitch</span>
+							<span class="o">+</span> <span class="n">RegionData</span><span class="o">-&gt;</span><span class="n">Regions</span><span class="p">[</span><span class="n">RegionIndex</span><span class="p">].</span><span class="n">SrcX</span> <span class="o">*</span> <span class="n">RegionData</span><span class="o">-&gt;</span><span class="n">SrcBpp</span>
+						<span class="p">);</span>
+					<span class="p">}</span>
+				<span class="p">}</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">bFreeData</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">FMemory</span><span class="o">::</span><span class="n">Free</span><span class="p">(</span><span class="n">RegionData</span><span class="o">-&gt;</span><span class="n">Regions</span><span class="p">);</span>
+			<span class="n">FMemory</span><span class="o">::</span><span class="n">Free</span><span class="p">(</span><span class="n">RegionData</span><span class="o">-&gt;</span><span class="n">SrcData</span><span class="p">);</span>
+		<span class="p">}</span>
+		<span class="k">delete</span> <span class="n">RegionData</span><span class="p">;</span>
+			<span class="p">});</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Note: If your project name is different from me (CV1), you need to change
+       <b>
+        CV1
+       </b>
+       in the class definition of the header file and the project include in the source file with the your project name.
+      </p>
+      <p>
+       This class is used as a wrapper for a future unreal blueprint class. It allows you to specify the device ID, target resolution and framerate of the camera, as well as providing a dynamic texture and FColor array of the current frame's pixels and a blueprint native event that is called whenever the next webcam frame is available!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Moving_to_Blueprints">
+        Moving to Blueprints
+       </span>
+      </h2>
+      <p>
+       You can now access your webcam feed in blueprints. From this point forward we will be working in the editor.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Adding_the_WebcamBillboard_Actor">
+        Adding the WebcamBillboard Actor
+       </span>
+      </h3>
+      <p>
+       Now that all the code has been included for accessing your webcams, I will now show you how to use the dynamic texture from the WebcamReader actor in a new WebcamBillboard subclass. This time, the code will be implemented in unreal blueprints! Launch the editor again with Debug &gt; Start new instance.
+      </p>
+      <p>
+       In your choice of directory, right click and add a new blueprint class. At the bottom of the new window, expand ‘All Classes’ and search
+       <b>
+        AWebcamReader
+       </b>
+       and select it as the parent class. Name the new blueprint
+       <b>
+        BP_WebcamBillboard
+       </b>
+       and open it.
+      </p>
+      <p>
+       Within the viewport, add a
+       <b>
+        cube
+       </b>
+       static mesh component, and name it
+       <b>
+        Billboard
+       </b>
+       . This will be the component that the texture is rendered to.
+      </p>
+      <p>
+       At the beginning of the game, we will want to create a dynamic material instance and set it to the billboard mesh. Under Variables, click the + button to add a new
+       <b>
+        Material Instance Dynamic
+       </b>
+       type variable. Name the variable as
+       <b>
+        DynamicMaterial
+       </b>
+       .
+      </p>
+      <p>
+       Drag the Billboard component onto the Event Graph, and create a
+       <b>
+        getter
+       </b>
+       node. Drag out from this new getter and create a
+       <b>
+        Create Dynamic Material Instance
+       </b>
+       node and connect the white execution wire to the transparent
+       <b>
+        BeginPlay
+       </b>
+       event (or create one). This creates an special unreal material instance that can be altered at runtime. However, we have not created this unreal material!
+      </p>
+      <p>
+       Go back to your content browser, right click and create a new
+       <b>
+        material
+       </b>
+       . Call this material
+       <b>
+        M_Webcam
+       </b>
+       and open it. Click on the M_Webcam node and set the
+       <b>
+        Shading Mode
+       </b>
+       to
+       <b>
+        Unlit
+       </b>
+       . Hold
+       <b>
+        T
+       </b>
+       and left click anywhere in the new graph to create a texture node. You will have to set the default texture to anything (I used
+       <b>
+        T_Ceramic_Tile_M
+       </b>
+       ). Right click this node and convert it to a
+       <b>
+        parameter
+       </b>
+       . Call this parameter
+       <b>
+        Texture
+       </b>
+       and connect its white Float3 pin to the
+       <b>
+        Emissive Color
+       </b>
+       pin on the M_Webcam node. Make sure the save the material!
+      </p>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:182px;">
+        <img alt="Webcam Material with Parameter.png" class="thumbimage" height="205" src="../assets/detailed-account-of-integrating-opencv-into-ue4-with-vs2017/1.png" width="180"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       Now, back in the BP_WebcamBillboard blueprint, select the
+       <b>
+        M_Webcam
+       </b>
+       as the
+       <b>
+        Source Material
+       </b>
+       for the
+       <b>
+        Create Dynamic Material Instance node
+       </b>
+       , and make sure the Element Index is set to 0.
+      </p>
+      <p>
+       Drag out from the original
+       <b>
+        billboard getter
+       </b>
+       and create a
+       <b>
+        Set Material
+       </b>
+       node. Set the Material pin to the output of the Create Dynamic Material Instance node, and again make sure the Element Index is set to 0.
+      </p>
+      <p>
+       Finally, drag out the
+       <b>
+        DynamicMaterial
+       </b>
+       variable we created earlier and create a
+       <b>
+        setter
+       </b>
+       . Connect the
+       <b>
+        output of the Create Dynamic Material Instance
+       </b>
+       node to the
+       <b>
+        DynamicMaterial input pin
+       </b>
+       to save a reference of this special material for later use.
+      </p>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:182px;">
+        <img alt="WebcamBillboard event graph.png" class="thumbimage" height="99" src="../assets/detailed-account-of-integrating-opencv-into-ue4-with-vs2017/2.png" width="180"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       We have dynamically set the material of our Billboard mesh, and now we need to update its texture parameter each time a new frame is received. To do this, right click on the Event Graph and create a
+       <b>
+        OnNextVideoFrame
+       </b>
+       event. This event is called in the WebcamReader actor whenever a new frame is read.
+      </p>
+      <p>
+       Drag out the
+       <b>
+        DynamicMaterial
+       </b>
+       variable and create a
+       <b>
+        getter
+       </b>
+       underneath the new event. Drag out from the getter and create a
+       <b>
+        Set Texture Parameter Value
+       </b>
+       node. Set the Parameter Name to
+       <b>
+        Texture
+       </b>
+       (the name of the texture parameter in the M_Webcam material). Right click on the Event Graph and type
+       <b>
+        VideoTexture
+       </b>
+       to retrieve a reference to the webcam texture provided by the WebcamReader parent class. Connect the
+       <b>
+        output pin of this VideoTexture
+       </b>
+       reference to the
+       <b>
+        Value pin of the Set Texture Parameter Value
+       </b>
+       node. With that, the BP_WebcamBillboard is ready for use!
+      </p>
+      <p>
+       In case you have difficulty following the description above, I made a video.  
+&lt;youtube&gt;
+       <a class="external free" href="https://youtu.be/xw6VMIStFxA" rel="nofollow">
+        https://youtu.be/xw6VMIStFxA
+       </a>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Adding_the_WebcamBillboard_to_a_Level">
+        Adding the WebcamBillboard to a Level
+       </span>
+      </h3>
+      <p>
+       Drag the BP_WebcamBillboard blueprint from the content browser into your level. Orientate and position it however you like, and scale it to a similar scale of your images resolution (about 6.4, 4.8, and 0.5 for my webcam). Now, set the Webcam properties in the detail panel. (I used a Camera ID of 0, Should Resize to false, and Refresh Rate of 2.0) Your Camera ID will determine the camera that renders, it should be 0 unless you have more than one webcam. In the case of a laptop, 0 will probably be the integrated laptop, and 1+ will be any additional webcams. You can now press play to see the results!
+      </p>
+      <h3>
+       <span class="mw-headline" id="Adding_More_Functions_to_the_Blueprint">
+        Adding More Functions to the Blueprint
+       </span>
+      </h3>
+      <p>
+       Now I am going to add more features to the Blueprint. I want to apply an operation to the video frame, and change the operation to another one whenever I press the 'C' key.
+      </p>
+      <p>
+       Open BP_WebcamBillboard editor window again. Right click the editor window, search for
+       <b>
+        Enable Input
+       </b>
+       and create the node by click it. This time, right click the editor window, search for
+       <b>
+        Get Player Controller
+       </b>
+       and add the node by click it. Modify the existing connection to
+       <b>
+        BeginPlay
+       </b>
+       node as the picture. Now we can get any input from player!
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:852px;">
+        <img alt="" class="thumbimage" height="245" src="../assets/detailed-account-of-integrating-opencv-into-ue4-with-vs2017/3.jpg" width="850"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Modify connection to 'BeginPlay' node by following this picture
+        </div>
+       </div>
+      </div>
+      <p>
+       Right click the editor window, search for
+       <b>
+        input c
+       </b>
+       and create the node by click it. Right click the editor window again, search for
+       <b>
+        Change Operations
+       </b>
+       and add the node by click it. Connect the two node following the picture below.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:342px;">
+        <img alt="" class="thumbimage" height="146" src="../assets/detailed-account-of-integrating-opencv-into-ue4-with-vs2017/4.jpg" width="340"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Add connection to 'Change Operations' node by following this picture
+        </div>
+       </div>
+      </div>
+      <p>
+       The finished state of your BP_WebcamBillboard should be the same as the following picture.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:852px;">
+        <img alt="" class="thumbimage" height="511" src="../assets/detailed-account-of-integrating-opencv-into-ue4-with-vs2017/5.jpg" width="850"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Final state of BP_WebcamBillboard
+        </div>
+       </div>
+      </div>
+      <p>
+       Everything is ready. Click
+       <b>
+        Compile
+       </b>
+       and then
+       <b>
+        Save
+       </b>
+       your blueprint. 
+We finished adding new feature to our blueprint! Let's start using this newly added function from now on.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Enjoying_New_Function.21">
+        Enjoying New Function!
+       </span>
+      </h3>
+      <p>
+       Click the
+       <b>
+        Play
+       </b>
+       button on your UE4 editor. Press
+       <b>
+        C
+       </b>
+       key. Everytime you press your C key, you can see that different operations (default, median filter, Canny edge detection) are applied to your webcam billboard:) I also uploaded the result video below. Enjoy it!
+      </p>
+      <p>
+       &lt;youtube&gt;
+       <a class="external free" href="https://youtu.be/EC1ZUEV0rxg" rel="nofollow">
+        https://youtu.be/EC1ZUEV0rxg
+       </a>
+      </p>
+      <h1>
+       <span class="mw-headline" id="More_Information">
+        More Information
+       </span>
+      </h1>
+      <p>
+       You have finished your long journey. Congratulations. You will be able to integrate OpenCV into UE4 and use functions of OpenCV inside UE4 as you wish.
+      </p>
+      <p>
+       You can read more about me on my
+     . Have a nice day :).
+      </p>
+      <p>
+       - Mintchococookie
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

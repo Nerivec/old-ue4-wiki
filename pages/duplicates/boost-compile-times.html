@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Boost Compile Times - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Boost Compile Times
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <table class="wikitable sortable" style="float: right;">
+       <tbody>
+        <tr>
+         <td>
+          Name
+         </td>
+         <td>
+          Creating Boost Compile Times
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Category
+         </td>
+         <td>
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Author
+         </td>
+         <td>
+          <a class="external text" href="http://www.moritzwundke.com/" rel="nofollow">
+           Moritz "Moss" Wundke
+          </a>
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Cross-Post
+         </td>
+         <td>
+          <a class="external text" href="http://www.moritzwundke.com/2014/08/boosting-compile-times/" rel="nofollow">
+           Boost Unreal Engine 4 Compile Times
+          </a>
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Forum Thread
+         </td>
+         <td>
+          <a class="external text" href="https://forums.unrealengine.com/showthread.php?32064-Tutorial-Boost-Compile-Times" rel="nofollow">
+           Tutorial - Boost Compile Times
+          </a>
+         </td>
+        </tr>
+        <tr>
+         <td>
+          UE4 Build
+         </td>
+         <td>
+          Any
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       Note: This guide is applicable for any type of project and operating system, while we analyze the case of building Unreal Engine 4 on a Windows 7 box.
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Using_all_available_cores">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Using all available cores
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Optimizing_hard_drive">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Optimizing hard drive
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Using_junction_links_with_SSD">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Using junction links with SSD
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Final_compile_times">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Final compile times
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Engine_changes">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Engine changes
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Other_uses">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Other uses
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Using_all_available_cores">
+        Using all available cores
+       </span>
+      </h2>
+      <p>
+       Using all available cores will give you an extra boost without too much setup effort. The engine will use only one compile worker per CPU core, in case your CPU uses Hyper Threading you could actually use 2 per physical core. This is disabled by default to not saturate the system. In my opinion I prefer to consume less time to build what I'm building instead of being able to use other programs while I'm building. Being able to use 4 or 8 workers is a huge difference.
+      </p>
+      <p>
+       To change the number of workers created you should create a copy of your build configuration file (
+       <b>
+        \UnrealEngine\Engine\Programs\UnrealBuildTool
+       </b>
+       ) and past it into the following path
+       <b>
+        C:\Users\&lt;user&gt;\Documents\Unreal Engine\UnrealBuildTool\BuildConfiguration.xml
+       </b>
+       .
+      </p>
+      <p>
+       Open the XML file and change the
+       <b>
+        ProcessorCountMultiplier
+       </b>
+       value to
+       <b>
+        2
+       </b>
+       for example (4 cores with HyperThreading will then spawn 8 workers).
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>    <span class="nt">&lt;ProcessorCountMultiplier&gt;</span>2<span class="nt">&lt;/ProcessorCountMultiplier&gt;</span>
+</pre>
+      </div>
+      <p>
+       Another option to tweak your build setting is playing around with UnityBuild and the PCH settings. Unreal is configured for large projects and so Unity build will be very helpful in such cases. If your project has very little code you can try to set the
+       <b>
+        bUseUnityBuild
+       </b>
+       value to
+       <b>
+        false
+       </b>
+       and the
+       <b>
+        MinFilesUsingPrecompiledHeader
+       </b>
+       value to
+       <b>
+        1
+       </b>
+       and see what happens. In my case I prefer to not change those values.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>    <span class="nt">&lt;bUseUnityBuild&gt;</span>true<span class="nt">&lt;/bUseUnityBuild&gt;</span>
+    <span class="nt">&lt;MinFilesUsingPrecompiledHeader&gt;</span>6<span class="nt">&lt;/MinFilesUsingPrecompiledHeader&gt;</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Optimizing_hard_drive">
+        Optimizing hard drive
+       </span>
+      </h2>
+      <p>
+       Indexing is a very nice feature for every day usage of your system, it lets you find your files faster and makes it easier for anyone using your PC. But this is not always the case when you have heavy I/O interactions for example when you are compiling and building the engine. Each time you build you will open and close tons of files, check if they have changed etc... this consumes a lot of time, sometimes even more than actually building.
+      </p>
+      <p>
+       A quick way to drop the time required for each I/O operation is preventing the OS to perform indexing operation on your files. While I'm preventing it for my whole main drive you can do the same for a specific folder if you which within the advanced option section of the folder properties. Just disable the option called
+       <b>
+        Allow files on this drive to have contents indexed in addition to file properties
+       </b>
+       and you will have an instant boost in your compile times. On a full rebuild just that option gave me about 2 to 3 minutes of improvement.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Using_junction_links_with_SSD">
+        Using junction links with SSD
+       </span>
+      </h2>
+      <p>
+       The next and most important optimization is to speedup your building, again
+       <b>
+        optimizing the time required for any I/O operation
+       </b>
+       , using a nice SSD drive. You do not need a super expensive one which comes with a lot space, a simple SSD is enough to get very good numbers.
+      </p>
+      <p>
+       The main idea behind using a SSD is not to have your whole engine or game installation onto a SSD but instead just having some folders that are very prone to I/O operations. The two most important folders are the Intermediate and the Source folders (same applies to your project specific folders).
+      </p>
+      <p>
+       We just navigate to the desired folder (the Engine folder in this case) and create a Junction Link fro the Intermediate and the Source folder which will then actually be on a different drive, the SSD one. You will be able to navigate the folders as always and your source control system will work exactly the same.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>    <span class="nb">cd</span> UnrealEngine<span class="se">\E</span>ngine
+    mklink /J Intermediate C:<span class="se">\U</span>E4<span class="se">\P</span>R<span class="se">\I</span>ntermediate
+    mklink /J Source C:<span class="se">\U</span>E4<span class="se">\P</span>R<span class="se">\S</span>ource
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Final_compile_times">
+        Final compile times
+       </span>
+      </h2>
+      <p>
+       All benchmarks has been performed using the following machine:
+      </p>
+      <ul>
+       <li>
+        Operating System: Windows 7 Ultimate 64-bit (6.1, Build 7601) Service Pack 1
+       </li>
+       <li>
+        Board: Z68AP-D3 Gigabyte Technology Co., Ltd.
+       </li>
+       <li>
+        BIOS: Award Modular BIOS v6.00PG
+       </li>
+       <li>
+        Processor: Intel(R) Core(TM) i7-2600 CPU @ 3.40GHz (4 CPUs), ~3.7GHz, HyperThreading
+       </li>
+       <li>
+        Memory: 8192MB RAM
+       </li>
+      </ul>
+      <p>
+       Without the changes:
+      </p>
+      <ul>
+       <li>
+        Unreal Header Tool execution time (no tweaks): 53.84 seconds
+       </li>
+       <li>
+        UE4 execution time (no tweaks):  2145.25 seconds approx. 36 minutes
+       </li>
+      </ul>
+      <p>
+       With the changes:
+      </p>
+      <ul>
+       <li>
+        Unreal Header Tool execution time (with tweaks): 51.67 seconds
+       </li>
+       <li>
+        UE4 execution time (with tweaks): 1362.48 seconds approx. 23 minutes
+       </li>
+      </ul>
+      <p>
+       The compiles of the header tool are nearly the same but
+       <b>
+        the full build of the engine took 13 minutes less to complete!
+       </b>
+       There are plenty of ways to boost your compile and building times but many require quite an amount of investment. Just using a small and cheap SSD can give you incredible boost for low cash.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Engine_changes">
+        Engine changes
+       </span>
+      </h2>
+      <p>
+       There are some minor engine changes that you can apply to UBT (Unreal Build Tool) if you are using a source build. Just open the file
+       <i>
+        Engine/Source/Programs/UnrealBuildTool/System/LocalExecutor.cs
+       </i>
+       and replace:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">double</span> <span class="n">ProcessorCountMultiplier</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       with
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">double</span> <span class="n">ProcessorCountMultiplier</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       and
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">ActionProcess</span><span class="p">.</span><span class="n">PriorityClass</span> <span class="o">=</span> <span class="n">ProcessPriorityClass</span><span class="p">.</span><span class="n">BelowNormal</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       with
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">ActionProcess</span><span class="p">.</span><span class="n">PriorityClass</span> <span class="o">=</span> <span class="n">ProcessPriorityClass</span><span class="p">.</span><span class="n">AboveNormal</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       <b>
+        Note:
+       </b>
+       There are more process priority classes but if you go even higher resource trashing will occur, bare in mind that there are vital processes that you still need such as I/O.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Other_uses">
+        Other uses
+       </span>
+      </h2>
+      <p>
+       As stated by user
+       <a class="external text" href="https://forums.unrealengine.com/member.php?14825-kklors" rel="nofollow">
+        kklors
+       </a>
+       using these optimizations makes a huge difference when using Lightmass
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?32064-Tutorial-Boost-Compile-Times&amp;p=126164&amp;viewfull=1#post126164" rel="nofollow">
+        Lightmass (5-10x faster)
+       </a>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

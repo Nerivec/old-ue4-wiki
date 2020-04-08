@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Two-Sided Foliage Material - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Two-Sided Foliage Material
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <pre>    This tutorial assumes the user has a basic understanding of Materials.
+</pre>
+      <p>
+       In this tutorial you will learn how to create a simple two-sided foliage material for your projects. Nearly every output will be converted into a parameter for instancing.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Setup">
+        Setup
+       </span>
+      </h2>
+      <p>
+       1. Create a new blank project with Starter Content.
+      </p>
+      <p>
+       2. Create a new Default Level
+      </p>
+      <p>
+       3. Place two of the 'SM_Bush' actors (found in the Content Browser) side by side on the floor within the level.
+      </p>
+      <p>
+       4. Locate and duplicate the Material used for the 'SM_bush' and rename it to something like 'M_TwoSided'
+      </p>
+      <p>
+       5. Set the Blend Mode to Masked, the Shading Model to Two Sided, and check the Two Sided option.
+      </p>
+      <p>
+       6. Now create a Vector Parameter by pressing the 'V' key and clicking in the material graph. Name this Subsurface Color.
+      </p>
+      <p>
+       7. Create a Multiply node and plug the Subsurface Color into the 'B' input and the Diffuse Texture Sample into the 'A' input.
+      </p>
+      <p>
+       8. Plug the result of your Multiply into the Subsurface Color input of your material.
+      </p>
+      <p>
+       9. Create another Multiply node and plug the Alpha channel from the Diffuse Texture Sample into the 'A' input.
+      </p>
+      <p>
+       10. Create a Scalar Parameter by holding the 'S' key and clicking in the material graph. Name this 'Opacity' and plug this into the 'B' input of your multiply.
+      </p>
+      <p>
+       11. Plug the output of your multiply into the Opacity input of your material.
+      </p>
+      <p>
+       12. Create two scalar parameters and name one Specular and one Roughness. Plug them into their respective inputs of your material. Apply and Save!
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:1479px;">
+         <img alt="" class="thumbimage" height="893" src="../assets/two-sided-foliage-material/0.png" width="1477"/>
+         <div class="thumbcaption">
+          Final Material Connections and Properties
+         </div>
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Final_Result">
+        Final Result
+       </span>
+      </h2>
+      <p>
+       Below are the results you should get when applied as a Material Instance after slightly tweaking the parameters.
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:1163px;">
+         <img alt="" class="thumbimage" height="791" src="../assets/two-sided-foliage-material/1.png" width="1161"/>
+         <div class="thumbcaption">
+          Left: Default Material    Right: Two-Sided Material
+         </div>
+        </div>
+       </div>
+      </div>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:965px;">
+         <img alt="" class="thumbimage" height="580" src="../assets/two-sided-foliage-material/2.png" width="963"/>
+         <div class="thumbcaption">
+          Material Parameter settings
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       Thanks for following along! I have written some more tutorials you can check out by following the links within my Wiki Profile page found below.
+      </p>
+      <p>
+      </p>
+      <p>
+       <b>
+        Written by:
+       </b>
+      </p>
+      <p>
+       Andrew Hurley
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

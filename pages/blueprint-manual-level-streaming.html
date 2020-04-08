@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Blueprint Manual Level Streaming - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Blueprint Manual Level Streaming
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <br/>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Setting_up_the_Level">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Setting up the Level
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Blueprint_Level_Streaming">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Blueprint Level Streaming
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Summary">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Summary
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       Level Streaming is a necessary part of any game that contain many varied levels which need to be seamlessly connected. This tutorial explains how to setup a Level Streaming solution that is entirely
+       <b>
+        Blueprint
+       </b>
+       based. This tutorial is also showing the transition between two levels using a hallway separated by two doors. Most of what is shown here is covered in the
+       <b>
+        Content Example - Level Streaming Level
+       </b>
+       .
+      </p>
+      <h2>
+       <span class="mw-headline" id="Setting_up_the_Level">
+        Setting up the Level
+       </span>
+      </h2>
+      <dl>
+       <dd>
+        1. The very first thing that you need to do is open the
+        <b>
+         Levels Window
+        </b>
+        , this is located in the menu under
+        <b>
+         Window/Levels
+        </b>
+       </dd>
+      </dl>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:300px;">
+        <img alt="" class="thumbimage" height="165" src="../assets/blueprint-manual-level-streaming/0.png" width="298"/>
+        <div class="thumbcaption">
+         Levels Window menu location.
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:616px;">
+        <img alt="" class="thumbimage" height="293" src="../assets/blueprint-manual-level-streaming/1.png" width="614"/>
+        <div class="thumbcaption">
+         Empty Levels Window.
+        </div>
+       </div>
+      </div>
+      <dl>
+       <dd>
+        2.
+        <i>
+         Right-click
+        </i>
+        in the
+        <b>
+         Levels Window
+        </b>
+        and select Add Level to add as many levels as needed. You might want to distribute your sublevels into subfolders that logically divides your world.
+       </dd>
+      </dl>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:644px;">
+        <img alt="" class="thumbimage" height="572" src="../assets/blueprint-manual-level-streaming/2.png" width="642"/>
+        <div class="thumbcaption">
+         Create New Levels.
+        </div>
+       </div>
+      </div>
+      <dl>
+       <dd>
+        3. Notice which level is the
+        <b>
+         Current Level
+        </b>
+        in the
+        <b>
+         Levels Window
+        </b>
+        , as you add actors to your scene they will be added to the
+        <b>
+         Current Level
+        </b>
+        . Now build your world as you normally would and take care of placing actors in the right levels. If you accidentally place an actor in the wrong level you can easily reassign it by selecting the actor and right-clicking on the level in the level window and selecting
+        <b>
+         Move Selected Actors to Level
+        </b>
+        /
+       </dd>
+      </dl>
+      <h2>
+       <span class="mw-headline" id="Blueprint_Level_Streaming">
+        Blueprint Level Streaming
+       </span>
+      </h2>
+      <p>
+       By now your level should be ready so it is time to add
+       <b>
+        Level Streaming
+       </b>
+       .
+      </p>
+      <dl>
+       <dd>
+        1. Since we are using a connecting hallway between the two levels we first need to add the actors representing that hallway. In this tutorial I am using two floor tiles rotated vertically that will slide down into the floor when approached. These doors were made their own blueprints and they contain an editable
+        <b>
+         Level
+        </b>
+        name variable. This was done to have the trigger volume animated door and level streaming in a single blueprint. Each door belongs to a different level, the door on the left is part of the silver floor tile level and the door on the right is part of the red floor tile level.
+       </dd>
+      </dl>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:938px;">
+        <img alt="" class="thumbimage" height="641" src="../assets/blueprint-manual-level-streaming/3.png" width="936"/>
+        <div class="thumbcaption">
+         Back to back sliding doors separating two levels.
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:865px;">
+        <img alt="" class="thumbimage" height="304" src="../assets/blueprint-manual-level-streaming/4.png" width="863"/>
+        <div class="thumbcaption">
+         Blueprint part used to make the door slide. Play and Reverse are connected to Begin and End overlap of a trigger volume.
+        </div>
+       </div>
+      </div>
+      <dl>
+       <dd>
+        2. To Load a level set up a door containing a trigger volume that triggers on begin and end overlap. The volume extends  in-front and behind the door. When the player enters the volume an
+        <b>
+         Open Door Event
+        </b>
+        is triggered. This event calls
+        <b>
+         Load Stream Level
+        </b>
+        passing in the
+        <i>
+         Name
+        </i>
+        of the level to stream in. When a player leaves the volume the
+        <b>
+         Close Door Event
+        </b>
+        is called and this event is only connected to the Reverse connection of the timeline. Level unloading is done outside of the sliding door.
+       </dd>
+      </dl>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:782px;">
+        <img alt="" class="thumbimage" height="417" src="../assets/blueprint-manual-level-streaming/5.png" width="780"/>
+        <div class="thumbcaption">
+         Level Streaming Blueprint.
+        </div>
+       </div>
+      </div>
+      <dl>
+       <dd>
+        3. To unload the previous level, place another trigger volume outside the door. When the player leaves the hallway he will trigger the unloading of the previous section.
+       </dd>
+      </dl>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:924px;">
+        <img alt="" class="thumbimage" height="657" src="../assets/blueprint-manual-level-streaming/6.png" width="922"/>
+        <div class="thumbcaption">
+         Unload Trigger Volume.
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:670px;">
+        <img alt="" class="thumbimage" height="287" src="../assets/blueprint-manual-level-streaming/7.png" width="668"/>
+        <div class="thumbcaption">
+         Unload Trigger Volume Blueprint.
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Summary">
+        Summary
+       </span>
+      </h2>
+      <p>
+       That is all there is to it. For a blueprint only solution to level streaming using a set of two doors you only need four separate triggers. Two to load and open the doors and to outside to unload the other level.
+      </p>
+      <p>
+       <a class="external text" href="https://www.youtube.com/watch?v=W93LqDGDHwY" rel="nofollow">
+        Blueprint Level Streaming - VIDEO
+       </a>
+       <br/>
+       <br/>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

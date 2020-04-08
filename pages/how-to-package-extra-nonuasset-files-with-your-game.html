@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   How To Package Extra NonUASSET Files With Your Game - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    How To Package Extra NonUASSET Files With Your Game
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#UFS_Files_.28.pak.29">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             UFS Files (.pak)
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Custom_IO_system_files">
+            <span class="tocnumber">
+             1.2
+            </span>
+            <span class="toctext">
+             Custom IO system files
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Project_Settings">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Project Settings
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Search_for_Additional">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Search for Additional
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Add.21">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Add!
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#How_To_Access_Content_Folder_In_Packaged_Game">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           How To Access Content Folder In Packaged Game
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Celebrate.21">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Celebrate!
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <b>
+        Author:
+       </b>
+       (
+       )
+      </p>
+      <p>
+       In this wiki I give you a pictorial guide of how to add extra files to your packaged game that are not .uassets.
+      </p>
+      <p>
+       Please note there are two types, and the tooltips explain them thoroughly :)
+      </p>
+      <h3>
+       <span class="mw-headline" id="UFS_Files_.28.pak.29">
+        UFS Files (.pak)
+       </span>
+      </h3>
+      <p>
+       There are files which you expect UE4 to load via the Unreal File System, which will be put in the .pak file.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Custom_IO_system_files">
+        Custom IO system files
+       </span>
+      </h3>
+      <p>
+       And there are also files which you plan to load via your own methods in packaged game, which will be included but not added to the .pak file so your own IO system can still find them and load them.
+      </p>
+      <p>
+       ♥
+      </p>
+      <p>
+       Rama
+      </p>
+      <h2>
+       <span class="mw-headline" id="Project_Settings">
+        Project Settings
+       </span>
+      </h2>
+      <p>
+       <img alt="NonUassetPackaging1.jpg" class="" height="695" src="../assets/how-to-package-extra-nonuasset-files-with-your-game/0.jpg" width="707"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Search_for_Additional">
+        Search for Additional
+       </span>
+      </h2>
+      <p>
+       <img alt="NonUassetPackaging2.jpg" class="" height="667" src="../assets/how-to-package-extra-nonuasset-files-with-your-game/1.jpg" width="1116"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Add.21">
+        Add!
+       </span>
+      </h2>
+      <p>
+       <img alt="NonUassetPackaging3.jpg" class="" height="670" src="../assets/how-to-package-extra-nonuasset-files-with-your-game/2.jpg" width="1105"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="How_To_Access_Content_Folder_In_Packaged_Game">
+        How To Access Content Folder In Packaged Game
+       </span>
+      </h2>
+      <p>
+       To find the Content folder of packaged game, you can use this code, I have a whole wiki on
+       <a class="external text" href="./packaged-game-paths-obtain-directories-based-on-executable-location.html" rel="nofollow">
+        Paths in Packaged Games
+       </a>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//InstallDir/WindowsNoEditor/GameName/Content</span>
+<span class="k">const</span> <span class="n">FString</span> <span class="n">ThePath</span> <span class="o">=</span> <span class="n">FPaths</span><span class="o">::</span><span class="n">ConvertRelativePathToFull</span><span class="p">(</span><span class="n">FPaths</span><span class="o">::</span><span class="n">GameContentDir</span><span class="p">());</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Celebrate.21">
+        Celebrate!
+       </span>
+      </h2>
+      <p>
+       ♥
+      </p>
+      <p>
+       Rama
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

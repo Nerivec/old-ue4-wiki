@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   QtCreator in Windows - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    QtCreator in Windows
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Prerequisites">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Prerequisites
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Setting_up_your_project">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Setting up your project
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Generating_defines.pri_and_includes.pri">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Generating defines.pri and includes.pri
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-5">
+             <a href="#defines.pri">
+              <span class="tocnumber">
+               3.1.1
+              </span>
+              <span class="toctext">
+               defines.pri
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-6">
+             <a href="#includes.pri">
+              <span class="tocnumber">
+               3.1.2
+              </span>
+              <span class="toctext">
+               includes.pri
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Setting_up_the_debugger_for_Qt_Creator">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Setting up the debugger for Qt Creator
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Setting_up_the_Qt_Creator_code_style">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Setting up the Qt Creator code style
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Configuring_the_project">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Configuring the project
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#Build">
+            <span class="tocnumber">
+             6.1
+            </span>
+            <span class="toctext">
+             Build
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#Clean">
+            <span class="tocnumber">
+             6.2
+            </span>
+            <span class="toctext">
+             Clean
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-12">
+           <a href="#Run">
+            <span class="tocnumber">
+             6.3
+            </span>
+            <span class="toctext">
+             Run
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-13">
+           <a href="#Configurations">
+            <span class="tocnumber">
+             6.4
+            </span>
+            <span class="toctext">
+             Configurations
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-14">
+         <a href="#Building.2C_running_and_debugging_our_project">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Building, running and debugging our project
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-15">
+         <a href="#Known_issues">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Known issues
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       This tutorial will describe how to setup your project for use with Qt Creator.
+Why would you want this?
+      </p>
+      <ul>
+       <li>
+        Visual Studio is really limited for non-free versions.
+       </li>
+       <li>
+        Qt Creator is fast and lightweight.
+       </li>
+       <li>
+        Qt Creator's intellisense works better out of the box.
+       </li>
+       <li>
+        Qt Creator has a lot of refactoring options out of the box.
+       </li>
+      </ul>
+      <p>
+       At the end of this tutorial you will be able to do the following:
+      </p>
+      <ul>
+       <li>
+        Build your project from Qt Creator
+       </li>
+       <li>
+        Run your project from Qt Creator
+       </li>
+       <li>
+        Debug your project from Qt Creator
+       </li>
+      </ul>
+      <p>
+       <br/>
+       <b>
+        Edit from another author:
+       </b>
+       I made a tool to automate some of the steps described below, for more information (including a modified version of this great tutorial, which makes use of the tool) see
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?59458-TOOL-Tut-WIN-Unreal-Qt-Creator-Project-Generator-%28v0-1-Beta%29" rel="nofollow">
+        Link
+       </a>
+      </p>
+      <p>
+       <b>
+        Edit from xBazilio:
+       </b>
+       You can install free code plugin
+       <a class="external text" href="https://www.unrealengine.com/marketplace/qt-creator-source-code-access" rel="nofollow">
+        Qt Creator Source Code Access
+       </a>
+       . It integrates Qt Creator into Unreal Editor, so that you can create and open C++ classes in Qt Creator from Unreal Editor.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Prerequisites">
+        Prerequisites
+       </span>
+      </h2>
+      <p>
+       You will need the following software installed:
+      </p>
+      <ul>
+       <li>
+        <a class="external text" href="http://qt-project.org/downloads" rel="nofollow">
+         Qt Creator for Visual Studio 2013 64 bit
+        </a>
+        , I took the OpenGL version since it was a bit smaller. It's important that you pick the 64 bit version for VS 2013.
+       </li>
+       <li>
+        Visual Studio 2013 (Express edition is OK)
+       </li>
+       <li>
+        <a class="external text" href="http://msdn.microsoft.com/en-US/windows/desktop/bg162891" rel="nofollow">
+         Debugging tools for windows
+        </a>
+        , required for debugging your project. Before installing untick everything but "Debugging tools for Windows", the rest is unneeded.
+       </li>
+       <li>
+        A text editor that understands regular expressions (regex) such as Notepad++.
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="Setting_up_your_project">
+        Setting up your project
+       </span>
+      </h2>
+      <p>
+       So for the sake of this tutorial, I'm going to go ahead and create a new project called "MyQtProject", which will be based on the C++ First Person template.
+Once the project is done generating, navigate to where you saved your project, which would be in my case "Documents\Unreal Projects\MyQtProject".
+      </p>
+      <p>
+       Now go to "Intermediate\ProjectFiles" and create 3 new files called "MyQtProject.pro", "defines.pri" and "includes.pri". Make sure it has no extra extension such as ".txt".
+Now open "MyQtProject.pro" in your favorite text editor (NOT Qt Creator), which is in my case Notepad++.
+Go ahead and copy paste this into your project file:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="nv">TEMPLATE</span> <span class="o">=</span> app
+<span class="nv">CONFIG</span> <span class="o">+=</span> console
+CONFIG -<span class="o">=</span> app_bundle
+CONFIG -<span class="o">=</span> qt
+<span class="nv">CONFIG</span> <span class="o">+=</span> c++11
+ 
+<span class="c1"># All the defines of your project will go in this file</span>
+<span class="c1"># You can put this file on your repository, but you will need to remake it once you upgrade the engine.</span>
+include<span class="o">(</span>defines.pri<span class="o">)</span>
+
+<span class="c1"># Qt Creator will automatically add headers and source files if you add them via Qt Creator.</span>
+<span class="nv">HEADERS</span> <span class="o">+=</span> ../../Source/MyQtProject/Public/MyQtProject.h <span class="se">\</span>
+	../../Source/MyQtProject/Public/MyQtProjectCharacter.h <span class="se">\</span>
+	../../Source/MyQtProject/Public/MyQtProjectGameMode.h <span class="se">\</span>
+	../../Source/MyQtProject/Public/MyQtProjectHUD.h <span class="se">\</span>
+	../../Source/MyQtProject/Public/MyQtProjectProjectile.h
+
+<span class="nv">SOURCES</span> <span class="o">+=</span> ../../Source/MyQtProject/Private/MyQtProject.cpp <span class="se">\</span>
+	../../Source/MyQtProject/Private/MyQtProjectCharacter.cpp <span class="se">\</span>
+	../../Source/MyQtProject/Private/MyQtProjectGameMode.cpp <span class="se">\</span>
+	../../Source/MyQtProject/Private/MyQtProjectHUD.cpp <span class="se">\</span>
+	../../Source/MyQtProject/Private/MyQtProjectProjectile.cpp
+
+<span class="c1"># All your generated includes will go in this file</span>
+<span class="c1"># You can not put this on the repository as this contains hardcoded paths</span>
+<span class="c1"># and is dependend on your windows install and engine version</span>
+include<span class="o">(</span>includes.pri<span class="o">)</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Generating_defines.pri_and_includes.pri">
+        Generating defines.pri and includes.pri
+       </span>
+      </h3>
+      <p>
+       Now here is where the editor with regular expressions comes handy (and will save you a lot of annoying work).
+      </p>
+      <p>
+       Assuming you have the Visual Studio project files in place, if not you can generate by right clicking your ".uproject", open "MyQtProject.vcxproj" with your text editor (NOT Visual studio).
+      </p>
+      <h4>
+       <span class="mw-headline" id="defines.pri">
+        defines.pri
+       </span>
+      </h4>
+      <p>
+       Scroll all the way down and find "&lt;NMakePreprocessorDefinitions&gt;", now copy the contents from that line into "defines.pri" and you will end up with something similar to this:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>$(NMakePreprocessorDefinitions);UE_GAME=1;IS_PROGRAM=0;UE_ROCKET=1;UNICODE;_UNICODE;__UNREAL__;IS_MONOLITHIC=1;WITH_ENGINE=1;WITH_UNREAL_DEVELOPER_TOOLS=0;WITH_COREUOBJECT=1;USE_STATS_WITHOUT_ENGINE=0;
+</pre>
+      </div>
+      <p>
+       I left a big part of the line out, but as you can see, we have a ridiculously long line, now we're going to convert it into a format Qt Creator can use.
+      </p>
+      <p>
+       Open up the replace window of your text editor and in the "Find" field put in ";" (without quotes), in the "Replace" field put "\r\n" (also without quotes), click "Replace all" (or the equivalent of it) and 
+now every define should be on a new line.
+      </p>
+      <p>
+       We're not done yet, now put in the "Find" field "^" (again without quotes) and in the "Replace" field "DEFINES += "" (without the outer quotes, be sure to include the second last quote). And click "Replace all".
+Now we're almost done, just one last step. In the "Find" field, input "$" and in the "Replace" field input a quote. Click "Replace all" and your lines should like this:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="nv">DEFINES</span> <span class="o">+=</span> <span class="s2">"DEFINE_GOES_HERE"</span>
+</pre>
+      </div>
+      <p>
+       Now save the file and we're done here.
+      </p>
+      <h4>
+       <span class="mw-headline" id="includes.pri">
+        includes.pri
+       </span>
+      </h4>
+      <p>
+       Back in "MyQtProject.vcxproj" scroll all the way down to "&lt;NMakeIncludeSearchPath&gt;", again copy the contents from that line into "includes.pri".
+      </p>
+      <p>
+       Again replace semicolons by newlines just as we did for "defines.pri".
+      </p>
+      <p>
+       Now instead of prepending "DEFINES += "", we prepend "INCLUDEPATH += "".
+      </p>
+      <p>
+       Now append the quote like we did for "defines.pri".
+      </p>
+      <p>
+       Your lines should look like this (you obviously have a lot more lines):
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="nv">INCLUDEPATH</span> <span class="o">+=</span> <span class="s2">"</span><span class="k">$(</span>NMakeIncludeSearchPath<span class="k">)</span><span class="s2">"</span>
+<span class="nv">INCLUDEPATH</span> <span class="o">+=</span> <span class="s2">"C:\Program Files\Unreal\Unreal Engine\4.4\Engine\Source"</span>
+<span class="nv">INCLUDEPATH</span> <span class="o">+=</span> <span class="s2">"..\..\Source"</span>
+<span class="nv">INCLUDEPATH</span> <span class="o">+=</span> <span class="s2">"..\Build\Win64\MyQtProject\Inc\MyQtProject"</span>
+<span class="nv">INCLUDEPATH</span> <span class="o">+=</span> <span class="s2">"..\..\Source\MyQtProject\Public"</span>
+</pre>
+      </div>
+      <p>
+       Now save the file and we're done here.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Setting_up_the_debugger_for_Qt_Creator">
+        Setting up the debugger for Qt Creator
+       </span>
+      </h2>
+      <p>
+       Now we have successfully configured our project, we need to setup the debugger.
+      </p>
+      <p>
+       Open up Qt Creator and go to Tools-&gt;Options-&gt;Build &amp; Run-&gt;Debuggers and click on "Add".
+      </p>
+      <p>
+       Even though there should already be a CDB listed, it's the 32 bit version, we need the 64 bit version for it to work with our project.
+      </p>
+      <p>
+       Unless you changed the default installation path, CDB should be in "C:\Program Files (x86)\Windows Kits\8.1\Debuggers\x64\".
+      </p>
+      <p>
+       Select "cdb.exe" and click "Open", give it a name and click "Apply".
+      </p>
+      <p>
+       Now, still in the options window, go to Debugger-&gt;CDB and check "Ignore first chance access violations".
+      </p>
+      <p>
+       Now to go the tab "CDB Paths" and put the following in "Symbol Paths":
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>symsrv*symsrv.dll*C:\Users\MyUsernameHere\AppData\Local\Temp\symbolcache
+cache*C:\Users\MyUsernameHere\Local\Temp\symbolcache
+</pre>
+      </div>
+      <p>
+       Replace "MyUsernameHere" with your username (go to "C:\Users\" to make sure it's correct).
+      </p>
+      <p>
+       Now go to Build &amp; Run-&gt;Kits and click "Add".
+      </p>
+      <p>
+       I named it "UE4", but you can name it whatever you want. Leave "File system name:" empty. As "Device type:" select "Desktop", as "Device" select "Local PC (default for desktop)".
+      </p>
+      <p>
+       Leave "Sysroot:" empty. As "Compiler:" select "Microsoft Visual C++ Compiler 12.0 (amd64)". As "Debugger:" select the debugger we added before, I called it "CDB 64 bit".
+      </p>
+      <p>
+       As "Qt version:" select "Qt 5.3 MSVC2013 OpenGL 64bit", your version might be different and you might not have the OpenGL version, but that doesn't matter as long as it's for "MSVC2013 64bit".
+      </p>
+      <p>
+       Now click "Apply" to save our changes.
+      </p>
+      <p>
+       NOTE: When starting to debug your project, it will ask if you want to use the Microsoft symbol servers, DO NOT USE THEM!!! It will slow down debugging to snail speed, having it turned on made just starting up the editor take about 5 minutes.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Setting_up_the_Qt_Creator_code_style">
+        Setting up the Qt Creator code style
+       </span>
+      </h2>
+      <p>
+       Again in the options, go to C++-&gt;Code Style and copy one of the build in code styles and give it a name, this will allow you to export it later.
+      </p>
+      <p>
+       Click on "Edit..." and change the following:
+      </p>
+      <p>
+       Change "Tab Policy" to "Tabs Only", "Tab Size" to 4, "Indent Size" to 4 and "Align Continuation Lines" to "With Regular Indent".
+      </p>
+      <p>
+       The rest is all personal preference on how your code is formatted, so be sure to go there if you don't like how something is formatted. But you have to use tabs as per policy of Epic, probably because some tools only work well with tabs is my guess.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Configuring_the_project">
+        Configuring the project
+       </span>
+      </h2>
+      <p>
+       Ok, now that we are almost done, we need to configure a few other small things for building, running and debugging to work.
+      </p>
+      <p>
+       Open the project file by clicking "Open Project" on the welcome page. The first time you open it you need to select a kit you want to use to compile, be sure to pick the kid we added before, in my case "UE4".
+      </p>
+      <p>
+       Now that our project is loaded, it wont compile and run just yet. We need to configure Qt Creator to use UBT first.
+      </p>
+      <p>
+       In the strip on the left size click on the folder icon with the text "Projects", here we can change the build settings.
+      </p>
+      <p>
+       At "Edit build configuration:" click "Rename" and rename the "Debug" configuration to "Debug Editor".
+      </p>
+      <h3>
+       <span class="mw-headline" id="Build">
+        Build
+       </span>
+      </h3>
+      <p>
+       Now at "Build Steps" and "Clean Steps" remove all the entries. Now at "Build Steps", click "Add Build Step" and select "Custom Process Step".
+      </p>
+      <p>
+       Now you can fill in a command, point this to the "Build.bat" of the engine version you're using, in my case it is "C:\Program Files\Unreal\Unreal Engine\4.4\Engine\Build\BatchFiles\Build.bat" (without quotes).
+      </p>
+      <p>
+       As "Arguments:" fill in "MyQtProjectEditor Win64 DebugGame "C:\Users\MyUsernameHere\Documents\Unreal Projects\MyQtProject\MyQtProject.uproject" -rocket" (without quotes). Where "C:\Users\MyUsernameHere\Documents\Unreal Projects\MyQtProject\MyQtProject.uproject" is the path to your project file and "MyQtProjectEditor" needs to be changed to reflect the name of your project.
+      </p>
+      <p>
+       As "Working directory:" set it to "C:\Users\MyUsernameHere\Documents\Unreal Projects\MyQtProject\Intermediate\Build" (without quotes).
+      </p>
+      <h3>
+       <span class="mw-headline" id="Clean">
+        Clean
+       </span>
+      </h3>
+      <p>
+       For the "Clean Steps" do the same, but point it "Clean.bat" instead, which is in the same folder as "Build.bat".
+      </p>
+      <h3>
+       <span class="mw-headline" id="Run">
+        Run
+       </span>
+      </h3>
+      <p>
+       Now under "Run" and then "Run configuration:", click "Add" and select "Custom Executable".
+      </p>
+      <p>
+       Rename it to "Debug Editor" by clicking on "Rename...".
+      </p>
+      <p>
+       For "Executable:" point it to the location of "UE4Editor.exe", which is in my case "C:\Program Files\Unreal\Unreal Engine\4.4\Engine\Binaries\Win64\UE4Editor.exe" (without quotes).
+      </p>
+      <p>
+       As "Arguments:" fill in ""C:\Users\MyUsernameHere\Documents\Unreal Projects\MyQtProject\MyQtProject.uproject" -debug" (without the outer quotes).
+      </p>
+      <p>
+       And as "Working directory:" set it to "C:\Users\MyUsernameHere\Documents\Unreal Projects\MyQtProject\Binaries\Win64" (without quotes). And uncheck "Run in terminal".
+      </p>
+      <p>
+       The annoying part is that you have to change this every time you change the configuration, it doesn't change with the build configurations.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Configurations">
+        Configurations
+       </span>
+      </h3>
+      <p>
+       Here is a list of configurations that can be used with the build tools:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>Debug Editor:
+{
+	Build:
+	{
+		Command: C:\Program Files\Unreal\Unreal Engine\4.4\Engine\Build\BatchFiles\Build.bat
+		Arguments: MyQtProjectEditor Win64 DebugGame "C:\Users\MyUsernameHere\Documents\Unreal Projects\MyQtProject\MyQtProject.uproject" -rocket
+		Working directory: C:\Users\Dragoon\Documents\Unreal Projects\MyQtProject\Intermediate\Build
+	}
+	Clean:
+	{
+		Command: C:\Program Files\Unreal\Unreal Engine\4.4\Engine\Build\BatchFiles\Clean.bat
+		Arguments: MyQtProjectEditor Win64 DebugGame "C:\Users\MyUsernameHere\Documents\Unreal Projects\MyQtProject\MyQtProject.uproject" -rocket
+		Working directory: C:\Users\Dragoon\Documents\Unreal Projects\MyQtProject\Intermediate\Build
+	}
+	Run:
+	{
+		Executable: C:\Program Files\Unreal\Unreal Engine\4.4\Engine\Binaries\Win64\UE4Editor.exe
+		Arguments: "C:\Users\Dragoon\Documents\Unreal Projects\MyQtProject\MyQtProject.uproject" -debug
+		Working directory: C:\Users\Dragoon\Documents\Unreal Projects\PitStop\Binaries\Win64
+	}
+}
+Debug Standalone:
+{
+	Build:
+	{
+		Command: C:\Program Files\Unreal\Unreal Engine\4.4\Engine\Build\BatchFiles\Build.bat
+		Arguments: MyQtProject Win64 DebugGame "C:\Users\MyUsernameHere\Documents\Unreal Projects\MyQtProject\MyQtProject.uproject" -rocket
+		Working directory: C:\Users\Dragoon\Documents\Unreal Projects\MyQtProject\Intermediate\Build
+	}
+	Clean:
+	{
+		Command: C:\Program Files\Unreal\Unreal Engine\4.4\Engine\Build\BatchFiles\Clean.bat
+		Arguments: MyQtProject Win64 DebugGame "C:\Users\MyUsernameHere\Documents\Unreal Projects\MyQtProject\MyQtProject.uproject" -rocket
+		Working directory: C:\Users\Dragoon\Documents\Unreal Projects\MyQtProject\Intermediate\Build
+	}
+	Run:
+	{
+		Executable: ..\..\Binaries\Win64\MyQtProject-Win64-DebugGame.exe
+		Arguments:
+		Working directory: C:\Users\Dragoon\Documents\Unreal Projects\PitStop\Binaries\Win64
+	}
+}
+Development Editor:
+{
+	Build:
+	{
+		Command: C:\Program Files\Unreal\Unreal Engine\4.4\Engine\Build\BatchFiles\Build.bat
+		Arguments: MyQtProjectEditor Win64 Development "C:\Users\MyUsernameHere\Documents\Unreal Projects\MyQtProject\MyQtProject.uproject" -rocket
+		Working directory: C:\Users\Dragoon\Documents\Unreal Projects\MyQtProject\Intermediate\Build
+	}
+	Clean:
+	{
+		Command: C:\Program Files\Unreal\Unreal Engine\4.4\Engine\Build\BatchFiles\Clean.bat
+		Arguments: MyQtProjectEditor Win64 Development "C:\Users\MyUsernameHere\Documents\Unreal Projects\MyQtProject\MyQtProject.uproject" -rocket
+		Working directory: C:\Users\Dragoon\Documents\Unreal Projects\MyQtProject\Intermediate\Build
+	}
+	Run:
+	{
+		Executable: C:\Program Files\Unreal\Unreal Engine\4.4\Engine\Binaries\Win64\UE4Editor.exe
+		Arguments: "C:\Users\Dragoon\Documents\Unreal Projects\MyQtProject\MyQtProject.uproject"
+		Working directory: C:\Users\Dragoon\Documents\Unreal Projects\PitStop\Binaries\Win64
+	}
+}
+Development Standalone:
+{
+	Build:
+	{
+		Command: C:\Program Files\Unreal\Unreal Engine\4.4\Engine\Build\BatchFiles\Build.bat
+		Arguments: MyQtProject Win64 Development "C:\Users\MyUsernameHere\Documents\Unreal Projects\MyQtProject\MyQtProject.uproject" -rocket
+		Working directory: C:\Users\Dragoon\Documents\Unreal Projects\MyQtProject\Intermediate\Build
+	}
+	Clean:
+	{
+		Command: C:\Program Files\Unreal\Unreal Engine\4.4\Engine\Build\BatchFiles\Clean.bat
+		Arguments: MyQtProject Win64 Development "C:\Users\MyUsernameHere\Documents\Unreal Projects\MyQtProject\MyQtProject.uproject" -rocket
+		Working directory: C:\Users\Dragoon\Documents\Unreal Projects\MyQtProject\Intermediate\Build
+	}
+	Run:
+	{
+		Executable: ..\..\Binaries\Win64\MyQtProject.exe
+		Arguments:
+		Working directory: C:\Users\Dragoon\Documents\Unreal Projects\PitStop\Binaries\Win64
+	}
+}
+Shipping:
+{
+	Build:
+	{
+		Command: C:\Program Files\Unreal\Unreal Engine\4.4\Engine\Build\BatchFiles\Build.bat
+		Arguments: MyQtProject Win32 Shipping "C:\Users\MyUsernameHere\Documents\Unreal Projects\MyQtProject\MyQtProject.uproject" -rocket
+		Working directory: C:\Users\Dragoon\Documents\Unreal Projects\MyQtProject\Intermediate\Build
+	}
+	Clean:
+	{
+		Command: C:\Program Files\Unreal\Unreal Engine\4.4\Engine\Build\BatchFiles\Clean.bat
+		Arguments: MyQtProject Win32 Shipping "C:\Users\MyUsernameHere\Documents\Unreal Projects\MyQtProject\MyQtProject.uproject" -rocket
+		Working directory: C:\Users\Dragoon\Documents\Unreal Projects\MyQtProject\Intermediate\Build
+	}
+	Run:
+	{
+		Executable: ..\..\Binaries\Win64\MyQtProject-Win32-Shipping.exe
+		Arguments:
+		Working directory: C:\Users\Dragoon\Documents\Unreal Projects\PitStop\Binaries\Win32
+	}
+}
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Building.2C_running_and_debugging_our_project">
+        Building, running and debugging our project
+       </span>
+      </h2>
+      <p>
+       We're now almost done, but here a few final guide lines.
+      </p>
+      <p>
+       To build the project you can either build from the menu or press Ctrl+B.
+      </p>
+      <p>
+       To run the project you can either run it from the menu or press Ctrl+R.
+      </p>
+      <p>
+       To debug you can either start debugging from the menu or press F5.
+      </p>
+      <p>
+       Once you start debugging for the first time, Qt Creator will ask you if you want to use the Microsoft Symbol servers, DO NOT USE IT! It will make the debugging process painfully slow, with it turned on it will take about 5 minutes before the editor is opened and you can start debugging.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Known_issues">
+        Known issues
+       </span>
+      </h2>
+      <p>
+       Once you start building, you will get this warning:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>WARNING: UnrealBuildTool found an Intermediate folder while looking for rules 'C:\Program Files\Unreal\Unreal Engine\4.4\Engine\Source\Intermediate'.
+It should only ever be searching under 'Source' folders -- an Intermediate folder is unexpected and will greatly decrease iteration times!
+</pre>
+      </div>
+      <p>
+       I don't know a fix for it, if you find it, please update the information accordingly.
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

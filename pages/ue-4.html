@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Система частиц в UE 4 - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Система частиц в UE 4
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#.D0.92.D0.B2.D0.B5.D0.B4.D0.B5.D0.BD.D0.B8.D0.B5">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Введение
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#.D0.A8.D0.B0.D0.B3_1._.D0.9F.D0.BE.D0.B4.D0.B3.D0.BE.D1.82.D0.BE.D0.B2.D0.BA.D0.B0_.5B.D0.BF.D1.80.D0.B0.D0.B2.D0.B8.D1.82.D1.8C.5D">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Шаг 1. Подготовка [править]
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Step_2:_Add_effects._noise">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Step 2: Add effects. noise
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#.D0.A8.D0.B0.D0.B3_3_.D0.B8.D1.81.D1.82.D0.BE.D1.87.D0.BD.D0.B8.D0.BA.D0.B0_.D0.B8_.D0.BD.D0.B0.D0.B7.D0.BD.D0.B0.D1.87.D0.B5.D0.BD.D0.B8.D1.8F">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Шаг 3 источника и назначения
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#.D0.9D.D0.B0.D1.81.D1.82.D1.80.D0.BE.D0.B9.D0.BA.D0.B0_.D0.B8.D1.81.D1.85.D0.BE.D0.B4.D0.BD.D0.BE.D0.B3.D0.BE_.D0.B8_.D1.86.D0.B5.D0.BB.D0.B5.D0.B2.D0.BE.D0.B3.D0.BE_.D0.BF.D0.B0.D1.80.D0.B0.D0.BC.D0.B5.D1.82.D1.80.D0.B0_.D0.BB.D1.83.D1.87.D0.B0">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Настройка исходного и целевого параметра луча
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Note">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Note
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#.D0.A0.D1.83.D1.81.D1.81.D0.BA.D0.BE.D0.B5_.D1.81.D0.BE.D0.BE.D0.B1.D1.89.D0.B5.D1.81.D1.82.D0.B2.D0.BE_Unreal_Engine_4">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Русское сообщество Unreal Engine 4
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id=".D0.92.D0.B2.D0.B5.D0.B4.D0.B5.D0.BD.D0.B8.D0.B5">
+        Введение
+       </span>
+      </h2>
+      <p>
+       Система частиц в Unreal Engine - это хорошая вещь, чтобы моделировать такие вещи, как:
+      </p>
+      <ul>
+       <li>
+        Лазеры, молнии;
+       </li>
+       <li>
+        Дым, пар, огонь
+       </li>
+       <li>
+        И так далее.
+       </li>
+      </ul>
+      <p>
+       В этой статье вы узнаете о принципах работы с системами частиц в UE 4.
+      </p>
+      <h2>
+       <span class="mw-headline" id=".D0.A8.D0.B0.D0.B3_1._.D0.9F.D0.BE.D0.B4.D0.B3.D0.BE.D1.82.D0.BE.D0.B2.D0.BA.D0.B0_.5B.D0.BF.D1.80.D0.B0.D0.B2.D0.B8.D1.82.D1.8C.5D">
+        Шаг 1. Подготовка [править]
+       </span>
+      </h2>
+      <p>
+       Во-первых, перед началом работы с частицей; является ли это или последствия того, что оружие (например, лазерные пушки и т.п.) требуется программирования, который выходит за рамки данного руководства. Теперь мы рассмотрим, как работать с ним эффектов.
+Что бы работать с частицами, мы нуждаемся в такой структуре. Как правило, точнее, как правило, требуется горизонтальная текстуру (например, как на скриншоте). В нашем примере мы создали простой материал, используя следующую структуру:
+      </p>
+      <p>
+       <br/>
+      </p>
+      <ul class="gallery mw-gallery-traditional">
+       <li class="gallerybox" style="width: 155px">
+        <div style="width: 155px">
+         <div class="thumb" style="width: 150px;">
+          <div style="margin:15px auto;">
+           <img alt="BaseBeam.png" class="" height="120" src="../assets/ue-4/0.png" width="120"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+         </div>
+        </div>
+       </li>
+       <li class="gallerybox" style="width: 155px">
+        <div style="width: 155px">
+         <div class="thumb" style="width: 150px;">
+          <div style="margin:15px auto;">
+           <img alt="BeamPulse.png" class="" height="120" src="../assets/ue-4/1.png" width="120"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       Эти текстуры объединены в следующие
+       <i>
+        'материала'
+       </i>
+       :
+      </p>
+      <p>
+       <img alt="BeamMaterial.jpg" class="" height="439" src="../assets/ue-4/2.jpg" width="940"/>
+      </p>
+      <p>
+       После того как мы добавить этот пункт в новой системе частиц, мы готовы сосредоточиться на пучок частиц (на наших Пучко-образных частиц).
+Для начала, нам нужно добавить модуль луч. (Щелкните правой кнопкой мыши в
+       <i>
+        'эмиттер'
+       </i>
+       и select
+       <i>
+        TypeData
+       </i>
+       &gt;
+       <i>
+        New-Beam Data
+       </i>
+       .
+Модуль Beam TypeData щелкнув правой кнопкой мыши в эмиттере и выбор TypeData&gt; Нью-Beam данных.
+      </p>
+      <p>
+       <img alt="AddBeamData.jpg" class="" height="333" src="../assets/ue-4/3.jpg" width="477"/>
+      </p>
+      <p>
+       Это, чтобы создать наш луч. Для дальнейшей настройки, что бы получить что-то интересное. Используйте следующую таблицу, чтобы начать с того, что будет более подробное исследование пучка частиц.
+      </p>
+      <table class="wikitable">
+       <caption>
+        Module Properties
+       </caption>
+       <tbody>
+        <tr>
+         <th scope="col">
+          property
+         </th>
+         <th scope="col">
+          value
+         </th>
+         <th scope="col">
+          description
+         </th>
+        </tr>
+        <tr>
+         <th scope="col">
+          Lifetime Module
+         </th>
+        </tr>
+        <tr>
+         <td>
+          Lifetime
+         </td>
+         <td>
+          0.0
+         </td>
+         <td>
+          The life span of the beam. (Default is infinite)
+         </td>
+        </tr>
+        <tr>
+         <th scope="col">
+          Beam Data Module
+         </th>
+        </tr>
+        <tr>
+         <td>
+          Beam Method
+         </td>
+         <td>
+          PEB2M_Distance
+         </td>
+         <td>
+          The beam will be calculated via distance along the emitter's X-Axis, rather than requiring a source and target.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Texture Tile Distance
+         </td>
+         <td>
+          500
+         </td>
+         <td>
+          Tiles the texture every 500 Unreal Units. Allows animated pulses to show more clearly.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Max Beam Count
+         </td>
+         <td>
+          3
+         </td>
+         <td>
+          Adds in a few more beams, which will look nice once we have noise.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Speed
+         </td>
+         <td>
+          0
+         </td>
+         <td>
+          Beam will travel instantly to its target.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Interpolation Points
+         </td>
+         <td>
+          50
+         </td>
+         <td>
+          Gives the beam some flexibility for the addition of noise, which we will do later.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Distance
+         </td>
+         <td>
+          1000
+         </td>
+         <td>
+          Extends the beam 1000 Unreal Units along the X-Axis, giving us something to work with.
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       Once you have set up the beam. Your beam will look like this:
+      </p>
+      <p>
+       <img alt="DistanceBeam.jpg" class="" height="434" src="../assets/ue-4/4.jpg" width="501"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Step_2:_Add_effects._noise">
+        Step 2: Add effects. noise
+       </span>
+      </h2>
+      <p>
+       Ваше луч может быть более интересным, вы можете добавить немного шума - искажение.
+Это делается с помощью модуля
+       <i>
+        'Noise'
+       </i>
+       .
+Он расположен в подменю
+       <i>
+        Луч
+       </i>
+       &gt;
+       <i>
+        Шум
+       </i>
+       .
+      </p>
+      <p>
+       <img alt="AddNoiseModule.jpg" class="" height="337" src="../assets/ue-4/5.jpg" width="401"/>
+      </p>
+      <p>
+       Используйте следующую таблицу, чтобы изменить различные свойства:
+      </p>
+      <table class="wikitable">
+       <caption>
+        Module Properties
+       </caption>
+       <tbody>
+        <tr>
+         <th scope="col">
+          Properties
+         </th>
+         <th scope="col">
+          Values
+         </th>
+         <th scope="col">
+          Descriptions
+         </th>
+        </tr>
+        <tr>
+         <td>
+          Frequency
+         </td>
+         <td>
+          30
+         </td>
+         <td>
+          Gives us a nice amount of noise. Adjust to taste.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Low Freq Enabled
+         </td>
+         <td>
+          Checked
+         </td>
+         <td>
+          Enables randomization of noise points.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Noise Range
+         </td>
+         <td>
+          Vector Uniform distribution. Min:( 0, -50, -50) Max:( 0, 50, 50)
+         </td>
+         <td>
+          Tells the noise how far it can move away from the beam.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Noise Tessellation
+         </td>
+         <td>
+          10
+         </td>
+         <td>
+          Smoothes out the noise.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Frequency Distance
+         </td>
+         <td>
+          100
+         </td>
+         <td>
+          Rounds out the shape of the noise.
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       Вот пример результат нашей работы.
+      </p>
+      <p>
+       <img alt="NoisyBeam.jpg" class="" height="434" src="../assets/ue-4/6.jpg" width="499"/>
+      </p>
+      <p>
+       Используйте различные свойств и их значений, которые диверсификации вашу работу.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id=".D0.A8.D0.B0.D0.B3_3_.D0.B8.D1.81.D1.82.D0.BE.D1.87.D0.BD.D0.B8.D0.BA.D0.B0_.D0.B8_.D0.BD.D0.B0.D0.B7.D0.BD.D0.B0.D1.87.D0.B5.D0.BD.D0.B8.D1.8F">
+        Шаг 3 источника и назначения
+       </span>
+      </h2>
+      <p>
+       Если вы хотите, что бы ваша пучок имел разную длину вдоль одной оси, эта часть урока для вас.
+      </p>
+      <p>
+       <img alt="DistanceBeamInLevel.jpg" class="" height="325" src="../assets/ue-4/7.jpg" width="662"/>
+      </p>
+      <p>
+       К сожалению, этот способ не всегда хорошо; В некоторых случаях, вам нужно будет указать начальную и конечную точки, а также контролировать процесс между ними.
+Это можно сделать с помощью «захвата цели» (источник и цель).
+      </p>
+      <p>
+       Для начала, мы добавили двух актеров на сцене, что бы они быть использованы в качестве начальных и конечных положениях. В этом случае, мы будем использовать
+       <i>
+        Замечание актеров.
+       </i>
+      </p>
+      <p>
+       <img alt="NotesAdded.jpg" class="" height="404" src="../assets/ue-4/8.jpg" width="725"/>
+      </p>
+      <p>
+       Вернуться к Cascade, добавьте
+       <i>
+        Источник
+       </i>
+       модуля i
+       <i>
+        Target
+       </i>
+       для вашей излучателя. Они оба в суб-луча.
+      </p>
+      <p>
+       <img alt="SourceAndTargetModules.jpg" class="" height="352" src="../assets/ue-4/9.jpg" width="697"/>
+      </p>
+      <p>
+       Модули Тип луча данных, источник и цель, установите следующие параметры:
+      </p>
+      <table class="wikitable">
+       <caption>
+        Module Properties
+       </caption>
+       <tbody>
+        <tr>
+         <th scope="col">
+          Property
+         </th>
+         <th scope="col">
+          Value
+         </th>
+         <th scope="col">
+          Reason
+         </th>
+        </tr>
+        <tr>
+         <th scope="col">
+          Beam Data Module
+         </th>
+        </tr>
+        <tr>
+         <td>
+          Beam Method
+         </td>
+         <td>
+          PEB2M_Target
+         </td>
+         <td>
+          Extablishes that the beam will require a source and a target.
+         </td>
+        </tr>
+        <tr>
+         <th scope="col">
+          Source Module
+         </th>
+        </tr>
+        <tr>
+         <td>
+          Source Method
+         </td>
+         <td>
+          PEB2STM_Actor
+         </td>
+         <td>
+          Tells the beam to start at the location of an actor.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Source Name
+         </td>
+         <td>
+          BeamSource
+         </td>
+         <td>
+          Tells the beam to start at the location of an actor.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Source
+         </td>
+         <td>
+          Vector Constant Distribution. Value:(0, 0, 0)
+         </td>
+         <td>
+          This sets the display source in the Preview window to be 0,0,0.
+         </td>
+        </tr>
+        <tr>
+         <th scope="col">
+          Target Module
+         </th>
+        </tr>
+        <tr>
+         <td>
+          Target Method
+         </td>
+         <td>
+          PEB2STM_Actor
+         </td>
+         <td>
+          Tells the beam to end at the location of an actor.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Target Name
+         </td>
+         <td>
+          BeamTarget
+         </td>
+         <td>
+          This is just a parameter name and can be anything you like.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Target
+         </td>
+         <td>
+          Vector Constant Distribution. Value:(1000, 0, 0)
+         </td>
+         <td>
+          This sets the display target in the Preview window to be 1000,0,0.
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       Ваше луч не изменится, но теперь он будет иметь начальную и конечную точки луча - сегмент.
+      </p>
+      <h2>
+       <span class="mw-headline" id=".D0.9D.D0.B0.D1.81.D1.82.D1.80.D0.BE.D0.B9.D0.BA.D0.B0_.D0.B8.D1.81.D1.85.D0.BE.D0.B4.D0.BD.D0.BE.D0.B3.D0.BE_.D0.B8_.D1.86.D0.B5.D0.BB.D0.B5.D0.B2.D0.BE.D0.B3.D0.BE_.D0.BF.D0.B0.D1.80.D0.B0.D0.BC.D0.B5.D1.82.D1.80.D0.B0_.D0.BB.D1.83.D1.87.D0.B0">
+        Настройка исходного и целевого параметра луча
+       </span>
+      </h2>
+      <p>
+       Чтобы луч использовать Note actor, как источник и цель, мы должны установить их в качестве параметров, например, для эмиттера актера.
+После того, как вы принесли эмиттер луча на сцену, выполните следующие действия:
+      </p>
+      <ul>
+       <li>
+        Настройте 2 параметра экземпляра на эмиттере актора. Назовите BeamSource и BeamTarget.
+       </li>
+       <li>
+        Установка и их Тип в
+        <i>
+         PSPT_Actor
+        </i>
+        .
+       </li>
+       <li>
+        Установите один из Note Actor в поле Actor каждого параметра.
+       </li>
+      </ul>
+      <p>
+       Когда закончите, ваша панель должна выглядеть примерно так:
+      </p>
+      <p>
+       <img alt="InstanceParameters.jpg" class="" height="602" src="../assets/ue-4/10.jpg" width="363"/>
+      </p>
+      <p>
+       Ваш луч в настоящее время движется между двумя Note actor-ами:
+      </p>
+      <p>
+       <img alt="Beamnotes.jpg" class="" height="424" src="../assets/ue-4/11.jpg" width="779"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Note">
+        Note
+       </span>
+      </h2>
+      <p>
+       Вы можете сделать намного интереснее, чем балки, регулируя касательные источника и цели.
+      </p>
+      <p>
+       <img alt="TangentBeam.jpg" class="" height="768" src="../assets/ue-4/12.jpg" width="648"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id=".D0.A0.D1.83.D1.81.D1.81.D0.BA.D0.BE.D0.B5_.D1.81.D0.BE.D0.BE.D0.B1.D1.89.D0.B5.D1.81.D1.82.D0.B2.D0.BE_Unreal_Engine_4">
+        Русское сообщество Unreal Engine 4
+       </span>
+      </h2>
+      <p>
+       <a class="external text" href="http://ue4.codengine.ru/" rel="nofollow">
+        Русское сообщество Unreal Engine 4
+       </a>
+      </p>
+      <p>
+       <a class="external text" href="http://ue4.codengine.ru/index.php/Категория:Уроки" rel="nofollow">
+        Уроки по Unreal Engine 4 на Русском
+       </a>
+      </p>
+      <p>
+       <a class="external text" href="http://ue4.codengine.ru/index.php/Система_частиц_в_UE_4" rel="nofollow">
+        Ссылка на русское сообщество
+       </a>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

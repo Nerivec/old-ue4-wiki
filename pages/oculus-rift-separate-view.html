@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Oculus Rift Separate View - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Oculus Rift Separate View
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <table align="right">
+       <tbody>
+        <tr>
+         <td>
+          <div class="toc" id="toc">
+           <div class="toctitle">
+            <h2>
+             Contents
+            </h2>
+           </div>
+           <ul>
+            <li class="toclevel-1 tocsection-1">
+             <a href="#Overview">
+              <span class="tocnumber">
+               1
+              </span>
+              <span class="toctext">
+               Overview
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-1 tocsection-2">
+             <a href="#Blueprints">
+              <span class="tocnumber">
+               2
+              </span>
+              <span class="toctext">
+               Blueprints
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-1 tocsection-3">
+             <a href="#C.2B.2B">
+              <span class="tocnumber">
+               3
+              </span>
+              <span class="toctext">
+               C++
+              </span>
+             </a>
+             <ul>
+              <li class="toclevel-2 tocsection-4">
+               <a href="#Your.Build.cs">
+                <span class="tocnumber">
+                 3.1
+                </span>
+                <span class="toctext">
+                 Your.Build.cs
+                </span>
+               </a>
+              </li>
+              <li class="toclevel-2 tocsection-5">
+               <a href="#YourPlayerController.h">
+                <span class="tocnumber">
+                 3.2
+                </span>
+                <span class="toctext">
+                 YourPlayerController.h
+                </span>
+               </a>
+              </li>
+              <li class="toclevel-2 tocsection-6">
+               <a href="#YourPlayerController.cpp">
+                <span class="tocnumber">
+                 3.3
+                </span>
+                <span class="toctext">
+                 YourPlayerController.cpp
+                </span>
+               </a>
+              </li>
+              <li class="toclevel-2 tocsection-7">
+               <a href="#YourCharacter.h">
+                <span class="tocnumber">
+                 3.4
+                </span>
+                <span class="toctext">
+                 YourCharacter.h
+                </span>
+               </a>
+              </li>
+              <li class="toclevel-2 tocsection-8">
+               <a href="#YourCharacter.cpp">
+                <span class="tocnumber">
+                 3.5
+                </span>
+                <span class="toctext">
+                 YourCharacter.cpp
+                </span>
+               </a>
+              </li>
+              <li class="toclevel-2 tocsection-9">
+               <a href="#YourGameMode.cpp">
+                <span class="tocnumber">
+                 3.6
+                </span>
+                <span class="toctext">
+                 YourGameMode.cpp
+                </span>
+               </a>
+              </li>
+             </ul>
+            </li>
+            <li class="toclevel-1 tocsection-10">
+             <a href="#See_also">
+              <span class="tocnumber">
+               4
+              </span>
+              <span class="toctext">
+               See also
+              </span>
+             </a>
+            </li>
+           </ul>
+          </div>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       By default, using an
+       in Unreal Engine 4 affects the rotation responsible for both the players view and movement direction.
+      </p>
+      <p>
+       There are two main ways to change this:
+      </p>
+      <ul>
+       <li>
+        Creating a Player Camera Manager, Player Controller &amp; GameMode using Blueprints.
+       </li>
+       <li>
+        Creating a new Player Controller, Character &amp; GameMode in C++.
+       </li>
+      </ul>
+      <p>
+       The end results are similar - the players view and movement directions are separate - but the C++ version is more flexible.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Blueprints">
+        Blueprints
+       </span>
+      </h2>
+      <ol>
+       <li>
+        Create a Blueprint that based on PlayerCameraManager.
+       </li>
+       <li>
+        In the Defaults tab, find "Follow Hmd Orientation" and set it to "true".
+       </li>
+       <li>
+        Create a Blueprint that based on PlayerController.
+       </li>
+       <li>
+        In the Defaults tab, find Player Camera Manager Class and set it to your PlayerCameraManager Blueprint.
+       </li>
+       <li>
+        Create a Blueprint that based on GameMode.
+       </li>
+       <li>
+        In the Defaults tab, find Default Controller Class and set it to your PlayerController Blueprint.
+       </li>
+       <li>
+        Finally, under your levels World Settings, find GameMode Override and set it to your GameMode Blueprint.
+       </li>
+      </ol>
+      <h2>
+       <span class="mw-headline" id="C.2B.2B">
+        C++
+       </span>
+      </h2>
+      <p>
+       The C++ method is a more complex, but is also more flexible.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Your.Build.cs">
+        Your.Build.cs
+       </span>
+      </h3>
+      <p>
+       Add HeadMountedDisplay to PublicDependencyModuleNames.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>        <span class="n">PublicDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">[]</span> <span class="p">{</span> 
+            <span class="s">"Core"</span><span class="p">,</span> 
+            <span class="s">"CoreUObject"</span><span class="p">,</span>
+            <span class="s">"Engine"</span><span class="p">,</span>
+            <span class="s">"InputCore"</span><span class="p">,</span> 
+            <span class="s">"HeadMountedDisplay"</span>
+        <span class="p">});</span>
+<span class="p">});</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="YourPlayerController.h">
+        YourPlayerController.h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">UpdateRotation</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaTime</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+    
+    <span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="s">"Pawn"</span><span class="p">)</span>
+    <span class="n">FRotator</span> <span class="n">GetViewRotation</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+    <span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="s">"Pawn"</span><span class="p">)</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">SetViewRotation</span><span class="p">(</span><span class="k">const</span> <span class="n">FRotator</span><span class="o">&amp;</span> <span class="n">NewRotation</span><span class="p">);</span>
+    
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">SetControlRotation</span><span class="p">(</span><span class="k">const</span> <span class="n">FRotator</span><span class="o">&amp;</span> <span class="n">NewRotation</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+    
+<span class="k">protected</span><span class="o">:</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     *  View &amp; Movement direction are now separate.</span>
+<span class="cm">     *  The controller rotation will determine which direction we will move.</span>
+<span class="cm">     *  ViewRotation represents where we are looking.</span>
+<span class="cm">     */</span>
+    <span class="n">UPROPERTY</span><span class="p">()</span>
+    <span class="n">FRotator</span> <span class="n">ViewRotation</span><span class="p">;</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="YourPlayerController.cpp">
+        YourPlayerController.cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Make sure you include this!!</span>
+<span class="cp">#include</span> <span class="cpf">"IHeadMountedDisplay.h"</span><span class="cp"></span>
+
+<span class="kt">void</span> <span class="n">AYourPlayerController</span><span class="o">::</span><span class="n">UpdateRotation</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaTime</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// Calculate Delta to be applied on ViewRotation</span>
+    <span class="n">FRotator</span> <span class="n">DeltaRot</span><span class="p">(</span><span class="n">RotationInput</span><span class="p">);</span>
+
+    <span class="n">FRotator</span> <span class="n">NewControlRotation</span> <span class="o">=</span> <span class="n">GetControlRotation</span><span class="p">();</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="n">PlayerCameraManager</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">PlayerCameraManager</span><span class="o">-&gt;</span><span class="n">ProcessViewRotation</span><span class="p">(</span><span class="n">DeltaTime</span><span class="p">,</span> <span class="n">NewControlRotation</span><span class="p">,</span> <span class="n">DeltaRot</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="n">SetControlRotation</span><span class="p">(</span><span class="n">NewControlRotation</span><span class="p">);</span>
+
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">PlayerCameraManager</span> <span class="o">||</span> <span class="o">!</span><span class="n">PlayerCameraManager</span><span class="o">-&gt;</span><span class="n">bFollowHmdOrientation</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">GEngine</span><span class="o">-&gt;</span><span class="n">HMDDevice</span><span class="p">.</span><span class="n">IsValid</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">GEngine</span><span class="o">-&gt;</span><span class="n">HMDDevice</span><span class="o">-&gt;</span><span class="n">IsHeadTrackingAllowed</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="n">FQuat</span> <span class="n">HMDOrientation</span><span class="p">;</span>
+            <span class="n">FVector</span> <span class="n">HMDPosition</span><span class="p">;</span>
+
+            <span class="c1">// Disable bUpdateOnRT if using this method.</span>
+            <span class="n">GEngine</span><span class="o">-&gt;</span><span class="n">HMDDevice</span><span class="o">-&gt;</span><span class="n">GetCurrentOrientationAndPosition</span><span class="p">(</span><span class="n">HMDOrientation</span><span class="p">,</span> <span class="n">HMDPosition</span><span class="p">);</span>
+
+            <span class="n">FRotator</span> <span class="n">NewViewRotation</span> <span class="o">=</span> <span class="n">HMDOrientation</span><span class="p">.</span><span class="n">Rotator</span><span class="p">();</span>
+
+            <span class="c1">// Only keep the yaw component from the controller.</span>
+            <span class="n">NewViewRotation</span><span class="p">.</span><span class="n">Yaw</span> <span class="o">+=</span> <span class="n">NewControlRotation</span><span class="p">.</span><span class="n">Yaw</span><span class="p">;</span>
+            
+            <span class="n">SetViewRotation</span><span class="p">(</span><span class="n">NewViewRotation</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    
+    <span class="n">APawn</span><span class="o">*</span> <span class="k">const</span> <span class="n">P</span> <span class="o">=</span> <span class="n">GetPawnOrSpectator</span><span class="p">();</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">P</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">P</span><span class="o">-&gt;</span><span class="n">FaceRotation</span><span class="p">(</span><span class="n">NewControlRotation</span><span class="p">,</span> <span class="n">DeltaTime</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AYourPlayerController</span><span class="o">::</span><span class="n">SetControlRotation</span><span class="p">(</span><span class="k">const</span> <span class="n">FRotator</span><span class="o">&amp;</span> <span class="n">NewRotation</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">ControlRotation</span> <span class="o">=</span> <span class="n">NewRotation</span><span class="p">;</span>
+    
+    <span class="c1">// Anything that is overriding view rotation will need to </span>
+    <span class="c1">// call SetViewRotation() after SetControlRotation().</span>
+    <span class="n">SetViewRotation</span><span class="p">(</span><span class="n">NewRotation</span><span class="p">);</span>
+    
+    <span class="k">if</span> <span class="p">(</span><span class="n">RootComponent</span> <span class="o">&amp;&amp;</span> <span class="n">RootComponent</span><span class="o">-&gt;</span><span class="n">bAbsoluteRotation</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">RootComponent</span><span class="o">-&gt;</span><span class="n">SetWorldRotation</span><span class="p">(</span><span class="n">GetControlRotation</span><span class="p">());</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AYourPlayerController</span><span class="o">::</span><span class="n">SetViewRotation</span><span class="p">(</span><span class="k">const</span> <span class="n">FRotator</span><span class="o">&amp;</span> <span class="n">NewRotation</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">ViewRotation</span> <span class="o">=</span> <span class="n">NewRotation</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">FRotator</span> <span class="n">AYourPlayerController</span><span class="o">::</span><span class="n">GetViewRotation</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">ViewRotation</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="YourCharacter.h">
+        YourCharacter.h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">public</span><span class="o">:</span>
+    <span class="k">virtual</span> <span class="n">FRotator</span> <span class="n">GetViewRotation</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="YourCharacter.cpp">
+        YourCharacter.cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FRotator</span> <span class="n">AYourCharacter</span><span class="o">::</span><span class="n">GetViewRotation</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">AYourPlayerController</span><span class="o">*</span> <span class="n">MYPC</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">AYourPlayerController</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Controller</span><span class="p">))</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="n">MYPC</span><span class="o">-&gt;</span><span class="n">GetViewRotation</span><span class="p">();</span>
+    <span class="p">}</span>
+    <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">Role</span> <span class="o">&lt;</span> <span class="n">ROLE_Authority</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// check if being spectated</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">FConstPlayerControllerIterator</span> <span class="n">Iterator</span> <span class="o">=</span> <span class="n">GetWorld</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetPlayerControllerIterator</span><span class="p">();</span> <span class="n">Iterator</span><span class="p">;</span> <span class="o">++</span><span class="n">Iterator</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">APlayerController</span><span class="o">*</span> <span class="n">PlayerController</span> <span class="o">=</span> <span class="o">*</span><span class="n">Iterator</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">PlayerController</span> <span class="o">&amp;&amp;</span> <span class="n">PlayerController</span><span class="o">-&gt;</span><span class="n">PlayerCameraManager</span><span class="o">-&gt;</span><span class="n">GetViewTargetPawn</span><span class="p">()</span> <span class="o">==</span> <span class="k">this</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="n">PlayerController</span><span class="o">-&gt;</span><span class="n">BlendedTargetViewRotation</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">GetActorRotation</span><span class="p">();</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="YourGameMode.cpp">
+        YourGameMode.cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">AYourGameMode</span><span class="o">::</span><span class="n">AYourGameMode</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span>
+    <span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">DefaultPawnClass</span> <span class="o">=</span> <span class="n">AYourCharacter</span><span class="o">::</span><span class="n">StaticClass</span><span class="p">();</span>
+    <span class="n">PlayerControllerClass</span> <span class="o">=</span> <span class="n">AYourPlayerController</span><span class="o">::</span><span class="n">StaticClass</span><span class="p">();</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="See_also">
+        See also
+       </span>
+      </h2>
+      <ul>
+       <li>
+       </li>
+       <li>
+       </li>
+      </ul>
+      <p>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

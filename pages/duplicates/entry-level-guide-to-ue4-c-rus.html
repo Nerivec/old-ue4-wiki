@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Entry Level Guide to UE4 C++ RUS - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Entry Level Guide to UE4 C++ RUS
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#.D0.9E.D0.B1.D0.B7.D0.BE.D1.80">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Обзор
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#.D0.A1_.D1.87.D0.B5.D0.B3.D0.BE_.D0.BB.D1.83.D1.87.D1.88.D0.B5_.D0.BD.D0.B0.D1.87.D0.B0.D1.82.D1.8C_.D0.B8.D0.B7.D1.83.D1.87.D0.B5.D0.BD.D0.B8.D0.B5_UE4_C.2B.2B_.3F">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           С чего лучше начать изучение UE4 C++  ?
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#ClientMessage">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             ClientMessage
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#PlayerController_.D0.B2.D1.81.D1.82.D1.80.D0.B5.D1.87.D0.B0.D0.B5.D1.82.D1.81.D1.8F_.D0.BF.D0.BE.D0.B2.D1.81.D1.8E.D0.B4.D1.83">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             PlayerController встречается повсюду
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#.D0.A7.D1.82.D0.BE_.D1.82.D0.B0.D0.BA.D0.BE.D0.B5_.28-.3E.29.2C_.28_.29.2C_.28::.29_.3F">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Что такое (-&gt;), ( ), (::) ?
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#.28-.3E.29_.D0.B8_.28..29">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             (-&gt;) и (.)
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-7">
+             <a href="#.D0.9F.D1.80.D0.B8.D0.BC.D0.B5.D1.80">
+              <span class="tocnumber">
+               3.1.1
+              </span>
+              <span class="toctext">
+               Пример
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-8">
+             <a href="#.D0.98.D1.82.D0.BE.D0.B3">
+              <span class="tocnumber">
+               3.1.2
+              </span>
+              <span class="toctext">
+               Итог
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#.D0.98.D1.81.D0.BF.D0.BE.D0.BB.D1.8C.D0.B7.D0.BE.D0.B2.D0.B0.D0.BD.D0.B8.D0.B5_.28::.29">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             Использование (::)
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-10">
+             <a href="#.D0.94.D0.BB.D1.8F_.D1.87.D0.B5.D0.B3.D0.BE_.D1.8D.D1.82.D0.BE.3F">
+              <span class="tocnumber">
+               3.2.1
+              </span>
+              <span class="toctext">
+               Для чего это?
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-11">
+             <a href="#.D0.9F.D1.80.D0.B8.D0.BC.D0.B5.D1.80_2">
+              <span class="tocnumber">
+               3.2.2
+              </span>
+              <span class="toctext">
+               Пример
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-12">
+             <a href="#.D0.95.D1.81.D0.BB.D0.B8_.D0.B1.D1.8B_.D0.BD.D0.B5_.28::.29">
+              <span class="tocnumber">
+               3.2.3
+              </span>
+              <span class="toctext">
+               Если бы не (::)
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-13">
+             <a href="#.D0.98.D1.82.D0.BE.D0.B3_2">
+              <span class="tocnumber">
+               3.2.4
+              </span>
+              <span class="toctext">
+               Итог
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-14">
+         <a href="#T">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           T
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-15">
+           <a href="#.D0.9E.D0.B1.D1.89.D0.B0.D1.8F_.D0.A1.D1.81.D1.8B.D0.BB.D0.BA.D0.B0">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             Общая Ссылка
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-16">
+         <a href="#.D0.9F.D1.80.D0.B5.D1.84.D0.B8.D0.BA.D1.81.D1.8B">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Префиксы
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-17">
+           <a href="#EPIC.2C_.D0.9E.D1.84.D0.B8.D1.86.D0.B8.D0.B0.D0.BB.D1.8C.D0.BD.D0.B0.D1.8F_.D0.B4.D0.BE.D0.BA.D1.83.D0.BC.D0.B5.D0.BD.D1.82.D0.B0.D1.86.D0.B8.D1.8F_.D0.BF.D0.BE_.D0.BA.D0.BB.D0.B0.D1.81.D1.81.D0.B0.D0.BC">
+            <span class="tocnumber">
+             5.1
+            </span>
+            <span class="toctext">
+             EPIC, Официальная документация по классам
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-18">
+           <a href="#G">
+            <span class="tocnumber">
+             5.2
+            </span>
+            <span class="toctext">
+             G
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-19">
+         <a href="#.D0.A5.D0.BE.D1.80.D0.BE.D1.88.D0.BE.2C_.D1.82.D0.B0.D0.BA_.D1.87.D1.82.D0.BE_.D0.B2_.D0.B4.D0.B5.D0.B9.D1.81.D1.82.D0.B2.D0.B8.D1.82.D0.B5.D0.BB.D1.8C.D0.BD.D0.BE.D1.81.D1.82.D0.B8_.D0.BE.D0.B7.D0.BD.D0.B0.D1.87.D0.B0.D0.B5.D1.82_T_.3F">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Хорошо, так что в действительности означает T ?
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-20">
+         <a href="#.D0.A3.D0.BA.D0.B0.D0.B7.D0.B0.D1.82.D0.B5.D0.BB.D0.B8">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Указатели
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-21">
+           <a href="#.D0.92.D1.81.D0.B5.D0.B3.D0.B4.D0.B0_.D0.BF.D1.80.D0.BE.D0.B2.D0.B5.D1.80.D1.8F.D0.B9.D1.82.D0.B5_.D0.B2.D0.B0.D1.88.D0.B8_.D1.83.D0.BA.D0.B0.D0.B7.D0.B0.D1.82.D0.B5.D0.BB.D0.B8">
+            <span class="tocnumber">
+             7.1
+            </span>
+            <span class="toctext">
+             Всегда проверяйте ваши указатели
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-22">
+           <a href="#.D0.A0.D0.B0.D0.B7.D1.8B.D0.BC.D0.B5.D0.BD.D0.BE.D0.B2.D0.B0.D0.BD.D0.B8.D1.8F_.D1.83.D0.BA.D0.B0.D0.B7.D0.B0.D1.82.D0.B5.D0.BB.D0.B5.D0.B9_.28.D0.9F.D0.BE.D0.BB.D1.83.D1.87.D0.B5.D0.BD.D0.B8.D0.B5_.D0.B4.D0.BE.D1.81.D1.82.D1.83.D0.BF.D0.B0.29">
+            <span class="tocnumber">
+             7.2
+            </span>
+            <span class="toctext">
+             Разыменования указателей (Получение доступа)
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-23">
+             <a href="#.D0.A0.D0.B0.D0.B7.D1.8B.D0.BC.D0.B5.D0.BD.D0.BE.D0.B2.D0.B0.D0.BD.D0.B8.D1.8F_.D1.81_.D0.BF.D0.BE.D0.BC.D0.BE.D1.89.D1.8C.D1.8E_.28.2A.29">
+              <span class="tocnumber">
+               7.2.1
+              </span>
+              <span class="toctext">
+               Разыменования  с помощью (*)
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-24">
+             <a href="#.D0.A0.D0.B0.D0.B7.D1.8B.D0.BC.D0.B5.D0.BD.D0.BE.D0.B2.D0.B0.D0.BD.D0.B8.D1.8F_.D1.81_.D0.BF.D0.BE.D0.BC.D0.BE.D1.89.D1.8C.D1.8E_.28-.3E.29">
+              <span class="tocnumber">
+               7.2.2
+              </span>
+              <span class="toctext">
+               Разыменования  с помощью (-&gt;)
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-25">
+           <a href="#.D0.97.D0.B0.D1.87.D0.B5.D0.BC_.D0.B8.D1.81.D0.BF.D0.BE.D0.BB.D1.8C.D0.B7.D0.BE.D0.B2.D0.B0.D1.82.D1.8C_.D1.83.D0.BA.D0.B0.D0.B7.D0.B0.D1.82.D0.B5.D0.BB.D0.B8.3F">
+            <span class="tocnumber">
+             7.3
+            </span>
+            <span class="toctext">
+             Зачем использовать указатели?
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-26">
+             <a href="#.D0.94.D0.BE.D1.81.D1.82.D1.83.D0.BF_.D0.BA_.D0.B4.D0.B0.D0.BD.D0.BD.D1.8B.D0.BC_.D0.B8.D0.B7.D0.B4.D0.B0.D0.BB.D0.B5.D0.BA.D0.B0">
+              <span class="tocnumber">
+               7.3.1
+              </span>
+              <span class="toctext">
+               Доступ к данным издалека
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-27">
+             <a href="#.D0.94.D0.BE.D1.81.D1.82.D1.83.D0.BF_.D0.BA_.D0.BE.D0.B3.D1.80.D0.BE.D0.BC.D0.BD.D1.8B.D0.BC_.D0.BE.D0.B1.D1.8A.D0.B5.D0.BC.D0.B0.D0.BC_.D0.B4.D0.B0.D0.BD.D0.BD.D1.8B.D1.85_.D0.B2_.D0.BB.D1.8E.D0.B1.D0.BE.D0.B9_.D0.BC.D0.BE.D0.BC.D0.B5.D0.BD.D1.82">
+              <span class="tocnumber">
+               7.3.2
+              </span>
+              <span class="toctext">
+               Доступ к огромным объемам данных в любой момент
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-28">
+             <a href="#.D0.91.D1.83.D0.B4.D1.8C.D1.82.D0.B5_.D0.B2_.D0.BA.D1.83.D1.80.D1.81.D0.B5_.D0.B8.D0.B7.D0.BC.D0.B5.D0.BD.D0.B5.D0.BD.D0.B8.D0.B9_.D0.B2_.D1.80.D0.B5.D0.B0.D0.BB.D1.8C.D0.BD.D0.BE.D0.BC_.D0.B2.D1.80.D0.B5.D0.BC.D0.B5.D0.BD.D0.B8">
+              <span class="tocnumber">
+               7.3.3
+              </span>
+              <span class="toctext">
+               Будьте в курсе изменений в реальном времени
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-29">
+           <a href="#.D0.9F.D0.B5.D1.80.D0.B5.D0.B4.D0.B0.D1.87.D0.B0_.D0.B4.D0.B0.D0.BD.D0.BD.D1.8B.D1.85_.D0.BF.D0.BE_.D1.81.D1.81.D1.8B.D0.BB.D0.BA.D0.B5">
+            <span class="tocnumber">
+             7.4
+            </span>
+            <span class="toctext">
+             Передача данных по ссылке
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-30">
+         <a href="#.D0.A1.D0.B2.D1.8F.D0.B7.D0.B0.D0.BD.D0.BD.D1.8B.D0.B9_.D1.83.D1.80.D0.BE.D0.BA_.D0.BE.D1.82_Epic">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Связанный урок от Epic
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-31">
+         <a href="#.D0.98.D1.82.D0.BE.D0.B3_3">
+          <span class="tocnumber">
+           9
+          </span>
+          <span class="toctext">
+           Итог
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id=".D0.9E.D0.B1.D0.B7.D0.BE.D1.80">
+        Обзор
+       </span>
+      </h2>
+      <pre> <i>Автор</i>  ()
+ <i>Переводчик</i>  ()
+ <i>Редактура</i> (),  ()
+ <b></b>
+</pre>
+      <p>
+       Уважаемое сообщество!
+      </p>
+      <p>
+       Эта страница Вики посвящена снижению порога вхождения для новых программистов на C++ .
+      </p>
+      <p>
+       Если у Вас есть общие вопросы, Вы пытаетесь получить больше комфорта с C++, пожалуйста, задавайте их в дискуссионной вкладке.
+      </p>
+      <p>
+       Я и, надеюсь, другие смогут ответить на эти вопросы.
+      </p>
+      <h2>
+       <span class="mw-headline" id=".D0.A1_.D1.87.D0.B5.D0.B3.D0.BE_.D0.BB.D1.83.D1.87.D1.88.D0.B5_.D0.BD.D0.B0.D1.87.D0.B0.D1.82.D1.8C_.D0.B8.D0.B7.D1.83.D1.87.D0.B5.D0.BD.D0.B8.D0.B5_UE4_C.2B.2B_.3F">
+        С чего лучше начать изучение UE4 C++  ?
+       </span>
+      </h2>
+      <p>
+       Лично я рекомендую начать с расширения класса PlayerController, а затем сделать Blueprint из него.
+      </p>
+      <p>
+       Потом Вы сможете указать свой пользовательский PlayerController в вашем Game Mode Class.
+      </p>
+      <p>
+       У меня есть урок на эту тему:
+      </p>
+      <p>
+       <b>
+       </b>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="ClientMessage">
+        ClientMessage
+       </span>
+      </h3>
+      <p>
+       Когда Вы изучаете C ++, Вы должны быть в состоянии дать себе обратную связь, о том, что функции работают, алгоритмы получают информацию, и о том что разные части кода на самом деле отрабатываются.
+      </p>
+      <p>
+       <br/>
+       Вы можете использовать логирование для этого, но также можно использовать ClientMessage!
+      </p>
+      <p>
+       Мне нравится ClientMessage, потому что
+       <i>
+        'всё, что Вы должны сделать, это нажать ~ или другую клавишу, чтобы открыть консоль'
+       </i>
+       и Ваша обратная связь появится тут.
+      </p>
+      <p>
+       Когда только Вы начинаете, важно иметь обратную связь, чтобы знать, что сделали всё правильно и где части кода
+работают неправильно, или просто не работают вовсе!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">ClientMessage</span><span class="p">(</span><span class="s">"Да эта функция работает!"</span><span class="p">);</span>
+</pre>
+      </div>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">ClientMessage</span><span class="p">(</span><span class="s">"Значения переменой: "</span><span class="p">);</span>
+<span class="n">ClientMessage</span><span class="p">(</span><span class="n">FString</span><span class="o">::</span><span class="n">SanitizeFloat</span><span class="p">(</span><span class="n">TheFloat</span><span class="p">));</span>
+</pre>
+      </div>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">ClientMessage</span><span class="p">(</span><span class="s">"Текущее значения переменной: "</span><span class="p">);</span>
+<span class="n">ClientMessage</span><span class="p">(</span><span class="n">FString</span><span class="o">::</span><span class="n">SanitizeFloat</span><span class="p">(</span><span class="n">TheFloat</span><span class="p">));</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="PlayerController_.D0.B2.D1.81.D1.82.D1.80.D0.B5.D1.87.D0.B0.D0.B5.D1.82.D1.81.D1.8F_.D0.BF.D0.BE.D0.B2.D1.81.D1.8E.D0.B4.D1.83">
+        PlayerController встречается повсюду
+       </span>
+      </h3>
+      <p>
+       Фактически в любой игре будет  PlayerController, так что это хорошая точка входа в мир UE4 C++ :)
+      </p>
+      <h2>
+       <span class="mw-headline" id=".D0.A7.D1.82.D0.BE_.D1.82.D0.B0.D0.BA.D0.BE.D0.B5_.28-.3E.29.2C_.28_.29.2C_.28::.29_.3F">
+        Что такое (-&gt;), ( ), (::) ?
+       </span>
+      </h2>
+      <p>
+       <i>
+        Я видел, что в C++ мы используем дефис со стрелкой (-&gt;), а не точку, как в других языках (.). Но я также видел использование двойных двоеточий (::) которые я не понимаю. Вы можете, пожалуйста, объяснить- что делают с помощью этих символов в C++? Какая разница между (-&gt;) и (::) ?
+       </i>
+      </p>
+      <p>
+       <i>
+        Например, UnrealEdEngine.cpp (\UnrealEngine\Engine\Source\Editor\UnrealEd\Private), Вы можете увидеть функции UUnrealEdEngine ::Init в строке 26. Почему эта функция использует двойное двоеточие? И внутри этой функции я вижу Super::Init(InEngineLoop).
+       </i>
+      </p>
+      <p>
+       <i>
+        Я ожидал увидеть Super-&gt;Init(InEngineLoop), но вместо него двойное двоеточие. И внутри этой функции большинство вызовов с помощью двойного двоеточия. Поэтому пожалуйста: объясните разницу между (::) и (-&gt;) и (.)
+       </i>
+       .
+      </p>
+      <h3>
+       <span class="mw-headline" id=".28-.3E.29_.D0.B8_.28..29">
+        (-&gt;) и (.)
+       </span>
+      </h3>
+      <p>
+       Простым языком:
+      </p>
+      <p>
+       (-&gt;) означает, что это переменная, указывающая на данные. То есть переменная является ссылкой на контейнер, хранящий данные.
+      </p>
+      <p>
+       Это означает, что(.) это прямой доступ к реальным данным, в то время как (-&gt;) это косвенная ссылка на данные, которые могут и не существовать на самом деле.
+      </p>
+      <p>
+       То есть (-&gt;), может указывать на хранилище (контейнер) данных, которого на самом деле не существует.
+      </p>
+      <p>
+       Таким образом, Вы всегда должны проверять такие переменные!
+      </p>
+      <h4>
+       <span class="mw-headline" id=".D0.9F.D1.80.D0.B8.D0.BC.D0.B5.D1.80">
+        Пример
+       </span>
+      </h4>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FVector</span><span class="o">*</span> <span class="n">LocationPtr</span><span class="p">;</span>
+<span class="n">FVector</span> <span class="n">Location</span><span class="p">;</span>
+
+<span class="n">Location</span><span class="p">.</span><span class="n">X</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+<span class="n">LocationPtr</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">Location</span><span class="p">;</span>
+<span class="n">ClientMessage</span><span class="p">(</span><span class="n">FString</span><span class="o">::</span><span class="n">SanitizeFloat</span><span class="p">(</span><span class="n">LocationPtr</span><span class="o">-&gt;</span><span class="n">X</span><span class="p">));</span>
+</pre>
+      </div>
+      <p>
+       После создания LocationPtr не указывает на хранилище данных, её необходимо связать с фактическими данными.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">LocationPtr</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">Location</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       Переменная Location, напротив, сама является данными и может быть доступна сразу, используя точку (.)
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">Location</span><span class="p">.</span><span class="n">X</span> <span class="o">=</span> <span class="mi">5</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       Теперь, когда мы связали LocationPtr, мы можем получить доступ к переменной X с помощью косвенной ссылки (-&gt;)
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">LocationPtr</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+<span class="n">ClientMessage</span><span class="p">(</span><span class="n">FString</span><span class="o">::</span><span class="n">SanitizeFloat</span><span class="p">(</span><span class="n">LocationPtr</span><span class="o">-&gt;</span><span class="n">X</span><span class="p">));</span>
+</pre>
+      </div>
+      <pre> Значение выведенное на экран "5"
+</pre>
+      <h4>
+       <span class="mw-headline" id=".D0.98.D1.82.D0.BE.D0.B3">
+        Итог
+       </span>
+      </h4>
+      <p>
+       Если у Вас есть нормальная переменная нужно использовать (.), Потому что переменная сама по себе- контейнер данных, так что Вы можете получить к нему доступ в любое время.
+      </p>
+      <p>
+       Когда Вы используете указатель, который является косвенной ссылкой, Вы не можете быть уверены, что указываете на существующие данные, поэтому Вы должны это проверить:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">LocationPtr</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span> <span class="c1">//Переменная не указывала на что-либо</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       Если указатель ссылается на фактическую переменную, Вы можете получить к ней доступ, воспользовавшись стрелкой (-&gt;).
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">LocationPtr</span><span class="o">-&gt;</span><span class="n">X</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id=".D0.98.D1.81.D0.BF.D0.BE.D0.BB.D1.8C.D0.B7.D0.BE.D0.B2.D0.B0.D0.BD.D0.B8.D0.B5_.28::.29">
+        Использование (::)
+       </span>
+      </h3>
+      <p>
+       (::) говорит о пространстве имён (namespace) / или области видимости функции или переменой.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UUnrealEdEngine</span><span class="o">::</span><span class="n">Init</span>
+</pre>
+      </div>
+      <p>
+       Это означает, что функция объявлена в классе UUnrealEdEngine.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">Super</span><span class="o">::</span><span class="n">Init</span><span class="p">(</span><span class="n">InEngineLoop</span><span class="p">).</span>
+</pre>
+      </div>
+      <p>
+       Так как функция инициализации является виртуальной, Вы можете вызвать версию функции из родительского класса (и Вы должны это сделать!)
+      </p>
+      <p>
+       Super означает родительский класс UUnrealEdEngine.
+      </p>
+      <h4>
+       <span class="mw-headline" id=".D0.94.D0.BB.D1.8F_.D1.87.D0.B5.D0.B3.D0.BE_.D1.8D.D1.82.D0.BE.3F">
+        Для чего это?
+       </span>
+      </h4>
+      <p>
+       У Вас есть огромная власть и свобода в C++!
+      </p>
+      <p>
+       Это, возможно, то, что делает его немного более сложным, для изучения :)
+      </p>
+      <p>
+       Вы можете объявить функции и переменные в любом месте в C++, поэтому используются (::) чтобы разграничить области: различные классы могут иметь переменные и функции с тем же именем, но при этом компилятор их будет различать.
+      </p>
+      <h4>
+       <span class="mw-headline" id=".D0.9F.D1.80.D0.B8.D0.BC.D0.B5.D1.80_2">
+        Пример
+       </span>
+      </h4>
+      <p>
+       Например, у Вас есть классы AMyTree и AMyFlower.
+      </p>
+      <p>
+       AMyTree хочется иметь функцию GetLocation (), так же как и в AMyFlower.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FVector</span> <span class="nf">GetLocation</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       Однако в C ++, Вы работаете на очень низком уровне, что означает, что Вы можете объявить функции и переменные в глобальном пространстве имён.
+      </p>
+      <p>
+       Если Вы просто объявите переменную или функцию вне класса(class) или структуры(struct) или пространства имен(namespace),
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">static</span> <span class="k">const</span> <span class="n">FVector</span> <span class="n">MyGlobalVector</span> <span class="o">=</span> <span class="n">FVector</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">16</span><span class="p">);</span>
+<span class="n">FORCEINLINE</span> <span class="kt">void</span> <span class="nf">MyVeryGlobalFunction</span><span class="p">()</span>
+<span class="p">{</span>
+  <span class="c1">//что то делает</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       то тогда эти функции и переменные будут объявлены в глобальном пространстве имён и будут вызываться везде, где бы они не использовались.
+      </p>
+      <p>
+       Это на самом деле очень полезно для
+       <b>
+       </b>
+       !
+Однако, это вызывает проблемы для AMyTree и AMyFlower, где в обоих классах требуется функция GetLocation ()!
+Если Вы не будете использовать (::), то компилятор не сможет различить GetLocation () для AMyTree  и для AMyFlower при компиляции!
+Используя (::) Вы говорите компилятору: какая версия функции для какого класса.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FVector</span> <span class="n">AMyFlower</span><span class="o">::</span><span class="n">GetLocation</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="c1">//один код</span>
+<span class="p">}</span>
+<span class="n">FVector</span> <span class="n">AMyTree</span><span class="o">::</span><span class="n">GetLocation</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="c1">//другой код</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h4>
+       <span class="mw-headline" id=".D0.95.D1.81.D0.BB.D0.B8_.D0.B1.D1.8B_.D0.BD.D0.B5_.28::.29">
+        Если бы не (::)
+       </span>
+      </h4>
+      <p>
+       Если у нас не было (::) что бы объявлять области видимости переменных и функций, то каждое название в коде всего проекта должно было бы  быть уникальным. Вы не могли бы использовать функции с одинаковыми именами.
+      </p>
+      <h4>
+       <span class="mw-headline" id=".D0.98.D1.82.D0.BE.D0.B3_2">
+        Итог
+       </span>
+      </h4>
+      <pre> Воспринимайте (::) как просто ярлык, говорящий Вам- какая функция или переменная принадлежит какому классу.
+</pre>
+      <h2>
+       <span class="mw-headline" id="T">
+        T
+       </span>
+      </h2>
+      <p>
+       <i>
+        Что значит, Т? В таких случаях как TSharedRef, TWeakPtr, TArray и т.д. "
+       </i>
+      </p>
+      <p>
+       Не допускайте, чтобы T запутала Вас!
+Воспринимать код с ней немного сложнее, так что постарайтесь игнорировать её для себя в таких ситуациях как этот:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">TArray</span>
+</pre>
+      </div>
+      <p>
+       ..и просто читать следующим образом:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">Array</span>
+</pre>
+      </div>
+      <p>
+       Буква Т нужна, но это скорее заявление о типе класса- Array.
+Представьте себе: имена классов могут быть разных цветов, Т просто один цвет, или вкус класса в UE4.
+Но, если Вы пытаетесь прочитать код и если Вы не игнорировали ее, то буква Т может помешать пониманию- что делает сам класс.
+      </p>
+      <h3>
+       <span class="mw-headline" id=".D0.9E.D0.B1.D1.89.D0.B0.D1.8F_.D0.A1.D1.81.D1.8B.D0.BB.D0.BA.D0.B0">
+        Общая Ссылка
+       </span>
+      </h3>
+      <p>
+       Еще один пример:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">TSharedRef</span>
+</pre>
+      </div>
+      <p>
+       Читая без T, мы видим  "Общая Ссылка" (SharedRef).
+Игнорируя T, Вы можете читать основной код значительно легче, чтобы получить четкое представление о значениях каждого класса.
+Просто убедитесь, что использовали T, когда Вы попытаетесь работать с классом :)
+      </p>
+      <h2>
+       <span class="mw-headline" id=".D0.9F.D1.80.D0.B5.D1.84.D0.B8.D0.BA.D1.81.D1.8B">
+        Префиксы
+       </span>
+      </h2>
+      <p>
+       <i>
+        Зачем нужны дополнительные префиксы. Например
+       </i>
+      </p>
+      <ul>
+       <li>
+        зачем F в FVector и FSourceControlStatePtr
+       </li>
+       <li>
+        зачем  T в TSharedRef, TWeakPtr, TArray
+       </li>
+       <li>
+        зачем  U в (я думаю это Unreal) UObject, UUnrealEdEngine
+       </li>
+       <li>
+        зачем  G в GIsEditor, GSlowTaskOccurred
+       </li>
+       <li>
+        и так далее...
+       </li>
+      </ul>
+      <p>
+       За исключением G, это как цвета или вкусы классов в UE4.
+Каждая буква указывает на то, от какого класса унаследована та или иная сущность.
+      </p>
+      <h3>
+       <span class="mw-headline" id="EPIC.2C_.D0.9E.D1.84.D0.B8.D1.86.D0.B8.D0.B0.D0.BB.D1.8C.D0.BD.D0.B0.D1.8F_.D0.B4.D0.BE.D0.BA.D1.83.D0.BC.D0.B5.D0.BD.D1.82.D0.B0.D1.86.D0.B8.D1.8F_.D0.BF.D0.BE_.D0.BA.D0.BB.D0.B0.D1.81.D1.81.D0.B0.D0.BC">
+        EPIC, Официальная документация по классам
+       </span>
+      </h3>
+      <p>
+       Epic подробно рассказывает что означают данные префиксы:
+      </p>
+      <p>
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Programming/UnrealArchitecture/Reference/Classes/index.html" rel="nofollow">
+        Epic's Class Documentation
+       </a>
+      </p>
+      <h3>
+       <span class="mw-headline" id="G">
+        G
+       </span>
+      </h3>
+      <p>
+       G означает «глобальный», и это метка показывает Вам, что Вы можете получить доступ к этим переменным в любом месте.
+      </p>
+      <h2>
+       <span class="mw-headline" id=".D0.A5.D0.BE.D1.80.D0.BE.D1.88.D0.BE.2C_.D1.82.D0.B0.D0.BA_.D1.87.D1.82.D0.BE_.D0.B2_.D0.B4.D0.B5.D0.B9.D1.81.D1.82.D0.B2.D0.B8.D1.82.D0.B5.D0.BB.D1.8C.D0.BD.D0.BE.D1.81.D1.82.D0.B8_.D0.BE.D0.B7.D0.BD.D0.B0.D1.87.D0.B0.D0.B5.D1.82_T_.3F">
+        Хорошо, так что в действительности означает T ?
+       </span>
+      </h2>
+      <p>
+       В исходных кодах UE4, все типы данных имеют префикс указывающий на его категорию, например:
+Т используется для обозначения класса шаблона: TSharedRef, TWeakPtr, TArray и т.д.,- это всё шаблонные классы. 
+Префиксы позволяют легко отличать имена классов от имён переменных, поскольку имена переменных обычно не объявляются с префиксами в исходных кодах UE4 (одно исключение к этому правилу- имена логических переменных (bool), они начинаются с 'B').
+      </p>
+      <p>
+       В общем T даёт Вам понять две вещи:
+      </p>
+      <ol>
+       <li>
+        Вы смотрите на название типа (не имя переменной).
+        <ol>
+         <li>
+          Этот тип данных является шаблоном класса.
+         </li>
+        </ol>
+       </li>
+      </ol>
+      <p>
+       Так же есть и другие префиксы, которые можно найти в исходниках, например, U, A, S, I и F. Вы можете прочитать об их значениях здесь:
+      </p>
+      <p>
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Programming/Development/CodingStandard/index.html#namingconventions" rel="nofollow">
+        Epic's Naming Conventions
+       </a>
+      </p>
+      <p>
+       Да, префикс перед именем типа выглядит несколько некрасиво.
+       <a class="external autonumber" href="http://msdn.microsoft.com/en-us/library/aa260976(v=vs.60).aspx" rel="nofollow">
+        [1]
+       </a>
+       ,но может быть гораздо хуже (Посмотрите 36-строчный фрагмент кода ближе к концу статьи).
+      </p>
+      <p>
+       В качестве объяснения, шаблонные классы это такие классы, которым можно определить "подтип" к "основному типу". 
+Для TArray, подтип может быть типом данных, которые буду хранится в нём, например:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">TArray</span><span class="o">&lt;</span><span class="n">FString</span><span class="o">&gt;</span> <span class="n">MyBadVariableName</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       Это получился контейнер для ряда значений типа FString. Без шаблонных классов, Вам бы пришлось,"просто знать", что на самом деле массив "MyBadVariableName" содержит  переменные типа "FStrings", но благодаря шаблонным классам это знает и компилятор, и это хорошо, так что Вам не придется держать столько вещей в свое голове во время чтения магически-запутанного вуду кода вашего друга.
+      </p>
+      <p>
+       Вы можете больше прочитать о шаблонных классах здесь:
+      </p>
+      <p>
+       <a class="external text" href="https://en.wikipedia.org/wiki/Template_(C++)" rel="nofollow">
+        Template (Wikipedia Article)
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id=".D0.A3.D0.BA.D0.B0.D0.B7.D0.B0.D1.82.D0.B5.D0.BB.D0.B8">
+        Указатели
+       </span>
+      </h2>
+      <p>
+       <i>
+        Указатели (*) и ссылки (&amp;). Я с трудом понимаю как их использовать. Что они такое? Вы можете показать несколько примеров того, как использовать и где использовать и какие преимущества их использования ?
+       </i>
+      </p>
+      <p>
+       Это, пожалуй, самое главное что надо понять новичкам, чтобы действительно достичь прогресса в C++.
+Если у Вас есть четкое представление об указателях, то Вы должны быть счастливы от программирования в UE4 C++!
+Указатели чрезвычайно-мощные и немного опасные, потому что дают Вам силу, которая у них есть.
+      </p>
+      <pre> Указатели требуют, чтобы Вы аккуратно кодили. В свою очередь они дают Вам скорость и силу.
+</pre>
+      <p>
+       Указатель ссылается на адрес памяти, где хранятся фактические данные.
+Чтобы получить адрес памяти для указателя, нужно использовать (&amp;).
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FVector</span> <span class="n">Location</span> <span class="o">=</span> <span class="n">FVector</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">9000</span><span class="p">);</span>
+<span class="n">FVector</span><span class="o">*</span> <span class="n">LocationPtr</span><span class="p">;</span> <span class="c1">//LocationPtr в настоящее время указывает на ПУСТОЕ МЕСТО</span>
+
+<span class="n">LocationPtr</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">Location</span><span class="p">;</span> <span class="c1">//LocationPtr теперь указывает на адрес памяти по которому хранится переменная "Location"</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id=".D0.92.D1.81.D0.B5.D0.B3.D0.B4.D0.B0_.D0.BF.D1.80.D0.BE.D0.B2.D0.B5.D1.80.D1.8F.D0.B9.D1.82.D0.B5_.D0.B2.D0.B0.D1.88.D0.B8_.D1.83.D0.BA.D0.B0.D0.B7.D0.B0.D1.82.D0.B5.D0.BB.D0.B8">
+        Всегда проверяйте ваши указатели
+       </span>
+      </h3>
+      <p>
+       Прежде чем пытаться получить доступ к данным, указатели должны быть связаны, Вы всегда должны проверять это:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">check</span><span class="p">(</span><span class="n">LocationPtr</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       или:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">LocationPtr</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       Вы должны делать это, потому что Вы не можете быть уверены, что указатель всё ещё связан с действующим хранилищем данных.
+      </p>
+      <h3>
+       <span class="mw-headline" id=".D0.A0.D0.B0.D0.B7.D1.8B.D0.BC.D0.B5.D0.BD.D0.BE.D0.B2.D0.B0.D0.BD.D0.B8.D1.8F_.D1.83.D0.BA.D0.B0.D0.B7.D0.B0.D1.82.D0.B5.D0.BB.D0.B5.D0.B9_.28.D0.9F.D0.BE.D0.BB.D1.83.D1.87.D0.B5.D0.BD.D0.B8.D0.B5_.D0.B4.D0.BE.D1.81.D1.82.D1.83.D0.BF.D0.B0.29">
+        Разыменования указателей (Получение доступа)
+       </span>
+      </h3>
+      <p>
+       После того как Вы убедились, что указатель действительно связан с достоверными данными, Вы можете разыменовать его, то есть получить к ним доступ.
+      </p>
+      <h4>
+       <span class="mw-headline" id=".D0.A0.D0.B0.D0.B7.D1.8B.D0.BC.D0.B5.D0.BD.D0.BE.D0.B2.D0.B0.D0.BD.D0.B8.D1.8F_.D1.81_.D0.BF.D0.BE.D0.BC.D0.BE.D1.89.D1.8C.D1.8E_.28.2A.29">
+        Разыменования  с помощью (*)
+       </span>
+      </h4>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FVector</span> <span class="n">NewVector</span> <span class="o">=</span> <span class="n">FVector</span><span class="o">::</span><span class="n">ZeroVector</span><span class="p">;</span>
+<span class="k">if</span><span class="p">(</span><span class="n">LocationPtr</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">NewVector</span> <span class="o">=</span> <span class="o">*</span><span class="n">LocationPtr</span><span class="p">;</span> <span class="c1">//Разыменования указателей</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h4>
+       <span class="mw-headline" id=".D0.A0.D0.B0.D0.B7.D1.8B.D0.BC.D0.B5.D0.BD.D0.BE.D0.B2.D0.B0.D0.BD.D0.B8.D1.8F_.D1.81_.D0.BF.D0.BE.D0.BC.D0.BE.D1.89.D1.8C.D1.8E_.28-.3E.29">
+        Разыменования  с помощью (-&gt;)
+       </span>
+      </h4>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">LocationPtr</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+<span class="k">const</span> <span class="kt">float</span> <span class="n">XValue</span> <span class="o">=</span> <span class="n">LocationPtr</span><span class="o">-&gt;</span><span class="n">X</span><span class="p">;</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id=".D0.97.D0.B0.D1.87.D0.B5.D0.BC_.D0.B8.D1.81.D0.BF.D0.BE.D0.BB.D1.8C.D0.B7.D0.BE.D0.B2.D0.B0.D1.82.D1.8C_.D1.83.D0.BA.D0.B0.D0.B7.D0.B0.D1.82.D0.B5.D0.BB.D0.B8.3F">
+        Зачем использовать указатели?
+       </span>
+      </h3>
+      <ul>
+       <li>
+        Указатели дают Вам прямой доступ к области памяти, которая может быть далеко-далеко от локального контекста в котором работает ваш код.
+       </li>
+       <li>
+        Указатели также дают Вам возможность работать с огромными объёмами данных без создания копии этих данных.
+       </li>
+       <li>
+        Указатели дают Вам живую связь, с динамическим обновлением данных, которые всегда будут актуальными, потому что указатель это косвенная ссылка, и её не надо менять, чтобы обновились данные.
+       </li>
+      </ul>
+      <h4>
+       <span class="mw-headline" id=".D0.94.D0.BE.D1.81.D1.82.D1.83.D0.BF_.D0.BA_.D0.B4.D0.B0.D0.BD.D0.BD.D1.8B.D0.BC_.D0.B8.D0.B7.D0.B4.D0.B0.D0.BB.D0.B5.D0.BA.D0.B0">
+        Доступ к данным издалека
+       </span>
+      </h4>
+      <p>
+       Скажем, у Вас есть персонаж, который является частью подуровня, который является частью мира, который является частью далекой Галактики.
+Чтобы фактически получить доступ к переменной "Броня" этого персонажа, Вам надо пройти через целый ряд гетеров (Gets), как то так:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">GetGalaxy</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetSolarSystem</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetPlanet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetMainCharacter</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetCurrentArmor</span><span class="p">();</span>
+</pre>
+      </div>
+      <p>
+       Описанные выше операции являются дорогостоящими и тратят много процессорного времени, также это усложняет чтение кода.
+Код выше, однако, является способом доступа к текущей броне персонажа в далекой-далекой галактике.
+Было бы  не плохо сделать эту сложную операцию извлечения только один раз, и получить своего рода ссылку, своего рода
+       <i>
+        указатель
+       </i>
+       на фактические данные, для быстрого доступа:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FArmorStruct</span><span class="o">*</span> <span class="n">TheArmor</span> <span class="o">=</span> <span class="o">&amp;</span> <span class="n">GetGalaxy</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetSolarSystem</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetPlanet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetMainCharacter</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetCurrentArmor</span><span class="p">();</span>
+</pre>
+      </div>
+      <p>
+       Теперь, чтобы получить данные о броне, Вам не придётся писать
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">GetGalaxy</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetSolarSystem</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetPlanet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetMainCharacter</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetCurrentArmor</span><span class="p">().</span><span class="n">Durability</span><span class="p">;</span>
+<span class="n">GetGalaxy</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetSolarSystem</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetPlanet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetMainCharacter</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetCurrentArmor</span><span class="p">().</span><span class="n">Color</span><span class="p">;</span>
+<span class="n">GetGalaxy</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetSolarSystem</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetPlanet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetMainCharacter</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetCurrentArmor</span><span class="p">().</span><span class="n">Size</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       Такой код является одновременно запутанным и не экономным к процессорному времени, потому что то же самое придется делать и с другим персонажем другой расы в другой галактике.
+      </p>
+      <p>
+       Вместо этого Вы можете написать:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Всегда проверяйте ваши указатели </span>
+<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">TheArmor</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+
+<span class="n">TheArmor</span><span class="o">-&gt;</span><span class="n">Durability</span><span class="p">;</span>
+<span class="n">TheArmor</span><span class="o">-&gt;</span><span class="n">Color</span><span class="p">;</span>
+<span class="n">TheArmor</span><span class="o">-&gt;</span><span class="n">Size</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       Видите насколько это легче прочитать?
+Но подождите, это еще не все!
+      </p>
+      <h4>
+       <span class="mw-headline" id=".D0.94.D0.BE.D1.81.D1.82.D1.83.D0.BF_.D0.BA_.D0.BE.D0.B3.D1.80.D0.BE.D0.BC.D0.BD.D1.8B.D0.BC_.D0.BE.D0.B1.D1.8A.D0.B5.D0.BC.D0.B0.D0.BC_.D0.B4.D0.B0.D0.BD.D0.BD.D1.8B.D1.85_.D0.B2_.D0.BB.D1.8E.D0.B1.D0.BE.D0.B9_.D0.BC.D0.BE.D0.BC.D0.B5.D0.BD.D1.82">
+        Доступ к огромным объемам данных в любой момент
+       </span>
+      </h4>
+      <p>
+       Указатели могут быть связаны со сравнительно-небольшим объемом данных, или с большим или даже с гигантским объемом данных!
+      </p>
+      <pre> Указатель, связывается с местом в памяти,
+ А фактический объем этой памяти может быть огромным!
+</pre>
+      <p>
+       Продолжая приведенный выше пример, можно спросить, "Почему я не могу просто создать копию переменной "Броня" ?"
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FArmorStruct</span> <span class="n">ArmorVar</span> <span class="o">=</span> <span class="n">GetGalaxy</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetSolarSystem</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetPlanet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetMainCharacter</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetCurrentArmor</span><span class="p">();</span>
+</pre>
+      </div>
+      <p>
+       Но что, если FArmorStruct содержит гигантское количество данных, и Вы хотите сделать это для 300 персонажей по всей галактике?
+Вы бы стали копировать данные много раз. Но данные уже есть в одном месте памяти.
+Зачем Вам копировать их несколько раз, тем самым дублируя данные?
+Указатели позволяют избежать этого! Вы можете просто указать на одну ячейку в памяти и получать доступ к ней в любое время.
+      </p>
+      <h4>
+       <span class="mw-headline" id=".D0.91.D1.83.D0.B4.D1.8C.D1.82.D0.B5_.D0.B2_.D0.BA.D1.83.D1.80.D1.81.D0.B5_.D0.B8.D0.B7.D0.BC.D0.B5.D0.BD.D0.B5.D0.BD.D0.B8.D0.B9_.D0.B2_.D1.80.D0.B5.D0.B0.D0.BB.D1.8C.D0.BD.D0.BE.D0.BC_.D0.B2.D1.80.D0.B5.D0.BC.D0.B5.D0.BD.D0.B8">
+        Будьте в курсе изменений в реальном времени
+       </span>
+      </h4>
+      <p>
+       Также как и в приведенном выше случае, когда Вы копировали данные брони, это уже не броня персонажа из другого мира.
+Вы потеряли живую связь с бронёй.
+Так что, если персонаж из другого мира решит изменить цвет брони, Вы не будете знать этого!
+Указатели дают знать Вам актуальные данные, потенциально большие объемы данных, и потребность в получении доступа только один раз.
+      </p>
+      <p>
+       Итак, еще раз, правильный путь:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FArmorStruct</span><span class="o">*</span> <span class="n">TheArmor</span> <span class="o">=</span> <span class="o">&amp;</span> <span class="n">GetGalaxy</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetSolarSystem</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetPlanet</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetMainCharacter</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetCurrentArmor</span><span class="p">();</span>
+</pre>
+      </div>
+      <p>
+       Теперь у Вас есть легкий доступ и обновляемая связь с данными, что находятся в далекой-далекой галактике, без необходимости дублировать данные.
+      </p>
+      <h3>
+       <span class="mw-headline" id=".D0.9F.D0.B5.D1.80.D0.B5.D0.B4.D0.B0.D1.87.D0.B0_.D0.B4.D0.B0.D0.BD.D0.BD.D1.8B.D1.85_.D0.BF.D0.BE_.D1.81.D1.81.D1.8B.D0.BB.D0.BA.D0.B5">
+        Передача данных по ссылке
+       </span>
+      </h3>
+      <p>
+       Еще одно применение ссылок для передачи данных в функции.
+Это особенно важно для очень больших объемов данных, которые Вы бы не хотели, копировать в контексте функции!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">int32</span> <span class="n">AMyClass</span><span class="o">::</span><span class="n">GetArraySize</span><span class="p">(</span><span class="n">TArray</span><span class="o">&lt;</span><span class="n">uint8</span><span class="o">&gt;&amp;</span> <span class="n">MyHugeBinaryArray</span><span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">MyHugeBinaryArray</span><span class="p">.</span><span class="n">Num</span><span class="p">();</span> <span class="c1">//ты используешь (.) вместо (-&gt;), потому что проходишь по ссылке</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Если Вы не будете использовать ссылки, то будете копировать весь огромный массив, просто чтобы узнать, насколько он большой!
+      </p>
+      <pre> Проходите по ссылке, где это возможно, вместо передачи указателя. Это гораздо безопаснее :)
+</pre>
+      <h2>
+       <span class="mw-headline" id=".D0.A1.D0.B2.D1.8F.D0.B7.D0.B0.D0.BD.D0.BD.D1.8B.D0.B9_.D1.83.D1.80.D0.BE.D0.BA_.D0.BE.D1.82_Epic">
+        Связанный урок от Epic
+       </span>
+      </h2>
+      <p>
+       <b>
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/Programming/QuickStart/index.html" rel="nofollow">
+         Programming Quick Start
+        </a>
+       </b>
+      </p>
+      <h2>
+       <span class="mw-headline" id=".D0.98.D1.82.D0.BE.D0.B3_3">
+        Итог
+       </span>
+      </h2>
+      <p>
+       Не стесняйтесь отправлять новые вопросы на вкладку Обсуждение!
+Я надеюсь, что это поможет Вам преодолеть входной барьер C++ и наслаждаться силой и красотой UE4 C++!
+      </p>
+      <p>
+       Перевод:
+     (
+     )
+Коррекция перевода и грамматики:
+     (
+     )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

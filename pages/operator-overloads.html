@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Operator Overloads - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Operator Overloads
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Code_Simplification">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Code Simplification
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#UE4_String_Stream">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           UE4 String Stream
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Without_Custom_C.2B.2B_Operators">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Without Custom C++ Operators
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Global_Scope">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Global Scope
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#FORCEINLINE">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           FORCEINLINE
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#The_C.2B.2B">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           The C++
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Overloading_Comparison_Operators">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Overloading Comparison Operators
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#C.2B.2B_Example">
+            <span class="tocnumber">
+             6.1
+            </span>
+            <span class="toctext">
+             C++ Example
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-10">
+         <a href="#Summary">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Summary
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       Sooooo
+      </p>
+      <p>
+       This is one reason why I love UE4 C++ so much!
+      </p>
+      <p>
+       <br/>
+       We can do
+       <b>
+        anything
+       </b>
+       !
+      </p>
+      <p>
+       <br/>
+       Below is the C++ code for making two operators that I've overloaded for use with an FString and a Float
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Code_Simplification">
+        Code Simplification
+       </span>
+      </h3>
+      <p>
+       This enables me to go from
+      </p>
+      <p>
+       (Str is a FString)
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">Str</span> <span class="o">=</span> <span class="n">FString</span><span class="o">::</span><span class="n">SanitizeFloat</span><span class="p">(</span><span class="n">TheFloat</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       to
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">Str</span> <span class="o">&lt;&lt;=</span> <span class="n">TheFloat</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="UE4_String_Stream">
+        UE4 String Stream
+       </span>
+      </h2>
+      <p>
+       Using the code I am sharing with you below, I can also now create a UE4 String Stream! Streaming in Float values to Str like this!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">Str</span> <span class="o">=</span> <span class="s">""</span><span class="p">;</span>
+<span class="n">Str</span> <span class="o">&lt;&lt;</span> <span class="n">Float1</span> <span class="o">&lt;&lt;</span> <span class="n">Float2</span> <span class="o">&lt;&lt;</span> <span class="n">Float3</span><span class="p">;</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Without_Custom_C.2B.2B_Operators">
+        Without Custom C++ Operators
+       </span>
+      </h3>
+      <p>
+       for reference to do the above without my operators I would have to do this
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">Str</span> <span class="o">=</span> <span class="s">""</span>
+<span class="n">Str</span> <span class="o">+=</span> <span class="n">FString</span><span class="o">::</span><span class="n">SanitizeFloat</span><span class="p">(</span><span class="n">Float1</span><span class="p">);</span>
+<span class="n">Str</span> <span class="o">+=</span> <span class="s">" "</span><span class="p">;</span>
+<span class="n">Str</span> <span class="o">+=</span> <span class="n">FString</span><span class="o">::</span><span class="n">SantizeFloat</span><span class="p">(</span><span class="n">Float2</span><span class="p">);</span>
+<span class="n">Str</span> <span class="o">+=</span> <span class="s">" "</span><span class="p">;</span>
+<span class="n">Str</span> <span class="o">+=</span> <span class="n">FString</span><span class="o">::</span><span class="n">SanitizeFloat</span><span class="p">(</span><span class="n">Float3</span><span class="p">);</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Global_Scope">
+        Global Scope
+       </span>
+      </h2>
+      <p>
+       Please note you must define the operators at the global scope, so whatever .h  you put them, dont include any "::" like MyClass::etc
+      </p>
+      <h2>
+       <span class="mw-headline" id="FORCEINLINE">
+        FORCEINLINE
+       </span>
+      </h2>
+      <p>
+       FORCEINLINE is a requirement for operator overloads if you want to be able to easily define them in a way that the UE4 compiler will like even when you have code split across multiple .cpp chunks!
+      </p>
+      <p>
+       With operator overloads you can either define them in one place, or use FORCEINLINE, and FORCEINLINE is the much easier approach when multiple header include appearances are involved :)
+      </p>
+      <h2>
+       <span class="mw-headline" id="The_C.2B.2B">
+        The C++
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Str float</span>
+<span class="n">FORCEINLINE</span>	<span class="n">FString</span><span class="o">&amp;</span>	<span class="k">operator</span><span class="o">&lt;&lt;</span><span class="p">(</span><span class="n">FString</span> <span class="o">&amp;</span><span class="n">Str</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span><span class="o">&amp;</span> <span class="n">Value</span> <span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">Str</span><span class="p">.</span><span class="n">Len</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="n">Str</span> <span class="o">+=</span> <span class="s">" "</span><span class="p">;</span>
+	<span class="n">Str</span> <span class="o">+=</span> <span class="n">FString</span><span class="o">::</span><span class="n">SanitizeFloat</span><span class="p">(</span><span class="n">Value</span><span class="p">);</span>
+	<span class="k">return</span> <span class="n">Str</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="n">FORCEINLINE</span>	<span class="n">FString</span><span class="o">&amp;</span>	<span class="k">operator</span><span class="o">&lt;&lt;=</span><span class="p">(</span><span class="n">FString</span> <span class="o">&amp;</span><span class="n">Str</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span><span class="o">&amp;</span> <span class="n">Value</span> <span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Str</span> <span class="o">=</span> <span class="n">FString</span><span class="o">::</span><span class="n">SanitizeFloat</span><span class="p">(</span><span class="n">Value</span><span class="p">);</span>
+	<span class="k">return</span> <span class="n">Str</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overloading_Comparison_Operators">
+        Overloading Comparison Operators
+       </span>
+      </h2>
+      <p>
+       Sometimes, you will want to overload a comparison operator for a special type of struct or class. Every comparison operator must return a boolean return value. Overloading comparison operators can be useful for determining if two objects are the same object based on a particular property rather than pointer reference. If you store a list of actors within a TArray, you may want those objects to be sorted by some particular property. If you overload the "&lt;" operator, you can now call "sort()" on your TArray and the sort method will sort based off your "&lt;" operator logic.
+      </p>
+      <h3>
+       <span class="mw-headline" id="C.2B.2B_Example">
+        C++ Example
+       </span>
+      </h3>
+      <p>
+       Let's say you have a custom struct for storing a list of creatures and their associated 'aggro' values. Each creature has a TArray which contains a list of sensed creatures and their associated aggro values. Each tick, your creature will try to resense all nearby creatures and update this aggro value data. If the list already contains an aggro record, we want to update the existing record rather than adding a new one. Once all aggro records have been updated, we want to call "sort()" on the creatures list of aggro records.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">USTRUCT</span><span class="p">(</span><span class="n">BlueprintType</span><span class="p">)</span>
+<span class="k">struct</span> <span class="n">FAggroData</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_USTRUCT_BODY</span><span class="p">()</span>
+<span class="k">public</span><span class="o">:</span>
+
+	<span class="cm">/*Sort Key: This is the aggro value for this enemy*/</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Aggro"</span><span class="p">)</span>
+	<span class="n">int32</span> <span class="n">Aggro</span><span class="p">;</span>
+
+	<span class="cm">/*This is the enemy we sensed*/</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Aggro"</span><span class="p">)</span>
+	<span class="n">ABaseCreature</span><span class="o">*</span> <span class="n">Enemy</span><span class="p">;</span>
+
+	<span class="cm">/*This is the last known position of the enemy*/</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Aggro"</span><span class="p">)</span>
+	<span class="n">FVector</span> <span class="n">LastSensePosition</span><span class="p">;</span>
+
+	<span class="cm">/*This is the last known velocity of the enemy*/</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Aggro"</span><span class="p">)</span>
+	<span class="n">FVector</span> <span class="n">LastSenseVelocity</span><span class="p">;</span>
+
+	<span class="cm">/*This is how old the last sense time was*/</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Aggro"</span><span class="p">)</span>
+	<span class="kt">float</span> <span class="n">LastSenseAge</span><span class="p">;</span>
+
+	<span class="c1">//override the "&lt;" operator so that this object can be sorted</span>
+	<span class="n">FORCEINLINE</span> <span class="kt">bool</span> <span class="k">operator</span><span class="o">&lt;</span><span class="p">(</span><span class="k">const</span> <span class="n">FAggroData</span> <span class="o">&amp;</span><span class="n">Other</span><span class="p">)</span> <span class="k">const</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="n">Aggro</span> <span class="o">&lt;</span> <span class="n">Other</span><span class="p">.</span><span class="n">Aggro</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="c1">//check to see if the aggro record matches another aggro record by overloading the "==" operator.</span>
+	<span class="n">FORCEINLINE</span> <span class="kt">bool</span> <span class="k">operator</span><span class="o">==</span><span class="p">(</span><span class="k">const</span> <span class="n">FAggroData</span> <span class="o">&amp;</span><span class="n">Other</span><span class="p">)</span> <span class="k">const</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="n">Enemy</span> <span class="o">==</span> <span class="n">Other</span><span class="p">.</span><span class="n">Enemy</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">//ABaseCreature Class header:</span>
+<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FAggroData</span><span class="o">&gt;</span> <span class="n">SensedEnemies</span><span class="p">;</span>
+
+<span class="c1">//ABaseCreature Tick:</span>
+<span class="c1">//This will sort the list of sensed enemies based on the overloaded "&lt;" operator. In this case, our sort</span>
+<span class="c1">//scheme will put the creature with the highest aggro at the very front of the list. If we want to change the sort</span>
+<span class="c1">//order, we can just swap the operands in the "&lt;" operator overload</span>
+<span class="n">SensedEnemies</span><span class="p">.</span><span class="n">Sort</span><span class="p">();</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Summary">
+        Summary
+       </span>
+      </h2>
+      <p>
+       With these operators in your code, no more
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">Str</span> <span class="o">=</span> <span class="n">FString</span><span class="o">::</span><span class="n">SanitizeFloat</span><span class="p">(</span><span class="n">TheFoat</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       you can just do
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">Str</span> <span class="o">&lt;&lt;=</span> <span class="n">TheFloat</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       Yay!
+      </p>
+      <p>
+       <br/>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

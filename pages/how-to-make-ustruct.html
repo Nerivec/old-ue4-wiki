@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   How To Make UStruct - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    How To Make UStruct
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <table align="right">
+       <tbody>
+        <tr>
+         <td>
+          <div class="toc" id="toc">
+           <div class="toctitle">
+            <h2>
+             Contents
+            </h2>
+           </div>
+           <ul>
+            <li class="toclevel-1 tocsection-1">
+             <a href="#Overview">
+              <span class="tocnumber">
+               1
+              </span>
+              <span class="toctext">
+               Overview
+              </span>
+             </a>
+             <ul>
+              <li class="toclevel-2 tocsection-2">
+               <a href="#Scope_.26_Notes">
+                <span class="tocnumber">
+                 1.1
+                </span>
+                <span class="toctext">
+                 Scope &amp; Notes
+                </span>
+               </a>
+              </li>
+              <li class="toclevel-2 tocsection-3">
+               <a href="#What_is_UStruct.3F">
+                <span class="tocnumber">
+                 1.2
+                </span>
+                <span class="toctext">
+                 What is UStruct?
+                </span>
+               </a>
+              </li>
+              <li class="toclevel-2 tocsection-4">
+               <a href="#Making_a_UStruct">
+                <span class="tocnumber">
+                 1.3
+                </span>
+                <span class="toctext">
+                 Making a UStruct
+                </span>
+               </a>
+               <ul>
+                <li class="toclevel-3 tocsection-5">
+                 <a href="#Making_a_New_C.2B.2B_UE4_Project">
+                  <span class="tocnumber">
+                   1.3.1
+                  </span>
+                  <span class="toctext">
+                   Making a New C++ UE4 Project
+                  </span>
+                 </a>
+                </li>
+                <li class="toclevel-3 tocsection-6">
+                 <a href="#Declaring_a_UStruct">
+                  <span class="tocnumber">
+                   1.3.2
+                  </span>
+                  <span class="toctext">
+                   Declaring a UStruct
+                  </span>
+                 </a>
+                </li>
+               </ul>
+              </li>
+              <li class="toclevel-2 tocsection-7">
+               <a href="#Using_your_UStruct_inside_Blueprint">
+                <span class="tocnumber">
+                 1.4
+                </span>
+                <span class="toctext">
+                 Using your UStruct inside Blueprint
+                </span>
+               </a>
+              </li>
+              <li class="toclevel-2 tocsection-8">
+               <a href="#Let.27s_See_the_Result.21">
+                <span class="tocnumber">
+                 1.5
+                </span>
+                <span class="toctext">
+                 Let's See the Result!
+                </span>
+               </a>
+              </li>
+              <li class="toclevel-2 tocsection-9">
+               <a href="#Making_an_Array_of_Arrays_Using_UStruct">
+                <span class="tocnumber">
+                 1.6
+                </span>
+                <span class="toctext">
+                 Making an Array of Arrays Using UStruct
+                </span>
+               </a>
+              </li>
+             </ul>
+            </li>
+            <li class="toclevel-1 tocsection-10">
+             <a href="#More_Information">
+              <span class="tocnumber">
+               2
+              </span>
+              <span class="toctext">
+               More Information
+              </span>
+             </a>
+            </li>
+           </ul>
+          </div>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <h1>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h1>
+      <p>
+       Hi, I'm mintchococookie. I am a newbie to UE4, and I spent 2 days wondering, searching for the way I can make Ustruct. All I got was bunch of errors...nevertheless, I made it. Now I decided to make a brief tutorial about making Ustruct, for newbies like me.
+      </p>
+      <p>
+       The goal of this tutorial is to make a
+       <b>
+        Ustruct
+       </b>
+       that is accessible through
+       <b>
+        blueprint
+       </b>
+       .
+      </p>
+      <p>
+       <b>
+        Caution:
+       </b>
+       To follow this tutorial without any problem, please use
+       <b>
+        UE4.17
+       </b>
+       and
+       <b>
+        VS2017
+       </b>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Scope_.26_Notes">
+        Scope &amp; Notes
+       </span>
+      </h2>
+      <ul>
+       <li>
+        You will be able to make UStruct, which is accessible through Blueprint, as you want.
+       </li>
+       <li>
+        You will be able to make an array of arrys, using UStruct.
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="What_is_UStruct.3F">
+        What is UStruct?
+       </span>
+      </h2>
+      <p>
+       You may know what
+       <b>
+        struct
+       </b>
+       is in C and C++. UStruct is Unreal version of struct. It's a composite data type that has various types of variables in it. The cool thing is, you can wrap anything inside a UStruct. For example, Unreal Engine does not provide an array of arrays; TArray&lt;TArray&gt; wiil definitely produce an error. But if you wrap an array inside your UStuct, and then declare an array of that Ustruct, you can make an array of arrays.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Making_a_UStruct">
+        Making a UStruct
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Making_a_New_C.2B.2B_UE4_Project">
+        Making a New C++ UE4 Project
+       </span>
+      </h3>
+      <p>
+       In your UE4 launcher, select
+       <b>
+        C++ project
+       </b>
+       with
+       <b>
+        basic codes
+       </b>
+       option. Name the project as
+       <b>
+        Ustruct0
+       </b>
+       . UE4 and VS will open up.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Declaring_a_UStruct">
+        Declaring a UStruct
+       </span>
+      </h3>
+      <p>
+       Some guys like me might wonder, 'Where should I declare my Ustruct? Do I have to make special h and cpp files for my Ustruct?'. The answer is "You don't have to do it." I am going to declare my Ustruct in the default game h file provided by UE4. That is,
+       <b>
+        Ustruct0.h
+       </b>
+       file.
+      </p>
+      <p>
+       In your VS, locate the
+       <b>
+        Ustruct0.h
+       </b>
+       . Copy and paste the code below. Don't forget to include
+       <b>
+        .generated.h
+       </b>
+       file! In this case, it is
+       <b>
+        Ustruct0.generated.h
+       </b>
+       .
+      </p>
+      <p>
+       inside
+       <b>
+        Ustruct0.h
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+
+<span class="cp">#include</span> <span class="cpf">"CoreMinimal.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Ustruct0.generated.h"</span><span class="cp"></span>
+
+<span class="n">USTRUCT</span><span class="p">(</span><span class="n">BlueprintType</span><span class="p">)</span>
+<span class="k">struct</span> <span class="n">FStudent</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Student"</span><span class="p">)</span>
+		<span class="n">int32</span> <span class="n">Age</span><span class="p">;</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Student"</span><span class="p">)</span>
+		<span class="n">FString</span> <span class="n">Name</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <b>
+        BlueprintType
+       </b>
+       keyword allows us to access the UStruct we made.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Using_your_UStruct_inside_Blueprint">
+        Using your UStruct inside Blueprint
+       </span>
+      </h2>
+      <p>
+       Let's make our project output student's age whenever A key is pressed and output student's name whenever N key is pressed.
+      </p>
+      <ul>
+       <li>
+        Open
+        <b>
+         Level Blueprint
+        </b>
+       </li>
+       <li>
+        Add a new variable with
+        <b>
+         Student
+        </b>
+        type. Name it
+        <b>
+         student
+        </b>
+       </li>
+       <li>
+        Drag and drop
+        <b>
+         student
+        </b>
+        variable into Level Blueprint editor. Choose
+        <b>
+         set
+        </b>
+        .
+        <b>
+         SET
+        </b>
+        node will be created.
+       </li>
+       <li>
+        Drag out the input pin from the
+        <b>
+         SET
+        </b>
+        node. Choose
+        <b>
+         Make Student
+        </b>
+        .
+        <b>
+         Make Student
+        </b>
+        node will appear.
+       </li>
+       <li>
+        In your
+        <b>
+         Make Student
+        </b>
+        node, enter
+        <b>
+         7
+        </b>
+        into the blank named
+        <b>
+         Age
+        </b>
+        . Enter
+        <b>
+         Mintchoco
+        </b>
+        into the blank named
+        <b>
+         Name
+        </b>
+        .
+       </li>
+       <li>
+        Right click your mouse and search for
+        <b>
+         Begin Play
+        </b>
+        and create the node by clicking it. Connect the
+        <b>
+         Begin Play
+        </b>
+        node to the
+        <b>
+         SET
+        </b>
+        node.
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <ul>
+       <li>
+        Drag and drop
+        <b>
+         student
+        </b>
+        variable into Level Blueprint editor. Choose
+        <b>
+         get
+        </b>
+        .
+        <b>
+         student
+        </b>
+        variable will be created inside the editor.
+       </li>
+       <li>
+        Drag out the output pin from the
+        <b>
+         student
+        </b>
+        variable. Select
+        <b>
+         Break Student
+        </b>
+        .
+        <b>
+         Break Student
+        </b>
+        node will appear.
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <ul>
+       <li>
+        Drag out the
+        <b>
+         Age
+        </b>
+        output pin from the
+        <b>
+         Break Student
+        </b>
+        node. Search for
+        <b>
+         Print String
+        </b>
+        and create the node by clicking it.
+       </li>
+       <li>
+        Drag out the input execution pin from the
+        <b>
+         Print String
+        </b>
+        node. Search for
+        <b>
+         Input A
+        </b>
+        and create the node by clicking it.
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <ul>
+       <li>
+        Drag out the
+        <b>
+         Name
+        </b>
+        output pin from the
+        <b>
+         Break Student
+        </b>
+        node. Search for
+        <b>
+         Print String
+        </b>
+        and create the node by clicking it.
+       </li>
+       <li>
+        Drag out the input execution pin from the
+        <b>
+         Print String
+        </b>
+        node. Search for
+        <b>
+         Input N
+        </b>
+        and create the node by clicking it.
+       </li>
+      </ul>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:802px;">
+        <img alt="" class="thumbimage" height="352" src="../assets/how-to-make-ustruct/0.jpg" width="800"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Finished State of Your Blueprint
+        </div>
+       </div>
+      </div>
+      <p>
+       Click
+       <b>
+        Compile
+       </b>
+       and
+       <b>
+        Play
+       </b>
+       to see the result.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Let.27s_See_the_Result.21">
+        Let's See the Result!
+       </span>
+      </h2>
+      <p>
+       Whenever you press the A key, you will see the number 7 on the left top side of the viewport. Also, whenever you press the N key, you will see my nick "Mintchoco" on the viewport.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:502px;">
+        <img alt="" class="thumbimage" height="287" src="../assets/how-to-make-ustruct/1.jpg" width="500"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Age and Name appear on the Viewport
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Making_an_Array_of_Arrays_Using_UStruct">
+        Making an Array of Arrays Using UStruct
+       </span>
+      </h2>
+      <p>
+       UE4 does not support an array of arrays. In order to implement this, we need to wrap array within UStruct.
+Let's modify the above code to add an array named
+       <b>
+        Subjects
+       </b>
+       to the
+       <b>
+        Student
+       </b>
+       USturct, which is an array of subjects that the student had taken. Also, we will make an array named
+       <b>
+        Students
+       </b>
+       , which is an array of
+       <b>
+        Student
+       </b>
+       UStructs. The structures of the modified
+       <b>
+        Student
+       </b>
+       UStruct and
+       <b>
+        Students
+       </b>
+       array are described in the picture below.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:530px;">
+        <img alt="" class="thumbimage" height="306" src="../assets/how-to-make-ustruct/2.jpg" width="528"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Structure of Student UStruct and Students array
+        </div>
+       </div>
+      </div>
+      <p>
+       Modify the
+       <b>
+        Ustruct0.h
+       </b>
+       as following:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+
+<span class="cp">#include</span> <span class="cpf">"CoreMinimal.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Ustruct0.generated.h"</span><span class="cp"></span>
+
+<span class="n">USTRUCT</span><span class="p">(</span><span class="n">BlueprintType</span><span class="p">)</span>
+<span class="k">struct</span> <span class="n">FStudent</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Student"</span><span class="p">)</span>
+		<span class="n">int32</span> <span class="n">Age</span><span class="p">;</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Student"</span><span class="p">)</span>
+		<span class="n">FString</span> <span class="n">Name</span><span class="p">;</span>
+        <span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Student"</span><span class="p">)</span>
+		<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FString</span><span class="o">&gt;</span> <span class="n">Subjects</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h1>
+       <span class="mw-headline" id="More_Information">
+        More Information
+       </span>
+      </h1>
+      <p>
+       You have finished your long journey. Congratulations. You will be able to make UStruct as well as array of arrays as you want.
+      </p>
+      <p>
+       You can read more about me on my
+     . Have a nice day :).
+      </p>
+      <p>
+       - Mintchococookie
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

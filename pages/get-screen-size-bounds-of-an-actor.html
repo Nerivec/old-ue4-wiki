@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Get Screen-Size Bounds of An Actor - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Get Screen-Size Bounds of An Actor
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#The_Code">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           The Code
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Pre-Processor_Explanation">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Pre-Processor Explanation
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#How_To_Use_It">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           How To Use It
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       In this tutorial I'll show you how you can get a float variable of any objects size on-screen. This has a number of useful applications, for example: scaling a UMG widget to match the size of an object. The images below show the same object at two different distances, and the same widget is being scaled per-frame to keep the object inside the widget.
+      </p>
+      <p>
+       <img alt="ScaledUMGWidgetExample.jpg" class="" height="962" src="../assets/get-screen-size-bounds-of-an-actor/0.jpg" width="2864"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="The_Code">
+        The Code
+       </span>
+      </h2>
+      <p>
+       <b>
+        MyPlayerController.h
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">public</span><span class="o">:</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintPure</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Hud"</span><span class="p">)</span>
+	<span class="kt">float</span> <span class="n">GetObjectScreenRadius</span><span class="p">(</span><span class="n">AActor</span><span class="o">*</span> <span class="n">InActor</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       <b>
+        MyPlayerController.cpp
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#if WITH_EDITOR</span>
+<span class="cm">/* Get Screen Percentage */</span>
+<span class="k">static</span> <span class="k">const</span> <span class="k">auto</span> <span class="n">CVarScreenPercentage</span> <span class="o">=</span> <span class="n">IConsoleManager</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">FindTConsoleVariableDataFloat</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"r.SCreenPercentage"</span><span class="p">));</span>
+<span class="cp">#endif WITH_EDITOR</span>
+
+<span class="kt">float</span> <span class="n">AMyPlayerController</span><span class="o">::</span><span class="n">GetObjectScreenRadius</span><span class="p">(</span><span class="n">AActor</span><span class="o">*</span> <span class="n">InActor</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">float</span> <span class="n">ScreenRadius</span><span class="p">;</span>
+	<span class="n">int32</span> <span class="n">Width</span><span class="p">,</span> <span class="n">Height</span><span class="p">;</span>
+	<span class="n">FVector</span> <span class="n">Viewlocation</span><span class="p">;</span>
+	<span class="n">FRotator</span> <span class="n">ViewRotation</span><span class="p">;</span> <span class="c1">// Not Used, but required for Function call</span>
+	<span class="kt">float</span> <span class="n">CamFOV</span> <span class="o">=</span> <span class="mf">90.0f</span><span class="p">;</span> <span class="c1">//TODO: Replace With Function that returns camera FOV</span>
+<span class="cp">#if WITH_EDITOR</span>
+	<span class="kt">float</span> <span class="n">ScreenPerc</span> <span class="o">=</span> <span class="n">CVarScreenPercentage</span><span class="o">-&gt;</span><span class="n">GetValueOnGameThread</span><span class="p">()</span> <span class="o">/</span> <span class="mf">100.0f</span><span class="p">;</span>
+<span class="cp">#endif WITH_EDITOR</span>
+
+	<span class="cm">/* Get the size of the viewport, and the player cameras location. */</span>
+	<span class="n">GetViewportSize</span><span class="p">(</span><span class="n">Width</span><span class="p">,</span> <span class="n">Height</span><span class="p">);</span>
+	<span class="n">GetPlayerViewPoint</span><span class="p">(</span><span class="n">Viewlocation</span><span class="p">,</span> <span class="n">ViewRotation</span><span class="p">);</span>
+	
+<span class="cp">#if WITH_EDITOR</span>
+	<span class="cm">/* Factor in Screen Percentage &amp; Quality Settings */</span>
+	<span class="n">Width</span> <span class="o">*=</span> <span class="n">ScreenPerc</span><span class="p">;</span>
+	<span class="n">Height</span> <span class="o">*=</span> <span class="n">ScreenPerc</span><span class="p">;</span>
+<span class="cp">#endif WITH_EDITOR</span>
+
+	<span class="cm">/* Easy Way To Return The Size, Create a vector and scale it. Alternative would be to use FMath::Max3 */</span>
+	<span class="kt">float</span> <span class="n">SRad</span> <span class="o">=</span> <span class="n">FVector2D</span><span class="p">(</span><span class="n">Width</span><span class="p">,</span> <span class="n">Height</span><span class="p">).</span><span class="n">Size</span><span class="p">();</span>
+
+	<span class="cm">/* Get Object Bounds (R) */</span>
+	<span class="kt">float</span> <span class="n">BoundingRadius</span> <span class="o">=</span> <span class="n">InActor</span><span class="o">-&gt;</span><span class="n">GetRootComponent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">Bounds</span><span class="p">.</span><span class="n">SphereRadius</span><span class="p">;</span>
+	<span class="kt">float</span> <span class="n">DistanceToObject</span> <span class="o">=</span> <span class="n">FVector</span><span class="p">(</span><span class="n">InActor</span><span class="o">-&gt;</span><span class="n">GetActorLocation</span><span class="p">()</span> <span class="o">-</span> <span class="n">Viewlocation</span><span class="p">).</span><span class="n">Size</span><span class="p">();</span>
+
+	<span class="cm">/* Get Projected Screen Radius */</span>
+	<span class="n">ScreenRadius</span> <span class="o">=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Atan</span><span class="p">(</span><span class="n">BoundingRadius</span> <span class="o">/</span> <span class="n">DistanceToObject</span><span class="p">);</span>
+	<span class="n">ScreenRadius</span> <span class="o">*=</span> <span class="n">SRad</span> <span class="o">/</span> <span class="n">FMath</span><span class="o">::</span><span class="n">DegreesToRadians</span><span class="p">(</span><span class="n">CamFOV</span><span class="p">);</span>
+
+	<span class="k">return</span> <span class="n">ScreenRadius</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Pre-Processor_Explanation">
+        Pre-Processor Explanation
+       </span>
+      </h2>
+      <p>
+       If you're new to C++ you're probably wondering what the #if WITH_EDITOR and #endif WITH_EDITOR lines are doing. These are
+       <a class="external text" href="http://en.wikipedia.org/wiki/C_preprocessor" rel="nofollow">
+        pre-processor
+       </a>
+       commands, and tell the compiler to not include these lines of code if we're building a packaged version of our game.
+      </p>
+      <p>
+       The reason for their existence here, is that the Scalability settings are not safe to call without the editor (since they don't exist), meaning your code will
+       <a class="external text" href="http://en.wikipedia.org/wiki/Assertion_(software_development)" rel="nofollow">
+        assert
+       </a>
+       . The preprocessor commands will safeguard against it.
+      </p>
+      <h2>
+       <span class="mw-headline" id="How_To_Use_It">
+        How To Use It
+       </span>
+      </h2>
+      <p>
+       In my use-case I have used the size of the object as a scale for an Image component inside a UMG widget. Simply set the images 'Size X' and 'Size Y' values to
+       <b>
+        1.0
+       </b>
+       Although it will appear miniscule in the UMG editor, it will scale correctly when we use it in-game thanks to the code in the Blueprint (see below).
+      </p>
+      <p>
+       For the use-case in the image below, I have packed the Objects Location (Using GetWorldLocationAsScreenPosition) and it's Screen-Size from the code shown above, into a single vector in the players HUD. When the widget is created by the HUD, I set the 'BZHud' variable to the same HUD.
+      </p>
+      <p>
+       Using Event Tick in the UMG Widget, I then use that to set the widgets position and size in the view-port.
+      </p>
+      <p>
+       <img alt="UMGScreenFollowingWidget.PNG" class="" height="315" src="../assets/get-screen-size-bounds-of-an-actor/1.PNG" width="1050"/>
+      </p>
+      <p>
+       Hope this helps!
+      </p>
+      <p>
+       (
+     )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

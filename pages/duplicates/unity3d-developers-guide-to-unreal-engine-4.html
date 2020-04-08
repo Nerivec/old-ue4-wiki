@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Unity3D Developer's Guide to Unreal Engine 4 - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Unity3D Developer's Guide to Unreal Engine 4
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="tip">
+       <div class="normaltitle">
+        Unity Developers New to Unreal Engine 4
+       </div>
+       <p>
+        Check out the official
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/GettingStarted/FromUnity/index.html" rel="nofollow">
+         Unreal Engine 4 for Unity Developers
+        </a>
+        guide in the documentation!
+       </p>
+      </div>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Key_concepts">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Key concepts
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Game_logic">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Game logic
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-4">
+             <a href="#Unity">
+              <span class="tocnumber">
+               2.1.1
+              </span>
+              <span class="toctext">
+               Unity
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-5">
+             <a href="#Unreal_Engine_4">
+              <span class="tocnumber">
+               2.1.2
+              </span>
+              <span class="toctext">
+               Unreal Engine 4
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Game_Start">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             Game Start
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-7">
+             <a href="#Unity_2">
+              <span class="tocnumber">
+               2.2.1
+              </span>
+              <span class="toctext">
+               Unity
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-8">
+             <a href="#Unreal_Engine_4_2">
+              <span class="tocnumber">
+               2.2.2
+              </span>
+              <span class="toctext">
+               Unreal Engine 4
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-9">
+             <a href="#Life_Cycle">
+              <span class="tocnumber">
+               2.2.3
+              </span>
+              <span class="toctext">
+               Life Cycle
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#Scene">
+            <span class="tocnumber">
+             2.3
+            </span>
+            <span class="toctext">
+             Scene
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-11">
+             <a href="#Unity3D">
+              <span class="tocnumber">
+               2.3.1
+              </span>
+              <span class="toctext">
+               Unity3D
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-12">
+             <a href="#Unreal_Engine4">
+              <span class="tocnumber">
+               2.3.2
+              </span>
+              <span class="toctext">
+               Unreal Engine4
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-13">
+           <a href="#Scene_objects">
+            <span class="tocnumber">
+             2.4
+            </span>
+            <span class="toctext">
+             Scene objects
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-14">
+             <a href="#Unity_3">
+              <span class="tocnumber">
+               2.4.1
+              </span>
+              <span class="toctext">
+               Unity
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-15">
+             <a href="#Unreal_Engine_4_3">
+              <span class="tocnumber">
+               2.4.2
+              </span>
+              <span class="toctext">
+               Unreal Engine 4
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-16">
+           <a href="#Input_events">
+            <span class="tocnumber">
+             2.5
+            </span>
+            <span class="toctext">
+             Input events
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-17">
+             <a href="#Unity_4">
+              <span class="tocnumber">
+               2.5.1
+              </span>
+              <span class="toctext">
+               Unity
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-18">
+             <a href="#Unreal_Engine_4_4">
+              <span class="tocnumber">
+               2.5.2
+              </span>
+              <span class="toctext">
+               Unreal Engine 4
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-19">
+           <a href="#Print_to_console_.28log.29">
+            <span class="tocnumber">
+             2.6
+            </span>
+            <span class="toctext">
+             Print to console (log)
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-20">
+             <a href="#Unity_5">
+              <span class="tocnumber">
+               2.6.1
+              </span>
+              <span class="toctext">
+               Unity
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-21">
+             <a href="#Unreal_Engine_4_5">
+              <span class="tocnumber">
+               2.6.2
+              </span>
+              <span class="toctext">
+               Unreal Engine 4
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-22">
+         <a href="#Main_classes_and_function">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Main classes and function
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-23">
+           <a href="#Basic_Data_Types">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Basic Data Types
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-24">
+           <a href="#Member_Functions_and_Variables">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             Member Functions and Variables
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-25">
+           <a href="#Components">
+            <span class="tocnumber">
+             3.3
+            </span>
+            <span class="toctext">
+             Components
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-26">
+           <a href="#Statics">
+            <span class="tocnumber">
+             3.4
+            </span>
+            <span class="toctext">
+             Statics
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-27">
+           <a href="#Spawning">
+            <span class="tocnumber">
+             3.5
+            </span>
+            <span class="toctext">
+             Spawning
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-28">
+             <a href="#Unity3D_2">
+              <span class="tocnumber">
+               3.5.1
+              </span>
+              <span class="toctext">
+               Unity3D
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-29">
+             <a href="#Unreal_Engine4_2">
+              <span class="tocnumber">
+               3.5.2
+              </span>
+              <span class="toctext">
+               Unreal Engine4
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-30">
+         <a href="#.23includes">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           #includes
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-31">
+           <a href="#Particles.2FParticleSystemComponent.h">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             Particles/ParticleSystemComponent.h
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-32">
+         <a href="#Related_Links">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Related Links
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       This guide should be Used and Maintained with the idea that it's purpose is to illustrate comparable elements and features between Unity3D and Unreal4.
+       <br/>
+       Any topic that is not relatable back to Unity3D in some direct way should have it's own wiki page for user experience and searches.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h1>
+       <span class="mw-headline" id="Key_concepts">
+        Key concepts
+       </span>
+      </h1>
+      <h2>
+       <span class="mw-headline" id="Game_logic">
+        Game logic
+       </span>
+      </h2>
+      <h5>
+       <span class="mw-headline" id="Unity">
+        Unity
+       </span>
+      </h5>
+      <p>
+       Game logic is written using the Mono environment. Scripts manipulate GameObjects. GameObjects can have numerous scripts or none at all.
+      </p>
+      <h5>
+       <span class="mw-headline" id="Unreal_Engine_4">
+        Unreal Engine 4
+       </span>
+      </h5>
+      <p>
+       Game logic is written using C++ and/or Blueprint Editor. C++ classes and blueprints manipulate scene Actors. Blueprints are similar to Unity Prefabs. A Blueprint is a single parent class, interfaces, any components you wish to add via the blueprint editor, and one system of blueprint logic. A typical game sees major systems and functionality created with C++, but since C++ classes can be exposed to Blueprint systems, tertiary functionality can be added via the blueprint system.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Game_Start">
+        Game Start
+       </span>
+      </h2>
+      <h5>
+       <span class="mw-headline" id="Unity_2">
+        Unity
+       </span>
+      </h5>
+      <p>
+       By default the level with index 0 is loaded. Once loaded, all scripts (depending on execution order) have numerous methods fired, such as, Awake, Start, OnEnable, etc....
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h5>
+       <span class="mw-headline" id="Unreal_Engine_4_2">
+        Unreal Engine 4
+       </span>
+      </h5>
+      <p>
+       The level set by default in (Edit &gt; Project Settings &gt; Maps &amp; Modes) is loaded. Every level has a WorldSettings class of which the properties can be edited in the editor. Using this class, UWorld classes are created at runtime. UWorld creates an object of class GameMode in scene. GameMode objects are used to spawn PlayerController objects, managers, and other objects used during gameplay.
+      </p>
+      <p>
+       Note: (Edit &gt; Project Settings &gt; Maps &amp; Modes) Default Modes section will allow you to set a default GameMode that all levels by default use.
+      </p>
+      <p>
+       The Game's entry point is the constructor of the class inherited from GameMode.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Life_Cycle">
+        Life Cycle
+       </span>
+      </h3>
+      <p>
+       <b>
+        Stub:
+       </b>
+       This should be expanded to include the general life cycle of Unreal Script Execution Order similar to [
+       <a class="external text" href="http://docs.unity3d.com/Manual/ExecutionOrder.html" rel="nofollow">
+        Unity Docs
+       </a>
+       ]
+       <br/>
+       Consider making a new page and linking to it from here.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Scene">
+        Scene
+       </span>
+      </h2>
+      <p>
+       The concept of the Scene in both engines is the same. However, Unity3D and UE4 have different axes definitions.
+      </p>
+      <h5>
+       <span class="mw-headline" id="Unity3D">
+        Unity3D
+       </span>
+      </h5>
+      <p>
+       Unity uses a left handed coordinate system -- where the vertical direction is usually represented by the +Y axis.
+      </p>
+      <ul>
+       <li>
+        X - left, right
+       </li>
+       <li>
+        Y - up, down
+       </li>
+       <li>
+        Z - forwards, backwards
+       </li>
+      </ul>
+      <p>
+       File format: *.scene
+      </p>
+      <p>
+       Use GameObject static methods for scene objects operations ( find, spawn, destroy)
+      </p>
+      <p>
+       Level loading: Application.LoadLevel(string name);
+      </p>
+      <h5>
+       <span class="mw-headline" id="Unreal_Engine4">
+        Unreal Engine4
+       </span>
+      </h5>
+      <p>
+       UE4 uses a left handed coordinate system -- where the vertical direction is usually represented by the +Z axis.
+Z axis up.
+      </p>
+      <ul>
+       <li>
+        X - forwards, backwards
+       </li>
+       <li>
+        Y - left, right
+       </li>
+       <li>
+        Z - up, down
+       </li>
+      </ul>
+      <p>
+       UE4 also referrers to the pivots of a rotation as: Roll, Pitch, and Yaw.
+      </p>
+      <p>
+       File format: *.umap
+      </p>
+      <p>
+       Use UWorld for scene object operations ( find, spawn, destroy). You can get UWorld using GetWorld() from any UObject.
+      </p>
+      <p>
+       <b>
+        Level loading:
+       </b>
+       <br/>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// OpenLevel in Blueprints. Both work the same and allow you to pass additional parameters. Example: "&lt;key_1&gt;=&lt;value_1&gt;?&lt;key_2&gt;=&lt;value_2&gt;"</span>
+<span class="c1">// @param bAbsolute if true options are reset, if false options are carried over from current level</span>
+<span class="n">UGameplayStatics</span><span class="o">::</span><span class="n">OpenLevel</span><span class="p">(</span><span class="n">UObject</span><span class="o">*</span> <span class="n">WorldContextObject</span><span class="p">,</span> <span class="n">FName</span> <span class="n">LevelName</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bAbsolute</span><span class="p">,</span> <span class="n">FString</span> <span class="n">Options</span><span class="p">);</span>
+
+<span class="c1">// or</span>
+
+<span class="c1">// where the URL = path to the level and can include additional parameters. Example: "/Game/Maps/&lt;map_name&gt;?&lt;key_1&gt;=&lt;value_1&gt;?&lt;key_2&gt;=&lt;value_2&gt;"</span>
+<span class="n">GetWorld</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">ServerTravel</span><span class="p">(</span><span class="n">string</span> <span class="n">URL</span><span class="p">)</span>
+</pre>
+      </div>
+      <p>
+       <b>
+        Reading Parameters:
+       </b>
+       <br/>
+       To use the parameters in code you must be in the
+       <b>
+        GameMode
+       </b>
+       class
+       <br/>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Searches the GameMode's current OptionsString (a default gamemode variable) for the &lt;key&gt; and if the 'key' is not found returns the 'default_value'</span>
+<span class="c1">// Keys and Values are formatted similar to ini files.</span>
+<span class="n">GetIntOption</span><span class="p">(</span><span class="n">OptionsString</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">default_value</span><span class="p">);</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Scene_objects">
+        Scene objects
+       </span>
+      </h2>
+      <h5>
+       <span class="mw-headline" id="Unity_3">
+        Unity
+       </span>
+      </h5>
+      <p>
+       Base scene object – GameObject.
+      </p>
+      <p>
+       GameObjects are containers for all other Components. It has a Transform component by default. Components are then added to give the GameObject functionality.
+      </p>
+      <p>
+       GameObjects support a hierarchy (parent-child relation).
+      </p>
+      <h5>
+       <span class="mw-headline" id="Unreal_Engine_4_3">
+        Unreal Engine 4
+       </span>
+      </h5>
+      <p>
+       Base scene object  - Actor.
+      </p>
+      <p>
+       An Actor is the base object that can be placed or spawned into the world. An Actor by itself does not contain a USceneComponent (More on these later). The Actor is simply the base object which can have a presence in the level. Components add functionality to an Actor.
+      </p>
+      <p>
+       Actors support a hierarchy (parent-child relation).
+      </p>
+      <p>
+       Programmers can inherit from the default UActorComponent to create their own component.
+      </p>
+      <p>
+       Component spawning example:
+      </p>
+      <p>
+       <b>
+        .h
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Remember to add a UPROPERTY() to your component definition in the .h with proper tags to expose the variables of the component for editing in the details panel of UE4 Editor.</span>
+<span class="c1">// If you do not, you will be able to see the component but the details panel will show up blank!</span>
+<span class="c1">// Add BlueprintReadWrite or other Blueprint tags to use in Blueprints.</span>
+<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">)</span>
+<span class="n">USceneComponent</span><span class="o">*</span> <span class="n">SceneComponent</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       <b>
+        .cpp
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">USceneComponent</span><span class="o">*</span> <span class="n">SceneComponent</span> <span class="o">=</span> <span class="n">FObjectInitializer</span><span class="p">.</span><span class="n">CreateDefaultSubobject</span><span class="o">&lt;</span><span class="n">USceneComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"SceneComp"</span><span class="p">));</span>
+<span class="n">RootComponent</span> <span class="o">=</span> <span class="n">SceneComponent</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Input_events">
+        Input events
+       </span>
+      </h2>
+      <h5>
+       <span class="mw-headline" id="Unity_4">
+        Unity
+       </span>
+      </h5>
+      <p>
+       Class Input
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">Input</span><span class="p">.</span><span class="n">GetAxis</span><span class="p">(</span><span class="s">"MoveForward"</span><span class="p">);</span>
+<span class="n">Input</span><span class="p">.</span><span class="n">GetTouch</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+</pre>
+      </div>
+      <h5>
+       <span class="mw-headline" id="Unreal_Engine_4_4">
+        Unreal Engine 4
+       </span>
+      </h5>
+      <p>
+       Component UInputComponent of Actor class
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">InputComponent</span><span class="o">-&gt;</span><span class="n">BindAxis</span><span class="p">(</span><span class="s">"MoveForward"</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">AFirstPersonBaseCodeCharacter</span><span class="o">::</span><span class="n">MoveForward</span><span class="p">);</span>
+<span class="n">InputComponent</span><span class="o">-&gt;</span><span class="n">BindTouch</span><span class="p">(</span><span class="n">EInputEvent</span><span class="o">::</span><span class="n">IE_Pressed</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">AStrategyPlayerController</span><span class="o">::</span><span class="n">OnTapPressedMy</span><span class="p">);</span>
+<span class="p">...</span>
+<span class="kt">void</span> <span class="n">AStrategyPlayerController</span><span class="o">::</span><span class="n">OnTapPressedMy</span><span class="p">(</span><span class="n">ETouchIndex</span><span class="o">::</span><span class="n">Type</span> <span class="n">index</span><span class="p">,</span> <span class="n">FVector</span> <span class="n">ScreenPosition</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Print_to_console_.28log.29">
+        Print to console (log)
+       </span>
+      </h2>
+      <h5>
+       <span class="mw-headline" id="Unity_5">
+        Unity
+       </span>
+      </h5>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">Debug</span><span class="p">.</span><span class="n">Log</span><span class="p">(</span><span class="s">"Log text "</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.1f</span><span class="p">).</span><span class="n">ToString</span><span class="p">());</span>
+<span class="n">Debug</span><span class="p">.</span><span class="n">LogWarning</span><span class="p">(</span><span class="s">"Log warning"</span><span class="p">);</span>
+<span class="n">Debug</span><span class="p">.</span><span class="n">LogError</span><span class="p">(</span><span class="s">"Log error"</span><span class="p">);</span>
+</pre>
+      </div>
+      <h5>
+       <span class="mw-headline" id="Unreal_Engine_4_5">
+        Unreal Engine 4
+       </span>
+      </h5>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">GEngine</span><span class="o">-&gt;</span><span class="n">AddOnScreenDebugMessage</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mf">5.f</span><span class="p">,</span> <span class="n">FColor</span><span class="o">::</span><span class="n">Red</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"This is an on screen message!"</span><span class="p">));</span>
+<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogTemp</span><span class="p">,</span> <span class="n">Log</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Log text %f"</span><span class="p">),</span> <span class="mf">0.1f</span><span class="p">);</span>
+<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogTemp</span><span class="p">,</span> <span class="n">Warning</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Log warning"</span><span class="p">));</span>
+<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogTemp</span><span class="p">,</span> <span class="n">Error</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Log error"</span><span class="p">));</span>
+<span class="n">FError</span><span class="o">::</span><span class="n">Throwf</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"Log error"</span><span class="p">));</span>
+<span class="n">FMessageDialog</span><span class="o">::</span><span class="n">Open</span><span class="p">(</span><span class="n">EAppMsgType</span><span class="o">::</span><span class="n">Ok</span><span class="p">,</span> <span class="n">FText</span><span class="o">::</span><span class="n">FromString</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"Dialog message"</span><span class="p">)));</span>
+</pre>
+      </div>
+      <p>
+       Further Reading:
+       <br/>
+       <br/>
+      </p>
+      <h1>
+       <span class="mw-headline" id="Main_classes_and_function">
+        Main classes and function
+       </span>
+      </h1>
+      <h2>
+       <span class="mw-headline" id="Basic_Data_Types">
+        Basic Data Types
+       </span>
+      </h2>
+      <table class="wikitable">
+       <tbody>
+        <tr>
+         <th>
+          Unity3D
+         </th>
+         <th>
+          Unreal Engine4
+         </th>
+        </tr>
+        <tr>
+         <td>
+          int
+         </td>
+         <td>
+          int32, int24, int8
+         </td>
+        </tr>
+        <tr>
+         <td>
+          string
+         </td>
+         <td>
+          FString
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Transform
+         </td>
+         <td>
+          FTransform
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Quaternion
+         </td>
+         <td>
+          FQuat
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Rotation
+         </td>
+         <td>
+          FRotator
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Gameobject
+         </td>
+         <td>
+          Actor
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Array
+         </td>
+         <td>
+          TArray
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Member_Functions_and_Variables">
+        Member Functions and Variables
+       </span>
+      </h2>
+      <p>
+       Here is a list of commonly used functions and variables every Unity C# programmer should know and use. Listed along side are the identical/similar functions and variables used to gather the same information
+      </p>
+      <table class="wikitable">
+       <tbody>
+        <tr>
+         <th>
+          Unity3D
+         </th>
+         <th>
+          Unreal Engine4
+         </th>
+        </tr>
+        <tr>
+         <td>
+          Update()
+         </td>
+         <td>
+          Tick(), TickComponent()
+         </td>
+        </tr>
+        <tr>
+         <td>
+          transform
+         </td>
+         <td>
+          GetTransform() (returns new instance), SetActorTransform(FTransform) (to apply the Transform)
+         </td>
+        </tr>
+        <tr>
+         <td>
+          transform.position
+         </td>
+         <td>
+          GetActorLocation()
+         </td>
+        </tr>
+        <tr>
+         <td>
+          transform.rotation
+         </td>
+         <td>
+          GetActorRotation()
+         </td>
+        </tr>
+        <tr>
+         <td>
+          transform.localScale
+         </td>
+         <td>
+          GetActorScale()
+         </td>
+        </tr>
+        <tr>
+         <td>
+          GetComponent&lt;T&gt;()
+         </td>
+         <td>
+          FindComponentByClass&lt;T&gt;()
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Destroy()
+         </td>
+         <td>
+          Destroy()
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Find()
+         </td>
+         <td>
+          TObjectIterator&lt;T&gt;(), FActorIterator&lt;T&gt;, ActorItr(GetWorld()),ConstructorHelpers::FObjectFinder&lt;your_class&gt; object(name)
+         </td>
+        </tr>
+        <tr>
+         <td>
+          MathF
+         </td>
+         <td>
+          FMath
+         </td>
+        </tr>
+        <tr>
+         <td>
+          RayCast
+         </td>
+         <td>
+          Trace
+         </td>
+        </tr>
+        <tr>
+         <td>
+          SphereCast
+         </td>
+         <td>
+          Sweep
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Components">
+        Components
+       </span>
+      </h2>
+      <table class="wikitable">
+       <tbody>
+        <tr>
+         <th>
+          Unity3D
+         </th>
+         <th>
+          Unreal Engine4
+         </th>
+        </tr>
+        <tr>
+         <td>
+          Transform
+         </td>
+         <td>
+          USceneComponent
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Camera
+         </td>
+         <td>
+          UCameraComponent
+         </td>
+        </tr>
+        <tr>
+         <td>
+          BoxCollider
+         </td>
+         <td>
+          UBoxComponent
+         </td>
+        </tr>
+        <tr>
+         <td>
+          MeshFilter
+         </td>
+         <td>
+          UStaticMeshComponent
+         </td>
+        </tr>
+        <tr>
+         <td>
+          ParticleSystem
+         </td>
+         <td>
+          UParticleSystemComponent
+         </td>
+        </tr>
+        <tr>
+         <td>
+          AudioSource
+         </td>
+         <td>
+          UAudioComponent
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Statics">
+        Statics
+       </span>
+      </h2>
+      <table class="wikitable">
+       <tbody>
+        <tr>
+         <th>
+          Unreal Engine 4
+         </th>
+         <th>
+          Use
+         </th>
+        </tr>
+        <tr>
+         <td>
+          UGameplayStatics
+         </td>
+         <td>
+          Used to get access to things like players pawn, game mode, singleton, controller, spawn decal, spawn emitter
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <h2>
+       <span class="mw-headline" id="Spawning">
+        Spawning
+       </span>
+      </h2>
+      <p>
+       To create something at runtime.
+      </p>
+      <h5>
+       <span class="mw-headline" id="Unity3D_2">
+        Unity3D
+       </span>
+      </h5>
+      <p>
+       <b>
+        Instantiate()
+       </b>
+      </p>
+      <p>
+       This function makes a copy of an object in a similar way to the Duplicate command in the editor. If you are cloning a GameObject then you can also optionally specify its position and rotation (these will default to Vector3.zero and Quaternion.identity respectively). If you are cloning a Component then the GameObject it is attached to will also be cloned, again with an optional position and rotation.
+      </p>
+      <h5>
+       <span class="mw-headline" id="Unreal_Engine4_2">
+        Unreal Engine4
+       </span>
+      </h5>
+      <p>
+       <b>
+        UWorld-&gt;SpawnActor()
+       </b>
+      </p>
+      <p>
+       The process of creating a new instance of an Actor is known as spawning. Spawning of Actors is performed using the UWorld::SpawnActor() function. This function creates a new instance of a specified class and returns a pointer to the newly created Actor. UWorld::SpawnActor() may only be used for creating instances of classes which inherit from the Actor class in their hierarchy.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h1>
+       <span class="mw-headline" id=".23includes">
+        #includes
+       </span>
+      </h1>
+      <p>
+       It should be noted that #includes can also be added to your "Project.h" and will thus be included in all classes. This however can be a draw on your compiler and it's advised to add includes individually.
+      </p>
+      <h4>
+       <span class="mw-headline" id="Particles.2FParticleSystemComponent.h">
+        Particles/ParticleSystemComponent.h
+       </span>
+      </h4>
+      <p>
+       When trying to add a particle system via C++ you will receive an error unless you include the "Particles/ParticleSystemComponent.h" to your "class.h". Below is an example class that provides an exposed Particle System slot on an Actor via C++.
+      </p>
+      <p>
+       It is important to note that includes now require that the complete short path be defined. For example "ParticleSystemComponent.h" will not work without "Particles/" short path defined along with it as "Particles/ParticleSystemComponent.h".
+      </p>
+      <p>
+       <big>
+        <big>
+         <big>
+          <b>
+           .h
+          </b>
+         </big>
+        </big>
+       </big>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2014 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"GameFramework/Actor.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Particles/ParticleSystemComponent.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"ParticleTest.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">AParticleTest</span> <span class="o">:</span> <span class="k">public</span> <span class="n">AActor</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">VisibleAnywhere</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Particle</span> <span class="n">System</span><span class="p">)</span>
+	<span class="n">TSubobjectPtr</span><span class="o">&lt;</span><span class="n">UParticleSystemComponent</span><span class="o">&gt;</span> <span class="n">ParticleSystem</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <big>
+        <big>
+         <big>
+          <b>
+           .cpp
+          </b>
+         </big>
+        </big>
+       </big>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2014 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#include</span> <span class="cpf">"MyProject.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"ParticleTest.h"</span><span class="cp"></span>
+
+
+<span class="n">AParticleTest</span><span class="o">::</span><span class="n">AParticleTest</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">ParticleSystem</span> <span class="o">=</span> <span class="n">PCIP</span><span class="p">.</span><span class="n">CreateDefaultSubobject</span><span class="o">&lt;</span><span class="n">UParticleSystemComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">FName</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"Particle System"</span><span class="p">)));</span>
+	<span class="n">RootComponent</span> <span class="o">=</span> <span class="n">ParticleSystem</span><span class="p">;</span>
+
+<span class="p">}</span>
+</pre>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Related_Links">
+        Related Links
+       </span>
+      </h1>
+      <p>
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?60720-Unity-to-Unreal-Losing-world-references&amp;p=234977&amp;viewfull=1#post234977" rel="nofollow">
+        Storing References To World Objects, Forum Link by Rama
+       </a>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Collision Events in Code - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Collision Events in Code
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <b>
+        This is a stub - please add things that are missing!
+       </b>
+      </p>
+      <p>
+       Here are some of the functions that get called on Collision in code:
+      </p>
+      <table class="wikitable">
+       <tbody>
+        <tr>
+         <td>
+          Function name
+         </td>
+         <td>
+          Description
+         </td>
+         <td>
+          Parameters
+         </td>
+         <td>
+          Base Class
+         </td>
+         <td>
+          Tips
+         </td>
+        </tr>
+        <tr>
+         <td>
+          ReceiveHit
+         </td>
+         <td>
+          Event when this actor bumps into a blocking object, or blocks another actor that bumps into it.
+         </td>
+         <td>
+          class UPrimitiveComponent* MyComp, class AActor* Other, class UPrimitiveComponent* OtherComp, bool bSelfMoved, FVector HitLocation, FVector HitNormal, FVector NormalImpulse, const FHitResult&amp; Hit
+         </td>
+         <td>
+          Actor
+         </td>
+         <td>
+          Both Actors must have their collision response set to Block for this to occur. Of the two actors, only those that also have Simulation Generates Hit Events = True will receive the event.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          ReceiveActorBeginOverlap
+         </td>
+         <td>
+          Event when this actor overlaps another actor.
+         </td>
+         <td>
+          class AActor* OtherActor
+         </td>
+         <td>
+          Actor
+         </td>
+         <td>
+         </td>
+        </tr>
+        <tr>
+         <td>
+          ReceiveActorEndOverlap
+         </td>
+         <td>
+          Event when an actor no longer overlaps another actor, and they have separated.
+         </td>
+         <td>
+          class AActor* OtherActor
+         </td>
+         <td>
+          Actor
+         </td>
+         <td>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

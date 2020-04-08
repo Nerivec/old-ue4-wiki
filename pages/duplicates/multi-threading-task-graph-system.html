@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Multi-Threading: Task Graph System - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Multi-Threading: Task Graph System
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#My_Example:_Calculate_first_50.2C000_Prime_Numbers">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             My Example: Calculate first 50,000 Prime Numbers
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Video">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Video
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Comparing_Results">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Comparing Results
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Entire_.CPP_Source_Code_For_You.21">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Entire .CPP Source Code For You!
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#ENamedThreads::GameThread.3F">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           ENamedThreads::GameThread?
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Why_a_Name_Space.3F">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Why a Name Space?
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Knowing_When_All_Tasks_Are_Complete">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Knowing When All Tasks Are Complete
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#Completion_Events_Are_Filled_All_at_Once">
+            <span class="tocnumber">
+             7.1
+            </span>
+            <span class="toctext">
+             Completion Events Are Filled All at Once
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-10">
+         <a href="#Things_to_Note">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Things to Note
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-11">
+         <a href="#AsyncWork_Task_Templates">
+          <span class="tocnumber">
+           9
+          </span>
+          <span class="toctext">
+           AsyncWork Task Templates
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-12">
+         <a href="#What_About_Platforms_Without_Multithreading.3F">
+          <span class="tocnumber">
+           10
+          </span>
+          <span class="toctext">
+           What About Platforms Without Multithreading?
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-13">
+         <a href="#Further_Reading">
+          <span class="tocnumber">
+           11
+          </span>
+          <span class="toctext">
+           Further Reading
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-14">
+           <a href="#ParallelFor">
+            <span class="tocnumber">
+             11.1
+            </span>
+            <span class="toctext">
+             ParallelFor
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-15">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           12
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Author:
+       </i>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       The UE4 task graph system allows you to perform many actions, each of which is relatively small, on separate threads from the game thread.
+      </p>
+      <p>
+       Please note that a task graph
+       <b>
+        will sometimes use the game thread,
+       </b>
+       and therefore for large tasks you should use a FRunnable as demonstrated in
+       <a class="external text" href="./multi-threading-how-to-create-threads-in-ue4.html" rel="nofollow">
+        my other multi threading wiki.
+       </a>
+      </p>
+      <p>
+       <b>
+        AsyncWork.h
+       </b>
+      </p>
+      <pre>* Tells the user job to do the work, sometimes called synchronously, sometimes from the thread pool. Calls the event tracker.
+</pre>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="My_Example:_Calculate_first_50.2C000_Prime_Numbers">
+        My Example: Calculate first 50,000 Prime Numbers
+       </span>
+      </h3>
+      <p>
+       In the video below I am calculating the first 50,000 prime numbers while the rest of the game thread continues to run!
+      </p>
+      <p>
+       To put this in perspective, if I did what I do in the video without the UE4 task graph system, the game would be hanging while all those numbers get computed, for the total duration of the video :)
+      </p>
+      <h2>
+       <span class="mw-headline" id="Video">
+        Video
+       </span>
+      </h2>
+      <p>
+       &lt;youtube&gt;
+       <a class="external free" href="https://www.youtube.com/watch?v=cgELOodtoSU&amp;feature=youtu.be" rel="nofollow">
+        https://www.youtube.com/watch?v=cgELOodtoSU&amp;feature=youtu.be
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Comparing_Results">
+        Comparing Results
+       </span>
+      </h2>
+      <p>
+       I show my results at the end of the video.
+      </p>
+      <p>
+       You can compare them with this webpage!
+      </p>
+      <p>
+       My multi-threading system did actually calculate the first 50,000 (+1) prime numbers!
+      </p>
+      <p>
+       <b>
+        <a class="external text" href="http://www.cs.arizona.edu/icon/oddsends/primes.htm" rel="nofollow">
+         |First 50,000 Prime Numbers
+        </a>
+       </b>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Entire_.CPP_Source_Code_For_You.21">
+        Entire .CPP Source Code For You!
+       </span>
+      </h2>
+      <p>
+       I am doing all of this as a test in my player controller class :)
+      </p>
+      <p>
+       I did just about everything in the .cpp file alone using the Namespace.
+      </p>
+      <p>
+       Please note that the timer that checks when the threads are done is also in the .h, as is the function start the whole process. (see toward the end of the code)
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Multi thread Test, finding prime number</span>
+<span class="k">namespace</span> <span class="n">VictoryMultiThreadTest</span>
+<span class="p">{</span>
+	<span class="c1">//Multi-threaded link to UObjects, do not create,modify,destroy UObjects / AActors via this link!</span>
+	<span class="n">AVictoryGamePlayerController</span><span class="o">*</span> <span class="n">ThePC</span><span class="p">;</span>
+	
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+	<span class="c1">//   OUTPUT RESULTS OF TASK THREADS</span>
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">uint32</span><span class="o">&gt;</span> <span class="n">PrimeNumbers</span><span class="p">;</span>
+	
+	<span class="c1">// This is the array of thread completions to know if all threads are done yet</span>
+	<span class="n">FGraphEventArray</span>		<span class="n">VictoryMultithreadTest_CompletionEvents</span><span class="p">;</span>
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+
+	<span class="c1">//~~~~~~~~~~~~~~~</span>
+	<span class="c1">//Are All Tasks Complete?</span>
+	<span class="c1">//~~~~~~~~~~~~~~~</span>
+	<span class="kt">bool</span> <span class="nf">TasksAreComplete</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="c1">//Check all thread completion events</span>
+		<span class="k">for</span> <span class="p">(</span><span class="n">int32</span> <span class="n">Index</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">Index</span> <span class="o">&lt;</span> <span class="n">VictoryMultithreadTest_CompletionEvents</span><span class="p">.</span><span class="n">Num</span><span class="p">();</span> <span class="n">Index</span><span class="o">++</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="c1">//If  ! IsComplete()</span>
+			<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">VictoryMultithreadTest_CompletionEvents</span><span class="p">[</span><span class="n">Index</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">IsComplete</span><span class="p">())</span>
+			<span class="p">{</span>
+				<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+		<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="c1">//~~~~~~~~~~~</span>
+	<span class="c1">//Actual Task Code</span>
+	<span class="c1">//~~~~~~~~~~~</span>
+	<span class="n">int32</span> <span class="nf">FindNextPrimeNumber</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="c1">//Last known prime number  + 1</span>
+		<span class="n">int32</span> <span class="n">TestPrime</span> <span class="o">=</span> <span class="n">PrimeNumbers</span><span class="p">.</span><span class="n">Last</span><span class="p">();</span>
+		
+		<span class="kt">bool</span> <span class="n">NumIsPrime</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+		<span class="k">while</span><span class="p">(</span> <span class="o">!</span> <span class="n">NumIsPrime</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">NumIsPrime</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+			
+			<span class="c1">//Try Next Number</span>
+			<span class="n">TestPrime</span><span class="o">++</span><span class="p">;</span>
+			
+			<span class="c1">//Modulus from 2 to current number - 1 </span>
+			<span class="k">for</span><span class="p">(</span><span class="n">int32</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span> <span class="n">b</span> <span class="o">&lt;</span> <span class="n">TestPrime</span><span class="p">;</span> <span class="n">b</span><span class="o">++</span><span class="p">)</span>
+			<span class="p">{</span>
+				<span class="k">if</span><span class="p">(</span><span class="n">TestPrime</span> <span class="o">%</span> <span class="n">b</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> 
+				<span class="p">{</span>
+					<span class="n">NumIsPrime</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+					<span class="k">break</span><span class="p">;</span>
+					<span class="c1">//~~~</span>
+				<span class="p">}</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+		
+		<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+		<span class="c1">//Did another thread find this number already?</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">PrimeNumbers</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="n">TestPrime</span><span class="p">))</span>
+		<span class="p">{</span>
+			<span class="k">return</span> <span class="n">FindNextPrimeNumber</span><span class="p">();</span> <span class="c1">//recursion</span>
+		<span class="p">}</span>
+		<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+		
+		<span class="c1">//Success!</span>
+		<span class="k">return</span> <span class="n">TestPrime</span><span class="p">;</span>
+	<span class="p">}</span>
+	
+
+	<span class="c1">//~~~~~~~~~~~</span>
+	<span class="c1">//Each Task Thread</span>
+	<span class="c1">//~~~~~~~~~~~</span>
+	<span class="k">class</span> <span class="nc">FVictoryTestTask</span>
+	<span class="p">{</span>
+	
+	  <span class="k">public</span><span class="o">:</span>
+		<span class="n">FVictoryTestTask</span><span class="p">()</span> <span class="c1">//send in property defaults here</span>
+		<span class="p">{</span>
+			<span class="c1">//can add properties here</span>
+		<span class="p">}</span>
+
+		<span class="cm">/** return the name of the task **/</span>
+		<span class="k">static</span> <span class="k">const</span> <span class="n">TCHAR</span><span class="o">*</span> <span class="n">GetTaskName</span><span class="p">()</span>
+		<span class="p">{</span>
+			<span class="k">return</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"FVictoryTestTask"</span><span class="p">);</span>
+		<span class="p">}</span>
+		<span class="n">FORCEINLINE</span> <span class="k">static</span> <span class="n">TStatId</span> <span class="n">GetStatId</span><span class="p">()</span>
+		<span class="p">{</span>
+			<span class="n">RETURN_QUICK_DECLARE_CYCLE_STAT</span><span class="p">(</span><span class="n">FVictoryTestTask</span><span class="p">,</span> <span class="n">STATGROUP_TaskGraphTasks</span><span class="p">);</span>
+		<span class="p">}</span>
+		<span class="cm">/** return the thread for this task **/</span>
+		<span class="k">static</span> <span class="n">ENamedThreads</span><span class="o">::</span><span class="n">Type</span> <span class="n">GetDesiredThread</span><span class="p">()</span>
+		<span class="p">{</span>
+			<span class="k">return</span> <span class="n">ENamedThreads</span><span class="o">::</span><span class="n">AnyThread</span><span class="p">;</span>
+		<span class="p">}</span>
+		
+		
+		<span class="cm">/*</span>
+<span class="cm">		namespace ESubsequentsMode</span>
+<span class="cm">		{</span>
+<span class="cm">			enum Type</span>
+<span class="cm">			{</span>
+<span class="cm">				//Necessary when another task will depend on this task. </span>
+<span class="cm">				TrackSubsequents,</span>
+<span class="cm">				//Can be used to save task graph overhead when firing off a task that will not be a dependency of other tasks. </span>
+<span class="cm">				FireAndForget</span>
+<span class="cm">			};</span>
+<span class="cm">		}</span>
+<span class="cm">		*/</span>
+		<span class="k">static</span> <span class="n">ESubsequentsMode</span><span class="o">::</span><span class="n">Type</span> <span class="n">GetSubsequentsMode</span><span class="p">()</span> 
+		<span class="p">{</span> 
+			<span class="k">return</span> <span class="n">ESubsequentsMode</span><span class="o">::</span><span class="n">TrackSubsequents</span><span class="p">;</span> 
+		<span class="p">}</span>
+		
+                <span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~</span>
+                <span class="c1">//Main Function: Do Task!!</span>
+                <span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~</span>
+		<span class="kt">void</span> <span class="n">DoTask</span><span class="p">(</span><span class="n">ENamedThreads</span><span class="o">::</span><span class="n">Type</span> <span class="n">CurrentThread</span><span class="p">,</span> <span class="k">const</span> <span class="n">FGraphEventRef</span><span class="o">&amp;</span> <span class="n">MyCompletionGraphEvent</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+			
+			<span class="n">PrimeNumbers</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">FindNextPrimeNumber</span><span class="p">());</span>
+			
+			<span class="c1">//***************************************</span>
+			<span class="c1">//Show Incremental Results in Main Game Thread!</span>
+			
+			<span class="c1">//	Please note you should not create, destroy, or modify UObjects here.</span>
+			<span class="c1">//	  Do those sort of things after all thread are completed.</span>
+			
+			<span class="c1">//	  All calcs for making stuff can be done in the threads</span>
+			<span class="c1">//	     But the actual making/modifying of the UObjects should be done in main game thread,</span>
+			<span class="c1">//		 which is AFTER all tasks have completed :)</span>
+			
+			<span class="n">ThePC</span><span class="o">-&gt;</span><span class="n">ClientMessage</span><span class="p">(</span><span class="n">FString</span><span class="p">(</span><span class="s">"A thread completed! ~ "</span><span class="p">)</span> <span class="o">+</span> <span class="n">FString</span><span class="o">::</span><span class="n">FromInt</span><span class="p">(</span><span class="n">PrimeNumbers</span><span class="p">.</span><span class="n">Last</span><span class="p">()));</span>
+			<span class="c1">//***************************************</span>
+		<span class="p">}</span>
+	<span class="p">};</span>
+	
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~</span>
+	<span class="c1">//  Multi-Task Initiation Point </span>
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~</span>
+	<span class="kt">void</span> <span class="nf">FindPrimes</span><span class="p">(</span><span class="k">const</span> <span class="n">uint32</span> <span class="n">TotalToFind</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">PrimeNumbers</span><span class="p">.</span><span class="n">Empty</span><span class="p">();</span>
+		<span class="n">PrimeNumbers</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+		<span class="n">PrimeNumbers</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+				
+		<span class="c1">//~~~~~~~~~~~~~~~~~~~~</span>
+		<span class="c1">//Add thread / task for each of total prime numbers to find</span>
+		<span class="c1">//~~~~~~~~~~~~~~~~~~~~</span>
+		
+		<span class="k">for</span><span class="p">(</span><span class="n">uint32</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">b</span> <span class="o">&lt;</span> <span class="n">TotalToFind</span><span class="p">;</span> <span class="n">b</span><span class="o">++</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">VictoryMultithreadTest_CompletionEvents</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">TGraphTask</span><span class="o">&lt;</span><span class="n">FVictoryTestTask</span><span class="o">&gt;::</span><span class="n">CreateTask</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="n">ENamedThreads</span><span class="o">::</span><span class="n">GameThread</span><span class="p">).</span><span class="n">ConstructAndDispatchWhenReady</span><span class="p">());</span> <span class="c1">//add properties inside ConstructAndDispatchWhenReady()</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	
+<span class="p">}</span>
+</pre>
+      </div>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//~~~ In the Game Thread ~~~</span>
+
+<span class="c1">//timer to check when threads are done</span>
+<span class="c1">//Please note timers must be in the game thread / main / normal thread</span>
+<span class="kt">void</span> <span class="n">AVictoryGamePlayerController</span><span class="o">::</span><span class="n">VictoryCheckAllThreadsDone</span><span class="p">()</span>
+<span class="p">{</span>
+	
+	<span class="k">if</span><span class="p">(</span><span class="n">VictoryMultiThreadTest</span><span class="o">::</span><span class="n">TasksAreComplete</span><span class="p">()</span> <span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//Clear Timer</span>
+		<span class="n">GetWorldTimerManager</span><span class="p">().</span><span class="n">ClearTimer</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> 
+			<span class="o">&amp;</span><span class="n">AVictoryGamePlayerController</span><span class="o">::</span><span class="n">VictoryCheckAllThreadsDone</span><span class="p">);</span>
+			
+		<span class="n">ClientMessage</span><span class="p">(</span><span class="s">"Multi Thread Test Done!"</span><span class="p">);</span>
+		
+		<span class="n">VShow</span><span class="p">(</span><span class="s">"Prime Numbers Found:"</span><span class="p">);</span>
+		<span class="k">for</span><span class="p">(</span><span class="n">int32</span> <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="n">VictoryMultiThreadTest</span><span class="o">::</span><span class="n">PrimeNumbers</span><span class="p">.</span><span class="n">Num</span><span class="p">();</span> <span class="n">v</span><span class="o">++</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">VShow</span><span class="p">(</span><span class="n">FString</span><span class="o">::</span><span class="n">FromInt</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">+</span> <span class="n">FString</span><span class="p">(</span><span class="s">"~ "</span><span class="p">),</span> <span class="n">VictoryMultiThreadTest</span><span class="o">::</span><span class="n">PrimeNumbers</span><span class="p">[</span><span class="n">v</span><span class="p">]);</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Starting the Tasks / Threads</span>
+<span class="kt">void</span> <span class="n">AVictoryGamePlayerController</span><span class="o">::</span><span class="n">StartThreadTest</span><span class="p">()</span>
+<span class="p">{</span>
+
+	<span class="n">VictoryMultiThreadTest</span><span class="o">::</span><span class="n">ThePC</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+	<span class="n">VictoryMultiThreadTest</span><span class="o">::</span><span class="n">FindPrimes</span><span class="p">(</span><span class="mi">50000</span><span class="p">);</span> <span class="c1">//first 50,000 prime numbers</span>
+			
+	<span class="c1">//Start a timer to check when all the threads are done!</span>
+	<span class="n">GetWorldTimerManager</span><span class="p">().</span><span class="n">SetTimer</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> 
+		<span class="o">&amp;</span><span class="n">AVictoryGamePlayerController</span><span class="o">::</span><span class="n">VictoryCheckAllThreadsDone</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>	
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="ENamedThreads::GameThread.3F">
+        ENamedThreads::GameThread?
+       </span>
+      </h2>
+      <p>
+       Please note in this line:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">VictoryMultithreadTest_CompletionEvents</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span>
+  <span class="n">TGraphTask</span><span class="o">&lt;</span><span class="n">FVictoryTestTask</span><span class="o">&gt;::</span><span class="n">CreateTask</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="n">ENamedThreads</span><span class="o">::</span><span class="n">GameThread</span><span class="p">).</span><span class="n">ConstructAndDispatchWhenReady</span><span class="p">()</span>
+<span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       GameThread simply signifies where the task is being initiated from, not where it is allowed to run.
+      </p>
+      <p>
+       Unless you have threads starting other threads you will want to always specify GameThread :)
+      </p>
+      <h2>
+       <span class="mw-headline" id="Why_a_Name_Space.3F">
+        Why a Name Space?
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Multi thread Test, finding prime number</span>
+<span class="k">namespace</span> <span class="n">VictoryMultiThreadTest</span>
+<span class="p">{</span>
+</pre>
+      </div>
+      <p>
+       It's just a convenient way to organize the required info for multi-threading :)
+      </p>
+      <h2>
+       <span class="mw-headline" id="Knowing_When_All_Tasks_Are_Complete">
+        Knowing When All Tasks Are Complete
+       </span>
+      </h2>
+      <p>
+       I use a looping 1 second timer that runs this function:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Array of all task threads, instantly and entirely filled when FindPrimes is first called</span>
+<span class="n">FGraphEventArray</span>		<span class="n">VictoryMultithreadTest_CompletionEvents</span><span class="p">;</span>
+
+<span class="c1">//~~~~~~~~~~~~~~~</span>
+<span class="c1">//Are All Tasks Complete?</span>
+<span class="c1">//~~~~~~~~~~~~~~~</span>
+<span class="kt">bool</span> <span class="nf">TasksAreComplete</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">//Check all thread completion events</span>
+	<span class="k">for</span> <span class="p">(</span><span class="n">int32</span> <span class="n">Index</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">Index</span> <span class="o">&lt;</span> <span class="n">VictoryMultithreadTest_CompletionEvents</span><span class="p">.</span><span class="n">Num</span><span class="p">();</span> <span class="n">Index</span><span class="o">++</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//If  ! IsComplete()</span>
+		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">VictoryMultithreadTest_CompletionEvents</span><span class="p">[</span><span class="n">Index</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">IsComplete</span><span class="p">())</span>
+		<span class="p">{</span>
+			<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       the critical line is this
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">VictoryMultithreadTest_CompletionEvents</span><span class="p">[</span><span class="n">Index</span><span class="p">]</span><span class="o">-&gt;</span><span class="n">IsComplete</span><span class="p">())</span>
+</pre>
+      </div>
+      <p>
+       See TaskGraphInterfaces.h for more info!
+      </p>
+      <h3>
+       <span class="mw-headline" id="Completion_Events_Are_Filled_All_at_Once">
+        Completion Events Are Filled All at Once
+       </span>
+      </h3>
+      <p>
+       Please note that ALL completion events are created the instant the multi-threading process is initiated!
+      </p>
+      <p>
+       This part is NOT multi-threaded :)
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//~~~~~~~~~~~~~~~~~~~</span>
+<span class="c1">//  Multi-Task Initiation Point </span>
+<span class="c1">//~~~~~~~~~~~~~~~~~~~</span>
+<span class="kt">void</span> <span class="nf">FindPrimes</span><span class="p">(</span><span class="k">const</span> <span class="n">uint32</span> <span class="n">TotalToFind</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">PrimeNumbers</span><span class="p">.</span><span class="n">Empty</span><span class="p">();</span>
+	<span class="n">PrimeNumbers</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="mi">2</span><span class="p">);</span>
+	<span class="n">PrimeNumbers</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span>
+			
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~~</span>
+	<span class="c1">//Add thread / task for each of total prime numbers to find</span>
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~~</span>
+	
+	<span class="k">for</span><span class="p">(</span><span class="n">uint32</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">b</span> <span class="o">&lt;</span> <span class="n">TotalToFind</span><span class="p">;</span> <span class="n">b</span><span class="o">++</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">VictoryMultithreadTest_CompletionEvents</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">TGraphTask</span><span class="o">&lt;</span><span class="n">FVictoryTestTask</span><span class="o">&gt;::</span><span class="n">CreateTask</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="n">ENamedThreads</span><span class="o">::</span><span class="n">GameThread</span><span class="p">).</span><span class="n">ConstructAndDispatchWhenReady</span><span class="p">());</span> <span class="c1">//add properties inside ConstructAndDispatchWhenReady()</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Things_to_Note">
+        Things to Note
+       </span>
+      </h2>
+      <ul>
+       <li>
+        Do not create, delete, or modify UObjects inside the DoTask() of each task thread ( unless you are on 4.8 or after -Rama )
+       </li>
+      </ul>
+      <ul>
+       <li>
+        Do not call timers inside of DoTask()
+       </li>
+      </ul>
+      <ul>
+       <li>
+        Dont try to draw debug lines/points etc, it will likely crash (true as of 4.6.1)
+       </li>
+      </ul>
+      <ul>
+       <li>
+        If you follow the above rules you can send incremental progress to yourself on the main thread as I am doing.
+       </li>
+      </ul>
+      <p>
+       I am actually calling a function in my HUD class from my player controller pointer, from DoTask() !
+      </p>
+      <h2>
+       <span class="mw-headline" id="AsyncWork_Task_Templates">
+        AsyncWork Task Templates
+       </span>
+      </h2>
+      <p>
+       In AsyncWork.h you will find some great templates for tasks, such as FAsyncTask and FAutoDeleteAsyncTask
+      </p>
+      <p>
+       I would post the code here but I can't due to the fact that this a public wiki.
+      </p>
+      <p>
+       Have fun exploring AsyncWork.h!
+      </p>
+      <h2>
+       <span class="mw-headline" id="What_About_Platforms_Without_Multithreading.3F">
+        What About Platforms Without Multithreading?
+       </span>
+      </h2>
+      <p>
+       Note that the task graph system accounts for whether the destination platform does not support multithreading, which at the moment is only HTML5 as far as I know. iOS and Android have multi-threading support.
+      </p>
+      <p>
+       Inside of FTaskGraphImplementation::QueueTask
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">FPlatformProcess</span><span class="o">::</span><span class="n">SupportsMultithreading</span><span class="p">())</span>
+<span class="p">{</span>
+<span class="c1">//...</span>
+<span class="p">}</span>
+<span class="k">else</span>
+<span class="p">{</span>
+  <span class="n">ThreadToExecuteOn</span> <span class="o">=</span> <span class="n">ENamedThreads</span><span class="o">::</span><span class="n">GameThread</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Further_Reading">
+        Further Reading
+       </span>
+      </h2>
+      <p>
+       Check out
+      </p>
+      <pre> Core/Private/Async/TaskGraph.cpp 
+</pre>
+      <p>
+       to see how the tasks are created, and how whether the platform supports multi threading is taken into account!
+      </p>
+      <h3>
+       <span class="mw-headline" id="ParallelFor">
+        ParallelFor
+       </span>
+      </h3>
+      <p>
+       This is a great article, but if you have a "really simple function" that you just want to run split-up between threads, take a look at ParallelFor (Runtime/Core/Public/Async/ParallelFor.h).  ParallelFor uses the Task Graph System underneath the covers. Use ParallelFor if you NEED results for a bunch of calculations this frame, and you can't use results that are a couple of frames old.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">int32</span> <span class="n">MaxEntries</span> <span class="o">=</span> <span class="mi">500</span><span class="p">;</span>
+<span class="n">ParallelFor</span><span class="p">(</span> <span class="n">MaxEntries</span><span class="p">,</span> <span class="p">[](</span><span class="n">int32</span> <span class="n">CurrIdx</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// Your implementation may fetch/store results based on the CurrIdx, but</span>
+	<span class="c1">// for simplicity we just have some dummy "expensive" calculation here.</span>
+	<span class="n">int32</span> <span class="n">Sum</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="k">for</span> <span class="p">(</span> <span class="n">int32</span> <span class="n">Idx</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">Idx</span> <span class="o">&lt;</span> <span class="mi">1000</span> <span class="o">*</span> <span class="mi">10</span><span class="p">;</span> <span class="o">++</span><span class="n">Idx</span> <span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">Sum</span> <span class="o">+=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Sqrt</span><span class="p">(</span> <span class="mf">1234.56f</span> <span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span> <span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       For example, the above calculation takes about 30ms (on my PC) to run with a single thread, but just using ParallelFor will split the calculation between threads, making it complete in about 10ms instead.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

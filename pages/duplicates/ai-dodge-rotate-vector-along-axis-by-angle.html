@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   AI Dodge, Rotate Vector Along Axis By Angle - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    AI Dodge, Rotate Vector Along Axis By Angle
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Rotate_Vector_On_Axis_By_Angle">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Rotate Vector On Axis By Angle
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#AI_Dodge">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           AI Dodge
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Get_Safe_Normal">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Get Safe Normal
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Picking_Dodge_Direction">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Picking Dodge Direction
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Working_With_UE4_Nav_Mesh_System">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Working With UE4 Nav Mesh System
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#UE4_Nav_Mesh_Projection">
+            <span class="tocnumber">
+             6.1
+            </span>
+            <span class="toctext">
+             UE4 Nav Mesh Projection
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <b>
+        Author
+       </b>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       In this wiki I show you a simple way to create an AI dodge mechanic where the unit moves along the peridicular of the direction to its target.
+      </p>
+      <p>
+       The direction from the AI unit to its target is a what I call a "direction vector" because it is an FVector that is storing normalized direction data.
+      </p>
+      <p>
+       "Normalized" means the length of the vector is 1, which makes it easy to multiply with a float to create a total distance you want to move along a direction vector.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Rotate_Vector_On_Axis_By_Angle">
+        Rotate Vector On Axis By Angle
+       </span>
+      </h2>
+      <p>
+       If you want to rotate a direction vector around an axis quickly and easily you can use this handy function found in Vector.h
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/**</span>
+<span class="cm"> * Rotates around Axis (assumes Axis.Size() == 1).</span>
+<span class="cm"> *</span>
+<span class="cm"> * @param Angle Angle to rotate (in degrees).</span>
+<span class="cm"> * @param Axis Axis to rotate around.</span>
+<span class="cm"> * @return Rotated Vector.</span>
+<span class="cm"> */</span>
+<span class="n">FVector</span> <span class="nf">RotateAngleAxis</span><span class="p">(</span> <span class="k">const</span> <span class="kt">float</span> <span class="n">AngleDeg</span><span class="p">,</span> <span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">Axis</span> <span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="AI_Dodge">
+        AI Dodge
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="nf">AIDodge</span><span class="p">(</span><span class="kt">bool</span> <span class="n">DodgeRight</span><span class="o">=</span><span class="nb">true</span><span class="p">,</span> <span class="kt">float</span> <span class="n">Distance</span><span class="o">=</span><span class="mi">256</span><span class="p">);</span> <span class="c1">//.h</span>
+
+<span class="kt">void</span> <span class="n">AYourAIClass</span><span class="o">::</span><span class="n">AIDodge</span><span class="p">(</span><span class="kt">bool</span> <span class="n">DodgeRight</span><span class="p">,</span> <span class="kt">float</span> <span class="n">Distance</span><span class="p">)</span> 
+<span class="p">{</span>
+	<span class="c1">//Location of unit who wants to dodge sideways, presumed to be facing target already</span>
+	<span class="n">FVector</span> <span class="n">UnitLocation</span> <span class="o">=</span> <span class="n">GetActorLocation</span><span class="p">();</span>
+	<span class="n">FVector</span> <span class="n">DirectionToActor</span> <span class="o">=</span> <span class="p">(</span><span class="n">OtherActor</span><span class="o">-&gt;</span><span class="n">GetActorLocation</span><span class="p">()</span> <span class="o">-</span> <span class="n">UnitLocation</span> <span class="p">).</span><span class="n">GetSafeNormal</span><span class="p">();</span>
+
+	<span class="c1">//Optional, remove Z value for ground-based play, ensure UE4 Nav mesh point will be found.</span>
+	<span class="n">DirectionToActor</span><span class="p">.</span><span class="n">Z</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+	<span class="c1">//Rotate the direction by 90 to get perpendicular of direction to actor</span>
+	<span class="n">FVector</span> <span class="n">Perpendicular</span> <span class="o">=</span> <span class="n">DirectionToActor</span><span class="p">.</span><span class="n">RotateAngleAxis</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span><span class="n">FVector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">));</span>
+
+	<span class="c1">//Dodging to relative Left or Right?</span>
+	<span class="n">Perpendicular</span> <span class="o">*=</span> <span class="p">(</span><span class="n">DodgeRight</span><span class="p">)</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+	
+	<span class="c1">//Tell Unit to move 256 units along this perpendicular</span>
+	<span class="n">FVector</span> <span class="n">GoalLocation</span> <span class="o">=</span> <span class="n">UnitLocation</span> <span class="o">+</span> <span class="n">Perpendicular</span> <span class="o">*</span> <span class="n">Distance</span><span class="p">;</span>
+
+	<span class="c1">//Tell unit to move to this location</span>
+	<span class="n">AAIController</span><span class="o">*</span> <span class="n">AIControl</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">AAIController</span><span class="o">&gt;</span><span class="p">(</span><span class="n">GetController</span><span class="p">());</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">AIControl</span><span class="p">)</span>
+	<span class="p">{</span>
+	  <span class="n">AIControl</span><span class="o">-&gt;</span><span class="n">MoveToLocation</span><span class="p">(</span><span class="n">GoalLocation</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span> <span class="c1">//Optional Acceptance Radius</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Note that by using FVector::RotateAngleAxis you can implement an AI dodge function in just a few lines of code!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Rotate the direction by 90 to get perpendicular of direction to actor</span>
+<span class="n">FVector</span> <span class="n">Perpendicular</span> <span class="o">=</span> <span class="n">DirectionToActor</span><span class="p">.</span><span class="n">RotateAngleAxis</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span><span class="n">FVector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">));</span>
+</pre>
+      </div>
+      <p>
+       The reason the axis is FVector(0,0,1) is because that's the vertical axis, so you can imagine a vertical pole that the direction vector is rotating around.
+      </p>
+      <p>
+       You could just as easily use any axis of your own choosing, for your own game's needs :)
+      </p>
+      <h2>
+       <span class="mw-headline" id="Get_Safe_Normal">
+        Get Safe Normal
+       </span>
+      </h2>
+      <p>
+       Notice I am using GetSafeNormal() to remove all length/distance information from the vector between the AI unit and its target. This ensures that I can the multiply by the Distance parameter later and get a vector of exactly the desired length.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Location of unit who wants to dodge sideways, presumed to be facing target already</span>
+<span class="n">FVector</span> <span class="n">UnitLocation</span> <span class="o">=</span> <span class="n">GetActorLocation</span><span class="p">();</span>
+<span class="n">FVector</span> <span class="n">DirectionToActor</span> <span class="o">=</span> <span class="p">(</span><span class="n">OtherActor</span><span class="o">-&gt;</span><span class="n">GetActorLocation</span><span class="p">()</span> <span class="o">-</span> <span class="n">UnitLocation</span> <span class="p">).</span><span class="n">GetSafeNormal</span><span class="p">();</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Picking_Dodge_Direction">
+        Picking Dodge Direction
+       </span>
+      </h2>
+      <p>
+       Notice I am using the ternary operator ? : to switch dodge directions based on input parameter:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Dodging to relative Left or Right?</span>
+<span class="n">Perpendicular</span> <span class="o">*=</span> <span class="p">(</span><span class="n">DodgeRight</span><span class="p">)</span> <span class="o">?</span> <span class="mi">1</span> <span class="o">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Working_With_UE4_Nav_Mesh_System">
+        Working With UE4 Nav Mesh System
+       </span>
+      </h2>
+      <p>
+       To ensure that the final dodge point will be easy for the UE4 Navigation system to find, I remove all Z information of the direction of AI unit to its target:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Optional, remove Z value for ground-based play, ensure UE4 Nav mesh point will be found.</span>
+<span class="n">DirectionToActor</span><span class="p">.</span><span class="n">Z</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       Imagine the AI unit wants to dodge a target that 45 degrees above the AI unit on a ledge. If you rotate that vector with z value intact, the final goal may be beneath the ground, or in the case of AI unit being above target, then the goal will be in the air somewhere.
+      </p>
+      <p>
+       By removing Z information I ensure that the AI unit is querying the UE4 navigation system for a point that is on its own level.
+      </p>
+      <h3>
+       <span class="mw-headline" id="UE4_Nav_Mesh_Projection">
+        UE4 Nav Mesh Projection
+       </span>
+      </h3>
+      <p>
+       Alternatively, if you dont want to remove the Z information, you can use UE4 function ProjectPointToNav with an appropriate extent if you want to make absolutely sure the dodge point is going to be found on the nav mesh.
+      </p>
+      <p>
+       The "Extent" defines the shape of the trace that is performed, so an Extent with a Z of 512 will find destinations on the nav mesh above and below the queried location by 512.
+      </p>
+      <p>
+       Keep in mind Extent is the half-size of the final trace, because it goes in both directions along the axis.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//NavigationSystem.h</span>
+<span class="kt">bool</span> <span class="nf">ProjectPointToNavigation</span><span class="p">(</span><span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">Point</span><span class="p">,</span> <span class="n">FNavLocation</span><span class="o">&amp;</span> <span class="n">OutLocation</span><span class="p">,</span> <span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">Extent</span> <span class="o">=</span> <span class="n">INVALID_NAVEXTENT</span><span class="p">,</span> <span class="k">const</span> <span class="n">FNavAgentProperties</span><span class="o">*</span> <span class="n">AgentProperties</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">FNavigationQueryFilter</span><span class="o">&gt;</span> <span class="n">QueryFilter</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">ProjectPointToNavigation</span><span class="p">(</span><span class="n">Point</span><span class="p">,</span> <span class="n">OutLocation</span><span class="p">,</span> <span class="n">Extent</span><span class="p">,</span> <span class="n">AgentProperties</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="o">?</span> <span class="n">GetNavDataForProps</span><span class="p">(</span><span class="o">*</span><span class="n">AgentProperties</span><span class="p">)</span> <span class="o">:</span> <span class="n">GetMainNavData</span><span class="p">(</span><span class="n">FNavigationSystem</span><span class="o">::</span><span class="n">DontCreate</span><span class="p">),</span> <span class="n">QueryFilter</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="nf">ProjectPointToNavigation</span><span class="p">(</span><span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">Point</span><span class="p">,</span> <span class="n">FNavLocation</span><span class="o">&amp;</span> <span class="n">OutLocation</span><span class="p">,</span> <span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">Extent</span> <span class="o">=</span> <span class="n">INVALID_NAVEXTENT</span><span class="p">,</span> <span class="k">const</span> <span class="n">ANavigationData</span><span class="o">*</span> <span class="n">NavData</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">,</span> <span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">FNavigationQueryFilter</span><span class="o">&gt;</span> <span class="n">QueryFilter</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       This projection functionality is also built into the AIController MoveTo function, if you set that parameter to true!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/** Makes AI go toward specified Dest location</span>
+<span class="cm"> *  @param AcceptanceRadius - finish move if pawn gets close enough</span>
+<span class="cm"> *  @param bStopOnOverlap - add pawn's radius to AcceptanceRadius</span>
+<span class="cm"> *  @param bUsePathfinding - use navigation data to calculate path (otherwise it will go in straight line)</span>
+<span class="cm"> *  @param bProjectDestinationToNavigation - project location on navigation data before using it</span>
+<span class="cm"> *  @param bCanStrafe - set focus related flag: bAllowStrafe</span>
+<span class="cm"> *  @param FilterClass - navigation filter for pathfinding adjustments</span>
+<span class="cm"> *  @param bAllowPartialPath - use incomplete path when goal can't be reached</span>
+<span class="cm"> *	@note AcceptanceRadius has default value or -1 due to Header Parser not being able to recognize UPathFollowingComponent::DefaultAcceptanceRadius</span>
+<span class="cm"> */</span>
+<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"AI|Navigation"</span><span class="p">,</span> <span class="n">Meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">AdvancedDisplay</span> <span class="o">=</span> <span class="s">"bStopOnOverlap,bCanStrafe,bAllowPartialPath"</span><span class="p">))</span>
+<span class="n">EPathFollowingRequestResult</span><span class="o">::</span><span class="n">Type</span> <span class="n">MoveToLocation</span><span class="p">(</span><span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">Dest</span><span class="p">,</span> <span class="kt">float</span> <span class="n">AcceptanceRadius</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bStopOnOverlap</span> <span class="o">=</span> <span class="nb">true</span><span class="p">,</span>
+	<span class="kt">bool</span> <span class="n">bUsePathfinding</span> <span class="o">=</span> <span class="nb">true</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bProjectDestinationToNavigation</span> <span class="o">=</span> <span class="nb">false</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bCanStrafe</span> <span class="o">=</span> <span class="nb">true</span><span class="p">,</span>
+	<span class="n">TSubclassOf</span><span class="o">&lt;</span><span class="n">UNavigationQueryFilter</span><span class="o">&gt;</span> <span class="n">FilterClass</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bAllowPartialPath</span> <span class="o">=</span> <span class="nb">true</span><span class="p">);</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       In just a few lines of code I've shown you a way to tell your AI unit to move perpendicular to the direction to its target, thus implementing a dodge mechanic that you can use no matter how the AI unit and its target are positioned in world space.
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       Rama
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

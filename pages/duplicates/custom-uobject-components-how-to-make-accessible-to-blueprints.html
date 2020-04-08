@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Custom UObject Components, How to Make Accessible to Blueprints - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Custom UObject Components, How to Make Accessible to Blueprints
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <i>
+        Author
+       </i>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       This is how you expose your custom UObject components to Blueprints, so that you can add them to any blueprint you want!
+      </p>
+      <p>
+       Special thanks to Epic Dev Marc Audy for explaining this on the forums.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Code">
+        Code
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+<span class="cp">#include</span> <span class="cpf">"VictorySkelMeshComp.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"VictoryMorpherComp.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">(</span><span class="n">meta</span><span class="o">=</span><span class="p">(</span><span class="n">BlueprintSpawnableComponent</span><span class="p">))</span>
+<span class="k">class</span> <span class="nc">UVictoryMorpherComp</span> <span class="o">:</span> <span class="k">public</span> <span class="n">UVictorySkelMeshComp</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="The_Critical_Addition">
+        The Critical Addition
+       </span>
+      </h3>
+      <p>
+       The only thing you have to do to expose your custom UObject components to Blueprints is add this!
+      </p>
+      <pre> meta=(BlueprintSpawnableComponent)
+</pre>
+      <p>
+       inside of UCLASS() !
+      </p>
+      <h2>
+       <span class="mw-headline" id="Picture">
+        Picture
+       </span>
+      </h2>
+      <p>
+       <img alt="CustomComponents.jpg" class="" height="804" src="../assets/custom-uobject-components-how-to-make-accessible-to-blueprints/0.jpg" width="655"/>
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

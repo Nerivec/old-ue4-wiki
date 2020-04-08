@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Using excel to store gameplay data - DataTables - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Using excel to store gameplay data - DataTables
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Quick_How_To_Use">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Quick How To Use
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#1._Create_the_CSV_File">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             1. Create the CSV File
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#2._Create_the_structure_in_the_game">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             2. Create the structure in the game
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-5">
+             <a href="#GameObjectLookupTable.h">
+              <span class="tocnumber">
+               2.2.1
+              </span>
+              <span class="toctext">
+               GameObjectLookupTable.h
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#3._Create_the_structure_in_the_game">
+            <span class="tocnumber">
+             2.3
+            </span>
+            <span class="toctext">
+             3. Create the structure in the game
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#4._Using_the_DataTable_in_Game">
+            <span class="tocnumber">
+             2.4
+            </span>
+            <span class="toctext">
+             4. Using the DataTable in Game
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Referencing_Assets_from_your_data_table">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Referencing Assets from your data table
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#TODO">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           TODO
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       Data driven gameplay helps mitigate the amount of work and complexity involved, as well as providing the ability to visualize and parameterize data creation and progression, for games that have an extended lifetime well beyond that of a typical boxed game, and require constant tweaking and balancing of data based on player feedback. The ability to move data out to Excel documents that can be maintained using proven tools and then imported to automatically take effect in the game.
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Programming/Gameplay/DataDriven/index.html" rel="nofollow">
+        Epic's Data Driven Page
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Quick_How_To_Use">
+        Quick How To Use
+       </span>
+      </h2>
+      <h4>
+       <span class="mw-headline" id="1._Create_the_CSV_File">
+        1. Create the CSV File
+       </span>
+      </h4>
+      <p>
+       Using Excel / Google Docs, create a sheet with the following properties:
+      </p>
+      <p>
+       <img alt="Csv table example.png" class="" height="195" src="../assets/using-excel-to-store-gameplay-data-datatables/0.png" width="664"/>
+      </p>
+      <p>
+       Remember to not use spaces in the field titles, and also its important to have the first column/row in blank. Export this file as CSV.
+      </p>
+      <h4>
+       <span class="mw-headline" id="2._Create_the_structure_in_the_game">
+        2. Create the structure in the game
+       </span>
+      </h4>
+      <p>
+       There are two methods of creating the structure.
+      </p>
+      <p>
+       1) You can  create a blueprint Structure in the engine under "Add New &gt; Blueprints &gt; Structure".
+      </p>
+      <p>
+       2) You can create a C++ struct in code like this:
+      </p>
+      <h5>
+       <span class="mw-headline" id="GameObjectLookupTable.h">
+        GameObjectLookupTable.h
+       </span>
+      </h5>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"CoreMinimal.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Engine/DataTable.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"MyObjectLookupTable.generated.h"</span><span class="cp"></span>
+
+<span class="cm">/** Structure to store the lookup of GameObjects for use in a UDataTable */</span>
+<span class="n">USTRUCT</span><span class="p">(</span><span class="n">BlueprintType</span><span class="p">)</span>
+<span class="k">struct</span> <span class="nl">FMyObjectLookupTable</span> <span class="p">:</span> <span class="k">public</span> <span class="n">FTableRowBase</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+
+	<span class="cm">/** Full Path of Blueprint */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintReadOnly</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"GO"</span><span class="p">)</span>
+	<span class="n">FString</span> <span class="n">Blueprint_Class</span><span class="p">;</span>
+
+	<span class="cm">/** Category of GamePlay Object */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintReadOnly</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"GO"</span><span class="p">)</span>
+		<span class="n">int32</span> <span class="n">Category</span><span class="p">;</span>
+
+	<span class="cm">/** Scriptable Use Code */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintReadOnly</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"GO"</span><span class="p">)</span>
+		<span class="n">int32</span> <span class="n">Usecode</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h4>
+       <span class="mw-headline" id="3._Create_the_structure_in_the_game">
+        3. Create the structure in the game
+       </span>
+      </h4>
+      <p>
+       Import the data into your game. Make sure your file is named CSV, drag to content or hit the import button, select the destination data structure.
+      </p>
+      <p>
+       <img alt="How-to-import-csv-to-content.png" class="" height="540" src="../assets/using-excel-to-store-gameplay-data-datatables/1.png" width="510"/>
+      </p>
+      <h4>
+       <span class="mw-headline" id="4._Using_the_DataTable_in_Game">
+        4. Using the DataTable in Game
+       </span>
+      </h4>
+      <p>
+       <b>
+        Declaration
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// o-- Lookup table for Game Objects - Loaded from CSV/Excel</span>
+<span class="n">UDataTable</span><span class="o">*</span> <span class="n">GameObjectLookupTable</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       <b>
+        Construction
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">static</span> <span class="n">ConstructorHelpers</span><span class="o">::</span><span class="n">FObjectFinder</span><span class="o">&lt;</span><span class="n">UDataTable</span><span class="o">&gt;</span> 
+   <span class="n">GameObjectLookupDataTable_BP</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"DataTable'/Game/Data/GameObjectLookup.GameObjectLookup'"</span><span class="p">));</span>
+<span class="n">GameObjectLookupTable</span> <span class="o">=</span> <span class="n">GameObjectLookupDataTable_BP</span><span class="p">.</span><span class="n">Object</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       <b>
+        Searching and Getting Data
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">static</span> <span class="k">const</span> <span class="n">FString</span> <span class="nf">ContextString</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"GENERAL"</span><span class="p">));</span>
+<span class="c1">// o-- Search using FindRow. It returns a handle to the row.</span>
+<span class="c1">// Access the variables like GOLookupRow-&gt;Blueprint_Class, GOLookupRow-&gt;Usecode</span>
+<span class="n">FGameObjectLookupTable</span><span class="o">*</span> <span class="n">GOLookupRow</span> <span class="o">=</span> <span class="n">GameObjectLookupTable</span><span class="o">-&gt;</span><span class="n">FindRow</span><span class="o">&lt;</span><span class="n">FGameObjectLookupTable</span><span class="o">&gt;</span><span class="p">(</span>
+	<span class="o">*</span><span class="n">FString</span><span class="o">::</span><span class="n">Printf</span><span class="p">(</span>
+		<span class="n">TEXT</span><span class="p">(</span><span class="s">"%d"</span><span class="p">),</span>
+		<span class="n">GoID</span><span class="p">),</span>
+	<span class="n">ContextString</span>
+<span class="p">);</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="n">GOLookupRow</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">GEngine</span><span class="o">-&gt;</span><span class="n">AddOnScreenDebugMessage</span><span class="p">(</span>
+		<span class="n">GEngine</span><span class="o">-&gt;</span><span class="n">ScreenMessages</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+		<span class="mf">6.0f</span><span class="p">,</span>
+		<span class="n">FColor</span><span class="o">::</span><span class="n">Green</span><span class="p">,</span>
+		<span class="o">*</span><span class="n">GOLookupRow</span><span class="o">-&gt;</span><span class="n">Blueprint_Class</span>
+	<span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Referencing_Assets_from_your_data_table">
+        Referencing Assets from your data table
+       </span>
+      </h2>
+      <p>
+       1. Within the content browser, find the game asset you wish to reference. Right click on the asset and select "Copy Reference" to get the full path reference. Then, copy and paste that into your CSV file. Your asset will need to be surrounded by three double quotes (The first and last quote are quoting the quote).
+Note: The asset path contains an extension for the asset, which must be included! It's super easy to overlook.
+      </p>
+      <p>
+       Sample in CSV file: """Texture2D'/Game/Assets/Textures/Characters/KnightPortrait.KnightPortrait'"""
+      </p>
+      <p>
+       2. Your struct should contain a TAssetPtr&lt;T&gt; for the asset type you are importing. The TAssetPtr is a lazy initialized asset pointer which only loads an asset when its needed by the game. Be careful with assets which have a large file size. If they need to load during runtime, you'll get a slight delay in game. You can force an asset to be loaded at any time within code by calling the "Get()" method.
+      </p>
+      <p>
+       Sample in struct:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Transient</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"CreatureData"</span><span class="p">)</span>
+	<span class="n">TAssetPtr</span><span class="o">&lt;</span><span class="n">UTexture2D</span><span class="o">&gt;</span> <span class="n">Portrait</span><span class="p">;</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="TODO">
+        TODO
+       </span>
+      </h2>
+      <ul>
+       <li>
+        Show how to load the CSV dynamically too. If you do, remember to get back here and put how you did.
+       </li>
+      </ul>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

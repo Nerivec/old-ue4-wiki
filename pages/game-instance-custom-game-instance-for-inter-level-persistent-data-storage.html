@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Game Instance, Custom Game Instance For Inter-Level Persistent Data Storage - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Game Instance, Custom Game Instance For Inter-Level Persistent Data Storage
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Solus_Example">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Solus Example
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Example_For_You">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Example For You
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#SolusGameInstance.h">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           SolusGameInstance.h
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#SolusGameInstance.cpp">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           SolusGameInstance.cpp
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#PlayerController.cpp">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           PlayerController.cpp
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Config_Setting">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Config Setting
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Other_Solus_C.2B.2B_Tutorials">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Other Solus C++ Tutorials
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           9
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <b>
+        Author
+       </b>
+       (
+       )
+      </p>
+      <p>
+       One of the new UE4 engine features as of 4.4 is the Game Instance class!
+      </p>
+      <p>
+       This is a globally accessible instanced UObject that can store any data you want to be carried between levels!
+      </p>
+      <p>
+       Where formally you would have had to write out data to a config file or to binary file, to transfer between levels, now you can use the Game Instance class!
+      </p>
+      <p>
+       API documentation:
+      </p>
+      <h2>
+       <span class="mw-headline" id="Solus_Example">
+        Solus Example
+       </span>
+      </h2>
+      <p>
+       As a realistic example, in Solus there is a Comms Tower that needs to be in the same state when loaded into different levels, as it is seen from a great distance.
+      </p>
+      <p>
+       The player can perform actions that evolve the state of the Comms Tower, and those changes have to be reflected in each level that the player enters.
+      </p>
+      <p>
+       Using the Game Instance class, I can record the state of the Comms Tower any time the player makes modifications to it, and carry that information over when the player transitions to a new level!
+      </p>
+      <p>
+       Then, whenever the player saves the game, I can still save the Comms Tower normally, but a significant amount of management has been eased out of binary file manipulations thanks to the Game Instance class.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Example_For_You">
+        Example For You
+       </span>
+      </h2>
+      <p>
+       Here's an example we can do together!
+      </p>
+      <p>
+       We'll make a custom Game Instance class, and increment an int32 in the tick function of our player controller class.
+      </p>
+      <p>
+       Then you can watch as you change to several different maps in your own game (console -&gt; open mapname), and you will see we'll have a record of the total ticks that have occurred, even between the different levels!
+      </p>
+      <h2>
+       <span class="mw-headline" id="SolusGameInstance.h">
+        SolusGameInstance.h
+       </span>
+      </h2>
+      <p>
+       Please note the essential include!
+      </p>
+      <p>
+       Also note you could access the Game Instance var in blueprints, by using the BP node to Get Game Instance and casting to your custom Game Instance Class!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/*</span>
+<span class="cm">	By Rama</span>
+<span class="cm">*/</span>
+
+<span class="cp">#pragma once</span>
+
+<span class="c1">//Essential Include</span>
+<span class="cp">#include</span> <span class="cpf">"Engine/GameInstance.h" </span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"SolusGameInstance.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">USolusGameInstance</span> <span class="o">:</span> <span class="k">public</span> <span class="n">UGameInstance</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+<span class="k">public</span><span class="o">:</span>
+     <span class="n">USolusGameInstance</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">);</span>
+
+	<span class="cm">/** Increment this value in any map, change map, and notice it persists! */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">SolusHUDCrosshair</span><span class="p">)</span>
+	<span class="n">int32</span> <span class="n">InterLevelPersistentValue</span><span class="p">;</span> 
+	
+<span class="p">};</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="SolusGameInstance.cpp">
+        SolusGameInstance.cpp
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"Solus.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"SolusGameInstance.h"</span><span class="cp"></span>
+
+<span class="n">USolusGameInstance</span><span class="o">::</span><span class="n">USolusGameInstance</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">ObjectInitializer</span><span class="p">)</span>
+<span class="p">{</span>
+	
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="PlayerController.cpp">
+        PlayerController.cpp
+       </span>
+      </h2>
+      <p>
+       As you can see below, every Actor.h class has a function called GetGameInstance() similar to GetWorld() as of 4.4 !
+      </p>
+      <p>
+       So this means you have global access to persistent values in your custom game instance class, in your entire code base!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">ASolusPC</span><span class="o">::</span><span class="n">PlayerTick</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaTime</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">PlayerTick</span><span class="p">(</span><span class="n">DeltaTime</span><span class="p">);</span>
+	
+	<span class="n">USolusGameInstance</span><span class="o">*</span> <span class="n">SGI</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">USolusGameInstance</span><span class="o">&gt;</span><span class="p">(</span><span class="n">GetGameInstance</span><span class="p">());</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">SGI</span><span class="p">)</span>
+	<span class="p">{</span> 
+		<span class="n">SGI</span><span class="o">-&gt;</span><span class="n">InterLevelPersistentValue</span><span class="o">++</span><span class="p">;</span>
+		<span class="n">ClientMessage</span><span class="p">(</span><span class="n">FString</span><span class="o">::</span><span class="n">FromInt</span><span class="p">(</span><span class="n">SGI</span><span class="o">-&gt;</span><span class="n">InterLevelPersistentValue</span><span class="p">));</span>
+	<span class="p">}</span>
+	
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Config_Setting">
+        Config Setting
+       </span>
+      </h2>
+      <p>
+       Make sure to set your DefaultEngine.ini to use your custom game instance!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="p">[</span><span class="o">/</span><span class="n">Script</span><span class="o">/</span><span class="n">EngineSettings</span><span class="p">.</span><span class="n">GameMapsSettings</span><span class="p">]</span>
+<span class="n">GameInstanceClass</span><span class="o">=/</span><span class="n">Script</span><span class="o">/</span><span class="n">Solus</span><span class="p">.</span><span class="n">SolusGameInstance</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Other_Solus_C.2B.2B_Tutorials">
+        Other Solus C++ Tutorials
+       </span>
+      </h2>
+      <p>
+       I have many Solus C++ tutorials here!
+      </p>
+      <p>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       Have fun today!
+      </p>
+      <p>
+       Rama
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

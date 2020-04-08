@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   HUD, Canvas, Code Sample of 800+ Lines, Create Buttons &amp; Draw Materials - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    HUD, Canvas, Code Sample of 800+ Lines, Create Buttons &amp; Draw Materials
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Multiple_convenience_functions_for">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Multiple convenience functions for
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Transparency">
+            <span class="tocnumber">
+             1.2
+            </span>
+            <span class="toctext">
+             Transparency
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Centering">
+            <span class="tocnumber">
+             1.3
+            </span>
+            <span class="toctext">
+             Centering
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Rest_of_Game_Code_Integration">
+            <span class="tocnumber">
+             1.4
+            </span>
+            <span class="toctext">
+             Rest of Game Code Integration
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Player_Keyboard.2CMouse.2CController_Input">
+            <span class="tocnumber">
+             1.5
+            </span>
+            <span class="toctext">
+             Player Keyboard,Mouse,Controller Input
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Text_Size">
+            <span class="tocnumber">
+             1.6
+            </span>
+            <span class="toctext">
+             Text Size
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Buttons">
+            <span class="tocnumber">
+             1.7
+            </span>
+            <span class="toctext">
+             Buttons
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#Cursor">
+            <span class="tocnumber">
+             1.8
+            </span>
+            <span class="toctext">
+             Cursor
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#Tooltips">
+            <span class="tocnumber">
+             1.9
+            </span>
+            <span class="toctext">
+             Tooltips
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#Drawing_Images.2FTextures.2FMaterials">
+            <span class="tocnumber">
+             1.10
+            </span>
+            <span class="toctext">
+             Drawing Images/Textures/Materials
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-12">
+         <a href="#Video">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Video
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-13">
+           <a href="#Customizing_the_Appearance">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Customizing the Appearance
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-14">
+         <a href="#Credit">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Credit
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-15">
+         <a href="#Pre-requisites">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Pre-requisites
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-16">
+         <a href="#C.2B.2B_Code">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           C++ Code
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-17">
+           <a href="#JoyHUD.h">
+            <span class="tocnumber">
+             5.1
+            </span>
+            <span class="toctext">
+             JoyHUD.h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-18">
+           <a href="#JoyHUD.cpp">
+            <span class="tocnumber">
+             5.2
+            </span>
+            <span class="toctext">
+             JoyHUD.cpp
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-19">
+         <a href="#Compile_and_Make_BP">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Compile and Make BP
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-20">
+         <a href="#Adding_The_Graphics">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Adding The Graphics
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-21">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Code Author:
+       </i>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       In this tutorial I am giving you a fully functional HUD class that is 800+ lines of UE4 C++ code.
+      </p>
+      <p>
+       <b>
+        Features of this sample HUD class include:
+       </b>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Multiple_convenience_functions_for">
+        Multiple convenience functions for
+       </span>
+      </h3>
+      <ul>
+       <li>
+        drawing textures
+       </li>
+       <li>
+        drawing materials
+       </li>
+       <li>
+        drawing lines
+       </li>
+       <li>
+        drawing rectangles
+       </li>
+       <li>
+        drawing text
+       </li>
+      </ul>
+      <p>
+       The functions use the new UE4 method of using CanvasItems.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Transparency">
+        Transparency
+       </span>
+      </h3>
+      <p>
+       Every HUD element I show in my sample has at least some transparency!
+      </p>
+      <p>
+       The main HUD menu graphic is actually mostly transparent, except for the edges!
+      </p>
+      <h3>
+       <span class="mw-headline" id="Centering">
+        Centering
+       </span>
+      </h3>
+      <ul>
+       <li>
+        how to draw stuff centered in the screen (used by confirm dialog)
+       </li>
+      </ul>
+      <h3>
+       <span class="mw-headline" id="Rest_of_Game_Code_Integration">
+        Rest of Game Code Integration
+       </span>
+      </h3>
+      <p>
+       I have code in the tutorial to show you how to get a reference to your custom PC or Character class from within the HUD.
+      </p>
+      <p>
+       From your PC reference you can get access to your custom Game Mode and Game State classes (using the Cast&lt;&gt; code I show in tutorial PostInit)
+      </p>
+      <h3>
+       <span class="mw-headline" id="Player_Keyboard.2CMouse.2CController_Input">
+        Player Keyboard,Mouse,Controller Input
+       </span>
+      </h3>
+      <p>
+       How to capture player key presses for ANY key,mouse,controller that you want from within the HUD
+      </p>
+      <p>
+       <b>
+        Key Controls used in this tutorial code:
+       </b>
+      </p>
+      <ul>
+       <li>
+        ESC: 	clears the screen lock so camera will move with cursor.
+       </li>
+       <li>
+        F: 		Toggle screen lock so only the cursor moves as player moves the mouse.
+       </li>
+       <li>
+        H:		Toggles hiding the HUD
+       </li>
+       <li>
+        LMB: 	Clicks on buttons
+       </li>
+       <li>
+        Y:		Confirm yes if confirm dialog open
+       </li>
+       <li>
+        N:		Cancel if confirm dialog is open
+       </li>
+      </ul>
+      <h3>
+       <span class="mw-headline" id="Text_Size">
+        Text Size
+       </span>
+      </h3>
+      <p>
+       How to measure text, accounting for scaling and font size, to size backgrounds,buttons,tooltips appropriately
+      </p>
+      <h3>
+       <span class="mw-headline" id="Buttons">
+        Buttons
+       </span>
+      </h3>
+      <p>
+       A button system and corresponding USTRUCT
+      </p>
+      <h3>
+       <span class="mw-headline" id="Cursor">
+        Cursor
+       </span>
+      </h3>
+      <p>
+       How to draw cursor that player can move in-game
+      </p>
+      <p>
+       How to change cursor when hovering over button
+      </p>
+      <h3>
+       <span class="mw-headline" id="Tooltips">
+        Tooltips
+       </span>
+      </h3>
+      <p>
+       Button tooltips
+      </p>
+      <h3>
+       <span class="mw-headline" id="Drawing_Images.2FTextures.2FMaterials">
+        Drawing Images/Textures/Materials
+       </span>
+      </h3>
+      <p>
+       Drawing custom button and menu backgrounds that come from textures/materials
+      </p>
+      <h2>
+       <span class="mw-headline" id="Video">
+        Video
+       </span>
+      </h2>
+      <p>
+       Here is a video of this exact code in action!
+      </p>
+      <h3>
+       <span class="mw-headline" id="Customizing_the_Appearance">
+        Customizing the Appearance
+       </span>
+      </h3>
+      <p>
+       Note that I made my own fonts and cursors and materials as seen in video, you can make your own appearance using same code :)
+      </p>
+      <p>
+       &lt;youtube&gt;
+       <a class="external free" href="https://www.youtube.com/watch?v=85Rp4Xb2Ja0" rel="nofollow">
+        https://www.youtube.com/watch?v=85Rp4Xb2Ja0
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Credit">
+        Credit
+       </span>
+      </h2>
+      <p>
+       Feel free to use this as a template/foundation for making a c++ HUD-based GUI for your game!
+      </p>
+      <p>
+       Please do give me credit in some appropriate way for this base-line code contribution.
+      </p>
+      <pre> All of this code is of my own creation, and I am using functions made only by Epic.
+</pre>
+      <p>
+       <br/>
+      </p>
+      <p>
+       <b>
+        Why Did I Do All This?
+       </b>
+      </p>
+      <p>
+       I have implemented a very featured GUI for my game using only UE4 C++ and the HUD class!
+      </p>
+      <p>
+       I was able to create from scratch everything I wanted, including scrollable panels and an in-game file system.
+      </p>
+      <p>
+       <br/>
+       I wanted to demo for you how this can be done, so that you can do this in your game too!
+      </p>
+      <p>
+       <br/>
+       Constructing this tutorial for you took me about 5 hours, 2 hours of which was just documation / video
+      </p>
+      <p>
+       Adding buttons and such to this code should only take you minutes.
+      </p>
+      <p>
+       Integrating this code with your game engine will be easy, you can get a reference to the owning Character or the player controller from within the HUD class itself.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Pre-requisites">
+        Pre-requisites
+       </span>
+      </h2>
+      <p>
+       Make at least one font of your own, right click and make a new font asset.
+      </p>
+      <p>
+       I recommend a large default size like 36, as explained in the code below.
+      </p>
+      <h2>
+       <span class="mw-headline" id="C.2B.2B_Code">
+        C++ Code
+       </span>
+      </h2>
+      <p>
+       The code below assumes you have created a now Class named "JoyHUD". If you "add code to project" from the Editor, then you will need to replace the default files with the  code below.
+      </p>
+      <h3>
+       <span class="mw-headline" id="JoyHUD.h">
+        JoyHUD.h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2013 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="c1">//VictoryHUD extension by Rama</span>
+
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"JoyHUD.generated.h"</span><span class="cp"></span>
+
+<span class="n">USTRUCT</span><span class="p">()</span>
+<span class="k">struct</span> <span class="n">FJoyButtonStruct</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_USTRUCT_BODY</span><span class="p">()</span>
+
+	<span class="c1">//Vars</span>
+	<span class="n">int32</span> 		<span class="n">type</span><span class="p">;</span>
+	<span class="n">FString</span>	<span class="n">toolTip</span><span class="p">;</span>
+	<span class="kt">float</span> 		<span class="n">minX</span><span class="p">;</span>
+	<span class="kt">float</span> 		<span class="n">maxX</span><span class="p">;</span>
+	<span class="kt">float</span> 		<span class="n">minY</span><span class="p">;</span>
+	<span class="kt">float</span> 		<span class="n">maxY</span><span class="p">;</span>
+	
+	<span class="c1">//~</span>
+	
+	<span class="c1">//default properties</span>
+	
+	<span class="n">FJoyButtonStruct</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="n">type</span> 			<span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+		<span class="n">toolTip</span> 		<span class="o">=</span> <span class="s">""</span><span class="p">;</span>
+		<span class="n">minX</span> 			<span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+		<span class="n">maxX</span> 			<span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+		<span class="n">minY</span> 			<span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+		<span class="n">maxY</span> 			<span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">AJoyHUD</span> <span class="o">:</span> <span class="k">public</span> <span class="n">AHUD</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+
+	<span class="c1">// Font </span>
+	<span class="c1">//		I recommend creating the font at a high resolution / size like 36</span>
+	<span class="c1">//			then you can scale down the font as needed to any size of your choice</span>
+	
+	<span class="cm">/** Verdana */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">JoyHUD</span><span class="p">)</span>
+	<span class="n">UFont</span><span class="o">*</span> <span class="n">VerdanaFont</span><span class="p">;</span>
+	
+	<span class="cm">/** Put Roboto Here */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">JoyHUD</span><span class="p">)</span>
+	<span class="n">UFont</span><span class="o">*</span> <span class="n">UE4Font</span><span class="p">;</span>
+	
+	<span class="cm">/** Font Scaling Used By Your HUD Code */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">JoyHUD</span><span class="p">)</span>
+	<span class="kt">float</span> <span class="n">DefaultFontScale</span><span class="p">;</span>
+	
+	<span class="cm">/** HUD Scaling */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">JoyHUD</span><span class="p">)</span>
+	<span class="kt">float</span> <span class="n">GlobalHUDMult</span><span class="p">;</span>
+	
+	<span class="c1">// T2D </span>
+	<span class="cm">/** Cursor */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">T2D</span><span class="p">)</span>
+	<span class="n">UTexture2D</span><span class="o">*</span> <span class="n">CursorMain</span><span class="p">;</span>
+	
+	<span class="cm">/** Hovering */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">T2D</span><span class="p">)</span>
+	<span class="n">UTexture2D</span><span class="o">*</span> <span class="n">CursorHoveringButton</span><span class="p">;</span>
+	
+	<span class="cm">/** Button */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">T2D</span><span class="p">)</span>
+	<span class="n">UTexture2D</span><span class="o">*</span> <span class="n">ButtonBackground</span><span class="p">;</span>
+	
+	<span class="c1">// Materials </span>
+	<span class="cm">/** Events */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">Materials</span><span class="p">)</span>
+	<span class="n">UMaterialInterface</span><span class="o">*</span> <span class="n">MaterialBackground</span><span class="p">;</span>
+
+	<span class="c1">//</span>
+	
+	<span class="cm">/* Draw Hud? */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">Options</span><span class="p">)</span>
+	<span class="kt">bool</span> <span class="n">DontDrawHUD</span><span class="p">;</span>
+	
+<span class="c1">//Cursor</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">FVector2D</span> <span class="n">MouseLocation</span><span class="p">;</span>
+	<span class="kt">void</span> <span class="nf">DrawHUD_DrawCursor</span><span class="p">();</span>
+	
+<span class="c1">//Buttons</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FJoyButtonStruct</span><span class="o">&gt;</span> <span class="n">ButtonsMain</span><span class="p">;</span>
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FJoyButtonStruct</span><span class="o">&gt;</span> <span class="n">ButtonsConfirm</span><span class="p">;</span>
+	
+	<span class="c1">//Cursor In buttons</span>
+	<span class="kt">void</span> <span class="nf">DrawHUD_CheckCursorInButtons</span><span class="p">();</span>
+	<span class="kt">void</span> <span class="nf">CheckCursorInButtonsMain</span><span class="p">();</span>
+	<span class="kt">void</span> <span class="nf">CheckCursorInButtonsConfirm</span><span class="p">();</span>
+	
+	<span class="k">const</span> <span class="n">FJoyButtonStruct</span><span class="o">*</span> <span class="n">CurCheckButton</span><span class="p">;</span>
+	<span class="n">int32</span> <span class="nf">CheckCursorInButton</span><span class="p">(</span><span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FJoyButtonStruct</span><span class="o">&gt;&amp;</span> <span class="n">ButtonArray</span><span class="p">);</span>
+	<span class="n">int32</span> <span class="n">ClickedButtonType</span><span class="p">;</span>
+	<span class="c1">//States</span>
+	<span class="kt">bool</span> <span class="n">ConfirmDialogOpen</span><span class="p">;</span>
+	<span class="kt">bool</span> <span class="n">InMainMenu</span><span class="p">;</span>
+	
+	<span class="n">int32</span> 		<span class="n">ActiveButton_Type</span><span class="p">;</span>
+	<span class="n">FString</span> 	<span class="n">ActiveButton_Tip</span><span class="p">;</span>
+	<span class="kt">bool</span> <span class="n">CursorHoveringInButton</span><span class="p">;</span>
+<span class="c1">//Colors</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="k">const</span> <span class="n">FLinearColor</span> <span class="o">*</span> <span class="n">ColorPtr</span><span class="p">;</span> 
+	
+	<span class="c1">//Colors</span>
+	<span class="k">static</span> <span class="k">const</span> <span class="n">FColor</span>		<span class="n">FColorBlack</span><span class="p">;</span>
+	<span class="k">static</span> <span class="k">const</span> <span class="n">FColor</span>		<span class="n">FColorRed</span><span class="p">;</span>
+	<span class="k">static</span> <span class="k">const</span> <span class="n">FColor</span>		<span class="n">FColorYellow</span><span class="p">;</span>
+	<span class="k">static</span> <span class="k">const</span> <span class="n">FColor</span>		<span class="n">FColorBlue</span><span class="p">;</span>
+	<span class="k">static</span> <span class="k">const</span> <span class="n">FColor</span>		<span class="n">FColor_White</span><span class="p">;</span>
+	
+	<span class="k">static</span> <span class="k">const</span> <span class="n">FLinearColor</span> <span class="n">LC_Black</span><span class="p">;</span>
+	<span class="k">static</span> <span class="k">const</span> <span class="n">FLinearColor</span> <span class="n">LC_Pink</span><span class="p">;</span>
+	<span class="k">static</span> <span class="k">const</span> <span class="n">FLinearColor</span> <span class="n">LC_Red</span><span class="p">;</span>
+	<span class="k">static</span> <span class="k">const</span> <span class="n">FLinearColor</span> <span class="n">LC_Yellow</span><span class="p">;</span>
+<span class="c1">//FString</span>
+<span class="k">public</span><span class="o">:</span>
+	
+	<span class="c1">//`Titles</span>
+	<span class="k">static</span> <span class="k">const</span> <span class="n">FString</span> <span class="n">S_Title_Main</span><span class="p">;</span>
+	<span class="k">static</span> <span class="k">const</span> <span class="n">FString</span> <span class="n">S_Title_Confirm</span><span class="p">;</span>
+	<span class="c1">//`Button Text</span>
+	<span class="k">static</span> <span class="k">const</span> <span class="n">FString</span> <span class="n">S_Button_Restart</span><span class="p">;</span> 
+	<span class="k">static</span> <span class="k">const</span> <span class="n">FString</span> <span class="n">S_Button_Exit</span><span class="p">;</span>
+	
+<span class="c1">// Utility </span>
+
+<span class="c1">//Stop Camera From Moving With Mouse</span>
+<span class="n">FORCEINLINE</span> <span class="kt">void</span> <span class="nf">SetCursorMoveOnly</span><span class="p">(</span><span class="kt">bool</span> <span class="n">CursorOnly</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">ThePC</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+	<span class="c1">//</span>
+	<span class="n">ThePC</span><span class="o">-&gt;</span><span class="n">SetIgnoreLookInput</span><span class="p">(</span><span class="n">CursorOnly</span><span class="p">);</span>
+	
+<span class="p">}</span>
+
+<span class="c1">//DrawLine</span>
+<span class="n">FORCEINLINE</span> <span class="kt">void</span> <span class="nf">DrawJoyLine</span>
+<span class="p">(</span>
+	<span class="k">const</span> <span class="n">FVector2D</span><span class="o">&amp;</span> <span class="n">Start</span><span class="p">,</span> 
+	<span class="k">const</span> <span class="n">FVector2D</span><span class="o">&amp;</span> <span class="n">End</span><span class="p">,</span> 
+	<span class="k">const</span> <span class="n">FLinearColor</span><span class="o">&amp;</span> <span class="n">TheColor</span><span class="p">,</span> 
+	<span class="k">const</span> <span class="kt">float</span><span class="o">&amp;</span> <span class="n">Thick</span>
+<span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">Canvas</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+	<span class="c1">//</span>
+	
+	<span class="n">FCanvasLineItem</span> <span class="n">NewLine</span><span class="p">(</span><span class="n">Start</span><span class="p">,</span><span class="n">End</span><span class="p">);</span>
+	<span class="n">NewLine</span><span class="p">.</span><span class="n">SetColor</span><span class="p">(</span><span class="n">TheColor</span><span class="p">);</span>
+	<span class="n">NewLine</span><span class="p">.</span><span class="n">LineThickness</span> <span class="o">=</span> <span class="n">Thick</span><span class="p">;</span>
+	<span class="n">Canvas</span><span class="o">-&gt;</span><span class="n">DrawItem</span><span class="p">(</span><span class="n">NewLine</span><span class="p">);</span>
+<span class="p">}</span>	
+
+<span class="c1">//~</span>
+
+<span class="n">FORCEINLINE</span> <span class="kt">void</span> <span class="nf">DrawJoyRect</span><span class="p">(</span> 
+	<span class="kt">float</span> <span class="n">X</span><span class="p">,</span> <span class="kt">float</span> <span class="n">Y</span><span class="p">,</span> 
+	<span class="kt">float</span> <span class="n">Width</span><span class="p">,</span> <span class="kt">float</span> <span class="n">Height</span><span class="p">,</span> 
+	<span class="k">const</span> <span class="n">FLinearColor</span><span class="o">&amp;</span> <span class="n">Color</span>
+<span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">Canvas</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+	<span class="c1">//</span>
+	
+	<span class="n">FCanvasTileItem</span> <span class="n">RectItem</span><span class="p">(</span> 
+		<span class="n">FVector2D</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">),</span> 
+		<span class="n">FVector2D</span><span class="p">(</span> <span class="n">Width</span><span class="p">,</span> <span class="n">Height</span> <span class="p">),</span> 
+		<span class="n">Color</span> 
+	<span class="p">);</span>
+   
+    <span class="n">RectItem</span><span class="p">.</span><span class="n">BlendMode</span> <span class="o">=</span> <span class="n">SE_BLEND_Translucent</span><span class="p">;</span>
+	<span class="n">Canvas</span><span class="o">-&gt;</span><span class="n">DrawItem</span><span class="p">(</span><span class="n">RectItem</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">//~</span>
+
+<span class="c1">//DrawText</span>
+<span class="n">FORCEINLINE</span> <span class="kt">void</span> <span class="nf">DrawJoyText</span><span class="p">(</span>
+	<span class="n">UFont</span><span class="o">*</span>	<span class="n">TheFont</span><span class="p">,</span>
+	<span class="k">const</span> <span class="n">FString</span><span class="o">&amp;</span> <span class="n">TheStr</span><span class="p">,</span> 
+	<span class="k">const</span> <span class="kt">float</span><span class="o">&amp;</span> <span class="n">X</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span><span class="o">&amp;</span> <span class="n">Y</span><span class="p">,</span> 
+	<span class="k">const</span> <span class="n">FLinearColor</span><span class="o">&amp;</span> <span class="n">TheColor</span><span class="p">,</span> 
+	<span class="k">const</span> <span class="kt">float</span><span class="o">&amp;</span> <span class="n">TheScale</span><span class="p">,</span>
+	<span class="kt">bool</span> <span class="n">DrawOutline</span><span class="o">=</span><span class="nb">false</span><span class="p">,</span>
+	<span class="k">const</span> <span class="n">FLinearColor</span> <span class="n">OutlineColor</span><span class="o">=</span><span class="n">FLinearColor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="p">)</span> <span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">Canvas</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+	<span class="c1">//</span>
+	
+	<span class="c1">//Text and Font</span>
+	<span class="n">FCanvasTextItem</span> <span class="n">NewText</span><span class="p">(</span>
+		<span class="n">FVector2D</span><span class="p">(</span><span class="n">X</span><span class="p">,</span><span class="n">Y</span><span class="p">),</span>
+		<span class="n">FText</span><span class="o">::</span><span class="n">FromString</span><span class="p">(</span><span class="n">TheStr</span><span class="p">),</span>
+		<span class="n">TheFont</span><span class="p">,</span>
+		<span class="n">TheColor</span>
+	<span class="p">);</span>
+	
+	<span class="c1">//Text Scale</span>
+	<span class="n">NewText</span><span class="p">.</span><span class="n">Scale</span><span class="p">.</span><span class="n">Set</span><span class="p">(</span><span class="n">TheScale</span><span class="p">,</span><span class="n">TheScale</span><span class="p">);</span>
+	
+	<span class="c1">//Outline gets its alpha from the main color</span>
+	<span class="n">NewText</span><span class="p">.</span><span class="n">bOutlined</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+	<span class="n">NewText</span><span class="p">.</span><span class="n">OutlineColor</span> <span class="o">=</span> <span class="n">OutlineColor</span><span class="p">;</span>
+	<span class="n">NewText</span><span class="p">.</span><span class="n">OutlineColor</span><span class="p">.</span><span class="n">A</span> <span class="o">=</span> <span class="n">TheColor</span><span class="p">.</span><span class="n">A</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>
+	
+	<span class="c1">//Draw</span>
+	<span class="n">Canvas</span><span class="o">-&gt;</span><span class="n">DrawItem</span><span class="p">(</span><span class="n">NewText</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">//~</span>
+<span class="c1">//Draw Full Size Tile</span>
+<span class="n">FORCEINLINE</span> <span class="kt">void</span> <span class="nf">DrawFullSizeTile</span><span class="p">(</span><span class="n">UTexture2D</span><span class="o">*</span> <span class="n">tex</span><span class="p">,</span> <span class="kt">float</span> <span class="n">x</span><span class="p">,</span> <span class="kt">float</span> <span class="n">y</span><span class="p">,</span> <span class="k">const</span> <span class="n">FColor</span><span class="o">&amp;</span> <span class="n">Color</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">Canvas</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">tex</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+	<span class="c1">//~~</span>
+	
+	<span class="n">Canvas</span><span class="o">-&gt;</span><span class="n">SetDrawColor</span><span class="p">(</span><span class="n">Color</span><span class="p">);</span>
+	
+	<span class="c1">//Draw</span>
+	<span class="n">Canvas</span><span class="o">-&gt;</span><span class="n">DrawTile</span><span class="p">(</span>
+		<span class="n">tex</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="c1">//z pos</span>
+		<span class="n">tex</span><span class="o">-&gt;</span><span class="n">GetSurfaceWidth</span><span class="p">(),</span> <span class="c1">//screen width</span>
+		<span class="n">tex</span><span class="o">-&gt;</span><span class="n">GetSurfaceHeight</span><span class="p">(),</span>  <span class="c1">//screen height</span>
+		<span class="mi">0</span><span class="p">,</span> <span class="c1">//texture start width</span>
+		<span class="mi">0</span><span class="p">,</span> <span class="c1">//texture start height</span>
+		<span class="n">tex</span><span class="o">-&gt;</span><span class="n">GetSurfaceWidth</span><span class="p">(),</span> <span class="c1">//texture width from start</span>
+		<span class="n">tex</span><span class="o">-&gt;</span><span class="n">GetSurfaceHeight</span><span class="p">(),</span> <span class="c1">//texture height from start</span>
+		<span class="n">BLEND_Translucent</span>
+	<span class="p">);</span>
+<span class="p">}</span>
+	
+<span class="c1">//~</span>
+
+<span class="n">FORCEINLINE</span> <span class="kt">void</span> <span class="nf">VDrawTile</span><span class="p">(</span><span class="n">UTexture2D</span><span class="o">*</span> <span class="n">tex</span><span class="p">,</span> <span class="kt">float</span> <span class="n">x</span><span class="p">,</span> <span class="kt">float</span> <span class="n">y</span><span class="p">,</span> <span class="kt">float</span> <span class="n">screenX</span><span class="p">,</span> <span class="kt">float</span> <span class="n">screenY</span><span class="p">,</span> <span class="k">const</span> <span class="n">FColor</span><span class="o">&amp;</span> <span class="n">TheColor</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">Canvas</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">tex</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+	<span class="c1">//~</span>
+	
+	<span class="n">Canvas</span><span class="o">-&gt;</span><span class="n">SetDrawColor</span><span class="p">(</span><span class="n">TheColor</span><span class="p">);</span>
+	
+	<span class="c1">//Draw</span>
+	<span class="n">Canvas</span><span class="o">-&gt;</span><span class="n">DrawTile</span><span class="p">(</span>
+		<span class="n">tex</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="c1">//z pos</span>
+		<span class="n">screenX</span><span class="p">,</span> <span class="c1">//screen width</span>
+		<span class="n">screenY</span><span class="p">,</span>  <span class="c1">//screen height</span>
+		<span class="mi">0</span><span class="p">,</span> <span class="c1">//texture start width</span>
+		<span class="mi">0</span><span class="p">,</span> <span class="c1">//texture start height</span>
+		<span class="n">tex</span><span class="o">-&gt;</span><span class="n">GetSurfaceWidth</span><span class="p">(),</span> <span class="c1">//texture width from start</span>
+		<span class="n">tex</span><span class="o">-&gt;</span><span class="n">GetSurfaceHeight</span><span class="p">(),</span> <span class="c1">//texture height from start</span>
+		<span class="n">BLEND_Translucent</span>
+	<span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">//~</span>
+
+<span class="c1">//Draw</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="kt">void</span> <span class="n">DrawHUD_DrawDialogs</span><span class="p">();</span>
+	
+	<span class="c1">//Menus</span>
+	<span class="kt">void</span> <span class="nf">DrawMainMenu</span><span class="p">();</span>
+	<span class="kt">void</span> <span class="nf">DrawConfirm</span><span class="p">();</span>
+
+	<span class="c1">//Buttons</span>
+	<span class="kt">void</span> <span class="nf">DrawMainMenuButtons</span><span class="p">();</span>
+	<span class="kt">void</span> <span class="nf">DrawConfirmButtons</span><span class="p">();</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="kt">void</span> <span class="n">DrawToolTip</span><span class="p">();</span>
+	
+<span class="c1">//Core</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">APlayerController</span><span class="o">*</span> <span class="n">ThePC</span><span class="p">;</span>
+	<span class="kt">void</span> <span class="nf">PlayerInputChecks</span><span class="p">();</span>
+<span class="k">protected</span><span class="o">:</span>
+	<span class="c1">//Draw HUD</span>
+	<span class="kt">void</span> <span class="n">DrawHUD_Reset</span><span class="p">();</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">DrawHUD</span><span class="p">()</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+	
+	<span class="cm">/** after all game elements are created */</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">PostInitializeComponents</span><span class="p">()</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+	
+	
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="JoyHUD.cpp">
+        JoyHUD.cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2013 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="c1">//JoyHUD extension by Rama</span>
+
+<span class="cp">#include</span> <span class="cpf">"VictoryGame.h"   //Replace with a reference to the header file of your own project</span><span class="cp"></span>
+
+<span class="cp">#define BUTTONTYPE_MAIN_RESTART 	1</span>
+<span class="cp">#define BUTTONTYPE_MAIN_EXIT 		2</span>
+
+<span class="cp">#define BUTTONTYPE_CONFIRM_YES 	1</span>
+<span class="cp">#define BUTTONTYPE_CONFIRM_NO 	2</span>
+
+<span class="cp">#define CANVAS_WHITE if(Canvas) Canvas-&gt;SetDrawColor(FColor_White);</span>
+
+<span class="c1">//Cursor Draw Offset</span>
+<span class="c1">//		use this to position texture over the point of your cursor, </span>
+<span class="c1">//			if the point is not at exactly 0,0</span>
+<span class="cp">#define CURSOR_DRAW_OFFSET 3</span>
+
+<span class="c1">//</span>
+<span class="c1">//Static Consts</span>
+<span class="c1">//</span>
+
+<span class="k">const</span> <span class="n">FString</span> <span class="n">AJoyHUD</span><span class="o">::</span><span class="n">S_Title_Main</span>			<span class="o">=</span> <span class="n">FString</span><span class="p">(</span><span class="s">"Joy!"</span><span class="p">);</span> 
+<span class="k">const</span> <span class="n">FString</span> <span class="n">AJoyHUD</span><span class="o">::</span><span class="n">S_Title_Confirm</span>		<span class="o">=</span> <span class="n">FString</span><span class="p">(</span><span class="s">"Exit Game?"</span><span class="p">);</span>
+
+<span class="k">const</span> <span class="n">FString</span> <span class="n">AJoyHUD</span><span class="o">::</span><span class="n">S_Button_Restart</span>	<span class="o">=</span> <span class="n">FString</span><span class="p">(</span><span class="s">"Restart"</span><span class="p">);</span> 
+<span class="k">const</span> <span class="n">FString</span> <span class="n">AJoyHUD</span><span class="o">::</span><span class="n">S_Button_Exit</span>		<span class="o">=</span> <span class="n">FString</span><span class="p">(</span><span class="s">"Exit"</span><span class="p">);</span> 
+
+<span class="c1">// Colors </span>
+<span class="k">const</span> <span class="n">FColor</span> <span class="n">AJoyHUD</span><span class="o">::</span><span class="n">FColorBlack</span> 		<span class="o">=</span> <span class="n">FColor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">);</span>
+<span class="k">const</span> <span class="n">FColor</span> <span class="n">AJoyHUD</span><span class="o">::</span><span class="n">FColorRed</span> 			<span class="o">=</span> <span class="n">FColor</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">);</span>
+<span class="k">const</span> <span class="n">FColor</span> <span class="n">AJoyHUD</span><span class="o">::</span><span class="n">FColorYellow</span> 		<span class="o">=</span> <span class="n">FColor</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">);</span>
+<span class="k">const</span> <span class="n">FColor</span> <span class="n">AJoyHUD</span><span class="o">::</span><span class="n">FColorBlue</span>			<span class="o">=</span> <span class="n">FColor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">);</span>
+<span class="k">const</span> <span class="n">FColor</span> <span class="n">AJoyHUD</span><span class="o">::</span><span class="n">FColor_White</span>		<span class="o">=</span> <span class="n">FColor</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">);</span>
+<span class="c1">// Backgrounds </span>
+<span class="k">const</span> <span class="n">FLinearColor</span> <span class="n">AJoyHUD</span><span class="o">::</span><span class="n">LC_Black</span> 	<span class="o">=</span> <span class="n">FLinearColor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="k">const</span> <span class="n">FLinearColor</span> <span class="n">AJoyHUD</span><span class="o">::</span><span class="n">LC_Pink</span>		<span class="o">=</span> <span class="n">FLinearColor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="k">const</span> <span class="n">FLinearColor</span> <span class="n">AJoyHUD</span><span class="o">::</span><span class="n">LC_Red</span> 		<span class="o">=</span> <span class="n">FLinearColor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+<span class="k">const</span> <span class="n">FLinearColor</span> <span class="n">AJoyHUD</span><span class="o">::</span><span class="n">LC_Yellow</span> 	<span class="o">=</span> <span class="n">FLinearColor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">);</span>
+
+<span class="n">AJoyHUD</span><span class="o">::</span><span class="n">AJoyHUD</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span> <span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">//Draw HUD?</span>
+	<span class="n">DontDrawHUD</span> 		<span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+	
+	<span class="c1">//States</span>
+	<span class="n">ConfirmDialogOpen</span> 	<span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="n">InMainMenu</span> 			<span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+	
+	<span class="c1">//Scale</span>
+	<span class="n">GlobalHUDMult</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+	<span class="n">DefaultFontScale</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">;</span>   <span class="c1">//scaling down a size 36 font</span>
+	
+	<span class="c1">//	 I recommend creating fonts at a high resolution / size like 36</span>
+	<span class="c1">//			then you can scale down the font as needed to any size of your choice</span>
+	
+	<span class="c1">// this avoids needing to make multiple fonts for different sizes, but have a high</span>
+	<span class="c1">// resolution when you use larger font sizes</span>
+	
+<span class="p">}</span>	
+
+<span class="c1">//Core </span>
+
+<span class="kt">void</span> <span class="n">AJoyHUD</span><span class="o">::</span><span class="n">PostInitializeComponents</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">PostInitializeComponents</span><span class="p">();</span>
+
+	<span class="c1">//Establish the PC</span>
+	<span class="n">ThePC</span> <span class="o">=</span> <span class="n">GetOwningPlayerController</span><span class="p">();</span>
+	
+	<span class="c1">//How to get a ref to your custom PC</span>
+	<span class="c1">//AYourPlayerController* YourChar = Cast&lt;AYourPlayerController&gt;(ThePC);</span>
+	
+	<span class="c1">//How to Get The Character</span>
+	<span class="c1">//AYourCharacterClass* YourChar = Cast&lt;AYourCharacterClass&gt;(GetOwningPawn());</span>
+	
+<span class="p">}</span>
+
+<span class="c1">//===============</span>
+<span class="c1">// Draw Dialogs</span>
+<span class="c1">//===============</span>
+<span class="kt">void</span> <span class="n">AJoyHUD</span><span class="o">::</span><span class="n">DrawHUD_DrawDialogs</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">DrawMainMenu</span><span class="p">();</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">ConfirmDialogOpen</span><span class="p">)</span> <span class="n">DrawConfirm</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="c1">//Menus</span>
+<span class="kt">void</span> <span class="n">AJoyHUD</span><span class="o">::</span><span class="n">DrawMainMenu</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">//Background</span>
+	<span class="n">DrawMaterialSimple</span><span class="p">(</span>
+		<span class="n">MaterialBackground</span><span class="p">,</span> 
+		<span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> 
+		<span class="mi">256</span><span class="p">,</span> 
+		<span class="mi">512</span><span class="p">,</span>
+		<span class="mf">1.3</span>
+	<span class="p">);</span>
+	
+	<span class="c1">//Menu Title</span>
+	
+	<span class="c1">//Draw buttons</span>
+	<span class="n">DrawMainMenuButtons</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">AJoyHUD</span><span class="o">::</span><span class="n">DrawConfirm</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">//Blue rect with alpha 50%</span>
+	<span class="n">DrawJoyRect</span><span class="p">(</span><span class="n">Canvas</span><span class="o">-&gt;</span><span class="n">SizeX</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">100</span><span class="p">,</span> <span class="n">Canvas</span><span class="o">-&gt;</span><span class="n">SizeY</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">50</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="n">FLinearColor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.2333</span><span class="p">));</span>
+	
+	<span class="c1">//Confirm Title</span>
+	
+	<span class="c1">//Draw buttons</span>
+	<span class="n">DrawConfirmButtons</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">//Buttons</span>
+<span class="kt">void</span> <span class="n">AJoyHUD</span><span class="o">::</span><span class="n">DrawMainMenuButtons</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">//Start Point</span>
+	<span class="kt">float</span> <span class="n">xStart</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+	<span class="kt">float</span> <span class="n">yStart</span> <span class="o">=</span> <span class="mi">110</span><span class="p">;</span>
+	
+	<span class="c1">//Background</span>
+	<span class="n">VDrawTile</span><span class="p">(</span><span class="n">ButtonBackground</span><span class="p">,</span><span class="n">xStart</span><span class="p">,</span><span class="n">yStart</span><span class="p">,</span><span class="mi">150</span><span class="p">,</span><span class="mi">80</span><span class="p">,</span><span class="n">FColor</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">120</span><span class="p">));</span> <span class="c1">//alpha 120/255</span>
+	
+	<span class="c1">//Text</span>
+	<span class="n">DrawJoyText</span><span class="p">(</span>
+		<span class="n">VerdanaFont</span><span class="p">,</span><span class="s">"Restart"</span><span class="p">,</span><span class="n">xStart</span><span class="o">+</span><span class="mi">30</span><span class="p">,</span><span class="n">yStart</span><span class="o">+</span><span class="mi">20</span><span class="p">,</span>
+		<span class="n">LC_Black</span><span class="p">,</span> <span class="n">DefaultFontScale</span><span class="p">,</span>
+		<span class="nb">true</span><span class="p">,</span><span class="n">LC_Red</span>
+	<span class="p">);</span>
+	
+	<span class="c1">//Struct</span>
+	<span class="c1">//Add Button If Necessary</span>
+	<span class="c1">//		could be cleared and need refreshing if using a different menu</span>
+	<span class="c1">//			clear buttons with ButtonsMain.Empty()</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">ButtonsMain</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">FJoyButtonStruct</span> <span class="n">newButton</span> <span class="o">=</span> <span class="n">FJoyButtonStruct</span><span class="p">();</span>
+		<span class="n">newButton</span><span class="p">.</span><span class="n">type</span> 			<span class="o">=</span> <span class="n">BUTTONTYPE_MAIN_RESTART</span><span class="p">;</span>
+		<span class="n">newButton</span><span class="p">.</span><span class="n">toolTip</span>		<span class="o">=</span> <span class="s">"Restart the Game!"</span><span class="p">;</span>	
+		<span class="n">newButton</span><span class="p">.</span><span class="n">minX</span> 			<span class="o">=</span> <span class="n">xStart</span><span class="p">;</span>
+		<span class="n">newButton</span><span class="p">.</span><span class="n">maxX</span> 			<span class="o">=</span> <span class="n">xStart</span> <span class="o">+</span> <span class="mi">150</span><span class="p">;</span>		
+		<span class="n">newButton</span><span class="p">.</span><span class="n">minY</span> 			<span class="o">=</span> <span class="n">yStart</span><span class="p">;</span>
+		<span class="n">newButton</span><span class="p">.</span><span class="n">maxY</span> 			<span class="o">=</span> <span class="n">yStart</span> <span class="o">+</span> <span class="mi">80</span><span class="p">;</span>
+			
+		<span class="c1">//Add to correct array</span>
+		<span class="n">ButtonsMain</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">newButton</span><span class="p">);</span>
+	<span class="p">}</span>
+	
+	
+	<span class="n">xStart</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+	<span class="n">yStart</span> <span class="o">=</span> <span class="mi">410</span><span class="p">;</span>
+	
+	<span class="n">VDrawTile</span><span class="p">(</span><span class="n">ButtonBackground</span><span class="p">,</span><span class="n">xStart</span><span class="p">,</span><span class="n">yStart</span><span class="p">,</span><span class="mi">150</span><span class="p">,</span><span class="mi">80</span><span class="p">,</span><span class="n">FColor</span><span class="p">(</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">255</span><span class="p">,</span><span class="mi">120</span><span class="p">));</span> <span class="c1">//alpha 120/255</span>
+	
+	<span class="c1">//Text</span>
+	<span class="n">DrawJoyText</span><span class="p">(</span>
+		<span class="n">VerdanaFont</span><span class="p">,</span><span class="s">"Exit"</span><span class="p">,</span><span class="n">xStart</span><span class="o">+</span><span class="mi">55</span><span class="p">,</span><span class="n">yStart</span><span class="o">+</span><span class="mi">20</span><span class="p">,</span>
+		<span class="n">LC_Black</span><span class="p">,</span> <span class="n">DefaultFontScale</span><span class="p">,</span>
+		<span class="nb">true</span><span class="p">,</span><span class="n">LC_Red</span>
+	<span class="p">);</span>
+	
+	<span class="k">if</span> <span class="p">(</span><span class="n">ButtonsMain</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">FJoyButtonStruct</span> <span class="n">newButton</span> <span class="o">=</span> <span class="n">FJoyButtonStruct</span><span class="p">();</span>
+		<span class="n">newButton</span><span class="p">.</span><span class="n">type</span> 			<span class="o">=</span> <span class="n">BUTTONTYPE_MAIN_EXIT</span><span class="p">;</span>
+		<span class="n">newButton</span><span class="p">.</span><span class="n">toolTip</span>			<span class="o">=</span> <span class="s">"Exit the Game!"</span><span class="p">;</span>	
+		<span class="n">newButton</span><span class="p">.</span><span class="n">minX</span> 			<span class="o">=</span> <span class="n">xStart</span><span class="p">;</span>
+		<span class="n">newButton</span><span class="p">.</span><span class="n">maxX</span> 			<span class="o">=</span> <span class="n">xStart</span> <span class="o">+</span> <span class="mi">150</span><span class="p">;</span>		
+		<span class="n">newButton</span><span class="p">.</span><span class="n">minY</span> 			<span class="o">=</span> <span class="n">yStart</span><span class="p">;</span>
+		<span class="n">newButton</span><span class="p">.</span><span class="n">maxY</span> 			<span class="o">=</span> <span class="n">yStart</span> <span class="o">+</span> <span class="mi">80</span><span class="p">;</span>
+		
+		<span class="c1">//Add to correct array</span>
+		<span class="n">ButtonsMain</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">newButton</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">AJoyHUD</span><span class="o">::</span><span class="n">DrawConfirmButtons</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="kt">float</span> <span class="n">xStart</span> <span class="o">=</span> <span class="n">Canvas</span><span class="o">-&gt;</span><span class="n">SizeX</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">100</span><span class="p">;</span>
+	<span class="kt">float</span> <span class="n">yStart</span> <span class="o">=</span> <span class="n">Canvas</span><span class="o">-&gt;</span><span class="n">SizeY</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">40</span><span class="p">;</span>
+	
+	<span class="c1">//Highlighted?</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">ActiveButton_Type</span> <span class="o">==</span> <span class="n">BUTTONTYPE_CONFIRM_YES</span> <span class="p">)</span> <span class="n">ColorPtr</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">LC_Pink</span><span class="p">;</span>
+	<span class="k">else</span> <span class="n">ColorPtr</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">LC_Yellow</span><span class="p">;</span>
+	
+	<span class="c1">//Text</span>
+	<span class="n">DrawJoyText</span><span class="p">(</span>
+		<span class="n">VerdanaFont</span><span class="p">,</span><span class="s">"Yes"</span><span class="p">,</span><span class="n">xStart</span><span class="o">+</span><span class="mi">30</span><span class="p">,</span><span class="n">yStart</span><span class="o">+</span><span class="mi">20</span><span class="p">,</span>
+		<span class="o">*</span><span class="n">ColorPtr</span><span class="p">,</span> <span class="n">DefaultFontScale</span><span class="p">,</span>
+		<span class="nb">true</span>
+	<span class="p">);</span>
+	
+	<span class="k">if</span> <span class="p">(</span><span class="n">ButtonsConfirm</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">1</span> <span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">FJoyButtonStruct</span> <span class="n">newButton</span> <span class="o">=</span> <span class="n">FJoyButtonStruct</span><span class="p">();</span>
+		<span class="n">newButton</span><span class="p">.</span><span class="n">type</span> 			<span class="o">=</span> <span class="n">BUTTONTYPE_CONFIRM_YES</span> <span class="p">;</span>
+		<span class="n">newButton</span><span class="p">.</span><span class="n">toolTip</span>			<span class="o">=</span> <span class="s">""</span><span class="p">;</span>	
+		<span class="n">newButton</span><span class="p">.</span><span class="n">minX</span> 			<span class="o">=</span> <span class="n">xStart</span><span class="p">;</span>
+		<span class="n">newButton</span><span class="p">.</span><span class="n">maxX</span> 			<span class="o">=</span> <span class="n">xStart</span> <span class="o">+</span> <span class="mi">75</span><span class="p">;</span>		
+		<span class="n">newButton</span><span class="p">.</span><span class="n">minY</span> 			<span class="o">=</span> <span class="n">yStart</span> <span class="o">+</span> <span class="mi">20</span><span class="p">;</span>
+		<span class="n">newButton</span><span class="p">.</span><span class="n">maxY</span> 			<span class="o">=</span> <span class="n">yStart</span> <span class="o">+</span> <span class="mi">60</span><span class="p">;</span>
+		
+		<span class="c1">//could use GetTextSize to streamline this</span>
+		
+		<span class="c1">//Add to correct array</span>
+		<span class="n">ButtonsConfirm</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">newButton</span><span class="p">);</span>
+	<span class="p">}</span>
+	
+	<span class="n">xStart</span> <span class="o">=</span> <span class="n">Canvas</span><span class="o">-&gt;</span><span class="n">SizeX</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">20</span><span class="p">;</span>
+	<span class="n">yStart</span> <span class="o">=</span> <span class="n">Canvas</span><span class="o">-&gt;</span><span class="n">SizeY</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">40</span><span class="p">;</span>
+	
+	<span class="c1">//Highlighted?</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">ActiveButton_Type</span> <span class="o">==</span> <span class="n">BUTTONTYPE_CONFIRM_NO</span><span class="p">)</span> <span class="n">ColorPtr</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">LC_Black</span><span class="p">;</span>
+	<span class="k">else</span> <span class="n">ColorPtr</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">LC_Yellow</span><span class="p">;</span>
+	
+	<span class="c1">//Text</span>
+	<span class="n">DrawJoyText</span><span class="p">(</span>
+		<span class="n">VerdanaFont</span><span class="p">,</span><span class="s">"No"</span><span class="p">,</span><span class="n">xStart</span><span class="o">+</span><span class="mi">30</span><span class="p">,</span><span class="n">yStart</span><span class="o">+</span><span class="mi">20</span><span class="p">,</span>
+		<span class="o">*</span><span class="n">ColorPtr</span><span class="p">,</span> <span class="n">DefaultFontScale</span><span class="p">,</span>
+		<span class="nb">true</span>
+	<span class="p">);</span>
+	
+	<span class="k">if</span> <span class="p">(</span><span class="n">ButtonsConfirm</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">2</span> <span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">FJoyButtonStruct</span> <span class="n">newButton</span> <span class="o">=</span> <span class="n">FJoyButtonStruct</span><span class="p">();</span>
+		<span class="n">newButton</span><span class="p">.</span><span class="n">type</span> 			<span class="o">=</span> <span class="n">BUTTONTYPE_CONFIRM_NO</span><span class="p">;</span>
+		<span class="n">newButton</span><span class="p">.</span><span class="n">toolTip</span>			<span class="o">=</span> <span class="s">""</span><span class="p">;</span>	
+		<span class="n">newButton</span><span class="p">.</span><span class="n">minX</span> 			<span class="o">=</span> <span class="n">xStart</span><span class="p">;</span>
+		<span class="n">newButton</span><span class="p">.</span><span class="n">maxX</span> 			<span class="o">=</span> <span class="n">xStart</span> <span class="o">+</span> <span class="mi">75</span><span class="p">;</span>		
+		<span class="n">newButton</span><span class="p">.</span><span class="n">minY</span> 			<span class="o">=</span> <span class="n">yStart</span> <span class="o">+</span> <span class="mi">20</span><span class="p">;</span>
+		<span class="n">newButton</span><span class="p">.</span><span class="n">maxY</span> 			<span class="o">=</span> <span class="n">yStart</span> <span class="o">+</span> <span class="mi">60</span><span class="p">;</span>
+		
+		<span class="c1">//could use GetTextSize to streamline this</span>
+		
+		<span class="c1">//Add to correct array</span>
+		<span class="n">ButtonsConfirm</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">newButton</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//===============</span>
+<span class="c1">// Cursor In Buttons</span>
+<span class="c1">//===============</span>
+<span class="n">int32</span> <span class="n">AJoyHUD</span><span class="o">::</span><span class="n">CheckCursorInButton</span><span class="p">(</span><span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">FJoyButtonStruct</span><span class="o">&gt;&amp;</span> <span class="n">ButtonArray</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">for</span><span class="p">(</span><span class="n">int32</span> <span class="n">b</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">b</span> <span class="o">&lt;</span> <span class="n">ButtonArray</span><span class="p">.</span><span class="n">Num</span><span class="p">();</span> <span class="n">b</span><span class="o">++</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">CurCheckButton</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">ButtonArray</span><span class="p">[</span><span class="n">b</span><span class="p">];</span>
+			
+		<span class="c1">//check cursor in bounds</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">CurCheckButton</span><span class="o">-&gt;</span><span class="n">minX</span> <span class="o">&lt;=</span> <span class="n">MouseLocation</span><span class="p">.</span><span class="n">X</span> <span class="o">&amp;&amp;</span> <span class="n">MouseLocation</span><span class="p">.</span><span class="n">X</span> <span class="o">&lt;=</span> <span class="n">CurCheckButton</span><span class="o">-&gt;</span><span class="n">maxX</span> <span class="o">&amp;&amp;</span>
+			<span class="n">CurCheckButton</span><span class="o">-&gt;</span><span class="n">minY</span> <span class="o">&lt;=</span> <span class="n">MouseLocation</span><span class="p">.</span><span class="n">Y</span> <span class="o">&amp;&amp;</span> <span class="n">MouseLocation</span><span class="p">.</span><span class="n">Y</span> <span class="o">&lt;=</span> <span class="n">CurCheckButton</span><span class="o">-&gt;</span><span class="n">maxY</span> <span class="p">)</span>
+		<span class="p">{</span>
+			
+			<span class="c1">//Active Button Type</span>
+			<span class="n">ActiveButton_Type</span> <span class="o">=</span> <span class="n">CurCheckButton</span><span class="o">-&gt;</span><span class="n">type</span><span class="p">;</span> 
+			
+			<span class="c1">//Tool Tip</span>
+			<span class="n">ActiveButton_Tip</span> <span class="o">=</span> <span class="n">CurCheckButton</span><span class="o">-&gt;</span><span class="n">toolTip</span><span class="p">;</span> 
+			
+			<span class="c1">//Change Cursor</span>
+			<span class="n">CursorHoveringInButton</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+		
+			<span class="c1">//Mouse Clicked?</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">ThePC</span><span class="o">-&gt;</span><span class="n">WasInputKeyJustPressed</span><span class="p">(</span><span class="n">EKeys</span><span class="o">::</span><span class="n">LeftMouseButton</span><span class="p">))</span>
+			<span class="p">{</span>
+				<span class="k">return</span> <span class="n">ActiveButton_Type</span><span class="p">;</span>
+				<span class="c1">//~~</span>
+				<span class="c1">//no need to check rest of buttons</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	
+	<span class="c1">//No Click Occurred This Tick</span>
+	<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>	
+<span class="p">}</span>
+
+<span class="c1">//Check Confirm</span>
+<span class="kt">void</span> <span class="n">AJoyHUD</span><span class="o">::</span><span class="n">CheckCursorInButtonsConfirm</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">//Check Confirm Buttons</span>
+	<span class="n">ClickedButtonType</span> <span class="o">=</span> <span class="n">CheckCursorInButton</span><span class="p">(</span><span class="n">ButtonsConfirm</span><span class="p">);</span> <span class="c1">//fills global ActiveButton_Type</span>
+	
+	<span class="k">if</span><span class="p">(</span><span class="n">ClickedButtonType</span> <span class="o">==</span> <span class="n">BUTTONTYPE_CONFIRM_YES</span> <span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">ThePC</span><span class="o">-&gt;</span><span class="n">ConsoleCommand</span><span class="p">(</span><span class="s">"Exit"</span><span class="p">);</span>
+		<span class="k">return</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">ClickedButtonType</span> <span class="o">==</span> <span class="n">BUTTONTYPE_CONFIRM_NO</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">ConfirmDialogOpen</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+		<span class="n">ButtonsConfirm</span><span class="p">.</span><span class="n">Empty</span><span class="p">();</span> <span class="c1">//Buttons not needed anymore</span>
+		<span class="k">return</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//Check Buttons</span>
+<span class="kt">void</span> <span class="n">AJoyHUD</span><span class="o">::</span><span class="n">CheckCursorInButtonsMain</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">//Check Confirm Buttons</span>
+	<span class="n">ClickedButtonType</span> <span class="o">=</span> <span class="n">CheckCursorInButton</span><span class="p">(</span><span class="n">ButtonsMain</span><span class="p">);</span>
+
+	<span class="k">if</span><span class="p">(</span><span class="n">ClickedButtonType</span> <span class="o">==</span> <span class="n">BUTTONTYPE_MAIN_RESTART</span> <span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">ThePC</span><span class="o">-&gt;</span><span class="n">ConsoleCommand</span><span class="p">(</span><span class="s">"RestartLevel"</span><span class="p">);</span>
+		<span class="k">return</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">ClickedButtonType</span> <span class="o">==</span> <span class="n">BUTTONTYPE_MAIN_EXIT</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">ConfirmDialogOpen</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+		<span class="k">return</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">AJoyHUD</span><span class="o">::</span><span class="n">DrawHUD_CheckCursorInButtons</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">ConfirmDialogOpen</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">CheckCursorInButtonsConfirm</span><span class="p">();</span>
+		
+		<span class="c1">//Take Focus Away From All Other buttons</span>
+		<span class="k">return</span><span class="p">;</span> 
+		<span class="c1">//~</span>
+	<span class="p">}</span>
+	
+	<span class="c1">//Main</span>
+	<span class="n">CheckCursorInButtonsMain</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AJoyHUD</span><span class="o">::</span><span class="n">DrawToolTip</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">//if mouse is too far to right, draw from left instead</span>
+	<span class="kt">float</span> <span class="n">xStart</span> <span class="o">=</span> <span class="n">MouseLocation</span><span class="p">.</span><span class="n">X</span> <span class="o">+</span> <span class="mi">150</span><span class="p">;</span>
+	<span class="kt">float</span> <span class="n">yStart</span> <span class="o">=</span> <span class="n">MouseLocation</span><span class="p">.</span><span class="n">Y</span> <span class="o">+</span> <span class="mi">5</span><span class="p">;</span>
+	
+	<span class="c1">//out vars</span>
+	<span class="kt">float</span> <span class="n">RV_xLength</span><span class="p">;</span> 
+	<span class="kt">float</span> <span class="n">RV_yLength</span><span class="p">;</span>
+	<span class="c1">//Text Size</span>
+	<span class="n">GetTextSize</span><span class="p">(</span>
+		<span class="n">ActiveButton_Tip</span><span class="p">,</span> 
+		<span class="n">RV_xLength</span><span class="p">,</span> 
+		<span class="n">RV_yLength</span><span class="p">,</span> 
+		<span class="n">UE4Font</span><span class="p">,</span>
+		<span class="n">DefaultFontScale</span> <span class="o">*</span> <span class="mi">2</span>
+	<span class="p">);</span>
+	
+	<span class="c1">// Decide Draw to Left or to the Right </span>
+	
+	<span class="c1">//Draw to the Left</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">xStart</span> <span class="o">+</span> <span class="n">RV_xLength</span> <span class="o">&gt;=</span> <span class="n">Canvas</span><span class="o">-&gt;</span><span class="n">SizeX</span> <span class="o">-</span> <span class="mi">40</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">xStart</span> <span class="o">-=</span> <span class="mi">150</span> <span class="o">+</span> <span class="mi">140</span> <span class="o">+</span> <span class="mi">64</span> <span class="o">+</span> <span class="n">RV_xLength</span><span class="p">;</span>
+		
+		<span class="c1">//If Text is too long, bring it closer to the cursor</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">xStart</span> <span class="o">&lt;</span> <span class="mi">33</span> <span class="p">)</span> <span class="n">xStart</span> <span class="o">=</span> <span class="mi">33</span><span class="p">;</span>
+	<span class="p">}</span>
+	
+	<span class="c1">//Background</span>
+	<span class="n">DrawJoyRect</span><span class="p">(</span>
+		<span class="n">xStart</span><span class="p">,</span> <span class="n">yStart</span><span class="p">,</span> 
+		<span class="n">RV_xLength</span> <span class="o">+</span> <span class="mi">70</span><span class="p">,</span> 
+		<span class="mi">80</span><span class="p">,</span> 
+		<span class="n">FLinearColor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">)</span> <span class="c1">//alpha 0.7</span>
+	<span class="p">);</span>
+	
+	<span class="c1">//Tool Tip</span>
+	<span class="n">DrawText</span><span class="p">(</span>
+		<span class="n">ActiveButton_Tip</span><span class="p">,</span> 
+		<span class="n">LC_Pink</span><span class="p">,</span>
+		<span class="n">xStart</span> <span class="o">+</span> <span class="mi">32</span><span class="p">,</span> <span class="n">yStart</span> <span class="o">+</span> <span class="mi">20</span><span class="p">,</span>
+		<span class="n">UE4Font</span><span class="p">,</span>
+		<span class="n">DefaultFontScale</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span>			
+		<span class="nb">false</span>		<span class="c1">//scale position of message with HUD scale</span>
+	<span class="p">);</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">AJoyHUD</span><span class="o">::</span><span class="n">DrawHUD_DrawCursor</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">//Tool Tip</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">ActiveButton_Tip</span> <span class="o">!=</span> <span class="s">""</span><span class="p">)</span> <span class="n">DrawToolTip</span><span class="p">();</span>
+	
+	<span class="c1">//Cursor Hovering in a Button?</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">CursorHoveringInButton</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//pointer tex found?</span>
+		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">CursorHoveringButton</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+		<span class="n">DrawFullSizeTile</span><span class="p">(</span><span class="n">CursorHoveringButton</span><span class="p">,</span> <span class="n">MouseLocation</span><span class="p">.</span><span class="n">X</span> <span class="o">-</span> <span class="n">CURSOR_DRAW_OFFSET</span><span class="p">,</span> <span class="n">MouseLocation</span><span class="p">.</span><span class="n">Y</span> <span class="o">-</span> <span class="n">CURSOR_DRAW_OFFSET</span><span class="p">,</span> <span class="n">FColor_White</span> <span class="p">);</span>
+	<span class="p">}</span>
+	
+	<span class="k">else</span>
+	<span class="p">{</span>
+		<span class="c1">//cursor tex found?</span>
+		<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">CursorMain</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+		<span class="n">DrawFullSizeTile</span><span class="p">(</span><span class="n">CursorMain</span><span class="p">,</span> <span class="n">MouseLocation</span><span class="p">.</span><span class="n">X</span> <span class="o">-</span> <span class="n">CURSOR_DRAW_OFFSET</span><span class="p">,</span> <span class="n">MouseLocation</span><span class="p">.</span><span class="n">Y</span> <span class="o">-</span> <span class="n">CURSOR_DRAW_OFFSET</span><span class="p">,</span> <span class="n">FColor_White</span> <span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AJoyHUD</span><span class="o">::</span><span class="n">PlayerInputChecks</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">//check out this tutorial of mine for a list of all EKeys::</span>
+	<span class="c1">//http://forums.epicgames.com/threads/972861-Tutorials-C-for-UE4-Code-Samples-gt-gt-New-Video-Freeze-Render-When-Tabbed-Out?p=31660286&amp;viewfull=1#post31660286</span>
+	
+	<span class="k">if</span><span class="p">(</span><span class="n">ThePC</span><span class="o">-&gt;</span><span class="n">WasInputKeyJustPressed</span><span class="p">(</span><span class="n">EKeys</span><span class="o">::</span><span class="n">Escape</span><span class="p">))</span>
+	<span class="p">{</span>
+		<span class="n">SetCursorMoveOnly</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
+		<span class="k">return</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">ThePC</span><span class="o">-&gt;</span><span class="n">WasInputKeyJustPressed</span><span class="p">(</span><span class="n">EKeys</span><span class="o">::</span><span class="n">F</span><span class="p">))</span>
+	<span class="p">{</span>
+		<span class="n">SetCursorMoveOnly</span><span class="p">(</span><span class="o">!</span><span class="n">ThePC</span><span class="o">-&gt;</span><span class="n">IsLookInputIgnored</span><span class="p">());</span>
+		<span class="k">return</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">ThePC</span><span class="o">-&gt;</span><span class="n">WasInputKeyJustPressed</span><span class="p">(</span><span class="n">EKeys</span><span class="o">::</span><span class="n">H</span><span class="p">))</span>
+	<span class="p">{</span>
+		<span class="n">DontDrawHUD</span> <span class="o">=</span> <span class="o">!</span><span class="n">DontDrawHUD</span><span class="p">;</span>
+		<span class="k">return</span><span class="p">;</span>
+	<span class="p">}</span>
+	
+	<span class="c1">//Confirm</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">ConfirmDialogOpen</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">ThePC</span><span class="o">-&gt;</span><span class="n">WasInputKeyJustPressed</span><span class="p">(</span><span class="n">EKeys</span><span class="o">::</span><span class="n">Y</span><span class="p">))</span>
+		<span class="p">{</span>
+			<span class="n">ThePC</span><span class="o">-&gt;</span><span class="n">ConsoleCommand</span><span class="p">(</span><span class="s">"Exit"</span><span class="p">);</span> 
+			<span class="c1">//could replace with function based on confirm context</span>
+			
+			<span class="k">return</span><span class="p">;</span>
+		<span class="p">}</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">ThePC</span><span class="o">-&gt;</span><span class="n">WasInputKeyJustPressed</span><span class="p">(</span><span class="n">EKeys</span><span class="o">::</span><span class="n">N</span><span class="p">))</span>
+		<span class="p">{</span>
+			<span class="n">ConfirmDialogOpen</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+			<span class="n">ButtonsConfirm</span><span class="p">.</span><span class="n">Empty</span><span class="p">();</span> <span class="c1">//Buttons not needed anymore</span>
+			<span class="c1">//Cancel Confirm</span>
+			
+			<span class="k">return</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AJoyHUD</span><span class="o">::</span><span class="n">DrawHUD_Reset</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">ActiveButton_Type</span> 		<span class="o">=</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+	<span class="n">ActiveButton_Tip</span> 		<span class="o">=</span> <span class="s">""</span><span class="p">;</span>
+	<span class="n">CursorHoveringInButton</span> 	<span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AJoyHUD</span><span class="o">::</span><span class="n">DrawHUD</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">//==============================</span>
+	<span class="c1">//==============================</span>
+	<span class="c1">//==============================</span>
+	<span class="c1">//Have PC for Input Checks and Mouse Cursor?</span>
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">ThePC</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//Attempt to Reacquire PC</span>
+		<span class="n">ThePC</span> <span class="o">=</span> <span class="n">GetOwningPlayerController</span><span class="p">();</span>
+		 
+		<span class="c1">//Could Not Obtain PC</span>
+		<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">ThePC</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+		<span class="c1">//~~</span>
+	<span class="p">}</span>
+	
+	<span class="c1">//Multiplayer Safety Check</span>
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">ThePC</span><span class="o">-&gt;</span><span class="n">PlayerInput</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span> <span class="c1">//not valid for first seconds of a multiplayer client</span>
+	<span class="c1">//~~</span>
+	<span class="c1">//==============================</span>
+	<span class="c1">//==============================</span>
+	<span class="c1">//==============================</span>
+	
+	<span class="c1">//Player Input</span>
+	<span class="n">PlayerInputChecks</span><span class="p">();</span>
+	
+	<span class="c1">//Draw HUD?</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">DontDrawHUD</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+	<span class="c1">//~~</span>
+	
+	<span class="c1">//Super</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">DrawHUD</span><span class="p">();</span>
+	
+	<span class="c1">//No Canvas?</span>
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">Canvas</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+	<span class="c1">//</span>
+	
+	<span class="c1">//Reset States</span>
+	<span class="n">DrawHUD_Reset</span><span class="p">();</span>
+	
+	<span class="c1">//================</span>
+	<span class="c1">//Get New Mouse Position</span>
+	<span class="c1">//================</span>
+	<span class="n">ThePC</span><span class="o">-&gt;</span><span class="n">GetMousePosition</span><span class="p">(</span><span class="n">MouseLocation</span><span class="p">.</span><span class="n">X</span><span class="p">,</span><span class="n">MouseLocation</span><span class="p">.</span><span class="n">Y</span><span class="p">);</span>
+	
+	<span class="c1">//Cursor In Buttons</span>
+	<span class="n">DrawHUD_CheckCursorInButtons</span><span class="p">();</span>
+	
+	<span class="c1">//Draw Dialogs</span>
+	<span class="n">DrawHUD_DrawDialogs</span><span class="p">();</span>
+	
+	<span class="c1">//### Do Last ###</span>
+	<span class="c1">//Draw Cursor</span>
+	<span class="n">DrawHUD_DrawCursor</span><span class="p">();</span>
+	
+	<span class="c1">//Debugging Info</span>
+	<span class="c1">//ThePC-&gt;ClientMessage("HUD Loop Completed!");</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Compile_and_Make_BP">
+        Compile and Make BP
+       </span>
+      </h2>
+      <p>
+       After you get the above to compile, you need to go into the editor and make a blueprint of this JoyHUD
+      </p>
+      <p>
+       Then you need to go to your GameMode.cpp file and add this line:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">AYourGameMode</span><span class="o">::</span><span class="n">AYourGameMode</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// You can obtain the asset path of your HUD blueprint through the editor </span>
+	<span class="c1">// by right-clicking the Blueprint asset and choosing "Copy Reference".</span>
+	<span class="c1">// You should then add the "_C" suffix so that the class finder properly </span>
+	<span class="c1">// points to the actual class used by the game, as opposed to its Blueprint</span>
+	<span class="c1">// which is an editor-only concept).</span>
+	<span class="c1">// </span>
+	<span class="c1">// For instance, given a blueprint named BP_JoyHUD, the class path would be</span>
+	<span class="c1">//	"/Game/Blueprints/BP_JoyHUD_C"</span>
+	<span class="k">static</span> <span class="n">ConstructorHelpers</span><span class="o">::</span><span class="n">FClassFinder</span><span class="o">&lt;</span><span class="n">AHUD</span><span class="o">&gt;</span> <span class="n">TheHUDOb</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"/Game/Blueprints/BP_JoyHUD_C"</span><span class="p">));</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">TheHUDOb</span><span class="p">.</span><span class="n">Class</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">HUDClass</span> <span class="o">=</span> <span class="n">TheHUDOb</span><span class="p">.</span><span class="n">Class</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Adding_The_Graphics">
+        Adding The Graphics
+       </span>
+      </h2>
+      <p>
+       Open the defaults of your new HUD BP and set the various assets!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       Now you have the code to make your own button system, with tooltips, and draw textures and materials of any size and shape to the screen during game time!
+      </p>
+      <p>
+       Using the DrawMaterial function you can make fancy effects in your game's GUI as you see in my video!
+      </p>
+      <p>
+       You also have a solid foundation for a mouse/pointer driven GUI that responds to hover as well as click events!
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

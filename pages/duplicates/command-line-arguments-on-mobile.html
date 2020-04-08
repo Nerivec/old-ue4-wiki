@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Command-Line Arguments on Mobile - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Command-Line Arguments on Mobile
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <p>
+       Quick documentation on how-to pass command-line arguments to the UE4Game executable on devices, based on my experience with Android Gear VR. This is especially useful when profiling on mobile target.
+     (
+     )
+      </p>
+      <h2>
+       <span class="mw-headline" id="Command-Line_Arguments_introduction">
+        Command-Line Arguments introduction
+       </span>
+      </h2>
+      <ul>
+       <li>
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/Programming/Basics/CommandLineArguments/" rel="nofollow">
+         Command-Line Arguments official documentation
+        </a>
+        :
+        <b>
+         Command-Line Arguments
+        </b>
+        are strings of keywords that you can pass when running the executable via the command line or a shortcut to the executable. Their purpose is to customize the manner in which the engine runs to suit the needs of the developer or user.
+       </li>
+      </ul>
+      <pre>These commands are not case sensitive.
+</pre>
+      <ul>
+       <li>
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Performance/Options/index.html" rel="nofollow">
+         Command-line options for profiling
+        </a>
+        : Certain features can be disabled on the command line e.g.
+        <b>
+         UE4.exe -NoSound
+        </b>
+        . The most useful ones for profiling:
+       </li>
+      </ul>
+      <table class="wikitable">
+       <tbody>
+        <tr>
+         <th>
+          Command-line option
+         </th>
+         <th>
+          Description
+         </th>
+        </tr>
+        <tr>
+         <td>
+          -NoSound
+         </td>
+         <td>
+          To disable the sound and music system.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          -NoTextureStreaming
+         </td>
+         <td>
+          To disable texture streaming (good to isolate where hitches are coming from).
+         </td>
+        </tr>
+        <tr>
+         <td>
+          -NoVerifyGC
+         </td>
+         <td>
+          Otherwise expect massive hitching in Developpment builds at least every 30 seconds or so.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          -NoVSync
+         </td>
+         <td>
+          Gives faster rendering but can result in image tearing, especially important with high FPS.
+         </td>
+        </tr>
+        <tr>
+         <td>
+          -Streaming
+         </td>
+         <td>
+          Useful with StartFPSChart/StopFPSChart to get the data from a non windows device to the cooking PC for further investigations (assuming we use cook on the fly).
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <h2>
+       <span class="mw-headline" id="UE4CommandLine.txt">
+        UE4CommandLine.txt
+       </span>
+      </h2>
+      <p>
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Support/Builds/ReleaseNotes/2015/4_8/" rel="nofollow">
+        Since UE4.8
+       </a>
+       : The editor now checks for additional command line arguments stored in a
+       <b>
+        UE4CommandLine.txt
+       </b>
+       file in the root installation directory. Create this file to set arguments that the editor should always be run with.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Command-line_arguments_on_Android">
+        Command-line arguments on Android
+       </span>
+      </h2>
+      <p>
+       Android OS does not support passing command line arguments to an executable.
+A default UE4CommandLine.txt is created and deployed on the target for that, on
+       <b>
+        /mnt/sdcard/UE4Game/&lt;ProjectName&gt;/UE4CommandLine.txt
+       </b>
+      </p>
+      <p>
+       If you which to specify a specific option (let say
+       <i>
+        -NoSound
+       </i>
+       ) you have to overwrite this file.
+There is a template file and a batch file that you can use to do that. Look in:
+      </p>
+      <pre>C:\Program Files\Epic Games\UE_4.17\Engine\Build\Android\UE4Game
+</pre>
+      <p>
+       UE4CommandLine.txt.template:
+      </p>
+      <pre>../../../Samples/Showcases/Mobile/Mobile.uproject -filehostip=###.###.###.### -nosound -streaming
+</pre>
+      <p>
+       Should be edited with correct project name, for instance :
+      </p>
+      <pre>../../../UE4GearVR/UE4GearVR.uproject  /Game/Maps/GearVR -NoSound
+</pre>
+      <p>
+       Then simply execute
+       <b>
+        PushCommandLine.bat
+       </b>
+       after each new
+       <b>
+        Launch
+       </b>
+       from the Editor, and then restart your game on the target device.
+      </p>
+      <p>
+       Reference: the only place where I could find a reference to this file was on page 10 of the
+       <a class="external text" href="https://cdn2.unrealengine.com/Resources/files/UE4_DevCon2014_MobileDeployment-997068457.pdf" rel="nofollow">
+        UE4 – Mobile Deployment presentation
+       </a>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Logs, Printing Class Name, Function Name, Line Number of your Calling Code! - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Logs, Printing Class Name, Function Name, Line Number of your Calling Code!
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Print_Screen_Messages_With_Class.2FLineNumber">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Print Screen Messages With Class/LineNumber
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Print_the_name_of_the_Calling_Function.2C_With_Entire_Signature.21">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Print the name of the Calling Function, With Entire Signature!
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#My_C.2B.2B_Code_For_You">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           My C++ Code For You
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#V_LOG">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           V_LOG
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#V_LOGM">
+            <span class="tocnumber">
+             5.1
+            </span>
+            <span class="toctext">
+             V_LOGM
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#More_Info">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           More Info
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Summary">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Summary
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Original Author:
+       </i>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       In this wiki I am giving the code for how to independently print the Class, Function Name, and Line number wherever you are in the calling code that uses my pre-processor commands below!
+      </p>
+      <p>
+       You can even get a UE4 FString telling you the whole function signature of the function you are in where you use my code, including variable types!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Print_Screen_Messages_With_Class.2FLineNumber">
+        Print Screen Messages With Class/LineNumber
+       </span>
+      </h2>
+      <p>
+       I also provide you with a pre-processor command that prints a message to the screen including the Class name and line number!
+      </p>
+      <p>
+       Here's a pic!
+      </p>
+      <p>
+       <img alt="JoyStringCurrentClassFuncLineNumber2.jpg" class="" height="525" src="../assets/logs-printing-class-name-function-name-line-number-of-your-calling-code/0.jpg" width="700"/>
+      </p>
+      <p>
+       After you get my .h file below, the code for the above picture is this!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//~~~ Tick ~~~</span>
+<span class="kt">void</span> <span class="n">AEVCoreDefense</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaTime</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span><span class="n">DeltaTime</span><span class="p">);</span>
+	<span class="c1">//~~~~~~~~~~~~~</span>
+
+	<span class="n">VSCREENMSG</span><span class="p">(</span><span class="s">"Got Here!"</span><span class="p">);</span>  <span class="c1">//Class and line number get printed for you! ♥ Rama</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Print_the_name_of_the_Calling_Function.2C_With_Entire_Signature.21">
+        Print the name of the Calling Function, With Entire Signature!
+       </span>
+      </h2>
+      <p>
+       <img alt="JoyStringCurrentClassFuncLineNumber3.jpg" class="" height="525" src="../assets/logs-printing-class-name-function-name-line-number-of-your-calling-code/1.jpg" width="700"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="My_C.2B.2B_Code_For_You">
+        My C++ Code For You
+       </span>
+      </h2>
+      <p>
+       Here is the entire file you can #include in your code base!
+      </p>
+      <p>
+       I call it JoyCurrentClassFuncLine.h.
+      </p>
+      <p>
+       So you would then do this somewhere at the top of one of your core classes:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Joy Class Func Line</span>
+<span class="cp">#include</span> <span class="cpf">"JoyCurrentClassFuncLine.h"</span><span class="cp"></span>
+</pre>
+      </div>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/*</span>
+<span class="cm">	Joy String </span>
+<span class="cm">		Current Class, File, and Line Number!</span>
+<span class="cm">			by Rama</span>
+<span class="cm">			</span>
+<span class="cm">	PreProcessor commands to get </span>
+<span class="cm">		a. Class name</span>
+<span class="cm">		b. Function Name</span>
+<span class="cm">		c. Line number </span>
+<span class="cm">		d. Function Signature (including parameters)</span>
+<span class="cm">		</span>
+<span class="cm">	Gives you a UE4 FString anywhere in your code that these macros are used!</span>
+<span class="cm">	</span>
+<span class="cm">	Ex: </span>
+<span class="cm">		You can use JOYSTR_CUR_CLASS anywhere to get a UE4 FString back telling you </span>
+<span class="cm">		what the current class is where you called this macro!</span>
+<span class="cm">	</span>
+<span class="cm">	Ex:</span>
+<span class="cm">		This macro prints the class and line along with the message of your choosing!</span>
+<span class="cm">		VSCREENMSG("Have fun today!");</span>
+<span class="cm">	&lt;3  Rama</span>
+<span class="cm">*/</span>
+<span class="cp">#pragma once</span>
+
+<span class="c1">//Current Class Name + Function Name where this is called!</span>
+<span class="cp">#define JOYSTR_CUR_CLASS_FUNC (FString(__FUNCTION__))</span>
+
+<span class="c1">//Current Class where this is called!</span>
+<span class="cp">#define JOYSTR_CUR_CLASS (FString(__FUNCTION__).Left(FString(__FUNCTION__).Find(TEXT(":"))) )</span>
+
+<span class="c1">//Current Function Name where this is called!</span>
+<span class="cp">#define JOYSTR_CUR_FUNC (FString(__FUNCTION__).Right(FString(__FUNCTION__).Len() - FString(__FUNCTION__).Find(TEXT("::")) - 2 ))</span>
+  
+<span class="c1">//Current Line Number in the code where this is called!</span>
+<span class="cp">#define JOYSTR_CUR_LINE  (FString::FromInt(__LINE__))</span>
+
+<span class="c1">//Current Class and Line Number where this is called!</span>
+<span class="cp">#define JOYSTR_CUR_CLASS_LINE (JOYSTR_CUR_CLASS + "(" + JOYSTR_CUR_LINE + ")")</span>
+  
+<span class="c1">//Current Function Signature where this is called!</span>
+<span class="cp">#define JOYSTR_CUR_FUNCSIG (FString(__FUNCSIG__))</span>
+
+
+<span class="c1">//Victory Screen Message</span>
+<span class="c1">// 	Gives you the Class name and exact line number where you print a message to yourself!</span>
+<span class="cp">#define VSCREENMSG(Param1) (GEngine-&gt;AddOnScreenDebugMessage(-1, 5.f, FColor::Red, *(JOYSTR_CUR_CLASS_LINE + ": " + Param1)) )</span>
+
+<span class="cp">#define VSCREENMSG2(Param1,Param2) (GEngine-&gt;AddOnScreenDebugMessage(-1, 5.f, FColor::Red, *(JOYSTR_CUR_CLASS_LINE + ": " + Param1 + " " + Param2)) )</span>
+
+<span class="cp">#define VSCREENMSGF(Param1,Param2) (GEngine-&gt;AddOnScreenDebugMessage(-1, 5.f, FColor::Red, *(JOYSTR_CUR_CLASS_LINE + ": " + Param1 + " " + FString::SanitizeFloat(Param2))) )</span>
+
+<span class="c1">//UE LOG!</span>
+<span class="cp">#define V_LOG(LogCat, Param1) 		UE_LOG(LogCat,Warning,TEXT("%s: %s"), *JOYSTR_CUR_CLASS_LINE, *FString(Param1))</span>
+
+<span class="cp">#define V_LOG2(LogCat, Param1,Param2) 	UE_LOG(LogCat,Warning,TEXT("%s: %s %s"), *JOYSTR_CUR_CLASS_LINE, *FString(Param1),*FString(Param2))</span>
+
+<span class="cp">#define V_LOGF(LogCat, Param1,Param2) 	UE_LOG(LogCat,Warning,TEXT("%s: %s %f"), *JOYSTR_CUR_CLASS_LINE, *FString(Param1),Param2)</span>
+
+<span class="cp">#define V_LOGM(LogCat, FormatString , ...) UE_LOG(LogCat,Warning,TEXT("%s: %s"), 	*JOYSTR_CUR_CLASS_LINE, *FString::Printf(TEXT(FormatString), ##__VA_ARGS__ ) )</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="V_LOG">
+        V_LOG
+       </span>
+      </h2>
+      <p>
+       Each of the V_LOG Macros takes as the first parameter the log category that you want to use!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#define V_LOG(LogCat, Param1)   UE_LOG(LogCat,Warning,TEXT("%s: %s"), *JOYSTR_CUR_CLASS_LINE, *FString(Param1))</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="V_LOGM">
+        V_LOGM
+       </span>
+      </h3>
+      <p>
+       V_LOGM is special in that you can have an arbitrary number of vars that you output, and of any type, similar to standard UE_LOG functionality!
+      </p>
+      <p>
+       Example usage:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">int32</span> <span class="n">Health</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="kt">float</span> <span class="n">ArmorPct</span> <span class="o">=</span> <span class="mf">52.33</span><span class="p">;</span>
+<span class="n">FVector</span> <span class="nf">Location</span><span class="p">(</span><span class="mi">33</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+	
+<span class="n">V_LOGM</span><span class="p">(</span><span class="n">Joy</span><span class="p">,</span> <span class="s">"Health: %d, ArmorPct: %f, Loc: %s"</span><span class="p">,</span>  <span class="n">Health</span><span class="p">,</span> <span class="n">ArmorPct</span><span class="p">,</span> <span class="o">*</span><span class="n">Location</span><span class="p">.</span><span class="n">ToString</span><span class="p">());</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="More_Info">
+        More Info
+       </span>
+      </h2>
+      <p>
+       <a class="external text" href="https://msdn.microsoft.com/library/b0084kay.aspx" rel="nofollow">
+        VS C++ Predifined Macros
+       </a>
+      </p>
+      <p>
+       <a class="external text" href="https://gcc.gnu.org/onlinedocs/cpp/Variadic-Macros.html" rel="nofollow">
+        Variadic Macros
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Summary">
+        Summary
+       </span>
+      </h2>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

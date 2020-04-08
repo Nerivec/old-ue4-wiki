@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Weapon Modeling Tutorial Shock Rifle - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Weapon Modeling Tutorial Shock Rifle
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <br/>
+       Weapon Modeling Tutorial - Shock Rifle
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Introduction">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Introduction
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Concept">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Concept
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Rough_Geometry_Modeling">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Rough Geometry Modeling
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Prototype_Mesh_v1">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Prototype Mesh v1
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Base_Modeling_Refinement">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Base Modeling Refinement
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Prototype_Mesh_v2">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Prototype Mesh v2
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Hi_Poly_Refinement">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Hi Poly Refinement
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Refined_Concept_Paintover">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Refined Concept Paintover
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Polished_Hi_Poly">
+          <span class="tocnumber">
+           9
+          </span>
+          <span class="toctext">
+           Polished Hi Poly
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-10">
+         <a href="#Low_Poly">
+          <span class="tocnumber">
+           10
+          </span>
+          <span class="toctext">
+           Low Poly
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-11">
+         <a href="#Unwrap_and_Process">
+          <span class="tocnumber">
+           11
+          </span>
+          <span class="toctext">
+           Unwrap and Process
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-12">
+         <a href="#Assembling_Mesh_and_Materials_in_UE4">
+          <span class="tocnumber">
+           12
+          </span>
+          <span class="toctext">
+           Assembling Mesh and Materials in UE4
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-13">
+         <a href="#Final_Results">
+          <span class="tocnumber">
+           13
+          </span>
+          <span class="toctext">
+           Final Results
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Introduction">
+        Introduction
+       </span>
+      </h2>
+      <p>
+       This tutorial covers the high level concepts involved in modeling a weapon for Unreal Tournament. It is not a detailed 3d modeling tutorial. There are many application specific 3d tutorials on the web and game art specific forums like www.polycount.com that cover game modeling in further detail. 3d modeling (as with any art form) is a very personal process and your detailed approach will vary greatly depending on the modeling packages you use and your skill level. Hopefully this gives you a big picture view and some insight to my approach to weapon modeling.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Concept">
+        Concept
+       </span>
+      </h2>
+      <p>
+       Chris Perna worked with community member Gooba to come up with the concept.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="587" src="../assets/weapon-modeling-tutorial-shock-rifle/0.png" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Concept by community member Gooba
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Rough_Geometry_Modeling">
+        Rough Geometry Modeling
+       </span>
+      </h2>
+      <p>
+       For the first phase my primary goal is to get all of the base shapes roughed in. I'm not worried about size/proportion accuracy as much as I am getting all of the parts created. The sooner you get all the parts in some form the sooner you can start refining the shapes. Everybody is different but I find I am much faster at the start if I just focus on creating geometry versus creating perfect geometry.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="720" src="../assets/weapon-modeling-tutorial-shock-rifle/1.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Rough Geometry Modeling
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="720" src="../assets/weapon-modeling-tutorial-shock-rifle/2.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Rough Geometry Modeling
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="720" src="../assets/weapon-modeling-tutorial-shock-rifle/3.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Rough Geometry Modeling
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="720" src="../assets/weapon-modeling-tutorial-shock-rifle/4.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Rough Geometry Modeling
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="720" src="../assets/weapon-modeling-tutorial-shock-rifle/5.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Rough Geometry Modeling
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Prototype_Mesh_v1">
+        Prototype Mesh v1
+       </span>
+      </h2>
+      <p>
+       I want to get prototype weapon meshes, animations, and fx in the game asap. As long as the concept provides the right foundation then it's time to build a proto mesh, proto anims and get it in game. Once in the game I will iterate the nuances of the design with the design team and the concept artist Gooba. I typically don't dive into hi poly modeling until we are sure the design works and we work out any functionality issues before investing the heavy hi poly modeling task. If you want to replace an existing weapon in the game it is fairly ease to build on the foundation that is already there.
+      </p>
+      <p>
+       1. Export the existing SK mesh from the editor that you want to replace with your proto weapon. Export both the 1p &amp; 3p version. Be sure to save an original copy of these in case you break something and need to reverse your steps.
+      </p>
+      <p>
+       2. Open your weapon file with your proto mesh. Create a separate file for each 1p &amp; 3p view. Collapse all separate parts of your proto mesh and attach into a single mesh. Assign multi-mat id's if you want to assign base material breakouts in the editor. You don't need to do a proper unwrap, but at least put a planar UV map on the final collapsed proto mesh.
+      </p>
+      <p>
+       3. Make sure that nothing else is in your file, either hidden, grouped, or on another layer.
+      </p>
+      <p>
+       4. Import the editor SK .fbx into your your file. I use 3ds Max 2014. The .fbx will import the bone structure of the existing weapon and the rigged mesh.
+      </p>
+      <p>
+       5. The imported mesh will have a skin modifier on it. Edit the envelopes and look at how the weapon is bound. The 3p ver will be much simpler than the 1p. I was getting a dummy object imported that was named the same as the mesh, delete the dummy object as the double names will confuse export.
+      </p>
+      <p>
+       6. Position your new weapon as closely as possible to the old weapon. Name it the same as the old weapon. Delete the old weapon, add a skin modifier to your mesh.
+      </p>
+      <p>
+       7. Bind your weapon to the bone setup. Don't worry if the bones don't line up or if you don't have/need the same bones. For a quick &amp; simple test just bind the entire mesh to the root bone.
+      </p>
+      <p>
+       8. Select the mesh and the bone setup and export selected as .fbx. Import into same folder and say yes to overwrite. Check import as skeletal mesh and don't generate new skeleton, use the existing one (it will be named similar to the sk mesh).
+      </p>
+      <p>
+       9. Sometimes I got an error saying the bone chain was wrong and if I wanted to rebuild it (but warned it might bork animations). Since we aren't dealing with animations just rebuild.
+      </p>
+      <p>
+       10. Sometimes when re-importing it borked the phys asset and the linked bounding volume and that caused display issues. I don't know how/why it happened but I had to try the process multiple times to get it to work.
+      </p>
+      <p>
+       11. 3p view is easiest to fine tune the placement in your max source file. Just nudge/scale it around until it fits in the player hands.
+      </p>
+      <p>
+       12. 1p view is easiest to fine tune in the master blueprint for the weapon.
+      </p>
+      <p>
+       13. Add the MuzzleFlashSocket to the skeleton.
+      </p>
+      <p>
+       14. Add basic materials to your mesh.
+      </p>
+      <p>
+       15. Rinse and repeat until you get it right! Run around the game and see how it looks &amp; feels in action. Start to generate animation ideas, we will tackle that next.
+      </p>
+      <p>
+       16. The blueprint is awesome, you can also change every other attribute for the weapon. Change firing rate, fx beam, damage, ammo count, etc. Dig around and have fun tinkering!
+      </p>
+      <p>
+       17. When all else fails and your stuff is broken find a weapon that works and reverse engineer it. Keep digging around the SK meshes, the animation blueprints, the master weapon blueprints, etc. Keep reading tutorials and watching how to videos. You will get the hang of it!
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="720" src="../assets/weapon-modeling-tutorial-shock-rifle/6.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Prototype Mesh v1
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="720" src="../assets/weapon-modeling-tutorial-shock-rifle/7.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Prototype Mesh v1
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="720" src="../assets/weapon-modeling-tutorial-shock-rifle/8.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Prototype Mesh v1
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="720" src="../assets/weapon-modeling-tutorial-shock-rifle/9.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Prototype Mesh v1
+        </div>
+       </div>
+      </div>
+      <p>
+       Once everybody is 90% sure the proto mesh is looking and functioning how everybody wants in game then I kick renders of the final (evolved through testing) proto mesh to Gooba and he will do the final concept paintover. Once that is done and we are still on track with the proto weapon in the game I will start the fun (and now easy) process of making the hi poly. By making sure the bulk of the design and functionality issues are worked out before hand there should be less churn and tweaks during the hi poly modeling phase. It's all about making it look cool and visually balanced with the other weapons in the game.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Base_Modeling_Refinement">
+        Base Modeling Refinement
+       </span>
+      </h2>
+      <p>
+       After you have a prototype weapon in the game and start to get feedback I proceed to further refine the model so that people get a better idea of how it will look visually in addition to function.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="720" src="../assets/weapon-modeling-tutorial-shock-rifle/10.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Base Modeling Refinement
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="720" src="../assets/weapon-modeling-tutorial-shock-rifle/11.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Base Modeling Refinement
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="720" src="../assets/weapon-modeling-tutorial-shock-rifle/12.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Base Modeling Refinement
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="720" src="../assets/weapon-modeling-tutorial-shock-rifle/13.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Base Modeling Refinement
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="720" src="../assets/weapon-modeling-tutorial-shock-rifle/14.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Base Modeling Refinement
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="720" src="../assets/weapon-modeling-tutorial-shock-rifle/15.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Base Modeling Refinement
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Prototype_Mesh_v2">
+        Prototype Mesh v2
+       </span>
+      </h2>
+      <p>
+       Once you refine the base model further I usually update the prototype mesh. This will allow you to identify if the visual progress is still synching with the functional progress and allow people to give updated feedback on the weapon. Since you have already set up your first pass proto mesh it should be very quick and easy to update it with a more refined mesh.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="814" src="../assets/weapon-modeling-tutorial-shock-rifle/16.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Prototype Mesh v2
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="814" src="../assets/weapon-modeling-tutorial-shock-rifle/17.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Prototype Mesh v2
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Hi_Poly_Refinement">
+        Hi Poly Refinement
+       </span>
+      </h2>
+      <p>
+       Based on feedback of the updated proto mesh as well as feedback delivered on the latest renders you can take the hi poly further, refining the main forms without adding in too much detail.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="720" src="../assets/weapon-modeling-tutorial-shock-rifle/18.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Hi Poly Refinement
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="720" src="../assets/weapon-modeling-tutorial-shock-rifle/19.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Hi Poly Refinement
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="720" src="../assets/weapon-modeling-tutorial-shock-rifle/20.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Hi Poly Refinement
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="720" src="../assets/weapon-modeling-tutorial-shock-rifle/21.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Hi Poly Refinement
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="720" src="../assets/weapon-modeling-tutorial-shock-rifle/22.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Hi Poly Refinement
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="720" src="../assets/weapon-modeling-tutorial-shock-rifle/23.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Hi Poly Refinement
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="720" src="../assets/weapon-modeling-tutorial-shock-rifle/24.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Hi Poly Refinement
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Refined_Concept_Paintover">
+        Refined Concept Paintover
+       </span>
+      </h2>
+      <p>
+       Once you reach a certain point with the hi poly and proto meshes I think it's a great time to consult with the creative director and the concept artist to get a refreshed &amp; polished view of your final destination. Sometimes you need fresh eyes on a model if you have been looking at it for too long you sometimes loose objective focus. After talking with Perna and Gooba he painted over my latest renders to help me refine the hi poly model further.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="611" src="../assets/weapon-modeling-tutorial-shock-rifle/25.png" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Refined Concept Paintover by community member Gooba
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="720" src="../assets/weapon-modeling-tutorial-shock-rifle/26.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Refined Concept Paintover by community member Gooba
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="720" src="../assets/weapon-modeling-tutorial-shock-rifle/27.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Refined Concept Paintover by community member Gooba
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1202px;">
+        <img alt="" class="thumbimage" height="2015" src="../assets/weapon-modeling-tutorial-shock-rifle/28.jpg" width="1200"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Display Screen Concept Paintover by community member Gooba
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Polished_Hi_Poly">
+        Polished Hi Poly
+       </span>
+      </h2>
+      <p>
+       Using the paintover and latest batch of feedback from Perna, the development team and the community I could proceed to finalize the hi poly with more confidence and concrete direction. After I have added in details and got the weapon close to finished we create final hi poly renders to get feedback on the visual look before we proceed to the next step.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="640" src="../assets/weapon-modeling-tutorial-shock-rifle/29.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Polished Hi Poly rendered in Keyshot
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="640" src="../assets/weapon-modeling-tutorial-shock-rifle/30.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Polished Hi Poly rendered in Keyshot
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="640" src="../assets/weapon-modeling-tutorial-shock-rifle/31.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Polished Hi Poly rendered in Keyshot
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="640" src="../assets/weapon-modeling-tutorial-shock-rifle/32.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Polished Hi Poly rendered in Keyshot
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="640" src="../assets/weapon-modeling-tutorial-shock-rifle/33.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Polished Hi Poly rendered in Keyshot
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="640" src="../assets/weapon-modeling-tutorial-shock-rifle/34.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Polished Hi Poly rendered in Keyshot
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Low_Poly">
+        Low Poly
+       </span>
+      </h2>
+      <p>
+       I'm targeting around 15-20k UE4 verts for 1p and around 5k verts for 3p. It's always hard to tell when I'm doing the low poly as max verts do not equal UE4 verts (you have to account for smoothing group and UV break double verts in engine). It is important to always talk about vert counts not tri counts as the vert count number is absolute and therefore the only number that matters.
+      </p>
+      <p>
+       I always go over for first pass just so I can see exactly where geometry is needed most. Also, once you do a first pass process you can see much clearer if geometry is being wasted or if you need more in certain areas. And of course you want to load most of your geometry closer to the camera.
+      </p>
+      <p>
+       First Person View:
+Triangles: 29698
+Vertices: 19651
+      </p>
+      <p>
+       Third Person View:
+Triangles: 16311
+Vertices: 14429
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="752" src="../assets/weapon-modeling-tutorial-shock-rifle/35.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Low Poly
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="752" src="../assets/weapon-modeling-tutorial-shock-rifle/36.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Low Poly
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="752" src="../assets/weapon-modeling-tutorial-shock-rifle/37.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Low Poly
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="752" src="../assets/weapon-modeling-tutorial-shock-rifle/38.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Low Poly
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Unwrap_and_Process">
+        Unwrap and Process
+       </span>
+      </h2>
+      <p>
+       I try to keep my unwraps as clean as possible. I used to mirror a lot of geometry but I tend to mirror less with UE4 as the material system shows seams a lot easier. Also, you can use more resolution in the past so squeezing every last pixel out of your unwraps is less necessary.
+      </p>
+      <p>
+       I process my maps at 4096x4096 but they are mipped down in the editor. The shock rifle has 1 main unwrap, 1 unwrap for the energy beam, 1 for the glowy bits, and 1 for the ammo counter screen. It is possible to put multiple special fx unwraps on the same sheet and use masks to control the different parts but for this weapon I made them separate.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1002px;">
+        <img alt="" class="thumbimage" height="895" src="../assets/weapon-modeling-tutorial-shock-rifle/39.jpg" width="1000"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Unwrap and Process
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="509" src="../assets/weapon-modeling-tutorial-shock-rifle/40.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Unwrap and Process
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="509" src="../assets/weapon-modeling-tutorial-shock-rifle/41.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Unwrap and Process
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Assembling_Mesh_and_Materials_in_UE4">
+        Assembling Mesh and Materials in UE4
+       </span>
+      </h2>
+      <p>
+       Once you have your low poly and materials you import everything into the engine and assemble it.
+      </p>
+      <p>
+       For more detailed editor weapon tutorials view:
+      </p>
+      <p>
+       <a class="external free" href="https://learn.unrealtournament.com/tutorials/custom-weapon" rel="nofollow">
+        https://learn.unrealtournament.com/tutorials/custom-weapon
+       </a>
+      </p>
+      <p>
+       <a class="external free" href="https://learn.unrealtournament.com/tutorials/weapon-cosmetics" rel="nofollow">
+        https://learn.unrealtournament.com/tutorials/weapon-cosmetics
+       </a>
+      </p>
+      <p>
+       <a class="external free" href="https://learn.unrealtournament.com/tutorials/custom-impact-effect" rel="nofollow">
+        https://learn.unrealtournament.com/tutorials/custom-impact-effect
+       </a>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="796" src="../assets/weapon-modeling-tutorial-shock-rifle/42.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Assembling Mesh and Materials in UE4
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="796" src="../assets/weapon-modeling-tutorial-shock-rifle/43.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Assembling Mesh and Materials in UE4
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="796" src="../assets/weapon-modeling-tutorial-shock-rifle/44.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Assembling Mesh and Materials in UE4
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="1280" src="../assets/weapon-modeling-tutorial-shock-rifle/45.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Assembling Mesh and Materials in UE4
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="780" src="../assets/weapon-modeling-tutorial-shock-rifle/46.jpg" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Assembling Mesh and Materials in UE4
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Final_Results">
+        Final Results
+       </span>
+      </h2>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1282px;">
+        <img alt="" class="thumbimage" height="720" src="../assets/weapon-modeling-tutorial-shock-rifle/47.png" width="1280"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Final Results - UE4 UT Screenshot
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

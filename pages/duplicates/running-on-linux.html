@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Running On Linux - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Running On Linux
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       Once you have successfully
+       in Linux, this page will provide you with additional information on running it. The main page is
+       .
+      </p>
+      <p>
+       <br/>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Open_Source_.28Mesa.29_Drivers">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Open Source (Mesa) Drivers
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Ubuntu_14.04.1.2F2_LTS">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Ubuntu 14.04.1/2 LTS
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Fedora">
+            <span class="tocnumber">
+             1.2
+            </span>
+            <span class="toctext">
+             Fedora
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Arch">
+            <span class="tocnumber">
+             1.3
+            </span>
+            <span class="toctext">
+             Arch
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Nvidia_drivers">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Nvidia drivers
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Ubuntu_16.04_.2F_KDE_Neon">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Ubuntu 16.04 / KDE Neon
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Ubuntu_14.04.1.2F2_LTS_2">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             Ubuntu 14.04.1/2 LTS
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#.22Building_static_mesh....22.2C_various_malloc_crashes.2C_and_mangled_gizmo_.28XYZ_axes.29">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           "Building static mesh...", various malloc crashes, and mangled gizmo (XYZ axes)
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Font_Corruption">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Font Corruption
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-10">
+         <a href="#OpenGL_versions">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           OpenGL versions
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-11">
+         <a href="#Nvidia_Optimus">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Nvidia Optimus
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-12">
+         <a href="#UnrealLightmass">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           UnrealLightmass
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-13">
+         <a href="#Editor">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Editor
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-14">
+           <a href="#Multi_Desktop_not_supported">
+            <span class="tocnumber">
+             8.1
+            </span>
+            <span class="toctext">
+             Multi Desktop not supported
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-15">
+           <a href="#Pan.2C_Orbit.2C_Zoom_and_Copy">
+            <span class="tocnumber">
+             8.2
+            </span>
+            <span class="toctext">
+             Pan, Orbit, Zoom and Copy
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-16">
+             <a href="#Xfce">
+              <span class="tocnumber">
+               8.2.1
+              </span>
+              <span class="toctext">
+               Xfce
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-17">
+             <a href="#Unity">
+              <span class="tocnumber">
+               8.2.2
+              </span>
+              <span class="toctext">
+               Unity
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-18">
+             <a href="#Gnome">
+              <span class="tocnumber">
+               8.2.3
+              </span>
+              <span class="toctext">
+               Gnome
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-19">
+           <a href="#Building_C.2B.2B_scripts_from_terminal">
+            <span class="tocnumber">
+             8.3
+            </span>
+            <span class="toctext">
+             Building C++ scripts from terminal
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-20">
+           <a href="#Source_Code_Accessors">
+            <span class="tocnumber">
+             8.4
+            </span>
+            <span class="toctext">
+             Source Code Accessors
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-21">
+             <a href="#CodeLite">
+              <span class="tocnumber">
+               8.4.1
+              </span>
+              <span class="toctext">
+               CodeLite
+              </span>
+             </a>
+             <ul>
+              <li class="toclevel-4 tocsection-22">
+               <a href="#Tips">
+                <span class="tocnumber">
+                 8.4.1.1
+                </span>
+                <span class="toctext">
+                 Tips
+                </span>
+               </a>
+              </li>
+             </ul>
+            </li>
+            <li class="toclevel-3 tocsection-23">
+             <a href="#QtCreator">
+              <span class="tocnumber">
+               8.4.2
+              </span>
+              <span class="toctext">
+               QtCreator
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-24">
+             <a href="#KDevelop">
+              <span class="tocnumber">
+               8.4.3
+              </span>
+              <span class="toctext">
+               KDevelop
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-25">
+             <a href="#VIM_or_EMACS">
+              <span class="tocnumber">
+               8.4.4
+              </span>
+              <span class="toctext">
+               VIM or EMACS
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-26">
+             <a href="#Sublime_Text">
+              <span class="tocnumber">
+               8.4.5
+              </span>
+              <span class="toctext">
+               Sublime Text
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-27">
+             <a href="#Eclipse_CDT">
+              <span class="tocnumber">
+               8.4.6
+              </span>
+              <span class="toctext">
+               Eclipse CDT
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Open_Source_.28Mesa.29_Drivers">
+        Open Source (Mesa) Drivers
+       </span>
+      </h1>
+      <p>
+       If you use Mesa drivers use at least version &gt;= 10.4.x . Better use newer ones.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Ubuntu_14.04.1.2F2_LTS">
+        Ubuntu 14.04.1/2 LTS
+       </span>
+      </h2>
+      <p>
+       The standard Mesa drivers in Ubuntu 14.04.1/2 LTS has the version 10.1.3 and will not be sufficient for UE4Editor. You can use the Oibaf ppa which updates your mesa drivers almost everyday to the newest version. Read
+       <a class="external text" href="https://launchpad.net/~oibaf/+archive/ubuntu/graphics-drivers" rel="nofollow">
+        Oibaf PPA
+       </a>
+       for more information. In the following are the steps how to use Oibaf to get the newest and "Up to Date" Mesa drivers.
+      </p>
+      <ol>
+       <li>
+        sudo apt-add-repository ppa:oibaf/graphics-drivers
+       </li>
+       <li>
+        sudo apt-get update
+       </li>
+       <li>
+        sudo apt-get dist-upgrade
+       </li>
+      </ol>
+      <p>
+       Restart your system just in case.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Fedora">
+        Fedora
+       </span>
+      </h2>
+      <p>
+       The Mesa drivers come in a set of packages named "mesa-"; so e.g. from a terminal,
+      </p>
+      <pre> rpm -qa | grep ^mesa-
+</pre>
+      <p>
+       … yields the version numbers currently installed.
+      </p>
+      <p>
+       These are typically updated with the rest of the system, and as of Fedora 21 in Feb 2014, are version 10.4 (note that mesa-libGLU uses its own version numbering scheme). The lower-level drivers are in mesa-dri-drivers.
+      </p>
+      <p>
+       From the desktop (in a Terminal) you can run
+      </p>
+      <pre> pkcon update mesa-dri-drivers
+</pre>
+      <p>
+       (which uses the Gnome authentication; you usually must be an administrator, i.e. a member of group "wheel")
+Or on current Fedora
+      </p>
+      <pre> sudo dnf upgrade mesa-dri-drivers
+</pre>
+      <p>
+       On Fedora 19 or 20 perhaps
+      </p>
+      <pre> sudo yum upgrade mesa-dri-drivers
+</pre>
+      <p>
+       (Again, just running Software Update will normally do this along with every other package)
+      </p>
+      <p>
+       You could also use a program like "yumex" in the GUI to explore the package system. (The default "Software" program doesn't provide visibility to system libraries like this.)
+      </p>
+      <p>
+       Newer releases go to the Testing repository before going to Updates, which is normally disabled, but you can activate it for one transaction with a line like
+      </p>
+      <pre> sudo dnf --enablerepo=updates-testing upgrade mesa-dri-drivers
+</pre>
+      <p>
+       (or the same using Yum on ƒ20)
+      </p>
+      <p>
+       NB "dnf update" will do approximately the same thing as "dnf upgrade," but is more conservative about removing old packages and such.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Arch">
+        Arch
+       </span>
+      </h2>
+      <p>
+       sudo pacman -S mesa
+      </p>
+      <p>
+       If you are still experiencing crashes on Static Mesh generation or going through CacheOptimizeIndexBuffer function, see the following Answer Hub page for a possible resolution:
+       <a class="external free" href="https://answers.unrealengine.com/questions/191581/crash-in-cacheoptimizeindexbuffer-on-editor-startu.html" rel="nofollow">
+        https://answers.unrealengine.com/questions/191581/crash-in-cacheoptimizeindexbuffer-on-editor-startu.html
+       </a>
+      </p>
+      <h1>
+       <span class="mw-headline" id="Nvidia_drivers">
+        Nvidia drivers
+       </span>
+      </h1>
+      <p>
+       You should get the newest drivers for Nvidia based gfx cards. Don't use the 331.x drivers because they might cause problems.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Ubuntu_16.04_.2F_KDE_Neon">
+        Ubuntu 16.04 / KDE Neon
+       </span>
+      </h3>
+      <ol>
+       <li>
+        sudo add-apt-repository ppa:graphics-drivers/ppa
+       </li>
+       <li>
+        sudo apt-get update
+       </li>
+       <li>
+        sudo apt-get install &lt;package name&gt;
+       </li>
+      </ol>
+      <h3>
+       <span class="mw-headline" id="Ubuntu_14.04.1.2F2_LTS_2">
+        Ubuntu 14.04.1/2 LTS
+       </span>
+      </h3>
+      <ol>
+       <li>
+        sudo add-apt-repository ppa:graphics-drivers/ppa
+       </li>
+       <li>
+        sudo apt-get update
+       </li>
+       <li>
+        sudo apt-get install &lt;package name&gt;
+       </li>
+      </ol>
+      <p>
+       &lt;package name&gt; can be like nvidia-370. Check the list which drivers are supported. See here
+       <a class="external autonumber" href="https://launchpad.net/~graphics-drivers/+archive/ubuntu/ppa" rel="nofollow">
+        [1]
+       </a>
+       for more information.
+      </p>
+      <h1>
+       <span class="mw-headline" id=".22Building_static_mesh....22.2C_various_malloc_crashes.2C_and_mangled_gizmo_.28XYZ_axes.29">
+        "Building static mesh...", various malloc crashes, and mangled gizmo (XYZ axes)
+       </span>
+      </h1>
+      <p>
+       As reported here:
+       <a class="external free" href="https://answers.unrealengine.com/questions/183259/bug-ue4editor-manipulation-axis-rendering-error.html" rel="nofollow">
+        https://answers.unrealengine.com/questions/183259/bug-ue4editor-manipulation-axis-rendering-error.html
+       </a>
+      </p>
+      <p>
+       Generally this happens with Mesa drivers.
+      </p>
+      <p>
+       Edit ConsoleVariables.ini and add r.TriangleOrderOptimization=2, if there's no such parameter, else change the value to 2 if the parameter is already there.
+      </p>
+      <h1>
+       <span class="mw-headline" id="Font_Corruption">
+        Font Corruption
+       </span>
+      </h1>
+      <p>
+       As outlined in the following Answer Hub reports:
+      </p>
+      <p>
+       <a class="external free" href="https://answers.unrealengine.com/questions/117323/editor-rendering-problems.html" rel="nofollow">
+        https://answers.unrealengine.com/questions/117323/editor-rendering-problems.html
+       </a>
+       <a class="external free" href="https://answers.unrealengine.com/questions/161055/font-problem-with-ue4editor.html" rel="nofollow">
+        https://answers.unrealengine.com/questions/161055/font-problem-with-ue4editor.html
+       </a>
+      </p>
+      <p>
+       <img alt="Font Corruption Linux.png" class="" height="220" src="../assets/running-on-linux/0.png" width="400"/>
+      </p>
+      <p>
+       If you are experiencing screen/font corruption that looks like the image above, please update your graphics drivers.
+      </p>
+      <h1>
+       <span class="mw-headline" id="OpenGL_versions">
+        OpenGL versions
+       </span>
+      </h1>
+      <p>
+       If you have a graphics card and drivers that supports at least OpenGL 4.3 you can start the editor with the -opengl4 flag which will start the editor in OpenGL4 mode. This mode causes some issues in the editor's viewport, though. Here are some hints to make it work:
+      </p>
+      <ol>
+       <li>
+        Set the Anti-Alias level to "Medium"
+       </li>
+       <li>
+        Switch off the Reflection Environment (r.ReflectionEnvironment=0) while using Reflection cubes or spheres (Sometimes necessary).
+       </li>
+      </ol>
+      <p>
+       <br/>
+      </p>
+      <h1>
+       <span class="mw-headline" id="Nvidia_Optimus">
+        Nvidia Optimus
+       </span>
+      </h1>
+      <p>
+       If you're running on an computer with
+       <a class="external text" href="http://en.wikipedia.org/wiki/Nvidia_Optimus%7C" rel="nofollow">
+        Nvidia Optimus
+       </a>
+       (Intel and Nvidia on a laptop), run the Editor through
+       <i>
+        optirun
+       </i>
+       or
+       <i>
+        primusrun
+       </i>
+       , otherwise you will run into OpenGL context issues and the editor will not run.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h1>
+       <span class="mw-headline" id="UnrealLightmass">
+        UnrealLightmass
+       </span>
+      </h1>
+      <p>
+       If your lighting is failing or stuck at 0%, make sure that your firewall is not blocking port 6666 and/or 230.0.0.1 network. It uses those for multicast operation, and is safe to open/enable in your firewall.
+      </p>
+      <pre> sudo iptables -A INPUT -p UDP -d 230.0.0.1 --destination-port 6666 -j ACCEPT
+</pre>
+      <p>
+       Of if you have Ubuntu and/or Uncomplicated firewall (ufw) you can run this command.
+      </p>
+      <pre> sudo ufw allow to 230.0.0.1 port 6666 proto udp
+</pre>
+      <h1>
+       <span class="mw-headline" id="Editor">
+        Editor
+       </span>
+      </h1>
+      <h2>
+       <span class="mw-headline" id="Multi_Desktop_not_supported">
+        Multi Desktop not supported
+       </span>
+      </h2>
+      <p>
+       Do not try to use UE4Editor on separate "virtual" desktops. That means if you try for example to put a Blueprint, Matinee or the Cascade Editor window etc. into another virtual desktop, it will not work. You can use UE4Editor on multiple monitors.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Pan.2C_Orbit.2C_Zoom_and_Copy">
+        Pan, Orbit, Zoom and Copy
+       </span>
+      </h2>
+      <p>
+       The Unreal Editor supports Maya-style pan, orbit, and zoom viewport controls. Unfortunately it's using the ALT key on Windows which can be troublesome  because that key is usually assigned to do other stuff in the world of X11/WM. To get the same behaviour like on Window change the assignment of the ALT key in you Window Manager.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Xfce">
+        Xfce
+       </span>
+      </h3>
+      <p>
+       Go to Settings menu, select Window Manager Tweaks and select the Accessibility tab. Change the field: Key used to grab and move windows. Select one which does not use the ALT key.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Unity">
+        Unity
+       </span>
+      </h3>
+      <p>
+       Install Compiz Config Settings Manager (sudo apt-get install compizconfig-settings-manager in a terminal) and open it. Select "Window Management" and then the "Window Movement". Click on the button which is on the right side of the "Initiate Window Move" label. Select the "Enable" checkbox to disable or change it so that it does not conflict with other key combinations in UE4. Maybe "SHIFT" could be used.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Gnome">
+        Gnome
+       </span>
+      </h3>
+      <p>
+       Gnome 3 defaults to using the Super (Windows) key instead of Alt, which should work fine. If you need to change it, install Gnome Tweak Tool (sudo apt-get install gnome-tweak-tool) and open it. Select "Windows" on the left side, then change the "Window Action Key" setting.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Building_C.2B.2B_scripts_from_terminal">
+        Building C++ scripts from terminal
+       </span>
+      </h2>
+      <p>
+       If you  prefer working without an IDE, and the built-in compiler tool is not feeding back useful compiler errors, it's possible to invoke C++ script compilation from the terminal, and make using the toolset easier. Inspired by
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?124578-Linux-How-to-compile-C-scripts-from-terminal&amp;highlight=compile+c+terminal" rel="nofollow">
+        this forum post
+       </a>
+       , below is a set of .bashrc functions which can be used to build, generate and launch C++ projects.
+      </p>
+      <p>
+       Add these to your ~/.bashrc:
+(Replacing the /opt/UnrealEngine with your own path)
+      </p>
+      <pre>   UE_HOME=/opt/UnrealEngine
+   
+   function unrealbuild {
+            CURR_DIR=`pwd`;
+            PROJ_NAME=$(basename ${1%.uproject});
+            $UE_HOME/Engine/Build/BatchFiles/Linux/Build.sh $PROJ_NAME Linux Development -editorrecompile "${CURR_DIR}/${PROJ_NAME}.uproject" -progress -editor -game -NoHotReloadFromIDE
+   }
+   complete -f -X '!*.@(uproject)' unrealbuild
+   
+   function unrealeditor {
+       DIR="$( cd "$( dirname "$i" )" &amp;&amp; pwd )"
+       $UE_HOME/Engine/Binaries/Linux/UE4Editor $DIR/$1
+   }
+   complete -f -X '!*.@(uproject)' unrealeditor
+   
+   function unrealgen {
+       DIR="$( cd "$( dirname "$i" )" &amp;&amp; pwd )"
+       pushd $UE_HOME
+       ./GenerateProjectFiles.sh -project="$DIR/$1" -game -engine -editor
+       popd
+   }
+   complete -f -X '!*.@(uproject)' unrealgen
+   
+   # For automation tests, if used
+   function unrealtest {
+       DIR="$( cd "$( dirname "$i" )" &amp;&amp; pwd )"
+           $UE_HOME/Engine/Binaries/Linux/UE4Editor $DIR/$1 -Game -ExecCmds="Automation RunTests $2" -log
+   }
+   complete -f -X '!*.@(uproject)' unrealtest
+</pre>
+      <p>
+       Run it like this:
+      </p>
+      <pre>     cd /path/to/ProjectName
+     unrealgen ProjectName.uproject
+     unrealbuild ProjectName.uproject
+     unrealeditor ProjectName.uproject
+</pre>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Source_Code_Accessors">
+        Source Code Accessors
+       </span>
+      </h2>
+      <p>
+       If you get a message: Unable to create C++ template based projects because "an IDE is not installed", it means you did not setup a code acessor
+      </p>
+      <p>
+       To use a specific IDE SourceCodeAccessor see the list below.
+      </p>
+      <h3>
+       <span class="mw-headline" id="CodeLite">
+        CodeLite
+       </span>
+      </h3>
+      <p>
+       Modify your
+       <b>
+        Engine/Config/Linux/LinuxEngine.ini
+       </b>
+       :
+      </p>
+      <pre> [/Script/SourceCodeAccess.SourceCodeAccessSettings]
+ PreferredAccessor=CodeLiteSourceCodeAccessor
+</pre>
+      <p>
+       If you are using Unreal Engine 4.9 &gt;= you don't have to clone the accessor because CodeLite is fully integrated.
+      </p>
+      <pre> cd Engine/Plugins/Developer &amp;&amp; git clone <a class="external free" href="https://github.com/yaakuro/CodeLiteSourceCodeAccess" rel="nofollow">https://github.com/yaakuro/CodeLiteSourceCodeAccess</a>
+</pre>
+      <p>
+       Videos:
+      </p>
+      <ul>
+       <li>
+        Playlist by Yaakuro at
+        <a class="external text" href="https://www.youtube.com/playlist?list=PL6nfgHEEeATUE3ZlnsebrFyo8Vd3xj4IE" rel="nofollow">
+         Unreal Engine 4 and CodeLite on GNU/Linux
+        </a>
+       </li>
+      </ul>
+      <h4>
+       <span class="mw-headline" id="Tips">
+        Tips
+       </span>
+      </h4>
+      <ul>
+       <li>
+        Allow only a single instance to open the editor
+       </li>
+      </ul>
+      <pre> Select <b>YourProjectName</b> Target.
+ Right click -&gt; <b>Settings</b> -&gt; <b>Preferences</b> -&gt; <b>Misc</b> -&gt; <b>Allow only single instance running</b>  
+</pre>
+      <ul>
+       <li>
+        Change the default run to launch the game with the editor (like in VisualStudio)
+       </li>
+      </ul>
+      <pre> Select <b>YourProjectName</b> Target.
+ Right click -&gt; <b>Settings</b> -&gt; <b>General</b>
+ In the <b>Execution</b> section, remove the <b>-game</b> from the <b>Program Arguments</b>
+</pre>
+      <h3>
+       <span class="mw-headline" id="QtCreator">
+        QtCreator
+       </span>
+      </h3>
+      <p>
+       Modify your
+       <b>
+        Engine/Config/Linux/LinuxEngine.ini
+       </b>
+       :
+      </p>
+      <pre> [/Script/SourceCodeAccess.SourceCodeAccessSettings]
+ PreferredAccessor=QtCreatorSourceCodeAccessor
+</pre>
+      <p>
+       If you are running an engine version that does not have this code accessor built in, run:
+      </p>
+      <pre> cd Engine/Plugins/Developer &amp;&amp; git clone <a class="external free" href="https://github.com/fire/QtCreatorSourceCodeAccess" rel="nofollow">https://github.com/fire/QtCreatorSourceCodeAccess</a>
+</pre>
+      <p>
+       Some official documentation on how to setup Qt Creator can be found at
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Platforms/Linux/BeginnerLinuxDeveloper/SettingUpQtCreator/index.html" rel="nofollow">
+        How to Set up Qt Creator for UE4
+       </a>
+      </p>
+      <p>
+       Videos:
+      </p>
+      <ul>
+       <li>
+        Additionally, you may wish to watch this video (NOTE fairly outdated)
+        <a class="external text" href="https://www.youtube.com/watch?v=RnINgMbJx5Q%7C" rel="nofollow">
+         UE4Editor/UProject inside Qt Creator debugger
+        </a>
+        , which shows you how to create a kit in Qt Creator capable of compiling your project for in-IDE debugging and editor debugging.
+       </li>
+      </ul>
+      <h3>
+       <span class="mw-headline" id="KDevelop">
+        KDevelop
+       </span>
+      </h3>
+      <p>
+       Modify your
+       <b>
+        Engine/Config/Linux/LinuxEngine.ini
+       </b>
+       :
+      </p>
+      <pre> [/Script/SourceCodeAccess.SourceCodeAccessSettings]
+ PreferredAccessor=KDevelopSourceCodeAccessor
+</pre>
+      <p>
+       For KDevelop there is a plugin that comes with the engine source code that is automatically built with UE4Editor.
+      </p>
+      <h3>
+       <span class="mw-headline" id="VIM_or_EMACS">
+        VIM or EMACS
+       </span>
+      </h3>
+      <p>
+       Modify your
+       <b>
+        Engine/Config/Linux/LinuxEngine.ini
+       </b>
+       :
+      </p>
+      <pre> [/Script/SourceCodeAccess.SourceCodeAccessSettings]
+ PreferredAccessor=SensibleEditorSourceCodeAccessor
+</pre>
+      <p>
+       If you are running an engine version that does not have this code accessor built in, run:
+      </p>
+      <pre> cd Engine/Plugins/Developer &amp;&amp; git clone <a class="external free" href="https://github.com/fire/SensibleEditorSourceCodeAccess" rel="nofollow">https://github.com/fire/SensibleEditorSourceCodeAccess</a>
+</pre>
+      <h3>
+       <span class="mw-headline" id="Sublime_Text">
+        Sublime Text
+       </span>
+      </h3>
+      <p>
+       Modify your
+       <b>
+        Engine/Config/Linux/LinuxEngine.ini
+       </b>
+       :
+      </p>
+      <pre> [/Script/SourceCodeAccess.SourceCodeAccessSettings]
+ PreferredAccessor=SublimeTextSourceCodeAccessor
+</pre>
+      <p>
+       If you are running an engine version that does not have this code accessor built in, run:
+      </p>
+      <pre> cd Engine/Plugins/Developer &amp;&amp; git clone <a class="external free" href="https://github.com/erbridge/SublimeTextSourceCodeAccess" rel="nofollow">https://github.com/erbridge/SublimeTextSourceCodeAccess</a>
+</pre>
+      <h3>
+       <span class="mw-headline" id="Eclipse_CDT">
+        Eclipse CDT
+       </span>
+      </h3>
+      <p>
+       Modify your
+       <b>
+        Engine/Config/Linux/LinuxEngine.ini
+       </b>
+       :
+      </p>
+      <pre> [/Script/SourceCodeAccess.SourceCodeAccessSettings]
+ PreferredAccessor=EclipseSourceCodeAccessor
+</pre>
+      <p>
+       If you are running an engine version that does not have this code accessor built in, run:
+      </p>
+      <pre> cd Engine/Plugins/Developer &amp;&amp; git clone <a class="external free" href="https://github.com/bdidemus/EclipseSourceCodeAccess" rel="nofollow">https://github.com/bdidemus/EclipseSourceCodeAccess</a>
+</pre>
+      <p>
+       Versions:
+      </p>
+      <ul>
+       <li>
+        <a class="external free" href="https://github.com/mgerhardy/EclipseSourceCodeAccess" rel="nofollow">
+         https://github.com/mgerhardy/EclipseSourceCodeAccess
+        </a>
+        - also works for windows and mac
+       </li>
+       <li>
+        <a class="external free" href="https://github.com/bdidemus/EclipseSourceCodeAccess" rel="nofollow">
+         https://github.com/bdidemus/EclipseSourceCodeAccess
+        </a>
+        - Fork updated for new versions.
+       </li>
+      </ul>
+      <div style="border-top: 1px solid gray; width: 300px; font-size: 14px; color: #666; margin-top: 20px; padding: 6px">
+       &lt;-- Back to the main
+       page.
+      </div>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

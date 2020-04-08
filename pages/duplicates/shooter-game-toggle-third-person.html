@@ -1,0 +1,1278 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Shooter Game - Toggle Third Person - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Shooter Game - Toggle Third Person
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       Original author:
+       <a class="external text" href="https://forums.unrealengine.com/member.php?3827-GregBlast" rel="nofollow">
+        GregBlast
+       </a>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Purpose">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Purpose
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Required">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Required
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Tutorial">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Tutorial
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Play-testing_the_game">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             Play-testing the game
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Inside_the_code">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             Inside the code
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-7">
+             <a href="#Digging_the_grave_.28into_the_death_code.29">
+              <span class="tocnumber">
+               4.2.1
+              </span>
+              <span class="toctext">
+               Digging the grave (into the death code)
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-8">
+             <a href="#Camera_view_state">
+              <span class="tocnumber">
+               4.2.2
+              </span>
+              <span class="toctext">
+               Camera view state
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-9">
+             <a href="#Adding_third_person_support">
+              <span class="tocnumber">
+               4.2.3
+              </span>
+              <span class="toctext">
+               Adding third person support
+              </span>
+             </a>
+             <ul>
+              <li class="toclevel-4 tocsection-10">
+               <a href="#Preparing_the_header_file">
+                <span class="tocnumber">
+                 4.2.3.1
+                </span>
+                <span class="toctext">
+                 Preparing the header file
+                </span>
+               </a>
+              </li>
+              <li class="toclevel-4 tocsection-11">
+               <a href="#Adding_the_code">
+                <span class="tocnumber">
+                 4.2.3.2
+                </span>
+                <span class="toctext">
+                 Adding the code
+                </span>
+               </a>
+              </li>
+             </ul>
+            </li>
+            <li class="toclevel-3 tocsection-12">
+             <a href="#Adding_inputs">
+              <span class="tocnumber">
+               4.2.4
+              </span>
+              <span class="toctext">
+               Adding inputs
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-13">
+           <a href="#Taking_a_step_back">
+            <span class="tocnumber">
+             4.3
+            </span>
+            <span class="toctext">
+             Taking a step back
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-14">
+           <a href="#The_weapon">
+            <span class="tocnumber">
+             4.4
+            </span>
+            <span class="toctext">
+             The weapon
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-15">
+             <a href="#Adding_support_for_third_person_view_in_weapon_code">
+              <span class="tocnumber">
+               4.4.1
+              </span>
+              <span class="toctext">
+               Adding support for third person view in weapon code
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-16">
+           <a href="#Fixing_the_camera_view_in_third_person">
+            <span class="tocnumber">
+             4.5
+            </span>
+            <span class="toctext">
+             Fixing the camera view in third person
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-17">
+             <a href="#Adding_the_third_person_camera">
+              <span class="tocnumber">
+               4.5.1
+              </span>
+              <span class="toctext">
+               Adding the third person camera
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-18">
+             <a href="#Fixing_the_zoom_in.2Fout_.28FOV_change.29_on_right-click">
+              <span class="tocnumber">
+               4.5.2
+              </span>
+              <span class="toctext">
+               Fixing the zoom in/out (FOV change) on right-click
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-19">
+           <a href="#Fixing_muzzle_flash">
+            <span class="tocnumber">
+             4.6
+            </span>
+            <span class="toctext">
+             Fixing muzzle flash
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-20">
+         <a href="#Recap">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Recap
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-21">
+         <a href="#Potential_Issues">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Potential Issues
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h1>
+      <p>
+       Hello everyone !
+      </p>
+      <p>
+       <br/>
+       In this tutorial I will show you how you can modify the
+       <b>
+        Shooter Game
+       </b>
+       sample from the
+       <b>
+        Marketplace
+       </b>
+       to allow toggling between first and third person views. The approach I will be using will be focused on sticking as much as possible to the original behaviour. By this I mean that I am not going to erase the use of a first person mesh when in first person view, but rather still keep its advantage and add a way to use the third person model and features only when needed.
+      </p>
+      <p>
+       In the tutorial I describe how I understood the code to tell you what it does and based on what. That's why it's not a quick short tutorial. If I have misunderstood something please do not hesitate to let me know.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:942px;">
+        <img alt="" class="thumbimage" height="508" src="../assets/shooter-game-toggle-third-person/0.png" width="940"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         <b>
+          Third Person View
+         </b>
+         in the
+         <b>
+          Shooter Game
+         </b>
+         sample from the
+         <b>
+          Marketplace
+         </b>
+        </div>
+       </div>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Purpose">
+        Purpose
+       </span>
+      </h1>
+      <p>
+       The main purpose of this tutorial is of course to show you how to upgrade the original code to add third person view. However I will try to explain everything I did and how I found out it had to be done so that you can understand what you do instead of just copy-pasting the code.
+       <br/>
+       The code sections won't include the methods names if they have been exposed in the description above them, so that you have to read them to know what to do. However I've marked the most relevant information in bold whenever applicable.
+      </p>
+      <h1>
+       <span class="mw-headline" id="Required">
+        Required
+       </span>
+      </h1>
+      <p>
+       For this tutorial you will need to download the
+       <b>
+        Shooter Game
+       </b>
+       sample from the
+       <b>
+        Marketplace
+       </b>
+       and create a project with it.
+      </p>
+      <h1>
+       <span class="mw-headline" id="Tutorial">
+        Tutorial
+       </span>
+      </h1>
+      <h2>
+       <span class="mw-headline" id="Play-testing_the_game">
+        Play-testing the game
+       </span>
+      </h2>
+      <p>
+       So to get started - and if you haven't already - you should first run the sample to see how everything behaves.
+      </p>
+      <p>
+       When alive you can see your character arms and weapon. If you look down you won't see any legs. That's because a special first person mesh has been given to the local player. As the local player is always in first person view you could think that the code has been written in that direction as well. And it has for some parts of it but fortunately not all. We'll get back on this later.
+      </p>
+      <p>
+       It's interesting to see what happens when you die. The camera stops moving and you can see a third person ragdoll fall to the floor. This means that at this point the game switches between first person and third person views.
+      </p>
+      <p>
+       That is what got me started.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Inside_the_code">
+        Inside the code
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Digging_the_grave_.28into_the_death_code.29">
+        Digging the grave (into the death code)
+       </span>
+      </h3>
+      <p>
+       From that point I searched for the handling of player death. Having a look at
+       <b>
+        ShooterCharacter.cpp
+       </b>
+       you will quickly find the
+       <b>
+        OnDeath
+       </b>
+       method which is called upon player death. Inside of that method you will notice the following commented piece of code (On line 341):
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// switch back to 3rd person view</span>
+<span class="n">UpdatePawnMeshes</span><span class="p">();</span>
+</pre>
+      </div>
+      <p>
+       Let's then have a look at
+       <b>
+        UpdatePawnMeshes
+       </b>
+       . In that method you can see that another method determines which mesh should be visible:
+       <b>
+        IsFirstPerson()
+       </b>
+       . Its value is used with a call to
+       <b>
+        SetOwnerNoSee
+       </b>
+       on each mesh to show the first person mesh when in first person and show the third person mesh when in third person.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Camera_view_state">
+        Camera view state
+       </span>
+      </h3>
+      <p>
+       The
+       <b>
+        IsFirstPerson()
+       </b>
+       method defines the camera view state. If you have a look at its implementation you can see that it:
+      </p>
+      <ul>
+       <li>
+        returns
+        <b>
+         false
+        </b>
+        if the player is dead
+       </li>
+       <li>
+        returns
+        <b>
+         false
+        </b>
+        for remote players
+       </li>
+       <li>
+        returns
+        <b>
+         true
+        </b>
+        for local players
+       </li>
+      </ul>
+      <p>
+       This is good enough for the purpose of the game as it is but you can see that it doesn't really talk about first or third person. It just assumes that local players will always be in first person unless they are dead (hence the third person switch on death). So next we're going to start by adding support for third person.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Adding_third_person_support">
+        Adding third person support
+       </span>
+      </h3>
+      <p>
+       Here's what we're going to do for this purpose:
+      </p>
+      <ul>
+       <li>
+        add a flag that will tell whether the player is using third person or not
+       </li>
+       <li>
+        add support for this flag to be replicated so that the server will know if a player is using third person
+       </li>
+       <li>
+        add default input support for this flag
+       </li>
+       <li>
+        update IsFirstPerson to rely on this flag
+       </li>
+      </ul>
+      <h4>
+       <span class="mw-headline" id="Preparing_the_header_file">
+        Preparing the header file
+       </span>
+      </h4>
+      <p>
+       Find the section of
+       <b>
+        ShooterCharacter.h
+       </b>
+       where the other flags are defined (e.g. below
+       <b>
+        bWantsToFire
+       </b>
+       ) and add a new boolean flag for third person toggle:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/** flag used to toggle third person camera view */</span>
+<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">Transient</span><span class="p">,</span> <span class="n">Replicated</span><span class="p">)</span>
+<span class="n">uint8</span> <span class="n">bIsThirdPerson</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       Next find the definition of
+       <b>
+        SetRunning
+       </b>
+       because we will be using a similar approach here. Below it add a definition for
+       <b>
+        SetThirdPerson
+       </b>
+       . This function will be responsible for actually toggling the camera view mode.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/** &lt;GB&gt; [server + local] change third person state (server has to know that player is using third person) */</span>
+<span class="kt">void</span> <span class="nf">SetThirdPerson</span><span class="p">(</span><span class="kt">bool</span> <span class="n">bNewThirdPerson</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       We'll need one last definition in the header file. At the very bottom of the code you'll see
+       <b>
+        ServerSetRunning
+       </b>
+       . Again we'll add a relatively similar method below it:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/** update first person state*/</span>
+<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">reliable</span><span class="p">,</span> <span class="n">server</span><span class="p">,</span> <span class="n">WithValidation</span><span class="p">)</span>
+<span class="kt">void</span> <span class="n">ServerSetThirdPerson</span><span class="p">(</span><span class="kt">bool</span> <span class="n">bNewThirdPerson</span><span class="p">);</span>
+</pre>
+      </div>
+      <h4>
+       <span class="mw-headline" id="Adding_the_code">
+        Adding the code
+       </span>
+      </h4>
+      <p>
+       Let's head to the code and add the implementation for our methods. Under
+       <b>
+        UpdateRunSounds
+       </b>
+       which is a good place for our purpose add the base code for the
+       <b>
+        SetThirdPerson
+       </b>
+       method (which will be similar to
+       <b>
+        SetRunning
+       </b>
+       ):
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">AShooterCharacter</span><span class="o">::</span><span class="n">SetThirdPerson</span><span class="p">(</span><span class="kt">bool</span> <span class="n">bNewThirdPerson</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">bIsThirdPerson</span> <span class="o">=</span> <span class="n">bNewThirdPerson</span><span class="p">;</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">Role</span> <span class="o">&lt;</span> <span class="n">ROLE_Authority</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">ServerSetThirdPerson</span><span class="p">(</span><span class="n">bNewThirdPerson</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Then similarily add the server validation and implementation:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">bool</span> <span class="n">AShooterCharacter</span><span class="o">::</span><span class="n">ServerSetThirdPerson_Validate</span><span class="p">(</span><span class="kt">bool</span> <span class="n">bNewThirdPerson</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AShooterCharacter</span><span class="o">::</span><span class="n">ServerSetThirdPerson_Implementation</span><span class="p">(</span><span class="kt">bool</span> <span class="n">bNewThirdPerson</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">SetThirdPerson</span><span class="p">(</span><span class="n">bNewThirdPerson</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Alright this will take care of updating our flag. However we saw earlier that
+       <b>
+        UpdatePawnMeshes
+       </b>
+       is the method that toggles the visibility of the mesh to use. We should then call it from
+       <b>
+        SetThirdPerson
+       </b>
+       to make sure that our first person mesh gets hidden and our third person mesh becomes visible when using third person (and vice versa). Simply add a call to
+       <b>
+        UpdatePawnMeshes();
+       </b>
+       at the bottom of
+       <b>
+        SetThirdPerson
+       </b>
+       :
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">AShooterCharacter</span><span class="o">::</span><span class="n">SetThirdPerson</span><span class="p">(</span><span class="kt">bool</span> <span class="n">bNewThirdPerson</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">bIsThirdPerson</span> <span class="o">=</span> <span class="n">bNewThirdPerson</span><span class="p">;</span>
+	<span class="n">UpdatePawnMeshes</span><span class="p">();</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">Role</span> <span class="o">&lt;</span> <span class="n">ROLE_Authority</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">ServerSetThirdPerson</span><span class="p">(</span><span class="n">bNewThirdPerson</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Good. But still
+       <b>
+        UpdatePawnMeshes
+       </b>
+       relies on
+       <b>
+        IsFirstPerson()
+       </b>
+       to determine which mesh to show or hide. We thus still need to update it so it uses our flag to determine the camera view mode. Head to
+       <b>
+        IsFirstPerson()
+       </b>
+       and in addition to testing whether the player is alive and local, also check if the third person flag is not set:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">return</span> <span class="nf">IsAlive</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">Controller</span> <span class="o">&amp;&amp;</span> <span class="n">Controller</span><span class="o">-&gt;</span><span class="n">IsLocalPlayerController</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">bIsThirdPerson</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       Oh and last but not least lets not forget to initialize our flag in the constructor. Below
+       <b>
+        bWantsToFire = false;
+       </b>
+       do the same with our flag:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">bIsThirdPerson</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Adding_inputs">
+        Adding inputs
+       </span>
+      </h3>
+      <p>
+       This section will be pretty straightforward as it is assumed that you know how to add inputs to trigger some action. In
+       <b>
+        ShooterCharacter.h
+       </b>
+       below
+       <b>
+        OnStopRunning
+       </b>
+       add the following input declarations:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/** player pressed 3rd person action */</span>
+<span class="kt">void</span> <span class="nf">OnThirdPerson</span><span class="p">();</span>
+
+<span class="cm">/** player toggled 3rd person action */</span>
+<span class="kt">void</span> <span class="nf">OnThirdPersonToggle</span><span class="p">();</span>
+
+<span class="cm">/** player released 3rd person action */</span>
+<span class="kt">void</span> <span class="nf">OnFirstPerson</span><span class="p">();</span>
+</pre>
+      </div>
+      <p>
+       In the code file
+       <b>
+        ShooterCharacter.cpp
+       </b>
+       add the third person inputs implementations below
+       <b>
+        IsRunning
+       </b>
+       :
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">AShooterCharacter</span><span class="o">::</span><span class="n">OnThirdPerson</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">AShooterPlayerController</span><span class="o">*</span> <span class="n">MyPC</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">AShooterPlayerController</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Controller</span><span class="p">);</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">MyPC</span> <span class="o">&amp;&amp;</span> <span class="n">MyPC</span><span class="o">-&gt;</span><span class="n">IsGameInputAllowed</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="n">SetThirdPerson</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AShooterCharacter</span><span class="o">::</span><span class="n">OnThirdPersonToggle</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">AShooterPlayerController</span><span class="o">*</span> <span class="n">MyPC</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">AShooterPlayerController</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Controller</span><span class="p">);</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">MyPC</span> <span class="o">&amp;&amp;</span> <span class="n">MyPC</span><span class="o">-&gt;</span><span class="n">IsGameInputAllowed</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="n">SetThirdPerson</span><span class="p">(</span><span class="o">!</span><span class="n">bIsThirdPerson</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AShooterCharacter</span><span class="o">::</span><span class="n">OnFirstPerson</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">SetThirdPerson</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Now let's bind those actions in
+       <b>
+        SetupPlayerInputComponent
+       </b>
+       :
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">InputComponent</span><span class="o">-&gt;</span><span class="n">BindAction</span><span class="p">(</span><span class="s">"ThirdPerson"</span><span class="p">,</span> <span class="n">IE_Pressed</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">AShooterCharacter</span><span class="o">::</span><span class="n">OnThirdPerson</span><span class="p">);</span>
+<span class="n">InputComponent</span><span class="o">-&gt;</span><span class="n">BindAction</span><span class="p">(</span><span class="s">"ThirdPersonToggle"</span><span class="p">,</span> <span class="n">IE_Pressed</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">AShooterCharacter</span><span class="o">::</span><span class="n">OnThirdPersonToggle</span><span class="p">);</span>
+<span class="n">InputComponent</span><span class="o">-&gt;</span><span class="n">BindAction</span><span class="p">(</span><span class="s">"ThirdPerson"</span><span class="p">,</span> <span class="n">IE_Released</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">AShooterCharacter</span><span class="o">::</span><span class="n">OnFirstPerson</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       Finally lets edit
+       <b>
+        Config/DefaultInput.ini
+       </b>
+       to bind some default keys to those actions:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="na">+ActionMappings</span><span class="o">=</span><span class="s">(ActionName="ThirdPersonToggle",Key=G,bShift=False,bCtrl=False,bAlt=False,bCmd=False)</span>
+<span class="na">+ActionMappings</span><span class="o">=</span><span class="s">(ActionName="ThirdPerson",Key=F,bShift=False,bCtrl=False,bAlt=False,bCmd=False)</span>
+</pre>
+      </div>
+      <p>
+       You'll thus be able to toggle third person with
+       <b>
+        G
+       </b>
+       or press and release
+       <b>
+        F
+       </b>
+       to switch to/from third person.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Taking_a_step_back">
+        Taking a step back
+       </span>
+      </h2>
+      <p>
+       Alright now we have a functional logic to toggle third person. So let's see what we get when running this code. Well you will actually notice a few problems:
+      </p>
+      <ul>
+       <li>
+        in third person, the camera is inside of the player
+       </li>
+       <li>
+        in third person, the weapon doesn't snap to the character's hands
+       </li>
+       <li>
+        in third person, the right-click doesn't change bring iron sights or change the FOV
+       </li>
+      </ul>
+      <p>
+       We'll start by taking care of the weapon.
+      </p>
+      <h2>
+       <span class="mw-headline" id="The_weapon">
+        The weapon
+       </span>
+      </h2>
+      <p>
+       If you look at the code in
+       <b>
+        ShooterWeapon.cpp
+       </b>
+       you'll see that it also defines two meshes (one for 1st person and one for 3rd person) and that pretty much everywhere both of those are used in a rather generic manner so that you won't have to change much. For example:
+      </p>
+      <ul>
+       <li>
+        <b>
+         GetWeaponMesh
+        </b>
+        already checks for
+        <b>
+         IsFirstPerson()
+        </b>
+        on the owning Pawn
+       </li>
+       <li>
+        <b>
+         AttachMeshToPawn
+        </b>
+        has a comment that says:
+        <i>
+         For locally controller players we attach both weapons and let the bOnlyOwnerSee, bOwnerNoSee flags deal with visibility.
+        </i>
+       </li>
+      </ul>
+      <p>
+       However it doesn't snap to the player when in third person. The reason for that is simple: it's still the first person weapon mesh that is displayed in third person. And that last comment I quoted should set you on the correct path to handling this issue. You just need to swap model visibilities when switching between camera view modes just like it is done for the player model.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Adding_support_for_third_person_view_in_weapon_code">
+        Adding support for third person view in weapon code
+       </span>
+      </h3>
+      <p>
+       Let's define a new method in the
+       <b>
+        ShooterWeapon
+       </b>
+       header file that will be responsible for switching mesh visibility (below
+       <b>
+        IsAttachedToPawn
+       </b>
+       is fine):
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/** update the meshes visibility */</span>
+<span class="kt">void</span> <span class="nf">UpdateMeshes</span><span class="p">();</span>
+</pre>
+      </div>
+      <p>
+       The implementation in
+       <b>
+        ShooterWeapon.cpp
+       </b>
+       will simply check the pawn
+       <b>
+        IsFirstPerson()
+       </b>
+       and assign visibility based on that. We don't need to check if the pawn is a player and not a bot because
+       <b>
+        IsFirstPerson()
+       </b>
+       already checks if the pawn is locally controlled and returns false if not (i.e. third person for bots).
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">AShooterWeapon</span><span class="o">::</span><span class="n">UpdateMeshes</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">MyPawn</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">const</span> <span class="kt">bool</span> <span class="n">bFirstPerson</span> <span class="o">=</span> <span class="n">MyPawn</span><span class="o">-&gt;</span><span class="n">IsFirstPerson</span><span class="p">();</span>
+		<span class="n">Mesh1P</span><span class="o">-&gt;</span><span class="n">SetOwnerNoSee</span><span class="p">(</span><span class="o">!</span><span class="n">bFirstPerson</span><span class="p">);</span>
+		<span class="n">Mesh3P</span><span class="o">-&gt;</span><span class="n">SetOwnerNoSee</span><span class="p">(</span><span class="n">bFirstPerson</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Now we need to call that method when we switch between camera view modes. So let's go back to
+       <b>
+        ShooterCharacter.cpp
+       </b>
+       and update
+       <b>
+        UpdatePawnMeshes
+       </b>
+       . We'll simply update the meshes visibility for the current weapon, if any:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">CurrentWeapon</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">CurrentWeapon</span><span class="o">-&gt;</span><span class="n">UpdateMeshes</span><span class="p">();</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Now if you run this you will notice a little problem when switching weapon. The second weapon will not use that code we just wrote. Well that's because when it is created and added to the inventory it will use the first person mesh and since we only change the visibilities when we toggle the camera view mode it won't affect that other weapon at the time we equip it.
+      </p>
+      <p>
+       To fix that we can simply have a look at
+       <b>
+        AShooterWeapon.OnEquip
+       </b>
+       . At the bottom of the code you'll see that there is a check for locally controlled pawns. That is perfect for us to call our method. So add a call to
+       <b>
+        UpdateMeshes();
+       </b>
+       directly below the call to
+       <b>
+        PlayerWeaponSound
+       </b>
+       .
+      </p>
+      <h2>
+       <span class="mw-headline" id="Fixing_the_camera_view_in_third_person">
+        Fixing the camera view in third person
+       </span>
+      </h2>
+      <p>
+       Now you could be tempted to think that this section will be the easiest. Well if you know how the engine works with the cameras you will probably have guessed that we're going to use a
+       <b>
+        UCameraComponent
+       </b>
+       to customize the third person view.
+      </p>
+      <p>
+       For those of you who (like me before making this) do not know how the engine handles the local player view location and rotation here's what you need to know for this tutorial:
+      </p>
+      <ul>
+       <li>
+        the
+        <b>
+         PlayerCameraManager
+        </b>
+        should be fed with a view target
+       </li>
+       <li>
+        if the view target is a
+        <b>
+         CameraActor
+        </b>
+        or an
+        <b>
+         Actor
+        </b>
+        that contains a
+        <b>
+         CameraComponent
+        </b>
+        , it will use its information only if
+        <b>
+         bFindCameraComponentWhenViewTarget
+        </b>
+        is set to
+        <b>
+         true
+        </b>
+       </li>
+       <li>
+        if the flag is set to
+        <b>
+         false
+        </b>
+        or the
+        <b>
+         Actor
+        </b>
+        doesn't have a
+        <b>
+         CameraComponent
+        </b>
+        the camera manager will use the Actor's location and rotation
+       </li>
+      </ul>
+      <p>
+       That said we know what we have to do:
+      </p>
+      <ul>
+       <li>
+        add a
+        <b>
+         CameraComponent
+        </b>
+        to
+        <b>
+         ShooterCharacter
+        </b>
+       </li>
+       <li>
+        make sure
+        <b>
+         bFindCameraComponentWhenViewTarget
+        </b>
+        is disabled when using the first person mesh (so that the camera manager keeps using the first person mesh's location and rotation and not our third person camera)
+       </li>
+      </ul>
+      <h3>
+       <span class="mw-headline" id="Adding_the_third_person_camera">
+        Adding the third person camera
+       </span>
+      </h3>
+      <p>
+       In the
+       <b>
+        ShooterCharacter
+       </b>
+       header file under
+       <b>
+        Mesh1P
+       </b>
+       add the following elements (camera + spring arm):
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/** third person camera */</span>
+<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">VisibleDefaultsOnly</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">Camera</span><span class="p">)</span>
+<span class="n">UCameraComponent</span><span class="o">*</span> <span class="n">ThirdPersonCamera</span><span class="p">;</span>
+
+<span class="cm">/** an arm for the third person camera*/</span>
+<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">VisibleDefaultsOnly</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">Camera</span><span class="p">)</span>
+<span class="n">USpringArmComponent</span><span class="o">*</span> <span class="n">ThirdPersonCameraArm</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+      </p>
+      <p>
+       Initialize them in the constructor in the code file:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">ThirdPersonCameraArm</span> <span class="o">=</span> <span class="n">ObjectInitializer</span><span class="p">.</span><span class="n">CreateDefaultSubobject</span><span class="o">&lt;</span><span class="n">USpringArmComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"ThirdPersonCameraArm"</span><span class="p">));</span>
+<span class="n">ThirdPersonCameraArm</span><span class="o">-&gt;</span><span class="n">TargetOffset</span> <span class="o">=</span> <span class="n">FVector</span><span class="p">(</span><span class="mf">0.f</span><span class="p">,</span> <span class="mf">0.f</span><span class="p">,</span> <span class="mf">0.f</span><span class="p">);</span>
+<span class="n">ThirdPersonCameraArm</span><span class="o">-&gt;</span><span class="n">SetRelativeLocation</span><span class="p">(</span><span class="n">FVector</span><span class="p">(</span><span class="o">-</span><span class="mf">40.f</span><span class="p">,</span> <span class="mf">0.f</span><span class="p">,</span> <span class="mf">160.f</span><span class="p">));</span>
+<span class="n">ThirdPersonCameraArm</span><span class="o">-&gt;</span><span class="n">SetRelativeRotation</span><span class="p">(</span><span class="n">FRotator</span><span class="p">(</span><span class="o">-</span><span class="mf">10.f</span><span class="p">,</span> <span class="mf">0.f</span><span class="p">,</span> <span class="mf">0.f</span><span class="p">));</span>
+<span class="n">ThirdPersonCameraArm</span><span class="o">-&gt;</span><span class="n">AttachTo</span><span class="p">(</span><span class="n">GetMesh</span><span class="p">());</span> <span class="c1">// attach it to the third person mesh</span>
+<span class="n">ThirdPersonCameraArm</span><span class="o">-&gt;</span><span class="n">TargetArmLength</span> <span class="o">=</span> <span class="mf">200.f</span><span class="p">;</span>
+<span class="n">ThirdPersonCameraArm</span><span class="o">-&gt;</span><span class="n">bEnableCameraLag</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<span class="n">ThirdPersonCameraArm</span><span class="o">-&gt;</span><span class="n">bEnableCameraRotationLag</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<span class="n">ThirdPersonCameraArm</span><span class="o">-&gt;</span><span class="n">bUsePawnControlRotation</span><span class="o">=</span> <span class="nb">true</span><span class="p">;</span> <span class="c1">// let the controller handle the view rotation</span>
+<span class="n">ThirdPersonCameraArm</span><span class="o">-&gt;</span><span class="n">bInheritYaw</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+<span class="n">ThirdPersonCameraArm</span><span class="o">-&gt;</span><span class="n">bInheritPitch</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+<span class="n">ThirdPersonCameraArm</span><span class="o">-&gt;</span><span class="n">bInheritRoll</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+
+<span class="n">ThirdPersonCamera</span> <span class="o">=</span> <span class="n">ObjectInitializer</span><span class="p">.</span><span class="n">CreateDefaultSubobject</span><span class="o">&lt;</span><span class="n">UCameraComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"ThirdPersonCamera"</span><span class="p">));</span>
+<span class="n">ThirdPersonCamera</span><span class="o">-&gt;</span><span class="n">AttachTo</span><span class="p">(</span><span class="n">ThirdPersonCameraArm</span><span class="p">,</span> <span class="n">USpringArmComponent</span><span class="o">::</span><span class="n">SocketName</span><span class="p">);</span>
+<span class="n">ThirdPersonCamera</span><span class="o">-&gt;</span><span class="n">bUsePawnControlRotation</span><span class="o">=</span> <span class="nb">false</span><span class="p">;</span> <span class="c1">// the arm is already doing the rotation</span>
+<span class="n">ThirdPersonCamera</span><span class="o">-&gt;</span><span class="n">FieldOfView</span> <span class="o">=</span> <span class="mf">90.f</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+      </p>
+      <p>
+      </p>
+      <p>
+       Now we need to deactivate the auto-search for camera functionality within our pawn when in
+       <b>
+        first person
+       </b>
+       . This will prevent the camera manager from using our
+       <b>
+        third person camera
+       </b>
+       as the point of view there. Remember it will use the
+       <b>
+        first person mesh's
+       </b>
+       location and rotation in that case. We can do this directly in
+       <b>
+        UpdatePawnMeshes
+       </b>
+       before updating the weapon meshes:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">bFindCameraComponentWhenViewTarget</span> <span class="o">=</span> <span class="o">!</span><span class="n">bFirstPerson</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+      </p>
+      <p>
+       At this point if you test the game everything should be working as expected. Everything except a little detail we forgot: remember what the right-click does in first person ? Well it would be great to have at least a part of it functioning in third person too right ? I mean it should at least zoom in/out (change the FOV). Well let's fix that then.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Fixing_the_zoom_in.2Fout_.28FOV_change.29_on_right-click">
+        Fixing the zoom in/out (FOV change) on right-click
+       </span>
+      </h3>
+      <p>
+       The
+       <b>
+        ShooterCharacter
+       </b>
+       code file contains a method called
+       <b>
+        OnCameraUpdate
+       </b>
+       . This method is actually called by the custom camera manager called
+       <b>
+        ShooterPlayerCameraManager
+       </b>
+       when it updates the camera (
+       <b>
+        UpdateCamera
+       </b>
+       ). The first thing to note about this method is that it gets called only in first person. That's how it is defined to work in
+       <b>
+        ShooterPlayerCameraManager.UpdateCamera
+       </b>
+       . Since
+       <b>
+        OnCameraUpdate
+       </b>
+       is meant to update the camera view for the pawn we should use it if we need specific actions to be done with the view in third person. So let's modify
+       <b>
+        ShooterPlayerCameraManager.UpdateCamera
+       </b>
+       to do what we need in third person.
+      </p>
+      <p>
+       The first part of the code calculates a new FOV (field of view). It does it only if the pawn returns
+       <b>
+        true
+       </b>
+       with
+       <b>
+        IsFirstPerson()
+       </b>
+       . If you still remember
+       <b>
+        IsFirstPerson
+       </b>
+       checks if the player is alive, local and now if he's not in third person (using our flag). Well let's just get rid of the check on our flag so it runs in third person too by checking alive and local manually.
+Replace:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">MyPawn</span> <span class="o">&amp;&amp;</span> <span class="n">MyPawn</span><span class="o">-&gt;</span><span class="n">IsFirstPerson</span><span class="p">())</span>
+</pre>
+      </div>
+      <p>
+       With:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">MyPawn</span> <span class="o">&amp;&amp;</span> <span class="n">MyPawn</span><span class="o">-&gt;</span><span class="n">IsAlive</span><span class="p">()</span> <span class="o">&amp;&amp;</span> <span class="n">MyPawn</span><span class="o">-&gt;</span><span class="n">IsLocallyControlled</span><span class="p">())</span>
+</pre>
+      </div>
+      <p>
+       Do the same to call
+       <b>
+        OnCameraUpdate
+       </b>
+       on the pawn below the call to the base class.
+      </p>
+      <p>
+       Finally we need to handle the camera update differently for the third person. There we'll only change the FOV of our third person camera while in first person there is a bunch of code that calculates a new relative location and rotation for the fist person mesh, which we don't want.
+      </p>
+      <p>
+       In the
+       <b>
+        ShooterCharacter
+       </b>
+       header file add two new method declarations that take the same parameters as
+       <b>
+        OnCameraUpdate
+       </b>
+       . This is because they will be called by
+       <b>
+        OnCameraUpdate
+       </b>
+       using a branch on the camera view mode. Add those below
+       <b>
+        TornOff();
+       </b>
+       :
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/** camera update in first person */</span>
+<span class="kt">void</span> <span class="nf">UpdateCameraFirstPerson</span><span class="p">(</span><span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">CameraLocation</span><span class="p">,</span> <span class="k">const</span> <span class="n">FRotator</span><span class="o">&amp;</span> <span class="n">CameraRotation</span><span class="p">);</span>
+
+<span class="cm">/** camera update in third person */</span>
+<span class="kt">void</span> <span class="nf">UpdateCameraThirdPerson</span><span class="p">(</span><span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">CameraLocation</span><span class="p">,</span> <span class="k">const</span> <span class="n">FRotator</span><span class="o">&amp;</span> <span class="n">CameraRotation</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       Now take all the code from
+       <b>
+        OnCameraUpdate
+       </b>
+       and use it as the implementation of
+       <b>
+        UpdateCameraFirstPerson
+       </b>
+       . Just a simple cut-paste from one method to the other ;). Then modify
+       <b>
+        OnCameraUpdate
+       </b>
+       so that it updates the first person view in first person and the third person view in third person:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">if</span> <span class="p">(</span><span class="n">IsFirstPerson</span><span class="p">())</span>
+<span class="p">{</span>
+	<span class="n">UpdateCameraFirstPerson</span><span class="p">(</span><span class="n">CameraLocation</span><span class="p">,</span> <span class="n">CameraRotation</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">else</span>
+<span class="p">{</span>
+	<span class="n">UpdateCameraThirdPerson</span><span class="p">(</span><span class="n">CameraLocation</span><span class="p">,</span> <span class="n">CameraRotation</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       The implementation of
+       <b>
+        UpdateCameraThirdPerson
+       </b>
+       is not very complicated. Remember what the
+       <b>
+        ShooterPlayerCameraManager
+       </b>
+       did with the FOV ? It redefined it's own
+       <b>
+        DefaultFOV
+       </b>
+       value. So that's the one we'll be using for our third person camera. Simply assign the camera's FOV with the
+       <b>
+        DefaultFOV
+       </b>
+       from the camera manager like this:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">AShooterCharacter</span><span class="o">::</span><span class="n">UpdateCameraThirdPerson</span><span class="p">(</span><span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">CameraLocation</span><span class="p">,</span> <span class="k">const</span> <span class="n">FRotator</span><span class="o">&amp;</span> <span class="n">CameraRotation</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">Controller</span> <span class="o">&amp;&amp;</span> <span class="n">ThirdPersonCamera</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">ThirdPersonCamera</span><span class="o">-&gt;</span><span class="n">FieldOfView</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">AShooterPlayerController</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Controller</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">PlayerCameraManager</span><span class="o">-&gt;</span><span class="n">DefaultFOV</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Done! It should now be fully operational. Wait... I noticed one more strange thingy when playing. Yeah, the muzzle flash is not spawned at the correct location in third person. Well that's right. Again that part is based on mesh visibility but doesn't take the first person state into account directly.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Fixing_muzzle_flash">
+        Fixing muzzle flash
+       </span>
+      </h2>
+      <p>
+       <b>
+        ShooterWeapon.SimulateWeaponFire
+       </b>
+       is the one method in charge for that. A comment has been added to let us know that 2 effects are created because of a potential split screen game. In thate case both players are locally controlled so the shooter will see one effect and the other player will see the other one. Well lets define our possible cases:
+      </p>
+      <ul>
+       <li>
+        shooting in first person =&gt; show first person effect to shooter, show third person effect to other player
+       </li>
+       <li>
+        shooting in third person =&gt; show third person effect to both players
+       </li>
+      </ul>
+      <p>
+       So we'll first gather the result of
+       <b>
+        IsFirstPerson()
+       </b>
+       . Then we'll spawn the first person effect only in first person as nobody will need to see it in third person. It will be the shooting player's effect in first person. In third person it will become the other player's effect. The second effect will be the shooting player's effect when in third person and the other player's effect when in first person. Modify the code to look like this:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">if</span><span class="p">(</span> <span class="n">PlayerCon</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">const</span> <span class="kt">bool</span> <span class="n">isFirstPerson</span> <span class="o">=</span> <span class="n">MyPawn</span><span class="o">-&gt;</span><span class="n">IsFirstPerson</span><span class="p">();</span>
+
+	<span class="c1">// &lt;GB&gt; In first person, this will be the Shooting player's effect</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">isFirstPerson</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">Mesh1P</span><span class="o">-&gt;</span><span class="n">GetSocketLocation</span><span class="p">(</span><span class="n">MuzzleAttachPoint</span><span class="p">);</span>
+		<span class="n">MuzzlePSC</span> <span class="o">=</span> <span class="n">UGameplayStatics</span><span class="o">::</span><span class="n">SpawnEmitterAttached</span><span class="p">(</span><span class="n">MuzzleFX</span><span class="p">,</span> <span class="n">Mesh1P</span><span class="p">,</span> <span class="n">MuzzleAttachPoint</span><span class="p">);</span>
+		<span class="n">MuzzlePSC</span><span class="o">-&gt;</span><span class="n">bOwnerNoSee</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+		<span class="n">MuzzlePSC</span><span class="o">-&gt;</span><span class="n">bOnlyOwnerSee</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="c1">// &lt;GB&gt; In third person, this will be the Other player's effect</span>
+	<span class="k">else</span>
+	<span class="p">{</span>
+		<span class="n">Mesh3P</span><span class="o">-&gt;</span><span class="n">GetSocketLocation</span><span class="p">(</span><span class="n">MuzzleAttachPoint</span><span class="p">);</span>
+		<span class="n">MuzzlePSC</span> <span class="o">=</span> <span class="n">UGameplayStatics</span><span class="o">::</span><span class="n">SpawnEmitterAttached</span><span class="p">(</span><span class="n">MuzzleFX</span><span class="p">,</span> <span class="n">Mesh3P</span><span class="p">,</span> <span class="n">MuzzleAttachPoint</span><span class="p">);</span>
+		<span class="n">MuzzlePSC</span><span class="o">-&gt;</span><span class="n">bOwnerNoSee</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+		<span class="n">MuzzlePSC</span><span class="o">-&gt;</span><span class="n">bOnlyOwnerSee</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="c1">// &lt;GB&gt; In first person, this will be the Other player's effect</span>
+	<span class="c1">// &lt;GB&gt; In third person, this will be the Shooting player's effect</span>
+	<span class="n">Mesh3P</span><span class="o">-&gt;</span><span class="n">GetSocketLocation</span><span class="p">(</span><span class="n">MuzzleAttachPoint</span><span class="p">);</span>
+	<span class="n">MuzzlePSCSecondary</span> <span class="o">=</span> <span class="n">UGameplayStatics</span><span class="o">::</span><span class="n">SpawnEmitterAttached</span><span class="p">(</span><span class="n">MuzzleFX</span><span class="p">,</span> <span class="n">Mesh3P</span><span class="p">,</span> <span class="n">MuzzleAttachPoint</span><span class="p">);</span>
+	<span class="n">MuzzlePSCSecondary</span><span class="o">-&gt;</span><span class="n">bOwnerNoSee</span> <span class="o">=</span> <span class="n">isFirstPerson</span><span class="p">;</span>
+	<span class="n">MuzzlePSCSecondary</span><span class="o">-&gt;</span><span class="n">bOnlyOwnerSee</span> <span class="o">=</span> <span class="o">!</span><span class="n">isFirstPerson</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       That should do it. Now you'll see your muzzle flash coming out of your gun correctly in third person view.
+      </p>
+      <h1>
+       <span class="mw-headline" id="Recap">
+        Recap
+       </span>
+      </h1>
+      <p>
+       That's it for this tutorial. Of course do not hesitate to let me know if I made any mistakes or if some improvements could be added. I'll gladly reply to you and upgrade this.
+      </p>
+      <p>
+       Thanks for reading :).
+      </p>
+      <p>
+       <a class="external text" href="https://forums.unrealengine.com/member.php?3827-GregBlast" rel="nofollow">
+        GregBlast
+       </a>
+      </p>
+      <h1>
+       <span class="mw-headline" id="Potential_Issues">
+        Potential Issues
+       </span>
+      </h1>
+      <p>
+       As mentioned in the tutorial I am unsure about the replication part of the code. But as it doesn't really fall into the scope of this tutorial I'm not going to dig any further into it. Please feel free to let me know if what I did was incorrect.
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

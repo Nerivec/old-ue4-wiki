@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Slate, Edit Text Widget, Custom Rendering &amp; Any TrueTypeFont - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Slate, Edit Text Widget, Custom Rendering &amp; Any TrueTypeFont
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Display_Edit_Text_Contents_Any_Way_You_Want">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Display Edit Text Contents Any Way You Want
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Use_Any_True_Type_Font">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Use Any True Type Font
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#YourHUD">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           YourHUD
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#.H">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             .H
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#.CPP">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             .CPP
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#SVictoryEditText">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           SVictoryEditText
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#.H_2">
+            <span class="tocnumber">
+             5.1
+            </span>
+            <span class="toctext">
+             .H
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#.CPP_2">
+            <span class="tocnumber">
+             5.2
+            </span>
+            <span class="toctext">
+             .CPP
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-10">
+         <a href="#Code_Excerpts">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Code Excerpts
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#Copy_Paste_to_OS_Clipboard">
+            <span class="tocnumber">
+             6.1
+            </span>
+            <span class="toctext">
+             Copy Paste to OS Clipboard
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-12">
+           <a href="#Toggling_User_Input_to.2Ffrom_Victory_Edit_Text">
+            <span class="tocnumber">
+             6.2
+            </span>
+            <span class="toctext">
+             Toggling User Input to/from Victory Edit Text
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-13">
+           <a href="#Capturing_User_Input">
+            <span class="tocnumber">
+             6.3
+            </span>
+            <span class="toctext">
+             Capturing User Input
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-14">
+             <a href="#Key_Presses">
+              <span class="tocnumber">
+               6.3.1
+              </span>
+              <span class="toctext">
+               Key Presses
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-15">
+             <a href="#Mouse_Input">
+              <span class="tocnumber">
+               6.3.2
+              </span>
+              <span class="toctext">
+               Mouse Input
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-16">
+         <a href="#Related_Tutorials">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Related Tutorials
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-17">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Code Author:
+       </i>
+       (
+       )
+      </p>
+      <p>
+       In this tutorial I am showing you how to make an Edit Text widget so you can allow users to enter any kind of input while in-game!
+      </p>
+      <p>
+       <b>
+        Special features of my code:
+       </b>
+      </p>
+      <ul>
+       <li>
+        Set the default font of the Edit Text to use any True Type Font that you prefer!
+       </li>
+      </ul>
+      <ul>
+       <li>
+        Easy function to change what True Type Font is being used, during runtime.
+       </li>
+      </ul>
+      <ul>
+       <li>
+        Completely customize the actual display of the text that the user is entering, using any alternative text rendering setup that you prefer.
+       </li>
+      </ul>
+      <ul>
+       <li>
+        Easy way to show / hide the Edit Text caret (the blinking vertical bar)
+       </li>
+      </ul>
+      <ul>
+       <li>
+        Copy / Paste text to and from the OS clipboard!
+       </li>
+      </ul>
+      <p>
+       <img alt="Slate1Ingame.jpg" class="" height="486" src="../assets/slate-edit-text-widget-custom-rendering-any-truetypefont/0.jpg" width="800"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Display_Edit_Text_Contents_Any_Way_You_Want">
+        Display Edit Text Contents Any Way You Want
+       </span>
+      </h2>
+      <p>
+       In my game I did not want to show the
+       <i>
+        Edit Text caret
+       </i>
+       or the
+       <i>
+        actual text
+       </i>
+       , because you cant use shadowing currently with SEditableText.
+      </p>
+      <p>
+       I found a way to
+       <i>
+        completely hide the SEditableText widget
+       </i>
+       and
+       <b>
+        pass the contents to a different display widget
+       </b>
+       that had the visual rendering options that I wanted.
+      </p>
+      <p>
+       You can use the same logic I am using in this example to display the SEditableText contents in any way that you like!
+      </p>
+      <p>
+       I have comments in the code for how you can actually enable the Edit Text caret, and display the Edit Text.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Use_Any_True_Type_Font">
+        Use Any True Type Font
+       </span>
+      </h2>
+      <p>
+       You can use any True Type Font you want with my Edit Text Code !
+      </p>
+      <p>
+       I set up the HUD class so that you can use your HUD BP to enter a path for .ttf files!
+      </p>
+      <pre> Obtain .ttf files from windows/fonts by <b>copying</b> them :)
+</pre>
+      <p>
+       Move them into your Content directory, into some subfolder structure, and write out that folder structure in the HUD BP!
+      </p>
+      <p>
+       I also wrote a function for you to easily change the font of the Edit Text during runtime, using a new .ttf!
+      </p>
+      <p>
+       <img alt="Slate1Editor.jpg" class="" height="88" src="../assets/slate-edit-text-widget-custom-rendering-any-truetypefont/1.jpg" width="600"/>
+      </p>
+      <p>
+       <img alt="Slate1HDD.jpg" class="" height="435" src="../assets/slate-edit-text-widget-custom-rendering-any-truetypefont/2.jpg" width="600"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="YourHUD">
+        YourHUD
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id=".H">
+        .H
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2013 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"SVictoryEditText.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"YourHUD.generated.h"</span><span class="cp"></span>
+
+
+
+<span class="k">class</span> <span class="nc">AYourHUD</span> <span class="o">:</span> <span class="k">public</span> <span class="n">AHUD</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+	
+	<span class="cm">/** Default True Type Font. This should be the path off of Content that leads to your chosen TTF. Copy paste .ttf files from Windows/Fonts. Path should not include "Content".  Ex: "TTF/comicbd.ttf" */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditDefaultsOnly</span><span class="p">,</span> <span class="n">BlueprintReadOnly</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">VictoryChat</span><span class="p">)</span>
+	<span class="n">FString</span> <span class="n">ChatFontTTF</span><span class="p">;</span>
+	
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">VictoryChat</span><span class="p">)</span>
+	<span class="n">int32</span> <span class="n">ChatInputFontSize</span><span class="p">;</span>
+	
+	<span class="cm">/** Set a new .ttf for chat text! This should be the path off of Content that leads to your chosen TTF. Copy paste .ttf files from Windows/Fonts. Path should not include "Content".  Ex: "TTF/comicbd.ttf" */</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">VictoryChat</span><span class="p">)</span>
+	<span class="kt">void</span> <span class="n">SetChatFont</span><span class="p">(</span><span class="n">FString</span> <span class="n">NewFontPath</span><span class="p">);</span>
+		
+<span class="c1">//Slate Core</span>
+<span class="k">public</span><span class="o">:</span>
+	
+	<span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">SVictoryEditText</span><span class="o">&gt;</span> <span class="n">VictoryChat</span><span class="p">;</span>
+	
+	<span class="kt">void</span> <span class="nf">JoyInit_VictoryChat</span><span class="p">();</span>
+		
+<span class="c1">//AHUD</span>
+<span class="k">public</span><span class="o">:</span>
+	
+	<span class="c1">//Draw HUD</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">DrawHUD</span><span class="p">()</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id=".CPP">
+        .CPP
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//VictoryHUD extension by Rama</span>
+
+<span class="cp">#include</span> <span class="cpf">"VictoryGame.h"</span><span class="cp"></span>
+
+<span class="cp">#define VICTORY_ALLOW_TICK if(!GEngine) return; if(!GEngine-&gt;GameViewport) return;</span>
+
+<span class="n">AYourHUD</span><span class="o">::</span><span class="n">AYourHUD</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span> <span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="p">{</span>	
+	<span class="n">ChatFontTTF</span> <span class="o">=</span> <span class="s">"TTF/comicbd.ttf"</span><span class="p">;</span>
+	<span class="n">ChatInputFontSize</span> <span class="o">=</span> <span class="mi">24</span><span class="p">;</span>
+	
+<span class="p">}</span>
+
+<span class="c1">//~~~~~~~~~~~~~~</span>
+<span class="c1">// Joy Init Victory Chat</span>
+<span class="c1">//~~~~~~~~~~~~~~</span>
+
+<span class="kt">void</span> <span class="n">AYourHUD</span><span class="o">::</span><span class="n">JoyInit_VictoryChat</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span> <span class="o">!</span> <span class="n">VictoryChat</span><span class="p">.</span><span class="n">IsValid</span><span class="p">()</span> <span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~</span>
+	
+	<span class="c1">//Visible</span>
+	<span class="n">VictoryChat</span><span class="o">-&gt;</span><span class="n">SetShowChat</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+	
+	<span class="c1">//Cursor						//No cursor!</span>
+	<span class="c1">//VictoryChat-&gt;SetCursor(EMouseCursor::None);//EMouseCursor::TextEditBeam);</span>
+	
+	<span class="c1">//Font</span>
+	<span class="n">SetChatFont</span><span class="p">(</span><span class="n">ChatFontTTF</span><span class="p">);</span>
+	
+	<span class="c1">//Capture User Input immediately upon Creation</span>
+	<span class="n">VictoryChat</span><span class="o">-&gt;</span><span class="n">SetSlateUIMode</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">//~~~~~~~~~~~~</span>
+<span class="c1">//  Set Font</span>
+<span class="c1">//~~~~~~~~~~~~</span>
+<span class="kt">void</span> <span class="n">AYourHUD</span><span class="o">::</span><span class="n">SetChatFont</span><span class="p">(</span><span class="n">FString</span> <span class="n">NewFontPath</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span> <span class="o">!</span> <span class="n">VictoryChat</span><span class="p">.</span><span class="n">IsValid</span><span class="p">()</span> <span class="p">)</span> 			<span class="k">return</span><span class="p">;</span>
+	<span class="k">if</span><span class="p">(</span> <span class="o">!</span> <span class="n">VictoryChat</span><span class="o">-&gt;</span><span class="n">ChatDisplay</span><span class="p">.</span><span class="n">IsValid</span><span class="p">())</span> 	<span class="k">return</span><span class="p">;</span>
+	<span class="k">if</span><span class="p">(</span> <span class="o">!</span> <span class="n">VictoryChat</span><span class="o">-&gt;</span><span class="n">ChatInput</span><span class="p">.</span><span class="n">IsValid</span><span class="p">())</span> 	<span class="k">return</span><span class="p">;</span>
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+	
+	<span class="c1">//Get Font from TTF Path</span>
+	<span class="k">const</span> <span class="n">FString</span> <span class="n">ChatInputFont</span> <span class="o">=</span> <span class="n">FString</span><span class="p">(</span> <span class="n">FPaths</span><span class="o">::</span><span class="n">GameContentDir</span><span class="p">()</span> <span class="o">/</span> <span class="o">*</span><span class="n">NewFontPath</span> <span class="p">);</span>
+	
+	<span class="c1">//Create Font Info</span>
+	<span class="n">FSlateFontInfo</span> <span class="nf">NewFontInfo</span><span class="p">(</span><span class="n">ChatInputFont</span><span class="p">,</span><span class="n">ChatInputFontSize</span><span class="p">);</span>
+	
+	<span class="c1">//Show / Hide Edit Caret</span>
+	<span class="n">FSlateFontInfo</span> <span class="n">CaretSize</span> <span class="o">=</span> <span class="n">NewFontInfo</span><span class="p">;</span>
+	<span class="n">CaretSize</span><span class="p">.</span><span class="n">Size</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>		<span class="c1">//set to 1 to show caret.</span>
+	
+	<span class="c1">//Set !</span>
+	<span class="n">VictoryChat</span><span class="o">-&gt;</span><span class="n">ChatInput</span><span class="o">-&gt;</span><span class="n">SetFont</span><span class="p">(</span><span class="n">CaretSize</span><span class="p">);</span> <span class="c1">//invisible input, just Caret</span>
+	<span class="n">VictoryChat</span><span class="o">-&gt;</span><span class="n">ChatDisplay</span><span class="o">-&gt;</span><span class="n">SetFont</span><span class="p">(</span><span class="n">NewFontInfo</span><span class="p">);</span>		<span class="c1">//Display Text</span>
+<span class="p">}</span>
+
+<span class="c1">//~~~~~~~~~~~~</span>
+<span class="c1">// Draw HUD</span>
+<span class="c1">//~~~~~~~~~~~~</span>
+<span class="kt">void</span> <span class="n">AYourHUD</span><span class="o">::</span><span class="n">DrawHUD</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">DrawHUD</span><span class="p">();</span>
+	<span class="c1">//~~~~~~~~~</span>
+	
+	<span class="c1">//~~~~~~~~~~~~~</span>
+	<span class="n">VICTORY_ALLOW_TICK</span>
+	<span class="c1">//~~~~~~~~~~~~~</span>
+	
+	
+	
+	<span class="c1">//~~~ Recreate Chat As Needed ~~~</span>
+        <span class="c1">// Thank you Wraiyth for this code structure!</span>
+	<span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="n">VictoryChat</span><span class="p">.</span><span class="n">IsValid</span><span class="p">()</span> <span class="p">)</span>
+        <span class="p">{</span>
+          <span class="n">SAssignNew</span><span class="p">(</span><span class="n">VictoryChat</span><span class="p">,</span><span class="n">SVictoryEditText</span><span class="p">)</span>
+            <span class="p">.</span><span class="n">JoyHUD</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+
+          <span class="k">if</span> <span class="p">(</span> <span class="n">VictoryChat</span><span class="p">.</span><span class="n">IsValid</span><span class="p">()</span> <span class="p">)</span>
+          <span class="p">{</span>
+            <span class="n">GEngine</span><span class="o">-&gt;</span><span class="n">GameViewport</span><span class="o">-&gt;</span><span class="n">AddViewportWidgetContent</span><span class="p">(</span>
+                <span class="n">SNew</span><span class="p">(</span><span class="n">SWeakWidget</span><span class="p">)</span>
+                <span class="p">.</span><span class="n">PossiblyNullContent</span><span class="p">(</span><span class="n">VictoryChat</span><span class="p">.</span><span class="n">ToSharedRef</span><span class="p">())</span>
+            <span class="p">);</span>
+				
+	    <span class="c1">//~~~ Joy Init ~~~</span>
+	    <span class="n">JoyInit_VictoryChat</span><span class="p">();</span>
+          <span class="p">}</span>
+        <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="SVictoryEditText">
+        SVictoryEditText
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id=".H_2">
+        .H
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="c1">//Slate</span>
+<span class="cp">#include</span> <span class="cpf">"Slate.h"</span><span class="cp"></span>
+
+<span class="c1">//~~~ Forward Declarations ~~~</span>
+<span class="k">class</span> <span class="nc">AYourHUD</span><span class="p">;</span>
+
+
+
+<span class="k">class</span> <span class="nc">SVictoryEditText</span> <span class="o">:</span> <span class="k">public</span> <span class="n">SCompoundWidget</span>
+<span class="p">{</span>
+<span class="c1">//Slate Init</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">SLATE_BEGIN_ARGS</span><span class="p">(</span><span class="n">SVictoryEditText</span><span class="p">)</span> <span class="o">:</span> <span class="n">_JoyHUD</span><span class="p">()</span> <span class="c1">//, _bKeepVisible(false)</span>
+	<span class="p">{}</span>
+ 
+	<span class="n">SLATE_ARGUMENT</span><span class="p">(</span><span class="n">TWeakObjectPtr</span><span class="o">&lt;</span><span class="n">AYourHUD</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">JoyHUD</span><span class="p">)</span>
+	
+	<span class="n">SLATE_END_ARGS</span><span class="p">()</span>
+	
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+	
+<span class="c1">//~~~~~~~~</span>
+<span class="c1">//  HUD</span>
+<span class="c1">//~~~~~~~~</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="c1">//HUD that owns this</span>
+	<span class="n">TWeakObjectPtr</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">AYourHUD</span><span class="o">&gt;</span> <span class="n">JoyHUD</span><span class="p">;</span>
+	
+<span class="c1">//~~~~~~~~</span>
+<span class="c1">//Components</span>
+<span class="c1">//~~~~~~~~</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="c1">//The edit text widget. </span>
+	<span class="n">TSharedPtr</span><span class="o">&lt;</span> <span class="n">SEditableText</span> <span class="o">&gt;</span> <span class="n">ChatInput</span><span class="p">;</span>
+
+        <span class="c1">//How the Edit Text is actually displayed</span>
+	<span class="n">TSharedPtr</span><span class="o">&lt;</span> <span class="n">STextBlock</span> <span class="o">&gt;</span> <span class="n">ChatDisplay</span><span class="p">;</span>
+	
+<span class="c1">//~~~~~~~~~~~~~~~~~</span>
+<span class="c1">//  Chat Visibility</span>
+<span class="c1">//~~~~~~~~~~~~~~~~~</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="kt">void</span> <span class="n">SetShowChat</span><span class="p">(</span><span class="kt">bool</span> <span class="n">MakeVisible</span><span class="p">);</span>
+	
+	
+<span class="c1">//~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="c1">//  Copy/Paste Text </span>
+<span class="c1">//~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">FORCEINLINE</span> <span class="kt">void</span> <span class="n">CopyToClipboard</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">ChatInput</span><span class="p">.</span><span class="n">IsValid</span><span class="p">())</span>
+		<span class="p">{</span>
+			<span class="n">ChatInput</span><span class="o">-&gt;</span><span class="n">CopySelectedTextToClipboard</span><span class="p">();</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="n">FORCEINLINE</span> <span class="kt">void</span> <span class="n">PasteFromClipboard</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">ChatInput</span><span class="p">.</span><span class="n">IsValid</span><span class="p">())</span>
+		<span class="p">{</span>
+			<span class="n">ChatInput</span><span class="o">-&gt;</span><span class="n">PasteTextFromClipboard</span><span class="p">()</span> <span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+<span class="c1">//~~~~~~~~~~~~~~~~~</span>
+<span class="c1">// Chat Text Entry </span>
+<span class="c1">//~~~~~~~~~~~~~~~~~</span>
+<span class="k">public</span><span class="o">:</span>
+	
+	<span class="c1">//Set Slate UI Mode, Capture User Keyboard Input</span>
+	<span class="kt">void</span> <span class="n">SetSlateUIMode</span><span class="p">(</span><span class="kt">bool</span> <span class="n">EnterSlateUI</span><span class="p">);</span>
+	
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+	<span class="c1">//Delegate called when the text is commited.</span>
+	
+	<span class="c1">// @param	InText			The committed text.</span>
+	<span class="c1">// @Param	InCommitInfo	The type of commit (eg. Pressed enter, changed focus) </span>
+	<span class="kt">void</span> <span class="nf">OnChatTextCommitted</span><span class="p">(</span><span class="k">const</span> <span class="n">FText</span><span class="o">&amp;</span> <span class="n">InText</span><span class="p">,</span> <span class="n">ETextCommit</span><span class="o">::</span><span class="n">Type</span> <span class="n">InCommitInfo</span><span class="p">);</span>
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+	
+        <span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+	<span class="c1">//	     Text Changed Delegate!</span>
+	<span class="kt">void</span> <span class="nf">OnChatTextChanged</span><span class="p">(</span><span class="k">const</span> <span class="n">FText</span><span class="o">&amp;</span> <span class="n">InText</span><span class="p">);</span>
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+
+<span class="c1">//~~~~~~~~~~~~~~~~~</span>
+<span class="c1">//  Base Input</span>
+<span class="c1">//~~~~~~~~~~~~~~~~~</span>
+		<span class="c1">//SWidget.h</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="c1">//~~~ Keyboard Focused ~~~ </span>
+	<span class="k">virtual</span> <span class="n">FReply</span> <span class="n">OnKeyboardFocusReceived</span><span class="p">(</span> <span class="k">const</span> <span class="n">FGeometry</span><span class="o">&amp;</span> <span class="n">MyGeometry</span><span class="p">,</span> <span class="k">const</span> <span class="n">FKeyboardFocusEvent</span><span class="o">&amp;</span> <span class="n">InKeyboardFocusEvent</span> <span class="p">)</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+	
+	<span class="c1">//~~~ Key Down  ~~~  		</span>
+	<span class="k">virtual</span> <span class="n">FReply</span> <span class="nf">OnKeyDown</span><span class="p">(</span> <span class="k">const</span> <span class="n">FGeometry</span><span class="o">&amp;</span> <span class="n">MyGeometry</span><span class="p">,</span> <span class="k">const</span> <span class="n">FKeyboardEvent</span><span class="o">&amp;</span> <span class="n">InKeyboardEvent</span> <span class="p">)</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+	
+	<span class="c1">//~~~ Mouse Down  ~~~</span>
+	<span class="k">virtual</span> <span class="n">FReply</span> <span class="nf">OnMouseButtonDown</span><span class="p">(</span> <span class="k">const</span> <span class="n">FGeometry</span><span class="o">&amp;</span> <span class="n">MyGeometry</span><span class="p">,</span> <span class="k">const</span> <span class="n">FPointerEvent</span><span class="o">&amp;</span> <span class="n">MouseEvent</span> <span class="p">)</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+	
+
+	
+<span class="c1">//Slate Base</span>
+<span class="k">public</span><span class="o">:</span>
+	
+	<span class="c1">//Constructor</span>
+	<span class="kt">void</span> <span class="n">Construct</span><span class="p">(</span><span class="k">const</span> <span class="n">FArguments</span><span class="o">&amp;</span> <span class="n">InArgs</span><span class="p">);</span>
+	
+	<span class="c1">//As Widget</span>
+	<span class="n">TSharedRef</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">SWidget</span><span class="o">&gt;</span> <span class="n">AsWidget</span><span class="p">();</span>
+	
+	<span class="c1">//~~~ Tick ~~~ </span>
+	<span class="kt">void</span> <span class="nf">Tick</span><span class="p">(</span><span class="k">const</span> <span class="n">FGeometry</span><span class="o">&amp;</span> <span class="n">AllottedGeometry</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">InCurrentTime</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span> <span class="n">InDeltaTime</span><span class="p">);</span>
+	
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id=".CPP_2">
+        .CPP
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"VictoryGame.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"SVictoryEditText.h"</span><span class="cp"></span>
+
+<span class="kt">void</span> <span class="n">SVictoryEditText</span><span class="o">::</span><span class="n">Construct</span><span class="p">(</span><span class="k">const</span> <span class="n">FArguments</span><span class="o">&amp;</span> <span class="n">InArgs</span><span class="p">)</span>
+<span class="p">{</span>
+  <span class="n">JoyHUD</span> <span class="o">=</span> <span class="n">InArgs</span><span class="p">.</span><span class="n">_JoyHUD</span><span class="p">;</span>
+ 
+  <span class="n">ChildSlot</span>
+  <span class="p">.</span><span class="n">VAlign</span><span class="p">(</span><span class="n">VAlign_Fill</span><span class="p">)</span>
+  <span class="p">.</span><span class="n">HAlign</span><span class="p">(</span><span class="n">HAlign_Fill</span><span class="p">)</span>
+  <span class="c1">//~~~~~~~~~~~~~~~~~~~~</span>
+  <span class="c1">//  Being Slate Construct Block</span>
+  <span class="p">[</span>
+	<span class="n">SNew</span><span class="p">(</span><span class="n">SOverlay</span><span class="p">)</span>
+	<span class="o">+</span> <span class="n">SOverlay</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span>
+	<span class="p">.</span><span class="n">VAlign</span><span class="p">(</span><span class="n">VAlign_Bottom</span><span class="p">)</span>
+	<span class="p">.</span><span class="n">HAlign</span><span class="p">(</span><span class="n">HAlign_Left</span><span class="p">)</span>
+	<span class="p">[</span>
+			
+		<span class="c1">//~~~ Chat Input ~~~</span>
+		<span class="n">SAssignNew</span><span class="p">(</span><span class="n">ChatInput</span><span class="p">,</span> <span class="n">SEditableText</span><span class="p">)</span>
+			
+		<span class="c1">//Function to call when text is entered</span>
+		<span class="p">.</span><span class="n">OnTextCommitted</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">SVictoryEditText</span><span class="o">::</span><span class="n">OnChatTextCommitted</span><span class="p">)</span>
+			
+
+                <span class="c1">//Function to call when text is changed</span>
+		<span class="p">.</span><span class="n">OnTextChanged</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">SVictoryEditText</span><span class="o">::</span><span class="n">OnChatTextChanged</span><span class="p">)</span>
+
+
+		<span class="c1">//Stay and possibly enter multiple lines</span>
+		<span class="p">.</span><span class="n">ClearKeyboardFocusOnCommit</span><span class="p">(</span><span class="nb">false</span><span class="p">)</span> 
+			
+		<span class="c1">//Optional</span>
+		<span class="c1">//.MinDesiredWidth(500)	</span>
+			
+		<span class="p">.</span><span class="n">Text</span><span class="p">(</span><span class="n">FText</span><span class="o">::</span><span class="n">FromString</span><span class="p">(</span><span class="s">"Victory!"</span><span class="p">))</span>
+		<span class="p">.</span><span class="n">Font</span><span class="p">(</span><span class="n">FSlateFontInfo</span><span class="p">(</span><span class="n">FPaths</span><span class="o">::</span><span class="n">EngineContentDir</span><span class="p">()</span> <span class="o">/</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Slate/Fonts/Roboto-Bold.ttf"</span><span class="p">),</span> <span class="mi">24</span><span class="p">))</span>
+		<span class="p">.</span><span class="n">ColorAndOpacity</span><span class="p">(</span><span class="n">FLinearColor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">))</span>    <span class="c1">//&lt;~~~</span>
+			
+		<span class="c1">//Chat input itself is hidden, display used instead</span>
+		<span class="c1">//		for the shadowing, and as a demonstration</span>
+		<span class="c1">//		of accessing the input text and displaying it elsewhere</span>
+		<span class="c1">//			See Tick Function</span>
+			
+	<span class="p">]</span>
+	<span class="o">+</span> <span class="n">SOverlay</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span>
+	<span class="p">.</span><span class="n">VAlign</span><span class="p">(</span><span class="n">VAlign_Bottom</span><span class="p">)</span>
+	<span class="p">.</span><span class="n">HAlign</span><span class="p">(</span><span class="n">HAlign_Left</span><span class="p">)</span>
+	<span class="p">[</span>
+		<span class="n">SAssignNew</span><span class="p">(</span><span class="n">ChatDisplay</span><span class="p">,</span> <span class="n">STextBlock</span><span class="p">)</span>
+		<span class="p">.</span><span class="n">Text</span><span class="p">(</span><span class="n">FText</span><span class="o">::</span><span class="n">FromString</span><span class="p">(</span><span class="s">"Victory!!!!"</span><span class="p">))</span>
+		<span class="p">.</span><span class="n">Font</span><span class="p">(</span><span class="n">FSlateFontInfo</span><span class="p">(</span><span class="n">FPaths</span><span class="o">::</span><span class="n">EngineContentDir</span><span class="p">()</span> <span class="o">/</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Slate/Fonts/Roboto-Bold.ttf"</span><span class="p">),</span> <span class="mi">24</span><span class="p">))</span>
+		<span class="p">.</span><span class="n">ColorAndOpacity</span><span class="p">(</span><span class="n">FLinearColor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+		<span class="p">.</span><span class="n">ShadowColorAndOpacity</span><span class="p">(</span><span class="n">FLinearColor</span><span class="o">::</span><span class="n">Black</span><span class="p">)</span>
+		<span class="p">.</span><span class="n">ShadowOffset</span><span class="p">(</span><span class="n">FIntPoint</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+	<span class="p">]</span>
+  <span class="p">];</span> <span class="c1">//End Slate Construct Block</span>
+  <span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~</span>
+			
+<span class="p">}</span>
+
+<span class="c1">//~~~~~~~~~~</span>
+<span class="c1">//  Base </span>
+<span class="c1">//~~~~~~~~~~</span>
+<span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">SWidget</span><span class="o">&gt;</span> <span class="n">SVictoryEditText</span><span class="o">::</span><span class="n">AsWidget</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">SharedThis</span><span class="p">(</span><span class="k">this</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">//~~~~~~~~~~~~~</span>
+<span class="c1">// Base Input</span>
+<span class="c1">//~~~~~~~~~~~~~</span>
+<span class="c1">//Keyboard Focussed</span>
+<span class="n">FReply</span> <span class="n">SVictoryEditText</span><span class="o">::</span><span class="n">OnKeyboardFocusReceived</span><span class="p">(</span> <span class="k">const</span> <span class="n">FGeometry</span><span class="o">&amp;</span> <span class="n">MyGeometry</span><span class="p">,</span> <span class="k">const</span> <span class="n">FKeyboardFocusEvent</span><span class="o">&amp;</span> <span class="n">InKeyboardFocusEvent</span> <span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">//Lock Mouse To Edit</span>
+	<span class="k">return</span> <span class="n">FReply</span><span class="o">::</span><span class="n">Handled</span><span class="p">().</span><span class="n">ReleaseMouseCapture</span><span class="p">().</span><span class="n">ReleaseJoystickCapture</span><span class="p">().</span><span class="n">LockMouseToWidget</span><span class="p">(</span> <span class="n">SharedThis</span><span class="p">(</span> <span class="k">this</span> <span class="p">)</span> <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">//~~~ Key Down ~~~</span>
+<span class="n">FReply</span> <span class="n">SVictoryEditText</span><span class="o">::</span><span class="n">OnKeyDown</span><span class="p">(</span> <span class="k">const</span> <span class="n">FGeometry</span><span class="o">&amp;</span> <span class="n">MyGeometry</span><span class="p">,</span> <span class="k">const</span> <span class="n">FKeyboardEvent</span><span class="o">&amp;</span> <span class="n">InKeyboardEvent</span> <span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">//Get Key Pressed</span>
+	<span class="k">const</span> <span class="n">FKey</span> <span class="n">VKey</span> <span class="o">=</span> <span class="n">InKeyboardEvent</span><span class="p">.</span><span class="n">GetKey</span><span class="p">();</span>
+	
+	<span class="c1">//ESC Pressed</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">VKey</span> <span class="o">==</span> <span class="n">EKeys</span><span class="o">::</span><span class="n">Escape</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//Exit!</span>
+		<span class="n">SetSlateUIMode</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
+		<span class="k">return</span> <span class="n">FReply</span><span class="o">::</span><span class="n">Handled</span><span class="p">();</span>
+	<span class="p">}</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="n">InKeyboardEvent</span><span class="p">.</span><span class="n">IsControlDown</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="k">if</span><span class="p">(</span> <span class="o">!</span> <span class="n">ChatInput</span><span class="p">.</span><span class="n">IsValid</span><span class="p">())</span> <span class="k">return</span> <span class="n">FReply</span><span class="o">::</span><span class="n">Handled</span><span class="p">();</span>
+		<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+		
+		<span class="c1">//CTRL + V = Paste</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">VKey</span> <span class="o">==</span> <span class="n">EKeys</span><span class="o">::</span><span class="n">V</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">PasteFromClipboard</span><span class="p">();</span>
+		<span class="p">}</span>
+		<span class="c1">//CTRL + C = Copy</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">VKey</span> <span class="o">==</span> <span class="n">EKeys</span><span class="o">::</span><span class="n">C</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="c1">//Copy All</span>
+			<span class="n">FWindowsPlatformMisc</span><span class="o">::</span><span class="n">ClipboardCopy</span><span class="p">(</span><span class="o">*</span><span class="n">ChatInput</span><span class="o">-&gt;</span><span class="n">GetText</span><span class="p">().</span><span class="n">ToString</span><span class="p">());</span>
+			
+			<span class="c1">//or you can use the highlighting of text method</span>
+			<span class="c1">//CopyToClipboard();</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="n">FReply</span><span class="o">::</span><span class="n">Handled</span><span class="p">();</span>
+<span class="p">}</span>
+	
+<span class="c1">//~~~ Mouse Down  ~~~</span>
+<span class="n">FReply</span> <span class="n">SVictoryEditText</span><span class="o">::</span><span class="n">OnMouseButtonDown</span><span class="p">(</span> <span class="k">const</span> <span class="n">FGeometry</span><span class="o">&amp;</span> <span class="n">MyGeometry</span><span class="p">,</span> <span class="k">const</span> <span class="n">FPointerEvent</span><span class="o">&amp;</span> <span class="n">MouseEvent</span> <span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">//Get Key Pressed</span>
+	<span class="k">const</span> <span class="n">FKey</span> <span class="n">VKey</span> <span class="o">=</span> <span class="n">MouseEvent</span><span class="p">.</span><span class="n">GetEffectingButton</span><span class="p">();</span>
+	
+	<span class="c1">//LMB Pressed</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">VKey</span> <span class="o">==</span> <span class="n">EKeys</span><span class="o">::</span><span class="n">LeftMouseButton</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//Exit!</span>
+		<span class="n">SetSlateUIMode</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
+		<span class="k">return</span> <span class="n">FReply</span><span class="o">::</span><span class="n">Handled</span><span class="p">();</span>
+	<span class="p">}</span>
+	
+	<span class="k">return</span> <span class="n">FReply</span><span class="o">::</span><span class="n">Handled</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">//~~~~~~~~~~~~~~~~</span>
+<span class="c1">//   Show Chat</span>
+<span class="c1">//~~~~~~~~~~~~~~~~</span>
+<span class="kt">void</span> <span class="n">SVictoryEditText</span><span class="o">::</span><span class="n">SetShowChat</span><span class="p">(</span><span class="kt">bool</span> <span class="n">MakeVisible</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">TAttribute</span><span class="o">&lt;</span><span class="n">EVisibility</span><span class="o">&gt;</span> <span class="n">NewVisibility</span><span class="p">;</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">MakeVisible</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">NewVisibility</span> <span class="o">=</span> <span class="n">EVisibility</span><span class="o">::</span><span class="n">Visible</span><span class="p">;</span>
+		<span class="n">SetVisibility</span><span class="p">(</span>				<span class="n">NewVisibility</span><span class="p">);</span>
+		<span class="n">ChatInput</span><span class="o">-&gt;</span><span class="n">SetVisibility</span><span class="p">(</span>		<span class="n">NewVisibility</span><span class="p">);</span>
+		<span class="n">ChatDisplay</span><span class="o">-&gt;</span><span class="n">SetVisibility</span><span class="p">(</span>		<span class="n">NewVisibility</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">else</span>
+	<span class="p">{</span>
+		<span class="n">NewVisibility</span> <span class="o">=</span> <span class="n">EVisibility</span><span class="o">::</span><span class="n">Hidden</span><span class="p">;</span>
+		<span class="n">SetVisibility</span><span class="p">(</span>				<span class="n">NewVisibility</span><span class="p">);</span>
+		<span class="n">ChatInput</span><span class="o">-&gt;</span><span class="n">SetVisibility</span><span class="p">(</span>		<span class="n">NewVisibility</span><span class="p">);</span>
+		<span class="n">ChatDisplay</span><span class="o">-&gt;</span><span class="n">SetVisibility</span><span class="p">(</span>		<span class="n">NewVisibility</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//~~~~~~~~~~~~~~~~</span>
+<span class="c1">// Chat Text Entered</span>
+<span class="c1">//~~~~~~~~~~~~~~~~</span>
+<span class="kt">void</span> <span class="n">SVictoryEditText</span><span class="o">::</span><span class="n">OnChatTextCommitted</span><span class="p">(</span><span class="k">const</span> <span class="n">FText</span><span class="o">&amp;</span> <span class="n">InText</span><span class="p">,</span> <span class="n">ETextCommit</span><span class="o">::</span><span class="n">Type</span> <span class="n">InCommitInfo</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">InCommitInfo</span> <span class="o">==</span> <span class="n">ETextCommit</span><span class="o">::</span><span class="n">OnEnter</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="n">InText</span><span class="p">.</span><span class="n">IsEmpty</span><span class="p">()</span> <span class="p">)</span>
+		<span class="p">{</span>
+			<span class="k">if</span><span class="p">(</span><span class="n">ChatInput</span><span class="p">.</span><span class="n">IsValid</span><span class="p">())</span>
+			<span class="p">{</span>
+				<span class="c1">// Add the string so we see it too (we will ignore our own strings in the receive function)</span>
+				<span class="c1">//AddChatLine( InText.ToString() );</span>
+
+				<span class="c1">// Clear the text</span>
+				<span class="n">ChatInput</span><span class="o">-&gt;</span><span class="n">SetText</span><span class="p">(</span><span class="n">FText</span><span class="p">());</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+		
+		<span class="c1">//Exit properly! Hides mouse and restores Viewport control</span>
+		<span class="n">SetSlateUIMode</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+<span class="c1">//~~~~~~~~~~~~~~~~</span>
+<span class="c1">// Chat Text Changed</span>
+<span class="c1">//~~~~~~~~~~~~~~~~</span>
+<span class="kt">void</span> <span class="n">SVictoryEditText</span><span class="o">::</span><span class="n">OnChatTextChanged</span><span class="p">(</span><span class="k">const</span> <span class="n">FText</span><span class="o">&amp;</span> <span class="n">InText</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span> <span class="o">!</span> <span class="n">ChatDisplay</span><span class="p">.</span><span class="n">IsValid</span><span class="p">())</span> 	<span class="k">return</span><span class="p">;</span>
+	<span class="k">if</span><span class="p">(</span> <span class="o">!</span> <span class="n">ChatInput</span><span class="p">.</span><span class="n">IsValid</span><span class="p">())</span> 		<span class="k">return</span><span class="p">;</span>
+	
+	<span class="c1">//~~~ Update The Chat Display! ~~~</span>
+	<span class="n">ChatDisplay</span><span class="o">-&gt;</span><span class="n">SetText</span><span class="p">(</span><span class="n">ChatInput</span><span class="o">-&gt;</span><span class="n">GetText</span><span class="p">().</span><span class="n">ToString</span><span class="p">()</span> <span class="o">+</span> <span class="n">FString</span><span class="p">(</span><span class="s">" "</span><span class="p">));</span> 
+	
+	<span class="c1">//single space to fix letter clipping, not sure why its clipping.</span>
+	
+<span class="p">}</span>
+<span class="c1">//~~~~~~~~~~~~~~~~</span>
+<span class="c1">//  Slate UI Mode</span>
+<span class="c1">//~~~~~~~~~~~~~~~~</span>
+<span class="kt">void</span> <span class="n">SVictoryEditText</span><span class="o">::</span><span class="n">SetSlateUIMode</span><span class="p">(</span><span class="kt">bool</span> <span class="n">EnterSlateUI</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">EnterSlateUI</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">// Enter UI mode</span>
+		<span class="n">FSlateApplication</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">SetKeyboardFocus</span><span class="p">(</span> <span class="n">SharedThis</span><span class="p">(</span><span class="k">this</span><span class="p">)</span> <span class="p">);</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="n">ChatInput</span><span class="p">.</span><span class="n">IsValid</span><span class="p">())</span>
+		<span class="p">{</span>
+		  <span class="n">FWidgetPath</span> <span class="n">WidgetToFocusPath</span><span class="p">;</span>
+			
+		  <span class="kt">bool</span> <span class="n">bFoundPath</span> <span class="o">=</span> <span class="n">FSlateApplication</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">FindPathToWidget</span><span class="p">(</span><span class="n">FSlateApplication</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">GetInteractiveTopLevelWindows</span><span class="p">(),</span> <span class="n">ChatInput</span><span class="p">.</span><span class="n">ToSharedRef</span><span class="p">(),</span> <span class="n">WidgetToFocusPath</span><span class="p">);</span>
+		  <span class="k">if</span> <span class="p">(</span><span class="n">bFoundPath</span> <span class="o">&amp;&amp;</span> <span class="n">WidgetToFocusPath</span><span class="p">.</span><span class="n">IsValid</span><span class="p">())</span>
+		  <span class="p">{</span>
+			<span class="n">FSlateApplication</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">SetKeyboardFocus</span><span class="p">(</span><span class="n">WidgetToFocusPath</span><span class="p">,</span> <span class="n">EKeyboardFocusCause</span><span class="o">::</span><span class="n">SetDirectly</span><span class="p">);</span>
+		  <span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">else</span>
+	<span class="p">{</span>
+	  <span class="c1">// Exit UI mode</span>
+ 	  <span class="n">FSlateApplication</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">SetFocusToGameViewport</span><span class="p">();</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+<span class="c1">//~~~~~~~~~~~~~~~~</span>
+<span class="c1">//	Tick</span>
+<span class="c1">//~~~~~~~~~~~~~~~~</span>
+<span class="kt">void</span> <span class="n">SVictoryEditText</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span><span class="k">const</span> <span class="n">FGeometry</span><span class="o">&amp;</span> <span class="n">AllottedGeometry</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">InCurrentTime</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span> <span class="n">InDeltaTime</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// Always tick the super.</span>
+	<span class="n">SCompoundWidget</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span><span class="n">AllottedGeometry</span><span class="p">,</span> <span class="n">InCurrentTime</span><span class="p">,</span> <span class="n">InDeltaTime</span><span class="p">);</span>
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+	
+	
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Code_Excerpts">
+        Code Excerpts
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Copy_Paste_to_OS_Clipboard">
+        Copy Paste to OS Clipboard
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Ctrl is Down</span>
+<span class="k">if</span><span class="p">(</span><span class="n">InKeyboardEvent</span><span class="p">.</span><span class="n">IsControlDown</span><span class="p">())</span>
+<span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span> <span class="o">!</span> <span class="n">ChatInput</span><span class="p">.</span><span class="n">IsValid</span><span class="p">())</span> <span class="k">return</span> <span class="n">FReply</span><span class="o">::</span><span class="n">Handled</span><span class="p">();</span>
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+		
+	<span class="c1">//CTRL + V = Paste</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">VKey</span> <span class="o">==</span> <span class="n">EKeys</span><span class="o">::</span><span class="n">V</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">PasteFromClipboard</span><span class="p">();</span>
+	<span class="p">}</span>
+	<span class="c1">//CTRL + C = Copy</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">VKey</span> <span class="o">==</span> <span class="n">EKeys</span><span class="o">::</span><span class="n">C</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//Copy All</span>
+		<span class="n">FWindowsPlatformMisc</span><span class="o">::</span><span class="n">ClipboardCopy</span><span class="p">(</span><span class="o">*</span><span class="n">ChatInput</span><span class="o">-&gt;</span><span class="n">GetText</span><span class="p">().</span><span class="n">ToString</span><span class="p">());</span>
+			
+		<span class="c1">//or you can use the highlighting of text method</span>
+		<span class="c1">//CopyToClipboard();</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Toggling_User_Input_to.2Ffrom_Victory_Edit_Text">
+        Toggling User Input to/from Victory Edit Text
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">SVictoryEditText</span><span class="o">::</span><span class="n">SetSlateUIMode</span><span class="p">(</span><span class="kt">bool</span> <span class="n">EnterSlateUI</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">EnterSlateUI</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">// Enter UI mode</span>
+		<span class="n">FSlateApplication</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">SetKeyboardFocus</span><span class="p">(</span> <span class="n">SharedThis</span><span class="p">(</span><span class="k">this</span><span class="p">)</span> <span class="p">);</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="n">ChatInput</span><span class="p">.</span><span class="n">IsValid</span><span class="p">())</span>
+		<span class="p">{</span>
+			<span class="n">FWidgetPath</span> <span class="n">WidgetToFocusPath</span><span class="p">;</span>
+			
+			<span class="kt">bool</span> <span class="n">bFoundPath</span> <span class="o">=</span> <span class="n">FSlateApplication</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">FindPathToWidget</span><span class="p">(</span><span class="n">ChatInput</span><span class="p">.</span><span class="n">ToSharedRef</span><span class="p">(),</span> <span class="n">WidgetToFocusPath</span><span class="p">);</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">bFoundPath</span> <span class="o">&amp;&amp;</span> <span class="n">WidgetToFocusPath</span><span class="p">.</span><span class="n">IsValid</span><span class="p">())</span>
+			<span class="p">{</span>
+				<span class="n">FSlateApplication</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">SetKeyboardFocus</span><span class="p">(</span><span class="n">WidgetToFocusPath</span><span class="p">,</span> <span class="n">EKeyboardFocusCause</span><span class="o">::</span><span class="n">SetDirectly</span><span class="p">);</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">else</span>
+	<span class="p">{</span>
+		<span class="c1">// Exit UI mode</span>
+ 		<span class="n">FSlateApplication</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">SetFocusToGameViewport</span><span class="p">();</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Capturing_User_Input">
+        Capturing User Input
+       </span>
+      </h3>
+      <h4>
+       <span class="mw-headline" id="Key_Presses">
+        Key Presses
+       </span>
+      </h4>
+      <p>
+       I check if the user presses the ESC key to cancel out of Edit Text Mode, restoring input to the main Game Viewport
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FReply</span> <span class="n">SVictoryEditText</span><span class="o">::</span><span class="n">OnKeyDown</span><span class="p">(</span> <span class="k">const</span> <span class="n">FGeometry</span><span class="o">&amp;</span> <span class="n">MyGeometry</span><span class="p">,</span> <span class="k">const</span> <span class="n">FKeyboardEvent</span><span class="o">&amp;</span> <span class="n">InKeyboardEvent</span> <span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">//Get Key Pressed</span>
+	<span class="k">const</span> <span class="n">FKey</span> <span class="n">VKey</span> <span class="o">=</span> <span class="n">InKeyboardEvent</span><span class="p">.</span><span class="n">GetKey</span><span class="p">();</span>
+	
+	<span class="c1">//ESC Pressed</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">VKey</span> <span class="o">==</span> <span class="n">EKeys</span><span class="o">::</span><span class="n">Escape</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//Exit!</span>
+		<span class="n">SetSlateUIMode</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
+		<span class="k">return</span> <span class="n">FReply</span><span class="o">::</span><span class="n">Handled</span><span class="p">();</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="n">FReply</span><span class="o">::</span><span class="n">Handled</span><span class="p">();</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h4>
+       <span class="mw-headline" id="Mouse_Input">
+        Mouse Input
+       </span>
+      </h4>
+      <p>
+       For my game I want the Edit Text Mode to end if the user presses LMB.
+      </p>
+      <p>
+       You can capture other mouse buttons and movement as well!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FReply</span> <span class="n">SVictoryEditText</span><span class="o">::</span><span class="n">OnMouseButtonDown</span><span class="p">(</span> <span class="k">const</span> <span class="n">FGeometry</span><span class="o">&amp;</span> <span class="n">MyGeometry</span><span class="p">,</span> <span class="k">const</span> <span class="n">FPointerEvent</span><span class="o">&amp;</span> <span class="n">MouseEvent</span> <span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">//Get Key Pressed</span>
+	<span class="k">const</span> <span class="n">FKey</span> <span class="n">VKey</span> <span class="o">=</span> <span class="n">MouseEvent</span><span class="p">.</span><span class="n">GetEffectingButton</span><span class="p">();</span>
+	
+	<span class="c1">//LMB Pressed</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">VKey</span> <span class="o">==</span> <span class="n">EKeys</span><span class="o">::</span><span class="n">LeftMouseButton</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//Exit!</span>
+		<span class="n">SetSlateUIMode</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
+		<span class="k">return</span> <span class="n">FReply</span><span class="o">::</span><span class="n">Handled</span><span class="p">();</span>
+	<span class="p">}</span>
+	
+	<span class="k">return</span> <span class="n">FReply</span><span class="o">::</span><span class="n">Handled</span><span class="p">();</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Related_Tutorials">
+        Related Tutorials
+       </span>
+      </h2>
+      <p>
+       by Bleakwise!
+      </p>
+      <p>
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?60-slate-tutorials-from-Wraiyth" rel="nofollow">
+        Slate Tutorials by Wraiyth
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Crash Reporter Explained - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Crash Reporter Explained
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <img alt="CrashReporterBreakdown.png" class="" height="761" src="../assets/crash-reporter-explained/0.png" width="762"/>
+      </p>
+      <p>
+       There have been quite a few questions about the overall workflow regarding the Crash Reporter. This tool helps to provide specific information to Epic about particular crashes, which in turn assists us in reproducing bugs so that we can get them fixed. Here is a general breakdown of how this feature works:
+      </p>
+      <ol>
+       <li>
+        <span style="color:#CC3333">
+         Project Name
+        </span>
+        - This is the project you were working in when the editor crashed
+       </li>
+       <li>
+        <span style="color:#00CC33">
+         Description
+        </span>
+        - This is one of the most important aspects of the crash reporter. When submitting, please provide the steps you were taking prior to the editor crashing. The more detailed the description, the better we can follow your instructions to attempt to reproduce this on our end, which leads to faster bug reporting.
+       </li>
+       <li>
+        <span style="color:#CCCC00">
+         Callstack
+        </span>
+        - This callstack gives some information aobut what occurred to cause the crash
+       </li>
+       <li>
+        <span style="color:#0000CC">
+         Copy Callstack to Clipboard
+        </span>
+        - Creates a copy of the callstack if you need to paste it to a new location.
+       </li>
+       <li>
+        <span style="color:#663399">
+         Submit/Don't Send
+        </span>
+        - Pressing submit sends the callstack and relevant information you provided in the description to Epic's Crash Reporter so we can attempt to reproduce this on our end. This is recommended as any information you can provide that helps us to reproduce an error leads to faster bug reporting. You can, however, opt to press Don't Send, which will not send any information to Epic.
+       </li>
+      </ol>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

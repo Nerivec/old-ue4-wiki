@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Template:Slate Data Binding Part 3 - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Template:Slate Data Binding Part 3
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Creating_In-Game_Menus_with_Slate.2FC.2B.2B.2C_Part_3">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Creating In-Game Menus with Slate/C++, Part 3
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Overview">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Overview
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Step_1:_Overview_.26_Prep">
+            <span class="tocnumber">
+             1.2
+            </span>
+            <span class="toctext">
+             Step 1: Overview &amp; Prep
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-4">
+             <a href="#TutorialGameHUDUI.h">
+              <span class="tocnumber">
+               1.2.1
+              </span>
+              <span class="toctext">
+               TutorialGameHUDUI.h
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-5">
+             <a href="#TutorialGameHUDUI.cpp">
+              <span class="tocnumber">
+               1.2.2
+              </span>
+              <span class="toctext">
+               TutorialGameHUDUI.cpp
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-6">
+             <a href="#TutorialGameHUD.h">
+              <span class="tocnumber">
+               1.2.3
+              </span>
+              <span class="toctext">
+               TutorialGameHUD.h
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-7">
+             <a href="#TutorialGameHUD.cpp">
+              <span class="tocnumber">
+               1.2.4
+              </span>
+              <span class="toctext">
+               TutorialGameHUD.cpp
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Step_3:_Binding_our_Data">
+            <span class="tocnumber">
+             1.3
+            </span>
+            <span class="toctext">
+             Step 3: Binding our Data
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#Step_4:_Binding_it_to_something_Useful">
+            <span class="tocnumber">
+             1.4
+            </span>
+            <span class="toctext">
+             Step 4: Binding it to something Useful
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-10">
+             <a href="#TutGameMode.h">
+              <span class="tocnumber">
+               1.4.1
+              </span>
+              <span class="toctext">
+               TutGameMode.h
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-11">
+             <a href="#TutGameMode.cpp">
+              <span class="tocnumber">
+               1.4.2
+              </span>
+              <span class="toctext">
+               TutGameMode.cpp
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-12">
+             <a href="#TutorialCharacter.h">
+              <span class="tocnumber">
+               1.4.3
+              </span>
+              <span class="toctext">
+               TutorialCharacter.h
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-13">
+             <a href="#TutorialCharacter.cpp">
+              <span class="tocnumber">
+               1.4.4
+              </span>
+              <span class="toctext">
+               TutorialCharacter.cpp
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-14">
+             <a href="#TutorialGameHUDUI.cpp_2">
+              <span class="tocnumber">
+               1.4.5
+              </span>
+              <span class="toctext">
+               TutorialGameHUDUI.cpp
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Creating_In-Game_Menus_with_Slate.2FC.2B.2B.2C_Part_3">
+        Creating In-Game Menus with Slate/C++, Part 3
+       </span>
+      </h1>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Original Author
+       </i>
+       <a class="external text" href="https://forums.unrealengine.com/member.php?1034-Minalien" rel="nofollow">
+        Minalien
+       </a>
+      </p>
+      <p>
+       Welcome back to my tutorial series on creating menus in Unreal Engine 4 using Slate &amp; C++!
+      </p>
+      <ul>
+       <li>
+       </li>
+       <li>
+       </li>
+       <li>
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="Step_1:_Overview_.26_Prep">
+        Step 1: Overview &amp; Prep
+       </span>
+      </h2>
+      <p>
+       What is data binding? Data binding is a concept from software development where information output, such as the player’s current health, is tied to the information it actually represents. In this way, any time you change the data (for example, by damaging the player) the display is updated automatically. This can have a great many uses, both simple and complex – in Soul Tech, a Mech Action/RPG I am programming for, I use data binding handle the individual pages available in the Mech customization &amp; shop screens. My UI only has to worry about having space to display data from the current page – updating the actual page does not require also sending update messages to the UI.
+      </p>
+      <p>
+       In our case, we are going to create a new Slate UI that will serve as an in-game HUD, displaying the player’s current health and score in the upper corners of the screen. Initially, the HUD will only have static values – we will change it to be bound data in the next step. I’m going to paste the code below, but I will not go into detail on how it works – it’s all pretty simple content that has been covered in past tutorials.
+      </p>
+      <h3>
+       <span class="mw-headline" id="TutorialGameHUDUI.h">
+        TutorialGameHUDUI.h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.</span>
+<span class="c1">// TutorialGameHUDUI.h - Provides an implementation of the Slate UI representing the tutorial game HUD.</span>
+
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"Slate.h"</span><span class="cp"></span>
+
+<span class="c1">// Lays out and controls the Tutorial HUD UI.</span>
+
+<span class="k">class</span> <span class="nc">STutorialGameHUDUI</span> <span class="o">:</span> <span class="k">public</span> <span class="n">SCompoundWidget</span>
+<span class="p">{</span>
+    <span class="n">SLATE_BEGIN_ARGS</span><span class="p">(</span><span class="n">STutorialGameHUDUI</span><span class="p">)</span>
+        <span class="o">:</span> <span class="n">_OwnerHUD</span><span class="p">()</span>
+    <span class="p">{</span>
+    <span class="p">}</span>
+ 
+    <span class="n">SLATE_ARGUMENT</span><span class="p">(</span><span class="n">TWeakObjectPtr</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">ATutorialGameHUD</span><span class="o">&gt;</span><span class="p">,</span> <span class="n">OwnerHUD</span><span class="p">);</span>
+ 
+    <span class="n">SLATE_END_ARGS</span><span class="p">()</span>
+ 
+<span class="k">public</span><span class="o">:</span>
+    <span class="cm">/**</span>
+<span class="cm">     * Constructs and lays out the Tutorial HUD UI Widget.</span>
+<span class="cm">     * </span>
+<span class="cm">     * \args Arguments structure that contains widget-specific setup information.</span>
+<span class="cm">     **/</span>
+    <span class="kt">void</span> <span class="n">Construct</span><span class="p">(</span><span class="k">const</span> <span class="n">FArguments</span><span class="o">&amp;</span> <span class="n">args</span><span class="p">);</span>
+ 
+<span class="k">private</span><span class="o">:</span>
+    <span class="cm">/**</span>
+<span class="cm">     * Stores a weak reference to the HUD owning this widget.</span>
+<span class="cm">     **/</span>
+    <span class="n">TWeakObjectPtr</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">ATutorialGameHUD</span><span class="o">&gt;</span> <span class="n">OwnerHUD</span><span class="p">;</span>
+ 
+    <span class="cm">/**</span>
+<span class="cm">     * A reference to the Slate Style used for this HUD's widgets.</span>
+<span class="cm">     **/</span>
+    <span class="k">const</span> <span class="k">struct</span> <span class="n">FGlobalStyle</span><span class="o">*</span> <span class="n">HUDStyle</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="TutorialGameHUDUI.cpp">
+        TutorialGameHUDUI.cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#include</span> <span class="cpf">"SlateTutorials.h"</span><span class="cp"></span>
+ 
+<span class="cp">#include</span> <span class="cpf">"TutorialGameHUD.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"TutorialGameHUDUI.h"</span><span class="cp"></span>
+ 
+<span class="cp">#include</span> <span class="cpf">"Menus/GlobalMenuStyle.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Menus/MenuStyles.h"</span><span class="cp"></span>
+ 
+<span class="kt">void</span> <span class="n">STutorialGameHUDUI</span><span class="o">::</span><span class="n">Construct</span><span class="p">(</span><span class="k">const</span> <span class="n">FArguments</span><span class="o">&amp;</span> <span class="n">args</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">OwnerHUD</span> <span class="o">=</span> <span class="n">args</span><span class="p">.</span><span class="n">_OwnerHUD</span><span class="p">;</span>
+ 
+    <span class="n">HUDStyle</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">FMenuStyles</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">GetWidgetStyle</span><span class="o">&lt;</span><span class="n">FGlobalStyle</span><span class="o">&gt;</span><span class="p">(</span><span class="s">"Global"</span><span class="p">);</span>
+ 
+    <span class="n">ChildSlot</span>
+        <span class="p">[</span>
+            <span class="n">SNew</span><span class="p">(</span><span class="n">SOverlay</span><span class="p">)</span>
+            <span class="o">+</span> <span class="n">SOverlay</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span>
+                <span class="p">.</span><span class="n">HAlign</span><span class="p">(</span><span class="n">HAlign_Right</span><span class="p">)</span>
+                <span class="p">.</span><span class="n">VAlign</span><span class="p">(</span><span class="n">VAlign_Top</span><span class="p">)</span>
+                <span class="p">[</span>
+                    <span class="n">SNew</span><span class="p">(</span><span class="n">STextBlock</span><span class="p">)</span>
+                        <span class="p">.</span><span class="n">TextStyle</span><span class="p">(</span><span class="o">&amp;</span><span class="n">HUDStyle</span><span class="o">-&gt;</span><span class="n">MenuTitleStyle</span><span class="p">)</span>
+                        <span class="p">.</span><span class="n">Text</span><span class="p">(</span><span class="n">FText</span><span class="o">::</span><span class="n">FromString</span><span class="p">(</span><span class="s">"SCORE: 0"</span><span class="p">))</span>
+                <span class="p">]</span>
+            <span class="o">+</span> <span class="n">SOverlay</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span>
+                <span class="p">.</span><span class="n">HAlign</span><span class="p">(</span><span class="n">HAlign_Left</span><span class="p">)</span>
+                <span class="p">.</span><span class="n">VAlign</span><span class="p">(</span><span class="n">VAlign_Top</span><span class="p">)</span>
+                <span class="p">[</span>
+                    <span class="n">SNew</span><span class="p">(</span><span class="n">STextBlock</span><span class="p">)</span>
+                        <span class="p">.</span><span class="n">TextStyle</span><span class="p">(</span><span class="o">&amp;</span><span class="n">HUDStyle</span><span class="o">-&gt;</span><span class="n">MenuTitleStyle</span><span class="p">)</span>
+                        <span class="p">.</span><span class="n">Text</span><span class="p">(</span><span class="n">FText</span><span class="o">::</span><span class="n">FromString</span><span class="p">(</span><span class="s">"HEALTH: 100"</span><span class="p">))</span>
+                <span class="p">]</span>
+        <span class="p">];</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="TutorialGameHUD.h">
+        TutorialGameHUD.h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.</span>
+<span class="c1">// TutorialGameHUD.h - Provides an implementation of the HUD that will embed the Tutorial Game UI.</span>
+
+<span class="cp">#pragma once</span>
+ 
+<span class="cp">#include</span> <span class="cpf">"GameFramework/HUD.h"</span><span class="cp"></span>
+ 
+<span class="cp">#include</span> <span class="cpf">"TutorialGameHUD.generated.h"</span><span class="cp"></span>
+ 
+<span class="cm">/**</span>
+<span class="cm"> * Provides an implementation of the game's in-game HUD, which will display the player's current health and score.</span>
+<span class="cm"> **/</span>
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">ATutorialGameHUD</span> <span class="o">:</span> <span class="k">public</span> <span class="n">AHUD</span>
+<span class="p">{</span>
+    <span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+ 
+<span class="k">public</span><span class="o">:</span>
+    <span class="cm">/**</span>
+<span class="cm">     * Initializes the Slate UI and adds it as a widget to the game viewport.</span>
+<span class="cm">     **/</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">PostInitializeComponents</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+ 
+<span class="k">private</span><span class="o">:</span>
+    <span class="cm">/**</span>
+<span class="cm">     * Reference to the Game HUD UI.</span>
+<span class="cm">     **/</span>
+    <span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">STutorialGameHUDUI</span><span class="o">&gt;</span> <span class="n">GameHUD</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="TutorialGameHUD.cpp">
+        TutorialGameHUD.cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#include</span> <span class="cpf">"SlateTutorials.h"</span><span class="cp"></span>
+ 
+<span class="cp">#include</span> <span class="cpf">"TutorialGameHUD.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"TutorialGameHUDUI.h"</span><span class="cp"></span>
+ 
+<span class="n">ATutorialGameHUD</span><span class="o">::</span><span class="n">ATutorialGameHUD</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span>
+    <span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="p">}</span>
+ 
+<span class="kt">void</span> <span class="n">ATutorialGameHUD</span><span class="o">::</span><span class="n">PostInitializeComponents</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">Super</span><span class="o">::</span><span class="n">PostInitializeComponents</span><span class="p">();</span>
+ 
+    <span class="k">if</span> <span class="p">(</span><span class="n">GEngine</span> <span class="o">&amp;&amp;</span> <span class="n">GEngine</span><span class="o">-&gt;</span><span class="n">GameViewport</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">UGameViewportClient</span><span class="o">*</span> <span class="n">Viewport</span> <span class="o">=</span> <span class="n">GEngine</span><span class="o">-&gt;</span><span class="n">GameViewport</span><span class="p">;</span>
+ 
+        <span class="n">SAssignNew</span><span class="p">(</span><span class="n">GameHUD</span><span class="p">,</span> <span class="n">STutorialGameHUDUI</span><span class="p">)</span>
+            <span class="p">.</span><span class="n">OwnerHUD</span><span class="p">(</span><span class="n">TWeakObjectPtr</span><span class="o">&lt;</span><span class="n">ATutorialGameHUD</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">));</span>
+ 
+        <span class="n">Viewport</span><span class="o">-&gt;</span><span class="n">AddViewportWidgetContent</span><span class="p">(</span>
+            <span class="n">SNew</span><span class="p">(</span><span class="n">SWeakWidget</span><span class="p">).</span><span class="n">PossiblyNullContent</span><span class="p">(</span><span class="n">GameHUD</span><span class="p">.</span><span class="n">ToSharedRef</span><span class="p">())</span>
+            <span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Go ahead and build the project and set up a new map and game mode and test the HUD out!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Step_3:_Binding_our_Data">
+        Step 3: Binding our Data
+       </span>
+      </h2>
+      <p>
+       We have two bits of information that we want to bind to our UI: Score and Health. Both of these are integers, but they have to be bound as strings for our HUD! I will cover obtaining this information from the Game Mode (Score) and active Character (Health) in a minute, but first we’ll handle the data binding portion. Our binding is going to have two important tasks: first, it is going to obtain the actual data. Next, it will convert it to an FText to be applied to the text block widgets.
+      </p>
+      <p>
+       There are two things needed for each of these: the Attribute, and something to bind it to. In our case, because we need to do extra processing on the data (converting from an integer to a string), we will have a function on our widget class itself to bind to. Add the following private values to the STutorialGameHUDUI class:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">private</span><span class="o">:</span>
+    <span class="cm">/**</span>
+<span class="cm">     * Attribute storing the binding for the player's score.</span>
+<span class="cm">     **/</span>
+    <span class="n">TAttribute</span><span class="o">&lt;</span><span class="n">FText</span><span class="o">&gt;</span> <span class="n">Score</span><span class="p">;</span>
+ 
+    <span class="cm">/**</span>
+<span class="cm">     * Attribute storing the binding for the player's health.</span>
+<span class="cm">     **/</span>
+    <span class="n">TAttribute</span><span class="o">&lt;</span><span class="n">FText</span><span class="o">&gt;</span> <span class="n">Health</span><span class="p">;</span>
+ 
+    <span class="cm">/**</span>
+<span class="cm">     * Our Score will be bound to this function, which will retrieve the appropriate data and convert it into an FText.</span>
+<span class="cm">     **/</span>
+    <span class="n">FText</span> <span class="nf">GetScore</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+ 
+    <span class="cm">/**</span>
+<span class="cm">     * Our Health will be bound to this function, which will retrieve the appropriate data and convert it into an FText.</span>
+<span class="cm">     **/</span>
+    <span class="n">FText</span> <span class="nf">GetHealth</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       The TAttribute type is used in Unreal to provide data binding that only has an accessor/getter. Next, we have two constant functions that will be responsible for retrieving and formatting the data into a form the UI can use! So how do we actually do the binding? Well, it’s quite simple – in fact, you’ve already done it if you’ve ever done input binding within C++ for an Unreal project. In the top of STutorialGameHUDUI’s Construct method, just after capturing HUDStyle, add the following to bind our TAttributes to their appropriate functions:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">Score</span><span class="p">.</span><span class="n">Bind</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">STutorialGameHUDUI</span><span class="o">::</span><span class="n">GetScore</span><span class="p">);</span>
+<span class="n">Health</span><span class="p">.</span><span class="n">Bind</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">STutorialGameHUDUI</span><span class="o">::</span><span class="n">GetHealth</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       Next, we can use the TAttributes directly in our Text specifications when constructing the UI layout:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="o">+</span> <span class="n">SOverlay</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span>
+    <span class="p">.</span><span class="n">HAlign</span><span class="p">(</span><span class="n">HAlign_Right</span><span class="p">)</span>
+    <span class="p">.</span><span class="n">VAlign</span><span class="p">(</span><span class="n">VAlign_Top</span><span class="p">)</span>
+    <span class="p">[</span>
+        <span class="n">SNew</span><span class="p">(</span><span class="n">STextBlock</span><span class="p">)</span>
+            <span class="p">.</span><span class="n">TextStyle</span><span class="p">(</span><span class="o">&amp;</span><span class="n">HUDStyle</span><span class="o">-&gt;</span><span class="n">MenuTitleStyle</span><span class="p">)</span>
+            <span class="p">.</span><span class="n">Text</span><span class="p">(</span><span class="n">Score</span><span class="p">)</span>
+    <span class="p">]</span>
+<span class="o">+</span> <span class="n">SOverlay</span><span class="o">::</span><span class="n">Slot</span><span class="p">()</span>
+    <span class="p">.</span><span class="n">HAlign</span><span class="p">(</span><span class="n">HAlign_Left</span><span class="p">)</span>
+    <span class="p">.</span><span class="n">VAlign</span><span class="p">(</span><span class="n">VAlign_Top</span><span class="p">)</span>
+    <span class="p">[</span>
+        <span class="n">SNew</span><span class="p">(</span><span class="n">STextBlock</span><span class="p">)</span>
+            <span class="p">.</span><span class="n">TextStyle</span><span class="p">(</span><span class="o">&amp;</span><span class="n">HUDStyle</span><span class="o">-&gt;</span><span class="n">MenuTitleStyle</span><span class="p">)</span>
+            <span class="p">.</span><span class="n">Text</span><span class="p">(</span><span class="n">Health</span><span class="p">)</span>
+    <span class="p">]</span>
+</pre>
+      </div>
+      <p>
+       And finally, we’ll put in some placeholder data for our bound functions, just to make sure everything’s worked:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FText</span> <span class="n">STutorialGameHUDUI</span><span class="o">::</span><span class="n">GetScore</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">FText</span><span class="o">::</span><span class="n">FromString</span><span class="p">(</span><span class="s">"SCORE: --"</span><span class="p">);</span> <span class="p">}</span>
+<span class="n">FText</span> <span class="n">STutorialGameHUDUI</span><span class="o">::</span><span class="n">GetHealth</span><span class="p">()</span> <span class="k">const</span> <span class="p">{</span> <span class="k">return</span> <span class="n">FText</span><span class="o">::</span><span class="n">FromString</span><span class="p">(</span><span class="s">"HEALTH: --"</span><span class="p">);</span> <span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Go ahead and build and make sure everything’s working, and congratulations! You’ve just bound your text blocks! You can do this binding for just about everything in Slate – button text, list items, image backgrounds, styles, etc.
+      </p>
+      <p>
+       <img alt="Скриншот 2015-03-18 16.55.25.png" class="" height="373" src="../assets/templateslate-data-binding-part-3/0.png" width="859"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Step_4:_Binding_it_to_something_Useful">
+        Step 4: Binding it to something Useful
+       </span>
+      </h2>
+      <p>
+       If you only needed to learn how to do data binding, and don’t care about the specifics for this tutorial then you don’t need to continue past this point – here, we’re just implementing our Score and Health functions. Consider it bonus content!
+      </p>
+      <p>
+       To get the score and health data for this tutorial, I’ve added the following GameMode and Character classes and set them up to be used with the GameMap level.
+      </p>
+      <h3>
+       <span class="mw-headline" id="TutGameMode.h">
+        TutGameMode.h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.</span>
+<span class="c1">// TutGameMode.h - Provides a simple game mode providing a Score!</span>
+
+<span class="cp">#pragma once</span>
+ 
+<span class="cp">#include</span> <span class="cpf">"GameFramework/GameMode.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"TutGameMode.generated.h"</span><span class="cp"></span>
+ 
+<span class="cm">/**</span>
+<span class="cm"> * A simple game mode providing a means of retrieving and adjusting a single Score value.</span>
+<span class="cm"> **/</span>
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">ATutGameMode</span> <span class="o">:</span> <span class="k">public</span> <span class="n">AGameMode</span>
+<span class="p">{</span>
+    <span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+ 
+<span class="k">public</span><span class="o">:</span>
+    <span class="cm">/**</span>
+<span class="cm">     * Retrieves the current Score from the game mode.</span>
+<span class="cm">     **/</span>
+    <span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintPure</span><span class="p">,</span> <span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Score"</span><span class="p">)</span>
+    <span class="n">int32</span> <span class="n">GetScore</span><span class="p">();</span>
+ 
+    <span class="cm">/**</span>
+<span class="cm">     * Adds to the game score.</span>
+<span class="cm">     **/</span>
+    <span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Score"</span><span class="p">)</span>
+    <span class="kt">void</span> <span class="n">AddPoints</span><span class="p">(</span><span class="n">int32</span> <span class="n">value</span><span class="p">);</span>
+ 
+    <span class="cm">/**</span>
+<span class="cm">     * Removes from the game score.</span>
+<span class="cm">     **/</span>
+    <span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Score"</span><span class="p">)</span>
+    <span class="kt">void</span> <span class="n">DeductPoints</span><span class="p">(</span><span class="n">int32</span> <span class="n">value</span><span class="p">);</span>
+ 
+<span class="k">private</span><span class="o">:</span>
+    <span class="cm">/**</span>
+<span class="cm">     * Stores the current score.</span>
+<span class="cm">     **/</span>
+    <span class="n">int32</span> <span class="n">CurrentScore</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="TutGameMode.cpp">
+        TutGameMode.cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#include</span> <span class="cpf">"SlateTutorials.h"</span><span class="cp"></span>
+ 
+<span class="cp">#include</span> <span class="cpf">&lt;algorithm&gt;</span><span class="cp"></span>
+ 
+<span class="cp">#include</span> <span class="cpf">"TutGameMode.h"</span><span class="cp"></span>
+ 
+<span class="n">ATutGameMode</span><span class="o">::</span><span class="n">ATutGameMode</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span>
+    <span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">),</span> <span class="n">CurrentScore</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="p">}</span>
+ 
+<span class="n">int32</span> <span class="n">ATutGameMode</span><span class="o">::</span><span class="n">GetScore</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">CurrentScore</span><span class="p">;</span>
+<span class="p">}</span>
+ 
+<span class="kt">void</span> <span class="n">ATutGameMode</span><span class="o">::</span><span class="n">AddPoints</span><span class="p">(</span><span class="n">int32</span> <span class="n">value</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">CurrentScore</span> <span class="o">+=</span> <span class="n">value</span><span class="p">;</span>
+<span class="p">}</span>
+ 
+<span class="kt">void</span> <span class="n">ATutGameMode</span><span class="o">::</span><span class="n">DeductPoints</span><span class="p">(</span><span class="n">int32</span> <span class="n">value</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">value</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">CurrentScore</span> <span class="o">=</span> <span class="n">std</span><span class="o">::</span><span class="n">max</span><span class="p">(</span><span class="n">CurrentScore</span> <span class="o">-</span> <span class="n">value</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="TutorialCharacter.h">
+        TutorialCharacter.h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.</span>
+<span class="c1">// TutorialCharacter.h - Provides a simple character providing Health!</span>
+
+<span class="cp">#pragma once</span>
+ 
+<span class="cp">#include</span> <span class="cpf">"GameFramework/Character.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"TutorialCharacter.generated.h"</span><span class="cp"></span>
+ 
+<span class="cm">/**</span>
+<span class="cm"> * A simple character providing a means of retrieving and manipulating health.</span>
+<span class="cm"> **/</span>
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">ATutorialCharacter</span> <span class="o">:</span> <span class="k">public</span> <span class="n">ACharacter</span>
+<span class="p">{</span>
+    <span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+        
+<span class="k">public</span><span class="o">:</span>
+    <span class="cm">/**</span>
+<span class="cm">     * Stores the character's current health.</span>
+<span class="cm">     **/</span>
+    <span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Combat"</span><span class="p">)</span>
+    <span class="n">int32</span> <span class="n">Health</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="TutorialCharacter.cpp">
+        TutorialCharacter.cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2015 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#include</span> <span class="cpf">"SlateTutorials.h"</span><span class="cp"></span>
+ 
+<span class="cp">#include</span> <span class="cpf">"TutorialCharacter.h"</span><span class="cp"></span>
+ 
+<span class="n">ATutorialCharacter</span><span class="o">::</span><span class="n">ATutorialCharacter</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span>
+    <span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Health</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Once we’ve got these, retrieving and applying the score and health is simple
+      </p>
+      <h3>
+       <span class="mw-headline" id="TutorialGameHUDUI.cpp_2">
+        TutorialGameHUDUI.cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FText</span> <span class="n">STutorialGameHUDUI</span><span class="o">::</span><span class="n">GetScore</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+    <span class="c1">// NOTE: THIS IS A TERRIBLE WAY TO DO THIS. DO NOT DO IT. IT ONLY WORKS ON SERVERS. USE GAME STATES INSTEAD!</span>
+    <span class="n">ATutGameMode</span><span class="o">*</span> <span class="n">gameMode</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">ATutGameMode</span><span class="o">&gt;</span><span class="p">(</span><span class="n">OwnerHUD</span><span class="o">-&gt;</span><span class="n">GetWorldSettings</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetWorld</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetAuthGameMode</span><span class="p">());</span>
+ 
+    <span class="k">if</span> <span class="p">(</span><span class="n">gameMode</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">FText</span><span class="o">::</span><span class="n">FromString</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"SCORE: --"</span><span class="p">));</span>
+ 
+    <span class="n">FString</span> <span class="n">score</span> <span class="o">=</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"SCORE: "</span><span class="p">);</span>
+    <span class="n">score</span><span class="p">.</span><span class="n">AppendInt</span><span class="p">(</span><span class="n">gameMode</span><span class="o">-&gt;</span><span class="n">GetScore</span><span class="p">());</span>
+ 
+    <span class="k">return</span> <span class="n">FText</span><span class="o">::</span><span class="n">FromString</span><span class="p">(</span><span class="n">score</span><span class="p">);</span>
+<span class="p">}</span>
+ 
+<span class="n">FText</span> <span class="n">STutorialGameHUDUI</span><span class="o">::</span><span class="n">GetHealth</span><span class="p">()</span> <span class="k">const</span> 
+<span class="p">{</span>
+    <span class="n">ATutorialCharacter</span><span class="o">*</span> <span class="n">character</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">ATutorialCharacter</span><span class="o">&gt;</span><span class="p">(</span><span class="n">OwnerHUD</span><span class="o">-&gt;</span><span class="n">PlayerOwner</span><span class="o">-&gt;</span><span class="n">GetCharacter</span><span class="p">());</span>
+ 
+    <span class="k">if</span> <span class="p">(</span><span class="n">character</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">FText</span><span class="o">::</span><span class="n">FromString</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"HEALTH: --"</span><span class="p">));</span>
+ 
+    <span class="n">FString</span> <span class="n">health</span> <span class="o">=</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"HEALTH: "</span><span class="p">);</span>
+    <span class="n">health</span><span class="p">.</span><span class="n">AppendInt</span><span class="p">(</span><span class="n">character</span><span class="o">-&gt;</span><span class="n">Health</span><span class="p">);</span>
+ 
+    <span class="k">return</span> <span class="n">FText</span><span class="o">::</span><span class="n">FromString</span><span class="p">(</span><span class="n">health</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Go ahead and run the game, then update the score! (You can do this in the sample files by pressing the Home/End to adjust health &amp; Page Up/Page Down to adjust score).
+      </p>
+      <p>
+       Source code:
+     (~547KB)
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

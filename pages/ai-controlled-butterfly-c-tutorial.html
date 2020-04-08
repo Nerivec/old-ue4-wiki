@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   AI Controlled Butterfly - C++ tutorial - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    AI Controlled Butterfly - C++ tutorial
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <p>
+       <i>
+        Original Author:
+       </i>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#What_can_you_learn.3F">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           What can you learn?
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Requirements">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Requirements
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Step_by_step">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Step by step
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#AI_logic_debrief">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           AI logic debrief
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Source_Code">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Source Code
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Next_Steps">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Next Steps
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       I am very new to Unreal engine, started with Blueprints first and now doing in C++. This is my first individual project inspired by flying butterflies in Epic's
+       <b>
+        Blueprints
+       </b>
+       tutorial ( can be found under
+       <i>
+        "Learn"
+       </i>
+       section of
+       <i>
+        Epic Games Launcher
+       </i>
+       ). I learned the butterfly AI logic from that tutorial and did it my way in C++. Also assets I used were migrated from that project. I think this tutorial can be helpful for all C++ programmers starting with Unreal.
+      </p>
+      <p>
+       Here is how the final work looks like ...
+      </p>
+      <p>
+       <img alt='"AI Controlled Butterfly"' class="" height="338" src="../assets/ai-controlled-butterfly-c-tutorial/0.png" width="600"/>
+      </p>
+      <p>
+       ... and some quick recording.
+      </p>
+      <p>
+       &lt;youtube&gt;
+       <a class="external free" href="https://youtu.be/cT5CrV4VAxE" rel="nofollow">
+        https://youtu.be/cT5CrV4VAxE
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="What_can_you_learn.3F">
+        What can you learn?
+       </span>
+      </h2>
+      <p>
+       You can learn following Unreal C++ programming topics from this tutorial:
+      </p>
+      <ol>
+       <li>
+        Create actor's components and build their hierarchy. Load mesh and assign it to component.
+       </li>
+       <li>
+        Create and load float curve asset into the program.
+       </li>
+       <li>
+        Use of FTimeline following float curve to animate meshes.
+       </li>
+       <li>
+        Move the object changing its location and rotation. Very easy vector and rotatory mathematics used for that.
+       </li>
+       <li>
+        Checking for collision with the line tracing.
+       </li>
+       <li>
+        Using random ranges.
+       </li>
+       <li>
+        Creating simple state machine to implement AI logic.
+       </li>
+       <li>
+        Debugging with the help of HUD Message or Output Log.
+       </li>
+      </ol>
+      <h2>
+       <span class="mw-headline" id="Requirements">
+        Requirements
+       </span>
+      </h2>
+      <p>
+       You need to know basics of Unreal: C++ project creation, C++ class creation, using Content Browser and create assets, compile C++ project, basic scene set up, analyse C++ code. I will not guide you through details of the source code but it is well commented to help you understand its logic.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Step_by_step">
+        Step by step
+       </span>
+      </h2>
+      <p>
+       Here is a quick guide to reproduce my project:
+      </p>
+      <ol>
+       <li>
+        Create new C++ project in
+        <i>
+         Unreal Project Browser
+        </i>
+        . Use
+        <i>
+         "Basic Code"
+        </i>
+        template, no need for
+        <i>
+         Starter Content
+        </i>
+        .
+       </li>
+       <li>
+        Download
+        <b>
+         Blueprints
+        </b>
+        project from
+        <i>
+         Epic Games Launcher/Learn
+        </i>
+        .
+       </li>
+       <li>
+        Open
+        <b>
+         Blueprints
+        </b>
+        project, in
+        <i>
+         Content Browser
+        </i>
+        go to
+        <i>
+         <b>
+          Content/Assets/Meshes
+         </b>
+        </i>
+        folder. Migrate following assets:
+        <i>
+         <b>
+          S_Butterfly_Body
+         </b>
+        </i>
+        ,
+        <i>
+         <b>
+          S_Butterfly_Left_Wing
+         </b>
+        </i>
+        ,
+        <i>
+         <b>
+          S_Butterfly_Right_Wing
+         </b>
+        </i>
+        to your just created C++ project folder. As a target for migration select
+        <i>
+         <b>
+          Content
+         </b>
+        </i>
+        folder of your project.
+       </li>
+       <li>
+        Open your C++ project in Unreal. In
+        <i>
+         Content Browser
+        </i>
+        create 3 Curve Float assets ( right click then
+        <i>
+         <b>
+          Miscellaneous/Curve
+         </b>
+        </i>
+        and  then select
+        <i>
+         <b>
+          CurveFloat
+         </b>
+        </i>
+        ):
+        <ul>
+         <li>
+          <b>
+           CF_ButterflyFlight
+          </b>
+          with key points: ( 0, 1 ), ( 0.2, -1 ), ( 0.5, 1 )
+          <img alt="AIControledButterfly02.png" class="" height="346" src="../assets/ai-controlled-butterfly-c-tutorial/1.png" width="600"/>
+         </li>
+         <li>
+          <b>
+           CF_ButterflyLanding
+          </b>
+          with key points: ( 0, 0  ), ( 1.5, 1 )
+          <b>
+           <img alt="AIControledButterfly03.png" class="" height="346" src="../assets/ai-controlled-butterfly-c-tutorial/2.png" width="600"/>
+          </b>
+         </li>
+         <li>
+          <b>
+           CF_ButterflyResting
+          </b>
+          with key points: ( 0, 0.1 ), ( 0.66, 0.79 ), ( 1.65, 0.95 ), ( 2.5, 0.23 ), ( 4.77, 0.18 ), ( 5.75, 0.78 ), ( 8.15, 0.92 ), ( 9.2, 0.1 ), ( 10, 0.35 )
+          <b>
+           <img alt="AIControledButterfly04.png" class="" height="346" src="../assets/ai-controlled-butterfly-c-tutorial/3.png" width="600"/>
+          </b>
+         </li>
+        </ul>
+       </li>
+       <li>
+        Create new C++ class using
+        <b>
+         Actor
+        </b>
+        as the parent and naming it
+        <b>
+         ButterflyActor
+        </b>
+        . Compile your C++ project.
+       </li>
+       <li>
+        You can now replace your
+        <i>
+         <b>
+          ButterflyActor.cpp
+         </b>
+        </i>
+        and
+        <i>
+         <b>
+          .h
+         </b>
+        </i>
+        files with my files. Recompile again.
+       </li>
+       <li>
+        You can either drag C++
+        <b>
+         ButterFlyActor
+        </b>
+        to your scene or create Blueprint using
+        <b>
+         ButterflyActor
+        </b>
+        as a parent and even change its logic there. While
+        <b>
+         ButterflyActor
+        </b>
+        object is selected in the Editor you can change
+        <i>
+         TargetAttractor
+        </i>
+        ,
+        <i>
+         MaxFlightRange
+        </i>
+        ,
+        <i>
+         GroundLevel
+        </i>
+        parameters found under
+        <b>
+         Butterfly
+        </b>
+        category in
+        <b>
+         Details
+        </b>
+        panel.
+       </li>
+       <li>
+        Enjoy the fly!
+       </li>
+      </ol>
+      <h2>
+       <span class="mw-headline" id="AI_logic_debrief">
+        AI logic debrief
+       </span>
+      </h2>
+      <p>
+       I hope my comments in source code are clear enough to help you understand it. Here is brief logic description:
+      </p>
+      <ol>
+       <li>
+        The first route is toward
+        <i>
+         TargetAttractor
+        </i>
+        location. Then target is exchanged with random location but not farther then
+        <i>
+         MaxFlightRange
+        </i>
+        from
+        <i>
+         TargetAttractor
+        </i>
+        .
+       </li>
+       <li>
+        <b>
+         Flying
+        </b>
+        state: - sets random flight time on the beginning; - every tick: changes location and rotation of the root component following move logic; checks for collision, if hit found then switch to
+        <b>
+         Landing Approach
+        </b>
+        state; if approaches close enough to the target then selects randomly new target; checks a flight time and if finished then targets to
+        <i>
+         GroundLevel
+        </i>
+        ; - with use of time line controls also swing of wings and the body.
+       </li>
+       <li>
+        <b>
+         Landing Approach
+        </b>
+        state: - using new time line changes location and rotation of the root component different way than during
+        <b>
+         Flying
+        </b>
+        : - continues to swing wings but 2.5 time faster now; - if landing time line is not playing any more then ends this state.
+       </li>
+       <li>
+        <b>
+         Resting state
+        </b>
+        : - sets random time of resting; - plays wings swing time line with the different curve float; - if time of resting is up then ends this state and triggers
+        <b>
+         Lift Off
+        </b>
+        .
+       </li>
+       <li>
+        <b>
+         Lift Off
+        </b>
+        state: - sets the time of
+        <b>
+         Lift Off
+        </b>
+        and triggers fast wings swing; - smoothly change just location of the root component; - when the lift off time is up then ends current state and triggers
+        <b>
+         Flying
+        </b>
+        .
+       </li>
+      </ol>
+      <h2>
+       <span class="mw-headline" id="Source_Code">
+        Source Code
+       </span>
+      </h2>
+      <p>
+       Here are
+       <b>
+        ButterflyActor.h
+       </b>
+       and
+       <b>
+        ButterflyActor.cpp
+       </b>
+       files:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Fill out your copyright notice in the Description page of Project Settings.</span>
+
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"CoreMinimal.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"GameFramework/Actor.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"ButterflyActor.generated.h"</span><span class="cp"></span>
+
+
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">BUTTERFLYPROJECT_API</span> <span class="nl">AButterflyActor</span> <span class="p">:</span> <span class="k">public</span> <span class="n">AActor</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+
+<span class="k">public</span><span class="o">:</span>
+		<span class="c1">// Sets default values for this actor's properties</span>
+	<span class="n">AButterflyActor</span><span class="p">();</span>
+
+<span class="k">protected</span><span class="o">:</span>
+		<span class="c1">// Called when the game starts or when spawned</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">BeginPlay</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+		<span class="c1">// Called every frame</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">Tick</span><span class="p">(</span> <span class="kt">float</span> <span class="n">DeltaTime</span> <span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+		<span class="c1">// called before garbage collection</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">BeginDestroy</span><span class="p">();</span>
+
+<span class="cp">#if WITH_EDITOR</span>
+		<span class="c1">// this is to update TargetAttractor parameter after it changed in Editor</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">PostEditChangeProperty</span><span class="p">(</span> <span class="n">FPropertyChangedEvent</span><span class="o">&amp;</span> <span class="n">PropertyChangeEvent</span> <span class="p">);</span>
+
+<span class="cp">#endif</span>
+		<span class="c1">// components created in that class</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span> <span class="n">VisibleDefaultsOnly</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Butterfly</span> <span class="p">)</span>
+	<span class="k">class</span> <span class="nc">UArrowComponent</span><span class="o">*</span> <span class="n">ButterflyRoot</span><span class="p">;</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span> <span class="n">VisibleDefaultsOnly</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Butterfly</span> <span class="p">)</span>
+	<span class="k">class</span> <span class="nc">UStaticMeshComponent</span><span class="o">*</span> <span class="n">Body</span><span class="p">;</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span> <span class="n">VisibleDefaultsOnly</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Butterfly</span> <span class="p">)</span>
+	<span class="k">class</span> <span class="nc">UStaticMeshComponent</span><span class="o">*</span> <span class="n">LeftWing</span><span class="p">;</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span> <span class="n">VisibleDefaultsOnly</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Butterfly</span> <span class="p">)</span>
+	<span class="k">class</span> <span class="nc">UStaticMeshComponent</span><span class="o">*</span> <span class="n">RightWing</span><span class="p">;</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span> <span class="n">VisibleDefaultsOnly</span><span class="p">,</span> <span class="n">BlueprintReadOnly</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Butterfly</span> <span class="p">)</span>
+	<span class="k">class</span> <span class="nc">UArrowComponent</span><span class="o">*</span> <span class="n">FlightTarget</span><span class="p">;</span>
+		<span class="c1">// base location to find new random target</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span> <span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Butterfly</span> <span class="p">)</span>
+	<span class="n">FVector</span>	<span class="n">TargetAttractor</span><span class="p">;</span>
+		<span class="c1">// max range value from TargetAttractor</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span> <span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Butterfly</span> <span class="p">)</span>
+	<span class="kt">float</span>	<span class="n">MaxFlightRange</span><span class="p">;</span>
+		<span class="c1">// Z level for forced landing</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span> <span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Butterfly</span> <span class="p">)</span>
+	<span class="kt">float</span>	<span class="n">GroundLevel</span><span class="p">;</span>
+
+<span class="k">protected</span><span class="o">:</span>
+		<span class="c1">// state machine states</span>
+	<span class="k">enum</span> <span class="n">ButterflyStateEnum</span>
+		<span class="p">{</span>
+		<span class="n">DoNothing</span><span class="p">,</span>
+		<span class="n">Resting</span><span class="p">,</span>
+		<span class="n">LiftOff</span><span class="p">,</span>
+		<span class="n">Flying</span><span class="p">,</span>
+		<span class="n">LandingApproach</span><span class="p">,</span>
+		<span class="p">};</span>
+			<span class="c1">// stores state machine current status</span>
+	<span class="n">ButterflyStateEnum</span> <span class="n">ButterflyState</span><span class="p">;</span>
+		<span class="c1">// check for collisions during the flight</span>
+	<span class="kt">void</span>	<span class="nf">CheckCollision</span><span class="p">();</span>
+		<span class="c1">// offsets location during the flight</span>
+	<span class="kt">void</span>	<span class="nf">FlyingMoveLocation</span><span class="p">(</span> <span class="kt">float</span> <span class="n">DeltaTime</span> <span class="p">);</span>
+		<span class="c1">// chnage rotation during hte flight</span>
+	<span class="kt">void</span>	<span class="nf">FlyingMoveRotation</span><span class="p">(</span> <span class="kt">float</span> <span class="n">DeltaTime</span> <span class="p">);</span>
+		<span class="c1">// randomly selects new target</span>
+	<span class="kt">void</span>	<span class="nf">ChooseNewTarget</span><span class="p">();</span>
+		<span class="c1">// rotate the wings, if Reset is true then positions them in default rotation</span>
+	<span class="kt">void</span> <span class="nf">RotateWings</span><span class="p">(</span> <span class="kt">float</span> <span class="n">Value</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">Reset</span> <span class="o">=</span> <span class="nb">false</span> <span class="p">);</span>
+		<span class="c1">// moves the body</span>
+	<span class="kt">void</span> <span class="nf">RotateBody</span><span class="p">(</span> <span class="kt">float</span> <span class="n">Value</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">Reset</span> <span class="o">=</span> <span class="nb">false</span> <span class="p">);</span>
+		<span class="c1">// below methos service states of state machine</span>
+	<span class="kt">void</span> <span class="nf">LiftOffStart</span><span class="p">();</span>
+	<span class="kt">void</span> <span class="nf">LiftOffEnd</span><span class="p">();</span>
+
+	<span class="kt">void</span> <span class="nf">FlyingStart</span><span class="p">();</span>
+	<span class="n">UFUNCTION</span><span class="p">()</span>
+	<span class="kt">void</span> <span class="n">FlyingContinues</span><span class="p">(</span> <span class="kt">float</span> <span class="n">Value</span> <span class="p">);</span>	<span class="c1">// method passed to Timeline processing has to be declared with UFUNCTION()!!!</span>
+	<span class="kt">void</span> <span class="nf">FlyingEnd</span><span class="p">();</span>
+
+	<span class="kt">void</span> <span class="nf">LandingApproachStart</span><span class="p">();</span>
+	<span class="n">UFUNCTION</span><span class="p">()</span>
+	<span class="kt">void</span> <span class="n">LandingApproachContinues</span><span class="p">(</span> <span class="kt">float</span> <span class="n">Value</span> <span class="p">);</span>	<span class="c1">// method passed to Timeline processing has to be declared with UFUNCTION()!!!</span>
+	<span class="kt">void</span> <span class="nf">LandingApproachEnd</span><span class="p">();</span>
+
+	<span class="kt">void</span> <span class="nf">RestingStart</span><span class="p">();</span>
+	<span class="n">UFUNCTION</span><span class="p">()</span>
+	<span class="kt">void</span> <span class="n">RestingContinues</span><span class="p">(</span> <span class="kt">float</span> <span class="n">Value</span> <span class="p">);</span>	<span class="c1">// method passed to Timeline processing has to be declared with UFUNCTION()!!!</span>
+	<span class="kt">void</span> <span class="nf">RestingEnd</span><span class="p">();</span>
+
+		<span class="c1">// below variables are made available to the Blueprint logic</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span> <span class="n">BlueprintReadWrite</span> <span class="p">)</span>
+	<span class="kt">float</span>	<span class="n">ForwardSpeed</span><span class="p">;</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span> <span class="n">BlueprintReadWrite</span> <span class="p">)</span>
+	<span class="kt">float</span>	<span class="n">UpwardSpeed</span><span class="p">;</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span> <span class="n">BlueprintReadWrite</span> <span class="p">)</span>
+	<span class="n">FVector</span>		<span class="n">CurrentTargetLocation</span><span class="p">;</span>
+
+		<span class="c1">// internal backup variable	</span>
+	<span class="n">FVector</span>		<span class="n">CurrentTargetLocationBackup</span><span class="p">;</span>
+		<span class="c1">// landing locations</span>
+	<span class="n">FVector</span>		<span class="n">LandingApproachStartLocation</span><span class="p">;</span>
+	<span class="n">FRotator</span>	<span class="n">LandingApproachStartRotation</span><span class="p">;</span>
+	<span class="n">FVector</span>		<span class="n">LandingApproachEndLocation</span><span class="p">;</span>
+	<span class="n">FVector</span>		<span class="n">LandingApproachEndNormal</span><span class="p">;</span>
+		<span class="c1">// landing support locations</span>
+	<span class="n">FVector</span>		<span class="n">LandingLocationSlightlyBelow</span><span class="p">;</span>
+	<span class="n">FVector</span>		<span class="n">LandingLocationSlightlyAbove</span><span class="p">;</span>
+		<span class="c1">// timers counting seconds till next event</span>
+	<span class="kt">float</span>		<span class="n">SecondsTillNextSwing</span><span class="p">;</span>
+	<span class="kt">float</span>		<span class="n">SecondsTillLiftOff</span><span class="p">;</span>
+	<span class="kt">float</span>		<span class="n">SecondsTillLiftOffEnd</span><span class="p">;</span>
+	<span class="kt">float</span>		<span class="n">SecondsTillNextLanding</span><span class="p">;</span>
+		<span class="c1">// setups struct fields and binds method</span>
+	<span class="kt">void</span> <span class="nf">MaintainTimeLine</span><span class="p">(</span> <span class="k">struct</span> <span class="n">FTimeline</span><span class="o">*</span> <span class="n">TimeLine</span><span class="p">,</span> <span class="k">class</span> <span class="nc">UCurveFloat</span><span class="o">*</span> <span class="n">CurveFloat</span><span class="p">,</span> <span class="k">const</span> <span class="n">FName</span><span class="o">&amp;</span> <span class="n">MethodName</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">Looping</span> <span class="o">=</span> <span class="nb">false</span> <span class="p">);</span>
+		<span class="c1">//pointers to Timeline structures</span>
+	<span class="k">struct</span> <span class="n">FTimeline</span><span class="o">*</span>	<span class="n">FTLButterflyFlight</span><span class="p">;</span>
+	<span class="k">struct</span> <span class="n">FTimeline</span><span class="o">*</span>	<span class="n">FTLButterflyLanding</span><span class="p">;</span>
+	<span class="k">struct</span> <span class="n">FTimeline</span><span class="o">*</span>	<span class="n">FTLButterflyResting</span><span class="p">;</span>
+		<span class="c1">// load mesh asset</span>
+	<span class="k">static</span> <span class="kt">void</span> <span class="nf">LoadMeshAsset</span><span class="p">(</span> <span class="n">UStaticMeshComponent</span><span class="o">*</span> <span class="n">MeshComponent</span><span class="p">,</span> <span class="k">const</span> <span class="n">TCHAR</span><span class="o">*</span> <span class="n">AssetPath</span> <span class="p">);</span>
+		<span class="c1">// load curve float asset</span>
+	<span class="k">static</span> <span class="n">UCurveFloat</span><span class="o">*</span> <span class="nf">LoadCurveFloatAsset</span><span class="p">(</span> <span class="k">const</span> <span class="n">TCHAR</span><span class="o">*</span> <span class="n">AssetPath</span> <span class="p">);</span>
+
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Fill out your copyright notice in the Description page of Project Settings.</span>
+
+<span class="cp">#include</span> <span class="cpf">"ButterflyActor.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"Components/ArrowComponent.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Kismet/KismetMathLibrary.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Components/TimelineComponent.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Math/UnrealMathUtility.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"DrawDebugHelpers.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"ConstructorHelpers.h"</span><span class="cp"></span>
+
+
+
+<span class="c1">// prints message to the screen with selected color</span>
+<span class="cp">#define HUDMessage(color,text) if( GEngine ) GEngine-&gt;AddOnScreenDebugMessage( -1, 5.0f, color, text );</span>
+
+
+<span class="c1">// those variables store resources, which should be loaded only once </span>
+<span class="k">static</span> <span class="n">UCurveFloat</span><span class="o">*</span>		<span class="n">CFButterflyFlight</span><span class="p">;</span>
+<span class="k">static</span> <span class="n">UCurveFloat</span><span class="o">*</span>		<span class="n">CFButterflyLanding</span><span class="p">;</span>
+<span class="k">static</span> <span class="n">UCurveFloat</span><span class="o">*</span>		<span class="n">CFButterflyResting</span><span class="p">;</span>
+
+
+<span class="c1">// Sets default values</span>
+<span class="n">AButterflyActor</span><span class="o">::</span><span class="n">AButterflyActor</span><span class="p">()</span> <span class="o">:</span>
+	<span class="n">ForwardSpeed</span><span class="p">(</span> <span class="mf">100.0f</span> <span class="p">),</span>
+	<span class="n">UpwardSpeed</span><span class="p">(</span> <span class="mf">1.0f</span> <span class="p">),</span>
+	<span class="n">MaxFlightRange</span><span class="p">(</span> <span class="mf">400.0f</span> <span class="p">),</span>
+	<span class="n">GroundLevel</span><span class="p">(</span> <span class="mi">0</span> <span class="p">),</span>
+	<span class="n">ButterflyState</span><span class="p">(</span> <span class="n">DoNothing</span> <span class="p">),</span>
+	<span class="n">SecondsTillNextSwing</span><span class="p">(</span> <span class="mf">0.0f</span> <span class="p">),</span>
+	<span class="n">SecondsTillLiftOff</span><span class="p">(</span> <span class="mf">32.0f</span> <span class="p">),</span>
+	<span class="n">SecondsTillLiftOffEnd</span><span class="p">(</span> <span class="mf">1.8f</span> <span class="p">),</span>
+	<span class="n">SecondsTillNextLanding</span><span class="p">(</span> <span class="mi">9</span> <span class="p">)</span>
+<span class="p">{</span>
+		<span class="c1">// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.</span>
+	<span class="n">PrimaryActorTick</span><span class="p">.</span><span class="n">bCanEverTick</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+
+		<span class="c1">// create components hierachy</span>
+		<span class="c1">// start from the root, which is starting position arrow component</span>
+	<span class="n">ButterflyRoot</span> <span class="o">=</span> <span class="n">CreateDefaultSubobject</span><span class="o">&lt;</span><span class="n">UArrowComponent</span><span class="o">&gt;</span><span class="p">(</span> <span class="n">TEXT</span><span class="p">(</span> <span class="s">"ButterflyRoot"</span> <span class="p">)</span> <span class="p">);</span>
+	<span class="n">ButterflyRoot</span><span class="o">-&gt;</span><span class="n">SetArrowColor</span><span class="p">(</span> <span class="n">FLinearColor</span><span class="p">(</span> <span class="n">FColor</span><span class="o">::</span><span class="n">Green</span> <span class="p">)</span> <span class="p">);</span>
+	<span class="n">ButterflyRoot</span><span class="o">-&gt;</span><span class="n">bEditableWhenInherited</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+	<span class="n">ButterflyRoot</span><span class="o">-&gt;</span><span class="n">SetRelativeScale3D</span><span class="p">(</span> <span class="n">FVector</span><span class="p">(</span> <span class="mf">4.0f</span><span class="p">,</span> <span class="mf">4.0f</span><span class="p">,</span> <span class="mf">4.0f</span> <span class="p">)</span> <span class="p">);</span>
+		<span class="c1">// make it a root component</span>
+	<span class="n">RootComponent</span> <span class="o">=</span> <span class="n">ButterflyRoot</span><span class="p">;</span>
+		<span class="c1">// buterfly body mesh component now</span>
+	<span class="n">Body</span> <span class="o">=</span> <span class="n">CreateDefaultSubobject</span><span class="o">&lt;</span><span class="n">UStaticMeshComponent</span><span class="o">&gt;</span><span class="p">(</span> <span class="n">TEXT</span><span class="p">(</span> <span class="s">"Body"</span> <span class="p">)</span> <span class="p">);</span>
+	<span class="n">Body</span><span class="o">-&gt;</span><span class="n">SetupAttachment</span><span class="p">(</span> <span class="n">RootComponent</span> <span class="p">);</span>
+	<span class="n">LoadMeshAsset</span><span class="p">(</span> <span class="n">Body</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span> <span class="s">"/Game/Assets/Meshes/S_Butterfly_Body.S_Butterfly_Body"</span> <span class="p">)</span> <span class="p">);</span>
+		<span class="c1">// left wing mesh component</span>
+	<span class="n">LeftWing</span> <span class="o">=</span> <span class="n">CreateDefaultSubobject</span><span class="o">&lt;</span><span class="n">UStaticMeshComponent</span><span class="o">&gt;</span><span class="p">(</span> <span class="n">TEXT</span><span class="p">(</span> <span class="s">"LeftWing"</span> <span class="p">)</span> <span class="p">);</span>
+	<span class="n">LeftWing</span><span class="o">-&gt;</span><span class="n">SetupAttachment</span><span class="p">(</span> <span class="n">Body</span> <span class="p">);</span>
+	<span class="n">LoadMeshAsset</span><span class="p">(</span> <span class="n">LeftWing</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span> <span class="s">"/Game/Assets/Meshes/S_Butterfly_Left_Wing.S_Butterfly_Left_Wing"</span> <span class="p">)</span> <span class="p">);</span>
+		<span class="c1">// right wing mesh component</span>
+	<span class="n">RightWing</span> <span class="o">=</span> <span class="n">CreateDefaultSubobject</span><span class="o">&lt;</span><span class="n">UStaticMeshComponent</span><span class="o">&gt;</span><span class="p">(</span> <span class="n">TEXT</span><span class="p">(</span> <span class="s">"RightWing"</span> <span class="p">)</span> <span class="p">);</span>
+	<span class="n">RightWing</span><span class="o">-&gt;</span><span class="n">SetupAttachment</span><span class="p">(</span> <span class="n">Body</span> <span class="p">);</span>
+	<span class="n">LoadMeshAsset</span><span class="p">(</span> <span class="n">RightWing</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span> <span class="s">"/Game/Assets/Meshes/S_Butterfly_Right_Wing.S_Butterfly_Right_Wing"</span> <span class="p">)</span> <span class="p">);</span>
+		<span class="c1">// target position arrow component</span>
+	<span class="n">FlightTarget</span> <span class="o">=</span> <span class="n">CreateDefaultSubobject</span><span class="o">&lt;</span><span class="n">UArrowComponent</span><span class="o">&gt;</span><span class="p">(</span> <span class="n">TEXT</span><span class="p">(</span> <span class="s">"FlightTarget"</span> <span class="p">)</span> <span class="p">);</span>
+	<span class="n">FlightTarget</span><span class="o">-&gt;</span><span class="n">SetupAttachment</span><span class="p">(</span> <span class="n">RootComponent</span> <span class="p">);</span>
+		<span class="c1">// some default target position</span>
+	<span class="n">FlightTarget</span><span class="o">-&gt;</span><span class="n">SetRelativeLocation</span><span class="p">(</span> <span class="n">FVector</span><span class="p">(</span> <span class="mf">40.0f</span><span class="p">,</span> <span class="mf">20.0f</span><span class="p">,</span> <span class="mf">10.0f</span> <span class="p">)</span> <span class="p">);</span>
+
+		<span class="c1">// load ButterflyFlight curve float</span>
+	<span class="k">if</span> <span class="p">(</span> <span class="n">CFButterflyFlight</span> <span class="o">==</span> <span class="k">nullptr</span> <span class="p">)</span>
+		<span class="n">CFButterflyFlight</span> <span class="o">=</span> <span class="n">LoadCurveFloatAsset</span><span class="p">(</span> <span class="n">TEXT</span><span class="p">(</span> <span class="s">"/Game/Assets_Mine/CF_ButterflyFlight"</span> <span class="p">)</span> <span class="p">);</span>
+		<span class="c1">// load butterfly landing curve float</span>
+	<span class="k">if</span> <span class="p">(</span> <span class="n">CFButterflyLanding</span> <span class="o">==</span> <span class="k">nullptr</span> <span class="p">)</span>
+		<span class="n">CFButterflyLanding</span> <span class="o">=</span> <span class="n">LoadCurveFloatAsset</span><span class="p">(</span> <span class="n">TEXT</span><span class="p">(</span> <span class="s">"/Game/Assets_Mine/CF_ButterflyLanding"</span> <span class="p">)</span> <span class="p">);</span>
+		<span class="c1">// load butterfly resting curve float</span>
+	<span class="k">if</span> <span class="p">(</span> <span class="n">CFButterflyResting</span> <span class="o">==</span> <span class="k">nullptr</span> <span class="p">)</span>
+		<span class="n">CFButterflyResting</span> <span class="o">=</span> <span class="cm">/*UMyStaticLibrary::*/</span><span class="n">LoadCurveFloatAsset</span><span class="p">(</span> <span class="n">TEXT</span><span class="p">(</span> <span class="s">"/Game/Assets_Mine/CF_ButterflyResting"</span> <span class="p">)</span> <span class="p">);</span>
+
+		<span class="c1">// create FTimeLine structures so can be used during the Play</span>
+	<span class="n">FTLButterflyFlight</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FTimeline</span><span class="p">;</span>
+	<span class="n">FTLButterflyLanding</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FTimeline</span><span class="p">;</span>
+	<span class="n">FTLButterflyResting</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FTimeline</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AButterflyActor</span><span class="o">::</span><span class="n">BeginDestroy</span><span class="p">()</span>
+<span class="p">{</span>
+		<span class="c1">//UE_LOG( LogTemp, Warning, TEXT("In AButterflyActor::BeginDestroy()") );</span>
+			<span class="c1">// clean up FTimeline structures</span>
+	<span class="k">delete</span> <span class="n">FTLButterflyFlight</span><span class="p">;</span>
+	<span class="k">delete</span> <span class="n">FTLButterflyLanding</span><span class="p">;</span>
+	<span class="k">delete</span> <span class="n">FTLButterflyResting</span><span class="p">;</span>
+		<span class="c1">// must call for the super class!!!</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">BeginDestroy</span><span class="p">();</span>
+<span class="p">}</span>
+
+	<span class="c1">// Called when the game starts or when spawned</span>
+<span class="kt">void</span> <span class="n">AButterflyActor</span><span class="o">::</span><span class="n">BeginPlay</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">BeginPlay</span><span class="p">();</span>
+		<span class="c1">// initial target location</span>
+	<span class="n">CurrentTargetLocation</span> <span class="o">=</span> <span class="n">TargetAttractor</span><span class="p">;</span>
+
+		<span class="c1">// setup butterfly flight timeline</span>
+	<span class="k">if</span> <span class="p">(</span> <span class="n">CFButterflyFlight</span> <span class="p">)</span>
+		<span class="p">{</span>
+		<span class="n">MaintainTimeLine</span><span class="p">(</span> <span class="n">FTLButterflyFlight</span><span class="p">,</span> <span class="n">CFButterflyFlight</span><span class="p">,</span> <span class="n">FName</span><span class="p">(</span> <span class="s">"FlyingContinues"</span> <span class="p">),</span> <span class="nb">true</span> <span class="p">);</span>
+		<span class="p">}</span>
+			<span class="c1">// setup butterfly landing timeline</span>
+	<span class="k">if</span> <span class="p">(</span> <span class="n">CFButterflyLanding</span> <span class="p">)</span>
+		<span class="p">{</span>
+		<span class="n">MaintainTimeLine</span><span class="p">(</span> <span class="n">FTLButterflyLanding</span><span class="p">,</span> <span class="n">CFButterflyLanding</span><span class="p">,</span> <span class="n">FName</span><span class="p">(</span> <span class="s">"LandingApproachContinues"</span> <span class="p">)</span> <span class="p">);</span>
+		<span class="p">}</span>
+			<span class="c1">// setup butterfly resting timeline</span>
+	<span class="k">if</span> <span class="p">(</span> <span class="n">CFButterflyResting</span> <span class="p">)</span>
+		<span class="p">{</span>
+		<span class="n">MaintainTimeLine</span><span class="p">(</span> <span class="n">FTLButterflyResting</span><span class="p">,</span> <span class="n">CFButterflyResting</span><span class="p">,</span> <span class="n">FName</span><span class="p">(</span> <span class="s">"RestingContinues"</span> <span class="p">)</span> <span class="p">);</span>
+		<span class="p">}</span>
+
+		<span class="c1">//FlyingStart();</span>
+			<span class="c1">// start from resting state now</span>
+	<span class="n">RestingStart</span><span class="p">();</span>
+<span class="p">}</span>
+
+	<span class="c1">// Called every frame</span>
+<span class="kt">void</span> <span class="n">AButterflyActor</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span> <span class="kt">float</span> <span class="n">DeltaTime</span> <span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span> <span class="n">DeltaTime</span> <span class="p">);</span>
+		<span class="c1">// let the update of timelines</span>
+	<span class="n">FTLButterflyFlight</span><span class="o">-&gt;</span><span class="n">TickTimeline</span><span class="p">(</span> <span class="n">DeltaTime</span> <span class="p">);</span>
+	<span class="n">FTLButterflyLanding</span><span class="o">-&gt;</span><span class="n">TickTimeline</span><span class="p">(</span> <span class="n">DeltaTime</span> <span class="p">);</span>
+	<span class="n">FTLButterflyResting</span><span class="o">-&gt;</span><span class="n">TickTimeline</span><span class="p">(</span> <span class="n">DeltaTime</span> <span class="p">);</span>
+		<span class="c1">// act according to the current state </span>
+	<span class="k">switch</span> <span class="p">(</span> <span class="n">ButterflyState</span> <span class="p">)</span>
+		<span class="p">{</span>
+			<span class="k">case</span> <span class="nl">LiftOff</span><span class="p">:</span>
+					<span class="c1">// count seconds till end of LiftOff phase</span>
+				<span class="k">if</span> <span class="p">(</span> <span class="n">SecondsTillLiftOffEnd</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="p">)</span>
+					<span class="n">LiftOffEnd</span><span class="p">();</span>
+				<span class="k">else</span>
+					<span class="n">SecondsTillLiftOffEnd</span> <span class="o">-=</span> <span class="n">DeltaTime</span><span class="p">;</span>
+					<span class="c1">// just move the butterfly location, no rotation</span>
+				<span class="n">FlyingMoveLocation</span><span class="p">(</span> <span class="n">DeltaTime</span> <span class="p">);</span>
+				<span class="k">break</span><span class="p">;</span>
+
+			<span class="k">case</span> <span class="nl">Flying</span><span class="p">:</span>
+					<span class="c1">// move the buterfly location</span>
+				<span class="n">FlyingMoveLocation</span><span class="p">(</span> <span class="n">DeltaTime</span> <span class="p">);</span>
+					<span class="c1">// and rotate it accordingly</span>
+				<span class="n">FlyingMoveRotation</span><span class="p">(</span> <span class="n">DeltaTime</span> <span class="p">);</span>
+					<span class="c1">// in case of collision start LandApproach state</span>
+				<span class="n">CheckCollision</span><span class="p">();</span>
+					<span class="c1">// check if close to current target</span>
+				<span class="k">if</span> <span class="p">(</span> <span class="p">(</span> <span class="n">CurrentTargetLocation</span> <span class="o">-</span> <span class="n">ButterflyRoot</span><span class="o">-&gt;</span><span class="n">GetComponentLocation</span><span class="p">()</span> <span class="p">).</span><span class="n">Size</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">60</span> <span class="p">)</span>
+					<span class="n">ChooseNewTarget</span><span class="p">();</span>
+					<span class="c1">// count seconds till landing, so butterfly is not flying to long</span>
+				<span class="k">if</span> <span class="p">(</span> <span class="n">SecondsTillNextLanding</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="p">)</span>
+					<span class="n">CurrentTargetLocation</span><span class="p">.</span><span class="n">Z</span> <span class="o">=</span> <span class="n">GroundLevel</span><span class="p">;</span>
+				<span class="k">else</span>
+					<span class="n">SecondsTillNextLanding</span> <span class="o">-=</span> <span class="n">DeltaTime</span><span class="p">;</span>
+
+				<span class="k">break</span><span class="p">;</span>
+
+			<span class="k">case</span> <span class="nl">LandingApproach</span><span class="p">:</span>
+					<span class="c1">// if landing timeline is not playing then finish this state</span>
+				<span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="n">FTLButterflyLanding</span><span class="o">-&gt;</span><span class="n">IsPlaying</span><span class="p">()</span> <span class="p">)</span>
+					<span class="p">{</span>
+						<span class="c1">//UE_LOG(LogTemp, Warning, TEXT("LandingApproachEnd in Tick()") );</span>
+					<span class="n">LandingApproachEnd</span><span class="p">();</span>
+					<span class="p">}</span>
+
+				<span class="k">break</span><span class="p">;</span>
+			<span class="k">case</span> <span class="nl">Resting</span><span class="p">:</span>
+					<span class="c1">// if resting timeline is not playing then ...</span>
+				<span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="n">FTLButterflyResting</span><span class="o">-&gt;</span><span class="n">IsPlaying</span><span class="p">()</span> <span class="p">)</span>
+					<span class="k">if</span> <span class="p">(</span> <span class="n">SecondsTillNextSwing</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">)</span>
+							<span class="c1">// ... count seconds ...</span>
+						<span class="n">SecondsTillNextSwing</span> <span class="o">-=</span> <span class="n">DeltaTime</span><span class="p">;</span>
+					<span class="k">else</span>
+						<span class="p">{</span>
+								<span class="c1">// ... or paly next swing if it is time for that</span>
+						<span class="n">FTLButterflyResting</span><span class="o">-&gt;</span><span class="n">PlayFromStart</span><span class="p">();</span>
+							<span class="c1">// assign random value till next Swing</span>
+						<span class="n">SecondsTillNextSwing</span> <span class="o">=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">FRandRange</span><span class="p">(</span> <span class="mf">5.0f</span><span class="p">,</span> <span class="mf">10.0f</span> <span class="p">);</span>
+						<span class="p">}</span>
+						<span class="c1">// count seconds till LiftOff ...</span>
+				<span class="n">SecondsTillLiftOff</span> <span class="o">-=</span> <span class="n">DeltaTime</span><span class="p">;</span>
+				<span class="k">if</span> <span class="p">(</span> <span class="n">SecondsTillLiftOff</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="p">)</span>
+					<span class="p">{</span>
+							<span class="c1">// ... finish this state and start LiftOff</span>
+					<span class="n">RestingEnd</span><span class="p">();</span>
+					<span class="n">LiftOffStart</span><span class="p">();</span>
+					<span class="p">}</span>
+
+				<span class="k">break</span><span class="p">;</span>
+			<span class="k">default</span><span class="o">:</span>
+				<span class="k">break</span><span class="p">;</span>
+		<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AButterflyActor</span><span class="o">::</span><span class="n">FlyingMoveLocation</span><span class="p">(</span> <span class="kt">float</span> <span class="n">DeltaTime</span> <span class="p">)</span>
+<span class="p">{</span>
+		<span class="c1">// calculate move offset in DeltaTime and sets root component</span>
+	<span class="n">FVector</span> <span class="n">DeltaLocation</span><span class="p">(</span> <span class="n">ForwardSpeed</span><span class="p">,</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="n">UpwardSpeed</span> <span class="p">);</span>
+	<span class="n">DeltaLocation</span> <span class="o">*=</span> <span class="n">DeltaTime</span><span class="p">;</span>
+	<span class="n">ButterflyRoot</span><span class="o">-&gt;</span><span class="n">AddLocalOffset</span><span class="p">(</span> <span class="n">DeltaLocation</span> <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AButterflyActor</span><span class="o">::</span><span class="n">FlyingMoveRotation</span><span class="p">(</span> <span class="kt">float</span> <span class="n">DeltaTime</span> <span class="p">)</span>
+<span class="p">{</span>
+		<span class="c1">// calculate rotation change in DeltaTime and sets root component</span>
+	<span class="n">FRotator</span> <span class="n">TargetRotation</span> <span class="o">=</span> <span class="n">UKismetMathLibrary</span><span class="o">::</span><span class="n">FindLookAtRotation</span><span class="p">(</span> <span class="n">ButterflyRoot</span><span class="o">-&gt;</span><span class="n">GetComponentLocation</span><span class="p">(),</span> <span class="n">CurrentTargetLocation</span> <span class="p">);</span>
+	<span class="n">FRotator</span> <span class="n">NewDirectionRotation</span> <span class="o">=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">RInterpTo</span><span class="p">(</span> <span class="n">ButterflyRoot</span><span class="o">-&gt;</span><span class="n">GetComponentRotation</span><span class="p">(),</span> <span class="n">TargetRotation</span><span class="p">,</span> <span class="n">DeltaTime</span><span class="p">,</span> <span class="mf">1.2</span> <span class="p">);</span>
+	<span class="n">ButterflyRoot</span><span class="o">-&gt;</span><span class="n">SetWorldRotation</span><span class="p">(</span> <span class="n">NewDirectionRotation</span> <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AButterflyActor</span><span class="o">::</span><span class="n">ChooseNewTarget</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="kt">float</span> <span class="n">RandomHX</span> <span class="o">=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">FRandRange</span><span class="p">(</span> <span class="o">-</span><span class="mf">0.7f</span><span class="o">*</span><span class="n">MaxFlightRange</span><span class="p">,</span> <span class="n">MaxFlightRange</span> <span class="p">);</span>
+	<span class="kt">float</span> <span class="n">RandomHY</span> <span class="o">=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">FRandRange</span><span class="p">(</span> <span class="o">-</span><span class="mf">0.7f</span><span class="o">*</span><span class="n">MaxFlightRange</span><span class="p">,</span> <span class="n">MaxFlightRange</span> <span class="p">);</span>
+	<span class="kt">float</span> <span class="n">RandomV</span> <span class="o">=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">FRandRange</span><span class="p">(</span> <span class="o">-</span><span class="mf">0.15f</span><span class="o">*</span><span class="n">MaxFlightRange</span><span class="p">,</span> <span class="mf">0.5f</span><span class="o">*</span><span class="n">MaxFlightRange</span> <span class="p">);</span>
+	<span class="n">CurrentTargetLocation</span> <span class="o">=</span> <span class="n">TargetAttractor</span> <span class="o">+</span> <span class="n">FVector</span><span class="p">(</span> <span class="n">RandomHX</span><span class="p">,</span> <span class="n">RandomHY</span><span class="p">,</span> <span class="n">RandomV</span> <span class="p">);</span>
+	<span class="c1">//UE_LOG(LogTemp, Warning, TEXT("Approaching CurrentTarget Location"));</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AButterflyActor</span><span class="o">::</span><span class="n">CheckCollision</span><span class="p">()</span>
+<span class="p">{</span>
+			<span class="c1">// get current location of the root component</span>
+	<span class="n">FVector</span> <span class="n">ButterflyRootLocation</span> <span class="o">=</span> <span class="n">ButterflyRoot</span><span class="o">-&gt;</span><span class="n">GetComponentLocation</span><span class="p">();</span>
+		<span class="c1">// trace if any collision is in the front</span>
+<span class="cp">#define TRACE_LENGTH	70</span>
+		<span class="c1">// forward vector is unit vector hence it is mulitplied, then slightly put down and finaly added to the current location</span>
+	<span class="n">FVector</span>	<span class="n">TraceEndLocation</span> <span class="o">=</span> <span class="n">ButterflyRootLocation</span> <span class="o">+</span> <span class="p">(</span> <span class="p">(</span> <span class="n">ButterflyRoot</span><span class="o">-&gt;</span><span class="n">GetForwardVector</span><span class="p">()</span><span class="o">*</span><span class="n">TRACE_LENGTH</span> <span class="p">)</span> <span class="o">-</span> <span class="n">FVector</span><span class="p">(</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="mf">15.0f</span> <span class="p">)</span> <span class="p">);</span>
+		<span class="c1">// you can see tracing vector below</span>
+	<span class="c1">//DrawDebugLine(GetWorld(), ButterflyRootLocation, TraceEndLocation, FColor::Red, false, -1.0f, 0, 1.0f);</span>
+		<span class="c1">// set parameters for tracing</span>
+	<span class="n">FHitResult</span> <span class="n">Hit</span><span class="p">;</span>
+	<span class="n">FCollisionObjectQueryParams</span> <span class="nf">ObjectQueryParams</span><span class="p">(</span> <span class="n">ECC_WorldStatic</span> <span class="p">);</span>
+	<span class="n">FCollisionQueryParams</span> <span class="nf">QueryParams</span><span class="p">(</span> <span class="n">FName</span><span class="p">(),</span> <span class="nb">true</span><span class="p">,</span> <span class="k">this</span> <span class="p">);</span>
+		<span class="c1">// call tracing function</span>
+	<span class="kt">bool</span> <span class="n">Result</span> <span class="o">=</span> <span class="n">GetWorld</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">LineTraceSingleByObjectType</span><span class="p">(</span> <span class="n">Hit</span><span class="p">,</span> <span class="n">ButterflyRootLocation</span><span class="p">,</span> <span class="n">TraceEndLocation</span><span class="p">,</span> <span class="n">ObjectQueryParams</span><span class="p">,</span> <span class="n">QueryParams</span> <span class="p">);</span>
+		<span class="c1">// if hit founf then ... </span>
+	<span class="k">if</span> <span class="p">(</span> <span class="n">Result</span> <span class="p">)</span>
+		<span class="p">{</span>
+			<span class="c1">//UE_LOG(LogTemp, Log, TEXT("-"));</span>
+			<span class="c1">//UE_LOG( LogTemp, Warning, TEXT("Trace hit for %s into %s"), *GetName(), *Hit.Actor-&gt;GetName() );</span>
+			<span class="c1">//UE_LOG(LogTemp, Warning, TEXT("Location: %s ImpactPoint: %s"), *Hit.Location.ToString(), *Hit.ImpactPoint.ToString() );</span>
+			<span class="c1">//UE_LOG(LogTemp, Warning, TEXT("Normal: %s ImpactNormal: %s"), *Hit.Normal.ToString(), *Hit.ImpactNormal.ToString());</span>
+				<span class="c1">// store hit location in local variables</span>
+		<span class="n">LandingApproachEndLocation</span> <span class="o">=</span> <span class="n">Hit</span><span class="p">.</span><span class="n">Location</span><span class="p">;</span>
+		<span class="n">LandingApproachEndNormal</span> <span class="o">=</span> <span class="n">Hit</span><span class="p">.</span><span class="n">Normal</span><span class="p">;</span>
+			<span class="c1">// ... start LandingApproach</span>
+		<span class="n">LandingApproachStart</span><span class="p">();</span>
+		<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AButterflyActor</span><span class="o">::</span><span class="n">RotateWings</span><span class="p">(</span> <span class="kt">float</span> <span class="n">Value</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">Reset</span> <span class="p">)</span>
+<span class="p">{</span>
+			<span class="c1">// neutral values for the mesh positions</span>
+	<span class="kt">float</span> <span class="n">XLeftWing</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">XRightWing</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+	<span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="n">Reset</span> <span class="p">)</span>
+		<span class="p">{</span>
+				<span class="c1">// set mesh positions following Value</span>
+		<span class="n">XLeftWing</span> <span class="o">=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Lerp</span><span class="p">(</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="mf">80.0f</span><span class="p">,</span> <span class="n">Value</span> <span class="p">);</span>
+		<span class="n">XRightWing</span> <span class="o">=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Lerp</span><span class="p">(</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="o">-</span><span class="mf">80.0f</span><span class="p">,</span> <span class="n">Value</span> <span class="p">);</span>
+		<span class="p">}</span>
+			<span class="c1">// change mesh</span>
+	<span class="n">LeftWing</span><span class="o">-&gt;</span><span class="n">SetRelativeRotation</span><span class="p">(</span> <span class="n">FRotator</span><span class="p">(</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="n">XLeftWing</span> <span class="p">)</span> <span class="p">);</span>
+	<span class="n">RightWing</span><span class="o">-&gt;</span><span class="n">SetRelativeRotation</span><span class="p">(</span> <span class="n">FRotator</span><span class="p">(</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="n">XRightWing</span> <span class="p">)</span> <span class="p">);</span>
+	<span class="c1">//UE_LOG( LogTemp, Warning, TEXT( "Value: %f   XLeftWing: %f   XRightWing: %f" ), Value, XLeftWing, XRightWing );</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AButterflyActor</span><span class="o">::</span><span class="n">RotateBody</span><span class="p">(</span> <span class="kt">float</span> <span class="n">Value</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">Reset</span> <span class="p">)</span>
+<span class="p">{</span>
+			<span class="c1">// neutral values for the mesh positions</span>
+	<span class="kt">float</span> <span class="n">ZBody</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">YBody</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+	<span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="n">Reset</span> <span class="p">)</span>
+		<span class="p">{</span>
+				<span class="c1">// set mesh positions following Value</span>
+		<span class="n">ZBody</span> <span class="o">=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Lerp</span><span class="p">(</span> <span class="mf">0.5f</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5f</span><span class="p">,</span> <span class="n">Value</span> <span class="p">);</span>
+		<span class="n">YBody</span> <span class="o">=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Lerp</span><span class="p">(</span> <span class="mf">4.0f</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.0f</span><span class="p">,</span> <span class="n">Value</span> <span class="p">);</span>
+		<span class="p">}</span>
+			<span class="c1">// change mesh</span>
+	<span class="n">Body</span><span class="o">-&gt;</span><span class="n">SetRelativeLocation</span><span class="p">(</span> <span class="n">FVector</span><span class="p">(</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="n">ZBody</span> <span class="p">)</span> <span class="p">);</span>
+	<span class="n">Body</span><span class="o">-&gt;</span><span class="n">SetRelativeRotation</span><span class="p">(</span> <span class="n">FRotator</span><span class="p">(</span> <span class="n">YBody</span><span class="p">,</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="mf">0.0f</span> <span class="p">)</span> <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AButterflyActor</span><span class="o">::</span><span class="n">RestingStart</span><span class="p">()</span>
+<span class="p">{</span>
+			<span class="c1">// change state machine status</span>
+	<span class="n">ButterflyState</span> <span class="o">=</span> <span class="n">Resting</span><span class="p">;</span>
+		<span class="c1">// play the timeline</span>
+	<span class="n">FTLButterflyResting</span><span class="o">-&gt;</span><span class="n">PlayFromStart</span><span class="p">();</span>
+		<span class="c1">// get random time till LiftOff</span>
+	<span class="n">SecondsTillLiftOff</span> <span class="o">=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">FRandRange</span><span class="p">(</span> <span class="mf">11.0f</span><span class="p">,</span> <span class="mf">18.0f</span> <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AButterflyActor</span><span class="o">::</span><span class="n">RestingContinues</span><span class="p">(</span> <span class="kt">float</span> <span class="n">Value</span> <span class="p">)</span>
+<span class="p">{</span>
+			<span class="c1">// animate wings in line with the Value value</span>
+	<span class="n">RotateWings</span><span class="p">(</span> <span class="n">Value</span> <span class="p">);</span>
+	<span class="c1">//UE_LOG(LogTemp, Warning, TEXT("RestingContinues"));</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AButterflyActor</span><span class="o">::</span><span class="n">RestingEnd</span><span class="p">()</span>
+<span class="p">{</span>
+			<span class="c1">// stop the timeline</span>
+	<span class="n">FTLButterflyResting</span><span class="o">-&gt;</span><span class="n">Stop</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AButterflyActor</span><span class="o">::</span><span class="n">FlyingStart</span><span class="p">()</span>
+<span class="p">{</span>
+			<span class="c1">// get random for till the landing</span>
+	<span class="n">SecondsTillNextLanding</span> <span class="o">=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">RandRange</span><span class="p">(</span> <span class="mf">9.0f</span><span class="p">,</span> <span class="mf">18.0f</span> <span class="p">);</span>
+		<span class="c1">// set velocity parameters</span>
+	<span class="n">ForwardSpeed</span> <span class="o">=</span> <span class="mi">100</span><span class="p">;</span>
+	<span class="n">UpwardSpeed</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+		<span class="c1">// change state machine status</span>
+	<span class="n">ButterflyState</span> <span class="o">=</span> <span class="n">Flying</span><span class="p">;</span>
+		<span class="c1">// .. and start timeline play</span>
+	<span class="n">FTLButterflyFlight</span><span class="o">-&gt;</span><span class="n">PlayFromStart</span><span class="p">();</span>
+	<span class="n">FTLButterflyFlight</span><span class="o">-&gt;</span><span class="n">SetPlayRate</span><span class="p">(</span> <span class="mf">1.0f</span> <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AButterflyActor</span><span class="o">::</span><span class="n">FlyingContinues</span><span class="p">(</span> <span class="kt">float</span> <span class="n">Value</span> <span class="p">)</span>
+<span class="p">{</span>
+		<span class="c1">//UE_LOG( LogTemp, Warning, TEXT( "Inside FlyingContinues %f" ), Value );</span>
+			<span class="c1">// animate wings and body in line with the Value value</span>
+	<span class="n">RotateWings</span><span class="p">(</span> <span class="n">Value</span> <span class="p">);</span>
+	<span class="n">RotateBody</span><span class="p">(</span> <span class="n">Value</span> <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AButterflyActor</span><span class="o">::</span><span class="n">FlyingEnd</span><span class="p">()</span>
+<span class="p">{</span>
+			<span class="c1">// stop timeline</span>
+	<span class="n">FTLButterflyFlight</span><span class="o">-&gt;</span><span class="n">Stop</span><span class="p">();</span>
+		<span class="c1">// ... prepare for the next fly, this can be moved to FlyingStart but I wanted the first fly targeted TargetAttractor and not a random values</span>
+	<span class="n">ChooseNewTarget</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AButterflyActor</span><span class="o">::</span><span class="n">LandingApproachStart</span><span class="p">()</span>
+<span class="p">{</span>
+			<span class="c1">// store local variables used later on</span>
+	<span class="n">LandingApproachStartLocation</span> <span class="o">=</span> <span class="n">ButterflyRoot</span><span class="o">-&gt;</span><span class="n">GetComponentLocation</span><span class="p">();</span>
+	<span class="n">LandingApproachStartRotation</span> <span class="o">=</span> <span class="n">ButterflyRoot</span><span class="o">-&gt;</span><span class="n">GetComponentRotation</span><span class="p">();</span>
+		<span class="c1">// calculate landing support locations</span>
+	<span class="n">LandingLocationSlightlyBelow</span> <span class="o">=</span> <span class="n">LandingApproachEndLocation</span> <span class="o">+</span> <span class="p">(</span> <span class="n">LandingApproachEndNormal</span> <span class="o">*</span> <span class="o">-</span><span class="mi">5</span> <span class="p">);</span>
+	<span class="n">LandingLocationSlightlyAbove</span> <span class="o">=</span> <span class="n">LandingApproachEndLocation</span> <span class="o">+</span> <span class="p">(</span> <span class="n">LandingApproachEndNormal</span> <span class="o">*</span> <span class="mi">5</span> <span class="p">);</span>
+		<span class="c1">// flight procedure continues with 2.5 faster wing rotation but flying navigation discontinues</span>
+	<span class="n">FTLButterflyFlight</span><span class="o">-&gt;</span><span class="n">SetPlayRate</span><span class="p">(</span> <span class="mf">2.5</span> <span class="p">);</span>
+		<span class="c1">// change state machine status</span>
+	<span class="n">ButterflyState</span> <span class="o">=</span> <span class="n">LandingApproach</span><span class="p">;</span>
+		<span class="c1">// trigger landing timeline to navigate landing</span>
+	<span class="n">FTLButterflyLanding</span><span class="o">-&gt;</span><span class="n">PlayFromStart</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AButterflyActor</span><span class="o">::</span><span class="n">LandingApproachContinues</span><span class="p">(</span> <span class="kt">float</span> <span class="n">Value</span> <span class="p">)</span>
+<span class="p">{</span>
+			<span class="c1">// handle location change for LandingApproach</span>
+	<span class="n">FVector</span> <span class="n">NewLocation</span> <span class="o">=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Lerp</span><span class="p">(</span> <span class="n">LandingApproachStartLocation</span><span class="p">,</span> <span class="n">LandingLocationSlightlyAbove</span><span class="p">,</span> <span class="n">Value</span> <span class="p">);</span>
+	<span class="n">ButterflyRoot</span><span class="o">-&gt;</span><span class="n">SetWorldLocation</span><span class="p">(</span> <span class="n">NewLocation</span> <span class="p">);</span>
+		<span class="c1">// ... and now rotation excepet last 0.01</span>
+	<span class="k">if</span> <span class="p">(</span> <span class="n">Value</span> <span class="o">&lt;</span> <span class="mf">0.99f</span> <span class="p">)</span>
+		<span class="p">{</span>
+				<span class="c1">// find the target rotation ...</span>
+		<span class="n">FRotator</span> <span class="n">TargetRotation</span> <span class="o">=</span> <span class="n">UKismetMathLibrary</span><span class="o">::</span><span class="n">FindLookAtRotation</span><span class="p">(</span> <span class="n">ButterflyRoot</span><span class="o">-&gt;</span><span class="n">GetComponentLocation</span><span class="p">(),</span> <span class="n">LandingLocationSlightlyBelow</span> <span class="p">);</span>
+			<span class="c1">// ... and pitch it 90 degree</span>
+		<span class="n">TargetRotation</span> <span class="o">+=</span> <span class="n">FRotator</span><span class="p">(</span> <span class="mf">90.0f</span><span class="p">,</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="mf">0.0f</span> <span class="p">);</span>
+			<span class="c1">// lerp (linear interpolation) it so the move is smooth</span>
+		<span class="n">FRotator</span> <span class="n">NewRotation</span> <span class="o">=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Lerp</span><span class="p">(</span> <span class="n">LandingApproachStartRotation</span><span class="p">,</span> <span class="n">TargetRotation</span><span class="p">,</span> <span class="n">Value</span> <span class="p">);</span>
+		<span class="n">ButterflyRoot</span><span class="o">-&gt;</span><span class="n">SetWorldRotation</span><span class="p">(</span> <span class="n">NewRotation</span> <span class="p">);</span>
+		<span class="c1">//UE_LOG(LogTemp, Warning, TEXT("TargetRotation: %s NewRotation: %s"), *TargetRotation.ToString(), *NewRotation.ToString());</span>
+		<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AButterflyActor</span><span class="o">::</span><span class="n">LandingApproachEnd</span><span class="p">()</span>
+<span class="p">{</span>
+			<span class="c1">// finish Flying state</span>
+	<span class="n">FlyingEnd</span><span class="p">();</span>
+	<span class="n">FTLButterflyLanding</span><span class="o">-&gt;</span><span class="n">Stop</span><span class="p">();</span>
+		<span class="c1">// ... and start Resting</span>
+	<span class="n">RestingStart</span><span class="p">();</span>
+		<span class="c1">// rotate wings so they stay sligthly up</span>
+	<span class="n">RotateWings</span><span class="p">(</span> <span class="mf">0.45f</span> <span class="p">);</span>
+		<span class="c1">// .. and reset body to original position</span>
+	<span class="n">RotateBody</span><span class="p">(</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="nb">true</span> <span class="p">);</span>
+	<span class="c1">//UE_LOG( LogTemp, Warning, TEXT("LandingApproachEnd") );</span>
+	<span class="c1">//UE_LOG(LogTemp, Warning, TEXT("End Location: %s Rotaion: %s"), *ButterflyRoot-&gt;GetComponentLocation().ToString(), *ButterflyRoot-&gt;GetComponentRotation().ToString());</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AButterflyActor</span><span class="o">::</span><span class="n">LiftOffStart</span><span class="p">()</span>
+<span class="p">{</span>
+			<span class="c1">// set velocity differnt to Flying state</span>
+	<span class="n">ForwardSpeed</span> <span class="o">=</span> <span class="mi">15</span><span class="p">;</span>
+	<span class="n">UpwardSpeed</span> <span class="o">=</span> <span class="mi">30</span><span class="p">;</span>
+		<span class="c1">// temprarly chanbe current target location</span>
+	<span class="n">CurrentTargetLocationBackup</span> <span class="o">=</span> <span class="n">CurrentTargetLocation</span><span class="p">;</span>
+	<span class="n">CurrentTargetLocation</span> <span class="o">=</span> <span class="n">LandingApproachStartLocation</span><span class="p">;</span>
+		<span class="c1">// set time till LiftOff end</span>
+	<span class="n">SecondsTillLiftOffEnd</span> <span class="o">=</span> <span class="mf">1.2f</span><span class="p">;</span>
+		<span class="c1">// set new state machine status !!! watchout for code racing this must be after FTLButterflyLanding-&gt;PlayFromStart();</span>
+	<span class="n">ButterflyState</span> <span class="o">=</span> <span class="n">LiftOff</span><span class="p">;</span>
+		<span class="c1">// play Flying timeline</span>
+	<span class="n">FTLButterflyFlight</span><span class="o">-&gt;</span><span class="n">PlayFromStart</span><span class="p">();</span>
+	<span class="n">FTLButterflyFlight</span><span class="o">-&gt;</span><span class="n">SetPlayRate</span><span class="p">(</span> <span class="mf">2.5f</span> <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AButterflyActor</span><span class="o">::</span><span class="n">LiftOffEnd</span><span class="p">()</span>
+<span class="p">{</span>
+			<span class="c1">// restore current target location</span>
+	<span class="n">CurrentTargetLocation</span> <span class="o">=</span> <span class="n">CurrentTargetLocationBackup</span><span class="p">;</span>
+		<span class="c1">// clean up landing support variables</span>
+	<span class="n">LandingApproachStartLocation</span> <span class="o">=</span> <span class="n">LandingApproachEndLocation</span> <span class="o">=</span> <span class="n">LandingApproachEndNormal</span> <span class="o">=</span>
+		<span class="n">LandingLocationSlightlyBelow</span> <span class="o">=</span> <span class="n">LandingLocationSlightlyAbove</span> <span class="o">=</span> <span class="n">FVector</span><span class="p">(</span> <span class="n">ForceInitToZero</span> <span class="p">);</span>
+	<span class="n">LandingApproachStartRotation</span> <span class="o">=</span> <span class="n">FRotator</span><span class="p">(</span> <span class="n">ForceInitToZero</span> <span class="p">);</span>
+		<span class="c1">// start Flying state</span>
+	<span class="n">FlyingStart</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AButterflyActor</span><span class="o">::</span><span class="n">LoadMeshAsset</span><span class="p">(</span> <span class="n">UStaticMeshComponent</span> <span class="o">*</span> <span class="n">MeshComponent</span><span class="p">,</span> <span class="k">const</span> <span class="n">TCHAR</span> <span class="o">*</span> <span class="n">AssetPath</span> <span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">ConstructorHelpers</span><span class="o">::</span><span class="n">FObjectFinder</span><span class="o">&lt;</span><span class="n">UStaticMesh</span><span class="o">&gt;</span> <span class="n">MeshAsset</span><span class="p">(</span> <span class="n">AssetPath</span> <span class="p">);</span>
+
+	<span class="k">if</span> <span class="p">(</span> <span class="n">MeshAsset</span><span class="p">.</span><span class="n">Succeeded</span><span class="p">()</span> <span class="p">)</span>
+		<span class="p">{</span>
+		<span class="n">MeshComponent</span><span class="o">-&gt;</span><span class="n">SetStaticMesh</span><span class="p">(</span> <span class="n">MeshAsset</span><span class="p">.</span><span class="n">Object</span> <span class="p">);</span>
+		<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">UCurveFloat</span> <span class="o">*</span> <span class="n">AButterflyActor</span><span class="o">::</span><span class="n">LoadCurveFloatAsset</span><span class="p">(</span> <span class="k">const</span> <span class="n">TCHAR</span> <span class="o">*</span> <span class="n">AssetPath</span> <span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">ConstructorHelpers</span><span class="o">::</span><span class="n">FObjectFinder</span><span class="o">&lt;</span><span class="n">UCurveFloat</span><span class="o">&gt;</span> <span class="n">CurveAsset</span><span class="p">(</span> <span class="n">AssetPath</span> <span class="p">);</span>
+	<span class="k">if</span> <span class="p">(</span> <span class="n">CurveAsset</span><span class="p">.</span><span class="n">Succeeded</span><span class="p">()</span> <span class="p">)</span>
+		<span class="p">{</span>
+		<span class="k">return</span> <span class="n">CurveAsset</span><span class="p">.</span><span class="n">Object</span><span class="p">;</span>
+		<span class="p">}</span>
+
+	<span class="k">return</span> <span class="k">nullptr</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AButterflyActor</span><span class="o">::</span><span class="n">MaintainTimeLine</span><span class="p">(</span> <span class="n">FTimeline</span> <span class="o">*</span> <span class="n">TimeLine</span><span class="p">,</span> <span class="n">UCurveFloat</span><span class="o">*</span> <span class="n">CurveFloat</span><span class="p">,</span> <span class="k">const</span> <span class="n">FName</span> <span class="o">&amp;</span> <span class="n">MethodName</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">Looping</span> <span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">FOnTimelineFloat</span>	<span class="n">ProgressionFunction</span><span class="p">;</span>
+	<span class="n">ProgressionFunction</span><span class="p">.</span><span class="n">BindUFunction</span><span class="p">(</span> <span class="k">this</span><span class="p">,</span> <span class="n">MethodName</span> <span class="p">);</span>
+
+	<span class="n">TimeLine</span><span class="o">-&gt;</span><span class="n">AddInterpFloat</span><span class="p">(</span> <span class="n">CurveFloat</span><span class="p">,</span> <span class="n">ProgressionFunction</span> <span class="p">);</span>
+	<span class="n">TimeLine</span><span class="o">-&gt;</span><span class="n">SetLooping</span><span class="p">(</span> <span class="n">Looping</span> <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="cp">#if WITH_EDITOR</span>
+<span class="kt">void</span> <span class="n">AButterflyActor</span><span class="o">::</span><span class="n">PostEditChangeProperty</span><span class="p">(</span> <span class="n">FPropertyChangedEvent</span><span class="o">&amp;</span> <span class="n">PropertyChangeEvent</span> <span class="p">)</span>
+<span class="p">{</span>
+		<span class="c1">// this is very simple method of handling that, full example can be found here:</span>
+		<span class="c1">// https://docs.unrealengine.com/latest/INT/API/Runtime/Engine/GameFramework/AActor/PostEditChangeProperty/</span>
+
+		<span class="c1">// HUDMessage(FColor::Red, TEXT("Property changed"))</span>
+	<span class="n">FlightTarget</span><span class="o">-&gt;</span><span class="n">SetWorldLocation</span><span class="p">(</span> <span class="n">TargetAttractor</span> <span class="p">);</span>
+
+	<span class="n">Super</span><span class="o">::</span><span class="n">PostEditChangeProperty</span><span class="p">(</span> <span class="n">PropertyChangeEvent</span> <span class="p">);</span>
+<span class="p">}</span>
+
+<span class="cp">#endif</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Next_Steps">
+        Next Steps
+       </span>
+      </h2>
+      <p>
+       There are still some functionalities that can be added, e.g. wings color set in object's Details panel, audio effects, collision sphere capsule encapsulating butterfly so 2 actors do not overlap each other or body and wings are not hiding in the ground. That is the work for next tutorial.
+      </p>
+      <p>
+       <br/>
+       Thank you Epic for very inspiring and helpful tutorials!
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

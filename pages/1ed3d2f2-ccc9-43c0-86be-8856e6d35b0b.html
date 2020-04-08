@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Анимированный Загрузочный Экран - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Анимированный Загрузочный Экран
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#.D0.9E.D0.B1.D1.89.D0.B0.D1.8F_.D0.B8.D0.BD.D1.84.D0.BE.D1.80.D0.BC.D0.B0.D1.86.D0.B8.D1.8F">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Общая информация
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Level_Streaming">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Level Streaming
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#.D0.9A.D0.B0.D0.BA_.D1.8F_.D1.81.D0.BC.D0.BE.D0.B3.D1.83_.D0.B8.D1.81.D0.BF.D0.BE.D0.BB.D1.8C.D0.B7.D0.BE.D0.B2.D0.B0.D1.82.D1.8C_.D1.8D.D1.82.D1.83_.D0.BE.D1.81.D0.BE.D0.B1.D0.B5.D0.BD.D0.BD.D0.BE.D1.81.D1.82.D1.8C_.D0.B4.D0.BB.D1.8F_.D1.81.D0.BE.D0.B7.D0.B4.D0.B0.D0.BD.D0.B8.D1.8F_.D0.B7.D0.B0.D0.B3.D1.80.D1.83.D0.B7.D0.BE.D1.87.D0.BD.D0.BE.D0.B3.D0.BE_.D1.8D.D0.BA.D1.80.D0.B0.D0.BD.D0.B0.3F">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Как я смогу использовать эту особенность для создания загрузочного экрана?
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#11_.D0.BA.D0.BE.D1.80.D0.BE.D1.82.D0.BA.D0.B8.D1.85_.D1.88.D0.B0.D0.B3.D0.BE.D0.B2_.D0.B4.D0.BB.D1.8F_.D1.81.D0.BE.D0.B7.D0.B4.D0.B0.D0.BD.D0.B8.D1.8F_.D0.90.D0.BD.D0.B8.D0.BC.D0.B8.D1.80.D0.BE.D0.B2.D0.B0.D0.BD.D0.BD.D0.BE.D0.B3.D0.BE_.D0.AD.D0.BA.D1.80.D0.B0.D0.BD.D0.B0_.D0.97.D0.B0.D0.B3.D1.80.D1.83.D0.B7.D0.BA.D0.B8">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           11 коротких шагов для создания Анимированного Экрана Загрузки
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#.D0.98.D1.82.D0.BE.D0.B3">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Итог
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id=".D0.9E.D0.B1.D1.89.D0.B0.D1.8F_.D0.B8.D0.BD.D1.84.D0.BE.D1.80.D0.BC.D0.B0.D1.86.D0.B8.D1.8F">
+        Общая информация
+       </span>
+      </h2>
+      <p>
+       Самый простой способ создания экрана загрузки (лоадскрина) заключается в отображении на экране обычной статической картинки при загрузке непосредственно уровня. (Для создания ощущения беспрерывной загрузки даже если движок при этом зависает!).
+      </p>
+      <p>
+       Мне удалось выяснить способ отображения анимированных изображений на экране загрузки...БЕЗ зависания самого движка!
+      </p>
+      <p>
+       Как это сделать?
+      </p>
+      <h2>
+       <span class="mw-headline" id="Level_Streaming">
+        Level Streaming
+       </span>
+      </h2>
+      <p>
+       Некоторые из вас не имеют ни малейшего понятия о том, что же такое “Level Streaming”. И это круто. Давайте сделаем супер-быстрый обзор самого “Level Streaming'a” и того как он может быть использован при создании нашего анимированного лоадскрина.
+      </p>
+      <p>
+       Level Streaming (в Unreal Engine 4): Level Streaming это особенность Unreal Engine 4 которая позволяет загружать/выгружать уровни на лету и дает разработчику дополнительную возможность переключать их отображение в игровом времени. Проще говоря, вы можете взять огромную карту разбить ее на кусочки, которые будут загружаться/выгружаться не все сразу а по мере надобности, таким образом увеличивая производительность.
+      </p>
+      <h2>
+       <span class="mw-headline" id=".D0.9A.D0.B0.D0.BA_.D1.8F_.D1.81.D0.BC.D0.BE.D0.B3.D1.83_.D0.B8.D1.81.D0.BF.D0.BE.D0.BB.D1.8C.D0.B7.D0.BE.D0.B2.D0.B0.D1.82.D1.8C_.D1.8D.D1.82.D1.83_.D0.BE.D1.81.D0.BE.D0.B1.D0.B5.D0.BD.D0.BD.D0.BE.D1.81.D1.82.D1.8C_.D0.B4.D0.BB.D1.8F_.D1.81.D0.BE.D0.B7.D0.B4.D0.B0.D0.BD.D0.B8.D1.8F_.D0.B7.D0.B0.D0.B3.D1.80.D1.83.D0.B7.D0.BE.D1.87.D0.BD.D0.BE.D0.B3.D0.BE_.D1.8D.D0.BA.D1.80.D0.B0.D0.BD.D0.B0.3F">
+        Как я смогу использовать эту особенность для создания загрузочного экрана?
+       </span>
+      </h2>
+      <p>
+       В двух словах я расскажу о том, что мне нужно было сделать, чтобы на экране отображался черный экран с вращающейся стрелкой. Сначала я создал “Begin Play” в level blueprint и соединил с событием(event), которое называется “Open Stream Level” (С тем уровнем, который я выбрал для загрузки).
+      </p>
+      <p>
+       У этого узла(node) есть выход(output) с названием “Completed”, который срабатывает один раз, когда уровень загружен. Так что я по быстрому создал Matinee (Который содержал single Fade in &gt; Fade Out) и выстрелил, когда уровень был загружен.
+      </p>
+      <p>
+       Отсюда, я просто изменил активную камеру из “Loading level” на одну из main level когда Matinee полностью исчез(faded out). Затем, когда камера изменилась, я отобразил все снова)fade back in) и БАМ! Уровень готов и загружен!
+       <i>
+        (Прошу проверить этот абзац других пользователей в оригинале и внести необходимые правки, если таковые нужны!)
+       </i>
+      </p>
+      <p>
+       Я знаю что читая это вслух все это звучит сложно, хотя на самом деле это супер-супер просто. Для людей не знакомых с Unreal Engine 4, это прозвучало как два параграфа на инопланетном языке, но я распишу вам весь процесс поэтапно!
+      </p>
+      <h2>
+       <span class="mw-headline" id="11_.D0.BA.D0.BE.D1.80.D0.BE.D1.82.D0.BA.D0.B8.D1.85_.D1.88.D0.B0.D0.B3.D0.BE.D0.B2_.D0.B4.D0.BB.D1.8F_.D1.81.D0.BE.D0.B7.D0.B4.D0.B0.D0.BD.D0.B8.D1.8F_.D0.90.D0.BD.D0.B8.D0.BC.D0.B8.D1.80.D0.BE.D0.B2.D0.B0.D0.BD.D0.BD.D0.BE.D0.B3.D0.BE_.D0.AD.D0.BA.D1.80.D0.B0.D0.BD.D0.B0_.D0.97.D0.B0.D0.B3.D1.80.D1.83.D0.B7.D0.BA.D0.B8">
+        11 коротких шагов для создания Анимированного Экрана Загрузки
+       </span>
+      </h2>
+      <p>
+       Step #1 - Переходим в
+       <i>
+        <b>
+         Window
+        </b>
+       </i>
+       &gt;
+       <i>
+        <b>
+         Levels
+        </b>
+       </i>
+      </p>
+      <p>
+       Step #2 - Создаем новый уровень(
+       <i>
+        <b>
+         New Level
+        </b>
+       </i>
+       ) выбираем в “
+       <i>
+        <b>
+         Levels
+        </b>
+       </i>
+       ” и нажимаем “
+       <i>
+        <b>
+         Create new Level
+        </b>
+       </i>
+       ”
+      </p>
+      <p>
+       Step #3 - В основном уровне(main level) перемещаем все что подсвечено в окно редактора(editor window) и выбираем “
+       <i>
+        <b>
+         Move Selected Actors to Level
+        </b>
+       </i>
+       ” с помощью вкладки “Уровни(
+       <i>
+        <b>
+         Levels
+        </b>
+       </i>
+       )”.
+      </p>
+      <p>
+       Step #4 - Убедитесь что созданная вами текстура самого лоадскрина, камера и анимированная иконка находятся в “
+       <i>
+        <b>
+         Persistent Level
+        </b>
+       </i>
+       ”.
+      </p>
+      <p>
+       Step #5 - В “
+       <i>
+        <b>
+         Level Blueprint
+        </b>
+       </i>
+       ” (для “
+       <i>
+        <b>
+         Persistent Level
+        </b>
+       </i>
+       ”), я создаю событие(
+       <i>
+        event
+       </i>
+       )  “Начать игру (
+       <i>
+        <b>
+         Begin Play
+        </b>
+       </i>
+       )” и создаем узел(
+       <i>
+        node
+       </i>
+       ) “
+       <i>
+        <b>
+         Open Stream Level
+        </b>
+       </i>
+       ” и соединяем их.
+      </p>
+      <p>
+       Step #6 - Ввожу название уровня в “
+       <i>
+        <b>
+         Open Stream Level
+        </b>
+       </i>
+       ” и проверяю чтобы “'
+       <b>
+        Block on Load'
+       </b>
+       ” не был отмечен галочкой, но включен “
+       <i>
+        <b>
+         Make visible after load
+        </b>
+       </i>
+       ”.
+      </p>
+      <p>
+       Step #7 - Создаем Matinee с треком “
+       <i>
+        <b>
+         Fade
+        </b>
+       </i>
+       ” и треком “
+       <i>
+        <b>
+         Event
+        </b>
+       </i>
+       ”. Затем необходимо сделать быстрое
+       <i>
+        <b>
+         Fade out / Fade in
+        </b>
+       </i>
+       и расположить событие (
+       <i>
+        event
+       </i>
+       ) в то время, когда экран будет полностью черный.
+      </p>
+      <p>
+       Step #8 - Возвращаемся к  “
+       <i>
+        <b>
+         Level Blueprint
+        </b>
+       </i>
+       ” и создаем узел “
+       <i>
+        <b>
+         Play
+        </b>
+       </i>
+       ”  Matinee один раз, когда уровень был загружен.
+      </p>
+      <p>
+       Step #9 - Затем добавляем узел (
+       <i>
+        node
+       </i>
+       ) - “
+       <i>
+        <b>
+         MatineeController
+        </b>
+       </i>
+       ”  жмем ПКМ и выбираем “
+       <i>
+        <b>
+         Refresh nodes
+        </b>
+       </i>
+       ” чтобы наш
+       <i>
+        event
+       </i>
+       созданный в Matinee появился.
+      </p>
+      <p>
+       Step #10 - Добавляем узел (
+       <i>
+        node
+       </i>
+       ) - “Remote Event” который ищет все
+       <i>
+        Level Blueprints
+       </i>
+       для события (
+       <i>
+        event
+       </i>
+       ) in question to fire it.
+      </p>
+      <p>
+       Step #11 - в “Level Blueprint” на уровне, который был загружен, я создаю событие (
+       <i>
+        event
+       </i>
+       ) которое называется точно так же - “Remote Event” и соединяю с узлом “
+       <i>
+        <b>
+         Get Player Controller &gt; Set View Target with Blend
+        </b>
+       </i>
+       ”.
+      </p>
+      <p>
+       И это все, что нам необходимо сделать!
+      </p>
+      <p>
+       Видите? 11 простых шагов и у нас анимированный лоадскрин. Впечатляет !
+      </p>
+      <h2>
+       <span class="mw-headline" id=".D0.98.D1.82.D0.BE.D0.B3">
+        Итог
+       </span>
+      </h2>
+      <p>
+       Теперь я использую этот способ в каждом уровне в SUPER DISTRO. Даже в тех случаях, когда мы переходим между уровнями, я просто затеняю до черноты  Мatinee и затем гружу на следующем “Whole” уровне, отображая на следующем уровне на лоадскрине.
+      </p>
+      <p>
+       Видите? Все просто!
+      </p>
+      <p>
+       Оригинал статьи -
+       <a class="external free" href="./animated-loading-screen.html" rel="nofollow">
+        Animated Loading Screen
+       </a>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

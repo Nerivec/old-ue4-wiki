@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Tutorial: Time of Day - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Tutorial: Time of Day
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       This tutorial will guide you through the steps of setting up a dynamic day-night cycle.  It's not a complicated process, but you do need to make sure that you have set all the correct settings, some of which are not immediately apparent.
+      </p>
+      <p>
+       Created with Unreal Engine version 4.0.1
+      </p>
+      <p>
+       Prerequisites: Basic knowledge of the UE4 editor, basic blueprint skills.
+      </p>
+      <p>
+       Tesla Dev has created a video version of this tutorial
+       <a class="external text" href="https://www.youtube.com/watch?v=xt_TIYthRUE" rel="nofollow">
+        here
+       </a>
+       .
+      </p>
+      <p>
+       Roflmuffin has created a variation (timeline) of this tutorial
+       <a class="external text" href="https://www.youtube.com/watch?v=BljC7-xMhHQ" rel="nofollow">
+        here
+       </a>
+       .
+      </p>
+      <p>
+       <br/>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Level_Setup">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Level Setup
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Sun_Lamp_Settings">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Sun Lamp Settings
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Level_Blueprint">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Level Blueprint
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Final_Steps">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Final Steps
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Using_Dynamic_Global_Illumination">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Using Dynamic Global Illumination
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Troubleshooting_the_Sun">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Troubleshooting the Sun
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Changing_the_Environment">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Changing the Environment
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Level_Setup">
+        Level Setup
+       </span>
+      </h2>
+      <p>
+       Create a new level from the "default" preset.  (You can also use a self-made level, but make sure that it has the skydome blueprint and dominant directional light in place.)
+      </p>
+      <p>
+       Add some static meshes to the floor, just so you can see some shadows from the sun.
+      </p>
+      <p>
+       <img alt="TODTut BaseScene.JPG" class="" height="391" src="../assets/tutorial-time-of-day/0.jpg" width="500"/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Sun_Lamp_Settings">
+        Sun Lamp Settings
+       </span>
+      </h2>
+      <p>
+       Next we need to set up the sun lamp's properties.  Select your Dominant Directional Light and go to the details panel.
+      </p>
+      <p>
+       Under the "Transform" pane, change the sun's "Mobility" property to "
+       <b>
+        Movable
+       </b>
+       ."  This will allow us to move the light during runtime and have the shadows and lighting update accordingly.
+      </p>
+      <p>
+       <img alt="TODTut_MovableSun.jpg" class="" height="209" src="../assets/tutorial-time-of-day/1.jpg" width="531"/>
+      </p>
+      <p>
+       Now uncheck "
+       <b>
+        Cast Static Shadows
+       </b>
+       ."
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Level_Blueprint">
+        Level Blueprint
+       </span>
+      </h2>
+      <p>
+       To actually get the time of day to progress, we need to use the Level Blueprint to rotate our Directional Light.  You could use Matinee or a Timeline, but here I will just add some rotation to the sun every frame.
+      </p>
+      <p>
+       <img alt="TODTut_LevelBlueprint.JPG" class="" height="461" src="../assets/tutorial-time-of-day/2.JPG" width="1225"/>
+      </p>
+      <p>
+       A quick explanation of the code:
+      </p>
+      <ul>
+       <li>
+        Every "
+        <b>
+         Tick
+        </b>
+        ," or frame, we are adding some rotation to the pitch of the directional light.
+       </li>
+      </ul>
+      <ul>
+       <li>
+        The "
+        <b>
+         SunSpeed
+        </b>
+        " is a float that controls the rate at which the sun revolves around the world.  We multiply it by DeltaTime so that the framerate won't affect this speed.  Setting this to 30 gives a good preview daycycle speed.
+       </li>
+      </ul>
+      <ul>
+       <li>
+        The "
+        <b>
+         Update Sun Direction
+        </b>
+        " node changes the sky based on the rotation of the sun.  This is a function built-in to the skydome blueprint that needs to be called every Tick.  (NOTE: You must have the skydome selected in the 3D viewport to add this node to the blueprint.)  For more info on this function, check out the class blueprint for the skydome.
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Final_Steps">
+        Final Steps
+       </span>
+      </h2>
+      <p>
+       Before testing it out, make sure to
+       <b>
+        rebuild the lighting
+       </b>
+       .
+      </p>
+      <p>
+       After the rebuild, jump into play or simulate mode.  You should see the sun moving through the sky, the lighting on your objects should update correctly, and the sky should go through the dawn/day/dusk/night phases.
+      </p>
+      <p>
+       <img alt="TODTut FinalScene Combo.jpg" class="" height="576" src="../assets/tutorial-time-of-day/3.jpg" width="1000"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Using_Dynamic_Global_Illumination">
+        Using Dynamic Global Illumination
+       </span>
+      </h2>
+      <p>
+       A time of day system works best with dynamic GI.  Although this feature is as of yet not fully implemented, you can find information on enabling it
+       .
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Troubleshooting_the_Sun">
+        Troubleshooting the Sun
+       </span>
+      </h2>
+      <ul>
+       <li>
+        <i>
+         Nothing happens when I press play; time is standing still!
+        </i>
+       </li>
+      </ul>
+      <p>
+       Make sure that you set the sun to "Movable," and that "Cast Static Shadows" is disabled.  Additionally, make sure that your "SunSpeed" float in the Level Blueprint is set to a high enough number.  (I recommend 30 for debugging purposes.)
+      </p>
+      <p>
+       <br/>
+      </p>
+      <ul>
+       <li>
+        <i>
+         The lighting angle changes, but the visible sun doesn't move and the sky doesn't change from day to night!
+        </i>
+        Or:
+        <i>
+         There are stars in the sky, even during the day!
+        </i>
+       </li>
+      </ul>
+      <p>
+       This means you didn't set up the "Update Sun Direction" node properly in your blueprint.  This function
+       <b>
+        needs
+       </b>
+       to be called every Tick.  If you don't see the option to add this function, make sure you have your skydome selected in the level.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <ul>
+       <li>
+        <i>
+         The sun is moving way too fast!
+        </i>
+       </li>
+      </ul>
+      <p>
+       The sun's speed is controlled by the "SunSpeed" variable in the blueprint you set up.  Whatever value this is set to is how many degrees the sun will rotate in one second.  For instance, if you have this set to 90, it will take 4 seconds to go through one day.  Just reduce this value to slow it down.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <ul>
+       <li>
+        <i>
+         The sun's light is shining through the earth during the night!
+        </i>
+       </li>
+      </ul>
+      <p>
+       Turning off the sun during the night will solve this.  Read the next section to see how to change variables based on the time of day.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Changing_the_Environment">
+        Changing the Environment
+       </span>
+      </h2>
+      <p>
+       You may want to have a way for the level to know whether it is night or day.  If you are using a Matinee sequence, it is pretty easy to do this; just put custom events into your Matinee to trigger the desired results.  However, if you are using the method I demonstrated above, it can be more tricky.
+      </p>
+      <p>
+       Here is the blueprint, with logic for checking day vs. night:
+      </p>
+      <p>
+       <img alt="TODTut_GetSunRotation.JPG" class="" height="553" src="../assets/tutorial-time-of-day/4.JPG" width="1220"/>
+      </p>
+      <p>
+       A quick overview:
+      </p>
+      <ul>
+       <li>
+        First of all, we get the rotation of our lamp.
+       </li>
+       <li>
+        Then we check if it is below the horizon.
+       </li>
+       <li>
+        The "Night Threshold" float allows us to specify how many degrees below the horizon the sun must be before we switch to "night."
+       </li>
+       <li>
+        We then set the "Night" boolean to reflect our findings.  We can now use this variable to make logic decisions.
+       </li>
+      </ul>
+      <p>
+       <br/>
+       Now we need to use the "Night" variable.  We set up some remote events to be called when the status changes from day to night:
+      </p>
+      <p>
+       <img alt="TODTut_SetupNightEvents.jpg" class="" height="410" src="../assets/tutorial-time-of-day/5.jpg" width="1308"/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <ul>
+       <li>
+        First of all: that "Set: Night" node at the beginning is the same as the right-most node from the last screenshot.  Don't add it again.
+       </li>
+       <li>
+        The "LastFrameNight" bool is use so that we know if it just became night, or if it has already been night.  If we don't do this, our remote events will be called every frame.
+       </li>
+       <li>
+        If it did indeed just change this last frame, we update our "LastFrameNight" accordingly.
+       </li>
+       <li>
+        Then we check "Night" to see if it is dawn or dusk.
+       </li>
+       <li>
+        Finally, we call the corresponding remote event.
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <p>
+       You can do whatever you want with the remote events, such as play different sounds, turn the sun (or moon) on or off, etc.
+      </p>
+      <p>
+       Here is my custom event setup:
+      </p>
+      <p>
+       <img alt="TODTut_ChangeTheSun.jpg" class="" height="455" src="../assets/tutorial-time-of-day/6.jpg" width="1102"/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <ul>
+       <li>
+        First I write to the log, just to make sure it's working.
+       </li>
+       <li>
+        Then I turn the sun on or off, depending on the need.
+       </li>
+       <li>
+        3.14 is the default sun brightness, that's why I used it.
+       </li>
+       <li>
+        Remember to tweak the "Night Threshold" float from earlier to get the best results.  If this value is too low, the sun will wink out before it goes down, which is not a good thing.
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       If you are going to have a complicated day/night scene, I would recommend using a Matinee sequence.  You will have much more control over the whole process.  However, for quick-and-easy day/night cycles, this setup will work fine.
+      </p>
+      <p>
+       <br/>
+       (Original Author:
+     )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

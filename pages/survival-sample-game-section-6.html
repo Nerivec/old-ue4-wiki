@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Survival Sample Game: Section 6 - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Survival Sample Game: Section 6
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       C++ Sample project covering common gameplay concepts packed in a small coop survival game.
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Introduction">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Introduction
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Links">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Links
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Feature_Highlights">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Feature Highlights
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Weapons_.26_Equipment">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Weapons &amp; Equipment
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Advanced_Animation_Blueprint">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             Advanced Animation Blueprint
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Zombie_AI">
+            <span class="tocnumber">
+             3.3
+            </span>
+            <span class="toctext">
+             Zombie AI
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Dynamic_Time_of_Day">
+            <span class="tocnumber">
+             3.4
+            </span>
+            <span class="toctext">
+             Dynamic Time of Day
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Object_interaction">
+            <span class="tocnumber">
+             3.5
+            </span>
+            <span class="toctext">
+             Object interaction
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#Moving_Objects">
+            <span class="tocnumber">
+             3.6
+            </span>
+            <span class="toctext">
+             Moving Objects
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-10">
+         <a href="#Available_Maps">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Available Maps
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#Coop_Landscape">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             Coop Landscape
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-12">
+           <a href="#ContainerCity">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             ContainerCity
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-13">
+         <a href="#Coop_and_Open_World">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Coop and Open World
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-14">
+           <a href="#2-Player_Coop_Survival">
+            <span class="tocnumber">
+             5.1
+            </span>
+            <span class="toctext">
+             2-Player Coop Survival
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-15">
+           <a href="#Open_World">
+            <span class="tocnumber">
+             5.2
+            </span>
+            <span class="toctext">
+             Open World
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-16">
+         <a href="#Taking_this_project_beyond">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Taking this project beyond
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-17">
+           <a href="#Upgrade_your_game_world">
+            <span class="tocnumber">
+             6.1
+            </span>
+            <span class="toctext">
+             Upgrade your game world
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-18">
+         <a href="#Special_Thanks">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Special Thanks
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-19">
+         <a href="#Closing">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Closing
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-20">
+           <a href="#Links_2">
+            <span class="tocnumber">
+             8.1
+            </span>
+            <span class="toctext">
+             Links
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Introduction">
+        Introduction
+       </span>
+      </h2>
+      <p>
+       Section 6 is the conclusion to the C++ Survival game series. The final series is upgraded to support the latest 4.8 version of Unreal Engine. It introduces a new coop landscape map along with many tweaks and bug fixes. In this final section I will go over some of the available features in the project and give you some tips on building your own game using this series.
+      </p>
+      <p>
+       <img alt="Section6 coopoverview.jpg" class="" height="741" src="../assets/survival-sample-game-section-6/0.jpg" width="1280"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Links">
+        Links
+       </span>
+      </h2>
+      <ul>
+       <li>
+        <a class="external text" href="https://forums.unrealengine.com/showthread.php?63678-Ongoing-C-Gameplay-Example-Series-Making-a-Survival-Game" rel="nofollow">
+         Forum Thread
+        </a>
+       </li>
+       <li>
+       </li>
+       <li>
+        <a class="external text" href="./survival-sample-game-section-5.html" rel="nofollow">
+         Previous Section (Gameplay networking)
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://github.com/tomlooman/EpicSurvivalGameSeries" rel="nofollow">
+         Source at GitHub
+        </a>
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="Feature_Highlights">
+        Feature Highlights
+       </span>
+      </h2>
+      <p>
+       During the course of the 6 sections I covered a variety of C++ gameplay concepts for you to explore and learn from. Not all available features in the project were covered in the section documentation. I invite you to play the game and explore the source to discover everything that was included! To help you get an overview of what is available, I'm highlighting some of the project features below.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Weapons_.26_Equipment">
+        Weapons &amp; Equipment
+       </span>
+      </h3>
+      <p>
+       <img alt="Section6 equipment03.jpg" class="" height="691" src="../assets/survival-sample-game-section-6/1.jpg" width="1764"/>
+      </p>
+      <p>
+       Players spawn with an assault rifle and a flashlight. These weapons can be carried on the character's back (rifle) and pelvis (flashlight) using
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Content/Types/SkeletalMeshes/Sockets/index.html" rel="nofollow">
+        Sockets
+       </a>
+       . One of the more advanced features included is the custom
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Animation/Sequences/Notifies/index.html" rel="nofollow">
+        AnimNotify
+       </a>
+       that calls for the exact moment during the animation we must switch the mesh from being in the character's hands to his back or pelvis. Any time you specify an AnimNotify in your animations you can implement this event in the EventGraph of the AnimationBlueprint for that character.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Advanced_Animation_Blueprint">
+        Advanced Animation Blueprint
+       </span>
+      </h3>
+      <p>
+       <img alt="Section6 advancedanimbp03.jpg" class="" height="506" src="../assets/survival-sample-game-section-6/2.jpg" width="1273"/>
+      </p>
+      <p>
+       The project includes an advanced animation blueprint setup for the player character. It includes sprinting, crouching, aiming down sights, weapon fire recoil, etc. along with a special "Idle Break" animation that is played whenever a player idle for a small period of time. On top of that
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Animation/AnimMontage/index.html" rel="nofollow">
+        AnimMontages
+       </a>
+       are used to blend weapon reloading and equipping.
+      </p>
+      <p>
+       The animations are from the
+       <a class="external text" href="https://www.unrealengine.com/content/88f875a30cfe4d5e906aef04138fbbfc" rel="nofollow">
+        Animation Starter Pack
+       </a>
+       , freely available on the Unreal Engine marketplace.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Zombie_AI">
+        Zombie AI
+       </span>
+      </h3>
+      <p>
+       <img alt="Section6 zombieattacking01.jpg" class="" height="479" src="../assets/survival-sample-game-section-6/3.jpg" width="1280"/>
+      </p>
+      <p>
+       Enemy AI wanders around the area during the night and moves towards noises made by the player. The AI is able to sense gun shots and footsteps and will attack the player on sight in a furious sprint.
+      </p>
+      <p>
+       The zombie has audio responses for many of the events including when sensing a player, idling, wandering, chasing, getting hit, dying, attacking etc. These audio files were kindly provided by
+       <a class="external text" href="https://twitter.com/YorickCoster" rel="nofollow">
+        @YorickCoster
+       </a>
+       and can be used in your own projects too!
+      </p>
+      <h3>
+       <span class="mw-headline" id="Dynamic_Time_of_Day">
+        Dynamic Time of Day
+       </span>
+      </h3>
+      <p>
+       <img alt="Section6 timeofday combined.jpg" class="" height="716" src="../assets/survival-sample-game-section-6/4.jpg" width="1718"/>
+      </p>
+      <p>
+       The game features a dynamic time of day that is tied to the game mode. As during night time the zombies start spawning into the level and any existing zombies become more active and start wandering around the map. It supports networking with smooth interpolation on clients.
+      </p>
+      <p>
+       <b>
+        Known issue:
+       </b>
+       The Skylight component does not support efficient runtime re-capture of the environment. To prevent a huge performance loss the lighting is not updated per frame, as a result the day/night isn't completely smooth the moment the sun sets.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Object_interaction">
+        Object interaction
+       </span>
+      </h3>
+      <p>
+       <img alt="Section6 bombfuze02.jpg" class="" height="496" src="../assets/survival-sample-game-section-6/5.jpg" width="1280"/>
+      </p>
+      <p>
+       Some of the objects in the world can be interacted with (Hotkey "E") These include the assault rifle, flashlight, cupcake and the bomb.
+      </p>
+      <p>
+       Consuming food restores hitpoints and energy while interacting with the bomb sets the fuze. Weapons can be added to the inventory.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Moving_Objects">
+        Moving Objects
+       </span>
+      </h3>
+      <p>
+       <img alt="Section6 barrier01.jpg" class="" height="584" src="../assets/survival-sample-game-section-6/6.jpg" width="1280"/>
+      </p>
+      <p>
+       Using the middle-mouse button, any physically simulated object can be picked up and moved around. Examples include the red barrier and the bomb actor. you can rotate the carried objects using the scroll-wheel and the 1 &amp; 2 numeric keys. Left-clicking while carrying an object will throw it in the view direction. This is a neat trick to throw fuzed bombs are your enemy, or to throw food/equipment to your coop buddy.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Available_Maps">
+        Available Maps
+       </span>
+      </h2>
+      <p>
+       For this series I've built a few maps to test out specific features. "DefaultMap" is used as the test bed for most newly introduced features.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Coop_Landscape">
+        Coop Landscape
+       </span>
+      </h3>
+      <p>
+       <img alt="Section openworldscenery01.jpg" class="" height="547" src="../assets/survival-sample-game-section-6/7.jpg" width="1280"/>
+      </p>
+      <p>
+       A recently introduced map for the cooperative gamemode with a slight nudge to an open world.
+      </p>
+      <h3>
+       <span class="mw-headline" id="ContainerCity">
+        ContainerCity
+       </span>
+      </h3>
+      <p>
+       <img alt="Section6 containercity01.jpg" class="" height="549" src="../assets/survival-sample-game-section-6/8.jpg" width="1280"/>
+      </p>
+      <p>
+       Some may recognize it as "Shipment" from a well known shooter. It was used as a testing grounds for the AI sensing and the coop-gamemode.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Coop_and_Open_World">
+        Coop and Open World
+       </span>
+      </h2>
+      <p>
+       The game was designed as a small 2-player coop survival game where players must survive as many nights as possible while using objects they find in the environment such as bombs, barriers and weapons. Additionally I've included a second gamemode stub you can use to build a more open ruleset for a DayZ/Rust like survival game.
+      </p>
+      <h3>
+       <span class="mw-headline" id="2-Player_Coop_Survival">
+        2-Player Coop Survival
+       </span>
+      </h3>
+      <p>
+       <img alt="Section6 coop02.jpg" class="" height="749" src="../assets/survival-sample-game-section-6/9.jpg" width="1280"/>
+      </p>
+      <p>
+       The gamemode features an accelerated day/night cycle, during the day players can collect items, equipment and setup defenses for the night to come. For the duration of the night zombies appear, any existing zombies become active and start moving around the map. Keep an eye out on your energy levels as low energy will hurt your health. If a player dies during the night, he will respawn at sunset as long as there is at least one other player still alive.
+      </p>
+      <p>
+       Players score points as they survive the night and by killing zombies. The game continues for as long as there is at least one player alive.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Open_World">
+        Open World
+       </span>
+      </h3>
+      <p>
+       <img alt="Section6 timeofday03.jpg" class="" height="544" src="../assets/survival-sample-game-section-6/10.jpg" width="1280"/>
+      </p>
+      <p>
+       The open world gamemode is a stub that can be used to build your own open world ruleset. Unlike the coop mode, this mode is free-for-all (friendlyfire enabled) The mode lacks the scoring system, but supports the time of day and enemy spawns to get you started. Keep in mind that it's a basic setup and will require additional work depending on the design of your own game.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Taking_this_project_beyond">
+        Taking this project beyond
+       </span>
+      </h2>
+      <p>
+       This series is built primarily as a C++ learning resource. I hope you've learned a lot from the previous sections in this series and put that knowledge to use for your own project! If you wish to use this project as a base for your own game, you can!
+      </p>
+      <h3>
+       <span class="mw-headline" id="Upgrade_your_game_world">
+        Upgrade your game world
+       </span>
+      </h3>
+      <p>
+       Don't forget to check out the amazing "A boy and his kite" demo, it's available on the Learn Tab in your Unreal Engine Launcher.
+      </p>
+      <p>
+       &lt;youtube&gt;
+       <a class="external free" href="https://www.youtube.com/watch?v=JNgsbNvkNjE" rel="nofollow">
+        https://www.youtube.com/watch?v=JNgsbNvkNjE
+       </a>
+      </p>
+      <p>
+       Have a look at the
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/OpenWorldTools/index.html" rel="nofollow">
+        Open World Tools
+       </a>
+       with many great open world rendering improvements introduced in 4.8!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Special_Thanks">
+        Special Thanks
+       </span>
+      </h2>
+      <p>
+       I'd like to give a special thanks to everyone who helped out during the series. And especially Yorick Coster for providing free to use game audio! The audio files included with the project can be used in your own projects.
+      </p>
+      <ul>
+       <li>
+        Yorick Coster (
+        <a class="external text" href="https://twitter.com/YorickCoster" rel="nofollow">
+         @YorickCoster
+        </a>
+        ) for contributing many of the audio files
+       </li>
+       <li>
+        Osman Tsjardiwal (
+        <a class="external text" href="https://twitter.com/ozmant" rel="nofollow">
+         @ozmant
+        </a>
+        ) for providing me with ContainerCity base map
+       </li>
+       <li>
+        Everyone on the forums to helped with reporting bugs and feedback
+       </li>
+       <li>
+        The contributors on GitHub
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="Closing">
+        Closing
+       </span>
+      </h2>
+      <p>
+       This section concludes the series, I hope you've learned many new C++ gameplay concepts and use this for your own game projects moving forward!
+      </p>
+      <p>
+       Follow me on
+       <a class="external text" href="https://twitter.com/t_looman" rel="nofollow">
+        Twitter
+       </a>
+       and let me know what you think of this series! Or check out some of the other things I'm working on
+       <a class="external text" href="http://www.tomlooman.com/" rel="nofollow">
+        right here
+       </a>
+       !
+      </p>
+      <h3>
+       <span class="mw-headline" id="Links_2">
+        Links
+       </span>
+      </h3>
+      <p>
+       <b>
+        -
+       </b>
+      </p>
+      <ul>
+       <li>
+        <a class="external text" href="https://forums.unrealengine.com/showthread.php?63678-Ongoing-C-Gameplay-Example-Series-Making-a-Survival-Game" rel="nofollow">
+         Forum Thread
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://github.com/tomlooman/EpicSurvivalGameSeries" rel="nofollow">
+         Source at GitHub
+        </a>
+       </li>
+      </ul>
+      <p>
+       <b>
+        Project &amp; Wiki by
+        <a class="external text" href="http://www.tomlooman.com/" rel="nofollow">
+         Tom Looman
+        </a>
+       </b>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Animated Vertex Positions of Character Mesh, How To Obtain Them - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Animated Vertex Positions of Character Mesh, How To Obtain Them
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <img alt="AnimatedVertexLocations3.jpg" class="" height="675" src="../assets/animated-vertex-positions-of-character-mesh-how-to-obtain-them/0.jpg" width="900"/>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Transforming_Vertices_To_World_Space">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Transforming Vertices To World Space
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Velocity_Correction">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Velocity Correction
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <b>
+        Author:
+       </b>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       Here is the C++ code that you can use to obtain animated vertex positions!
+      </p>
+      <p>
+       This is the code from my free
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?3851-(39)-Rama-s-Extra-Blueprint-Nodes-for-You-as-a-Plugin-No-C-Required!&amp;p=341965&amp;viewfull=1#post341965" rel="nofollow">
+        Victory BP Library plugin BP node
+       </a>
+       that obtains velocity-corrected animated vertex positions for Pawns and Characters!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">bool</span> <span class="n">UVictoryBPFunctionLibrary</span><span class="o">::</span><span class="n">AnimatedVertex__GetAnimatedVertexLocations</span><span class="p">(</span>
+	<span class="n">USkeletalMeshComponent</span><span class="o">*</span> <span class="n">Mesh</span><span class="p">,</span> 
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FVector</span><span class="o">&gt;&amp;</span> <span class="n">Locations</span><span class="p">,</span>
+	<span class="kt">bool</span> <span class="n">PerformPawnVelocityCorrection</span>
+<span class="p">){</span>
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">Mesh</span> <span class="o">||</span> <span class="o">!</span><span class="n">Mesh</span><span class="o">-&gt;</span><span class="n">SkeletalMesh</span><span class="p">)</span>  
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="c1">//~~~~~~~~~~~~~</span>
+	<span class="n">Locations</span><span class="p">.</span><span class="n">Empty</span><span class="p">();</span> 
+	<span class="c1">//~~~~~~~~~~~~~</span>
+	 
+	<span class="n">Mesh</span><span class="o">-&gt;</span><span class="n">ComputeSkinnedPositions</span><span class="p">(</span><span class="n">Locations</span><span class="p">);</span>
+	
+	<span class="n">FTransform</span> <span class="n">ToWorld</span> <span class="o">=</span> <span class="n">Mesh</span><span class="o">-&gt;</span><span class="n">GetComponentTransform</span><span class="p">();</span>
+	<span class="n">FVector</span> <span class="n">WorldLocation</span> <span class="o">=</span> <span class="n">ToWorld</span><span class="p">.</span><span class="n">GetLocation</span><span class="p">();</span>
+	
+	<span class="c1">//Pawn Velocity Correction</span>
+	<span class="n">UPawnMovementComponent</span><span class="o">*</span> <span class="n">MovementComp</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">;</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">PerformPawnVelocityCorrection</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">APawn</span><span class="o">*</span> <span class="n">Pawn</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">APawn</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Mesh</span><span class="o">-&gt;</span><span class="n">GetOwner</span><span class="p">());</span>
+		<span class="n">MovementComp</span> <span class="o">=</span> <span class="p">(</span><span class="n">Pawn</span><span class="p">)</span> <span class="o">?</span> <span class="n">Pawn</span><span class="o">-&gt;</span><span class="n">GetMovementComponent</span><span class="p">()</span> <span class="o">:</span> <span class="nb">NULL</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="kt">bool</span> <span class="n">DoVelocityCorrection</span> <span class="o">=</span> <span class="n">PerformPawnVelocityCorrection</span> <span class="o">&amp;&amp;</span> <span class="n">MovementComp</span><span class="p">;</span>
+	<span class="c1">//Pawn Velocity Correction</span>
+	 
+	<span class="k">for</span><span class="p">(</span><span class="n">FVector</span><span class="o">&amp;</span> <span class="nl">EachVertex</span> <span class="p">:</span> <span class="n">Locations</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">EachVertex</span> <span class="o">=</span> <span class="n">WorldLocation</span> <span class="o">+</span> <span class="n">ToWorld</span><span class="p">.</span><span class="n">TransformVector</span><span class="p">(</span><span class="n">EachVertex</span><span class="p">);</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">DoVelocityCorrection</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">EachVertex</span> <span class="o">+=</span> <span class="n">MovementComp</span><span class="o">-&gt;</span><span class="n">Velocity</span> <span class="o">*</span> <span class="n">FApp</span><span class="o">::</span><span class="n">GetDeltaTime</span><span class="p">();</span>
+		<span class="p">}</span> 
+	<span class="p">}</span> 
+	
+	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Transforming_Vertices_To_World_Space">
+        Transforming Vertices To World Space
+       </span>
+      </h2>
+      <p>
+       If you read the API notes on USkinnedMeshComponent::ComputeSkinnedPositions you will see that the vertex positions are obtained in component space.
+      </p>
+      <p>
+       In order to provide world space postions I have to transform each vertex by the world transform of the skeletal mesh component:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FTransform</span> <span class="n">ToWorld</span> <span class="o">=</span> <span class="n">Mesh</span><span class="o">-&gt;</span><span class="n">GetComponentTransform</span><span class="p">();</span>
+<span class="n">FVector</span> <span class="n">WorldLocation</span> <span class="o">=</span> <span class="n">ToWorld</span><span class="p">.</span><span class="n">GetLocation</span><span class="p">();</span>
+
+<span class="n">EachVertex</span> <span class="o">=</span> <span class="n">WorldLocation</span> <span class="o">+</span> <span class="n">ToWorld</span><span class="p">.</span><span class="n">TransformVector</span><span class="p">(</span><span class="n">Each</span><span class="p">);</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Velocity_Correction">
+        Velocity Correction
+       </span>
+      </h2>
+      <p>
+       The animated vertex positions obtained by the skeletal mesh are obtained on the CPU thread before the character movement update has occurred for characters, and thus vertices always lag behind if you just use USkinnedMeshComponent::ComputeSkinnedPositions.
+      </p>
+      <p>
+       I use this code below to add in the tick update from the pawn or character movement component so that animated vertex positions are accurate for moving characters!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">if</span><span class="p">(</span><span class="n">DoVelocityCorrection</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">EachVertex</span> <span class="o">+=</span> <span class="n">MovementComp</span><span class="o">-&gt;</span><span class="n">Velocity</span> <span class="o">*</span> <span class="n">FApp</span><span class="o">::</span><span class="n">GetDeltaTime</span><span class="p">();</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

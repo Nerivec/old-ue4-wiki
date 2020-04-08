@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   PhysX Source Guide - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    PhysX Source Guide
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       UE4 uses Nvidia PhysX and APEX as its underlying physics engine. PhysX takes care of core functionality like rigid body simulation, while APEX takes care of destruction and clothing. The source code is fully available for both which makes debugging and modifying behavior easy.
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Compiling">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Compiling
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Connecting_to_UE4">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Connecting to UE4
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Disabling_Optimizations">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Disabling Optimizations
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Using_a_Debug_Build">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Using a Debug Build
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Compiling">
+        Compiling
+       </span>
+      </h2>
+      <p>
+       This command generates the project files and compiles:
+      </p>
+      <pre> call RunUAT.bat BuildPhysX -TargetPlatforms=Win64 -TargetConfigs=profile -TargetWindowsCompilers=VisualStudio2015 -SkipSubmit
+</pre>
+      <p>
+       You may need to edit BuildPhysX.Automation.cs and remove the "[RequireP4]" attribute line.
+      </p>
+      <p>
+       If you only want the project files add -SkipBuild to the above command. The visual studio solution will be available here:
+      </p>
+      <p>
+       Engine\Source\ThirdParty\PhysX3\PhysX_3.4\Source\compiler\Win64\VS2015\PhysX.sln
+      </p>
+      <h2>
+       <span class="mw-headline" id="Connecting_to_UE4">
+        Connecting to UE4
+       </span>
+      </h2>
+      <p>
+       UE4 will automatically find the appropriate binaries when it compiles the engine module. You can either do a full recompile, or simply make a trivial modification (enter a few new lines) to this file:
+      </p>
+      <pre>Engine\Source\Runtime\Engine\Private\PhysicsEngine\PhysXLibs.cpp
+</pre>
+      <h2>
+       <span class="mw-headline" id="Disabling_Optimizations">
+        Disabling Optimizations
+       </span>
+      </h2>
+      <p>
+       Turning off optimizations on an arbitrary build can be helpful. To do this on windows edit the CMake file found here: Engine\Source\ThirdParty\PhysX3\PhysX_3.4\Source\compiler\cmake\windows\CMakeLists.txt
+      </p>
+      <p>
+       In this file you'll see the following:
+      </p>
+      <dl>
+       <dd>
+       </dd>
+       <dd>
+        SET(CMAKE_CXX_FLAGS_DEBUG "/Od ${WINCRT_DEBUG} /RTCu /Zi")
+       </dd>
+       <dd>
+        SET(CMAKE_CXX_FLAGS_CHECKED "/Ox ${WINCRT_NDEBUG} /Zi")
+       </dd>
+       <dd>
+        SET(CMAKE_CXX_FLAGS_PROFILE "/Ox ${WINCRT_NDEBUG} /Zi")
+       </dd>
+       <dd>
+        SET(CMAKE_CXX_FLAGS_RELEASE "/Ox ${WINCRT_NDEBUG} /Zi")
+       </dd>
+       <dd>
+       </dd>
+      </dl>
+      <p>
+       You can turn off optimization on any config by changing /Ox to /Od. Then recompile PhysX using the above guide
+      </p>
+      <h2>
+       <span class="mw-headline" id="Using_a_Debug_Build">
+        Using a Debug Build
+       </span>
+      </h2>
+      <p>
+       The PhysX debug build relies on the debug CRT. To make this work you will need to edit BuildConfiguration.xml to have:
+      </p>
+      <pre>&lt;bDebugBuildsActuallyUseDebugCRT&gt;true&lt;/bDebugBuildsActuallyUseDebugCRT&gt;
+</pre>
+      <p>
+       In general it's easier to use a checked build which will still fire asserts without requiring the full debug CRT.
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

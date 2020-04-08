@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Camera Switching in Blueprints - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Camera Switching in Blueprints
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Toggling_between_Cameras">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Toggling between Cameras
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Overview">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Overview
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Setup">
+            <span class="tocnumber">
+             1.2
+            </span>
+            <span class="toctext">
+             Setup
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Result">
+            <span class="tocnumber">
+             1.3
+            </span>
+            <span class="toctext">
+             Result
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Toggling_between_Cameras">
+        Toggling between Cameras
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h3>
+      <pre>    This tutorial assumes the user has a basic knowledge of blueprints.
+</pre>
+      <p>
+       This tutorial will show you switch from a camera placed in your scene/level, and then back to the current player camera using the 'Set View Target with Blend' node in blueprints.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Setup">
+        Setup
+       </span>
+      </h3>
+      <p>
+       Below is an example of how you can switch between your current active player camera, to another camera within the level/scene. Simply get a reference to the player camera and the camera placed within the scene and add the below logic to your Level Blueprint.
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:977px;">
+         <img alt="" class="thumbimage" height="810" src="../assets/camera-switching-in-blueprints/0.png" width="975"/>
+         <div class="thumbcaption">
+          Level Blueprint
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       You can see that I am controlling the switching using a FlipFlop node which alternates between cameras with each press of the 'C' key. This can be substituted for an event like OnBeginOverlap with triggers or even a custom event.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Result">
+        Result
+       </span>
+      </h3>
+      <p>
+       When I begin playing my level, it automatically adopts the player camera as the current active camera.
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:1035px;">
+         <img alt="" class="thumbimage" height="720" src="../assets/camera-switching-in-blueprints/1.png" width="1033"/>
+         <div class="thumbcaption">
+          Default Third Person Camera
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       Now whenever I press the 'C' key it will set the referenced camera placed in the level as the active camera, and will use the blend settings within the 'Set View Target with Blend' node to interpolate between the previous and current camera.
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:1640px;">
+         <img alt="InsideRoom Cam.png" class="thumbimage" height="944" src="../assets/camera-switching-in-blueprints/2.png" width="1638"/>
+         <div class="thumbcaption">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       Now the current camera is the one placed inside the room, and in order to switch back I need to press the 'C' key.
+      </p>
+      <p>
+       Thanks for following along! I have written some more tutorials you can check out by following the links within my Wiki Profile page found below.
+      </p>
+      <p>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

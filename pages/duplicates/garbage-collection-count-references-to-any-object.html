@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Garbage Collection ~ Count References To Any Object - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Garbage Collection ~ Count References To Any Object
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Code">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Code
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Who_Is_Referred_to_By_My_Object.3F">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Who Is Referred to By My Object?
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Original Author:
+       </i>
+       (
+       )
+      </p>
+      <p>
+       For a more thorough background in this topic of Memory Management I recommend you check out my main Garbage Collection wiki first:
+      </p>
+      <p>
+      </p>
+      <p>
+       In this wiki I am providing you with an extremely handy memory management tool, which is the ability to count references to any UObject yourself!
+      </p>
+      <p>
+       Additionally you can supply an array if you want to know exactly who is referred to by your object!
+      </p>
+      <p>
+       Victory!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Code">
+        Code
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">static</span> <span class="n">int32</span> <span class="n">URamaStaticFunctionLib</span><span class="o">::</span><span class="n">GetObjReferenceCount</span><span class="p">(</span><span class="n">UObject</span><span class="o">*</span> <span class="n">Obj</span><span class="p">,</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">UObject</span><span class="o">*&gt;*</span> <span class="n">OutReferredToObjects</span> <span class="o">=</span> <span class="k">nullptr</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">Obj</span> <span class="o">||</span> <span class="o">!</span><span class="n">Obj</span><span class="o">-&gt;</span><span class="n">IsValidLowLevelFast</span><span class="p">())</span> 
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="o">-</span><span class="mi">1</span><span class="p">;</span>
+	<span class="p">}</span>
+	
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">UObject</span><span class="o">*&gt;</span> <span class="n">ReferredToObjects</span><span class="p">;</span>				<span class="c1">//req outer, ignore archetype, recursive, ignore transient</span>
+	<span class="n">FReferenceFinder</span> <span class="nf">ObjectReferenceCollector</span><span class="p">(</span> <span class="n">ReferredToObjects</span><span class="p">,</span> <span class="n">Obj</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="nb">true</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
+	<span class="n">ObjectReferenceCollector</span><span class="p">.</span><span class="n">FindReferences</span><span class="p">(</span> <span class="n">Obj</span> <span class="p">);</span>
+
+        <span class="k">if</span><span class="p">(</span><span class="n">OutReferredToObjects</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">OutReferredToObjects</span><span class="o">-&gt;</span><span class="n">Append</span><span class="p">(</span><span class="n">ReferredToObjects</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="n">OutReferredToObjects</span><span class="p">.</span><span class="n">Num</span><span class="p">();</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Who_Is_Referred_to_By_My_Object.3F">
+        Who Is Referred to By My Object?
+       </span>
+      </h2>
+      <p>
+       You can supply an array to my function if you want to know exactly who the object is referring to!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">TArray</span><span class="o">&lt;</span><span class="n">UObject</span><span class="o">*&gt;</span> <span class="n">ReferredToObjs</span><span class="p">;</span>
+
+<span class="n">GetObjReferenceCount</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="o">&amp;</span><span class="n">ReferredToObjs</span><span class="p">);</span>
+
+<span class="k">for</span><span class="p">(</span><span class="n">UObject</span><span class="o">*</span> <span class="nl">Each</span> <span class="p">:</span> <span class="n">ReferredToObjs</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">Each</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">UE_LOG</span><span class="p">(</span><span class="n">YourLog</span><span class="p">,</span><span class="n">Warning</span><span class="p">,</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"%s"</span><span class="p">),</span> <span class="o">*</span><span class="n">Each</span><span class="o">-&gt;</span><span class="n">GetName</span><span class="p">());</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <img alt="ObjRefCount.jpg" class="" height="211" src="../assets/garbage-collection-count-references-to-any-object/0.jpg" width="1400"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       This is all the info you need to do your own careful UPROPERTY() memory management!
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

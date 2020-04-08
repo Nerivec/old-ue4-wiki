@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Using Weightmaps to texture a Landscape - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Using Weightmaps to texture a Landscape
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Importing_the_Heightmap">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Importing the Heightmap
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Creating_a_Landscape_Material">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Creating a Landscape Material
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Importing_the_heightmaps">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Importing the heightmaps
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       So, here is a little tutorial on how to use weightmaps to texture your landscape. It assumes that you have read and understood the documentation about landscapes.
+      </p>
+      <p>
+       This tutorial requires you to have a heightmap and the associated weightmaps. If don't have a finished terrain, have a look at TerreSculptor or World Machine to create them. While this document is using a non tiled terrain component, it should be noted that given the current version of Terresculptor is Alpha ( I've had no problems with it myself ) that it currently does not support exporting tiled terrains , which UE4 supports.
+      </p>
+      <p>
+       For this tutorial I am going to use a 16-Bit RAW format for the heightmap and 8-Bit PNG files for the weightmaps.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Importing_the_Heightmap">
+        Importing the Heightmap
+       </span>
+      </h2>
+      <p>
+       First you need to create a new landscape and choose "Import from file":
+      </p>
+      <p>
+       <img alt="LandscapeWeightmapTut01.jpeg" class="" height="394" src="../assets/using-weightmaps-to-texture-a-landscape/0.jpg" width="350"/>
+      </p>
+      <p>
+       Select your heightmap file click import.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Creating_a_Landscape_Material">
+        Creating a Landscape Material
+       </span>
+      </h2>
+      <p>
+       In the next step we have to create a material for the landscape. We need a seperate layer for each weightmap we have. The image below is showing a simple Landscape texture with three layers (snow, rock, grass).
+      </p>
+      <p>
+       <img alt="02 .jpg" class="" height="554" src="../assets/using-weightmaps-to-texture-a-landscape/1.jpg" width="815"/>
+      </p>
+      <p>
+       Save the material and apply it to the Landscape.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Importing_the_heightmaps">
+        Importing the heightmaps
+       </span>
+      </h2>
+      <p>
+       Navigate to the Landscape Options, choose Paint and scroll down until you see the "Target Layers" options:
+      </p>
+      <p>
+       <img alt="03.jpg" class="" height="392" src="../assets/using-weightmaps-to-texture-a-landscape/2.jpg" width="349"/>
+      </p>
+      <p>
+       Create a new Layer Info by clicking on the little "plus"-sign. Choose "Weight-Blended Layer". After that right-click on the Layer Info and choose "Import from file":
+      </p>
+      <p>
+       <img alt="LandscapeWeightmapTut04.jpeg" class="" height="392" src="../assets/using-weightmaps-to-texture-a-landscape/3.jpeg" width="349"/>
+      </p>
+      <p>
+       Choose your heightmap and repeat this step for all your layers.
+      </p>
+      <p>
+       And that's it. Your layers should now be imported and the terrain should be textured accordingly.
+      </p>
+      <p>
+       - Cheers
+       <br/>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

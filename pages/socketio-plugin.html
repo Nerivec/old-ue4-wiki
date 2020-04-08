@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   SocketIO Plugin - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    SocketIO Plugin
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <br/>
+      </p>
+      <table class="wikitable sortable" style="float: right;">
+       <tbody>
+        <tr>
+         <td>
+          Name
+         </td>
+         <td>
+          Socket.IO Client Plugin
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Category
+         </td>
+         <td>
+          Communication
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Author
+         </td>
+         <td>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <h1>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h1>
+      <p>
+       socket.io client plugin for UE4
+      </p>
+      <p>
+       Socket.io is a performant real-time bi-directional communication library. There are two parts, the server written in node.js and the client typically javascript for the web. There are alternative client implementations and this repo uses the C++11 client library ported to UE4.
+      </p>
+      <p>
+       See the
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?110680-Plugin-Socket-io-Client" rel="nofollow">
+        main plugin thread
+       </a>
+       for version downloads and development updates.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Quick_Setup">
+        Quick Setup
+       </span>
+      </h2>
+      <ol>
+       <li>
+        Download
+        <a class="external text" href="https://github.com/getnamo/socketio-client-ue4/releases" rel="nofollow">
+         Latest Release
+        </a>
+       </li>
+       <li>
+        Create new or choose project.
+       </li>
+       <li>
+        Browse to your project folder (typically found at Documents/Unreal Project/{Your Project Root})
+       </li>
+       <li>
+        Copy Plugins folder into your Project root.
+       </li>
+       <li>
+        Restart the Editor and open your project again. Plugin is now ready to use.
+       </li>
+      </ol>
+      <h2>
+       <span class="mw-headline" id="How_to_use">
+        How to use
+       </span>
+      </h2>
+      <p>
+       Most up to date documentation is always found at the
+       <a class="external text" href="https://github.com/getnamo/socketio-client-ue4" rel="nofollow">
+        socketio-client-ue4 github repository
+       </a>
+       .
+      </p>
+      <p>
+       Add the SocketIO Client Component to your blueprint actor of choice
+      </p>
+      <p>
+       <img alt="SocketIOAddComponent.png" class="" height="377" src="../assets/socketio-plugin/0.png" width="371"/>
+      </p>
+      <p>
+       Specify your address and port, defaults to localhost (127.0.0.1) at port 3000
+      </p>
+      <p>
+       <img alt="SocketIOConnect.png" class="" height="318" src="../assets/socketio-plugin/1.png" width="999"/>
+      </p>
+      <p>
+       Call bind for each event you wish the client to subscribe, e.g. 'chat message'
+      </p>
+      <p>
+       If you expect to receive events, select your component and in the Details pane press the + to add an 'On' event to your event graph
+      </p>
+      <p>
+       <img alt="SocketIOOnEvent.png" class="" height="290" src="../assets/socketio-plugin/2.png" width="661"/>
+      </p>
+      <p>
+       Handle this event for your event types, e.g. printing 'chat message' event strings.
+      </p>
+      <p>
+       <img alt="SocketIOHandlingEvent.png" class="" height="216" src="../assets/socketio-plugin/3.png" width="771"/>
+      </p>
+      <p>
+       If you want to send information to the server, emit events on the SocketIO Client Component, e.g. pressing M to emit a 'chat message' string
+      </p>
+      <p>
+       <img alt="SocketIOEmit.png" class="" height="264" src="../assets/socketio-plugin/4.png" width="927"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Contact">
+        Contact
+       </span>
+      </h2>
+      <p>
+       Post your questions and suggestions at the
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?110680-Plugin-Socket-io-Client" rel="nofollow">
+        main plugin thread
+       </a>
+       .
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

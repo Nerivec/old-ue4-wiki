@@ -1,0 +1,1660 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Dedicated Server Guide (Windows &amp; Linux) - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Dedicated Server Guide (Windows &amp; Linux)
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <br/>
+       Engine Version: 4.14, 4.15, 4.16, 4.17, 4.18
+      </p>
+      <p>
+       NOTE - Apologies for the video quality of the tutorials. They were recorded in 1080p and decent quality 
+but for some reason after uploading to you tube they became horribly blurred. I will redo them ASAP. Thanks
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Section_1_Building_a_dedicated_server_in_Unreal_Engine_4">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Section 1 Building a dedicated server in Unreal Engine 4
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#1._Download_the_Unreal_engine_from_source">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             1. Download the Unreal engine from source
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#2._Setup_source_unreal_engine">
+            <span class="tocnumber">
+             1.2
+            </span>
+            <span class="toctext">
+             2. Setup source unreal engine
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#2.a_Setup_source_unreal_engine_To_use_Visual_studio_2017">
+            <span class="tocnumber">
+             1.3
+            </span>
+            <span class="toctext">
+             2.a Setup source unreal engine To use Visual studio 2017
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Congratulations_-_you_should_have_now_successfully_setup_a_source_built_version_of_unreal_engine">
+            <span class="tocnumber">
+             1.4
+            </span>
+            <span class="toctext">
+             Congratulations - you should have now successfully setup a source built version of unreal engine
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#3._Video_guide">
+            <span class="tocnumber">
+             1.5
+            </span>
+            <span class="toctext">
+             3. Video guide
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Section_2_setting_up_a_dedicated_server_on_windows">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Section 2 setting up a dedicated server on windows
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#1._Dedicated_Server_from_a_brand_new_project">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             1. Dedicated Server from a brand new project
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#2._Dedicated_Server_from_a_blueprint_only_project">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             2. Dedicated Server from a blueprint only project
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#3._preparing_the_project_for_building">
+            <span class="tocnumber">
+             2.3
+            </span>
+            <span class="toctext">
+             3. preparing the project for building
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-11">
+             <a href="#1._Target_file_instructions_for_engine_version_4.14">
+              <span class="tocnumber">
+               2.3.1
+              </span>
+              <span class="toctext">
+               1. Target file instructions for engine version 4.14
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-12">
+             <a href="#2._Target_file_instructions_for_engine_version_4.15">
+              <span class="tocnumber">
+               2.3.2
+              </span>
+              <span class="toctext">
+               2. Target file instructions for engine version 4.15
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-13">
+             <a href="#3._Target_file_instructions_for_engine_version_4.16">
+              <span class="tocnumber">
+               2.3.3
+              </span>
+              <span class="toctext">
+               3. Target file instructions for engine version 4.16
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-14">
+             <a href="#4._Target_file_instructions_for_engine_version_4.17">
+              <span class="tocnumber">
+               2.3.4
+              </span>
+              <span class="toctext">
+               4. Target file instructions for engine version 4.17
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-15">
+             <a href="#5._Target_file_instructions_for_engine_version_4.18">
+              <span class="tocnumber">
+               2.3.5
+              </span>
+              <span class="toctext">
+               5. Target file instructions for engine version 4.18
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-16">
+           <a href="#4._Switch_Unreal_engine_versions_.26_generate_project_files">
+            <span class="tocnumber">
+             2.4
+            </span>
+            <span class="toctext">
+             4. Switch Unreal engine versions &amp; generate project files
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-17">
+           <a href="#5._Building_the_server">
+            <span class="tocnumber">
+             2.5
+            </span>
+            <span class="toctext">
+             5. Building the server
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-18">
+           <a href="#6._Fixing_the_lighting_swarm_error">
+            <span class="tocnumber">
+             2.6
+            </span>
+            <span class="toctext">
+             6. Fixing the lighting swarm error
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-19">
+           <a href="#6.a_Video_Guide">
+            <span class="tocnumber">
+             2.7
+            </span>
+            <span class="toctext">
+             6.a Video Guide
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-20">
+           <a href="#7._Prepare_the_project_for_packaging">
+            <span class="tocnumber">
+             2.8
+            </span>
+            <span class="toctext">
+             7. Prepare the project for packaging
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-21">
+           <a href="#8._setup_packaging_settings">
+            <span class="tocnumber">
+             2.9
+            </span>
+            <span class="toctext">
+             8. setup packaging settings
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-22">
+           <a href="#9._Congratulations_you_have_now_packaged_your_project_yay_:-p">
+            <span class="tocnumber">
+             2.10
+            </span>
+            <span class="toctext">
+             9. Congratulations you have now packaged your project yay :-p
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-23">
+         <a href="#Section_3_launching_and_joining_the_dedicated_server">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Section 3 launching and joining the dedicated server
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-24">
+           <a href="#1._copy_the_server_executable">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             1. copy the server executable
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-25">
+           <a href="#2._create_the_server_shortcut_and_setup_log_options">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             2. create the server shortcut and setup log options
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-26">
+           <a href="#3._Launch_and_test_the_server">
+            <span class="tocnumber">
+             3.3
+            </span>
+            <span class="toctext">
+             3. Launch and test the server
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-27">
+         <a href="#Section_4_notes">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Section 4 notes
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-28">
+           <a href="#1._allowing_friends_to_join_over_internet">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             1. allowing friends to join over internet
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-29">
+           <a href="#2._Hosting_on_a_virtual_server">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             2. Hosting on a virtual server
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-30">
+           <a href="#3._Creating_additional_maps_and_joining_different_maps">
+            <span class="tocnumber">
+             4.3
+            </span>
+            <span class="toctext">
+             3. Creating additional maps and joining different maps
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-31">
+           <a href="#4._Enabling_Physics">
+            <span class="tocnumber">
+             4.4
+            </span>
+            <span class="toctext">
+             4. Enabling Physics
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-32">
+         <a href="#Section_5">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Section 5
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-33">
+           <a href="#1._Im_too_lazy_for_all_this_just_give_me_the_files">
+            <span class="tocnumber">
+             5.1
+            </span>
+            <span class="toctext">
+             1. Im too lazy for all this just give me the files
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-34">
+         <a href="#section_6_Contact_the_author">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           section 6 Contact the author
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-35">
+           <a href="#1.">
+            <span class="tocnumber">
+             6.1
+            </span>
+            <span class="toctext">
+             1.
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-36">
+         <a href="#section_7_Building_and_deploying_a_UE4_dedicated_server_for_Linux">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           section 7 Building and deploying a UE4 dedicated server for Linux
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-37">
+           <a href="#1._Configure_Visual_Studio_for_Linux_cross_compilation">
+            <span class="tocnumber">
+             7.1
+            </span>
+            <span class="toctext">
+             1. Configure Visual Studio for Linux cross compilation
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-38">
+           <a href="#2._Package_your_project_to_a_distinct_location">
+            <span class="tocnumber">
+             7.2
+            </span>
+            <span class="toctext">
+             2. Package your project to a distinct location
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-39">
+           <a href="#3._Build_a_dedicated_server_binary_for_Linux">
+            <span class="tocnumber">
+             7.3
+            </span>
+            <span class="toctext">
+             3. Build a dedicated server binary for Linux
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-40">
+           <a href="#4._Deploy_your_binary_to_a_remote_machine">
+            <span class="tocnumber">
+             7.4
+            </span>
+            <span class="toctext">
+             4. Deploy your binary to a remote machine
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-41">
+           <a href="#5._Connect_to_your_server_and_run_the_dedicated_server_binary">
+            <span class="tocnumber">
+             7.5
+            </span>
+            <span class="toctext">
+             5. Connect to your server and run the dedicated server binary
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-42">
+           <a href="#6._Open_UDP:7777">
+            <span class="tocnumber">
+             7.6
+            </span>
+            <span class="toctext">
+             6. Open UDP:7777
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-43">
+           <a href="#7._Play_your_game_on_your_server">
+            <span class="tocnumber">
+             7.7
+            </span>
+            <span class="toctext">
+             7. Play your game on your server
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-44">
+           <a href="#8._Issues">
+            <span class="tocnumber">
+             7.8
+            </span>
+            <span class="toctext">
+             8. Issues
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-45">
+         <a href="#8._Dedicated_Server_on_Steam">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           8. Dedicated Server on Steam
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Section_1_Building_a_dedicated_server_in_Unreal_Engine_4">
+        Section 1 Building a dedicated server in Unreal Engine 4
+       </span>
+      </h2>
+      <p>
+       Building a standalone dedicated server wasn’t an easy thing to do and i know a lot of people struggle with it so i decided to make this wiki guide to try and help people. I’m going to cover the steps I took to build a Windows executable of a dedicated server.
+      </p>
+      <h3>
+       <span class="mw-headline" id="1._Download_the_Unreal_engine_from_source">
+        1. Download the Unreal engine from source
+       </span>
+      </h3>
+      <p>
+       You’ll need a source-built version of the engine in order to build using the server solution configurations in Visual Studio.
+      </p>
+      <p>
+       To build the engine from source go to
+       <a class="external free" href="https://github.com/EpicGames/UnrealEngine" rel="nofollow">
+        https://github.com/EpicGames/UnrealEngine
+       </a>
+      </p>
+      <p>
+       Note: to see the content of the link above you need first to create a git hub account and associate it to your epic games account, then accept the invite of epic games on GitHub. You will then need to click the link and login to your account.
+      </p>
+      <p>
+       Next select engine version and click the green clone/download button
+      </p>
+      <p>
+       <img alt="Select engine.png" class="" height="901" src="../assets/dedicated-server-guide-windows-linux/0.png" width="1612"/>
+      </p>
+      <p>
+       there are several options but i always prefer to just download as zip file
+      </p>
+      <p>
+       extract and unzip the zip file to a location of your choice.
+      </p>
+      <h3>
+       <span class="mw-headline" id="2._Setup_source_unreal_engine">
+        2. Setup source unreal engine
+       </span>
+      </h3>
+      <p>
+       open up the previously extracted folder
+and find a file called Setup.bat
+      </p>
+      <p>
+       double click this file and it will open up a console window and begin installing unreal dependencies
+      </p>
+      <p>
+       Note if you receive any errors when trying to open the .bat file then just right click instead and select run as administrator
+      </p>
+      <p>
+       <img alt="Setup.png" class="" height="802" src="../assets/dedicated-server-guide-windows-linux/1.png" width="1860"/>
+      </p>
+      <p>
+       now find a file called GenerateProjectFiles.bat
+      </p>
+      <p>
+       double click this file or again right click and run as administrator
+      </p>
+      <p>
+       once it is done you will then have a visual studios solution project file in your folder
+      </p>
+      <p>
+       <img alt="Solution.png" class="" height="390" src="../assets/dedicated-server-guide-windows-linux/2.png" width="832"/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="2.a_Setup_source_unreal_engine_To_use_Visual_studio_2017">
+        2.a Setup source unreal engine To use Visual studio 2017
+       </span>
+      </h3>
+      <p>
+       If you are using visual studio 2017. Instead of clicking on the GenerateProjectFiles.bat as shown above. Open up a CMD prompt window.
+Navigate to the folder where source built unreal files are by using the cd (change directory) command.
+Once inside the correct directory you need to run the following command.
+"GenerateProjectFiles.bat -2017"
+      </p>
+      <p>
+       this will then generate visual studio 2017 project files instead.
+full info can be found here
+       <a class="external free" href="https://answers.unrealengine.com/questions/579186/what-about-visual-studio-2017-in-ue4.html" rel="nofollow">
+        https://answers.unrealengine.com/questions/579186/what-about-visual-studio-2017-in-ue4.html
+       </a>
+       _______________________________________________________________________________________________
+      </p>
+      <p>
+       now open this solution file and it will open visual studios and begin loading the source code.
+      </p>
+      <p>
+       note the first time you open the solution it normally takes a long time to parse all the header files .
+make sure you let it completely finish until it says ready at the bottom before you continue.
+      </p>
+      <p>
+       next go up to where it says develop next to where it says win64 and in the drop down menu select DEVELOPMENT EDITOR
+      </p>
+      <p>
+       <img alt="Editor.png" class="" height="202" src="../assets/dedicated-server-guide-windows-linux/3.png" width="1081"/>
+      </p>
+      <p>
+       next go to the solution explorer and right click the ue4 and select build
+      </p>
+      <p>
+       <img alt="Build.png" class="" height="559" src="../assets/dedicated-server-guide-windows-linux/4.png" width="475"/>
+      </p>
+      <p>
+       note depending on your system this can again take quite a long time to complete
+      </p>
+      <p>
+       once complete you then need to right click on ue4 again in the solution explorer and go to "set as start up project"
+      </p>
+      <p>
+       <img alt="Build.png" class="" height="559" src="../assets/dedicated-server-guide-windows-linux/5.png" width="475"/>
+      </p>
+      <p>
+       finally go up to where it says local windows debugger and click the little green play button
+      </p>
+      <p>
+       <br/>
+       <img alt="Debugger.png" class="" height="286" src="../assets/dedicated-server-guide-windows-linux/6.png" width="624"/>
+      </p>
+      <p>
+       you may get a warning pop up like this
+      </p>
+      <p>
+       <br/>
+       <img alt="Warning2.png" class="" height="634" src="../assets/dedicated-server-guide-windows-linux/7.png" width="831"/>
+      </p>
+      <p>
+       just click yes and the editor will begin to open.
+      </p>
+      <p>
+       note again the first time it may take a while to open and can appear to be stuck on a certain percentage as if its frozen. just be patient and it will open.
+      </p>
+      <p>
+       <img alt="Shaders.png" class="" height="979" src="../assets/dedicated-server-guide-windows-linux/8.png" width="1566"/>
+      </p>
+      <p>
+       it will compile all the shaders as well which can take a while the first time.
+      </p>
+      <p>
+       What i do now is right click and add to task bar so that next time you can just open the engine directly rather than having to open visual studio and do it that way.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Congratulations_-_you_should_have_now_successfully_setup_a_source_built_version_of_unreal_engine">
+        Congratulations - you should have now successfully setup a source built version of unreal engine
+       </span>
+      </h3>
+      <h3>
+       <span class="mw-headline" id="3._Video_guide">
+        3. Video guide
+       </span>
+      </h3>
+      <p>
+       <a class="external free" href="https://www.youtube.com/watch?v=u0jtHK7BdzY&amp;feature=youtu.be" rel="nofollow">
+        https://www.youtube.com/watch?v=u0jtHK7BdzY&amp;feature=youtu.be
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Section_2_setting_up_a_dedicated_server_on_windows">
+        Section 2 setting up a dedicated server on windows
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="1._Dedicated_Server_from_a_brand_new_project">
+        1. Dedicated Server from a brand new project
+       </span>
+      </h3>
+      <p>
+       Open up source unreal engine, select c++ and third person template, give it a suitable name and save location
+      </p>
+      <p>
+       <img alt="Createproject.png" class="" height="775" src="../assets/dedicated-server-guide-windows-linux/9.png" width="1159"/>
+      </p>
+      <p>
+       once the project and visual studio have finished completely loading, close them both down.
+      </p>
+      <p>
+       Note again wait until the header files have all been parsed in visual studio before closing. it may prompt you to save just click ok.
+      </p>
+      <h3>
+       <span class="mw-headline" id="2._Dedicated_Server_from_a_blueprint_only_project">
+        2. Dedicated Server from a blueprint only project
+       </span>
+      </h3>
+      <p>
+       if your project was made with a none source or different engine version or was simply only BLUEPRINTS to begin with
+you will not be able to make a dedicated server until you add some c++ code.
+      </p>
+      <p>
+       So simply go to add new, c++ class, an empty class will suffice, and you can delete it later.
+      </p>
+      <p>
+       Once you have a source directory, right click on the .uproject file and generate visual studio project files. This should create an .sln in the project directory that you can open in visual studio.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="3._preparing_the_project_for_building">
+        3. preparing the project for building
+       </span>
+      </h3>
+      <h4>
+       <span class="mw-headline" id="1._Target_file_instructions_for_engine_version_4.14">
+        1. Target file instructions for engine version 4.14
+       </span>
+      </h4>
+      <p>
+       open up the previously created project folder from the file explorer
+inside there will be a folder called source . open this up
+      </p>
+      <p>
+       <img alt="Sourcefolder.png" class="" height="460" src="../assets/dedicated-server-guide-windows-linux/10.png" width="1030"/>
+      </p>
+      <p>
+       inside you will find some visual studio source files. take one of the source files and copy and paste it and then rename it to match the others . format is gamenameServer.Target.cs
+so in my case because my project game name is called test i would rename my file to testServer.Target.cs
+like so
+      </p>
+      <p>
+       <img alt="Testserver.png" class="" height="283" src="../assets/dedicated-server-guide-windows-linux/11.png" width="518"/>
+      </p>
+      <p>
+       right click this newly created file and click edit
+      </p>
+      <p>
+       <img alt="Editfile.png" class="" height="703" src="../assets/dedicated-server-guide-windows-linux/12.png" width="863"/>
+      </p>
+      <p>
+       this will normally bring up a notepad so you can edit the file , although you can use any kind of text or code editor you wish. notepad is just quick and easy.
+      </p>
+      <p>
+       delete anything that is in the file so it is completely blank and replace with this code/text
+      </p>
+      <pre>// Copyright 1998-2016 Epic Games, Inc. All Rights Reserved.
+
+using UnrealBuildTool;
+using System.Collections.Generic;
+
+public class ShooterGameServerTarget : TargetRules
+{
+      public ShooterGameServerTarget(TargetInfo Target)
+      {
+         Type = TargetType.Server;
+         bUsesSteam = true;
+      }
+
+       //
+       // TargetRules interface.
+       //
+
+       public override bool GetSupportedPlatforms(ref List&lt;UnrealTargetPlatform&gt; OutPlatforms)
+       {
+            // It is valid for only server platforms
+            return UnrealBuildTool.UnrealBuildTool.GetAllServerPlatforms(ref OutPlatforms, false);
+       }
+
+       public override void SetupBinaries
+       (
+          TargetInfo Target, ref List&lt;UEBuildBinaryConfiguration&gt; OutBuildBinaryConfigurations,
+          ref List&lt;string&gt; OutExtraModuleNames
+       )
+       {
+         OutExtraModuleNames.Add("ShooterGame");
+       }
+}
+</pre>
+      <p>
+       next you have to make 3 changes to the file
+      </p>
+      <p>
+       first find this line of code at the top
+      </p>
+      <pre>public class ShooterGameServerTarget : TargetRules
+</pre>
+      <p>
+       <br/>
+       and change it so that it has your game name instead so in my case my game is called test so i would change the line of code to this
+      </p>
+      <pre>public class testServerTarget : TargetRules
+</pre>
+      <p>
+       <br/>
+       next underneath it find this line of code and do the same as before and change the name to match your game
+      </p>
+      <pre>public ShooterGameServerTarget(TargetInfo Target)
+</pre>
+      <p>
+       <br/>
+       so again in my case my game name is test so i would change this line of code to this
+      </p>
+      <pre>public testServerTarget(TargetInfo Target)
+</pre>
+      <p>
+       <br/>
+       and finally find this line of code and do the same as before and change the name to match your game
+      </p>
+      <pre>OutExtraModuleNames.Add("ShooterGame");
+</pre>
+      <p>
+       <br/>
+       so again in my case my game is called test so i would change this line of code to this
+      </p>
+      <pre>OutExtraModuleNames.Add("test");
+
+</pre>
+      <p>
+       <br/>
+       Now just save the file with the same name and close it.
+      </p>
+      <h4>
+       <span class="mw-headline" id="2._Target_file_instructions_for_engine_version_4.15">
+        2. Target file instructions for engine version 4.15
+       </span>
+      </h4>
+      <pre>// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
+using UnrealBuildTool;
+using System.Collections.Generic;
+
+[SupportedPlatforms(UnrealPlatformClass.Server)]
+public class ShooterGameServerTarget : TargetRules      // Change this line of code as shown in the previous steps
+{
+ 
+    public ShooterGameServerTarget(TargetInfo Target)  // Change this line of code as shown in the previous steps
+
+       {
+
+     Type = TargetType.Server;
+
+      bUsesSteam = false;
+
+       }
+
+        //
+        // TargetRules interface.
+        //
+            public override void SetupBinaries
+            (
+             TargetInfo Target,
+             ref List&lt;UEBuildBinaryConfiguration&gt; OutBuildBinaryConfigurations,
+             ref List&lt;string&gt; OutExtraModuleNames
+             )
+               {
+                OutExtraModuleNames.Add("ShooterGame");     // Change this line of code as shown in the previous steps
+               }
+  }
+</pre>
+      <h4>
+       <span class="mw-headline" id="3._Target_file_instructions_for_engine_version_4.16">
+        3. Target file instructions for engine version 4.16
+       </span>
+      </h4>
+      <pre>// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
+using UnrealBuildTool;
+using System.Collections.Generic;
+
+[SupportedPlatforms(UnrealPlatformClass.Server)]
+public class ShooterGameServerTarget : TargetRules    // Change this line of code as shown previously
+{
+	public ShooterGameServerTarget(TargetInfo Target) : base(Target) // Change this line of code as shown previously
+       {
+              Type = TargetType.Server;
+              ExtraModuleNames.Add("ShooterGame");   // Change this line of code as shown previously
+       }
+}
+</pre>
+      <h4>
+       <span class="mw-headline" id="4._Target_file_instructions_for_engine_version_4.17">
+        4. Target file instructions for engine version 4.17
+       </span>
+      </h4>
+      <pre>// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
+using UnrealBuildTool;
+using System.Collections.Generic;
+
+[SupportedPlatforms(UnrealPlatformClass.Server)]
+public class ShooterGameServerTarget : TargetRules   // Change this line as shown previously
+{
+       public ShooterGameServerTarget(TargetInfo Target) : base(Target)  // Change this line as shown previously
+       {
+        Type = TargetType.Server;
+        ExtraModuleNames.Add("ShooterGame");    // Change this line as shown previously
+       }
+}
+</pre>
+      <h4>
+       <span class="mw-headline" id="5._Target_file_instructions_for_engine_version_4.18">
+        5. Target file instructions for engine version 4.18
+       </span>
+      </h4>
+      <pre>// Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
+
+using UnrealBuildTool;
+using System.Collections.Generic;
+
+[SupportedPlatforms(UnrealPlatformClass.Server)]
+public class ShooterGameServerTarget : TargetRules   // Change this line as shown previously
+{
+       public ShooterGameServerTarget(TargetInfo Target) : base(Target)  // Change this line as shown previously
+       {
+        Type = TargetType.Server;
+        ExtraModuleNames.Add("ShooterGame");    // Change this line as shown previously
+       }
+}
+</pre>
+      <h3>
+       <span class="mw-headline" id="4._Switch_Unreal_engine_versions_.26_generate_project_files">
+        4. Switch Unreal engine versions &amp; generate project files
+       </span>
+      </h3>
+      <p>
+       next inside the project folder right click the uproject file and when the menu pops up select "switch unreal engine versions"
+      </p>
+      <p>
+       if when you right click on a uproject file you dont get a menu that looks like this
+      </p>
+      <p>
+       <img alt="Build server.png" class="" height="267" src="../assets/dedicated-server-guide-windows-linux/13.png" width="516"/>
+      </p>
+      <p>
+       then follow this step below from the read me file.
+      </p>
+      <p>
+       <i>
+        One last thing. You’ll want to setup your Windows shell so that you can interact with .uproject files. Find the file named UnrealVersionSelector-Win64-Shippping.exe in the UnrealEngine/Engine/Binaries/Win64/ folder and run it. Now, you’ll be able to double-click .uproject files to load the project, or right click them to quickly update Visual Studio files.
+       </i>
+      </p>
+      <p>
+       This should now allow you to right click on the uproject file to bring up the menu.
+      </p>
+      <p>
+       when you click switch engine versions make sure that your source build version of the engine is selected in the drop down box and click ok.
+      </p>
+      <p>
+       <img alt="Selectsource.png" class="" height="392" src="../assets/dedicated-server-guide-windows-linux/14.png" width="892"/>
+      </p>
+      <p>
+       this should automatically regenerate the visual studio solution project files . if it does not then it means your files are already up to date but just to be safe you can right click the uproject file again and click "generate visual studio project files"
+      </p>
+      <h3>
+       <span class="mw-headline" id="5._Building_the_server">
+        5. Building the server
+       </span>
+      </h3>
+      <p>
+       next open up the visual studio project solution and allow it to fully load until it says ready.
+      </p>
+      <p>
+       <img alt="Testsolution.png" class="" height="398" src="../assets/dedicated-server-guide-windows-linux/15.png" width="517"/>
+      </p>
+      <p>
+       go up to the drop down box and in the menu this time select DEVELOPMENT EDITOR
+      </p>
+      <p>
+       <br/>
+       <img alt="Developmenteditor.png" class="" height="496" src="../assets/dedicated-server-guide-windows-linux/16.png" width="561"/>
+      </p>
+      <p>
+       then same as before go to the solution explorer and right click and click build
+      </p>
+      <p>
+       <br/>
+       <img alt="Buildserver.png" class="" height="796" src="../assets/dedicated-server-guide-windows-linux/17.png" width="794"/>
+      </p>
+      <p>
+       again depending on youre computer this can take a long time to complete.
+      </p>
+      <p>
+       <br/>
+       once this is done go back to the menu and in the drop down box this time select DEVELOPMENT SERVER
+      </p>
+      <p>
+       <img alt="Development server.png" class="" height="633" src="../assets/dedicated-server-guide-windows-linux/18.png" width="817"/>
+      </p>
+      <p>
+       then same as before go to the solution explorer and right click and click build
+      </p>
+      <p>
+       <br/>
+       <img alt="Buildserver.png" class="" height="796" src="../assets/dedicated-server-guide-windows-linux/19.png" width="794"/>
+      </p>
+      <p>
+       again depending on your computer this can take a long time to complete.
+      </p>
+      <p>
+       once the server is built if you go into your project folder again then click binaries, win64
+and you should have the server files in there like this
+      </p>
+      <p>
+       <img alt="Serverfiles.png" class="" height="341" src="../assets/dedicated-server-guide-windows-linux/20.png" width="688"/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="6._Fixing_the_lighting_swarm_error">
+        6. Fixing the lighting swarm error
+       </span>
+      </h3>
+      <p>
+       With source built unreal when you go to build the lighting it is common for the following error to occur and it took me forever to find the solution so i am including it here to save you guys the headache.
+      </p>
+      <p>
+       <br/>
+       <img alt="Swarm errorr.png" class="" height="268" src="../assets/dedicated-server-guide-windows-linux/21.png" width="692"/>
+      </p>
+      <p>
+       so what you do is in your solution explorer in visual studio scroll down until you see "unreal lightmass"
+      </p>
+      <p>
+       <img alt="Lightmass.png" class="" height="414" src="../assets/dedicated-server-guide-windows-linux/22.png" width="438"/>
+      </p>
+      <p>
+       and again like before right click it and click build.
+      </p>
+      <p>
+       when it has finished close visual studio and now the swarm bug error should be fixed.
+      </p>
+      <h3>
+       <span class="mw-headline" id="6.a_Video_Guide">
+        6.a Video Guide
+       </span>
+      </h3>
+      <p>
+       <a class="external free" href="https://www.youtube.com/watch?v=lkrFFNfjtS0&amp;feature=youtu.be" rel="nofollow">
+        https://www.youtube.com/watch?v=lkrFFNfjtS0&amp;feature=youtu.be
+       </a>
+      </p>
+      <h3>
+       <span class="mw-headline" id="7._Prepare_the_project_for_packaging">
+        7. Prepare the project for packaging
+       </span>
+      </h3>
+      <p>
+       now open up your project again by clicking on the uproject file.
+      </p>
+      <p>
+       ok so the first thing we need to do is under the content folder is add two new folders .
+one called maps, the other blueprints.
+      </p>
+      <p>
+       <img alt="Folder structure.png" class="" height="296" src="../assets/dedicated-server-guide-windows-linux/23.png" width="556"/>
+      </p>
+      <p>
+       then we need to go down to where the third person example map is stored and move it into your newly created map folder like so.
+      </p>
+      <p>
+       <br/>
+       <img alt="Maps.png" class="" height="349" src="../assets/dedicated-server-guide-windows-linux/24.png" width="648"/>
+      </p>
+      <p>
+       rename this to test level or whatever you like. this will be the level that the player loads into the server on and plays the game .
+      </p>
+      <p>
+       as of engine versions 4.14+ whenever you make a new map you must open the map and then click on build so that it generates the correct mapBuildDataRegistry Files for it. once this is done then click save all.
+      </p>
+      <p>
+       now we need to create 2 more additional maps. so go up to file, then new level and select the empty map level.
+name this first level entry map, and the second level transition map. like so
+      </p>
+      <p>
+       <br/>
+      </p>
+      <p>
+       <img alt="Mapfiles.png" class="" height="150" src="../assets/dedicated-server-guide-windows-linux/25.png" width="553"/>
+      </p>
+      <p>
+       again dont forget to build each time on the new map to make sure the data is saved correctly.
+      </p>
+      <p>
+       <br/>
+       open up the entry level map and go up to blueprints and open the level blueprint
+      </p>
+      <p>
+       <br/>
+       <img alt="Openlevel.png" class="" height="449" src="../assets/dedicated-server-guide-windows-linux/26.png" width="789"/>
+      </p>
+      <p>
+       in this blueprint drag off from begin play and find the open level node. in the level name set the parameter to
+127.0.0.1 this is your local ip address.
+      </p>
+      <p>
+       <br/>
+       <img alt="Ip.png" class="" height="291" src="../assets/dedicated-server-guide-windows-linux/27.png" width="626"/>
+      </p>
+      <p>
+       compile and save and close the blueprint.
+      </p>
+      <p>
+       finally open up the test level map and just click on the default character that is in the map and just delete him otherwise when you join the server you will end up with duplicated characters.
+      </p>
+      <p>
+       <img alt="Testlevel.png" class="" height="357" src="../assets/dedicated-server-guide-windows-linux/28.png" width="539"/>
+      </p>
+      <p>
+       <br/>
+       now we need to set the project settings up
+      </p>
+      <p>
+       so open up the project settings and then go to maps and modes.
+      </p>
+      <p>
+       set the editor startup map to entry
+      </p>
+      <p>
+       set the game default map to entry
+      </p>
+      <p>
+       set the transition map to transition
+      </p>
+      <p>
+       set the server default map to test level
+      </p>
+      <p>
+       like so
+      </p>
+      <p>
+       <img alt="Mapsetup.png" class="" height="222" src="../assets/dedicated-server-guide-windows-linux/29.png" width="429"/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="8._setup_packaging_settings">
+        8. setup packaging settings
+       </span>
+      </h3>
+      <p>
+       go to file, packaging, packaging settings
+      </p>
+      <p>
+       <img alt="PackagingSettings.png" class="" height="720" src="../assets/dedicated-server-guide-windows-linux/30.png" width="487"/>
+      </p>
+      <p>
+       in the packaging settings scroll down till you find the section list of maps to include in a packaged build . click on the + sign to add 3 elements to the array. one for each map you have in the project.
+then browse to your map folder and add each of your 3 maps to the array like so
+      </p>
+      <p>
+       <br/>
+       <img alt="Addmaps.png" class="" height="387" src="../assets/dedicated-server-guide-windows-linux/31.png" width="1129"/>
+      </p>
+      <p>
+       now close the settings and package the project.
+      </p>
+      <p>
+       <br/>
+       <img alt="Packageproject.png" class="" height="497" src="../assets/dedicated-server-guide-windows-linux/32.png" width="676"/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="9._Congratulations_you_have_now_packaged_your_project_yay_:-p">
+        9. Congratulations you have now packaged your project yay :-p
+       </span>
+      </h3>
+      <h2>
+       <span class="mw-headline" id="Section_3_launching_and_joining_the_dedicated_server">
+        Section 3 launching and joining the dedicated server
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="1._copy_the_server_executable">
+        1. copy the server executable
+       </span>
+      </h3>
+      <p>
+       go to your project folder, then binaries, win 64, and find the file called "yourProjectNameServer.exe"
+and right click it and copy it.
+      </p>
+      <p>
+       <img alt="Copyproject.png" class="" height="610" src="../assets/dedicated-server-guide-windows-linux/33.png" width="907"/>
+      </p>
+      <p>
+       next go to your packaged game location. then WindowsNoEditor, then the name of your project, binaries, win64,
+and paste in the server.exe like so.
+      </p>
+      <p>
+       <img alt="Projectbinaries.png" class="" height="327" src="../assets/dedicated-server-guide-windows-linux/34.png" width="737"/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="2._create_the_server_shortcut_and_setup_log_options">
+        2. create the server shortcut and setup log options
+       </span>
+      </h3>
+      <p>
+       now take the server file and create a shortcut to it. then rename it to match whatever you called your map inside the project . in my case i called it test level so my shortcut will look like this
+      </p>
+      <p>
+       <br/>
+       <img alt="Shortcut.png" class="" height="156" src="../assets/dedicated-server-guide-windows-linux/35.png" width="424"/>
+      </p>
+      <p>
+       now right click this shortcut and go to properties
+      </p>
+      <p>
+       <br/>
+       <img alt="Properties.png" class="" height="570" src="../assets/dedicated-server-guide-windows-linux/36.png" width="603"/>
+      </p>
+      <p>
+       at the end of the target path simply add   -log like so
+      </p>
+      <p>
+       <img alt="Targetpath.png" class="" height="279" src="../assets/dedicated-server-guide-windows-linux/37.png" width="551"/>
+      </p>
+      <p>
+       and click ok
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="3._Launch_and_test_the_server">
+        3. Launch and test the server
+       </span>
+      </h3>
+      <p>
+       Now we are ready to launch the dedicated server and test level.
+      </p>
+      <p>
+       double click the server shortcut you just modified
+      </p>
+      <p>
+       if all goes well you should see a command window open and the server will launch itself
+      </p>
+      <p>
+       <img alt="Serverlog.png" class="" height="284" src="../assets/dedicated-server-guide-windows-linux/38.png" width="1269"/>
+      </p>
+      <p>
+       here you can see the ip address of the computer hosting the server, you can see the server is listening on port 7777 which is the default unreal port, and it has loaded up the test level map as we set out in our project.
+      </p>
+      <p>
+       <br/>
+       Your server is now running all that's left now is to click the project.exe to join the server.
+      </p>
+      <p>
+       <br/>
+       in the logs if all is well you will see that a client requested to join the server and then at the bottom you should see join succeeded: 256
+      </p>
+      <p>
+       this means the player has successfully joined the dedicated server.
+      </p>
+      <p>
+       <img alt="Joinsuccess.png" class="" height="122" src="../assets/dedicated-server-guide-windows-linux/39.png" width="830"/>
+      </p>
+      <p>
+       if you were to launch another game exe you would now see another login success and the number would now be :257
+      </p>
+      <p>
+       like so
+      </p>
+      <p>
+       <img alt="257.png" class="" height="217" src="../assets/dedicated-server-guide-windows-linux/40.png" width="875"/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <p>
+       congratulations you are now hosting a dedicated server on your own computer and have two players joined that can run around and see each other
+      </p>
+      <p>
+       <img alt="Yay.png" class="" height="846" src="../assets/dedicated-server-guide-windows-linux/41.png" width="1541"/>
+      </p>
+      <p>
+       <br/>
+       to properly close down the server in the command window press ctrl c. alternatively you can press the x on the log window or failing that you can ctr alt delete and kill any unreal processes that are running. but the best method is to use ctrl c
+      </p>
+      <h2>
+       <span class="mw-headline" id="Section_4_notes">
+        Section 4 notes
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="1._allowing_friends_to_join_over_internet">
+        1. allowing friends to join over internet
+       </span>
+      </h3>
+      <p>
+       if you want to allow friends to join your games etc then simply go back to your project and on the entry level, open the level blueprint and instead of using your local ip address, input your real public ip address.
+      </p>
+      <p>
+       <img alt="Ip.png" class="" height="291" src="../assets/dedicated-server-guide-windows-linux/42.png" width="626"/>
+      </p>
+      <p>
+       to find this simply type  in to google "what is my ip" . or use an ip address finding program etc.
+      </p>
+      <p>
+       also remember that when you make changes in the game you need to repackage the game . so once you change the ip address to your real public ip make sure to repackage the game before you send it to your friends.
+      </p>
+      <p>
+       also you might need to rebuild the server binaries in visual studio.
+      </p>
+      <p>
+       once package is complete then zip up the whole windows no editor game folder and send it to youre friends.
+      </p>
+      <p>
+       start the server your end , then get the friends to open the game executable and join your game.
+      </p>
+      <p>
+       if your friends are unable to join your game it will be because you do not have the ports forwarded and setup properly on your router, and you may need to set up a static ip address.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="2._Hosting_on_a_virtual_server">
+        2. Hosting on a virtual server
+       </span>
+      </h3>
+      <p>
+       log into your virtual server, open up the internet and download the game package. unzip it and then launch the server shortcut as normal.
+      </p>
+      <h3>
+       <span class="mw-headline" id="3._Creating_additional_maps_and_joining_different_maps">
+        3. Creating additional maps and joining different maps
+       </span>
+      </h3>
+      <h3>
+       <span class="mw-headline" id="4._Enabling_Physics">
+        4. Enabling Physics
+       </span>
+      </h3>
+      <p>
+       Not sure if this is still relevant in engine 4.14+ but ive left it here just in case. from original wiki authors.
+      </p>
+      <p>
+       As of 4.4.3, if you’re replicating actors whose movement depends on simulated physics, you’ll need to set their
+       <b>
+        SkeletalMeshComponent.bEnablePhysicsOnDedicatedServer
+       </b>
+       property to true. The standalone dedicated servers return true to
+       <b>
+        IsRunningDedicatedServer()
+       </b>
+       , which results in prevention of physics simulations for SkeletalMeshComponents that do not explicitly set the bEnablePhysicsOnDedicatedServer property.
+Thanks to user
+       <b>
+        HateDread
+       </b>
+       for pointing this out for me.
+      </p>
+      <p>
+       Details:
+      </p>
+      <p>
+       <a class="external free" href="https://answers.unrealengine.com/questions/97074/vehicle-template-issues-with-standalone-dedicated.html#answer-101321" rel="nofollow">
+        https://answers.unrealengine.com/questions/97074/vehicle-template-issues-with-standalone-dedicated.html#answer-101321
+       </a>
+      </p>
+      <p>
+       Commit that fixes this:
+      </p>
+      <p>
+       <a class="external free" href="https://github.com/EpicGames/UnrealEngine/commit/9860acf7b10c7187cc9287342e43c73b0083791f" rel="nofollow">
+        https://github.com/EpicGames/UnrealEngine/commit/9860acf7b10c7187cc9287342e43c73b0083791f
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Section_5">
+        Section 5
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="1._Im_too_lazy_for_all_this_just_give_me_the_files">
+        1. Im too lazy for all this just give me the files
+       </span>
+      </h3>
+      <p>
+       i will provide the test project files soon i ran out of time
+      </p>
+      <h2>
+       <span class="mw-headline" id="section_6_Contact_the_author">
+        section 6 Contact the author
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="1.">
+        1.
+       </span>
+      </h3>
+      <p>
+       if you need help you can find me on unreal forums -
+       <a class="external free" href="https://forums.unrealengine.com/member.php?42414-EniGmaa" rel="nofollow">
+        https://forums.unrealengine.com/member.php?42414-EniGmaa
+       </a>
+      </p>
+      <p>
+       Or on unreal slackers discord
+       <a class="external free" href="http://unrealslackers.org/" rel="nofollow">
+        http://unrealslackers.org/
+       </a>
+      </p>
+      <p>
+       Username is PrintStringFTW#6597
+      </p>
+      <p>
+       thankyou
+      </p>
+      <h2>
+       <span class="mw-headline" id="section_7_Building_and_deploying_a_UE4_dedicated_server_for_Linux">
+        section 7 Building and deploying a UE4 dedicated server for Linux
+       </span>
+      </h2>
+      <p>
+       Original blog post:
+       <a class="external free" href="http://blog.piinecone.com/post/98470361272/building-and-deploying-a-ue4-dedicated-server-for-linux" rel="nofollow">
+        http://blog.piinecone.com/post/98470361272/building-and-deploying-a-ue4-dedicated-server-for-linux
+       </a>
+      </p>
+      <p>
+       In a prior post I covered the basics of building a standalone dedicated server executable for Windows from a UE4 game. This post will cover packaging, building, and deploying a Linux binary.
+      </p>
+      <h3>
+       <span class="mw-headline" id="1._Configure_Visual_Studio_for_Linux_cross_compilation">
+        1. Configure Visual Studio for Linux cross compilation
+       </span>
+      </h3>
+      <p>
+       Epic have provided a prebuilt cross compilation toolchain for building Linux binaries from Windows. Follow the installation guide on the wiki:
+       <a class="external free" href="./compiling-for-linux.html" rel="nofollow">
+        Compiling For Linux
+       </a>
+       .
+      </p>
+      <p>
+       Once you have the toolchain installed, verify that you have a LINUX_ROOT env var pointing to it. You can check this in git bash with the following command:
+      </p>
+      <p>
+       <i>
+        `env | grep LINUX_ROOT `
+       </i>
+      </p>
+      <h3>
+       <span class="mw-headline" id="2._Package_your_project_to_a_distinct_location">
+        2. Package your project to a distinct location
+       </span>
+      </h3>
+      <p>
+       Thanks to Osman for pointing this out to me. In order to compress everything you’ll need to deploy and run a standalone binary, you should package your project somewhere outside of your project’s working directory. The resulting file structure will contain the essentials.
+      </p>
+      <p>
+       Open the editor and package your project for Linux. Choose a distinct destination for the build (eg, ~/Desktop/MyGameLinux/). Once this completes, you should see a client build for Linux in the destination you chose.
+      </p>
+      <h3>
+       <span class="mw-headline" id="3._Build_a_dedicated_server_binary_for_Linux">
+        3. Build a dedicated server binary for Linux
+       </span>
+      </h3>
+      <p>
+       Open your project solution in Visual Studio, select the Development Server configuration (or whichever server configuration you’d like to use) and build for Linux. Make sure you’ve followed the previous guide and that your Server target is correctly setup.
+When the build completes, you’ll have a new server binary in your project’s working directory (../MyGame/Binaries/Win64/MyGameServer).
+      </p>
+      <p>
+       Copy the Linux Server binary to the packaged project directory we created in step 2. You should put it next to the client binary. So when you look in:
+      </p>
+      <p>
+       <i>
+        ~/Desktop/MyGameLinux/LinuxNoEditor/MyGame/Binaries/Linux
+       </i>
+      </p>
+      <p>
+       You should see:
+      </p>
+      <p>
+       <i>
+        MyGame
+       </i>
+      </p>
+      <p>
+       <i>
+        MyGameServer
+       </i>
+      </p>
+      <h3>
+       <span class="mw-headline" id="4._Deploy_your_binary_to_a_remote_machine">
+        4. Deploy your binary to a remote machine
+       </span>
+      </h3>
+      <p>
+       You’ll need a Linux machine to deploy and run your server. I’m using a Google Compute VM for testing, but EC2 or any other cloud provider should suffice for now. I haven’t done any research or benchmarking to determine which provider, OS, and machine type is ideal for running UE4 dedicated servers.
+      </p>
+      <p>
+       Using git bash, create a gzipped tar of your packaged directory (I foolishly forgot to remove the client binary before doing this; you should remove it as you won’t be running it remotely):
+      </p>
+      <p>
+       <i>
+        tar -cvzf mygame-linux-server.tar.gz ~/Desktop/MyGameLinux/
+       </i>
+      </p>
+      <p>
+       Copy the resulting archive to your remote Linux machine:
+      </p>
+      <p>
+       <i>
+        scp mygame-linux-server.tar.gz piinecone@123.456.78.91
+       </i>
+      </p>
+      <p>
+       This will copy the tar into the home directory of the machine at the supplied IP address. Replace my nonsense numbers with the external IP of your remote machine. Note that you may have to append
+      </p>
+      <p>
+       <i>
+        -i ~/.ssh/&lt;name of your private key&gt;
+       </i>
+      </p>
+      <p>
+       to perform the secure copy, depending on your ssh configuration.
+      </p>
+      <h3>
+       <span class="mw-headline" id="5._Connect_to_your_server_and_run_the_dedicated_server_binary">
+        5. Connect to your server and run the dedicated server binary
+       </span>
+      </h3>
+      <p>
+       SSH into your machine:
+      </p>
+      <p>
+       <i>
+        ssh piinecone@123.456.78.91
+       </i>
+      </p>
+      <p>
+       You may need to append `-i ~/.ssh/&lt;your private key&gt;` again here.
+      </p>
+      <p>
+       Once connected, you’ll be in your home directory. `ls` and you should see your gzipped tarball. Unpack it:
+      </p>
+      <p>
+       <i>
+        tar -xzf mygame-linux-server.tar.gz
+       </i>
+      </p>
+      <p>
+       `cd` to your binary location:
+      </p>
+      <p>
+       <i>
+        cd MyGameLinux/LinuxNoEditor/MyGame/Binaries/Linux
+       </i>
+      </p>
+      <p>
+       Make your server binary executable:
+      </p>
+      <p>
+       <i>
+        chmod +x MyGameServer
+       </i>
+      </p>
+      <p>
+       Run it!
+      </p>
+      <p>
+       <i>
+        ./MyGameServer -log
+       </i>
+      </p>
+      <p>
+       Okay, now kill it with Ctrl+C because we have to open up allow connections on UDP:7777.
+      </p>
+      <p>
+       Also, if you see this error:
+      </p>
+      <p>
+       <b>
+        Could not adjust number of file handles
+       </b>
+      </p>
+      <p>
+       Add this line to /etc/security/limits.conf:
+      </p>
+      <p>
+       <i>
+        user - nofile 10000
+       </i>
+      </p>
+      <p>
+       And for Debian and Ubuntu, add this line to /etc/pam.d/common-session:
+      </p>
+      <p>
+       <i>
+        session required pam_limits.so
+       </i>
+      </p>
+      <p>
+       After rebooting your machine you should be able to run the server executable.
+      </p>
+      <h3>
+       <span class="mw-headline" id="6._Open_UDP:7777">
+        6. Open UDP:7777
+       </span>
+      </h3>
+      <p>
+       Most cloud VMs default to fairly tight security so you’ll probably have to manually open port 7777 (the UE4 server’s default port) to accept UDP connections. I’m not going to cover the specifics of this because it can vary by machine and provider. For a Google Compute VM you can just create a forwarding rule with the CLI. Other machines will require that you modify the iptables.
+      </p>
+      <p>
+       Once you’ve opened UDP 7777, you can verify the connection is working with netcat. On the remote machine:
+      </p>
+      <p>
+       <i>
+        nc -luv 777
+       </i>
+      </p>
+      <p>
+       On your machine:
+      </p>
+      <p>
+       <i>
+        nc -vu server.ip.add.ress 7777
+       </i>
+      </p>
+      <p>
+       Enter text on either console and it should appear in the other.
+      </p>
+      <h3>
+       <span class="mw-headline" id="7._Play_your_game_on_your_server">
+        7. Play your game on your server
+       </span>
+      </h3>
+      <p>
+       This is, after all, the whole point. Build a client executable (or just use the one you built in step 2). Run it, open the console (with “~”), and type:
+open my.server.ip.address:7777
+      </p>
+      <p>
+       You should see a join in your server log, and your client pawn should spawn into whichever map the server is currently running.
+      </p>
+      <h3>
+       <span class="mw-headline" id="8._Issues">
+        8. Issues
+       </span>
+      </h3>
+      <p>
+       At some point of time (around Unreal Engine 4.4.x), Linux servers required glibc 2.14+, which made it unable to run on Debian-stable (back then Debian 7 'wheezy'). This was a temporary issue not experienced in previous versions, and it was fixed in later ones. Cross-toolchain provided with the Unreal Engine targets glibc 2.12.2, which is old enough to run on most contemporary distros, including Debian-stable and even CentOS 6.x without hassle.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="8._Dedicated_Server_on_Steam">
+        8. Dedicated Server on Steam
+       </span>
+      </h2>
+      <p>
+       Now on it's own page:
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

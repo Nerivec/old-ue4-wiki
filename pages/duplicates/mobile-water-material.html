@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Mobile Water Material - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Mobile Water Material
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Texture_Files">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Texture Files
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Base_Color">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Base Color
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Normals">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Normals
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Scalar_Parameters_and_Material_Properties">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Scalar Parameters and Material Properties
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Scene_Setup">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Scene Setup
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Final_Result">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Final Result
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       In this tutorial we will be creating a water material to be instanced for use on mobile devices. This tutorial has been updated to integrate the newly added High Quality Mobile Reflections rendering feature which require a high end mobile device (e.g. iPad Pro).
+      </p>
+      <pre>    Be sure to download the texture files posted here on the page.
+    Also be sure your Project Settings &gt; Rendering &gt; Allow Static Lighting is enabled. 
+    This is important for making sure reflections work correctly.
+</pre>
+      <h2>
+       <span class="mw-headline" id="Texture_Files">
+        Texture Files
+       </span>
+      </h2>
+      <p>
+       Files to download:
+       <br clear="all"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Base_Color">
+        Base Color
+       </span>
+      </h2>
+      <p>
+       1. Create a new project blank blueprint project for Mobile/Tablet using Maximum Quality.
+      </p>
+      <p>
+       2. Import the two texture files downloaded from this page in the link above.
+      </p>
+      <p>
+       3. Create a new Material and drag in the two texture samples you imported into the Material Graph.
+      </p>
+      <p>
+       4. First create two new Vector Parameters to represent our waters colors by holding the 'V' key and clicking in an empty space within the material graph.
+      </p>
+      <p>
+       5. Now set the value of one to a darker blue and the other to a lighter blue.
+      </p>
+      <p>
+       6. Create a Lerp node by holding the 'L' key and clicking in the material graph.
+      </p>
+      <p>
+       7. Connect the dark color to the 'A' input of the Lerp, and the light color to the 'B' input.
+      </p>
+      <p>
+       8. Now create a Fresnel node by searching for the word in the palette.
+      </p>
+      <p>
+       9. Connect the Fresnel output into the Alpha input of the Lerp.
+      </p>
+      <p>
+       10. Create a new Scalar Parameter node by holding the 'S' key and clicking in the material graph. Name is Fresnel Exponent. This will control the falloff of the fresnel using the lighter blue color.
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:1178px;">
+         <img alt="" class="thumbimage" height="663" src="../assets/mobile-water-material/0.png" width="1176"/>
+         <div class="thumbcaption">
+          Base Color connections
+         </div>
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Normals">
+        Normals
+       </span>
+      </h2>
+      <p>
+       1. Next we need to create two panning nodes by holding the “P” key and clicking into an empty area of the graph. This adds the effect as if the water were moving.
+      </p>
+      <p>
+       2. Plug the UV’s of the normal maps into each of their own panner.
+      </p>
+      <p>
+       3. Set the Values of one Panner to be negative along the Speed X &amp; Speed Y coordinates, and set the other panner to positive values. I used (-.04, -.04)(.04, .04)
+      </p>
+      <p>
+       4. Create a TexCoord node by holding the 'U' key and clicking in the material graph.
+      </p>
+      <p>
+       5. Create two new multiply nodes by holding the 'M' key and clicking in the material graph. These will help give control over the size/tiling of the normals when we instance the material.
+      </p>
+      <p>
+       6. Create two new Scalar Parameters. Name one Large Ripples and One Small Ripples.
+      </p>
+      <p>
+       7. Connect the TexCoord into the 'A' input for both Multiply nodes.
+      </p>
+      <p>
+       8. Connect the Large Ripples parameter to one 'B' input, and the Small Ripples parameter to the other 'B' input.
+      </p>
+      <p>
+       9. Now plug the Large Ripples multiply into the Coordinate input for its Panner, and the Small Ripples multiply into other Coordinate input.
+      </p>
+      <p>
+       10. Create a new Lerp and connect the two normal texture samples into the A and B inputs.
+      </p>
+      <p>
+       11. Plug the output of this Lerp into the Normal input of the Material.
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:1383px;">
+         <img alt="" class="thumbimage" height="623" src="../assets/mobile-water-material/1.png" width="1381"/>
+         <div class="thumbcaption">
+          Normals connections
+         </div>
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Scalar_Parameters_and_Material_Properties">
+        Scalar Parameters and Material Properties
+       </span>
+      </h2>
+      <p>
+       1. Now create three new Scalar Parameters.
+      </p>
+      <p>
+       2. Name one Specular, Roughness, and Metallic and plug them into their respective inputs.
+      </p>
+      <p>
+       3. In the Details tab of your Material be sure to enable Mobile &gt; High Quality Reflections
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:950px;">
+         <img alt="" class="thumbimage" height="503" src="../assets/mobile-water-material/2.png" width="948"/>
+         <div class="thumbcaption">
+          Parameters and Properties
+         </div>
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Scene_Setup">
+        Scene Setup
+       </span>
+      </h2>
+      <p>
+       1. Add a Skylight and set its mobility to 'Static'
+      </p>
+      <p>
+       2. Disable 'Lower Hemisphere is Black' and 'Cast Shadows'
+      </p>
+      <p>
+       3. Set the Directional Light to 'Stationary'
+      </p>
+      <p>
+       4. Drag a Sphere mesh from the Modes &gt; Basic tab into the scene.
+      </p>
+      <p>
+       5. Add a Sphere Reflection Capture and place it around the sphere to capture the reflections.
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:1646px;">
+         <img alt="" class="thumbimage" height="841" src="../assets/mobile-water-material/3.png" width="1644"/>
+         <div class="thumbcaption">
+          Scene Set Up
+         </div>
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Final_Result">
+        Final Result
+       </span>
+      </h2>
+      <p>
+       Your final outcome should look something like the below when deployed to a high end mobile device. Keep in mind I applied the material as an instance and messed around with the parameters to get the desired effect.
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:2734px;">
+         <img alt="" class="thumbimage" height="2048" src="../assets/mobile-water-material/4.PNG" width="2732"/>
+         <div class="thumbcaption">
+          Rendered on the iPad Pro
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       Thanks for following along! I have written some more tutorials you can check out by following the links within my Wiki Profile page found below.
+      </p>
+      <p>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

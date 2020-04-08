@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   How To Prevent Crashes Due To Dangling Actor Pointers - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    How To Prevent Crashes Due To Dangling Actor Pointers
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#UPROPERTY.28.29_UObjects_Clear_References_Properly">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           UPROPERTY() UObjects Clear References Properly
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#TWeakObjectPtr">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           TWeakObjectPtr
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <b>
+        Author
+       </b>
+       (
+       )
+      </p>
+      <p>
+       While working on
+       <a class="external text" href="http://www.abatrongame.com/" rel="nofollow">
+        Abatron
+       </a>
+       , an RTS/FPS hybrid game with tons of character units to keep track of, I created a lot of arrays of Actors:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">TArray</span><span class="o">&lt;</span><span class="n">AActor</span><span class="o">*&gt;</span> <span class="n">UnitArray</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       During multiplayer testing especially, stale / dangling AActor pointers were causing a lot of crashes!
+      </p>
+      <p>
+       The problem with stale pointers is that just checking ActorPtr != nullptr is not enough, a stale pointer will return true but wont actually still be pointing to a valid AActor, which is what causes the crash.
+      </p>
+      <h2>
+       <span class="mw-headline" id="UPROPERTY.28.29_UObjects_Clear_References_Properly">
+        UPROPERTY() UObjects Clear References Properly
+       </span>
+      </h2>
+      <p>
+       A less-advertised feature of UObject pointers that are made UPROPERTY() is that they are properly updated to NULL when the object is destroyed, unlike raw pointers like I was using above.
+      </p>
+      <p>
+       Automatic Updating of UObject References
+       <a class="external free" href="https://docs.unrealengine.com/latest/INT/Programming/UnrealArchitecture/Objects/Optimizations/index.html#automaticupdatingofreferences" rel="nofollow">
+        https://docs.unrealengine.com/latest/INT/Programming/UnrealArchitecture/Objects/Optimizations/index.html#automaticupdatingofreferences
+       </a>
+      </p>
+      <p>
+       So the
+       <b>
+        simple solution
+       </b>
+       if you are having issues with dangling / stale actor pointers is to make sure all AActor pointers are marked with UPROPERTY().
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UPROPERTY</span><span class="p">()</span> <span class="c1">//&lt;~~~ That's it! This now makes the pointers much more stable! -Rama</span>
+<span class="n">TArray</span><span class="o">&lt;</span><span class="n">AActor</span><span class="o">*&gt;</span> <span class="n">UnitArray</span><span class="p">;</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="TWeakObjectPtr">
+        TWeakObjectPtr
+       </span>
+      </h2>
+      <p>
+       For UObjects especially, having lots of UPROPERTY() references to them can prevent them from getting
+       properly. For this situation you can use TWeakObjectPtr which will still give you additional validity option using IsValid() but will not prevent GC from running.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       If you are encountering AActor* pointers that are going stale and crashing your game, make sure they are marked with UPROPERTY() and you will be taking advantage of a rather essential feature of UObjects in UE4, which is that all UPROPERTY() references get updated to NULL when a UObject is destroyed.
+      </p>
+      <p>
+       Have fun today!
+      </p>
+      <p>
+       Rama
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

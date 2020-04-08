@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Creating &amp; Linking Static Libraries And Make Your Own Blueprint Node With VS 2017 &amp; UE4 - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Creating &amp; Linking Static Libraries And Make Your Own Blueprint Node With VS 2017 &amp; UE4
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <table align="right">
+       <tbody>
+        <tr>
+         <td>
+          <div class="toc" id="toc">
+           <div class="toctitle">
+            <h2>
+             Contents
+            </h2>
+           </div>
+           <ul>
+            <li class="toclevel-1 tocsection-1">
+             <a href="#Overview">
+              <span class="tocnumber">
+               1
+              </span>
+              <span class="toctext">
+               Overview
+              </span>
+             </a>
+             <ul>
+              <li class="toclevel-2 tocsection-2">
+               <a href="#Scope_.26_Notes">
+                <span class="tocnumber">
+                 1.1
+                </span>
+                <span class="toctext">
+                 Scope &amp; Notes
+                </span>
+               </a>
+              </li>
+             </ul>
+            </li>
+            <li class="toclevel-1 tocsection-3">
+             <a href="#Visual_Studio_2017_-_Library_Configuration">
+              <span class="tocnumber">
+               2
+              </span>
+              <span class="toctext">
+               Visual Studio 2017 - Library Configuration
+              </span>
+             </a>
+             <ul>
+              <li class="toclevel-2 tocsection-4">
+               <a href="#Creating_the_static_library">
+                <span class="tocnumber">
+                 2.1
+                </span>
+                <span class="toctext">
+                 Creating the static library
+                </span>
+               </a>
+               <ul>
+                <li class="toclevel-3 tocsection-5">
+                 <a href="#Creating_a_static_library_project">
+                  <span class="tocnumber">
+                   2.1.1
+                  </span>
+                  <span class="toctext">
+                   Creating a static library project
+                  </span>
+                 </a>
+                </li>
+                <li class="toclevel-3 tocsection-6">
+                 <a href="#Adding_a_class_to_the_static_library">
+                  <span class="tocnumber">
+                   2.1.2
+                  </span>
+                  <span class="toctext">
+                   Adding a class to the static library
+                  </span>
+                 </a>
+                </li>
+               </ul>
+              </li>
+              <li class="toclevel-2 tocsection-7">
+               <a href="#Customizations_for_Targeting_UE4_Modules">
+                <span class="tocnumber">
+                 2.2
+                </span>
+                <span class="toctext">
+                 Customizations for Targeting UE4 Modules
+                </span>
+               </a>
+               <ul>
+                <li class="toclevel-3 tocsection-8">
+                 <a href="#Targeting_64_bit_platforms">
+                  <span class="tocnumber">
+                   2.2.1
+                  </span>
+                  <span class="toctext">
+                   Targeting 64 bit platforms
+                  </span>
+                 </a>
+                </li>
+                <li class="toclevel-3 tocsection-9">
+                 <a href="#Multi_Threaded_DLL">
+                  <span class="tocnumber">
+                   2.2.2
+                  </span>
+                  <span class="toctext">
+                   Multi Threaded DLL
+                  </span>
+                 </a>
+                </li>
+                <li class="toclevel-3 tocsection-10">
+                 <a href="#Building_in_Release_Mode">
+                  <span class="tocnumber">
+                   2.2.3
+                  </span>
+                  <span class="toctext">
+                   Building in Release Mode
+                  </span>
+                 </a>
+                </li>
+               </ul>
+              </li>
+              <li class="toclevel-2 tocsection-11">
+               <a href="#Making_UE4_C.2B.2B_Project_.26_Dealing_with_errors">
+                <span class="tocnumber">
+                 2.3
+                </span>
+                <span class="toctext">
+                 Making UE4 C++ Project &amp; Dealing with errors
+                </span>
+               </a>
+               <ul>
+                <li class="toclevel-3 tocsection-12">
+                 <a href="#For_those_who_had_both_VS_2015_Community_.26_VS_2017_Community_installed">
+                  <span class="tocnumber">
+                   2.3.1
+                  </span>
+                  <span class="toctext">
+                   For those who had both VS 2015 Community &amp; VS 2017 Community installed
+                  </span>
+                 </a>
+                </li>
+                <li class="toclevel-3 tocsection-13">
+                 <a href="#Error_complaining_.27hexadecimal_value_0x00_is_an_invalid_character....27">
+                  <span class="tocnumber">
+                   2.3.2
+                  </span>
+                  <span class="toctext">
+                   Error complaining 'hexadecimal value 0x00 is an invalid character...'
+                  </span>
+                 </a>
+                </li>
+                <li class="toclevel-3 tocsection-14">
+                 <a href="#For_those_who_had_only_installed_VS_2017.2C_not_VS_2015">
+                  <span class="tocnumber">
+                   2.3.3
+                  </span>
+                  <span class="toctext">
+                   For those who had only installed VS 2017, not VS 2015
+                  </span>
+                 </a>
+                </li>
+               </ul>
+              </li>
+              <li class="toclevel-2 tocsection-15">
+               <a href="#Third_Party_Directory">
+                <span class="tocnumber">
+                 2.4
+                </span>
+                <span class="toctext">
+                 Third Party Directory
+                </span>
+               </a>
+              </li>
+             </ul>
+            </li>
+            <li class="toclevel-1 tocsection-16">
+             <a href="#UE4_-_Build_System">
+              <span class="tocnumber">
+               3
+              </span>
+              <span class="toctext">
+               UE4 - Build System
+              </span>
+             </a>
+             <ul>
+              <li class="toclevel-2 tocsection-17">
+               <a href="#Extending_the_Base_ModuleRules_class">
+                <span class="tocnumber">
+                 3.1
+                </span>
+                <span class="toctext">
+                 Extending the Base ModuleRules class
+                </span>
+               </a>
+              </li>
+              <li class="toclevel-2 tocsection-18">
+               <a href="#Loading_Our_Libraries">
+                <span class="tocnumber">
+                 3.2
+                </span>
+                <span class="toctext">
+                 Loading Our Libraries
+                </span>
+               </a>
+              </li>
+              <li class="toclevel-2 tocsection-19">
+               <a href="#Full_code_of_our_Base_ModuleRules_class">
+                <span class="tocnumber">
+                 3.3
+                </span>
+                <span class="toctext">
+                 Full code of our Base ModuleRules class
+                </span>
+               </a>
+              </li>
+             </ul>
+            </li>
+            <li class="toclevel-1 tocsection-20">
+             <a href="#Visual_Studio_2017_-_Linking_Our_Library">
+              <span class="tocnumber">
+               4
+              </span>
+              <span class="toctext">
+               Visual Studio 2017 - Linking Our Library
+              </span>
+             </a>
+             <ul>
+              <li class="toclevel-2 tocsection-21">
+               <a href="#Making_Blueprint_Function_Library_Class">
+                <span class="tocnumber">
+                 4.1
+                </span>
+                <span class="toctext">
+                 Making Blueprint Function Library Class
+                </span>
+               </a>
+              </li>
+              <li class="toclevel-2 tocsection-22">
+               <a href="#Using_your_Blueprint_Node_in_UE4_Editor">
+                <span class="tocnumber">
+                 4.2
+                </span>
+                <span class="toctext">
+                 Using your Blueprint Node in UE4 Editor
+                </span>
+               </a>
+              </li>
+             </ul>
+            </li>
+            <li class="toclevel-1 tocsection-23">
+             <a href="#More_Information">
+              <span class="tocnumber">
+               5
+              </span>
+              <span class="toctext">
+               More Information
+              </span>
+             </a>
+            </li>
+           </ul>
+          </div>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <h1>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h1>
+      <p>
+       The goal of this tutorial is to illustrate in detail about how to create and link a
+       <b>
+        static library
+       </b>
+       into
+       <b>
+        UE 4.17
+       </b>
+       using the
+       <b>
+        Visual Studio 2017
+       </b>
+       , and make your own blueprint node with that library. This tutorial is mainly based on the great tutorial of
+       <a class="external text" href="./linking-static-libraries-using-the-build-system.html" rel="nofollow">
+        Bob Gneu
+       </a>
+       .
+      </p>
+      <p>
+       I wrote this because I want to give some help to newbies like me, who have difficulty following Bob's tutorial, and those who want to link their static library to UE 4.17 using Visual Studio 2017. My tutorial focuses more on trouble shooting which was the most difficult part for me. In addition to it, I will explain how to make your own blueprint node using your static library. If you are familiar with UE4 and trouble shooting with UE4 c++ system, you can just follow Bob's wonderful
+       <a class="external text" href="./linking-static-libraries-using-the-build-system.html" rel="nofollow">
+        tutorial
+       </a>
+       .
+      </p>
+      <p>
+       For examples sake, similar to the Bob's tutorial, I will be creating a library called
+       <b>
+        YJMagicLib
+       </b>
+       and linking into a UE4 project called
+       <b>
+        UE4Magic
+       </b>
+       .
+      </p>
+      <h2>
+       <span class="mw-headline" id="Scope_.26_Notes">
+        Scope &amp; Notes
+       </span>
+      </h2>
+      <ul>
+       <li>
+        You will be able to link in a library of your own design and make blueprint Node using your library by the end
+       </li>
+       <li>
+        I expect you to have, at the very least, a more than cursory level of knowledge about C++, C# and MS Visual Studio 2017
+       </li>
+       <li>
+        For the linking library part, I will follow the flow of Bob's tutorial, but in more detailed way.
+       </li>
+      </ul>
+      <h1>
+       <span class="mw-headline" id="Visual_Studio_2017_-_Library_Configuration">
+        Visual Studio 2017 - Library Configuration
+       </span>
+      </h1>
+      <p>
+       <i>
+        It is important that you compile out your static libraries with the same version of MS Visual Studio as you are using to work with UE4. This is because each edition of Visual Studio comes with a different compiler, leading to incompatibilities in the binaries. Rest assured if you cross into this realm you will get a warning when you attempt to compile the library in.
+       </i>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Creating_the_static_library">
+        Creating the static library
+       </span>
+      </h2>
+      <p>
+       This step is based on the tutorial of
+       <a class="external text" href="http://msdn.microsoft.com/en-us/library/ms235627.aspx#BKMK_CreateLibProject" rel="nofollow">
+        MSDN
+       </a>
+       .Following and understanding my tutorial doesn't require to read MSDN's tutorial. However, if you are interested, you can follow the link and read it.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Creating_a_static_library_project">
+        Creating a static library project
+       </span>
+      </h3>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="" class="thumbimage" height="224" src="../assets/creating-linking-static-libraries-and-make-your-own-blueprint-node-with-vs-2017-ue4/0.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         windows desktop project panel
+        </div>
+       </div>
+      </div>
+      <p>
+       <br/>
+       To create a static library project
+      </p>
+      <ul>
+       <li>
+        On the menu bar, choose
+        <b>
+         File
+        </b>
+        ,
+        <b>
+         New
+        </b>
+        ,
+        <b>
+         Project
+        </b>
+       </li>
+       <li>
+        In the left pane of the
+        <b>
+         New Project
+        </b>
+        dialog box, expand
+        <b>
+         Installed
+        </b>
+        ,
+        <b>
+         Visual C++
+        </b>
+        , and then select
+        <b>
+         Windows Desktop
+        </b>
+        .
+       </li>
+       <li>
+        In the center pane, select
+        <b>
+         Win32 Desktop Wizard
+        </b>
+        .
+       </li>
+       <li>
+        Specify a name for the project-for example,
+        <b>
+         YJMagicLib
+        </b>
+        -in the Name box. Specify a
+        <b>
+         name
+        </b>
+        for the solution-for example,
+        <b>
+         YJMagicLib
+        </b>
+        -in the
+        <b>
+         Solution Name box
+        </b>
+        . Choose the
+        <b>
+         OK
+        </b>
+        button. Then
+        <b>
+         Windows Desktop Project
+        </b>
+        panel will appear.
+       </li>
+       <li>
+        On the panel
+        <b>
+         Windows Desktop Project
+        </b>
+        panel, under
+        <b>
+         Application type
+        </b>
+        , select
+        <b>
+         Static library
+        </b>
+        .
+       </li>
+       <li>
+        On the panel
+        <b>
+         Windows Desktop Project
+        </b>
+        panel, under
+        <b>
+         Additional options
+        </b>
+        , clear the
+        <b>
+         Precompiled header
+        </b>
+        check box.
+       </li>
+       <li>
+        Choose the
+        <b>
+         Okay
+        </b>
+        button to create the project.
+       </li>
+      </ul>
+      <h3>
+       <span class="mw-headline" id="Adding_a_class_to_the_static_library">
+        Adding a class to the static library
+       </span>
+      </h3>
+      <p>
+       To add a class to the static library
+      </p>
+      <ul>
+       <li>
+        To create a header file for a new class, open the shortcut menu for the
+        <b>
+         YJMagicLib
+        </b>
+        project in
+        <b>
+         Solution Explorer
+        </b>
+        , and then choose
+        <b>
+         Add
+        </b>
+        ,
+        <b>
+         New Item
+        </b>
+        . In the
+        <b>
+         Add New Item
+        </b>
+        dialog box, in the left pane, under Visual C++, select
+        <b>
+         Code
+        </b>
+        . In the center pane, select
+        <b>
+         Header File (.h)
+        </b>
+        . Specify a name for the header file—for example,
+        <b>
+         YJMagic.h
+        </b>
+        —and then choose the
+        <b>
+         Add
+        </b>
+        button. A blank header file is displayed.
+       </li>
+       <li>
+        Add a class named
+        <b>
+         YJMagic
+        </b>
+        to do addition. The code should resemble this:
+       </li>
+      </ul>
+      <p>
+       inside
+       <b>
+        YJMagic.h
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="c1">// YJMagic.h</span>
+
+<span class="k">namespace</span> <span class="n">YJMagic</span>
+<span class="p">{</span>
+	<span class="k">class</span> <span class="nc">YJMagic</span>
+	<span class="p">{</span>
+	<span class="k">public</span><span class="o">:</span>
+		<span class="c1">// Returns a + b</span>
+		<span class="k">static</span> <span class="kt">double</span> <span class="n">Add</span><span class="p">(</span><span class="kt">double</span> <span class="n">a</span><span class="p">,</span> <span class="kt">double</span> <span class="n">b</span><span class="p">);</span>
+	<span class="p">};</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <ul>
+       <li>
+        To create a source file for the new class, open the shortcut menu for the
+        <b>
+         YJMagicLib
+        </b>
+        project in
+        <b>
+         Solution Explorer
+        </b>
+        , and then choose
+        <b>
+         Add
+        </b>
+        ,
+        <b>
+         New Item
+        </b>
+        . In the
+        <b>
+         Add New Item
+        </b>
+        dialog box, in the left pane, under
+        <b>
+         Visual C++
+        </b>
+        , select
+        <b>
+         Code
+        </b>
+        . In the center pane, select
+        <b>
+         C++ File (.cpp)
+        </b>
+        . Specify a name for the source file—for example,
+        <b>
+         YJMagic.cpp
+        </b>
+        —and then choose the
+        <b>
+         Add
+        </b>
+        button. A blank source file is displayed.
+       </li>
+       <li>
+        Use this source file to implement the functionality for
+        <b>
+         YJMagic
+        </b>
+        . The code should resemble this:
+       </li>
+      </ul>
+      <p>
+       inside
+       <b>
+        YJMagic.cpp
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// YJMagic.cpp</span>
+
+<span class="cp">#include</span> <span class="cpf">"YJMagic.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stdexcept&gt;</span><span class="cp"></span>
+
+<span class="k">using</span> <span class="k">namespace</span> <span class="n">std</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="n">YJMagic</span>
+<span class="p">{</span>
+	<span class="kt">double</span> <span class="n">YJMagic</span><span class="o">::</span><span class="n">Add</span><span class="p">(</span><span class="kt">double</span> <span class="n">a</span><span class="p">,</span> <span class="kt">double</span> <span class="n">b</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Customizations_for_Targeting_UE4_Modules">
+        Customizations for Targeting UE4 Modules
+       </span>
+      </h2>
+      <p>
+       Before compiling our static library, we will need to make a few other modifications to ensure that our libraries are able to be linked in easily.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Targeting_64_bit_platforms">
+        Targeting 64 bit platforms
+       </span>
+      </h3>
+      <p>
+       With a standard Static Library project we will be targeting x86 (32 bit) machines, which wont work for the UE4 toolset.
+      </p>
+      <ul>
+       <li>
+        Open the
+        <b>
+         Project Properties
+        </b>
+        page.
+       </li>
+       <li>
+        Choose Configuration Manager
+       </li>
+       <li>
+        Open the
+        <b>
+         Active Solution Platform
+        </b>
+        drop down list and select
+        <b>
+         &lt;New...&gt;
+        </b>
+       </li>
+       <li>
+        Type in or select
+        <b>
+         x64
+        </b>
+        if it is there
+       </li>
+       <li>
+        Save it by clicking OK
+       </li>
+      </ul>
+      <p>
+       You should see it in the drop down at the top of Visual Studio.
+      </p>
+      <p>
+       <a class="external text" href="http://msdn.microsoft.com/en-us/library/h2k70f3s.aspx" rel="nofollow">
+        More Info on targeting x64
+       </a>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Multi_Threaded_DLL">
+        Multi Threaded DLL
+       </span>
+      </h3>
+      <p>
+       The unreal build system expects you to be providing a static library that is then linked into a DLL, so we have to ensure that our project does this as well.
+      </p>
+      <ul>
+       <li>
+        Open the Project Properties Page
+       </li>
+       <li>
+        Filter through to Configuration Properties &gt; C/C++ &gt; Code Generation &gt; Runtime Library
+       </li>
+       <li>
+        From the drop down list select Multi-threaded DLL (/MD)
+       </li>
+       <li>
+        Save it by clicking OK
+       </li>
+      </ul>
+      <h3>
+       <span class="mw-headline" id="Building_in_Release_Mode">
+        Building in Release Mode
+       </span>
+      </h3>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="" class="thumbimage" height="133" src="../assets/creating-linking-static-libraries-and-make-your-own-blueprint-node-with-vs-2017-ue4/1.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         build the library in release mode
+        </div>
+       </div>
+      </div>
+      <p>
+       I think this is very important step. UE4 is compatible with libraries built in
+       <b>
+        Release Mode
+       </b>
+       , unless you will get error linking it to UE4.
+      </p>
+      <ul>
+       <li>
+        Click the
+        <b>
+         Solution Configuration
+        </b>
+        drop down on the menu bar
+       </li>
+       <li>
+        From the drop down list select
+        <b>
+         Release
+        </b>
+       </li>
+       <li>
+        Now you can compile the static library by selecting
+        <b>
+         Build
+        </b>
+        ,
+        <b>
+         Build Solution
+        </b>
+        on the menu bar. This creates a static library that we can use.
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="Making_UE4_C.2B.2B_Project_.26_Dealing_with_errors">
+        Making UE4 C++ Project &amp; Dealing with errors
+       </span>
+      </h2>
+      <p>
+       Make UE 4.17 c++ project. Name the project as
+       <b>
+        UE4Magic
+       </b>
+       . We will link the static library we made above to this UE4 project.
+      </p>
+      <p>
+       Here, you might have several problems compiling the UE4 project. I also spent a lot of time dealing with these problems. Here are list of problems &amp; solutions I went through.
+      </p>
+      <h3>
+       <span class="mw-headline" id="For_those_who_had_both_VS_2015_Community_.26_VS_2017_Community_installed">
+        For those who had both VS 2015 Community &amp; VS 2017 Community installed
+       </span>
+      </h3>
+      <p>
+       This was the exact case for me. I installed both old version of UE4, and newest version (4.17) of UE4. The old version only works with VS 2015 and the latest version works with VS 2017. So I had the old VS and new VS at the same time.
+      </p>
+      <p>
+       It seems that there exists compatibility problem between VS 2015 and VS 2017. I found solution
+       <a class="external text" href="https://answers.unrealengine.com/questions/699394/how-to-use-the-vs2017.html" rel="nofollow">
+        here
+       </a>
+       and it worked for me.
+      </p>
+      <ul>
+       <li>
+        Remove VS 2015 community completely with this
+        <a class="external text" href="https://github.com/Microsoft/VisualStudioUninstaller/releases" rel="nofollow">
+         program
+        </a>
+        . I used
+        <b>
+         Release5
+        </b>
+        . Don't try to manually remove VS 2015 by yourself because there are many dependency files.
+       </li>
+       <li>
+        Open Visual Studio 2017 installer and install
+        <b>
+         Game development with C++
+        </b>
+        with option :
+        <b>
+         C++ profiling tools
+        </b>
+        ,
+        <b>
+         Windows 10 SDK
+        </b>
+        (I installed every available version of it),
+        <b>
+         Windows 8.1 SDK and UCRT SDK
+        </b>
+        . Also, install the
+        <b>
+         .NET Framework
+        </b>
+        . This step will solve the error like 'Visual Studio 2015 must be installed in order to build this target.', 'Windows SDK v8.1 must be installed in order to build this target.' You might wonder the reason why I suggest you to install VS 2017 functions to solve this 'VS 2015 should be installed' error. I'm not sure but VS 2017 is internally called as VS 2015, so the error is using the VS 2017 and VS 2015 as same term.
+       </li>
+      </ul>
+      <h3>
+       <span class="mw-headline" id="Error_complaining_.27hexadecimal_value_0x00_is_an_invalid_character....27">
+        Error complaining 'hexadecimal value 0x00 is an invalid character...'
+       </span>
+      </h3>
+      <p>
+       I found the solution to this problem
+       <a class="external text" href="https://answers.unrealengine.com/questions/698680/cannot-create-c-project-hexadecimal-value-0x00-is.html" rel="nofollow">
+        here
+       </a>
+       .
+      </p>
+      <ul>
+       <li>
+        Go to 'C:\Users\user\AppData\Roaming\Unreal Engine\UnrealBuildTool' (AppData folder is usually hidden, so you should first unhide the AppData folder.) and remove the
+        <b>
+         BuildConfiguration.xml
+        </b>
+        file.
+       </li>
+      </ul>
+      <h3>
+       <span class="mw-headline" id="For_those_who_had_only_installed_VS_2017.2C_not_VS_2015">
+        For those who had only installed VS 2017, not VS 2015
+       </span>
+      </h3>
+      <p>
+       If you get errors like 'Visual Studio 2015 must be installed in order to build this target.', 'Windows SDK v8.1 must be installed in order to build this target.', open your VS 2017 installer and install
+       <b>
+        Game development with C++
+       </b>
+       with option :
+       <b>
+        C++ profiling tools
+       </b>
+       ,
+       <b>
+        Windows 10 SDK
+       </b>
+       (I installed every available version of it),
+       <b>
+        Windows 8.1 SDK and UCRT SDK
+       </b>
+       . Also, install the
+       <b>
+        .NET Framework
+       </b>
+       .
+      </p>
+      <h2>
+       <span class="mw-headline" id="Third_Party_Directory">
+        Third Party Directory
+       </span>
+      </h2>
+      <p>
+       Your lib file(s) should be in
+       <b>
+        Your Project Root Directory/x64/Release
+       </b>
+       , unless you changed them before hand. Your h file(s) should be in
+       <b>
+        Your Project Root Directory/Your Project Name
+       </b>
+       .
+      </p>
+      <p>
+       If you followed my tutorial, the path would be following:
+      </p>
+      <ul>
+       <li>
+        Lib file(s) path : ".../YJMagicLib/x64/Release"
+       </li>
+       <li>
+        H file(s) path : ".../YJMagicLib/YJMagicLib"
+       </li>
+      </ul>
+      <p>
+       We will be moving them from here into our UE4 project directory, for ease of reference and later packaging.
+      </p>
+      <p>
+       Open up a new explorer window and navigate to your Project directory. Once there, create a new path for your library -
+       <b>
+        /ThirdParty/YJMagicLib
+       </b>
+      </p>
+      <p>
+       Within this directory we will be adding two new folders - Libraries and Includes - to house their respective files. Includes are the header files that come with your library, used to define the API (Application Programming Interface) for you to reference in UE4. You should copy your *.h file(s) into the Includes directory, and your *.lib file(s) into the Libraries directory. Here, it is important to change the name of your YJMagicLib.lib to
+       <b>
+        YJMagicLib.x64.lib
+       </b>
+       . Unless, you will get 'can't link to YJMagicLib.x64.lib.' error.
+      </p>
+      <p>
+       Open your
+       <b>
+        Project Properties
+       </b>
+       and go to
+       <b>
+        Configuration Properties -&gt; VC++ Directories
+       </b>
+       section. Add
+       <b>
+        ..\..\ThirdParty\YJMagicLib\Includes
+       </b>
+       to
+       <b>
+        Include Directories
+       </b>
+       tab.
+      </p>
+      <p>
+       <b>
+        Note
+       </b>
+       : This is an arbitrary directory. It is only important to note its path so you can reference it in the build system later.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h1>
+       <span class="mw-headline" id="UE4_-_Build_System">
+        UE4 - Build System
+       </span>
+      </h1>
+      <p>
+       Now we are going to step into the UnrealEngine and actually address the binding of our library to the engine.
+      </p>
+      <p>
+       The build system requires some C# code, but you shouldn't fret. Our example is going to be pretty simple and so you should be alright to copy and paste the majority of the following code.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Extending_the_Base_ModuleRules_class">
+        Extending the Base ModuleRules class
+       </span>
+      </h3>
+      <p>
+       For anyone doing this as more than a one off you can, and probably should, add in a couple of properties to the ModuleRules class. The two I will be noting here are convenience properties to ensure that we always know where our Module and ThirdParty directories are. These two properties will leverage the System.IO namespace, to utilize a couple of the Path static methods.
+      </p>
+      <p>
+       inside
+       <b>
+        /Source/UE4Magic/UE4Magic.Build.cs
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">using</span> <span class="nn">System.IO</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">UnrealBuildTool</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">UE4Magic</span> <span class="p">:</span> <span class="n">ModuleRules</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="kt">string</span> <span class="n">ModulePath</span>
+    <span class="p">{</span>
+        <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ModuleDirectory</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="kt">string</span> <span class="n">ThirdPartyPath</span>
+    <span class="p">{</span>
+        <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">Path</span><span class="p">.</span><span class="n">GetFullPath</span><span class="p">(</span> <span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span> <span class="n">ModulePath</span><span class="p">,</span> <span class="s">"../../ThirdParty/"</span> <span class="p">)</span> <span class="p">);</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+<span class="na">    [Constructor]</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       Here, If you don't add
+       <b>
+        using System.IO;
+       </b>
+       you will get 'Path does not exist in the current context' error. Don't forget to add it!
+      </p>
+      <h3>
+       <span class="mw-headline" id="Loading_Our_Libraries">
+        Loading Our Libraries
+       </span>
+      </h3>
+      <p>
+       Next we will dive into our modules constructor, where we will create a new method to be called to configure the build system to load our libraries.
+      </p>
+      <p>
+       inside
+       <b>
+        /Source/UE4Magic/UE4Magic.Build.cs
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">UE4Magic</span> <span class="p">:</span> <span class="n">ModuleRules</span>
+<span class="p">{</span>
+<span class="na">    [Convenience Properties]</span>
+
+    <span class="k">public</span> <span class="nf">UE4Magic</span><span class="p">(</span><span class="n">TargetInfo</span> <span class="n">Target</span><span class="p">)</span>
+    <span class="p">{</span>
+<span class="na">        [Standard Module Initialization]</span>
+
+        <span class="n">LoadYJMagicLib</span><span class="p">(</span><span class="n">Target</span><span class="p">);</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       LoadYJMagicLib accepts a TargetInfo object, which holds a number of configuration elements for the build system, allowing you to customize the build at compilation time. It is passed in to allow us to load in the libs for windows targeting, and can be used later to target other platforms. It also allows you to see if 64 or 32 bit platforms are being targeted, which is gold for our circumstances. If you remember, above I mentioned that we will be targeting x64 machines, but you can use this opportunity to compile out 32bit (x86) libraries as well.
+      </p>
+      <p>
+       Next we will define a constant to be passed in with the name of the library to link.
+      </p>
+      <p>
+       inside
+       <b>
+        /Source/UE4Magic/UE4Magic.Build.cs
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">public</span> <span class="k">class</span> <span class="nc">UE4Magic</span> <span class="p">:</span> <span class="n">ModuleRules</span>
+<span class="p">{</span>
+<span class="na">    [Convenience Properties]</span>
+
+<span class="na">    [Constructor]</span>
+
+    <span class="k">public</span> <span class="kt">bool</span> <span class="nf">LoadYJMagicLib</span><span class="p">(</span><span class="n">TargetInfo</span> <span class="n">Target</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">bool</span> <span class="n">isLibrarySupported</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+
+        <span class="k">if</span> <span class="p">((</span><span class="n">Target</span><span class="p">.</span><span class="n">Platform</span> <span class="p">==</span> <span class="n">UnrealTargetPlatform</span><span class="p">.</span><span class="n">Win64</span><span class="p">)</span> <span class="p">||</span> <span class="p">(</span><span class="n">Target</span><span class="p">.</span><span class="n">Platform</span> <span class="p">==</span> <span class="n">UnrealTargetPlatform</span><span class="p">.</span><span class="n">Win32</span><span class="p">))</span>
+        <span class="p">{</span>
+            <span class="n">isLibrarySupported</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+
+            <span class="kt">string</span> <span class="n">PlatformString</span> <span class="p">=</span> <span class="p">(</span><span class="n">Target</span><span class="p">.</span><span class="n">Platform</span> <span class="p">==</span> <span class="n">UnrealTargetPlatform</span><span class="p">.</span><span class="n">Win64</span><span class="p">)</span> <span class="p">?</span> <span class="s">"x64"</span> <span class="p">:</span> <span class="s">"x86"</span><span class="p">;</span>
+            <span class="kt">string</span> <span class="n">LibrariesPath</span> <span class="p">=</span> <span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">ThirdPartyPath</span><span class="p">,</span> <span class="s">"YJMagicLib"</span><span class="p">,</span> <span class="s">"Libraries"</span><span class="p">);</span>
+
+            <span class="cm">/*</span>
+<span class="cm">            test your path with:</span>
+<span class="cm">            using System; // Console.WriteLine("");</span>
+<span class="cm">            Console.WriteLine("... LibrariesPath -&gt; " + LibrariesPath);</span>
+<span class="cm">            */</span>
+
+            <span class="n">PublicAdditionalLibraries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">LibrariesPath</span><span class="p">,</span> <span class="s">"YJMagicLib."</span> <span class="p">+</span> <span class="n">PlatformString</span> <span class="p">+</span> <span class="s">".lib"</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">isLibrarySupported</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="c1">// Include path</span>
+            <span class="n">PublicIncludePaths</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">ThirdPartyPath</span><span class="p">,</span> <span class="s">"YJMagicLib"</span><span class="p">,</span> <span class="s">"Includes"</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="n">Definitions</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"WITH_YJ_MAGIC_LIB_BINDING={0}"</span><span class="p">,</span> <span class="n">isLibrarySupported</span> <span class="p">?</span> <span class="m">1</span> <span class="p">:</span> <span class="m">0</span><span class="p">));</span>
+
+        <span class="k">return</span> <span class="n">isLibrarySupported</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       This is an exceptionally straight forward setup, and not likely to be representative of a fully cross platform build. What we have done is to create the constant WITH_YJ_MAGIC_LIB_BINDING to be passed in at compile time, it is set to 1 (or true).
+      </p>
+      <h3>
+       <span class="mw-headline" id="Full_code_of_our_Base_ModuleRules_class">
+        Full code of our Base ModuleRules class
+       </span>
+      </h3>
+      <p>
+       The full code of our Base ModuleRules class is following:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">using</span> <span class="nn">System.IO</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">UnrealBuildTool</span><span class="p">;</span>
+
+<span class="k">public</span> <span class="k">class</span> <span class="nc">UE4Magic</span> <span class="p">:</span> <span class="n">ModuleRules</span>
+<span class="p">{</span>
+    <span class="c1">// convenience properties</span>
+    <span class="k">private</span> <span class="kt">string</span> <span class="n">ModulePath</span>
+    <span class="p">{</span>
+        <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">ModuleDirectory</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="kt">string</span> <span class="n">ThirdPartyPath</span>
+    <span class="p">{</span>
+        <span class="k">get</span> <span class="p">{</span> <span class="k">return</span> <span class="n">Path</span><span class="p">.</span><span class="n">GetFullPath</span><span class="p">(</span><span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">ModulePath</span><span class="p">,</span> <span class="s">"../../ThirdParty/"</span><span class="p">));</span> <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="c1">// constructor</span>
+	<span class="k">public</span> <span class="nf">UE4Magic</span><span class="p">(</span><span class="n">TargetInfo</span> <span class="n">Target</span><span class="p">)</span>
+    <span class="p">{</span>
+		<span class="n">PCHUsage</span> <span class="p">=</span> <span class="n">PCHUsageMode</span><span class="p">.</span><span class="n">UseExplicitOrSharedPCHs</span><span class="p">;</span>
+
+		<span class="n">PublicDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"Core"</span><span class="p">,</span> <span class="s">"CoreUObject"</span><span class="p">,</span> <span class="s">"Engine"</span><span class="p">,</span> <span class="s">"InputCore"</span><span class="p">,</span> <span class="s">"HeadMountedDisplay"</span> <span class="p">});</span>
+
+        <span class="n">LoadYJMagicLib</span><span class="p">(</span><span class="n">Target</span><span class="p">);</span>
+	<span class="p">}</span>
+
+    <span class="k">public</span> <span class="kt">bool</span> <span class="nf">LoadYJMagicLib</span><span class="p">(</span><span class="n">TargetInfo</span> <span class="n">Target</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">bool</span> <span class="n">isLibrarySupported</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+
+        <span class="k">if</span> <span class="p">((</span><span class="n">Target</span><span class="p">.</span><span class="n">Platform</span> <span class="p">==</span> <span class="n">UnrealTargetPlatform</span><span class="p">.</span><span class="n">Win64</span><span class="p">)</span> <span class="p">||</span> <span class="p">(</span><span class="n">Target</span><span class="p">.</span><span class="n">Platform</span> <span class="p">==</span> <span class="n">UnrealTargetPlatform</span><span class="p">.</span><span class="n">Win32</span><span class="p">))</span>
+        <span class="p">{</span>
+            <span class="n">isLibrarySupported</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+
+            <span class="kt">string</span> <span class="n">PlatformString</span> <span class="p">=</span> <span class="p">(</span><span class="n">Target</span><span class="p">.</span><span class="n">Platform</span> <span class="p">==</span> <span class="n">UnrealTargetPlatform</span><span class="p">.</span><span class="n">Win64</span><span class="p">)</span> <span class="p">?</span> <span class="s">"x64"</span> <span class="p">:</span> <span class="s">"x86"</span><span class="p">;</span>
+            <span class="kt">string</span> <span class="n">LibrariesPath</span> <span class="p">=</span> <span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">ThirdPartyPath</span><span class="p">,</span> <span class="s">"YJMagicLib"</span><span class="p">,</span> <span class="s">"Libraries"</span><span class="p">);</span>
+
+            <span class="cm">/*</span>
+<span class="cm">            test your path with:</span>
+<span class="cm">            using System; // Console.WriteLine("");</span>
+<span class="cm">            Console.WriteLine("... LibrariesPath -&gt; " + LibrariesPath);</span>
+<span class="cm">            */</span>
+
+            <span class="n">PublicAdditionalLibraries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">LibrariesPath</span><span class="p">,</span> <span class="s">"YJMagicLib."</span> <span class="p">+</span> <span class="n">PlatformString</span> <span class="p">+</span> <span class="s">".lib"</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="n">isLibrarySupported</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="c1">// Include path</span>
+            <span class="n">PublicIncludePaths</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">ThirdPartyPath</span><span class="p">,</span> <span class="s">"YJMagicLib"</span><span class="p">,</span> <span class="s">"Includes"</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="n">Definitions</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"WITH_YJ_MAGIC_LIB_BINDING={0}"</span><span class="p">,</span> <span class="n">isLibrarySupported</span> <span class="p">?</span> <span class="m">1</span> <span class="p">:</span> <span class="m">0</span><span class="p">));</span>
+
+        <span class="k">return</span> <span class="n">isLibrarySupported</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Visual_Studio_2017_-_Linking_Our_Library">
+        Visual Studio 2017 - Linking Our Library
+       </span>
+      </h1>
+      <p>
+       All of the UE4 goodies are taken care of at this point. You can now include your header files and start executing code.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Making_Blueprint_Function_Library_Class">
+        Making Blueprint Function Library Class
+       </span>
+      </h2>
+      <p>
+       Now we are ready to use
+       <b>
+        YJMagicLib
+       </b>
+       and to make our own blueprint node. Let's make a blueprint node that does simple 'addition' operation.
+      </p>
+      <p>
+       In your contents browser of your UE4 editor, right-click the mouse and make new c++ class. Choose the parent class as
+       <b>
+        Blueprint Function Library
+       </b>
+       , and name it
+       <b>
+        YJLibrary
+       </b>
+       . VS 2017 will automatically open and YJLibrary.h &amp; YJLibrary.cpp will show up. Modify those codes as follows:
+      </p>
+      <p>
+       inside
+       <b>
+        /Source/UE4Magic/YJLibrary.h
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"CoreMinimal.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Kismet/BlueprintFunctionLibrary.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"YJLibrary.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">UE4MAGIC_API</span> <span class="nl">UYJLibrary</span> <span class="p">:</span> <span class="k">public</span> <span class="n">UBlueprintFunctionLibrary</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+	
+		<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">DisplayName</span> <span class="o">=</span> <span class="s">"Adds floats"</span><span class="p">,</span> <span class="n">Keywords</span> <span class="o">=</span> <span class="s">"Float Add"</span><span class="p">),</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">YJLibrary</span><span class="p">)</span>
+		<span class="k">static</span> <span class="kt">float</span> <span class="n">AddFloats</span><span class="p">(</span><span class="kt">float</span> <span class="n">A</span><span class="p">,</span> <span class="kt">float</span> <span class="n">B</span><span class="p">);</span>
+	
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       inside
+       <b>
+        /Source/UE4Magic/YJLibrary.cpp
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"YJLibrary.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"YJMagic.h"</span><span class="cp"></span>
+
+<span class="kt">float</span> <span class="n">UYJLibrary</span><span class="o">::</span><span class="n">AddFloats</span><span class="p">(</span><span class="kt">float</span> <span class="n">A</span><span class="p">,</span> <span class="kt">float</span> <span class="n">B</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">YJMagic</span><span class="o">::</span><span class="n">YJMagic</span> <span class="o">*</span><span class="n">PointerToYJMagic</span><span class="p">;</span>
+	
+	<span class="n">PointerToYJMagic</span> <span class="o">=</span> <span class="k">new</span> <span class="n">YJMagic</span><span class="o">::</span><span class="n">YJMagic</span><span class="p">();</span>
+
+	<span class="k">return</span> <span class="n">PointerToYJMagic</span><span class="o">-&gt;</span><span class="n">Add</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <b>
+        Note:
+       </b>
+       I referenced
+       <a class="external text" href="./custom-blueprint-node-creation.html" rel="nofollow">
+        this
+       </a>
+       tutorial for this section.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Using_your_Blueprint_Node_in_UE4_Editor">
+        Using your Blueprint Node in UE4 Editor
+       </span>
+      </h2>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="" class="thumbimage" height="104" src="../assets/creating-linking-static-libraries-and-make-your-own-blueprint-node-with-vs-2017-ue4/2.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         blueprint that does 'add' operation when 'A' key is pressed
+        </div>
+       </div>
+      </div>
+      <p>
+       Open
+       <b>
+        Level Blueprint Editor
+       </b>
+       . Right-click your mouse, and search for
+       <b>
+        YJLibrary
+       </b>
+       .
+       <b>
+        AddFloats
+       </b>
+       node will show up. We will make simple blueprint that adds two floats when keyboard 'A' is pressed, and show the results on the gameplay screen. 
+Connect the nodes as shown in the figure. In this example, I gave 2.0 and 3.0 as input to the AddFloats node.
+      </p>
+      <p>
+       Compile the Level Blueprint script, and hit the play button. You will see 5.0 on the screen whenever you press 'A' key.
+      </p>
+      <h1>
+       <span class="mw-headline" id="More_Information">
+        More Information
+       </span>
+      </h1>
+      <p>
+       You have finished your long journey. Congratulations. You will be able to add any third party library to UE4 as you wish from now on.
+      </p>
+      <p>
+       You can read more about me on my
+     . Have a nice day :).
+      </p>
+      <p>
+       - Mintchococookie
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

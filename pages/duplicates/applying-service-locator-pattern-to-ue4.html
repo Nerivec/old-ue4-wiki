@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Applying Service Locator Pattern to UE4 - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Applying Service Locator Pattern to UE4
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#What_Is_a_Service_Locator">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           What Is a Service Locator
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Where_is_it_useful_in_UE4">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Where is it useful in UE4
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Implementation">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Implementation
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Creating_the_Service_Locator_class">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             Creating the Service Locator class
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-6">
+             <a href="#ServiceLocator.h">
+              <span class="tocnumber">
+               4.1.1
+              </span>
+              <span class="toctext">
+               ServiceLocator.h
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-7">
+             <a href="#ServiceLocator.cpp">
+              <span class="tocnumber">
+               4.1.2
+              </span>
+              <span class="toctext">
+               ServiceLocator.cpp
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Instantiation">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             Instantiation
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-9">
+             <a href="#.h">
+              <span class="tocnumber">
+               4.2.1
+              </span>
+              <span class="toctext">
+               .h
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-10">
+             <a href="#.cpp">
+              <span class="tocnumber">
+               4.2.2
+              </span>
+              <span class="toctext">
+               .cpp
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#Supporting_a_Service">
+            <span class="tocnumber">
+             4.3
+            </span>
+            <span class="toctext">
+             Supporting a Service
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-12">
+             <a href="#ServiceLocator.h_2">
+              <span class="tocnumber">
+               4.3.1
+              </span>
+              <span class="toctext">
+               ServiceLocator.h
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-13">
+             <a href="#ServiceLocator.cpp_2">
+              <span class="tocnumber">
+               4.3.2
+              </span>
+              <span class="toctext">
+               ServiceLocator.cpp
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-14">
+           <a href="#Usage">
+            <span class="tocnumber">
+             4.4
+            </span>
+            <span class="toctext">
+             Usage
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-15">
+             <a href="#Setting">
+              <span class="tocnumber">
+               4.4.1
+              </span>
+              <span class="toctext">
+               Setting
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-16">
+             <a href="#Getting">
+              <span class="tocnumber">
+               4.4.2
+              </span>
+              <span class="toctext">
+               Getting
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-17">
+         <a href="#Summary">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Summary
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       This article draws heavily from Bob Nystrom's website and book
+       <a class="external text" href="http://gameprogrammingpatterns.com/" rel="nofollow">
+        Game Programming Patterns
+       </a>
+       and more specifically the chapter on
+       <a class="external text" href="http://gameprogrammingpatterns.com/service-locator.html" rel="nofollow">
+        Service Locators
+       </a>
+       . I simply describe how to implement the simplest form of this pattern with a few UE4 considerations.
+      </p>
+      <h2>
+       <span class="mw-headline" id="What_Is_a_Service_Locator">
+        What Is a Service Locator
+       </span>
+      </h2>
+      <p>
+       The
+       <a class="external text" href="http://gameprogrammingpatterns.com/service-locator.html" rel="nofollow">
+        Service Locator
+       </a>
+       pattern is a substitution and extension on a traditional Singleton Pattern. It contains static references to single instances of a several classes. Unlike a Singleton, the static reference resides outside of its class, existing in a kind of "middle man" class. This allows the reference to change at runtime while still allowing global access. It collects all static references into one place so that they're more easily managed by the programmer.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Where_is_it_useful_in_UE4">
+        Where is it useful in UE4
+       </span>
+      </h2>
+      <p>
+       Just like Singletons, this pattern should be used sparingly. I found Singletons in UE4 had their own dangers when implemented incorrectly. Static class instances don't support UPROPERTY and therefor it can't be guaranteed that the object wouldn't be garbage collected and disappear. This can be worked around by adding a non-static reference within the the instance to "hold" onto the object. However, I found it easier to consolidate this workaround into a single Service Locator instead of littering potentially unused variables around different classes.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Implementation">
+        Implementation
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Creating_the_Service_Locator_class">
+        Creating the Service Locator class
+       </span>
+      </h3>
+      <p>
+       Create an empty class like the one described below. Personally I keep it within its own "servicelocator" namespace. Notice how there is a static "Instance" variable, this is used by the static methods within the Service Locator later on to keep provided services in memory via UPROPERTY.
+      </p>
+      <p>
+       The Service Locator must extend UObject if the instances it stores are going to be properly managed by UE4.
+      </p>
+      <p>
+       Replace &lt;YourProject&gt; with the header of your game.
+      </p>
+      <h4>
+       <span class="mw-headline" id="ServiceLocator.h">
+        ServiceLocator.h
+       </span>
+      </h4>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+<span class="cp">#include</span> <span class="cpf">"ServiceLocator.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">UServiceLocator</span> <span class="o">:</span> <span class="k">public</span> <span class="n">UObject</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+	
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">UServiceLocator</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">);</span>
+<span class="k">private</span><span class="o">:</span>
+	<span class="k">static</span> <span class="n">UServiceLocator</span><span class="o">*</span> <span class="n">Instance</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h4>
+       <span class="mw-headline" id="ServiceLocator.cpp">
+        ServiceLocator.cpp
+       </span>
+      </h4>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"&lt;YourProject&gt;.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"ServiceLocator.h"</span><span class="cp"></span>
+
+<span class="n">UServiceLocator</span><span class="o">*</span> <span class="n">UServiceLocator</span><span class="o">::</span><span class="n">Instance</span><span class="p">;</span>
+
+<span class="n">UServiceLocator</span><span class="o">::</span><span class="n">UServiceLocator</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">ObjectInitializer</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">UServiceLocator</span><span class="o">::</span><span class="n">Instance</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Instantiation">
+        Instantiation
+       </span>
+      </h3>
+      <p>
+       The Service Locator must be created before any services are provided. I use a custom UGameInstance class and the overrided function Init(). This can be placed anywhere, as long as it's before any usage of the Service Locator and must be kept in memory for as long as you want to be able to access the services.
+      </p>
+      <h4>
+       <span class="mw-headline" id=".h">
+        .h
+       </span>
+      </h4>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">private</span><span class="o">:</span>
+	<span class="c1">//Holds the ServiceLocator in memory for the duration of the game using UPROPERTY</span>
+	<span class="n">UPROPERTY</span><span class="p">()</span>
+	<span class="n">UServiceLocator</span><span class="o">*</span> <span class="n">ServiceLocator</span><span class="p">;</span>
+</pre>
+      </div>
+      <h4>
+       <span class="mw-headline" id=".cpp">
+        .cpp
+       </span>
+      </h4>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Create an instance of the ServiceLocator and hold it in memory</span>
+<span class="n">ServiceLocator</span> <span class="o">=</span> <span class="n">ConstructObject</span><span class="o">&lt;</span><span class="n">UServiceLocator</span><span class="o">&gt;</span><span class="p">(</span><span class="n">UServiceLocator</span><span class="o">::</span><span class="n">StaticClass</span><span class="p">());</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Supporting_a_Service">
+        Supporting a Service
+       </span>
+      </h3>
+      <p>
+       Following Bob Nystrom's example lets say we have a fictional Audio service that needs to be called from multiple different points across the game. Add static methods and reference for any services you wish to provide.
+      </p>
+      <p>
+       Note that there is a static and non-static copy of the service. The non-static copy is used by UE4's reflection system and UPROPERTY, this is what keeps the object's memory managed.
+      </p>
+      <h4>
+       <span class="mw-headline" id="ServiceLocator.h_2">
+        ServiceLocator.h
+       </span>
+      </h4>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+<span class="cp">#include</span> <span class="cpf">"ServiceLocator.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">UServiceLocator</span> <span class="o">:</span> <span class="k">public</span> <span class="n">UObject</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+	
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">UServiceLocator</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">);</span>
+
+	<span class="k">static</span> <span class="n">UAudio</span><span class="o">*</span> <span class="nf">GetAudio</span><span class="p">()</span> <span class="p">{</span> <span class="k">return</span> <span class="n">AudioService_</span><span class="p">;</span> <span class="p">}</span>
+	
+	<span class="k">static</span> <span class="kt">void</span> <span class="nf">ProvideAudio</span><span class="p">(</span><span class="n">UAudio</span><span class="o">*</span> <span class="n">service</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">AudioService_</span> <span class="o">=</span> <span class="n">service</span><span class="p">;</span>
+		<span class="n">Instance</span><span class="o">-&gt;</span><span class="n">AudioService</span> <span class="o">=</span> <span class="n">service</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="k">private</span><span class="o">:</span>
+	<span class="k">static</span> <span class="n">UServiceLocator</span><span class="o">*</span> <span class="n">Instance</span><span class="p">;</span>
+
+	<span class="c1">// Static References</span>
+	<span class="k">static</span> <span class="n">UAudio</span><span class="o">*</span> <span class="n">AudioService_</span><span class="p">;</span>
+
+	<span class="c1">// UE4 UProperty references in the instance, used to maintain memory management and are otherwise unused.</span>
+	<span class="n">UPROPERTY</span><span class="p">()</span>
+	<span class="n">UAudio</span><span class="o">*</span> <span class="n">AudioService</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h4>
+       <span class="mw-headline" id="ServiceLocator.cpp_2">
+        ServiceLocator.cpp
+       </span>
+      </h4>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"&lt;YourProject&gt;.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"ServiceLocator.h"</span><span class="cp"></span>
+
+<span class="n">UServiceLocator</span><span class="o">*</span> <span class="n">UServiceLocator</span><span class="o">::</span><span class="n">Instance</span><span class="p">;</span>
+
+<span class="n">UAudio</span><span class="o">*</span> <span class="n">UServiceLocator</span><span class="o">::</span><span class="n">AudioService_</span><span class="p">;</span>
+
+<span class="n">UServiceLocator</span><span class="o">::</span><span class="n">UServiceLocator</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">ObjectInitializer</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">UServiceLocator</span><span class="o">::</span><span class="n">Instance</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       There must be an implementation of AudioService_ in the .cpp file to avoid compiler errors.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Usage">
+        Usage
+       </span>
+      </h3>
+      <h4>
+       <span class="mw-headline" id="Setting">
+        Setting
+       </span>
+      </h4>
+      <p>
+       To set the service to be retrieved later create the UObject with UE4's ConstructObject functionality and pass it to the Service Locator.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UAudio</span><span class="o">*</span> <span class="n">AudioService</span> <span class="o">=</span> <span class="n">ConstructObject</span><span class="o">&lt;</span><span class="n">UAudio</span><span class="o">&gt;</span><span class="p">(</span><span class="n">UAudio</span><span class="o">::</span><span class="n">StaticClass</span><span class="p">());</span>
+<span class="n">UServiceLocator</span><span class="o">::</span><span class="n">ProvideAudio</span><span class="p">(</span><span class="n">AudioService</span><span class="p">);</span>
+</pre>
+      </div>
+      <h4>
+       <span class="mw-headline" id="Getting">
+        Getting
+       </span>
+      </h4>
+      <p>
+       To retrieve the service simply call the UServiceLocator from anywhere!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UServiceLocator</span><span class="o">::</span><span class="n">GetAudio</span><span class="p">()</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Summary">
+        Summary
+       </span>
+      </h2>
+      <p>
+       Sometimes it's appropriate to use static references to different parts of your game. This application allows for flexibility and contains all of the static references for your module in one location. Used lightly it can empower and simplify your code, but if your Service Locator is managing an increasing list of services that may be a warning sign to rethink a few things.
+      </p>
+      <p>
+       Enjoy and good luck!
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

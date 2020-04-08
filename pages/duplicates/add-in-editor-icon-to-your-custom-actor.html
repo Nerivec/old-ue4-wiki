@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Add in editor Icon to your Custom Actor - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Add in editor Icon to your Custom Actor
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#MyActor.h">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           MyActor.h
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#MyActor.cpp">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           MyActor.cpp
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       Greetings!
+      </p>
+      <p>
+       This is a code snippets show you how to add in editor icon to your custom Actor.
+      </p>
+      <p>
+       Just like this:
+      </p>
+      <ul class="gallery mw-gallery-traditional">
+       <li class="gallerybox" style="width: 155px">
+        <div style="width: 155px">
+         <div class="thumb" style="width: 150px;">
+          <div style="margin:19px auto;">
+           <img alt="" class="" height="112" src="../assets/add-in-editor-icon-to-your-custom-actor/0.jpg" width="120"/>
+          </div>
+         </div>
+         <div class="gallerytext">
+          <p>
+           Custom Actor Icon
+          </p>
+         </div>
+        </div>
+       </li>
+      </ul>
+      <p>
+       I add some comment for reference.
+      </p>
+      <h2>
+       <span class="mw-headline" id="MyActor.h">
+        MyActor.h
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>   
+<span class="c1">// Copyright 1998-2014 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"GameFramework/Actor.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"MyActor.generated.h"</span><span class="cp"></span>
+
+<span class="cm">/**</span>
+<span class="cm"> * </span>
+<span class="cm"> */</span>
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">AMyActor</span> <span class="o">:</span> <span class="k">public</span> <span class="n">AActor</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">BeginPlay</span><span class="p">()</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+
+
+	<span class="n">UPROPERTY</span><span class="p">()</span>
+	<span class="c1">// A UBillboardComponent to hold Icon sprite</span>
+	<span class="n">TSubobjectPtr</span><span class="o">&lt;</span><span class="n">UBillboardComponent</span><span class="o">&gt;</span> <span class="n">SpriteComponent</span><span class="p">;</span>
+
+	<span class="c1">// Icon sprite</span>
+	<span class="n">UTexture2D</span><span class="o">*</span> <span class="n">SpriteTexture</span><span class="p">;;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>  
+<span class="c1">//Old</span>
+<span class="n">TSubobjectPtr</span><span class="o">&lt;</span><span class="n">UBillboardComponent</span><span class="o">&gt;</span> <span class="n">SpriteComponent</span><span class="p">;</span>
+
+<span class="c1">//New</span>
+<span class="n">UBillboardComponent</span><span class="o">*</span> <span class="n">SpriteComponent</span><span class="p">;</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="MyActor.cpp">
+        MyActor.cpp
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>   
+<span class="c1">// Copyright 1998-2014 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#include</span> <span class="cpf">"MyActor.h"</span><span class="cp"></span>
+
+<span class="n">AMyActor</span><span class="o">::</span><span class="n">AMyActor</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// Structure to hold one-time initialization</span>
+	<span class="k">struct</span> <span class="n">FConstructorStatics</span>
+	<span class="p">{</span>
+		<span class="c1">// A helper class object we use to find target UTexture2D object in resource package</span>
+		<span class="n">ConstructorHelpers</span><span class="o">::</span><span class="n">FObjectFinderOptional</span><span class="o">&lt;</span><span class="n">UTexture2D</span><span class="o">&gt;</span> <span class="n">NoteTextureObject</span><span class="p">;</span>
+
+		<span class="c1">// Icon sprite category name</span>
+		<span class="n">FName</span> <span class="n">ID_Notes</span><span class="p">;</span>
+
+		<span class="c1">// Icon sprite display name</span>
+		<span class="n">FText</span> <span class="n">NAME_Notes</span><span class="p">;</span>
+
+		<span class="n">FConstructorStatics</span><span class="p">()</span>
+			<span class="c1">// Use helper class object to find the texture</span>
+			<span class="c1">// "/Engine/EditorResources/S_Note" is resource path</span>
+			<span class="o">:</span> <span class="n">NoteTextureObject</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"/Engine/EditorResources/S_Note"</span><span class="p">))</span>
+			<span class="p">,</span> <span class="n">ID_Notes</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"Notes"</span><span class="p">))</span>
+			<span class="p">,</span> <span class="n">NAME_Notes</span><span class="p">(</span><span class="n">NSLOCTEXT</span><span class="p">(</span><span class="s">"SpriteCategory"</span><span class="p">,</span> <span class="s">"Notes"</span><span class="p">,</span> <span class="s">"Notes"</span><span class="p">))</span>
+		<span class="p">{</span>
+		<span class="p">}</span>
+	<span class="p">};</span>
+	<span class="k">static</span> <span class="n">FConstructorStatics</span> <span class="n">ConstructorStatics</span><span class="p">;</span>
+
+	<span class="c1">// We need a scene component to attach Icon sprite</span>
+	<span class="n">TSubobjectPtr</span><span class="o">&lt;</span><span class="n">USceneComponent</span><span class="o">&gt;</span> <span class="n">SceneComponent</span> <span class="o">=</span> <span class="n">PCIP</span><span class="p">.</span><span class="n">CreateDefaultSubobject</span><span class="o">&lt;</span><span class="n">USceneComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"SceneComp"</span><span class="p">));</span>
+	<span class="n">RootComponent</span> <span class="o">=</span> <span class="n">SceneComponent</span><span class="p">;</span>
+	<span class="n">RootComponent</span><span class="o">-&gt;</span><span class="n">Mobility</span> <span class="o">=</span> <span class="n">EComponentMobility</span><span class="o">::</span><span class="n">Static</span><span class="p">;</span>
+
+<span class="cp">#if WITH_EDITORONLY_DATA</span>
+	<span class="n">SpriteComponent</span> <span class="o">=</span> <span class="n">PCIP</span><span class="p">.</span><span class="n">CreateEditorOnlyDefaultSubobject</span><span class="o">&lt;</span><span class="n">UBillboardComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Sprite"</span><span class="p">));</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">SpriteComponent</span><span class="p">)</span>
+	<span class="p">{</span>
+
+		<span class="n">SpriteComponent</span><span class="o">-&gt;</span><span class="n">Sprite</span> <span class="o">=</span> <span class="n">ConstructorStatics</span><span class="p">.</span><span class="n">NoteTextureObject</span><span class="p">.</span><span class="n">Get</span><span class="p">();</span>		<span class="c1">// Get the sprite texture from helper class object</span>
+		<span class="n">SpriteComponent</span><span class="o">-&gt;</span><span class="n">SpriteInfo</span><span class="p">.</span><span class="n">Category</span> <span class="o">=</span> <span class="n">ConstructorStatics</span><span class="p">.</span><span class="n">ID_Notes</span><span class="p">;</span>		<span class="c1">// Assign sprite category name</span>
+		<span class="n">SpriteComponent</span><span class="o">-&gt;</span><span class="n">SpriteInfo</span><span class="p">.</span><span class="n">DisplayName</span> <span class="o">=</span> <span class="n">ConstructorStatics</span><span class="p">.</span><span class="n">NAME_Notes</span><span class="p">;</span>	<span class="c1">// Assign sprite display name</span>
+		<span class="n">SpriteComponent</span><span class="o">-&gt;</span><span class="n">AttachParent</span> <span class="o">=</span> <span class="n">RootComponent</span><span class="p">;</span>				        <span class="c1">// Attach sprite to scene component</span>
+		<span class="n">SpriteComponent</span><span class="o">-&gt;</span><span class="n">Mobility</span> <span class="o">=</span> <span class="n">EComponentMobility</span><span class="o">::</span><span class="n">Static</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="cp">#endif </span><span class="c1">// WITH_EDITORONLY_DATA</span>
+
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>  
+<span class="c1">//Old</span>
+<span class="n">AMyActor</span><span class="o">::</span><span class="n">AMyActor</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="p">{</span>
+
+<span class="c1">//New</span>
+<span class="n">AMyActor</span><span class="o">::</span><span class="n">AMyActor</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">ObjectInitializer</span><span class="p">)</span>
+<span class="p">{</span>
+</pre>
+      </div>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Old</span>
+<span class="n">TSubobjectPtr</span><span class="o">&lt;</span><span class="n">USceneComponent</span><span class="o">&gt;</span> <span class="n">SceneComponent</span> <span class="o">=</span> <span class="n">PCIP</span><span class="p">.</span><span class="n">CreateDefaultSubobject</span><span class="o">&lt;</span><span class="n">USceneComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"SceneComp"</span><span class="p">));</span>
+
+<span class="c1">//New</span>
+<span class="n">USceneComponent</span><span class="o">*</span> <span class="n">SceneComponent</span> <span class="o">=</span> <span class="n">ObjectInitializer</span><span class="p">.</span><span class="n">CreateDefaultSubobject</span><span class="o">&lt;</span><span class="n">USceneComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"SceneComp"</span><span class="p">));</span>
+</pre>
+      </div>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Old</span>
+<span class="n">SpriteComponent</span> <span class="o">=</span> <span class="n">PCIP</span><span class="p">.</span><span class="n">CreateEditorOnlyDefaultSubobject</span><span class="o">&lt;</span><span class="n">UBillboardComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Sprite"</span><span class="p">));</span>
+
+<span class="c1">//New</span>
+<span class="n">SpriteComponent</span> <span class="o">=</span> <span class="n">ObjectInitializer</span><span class="p">.</span><span class="n">CreateEditorOnlyDefaultSubobject</span><span class="o">&lt;</span><span class="n">UBillboardComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Sprite"</span><span class="p">));</span>
+</pre>
+      </div>
+      <p>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Old</span>
+<span class="n">SpriteComponent</span><span class="o">-&gt;</span><span class="n">AttachParent</span> <span class="o">=</span> <span class="n">RootComponent</span><span class="p">;</span>
+
+<span class="c1">//New</span>
+<span class="n">SpriteComponent</span><span class="o">-&gt;</span><span class="n">AttachToComponent</span><span class="p">(</span><span class="n">RootComponent</span><span class="p">,</span> <span class="n">FAttachmentTransformRules</span><span class="o">::</span><span class="n">KeepWorldTransform</span><span class="p">);</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       Please refer to Engine\Source\Runtime\Engine\Private\Note.cpp for more information.
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+     )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

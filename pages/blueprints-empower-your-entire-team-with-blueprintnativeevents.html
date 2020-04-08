@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Blueprints, Empower Your Entire Team With BlueprintNativeEvents - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Blueprints, Empower Your Entire Team With BlueprintNativeEvents
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#.h">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             .h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#.cpp">
+            <span class="tocnumber">
+             1.2
+            </span>
+            <span class="toctext">
+             .cpp
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Implementation">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           _Implementation
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#In_The_Editor">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           In The Editor
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Adding_Call_To_Parent_Function">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Adding Call To Parent Function
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Complete_Override">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Complete Override
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Overloaded_Function_not_found...">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Overloaded Function not found...
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Original Author:
+       </i>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       BlueprintNativeEvents are distinct from
+       because a BlueprintNativeEvent can have a C++ implementation!
+      </p>
+      <p>
+       A primary example is the GameMode class, which has many important BlueprintNativeEvents like
+      </p>
+      <pre> UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Game")
+ APawn* SpawnDefaultPawnFor(AController* NewPlayer, class AActor* StartSpot);
+</pre>
+      <p>
+       and
+      </p>
+      <pre> UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category="Game")
+ class AActor* FindPlayerStart( AController* Player, const FString&amp; IncomingName = TEXT("") );
+</pre>
+      <p>
+       These core functions that define how a UE4 game can even get started obviously need a C++ implementation, but what if a Blueprint-Only project wants to override this functionality?
+      </p>
+      <p>
+       Or what if you have BP-only teammates who want to override the functionality of your C++ functions?
+      </p>
+      <p>
+       This is where BlueprintNativeEvents shine!
+      </p>
+      <h3>
+       <span class="mw-headline" id=".h">
+        .h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Override in BP to extend the base C++ functionality!</span>
+<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintNativeEvent</span><span class="p">,</span> <span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="s">"JoyBall"</span><span class="p">)</span>
+<span class="kt">float</span> <span class="n">GetArmorRating</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id=".cpp">
+        .cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">float</span> <span class="n">AJoyBall</span><span class="o">::</span><span class="n">GetArmorRating_Implementation</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="c1">//remember to call super / parent function in BP!</span>
+	<span class="n">V_LOG</span><span class="p">(</span><span class="s">"C++ Happens First"</span><span class="p">);</span>
+	<span class="k">return</span> <span class="mi">100</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Implementation">
+        _Implementation
+       </span>
+      </h2>
+      <p>
+       Please duly note that you do not have to declare the function signature GetArmorRating_Implementation() in the .h file!
+      </p>
+      <p>
+       UE4 generates the declaration for you and you can simply write your cpp function body!
+      </p>
+      <h2>
+       <span class="mw-headline" id="In_The_Editor">
+        In The Editor
+       </span>
+      </h2>
+      <p>
+       <img alt="NativeEventImplinBP.jpg" class="" height="527" src="../assets/blueprints-empower-your-entire-team-with-blueprintnativeevents/0.jpg" width="900"/>
+      </p>
+      <p>
+       Click on Override to see a list of all overrideable BP Native events and add yours to your blueprint graph for your c++ class!
+      </p>
+      <p>
+       <img alt="BPNative2.jpg" class="" height="675" src="../assets/blueprints-empower-your-entire-team-with-blueprintnativeevents/1.jpg" width="900"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Adding_Call_To_Parent_Function">
+        Adding Call To Parent Function
+       </span>
+      </h2>
+      <p>
+       You must ensure that your teammates understand they have to right click on the function node and choose "Add Call To Parent Function" to cause your C++ implementation to run properly :) This is also essential if they are adding to output values that you calculate in C++
+      </p>
+      <p>
+       <b>
+        In my example above, what I see in the log is the correct value of 150!
+       </b>
+      </p>
+      <p>
+       100 comes from C++, and 50 gets added to that via call to parent function in BP !
+      </p>
+      <h2>
+       <span class="mw-headline" id="Complete_Override">
+        Complete Override
+       </span>
+      </h2>
+      <p>
+       Of course if you want to completely override behavior of C++ versions of BP Native Events, you would not call super in BP for that function :)
+      </p>
+      <h2>
+       <span class="mw-headline" id="Overloaded_Function_not_found...">
+        Overloaded Function not found...
+       </span>
+      </h2>
+      <p>
+       If you are getting a strange compile error involving overloaded functions and you know the signatures match between .h and your _Implementation, then it means UE4 generated a function parameter list for the _Implementation that does not match what you supplied in the .h
+      </p>
+      <p>
+       For example:
+      </p>
+      <pre> void SetMenu(FString Title)
+</pre>
+      <p>
+       will be generated as
+      </p>
+      <pre> void SetMenu(const FString&amp; Title)
+</pre>
+      <p>
+       and thus you will get a compile error until you change your .h to be:
+      </p>
+      <pre> void SetMenu(const FString&amp; Title)
+</pre>
+      <p>
+       ♥ Rama
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       Using BP Native Events you can offer your teammates powerful C++ tools that can be directly extended in blueprints!
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   TCP Socket Listener, Receive Binary Data From an IP/Port Into UE4, (Full Code Sample) - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    TCP Socket Listener, Receive Binary Data From an IP/Port Into UE4, (Full Code Sample)
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Build.CS">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Build.CS
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#.h">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           .h
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#.cpp">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           .cpp
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#How_It_Works">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           How It Works
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Another_TCP_Source_Code.2C_by_alfalfasprossen">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Another TCP Source Code, by alfalfasprossen
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Another_TCP_Source.2C_by_Phi.WOP">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Another TCP Source, by Phi.WOP
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#UDP">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           UDP
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           9
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Author:
+       </i>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       In this tutorial I am giving you the code I used to enable a python script to communicate with UE4 over a TCP socket!
+      </p>
+      <p>
+       That's right!
+      </p>
+      <p>
+       <b>
+        I am just straight up giving you my whole source code that I spent the past several hours writing!
+       </b>
+      </p>
+      <p>
+       ♥
+      </p>
+      <p>
+       Rama
+      </p>
+      <p>
+       <b>
+        <i>
+         COMMUNITY CAVEAT
+        </i>
+        [02/06/2017, UE4.14.3]
+       </b>
+       From the readme found in the Networking module (
+       <i>
+        &lt;Path_to_Engine&gt;/Source/Runtime/Networking/Readme.txt
+       </i>
+       ):
+      </p>
+      <p>
+       <i>
+        "This module is an internal R&amp;D effort to explore how the socket subsystem could be improved. Production use is NOT encouraged at this point."
+       </i>
+      </p>
+      <p>
+       For the reader of this tutorial this means the module will likely perpetually change as development on the UE4 is progressing. For example, since the initial writing of this wiki tutorial the
+       <i>
+        FTcpListener
+       </i>
+       class has been added which makes a lot of Rama's delightful work redundant. However, in the future this class may again be changed or removed entirely.
+      </p>
+      <p>
+       <img alt="PythonToUE4Socket.jpg" class="" height="750" src="../assets/tcp-socket-listener-receive-binary-data-from-an-ipport-into-ue4-full-code-sample/0.jpg" width="1000"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Build.CS">
+        Build.CS
+       </span>
+      </h2>
+      <p>
+       You will need at least this to work with sockets in UE4
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">PublicDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">[]</span> <span class="p">{</span> 
+		<span class="s">"Core"</span><span class="p">,</span> 
+		<span class="s">"CoreUObject"</span><span class="p">,</span> 
+		<span class="s">"Engine"</span><span class="p">,</span> 
+		<span class="s">"InputCore"</span><span class="p">,</span>
+
+		<span class="s">"Sockets"</span><span class="p">,</span><span class="s">"Networking"</span>
+<span class="p">});</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id=".h">
+        .h
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"Networking.h"</span><span class="cp"></span>
+
+<span class="c1">//AYourClass definition</span>
+
+<span class="k">public</span><span class="o">:</span>
+
+<span class="n">FSocket</span><span class="o">*</span> <span class="n">ListenerSocket</span><span class="p">;</span>
+<span class="n">FSocket</span><span class="o">*</span> <span class="n">ConnectionSocket</span><span class="p">;</span>
+<span class="n">FIPv4Endpoint</span> <span class="n">RemoteAddressForConnection</span><span class="p">;</span>
+
+<span class="kt">bool</span> <span class="nf">StartTCPReceiver</span><span class="p">(</span>
+	<span class="k">const</span> <span class="n">FString</span><span class="o">&amp;</span> <span class="n">YourChosenSocketName</span><span class="p">,</span>
+	<span class="k">const</span> <span class="n">FString</span><span class="o">&amp;</span> <span class="n">TheIP</span><span class="p">,</span> 
+	<span class="k">const</span> <span class="n">int32</span> <span class="n">ThePort</span>
+<span class="p">);</span>
+
+<span class="n">FSocket</span><span class="o">*</span> <span class="nf">CreateTCPConnectionListener</span><span class="p">(</span>
+	<span class="k">const</span> <span class="n">FString</span><span class="o">&amp;</span> <span class="n">YourChosenSocketName</span><span class="p">,</span>
+	<span class="k">const</span> <span class="n">FString</span><span class="o">&amp;</span> <span class="n">TheIP</span><span class="p">,</span> 
+	<span class="k">const</span> <span class="n">int32</span> <span class="n">ThePort</span><span class="p">,</span> 
+	<span class="k">const</span> <span class="n">int32</span> <span class="n">ReceiveBufferSize</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="mi">1024</span><span class="o">*</span><span class="mi">1024</span>
+<span class="p">);</span>
+
+<span class="c1">//Timer functions, could be threads</span>
+<span class="kt">void</span> <span class="nf">TCPConnectionListener</span><span class="p">();</span> 	<span class="c1">//can thread this eventually</span>
+<span class="kt">void</span> <span class="nf">TCPSocketListener</span><span class="p">();</span>		<span class="c1">//can thread this eventually</span>
+
+
+<span class="c1">//Format String IP4 to number array</span>
+<span class="kt">bool</span> <span class="nf">FormatIP4ToNumber</span><span class="p">(</span><span class="k">const</span> <span class="n">FString</span><span class="o">&amp;</span> <span class="n">TheIP</span><span class="p">,</span> <span class="n">uint8</span> <span class="p">(</span><span class="o">&amp;</span><span class="n">Out</span><span class="p">)[</span><span class="mi">4</span><span class="p">]);</span>
+
+<span class="c1">//Rama's StringFromBinaryArray</span>
+<span class="n">FString</span> <span class="nf">StringFromBinaryArray</span><span class="p">(</span><span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">uint8</span><span class="o">&gt;&amp;</span> <span class="n">BinaryArray</span><span class="p">);</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id=".cpp">
+        .cpp
+       </span>
+      </h2>
+      <p>
+       The flow goes basically from the top down, you can probably guess the purpose of this first function.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">AYourClass</span><span class="o">::</span><span class="n">Laaaaaauuuunch</span><span class="p">()</span>
+<span class="p">{</span>
+                                        <span class="c1">//IP = 127.0.0.1, Port = 8890 for my Python test case</span>
+	<span class="k">if</span><span class="p">(</span> <span class="o">!</span> <span class="n">StartTCPReceiver</span><span class="p">(</span><span class="s">"RamaSocketListener"</span><span class="p">,</span> <span class="s">"127.0.0.1"</span><span class="p">,</span> <span class="mi">8890</span><span class="p">))</span>
+	<span class="p">{</span>
+		<span class="c1">//UE_LOG  "TCP Socket Listener Created!"</span>
+		<span class="k">return</span><span class="p">;</span>
+	<span class="p">}</span>
+	
+	<span class="c1">//UE_LOG  "TCP Socket Listener Created! Yay!"</span>
+<span class="p">}</span>
+
+<span class="c1">//Rama's Start TCP Receiver</span>
+<span class="kt">bool</span> <span class="n">AYourClass</span><span class="o">::</span><span class="n">StartTCPReceiver</span><span class="p">(</span>
+	<span class="k">const</span> <span class="n">FString</span><span class="o">&amp;</span> <span class="n">YourChosenSocketName</span><span class="p">,</span>
+	<span class="k">const</span> <span class="n">FString</span><span class="o">&amp;</span> <span class="n">TheIP</span><span class="p">,</span> 
+	<span class="k">const</span> <span class="n">int32</span> <span class="n">ThePort</span>
+<span class="p">){</span>
+	<span class="c1">//Rama's CreateTCPConnectionListener</span>
+	<span class="n">ListenerSocket</span> <span class="o">=</span> <span class="n">CreateTCPConnectionListener</span><span class="p">(</span><span class="n">YourChosenSocketName</span><span class="p">,</span><span class="n">TheIP</span><span class="p">,</span> <span class="n">ThePort</span><span class="p">);</span>
+	
+	<span class="c1">//Not created?</span>
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">ListenerSocket</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">GEngine</span><span class="o">-&gt;</span><span class="n">AddOnScreenDebugMessage</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mf">5.f</span><span class="p">,</span> <span class="n">FColor</span><span class="o">::</span><span class="n">Red</span><span class="p">,</span> <span class="n">FString</span><span class="o">::</span><span class="n">Printf</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"StartTCPReceiver&gt;&gt; Listen socket could not be created! ~&gt; %s %d"</span><span class="p">),</span> <span class="o">*</span><span class="n">TheIP</span><span class="p">,</span> <span class="n">ThePort</span><span class="p">));</span>
+		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="p">}</span>
+	
+	<span class="c1">//Start the Listener! //thread this eventually</span>
+	<span class="n">GetWorldTimerManager</span><span class="p">().</span><span class="n">SetTimer</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> 
+		<span class="o">&amp;</span><span class="n">AYourClass</span><span class="o">::</span><span class="n">TCPConnectionListener</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>	
+	
+	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">//Format IP String as Number Parts</span>
+<span class="kt">bool</span> <span class="n">AYourClass</span><span class="o">::</span><span class="n">FormatIP4ToNumber</span><span class="p">(</span><span class="k">const</span> <span class="n">FString</span><span class="o">&amp;</span> <span class="n">TheIP</span><span class="p">,</span> <span class="n">uint8</span> <span class="p">(</span><span class="o">&amp;</span><span class="n">Out</span><span class="p">)[</span><span class="mi">4</span><span class="p">])</span>
+<span class="p">{</span>
+	<span class="c1">//IP Formatting</span>
+	<span class="n">TheIP</span><span class="p">.</span><span class="n">Replace</span><span class="p">(</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">" "</span><span class="p">),</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">""</span><span class="p">)</span> <span class="p">);</span>
+
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+	<span class="c1">//						   IP 4 Parts</span>
+	
+	<span class="c1">//String Parts</span>
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FString</span><span class="o">&gt;</span> <span class="n">Parts</span><span class="p">;</span>
+	<span class="n">TheIP</span><span class="p">.</span><span class="n">ParseIntoArray</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">Parts</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"."</span><span class="p">),</span> <span class="nb">true</span> <span class="p">);</span>
+	<span class="k">if</span> <span class="p">(</span> <span class="n">Parts</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">4</span> <span class="p">)</span>
+		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+
+	<span class="c1">//String to Number Parts</span>
+	<span class="k">for</span> <span class="p">(</span> <span class="n">int32</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">4</span><span class="p">;</span> <span class="o">++</span><span class="n">i</span> <span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">Out</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">FCString</span><span class="o">::</span><span class="n">Atoi</span><span class="p">(</span> <span class="o">*</span><span class="n">Parts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">);</span>
+	<span class="p">}</span>
+	
+	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="c1">//Rama's Create TCP Connection Listener</span>
+<span class="n">FSocket</span><span class="o">*</span> <span class="n">AYourClass</span><span class="o">::</span><span class="n">CreateTCPConnectionListener</span><span class="p">(</span><span class="k">const</span> <span class="n">FString</span><span class="o">&amp;</span> <span class="n">YourChosenSocketName</span><span class="p">,</span><span class="k">const</span> <span class="n">FString</span><span class="o">&amp;</span> <span class="n">TheIP</span><span class="p">,</span> <span class="k">const</span> <span class="n">int32</span> <span class="n">ThePort</span><span class="p">,</span><span class="k">const</span> <span class="n">int32</span> <span class="n">ReceiveBufferSize</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">uint8</span> <span class="n">IP4Nums</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>
+	<span class="k">if</span><span class="p">(</span> <span class="o">!</span> <span class="n">FormatIP4ToNumber</span><span class="p">(</span><span class="n">TheIP</span><span class="p">,</span> <span class="n">IP4Nums</span><span class="p">))</span>
+	<span class="p">{</span>
+		<span class="n">VShow</span><span class="p">(</span><span class="s">"Invalid IP! Expecting 4 parts separated by ."</span><span class="p">);</span>
+		<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="p">}</span>
+	
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+	
+	<span class="c1">//Create Socket</span>
+	<span class="n">FIPv4Endpoint</span> <span class="n">Endpoint</span><span class="p">(</span><span class="n">FIPv4Address</span><span class="p">(</span><span class="n">IP4Nums</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">IP4Nums</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">IP4Nums</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">IP4Nums</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span> <span class="n">ThePort</span><span class="p">);</span>
+	<span class="n">FSocket</span><span class="o">*</span> <span class="n">ListenSocket</span> <span class="o">=</span> <span class="n">FTcpSocketBuilder</span><span class="p">(</span><span class="o">*</span><span class="n">YourChosenSocketName</span><span class="p">)</span>
+		<span class="p">.</span><span class="n">AsReusable</span><span class="p">()</span>
+		<span class="p">.</span><span class="n">BoundToEndpoint</span><span class="p">(</span><span class="n">Endpoint</span><span class="p">)</span>
+		<span class="p">.</span><span class="n">Listening</span><span class="p">(</span><span class="mi">8</span><span class="p">);</span>
+
+	<span class="c1">//Set Buffer Size</span>
+	<span class="n">int32</span> <span class="n">NewSize</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="n">ListenSocket</span><span class="o">-&gt;</span><span class="n">SetReceiveBufferSize</span><span class="p">(</span><span class="n">ReceiveBufferSize</span><span class="p">,</span> <span class="n">NewSize</span><span class="p">);</span>
+	
+	<span class="c1">//Done!</span>
+	<span class="k">return</span> <span class="n">ListenSocket</span><span class="p">;</span>	
+<span class="p">}</span>
+<span class="c1">//Rama's TCP Connection Listener</span>
+<span class="kt">void</span> <span class="n">AYourClass</span><span class="o">::</span><span class="n">TCPConnectionListener</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">//~~~~~~~~~~~~~</span>
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">ListenerSocket</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+	<span class="c1">//~~~~~~~~~~~~~</span>
+	
+	<span class="c1">//Remote address</span>
+	<span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">FInternetAddr</span><span class="o">&gt;</span> <span class="n">RemoteAddress</span> <span class="o">=</span> <span class="n">ISocketSubsystem</span><span class="o">::</span><span class="n">Get</span><span class="p">(</span><span class="n">PLATFORM_SOCKETSUBSYSTEM</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">CreateInternetAddr</span><span class="p">();</span>
+	<span class="kt">bool</span> <span class="n">Pending</span><span class="p">;</span>
+
+	<span class="c1">// handle incoming connections</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">ListenerSocket</span><span class="o">-&gt;</span><span class="n">HasPendingConnection</span><span class="p">(</span><span class="n">Pending</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">Pending</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+		<span class="c1">//Already have a Connection? destroy previous</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">ConnectionSocket</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">ConnectionSocket</span><span class="o">-&gt;</span><span class="n">Close</span><span class="p">();</span>
+			<span class="n">ISocketSubsystem</span><span class="o">::</span><span class="n">Get</span><span class="p">(</span><span class="n">PLATFORM_SOCKETSUBSYSTEM</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">DestroySocket</span><span class="p">(</span><span class="n">ConnectionSocket</span><span class="p">);</span>
+		<span class="p">}</span>
+		<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+		
+		<span class="c1">//New Connection receive!</span>
+		<span class="n">ConnectionSocket</span> <span class="o">=</span> <span class="n">ListenerSocket</span><span class="o">-&gt;</span><span class="n">Accept</span><span class="p">(</span><span class="o">*</span><span class="n">RemoteAddress</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"RamaTCP Received Socket Connection"</span><span class="p">));</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="n">ConnectionSocket</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="c1">//Global cache of current Remote Address</span>
+			<span class="n">RemoteAddressForConnection</span> <span class="o">=</span> <span class="n">FIPv4Endpoint</span><span class="p">(</span><span class="n">RemoteAddress</span><span class="p">);</span>
+			
+			<span class="c1">//UE_LOG "Accepted Connection! WOOOHOOOO!!!";</span>
+			
+			<span class="c1">//can thread this too</span>
+			<span class="n">GetWorldTimerManager</span><span class="p">().</span><span class="n">SetTimer</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> 
+				<span class="o">&amp;</span><span class="n">AYourClass</span><span class="o">::</span><span class="n">TCPSocketListener</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>	
+		<span class="p">}</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//Rama's String From Binary Array</span>
+<span class="n">FString</span> <span class="n">AYourClass</span><span class="o">::</span><span class="n">StringFromBinaryArray</span><span class="p">(</span><span class="n">TArray</span><span class="o">&lt;</span><span class="n">uint8</span><span class="o">&gt;</span> <span class="n">BinaryArray</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">BinaryArray</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="c1">// Add 0 termination. Even if the string is already 0-terminated, it doesn't change the results.</span>
+	<span class="c1">// Create a string from a byte array. The string is expected to be 0 terminated (i.e. a byte set to 0).</span>
+	<span class="c1">// Use UTF8_TO_TCHAR if needed.</span>
+	<span class="c1">// If you happen to know the data is UTF-16 (USC2) formatted, you do not need any conversion to begin with.</span>
+	<span class="c1">// Otherwise you might have to write your own conversion algorithm to convert between multilingual UTF-16 planes.</span>
+	<span class="k">return</span> <span class="nf">FString</span><span class="p">(</span><span class="n">ANSI_TO_TCHAR</span><span class="p">(</span><span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="k">const</span> <span class="kt">char</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">BinaryArray</span><span class="p">.</span><span class="n">GetData</span><span class="p">()));</span>
+<span class="p">}</span>
+
+<span class="c1">//Rama's TCP Socket Listener</span>
+<span class="kt">void</span> <span class="n">AYourClass</span><span class="o">::</span><span class="n">TCPSocketListener</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">//~~~~~~~~~~~~~</span>
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">ConnectionSocket</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+	<span class="c1">//~~~~~~~~~~~~~</span>
+	
+	
+	<span class="c1">//Binary Array!</span>
+	<span class="n">TArray</span><span class="o">&lt;</span><span class="n">uint8</span><span class="o">&gt;</span> <span class="n">ReceivedData</span><span class="p">;</span>
+	
+	<span class="n">uint32</span> <span class="n">Size</span><span class="p">;</span>
+	<span class="k">while</span> <span class="p">(</span><span class="n">ConnectionSocket</span><span class="o">-&gt;</span><span class="n">HasPendingData</span><span class="p">(</span><span class="n">Size</span><span class="p">))</span>
+	<span class="p">{</span>
+		<span class="n">ReceivedData</span><span class="p">.</span><span class="n">Init</span><span class="p">(</span><span class="n">FMath</span><span class="o">::</span><span class="n">Min</span><span class="p">(</span><span class="n">Size</span><span class="p">,</span> <span class="mi">65507u</span><span class="p">));</span>
+
+		<span class="n">int32</span> <span class="n">Read</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+		<span class="n">ConnectionSocket</span><span class="o">-&gt;</span><span class="n">Recv</span><span class="p">(</span><span class="n">ReceivedData</span><span class="p">.</span><span class="n">GetData</span><span class="p">(),</span> <span class="n">ReceivedData</span><span class="p">.</span><span class="n">Num</span><span class="p">(),</span> <span class="n">Read</span><span class="p">);</span>
+
+		<span class="c1">//GEngine-&gt;AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Data Read! %d"), ReceivedData.Num()));</span>
+	<span class="p">}</span>
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+	
+	<span class="k">if</span><span class="p">(</span><span class="n">ReceivedData</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//No Data Received</span>
+		<span class="k">return</span><span class="p">;</span>
+	<span class="p">}</span>
+	
+	<span class="n">VShow</span><span class="p">(</span><span class="s">"Total Data read!"</span><span class="p">,</span> <span class="n">ReceivedData</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="p">);</span>
+	<span class="n">GEngine</span><span class="o">-&gt;</span><span class="n">AddOnScreenDebugMessage</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mf">5.f</span><span class="p">,</span> <span class="n">FColor</span><span class="o">::</span><span class="n">Red</span><span class="p">,</span> <span class="n">FString</span><span class="o">::</span><span class="n">Printf</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"Data Bytes Read ~&gt; %d"</span><span class="p">),</span> <span class="n">ReceivedData</span><span class="p">.</span><span class="n">Num</span><span class="p">()));</span>
+	
+	
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+	<span class="c1">//						Rama's String From Binary Array</span>
+	<span class="k">const</span> <span class="n">FString</span> <span class="n">ReceivedUE4String</span> <span class="o">=</span> <span class="n">StringFromBinaryArray</span><span class="p">(</span><span class="n">ReceivedData</span><span class="p">);</span>
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+	
+	
+	<span class="n">VShow</span><span class="p">(</span><span class="s">"As String!!!!! ~&gt;"</span><span class="p">,</span><span class="n">ReceivedUE4String</span><span class="p">);</span>	
+	<span class="n">GEngine</span><span class="o">-&gt;</span><span class="n">AddOnScreenDebugMessage</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mf">5.f</span><span class="p">,</span> <span class="n">FColor</span><span class="o">::</span><span class="n">Red</span><span class="p">,</span> <span class="n">FString</span><span class="o">::</span><span class="n">Printf</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"As String Data ~&gt; %s"</span><span class="p">),</span> <span class="o">*</span><span class="n">ReceivedUE4String</span><span class="p">));</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="How_It_Works">
+        How It Works
+       </span>
+      </h2>
+      <p>
+       The first socket listens on the port and IP supplied, and if a connection is received on this port, then the actual ListenerSocket is created.
+      </p>
+      <p>
+       The ListenerSocket is run in very short looping timer of 0.01 seconds.
+      </p>
+      <p>
+       You could also use a thread for this :)
+      </p>
+      <p>
+       <br/>
+       <b>
+       </b>
+      </p>
+      <p>
+       <br/>
+       Whenever the ListenerSocket receives data, it makes sure to gather all of it using the while loop, and then I convert the results into a FString.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Binary Array!</span>
+<span class="n">TArray</span><span class="o">&lt;</span><span class="n">uint8</span><span class="o">&gt;</span> <span class="n">ReceivedData</span><span class="p">;</span>
+
+<span class="n">uint32</span> <span class="n">Size</span><span class="p">;</span>
+<span class="k">while</span> <span class="p">(</span><span class="n">ConnectionSocket</span><span class="o">-&gt;</span><span class="n">HasPendingData</span><span class="p">(</span><span class="n">Size</span><span class="p">))</span>
+<span class="p">{</span>
+	<span class="n">ReceivedData</span><span class="p">.</span><span class="n">Init</span><span class="p">(</span><span class="n">FMath</span><span class="o">::</span><span class="n">Min</span><span class="p">(</span><span class="n">Size</span><span class="p">,</span> <span class="mi">65507u</span><span class="p">));</span>
+
+	<span class="n">int32</span> <span class="n">Read</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+	<span class="n">ConnectionSocket</span><span class="o">-&gt;</span><span class="n">Recv</span><span class="p">(</span><span class="n">ReceivedData</span><span class="p">.</span><span class="n">GetData</span><span class="p">(),</span> <span class="n">ReceivedData</span><span class="p">.</span><span class="n">Num</span><span class="p">(),</span> <span class="n">Read</span><span class="p">);</span>
+
+	<span class="c1">//GEngine-&gt;AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("Data Read! %d"), ReceivedData.Num()));</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       If you are not receiving string data you can skip that part and just pass out the binary array itself :)
+      </p>
+      <h2>
+       <span class="mw-headline" id="Another_TCP_Source_Code.2C_by_alfalfasprossen">
+        Another TCP Source Code, by alfalfasprossen
+       </span>
+      </h2>
+      <p>
+       Community Member alfalfasprossen has been developing a communication interface between UE4 and Maya since 2014 using TCP sockets. Check out his code and see if you can learn some more!
+      </p>
+      <p>
+       <a class="external text" href="https://github.com/m2u/m2uUE4Plugin" rel="nofollow">
+        alfalfa's m2u Plugin
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Another_TCP_Source.2C_by_Phi.WOP">
+        Another TCP Source, by Phi.WOP
+       </span>
+      </h2>
+      <p>
+       Here is another implementation you can check out from a UE4 Community member!
+      </p>
+      <p>
+       <a class="external free" href="https://forums.unrealengine.com/showthread.php?18566-TCP-Socket-Listener-Receiving-Binary-Data-into-UE4-From-a-Python-Script!&amp;p=708455&amp;viewfull=1#post708455" rel="nofollow">
+        https://forums.unrealengine.com/showthread.php?18566-TCP-Socket-Listener-Receiving-Binary-Data-into-UE4-From-a-Python-Script!&amp;p=708455&amp;viewfull=1#post708455
+       </a>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="UDP">
+        UDP
+       </span>
+      </h2>
+      <p>
+       I have written a wiki on communicating via UDP from one UE4 instance to another here!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       I am sharing my last several hours of research with you in fully functional C++ code format!
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   File Management, Create Folders, Delete Files, and More - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    File Management, Create Folders, Delete Files, and More
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Required_Knowledge">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Required Knowledge
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Using_.2AFString">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Using *FString
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Using_TEXT.28.29_Macro">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             Using TEXT() Macro
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Example_Code">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Example Code
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Verify_or_Create_Directory">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Verify or Create Directory
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Get_File_Size">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             Get File Size
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Moving_.2F_Renaming_File">
+            <span class="tocnumber">
+             3.3
+            </span>
+            <span class="toctext">
+             Moving / Renaming File
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#Delete_File">
+            <span class="tocnumber">
+             3.4
+            </span>
+            <span class="toctext">
+             Delete File
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#Read.2FWrite_to_Files">
+            <span class="tocnumber">
+             3.5
+            </span>
+            <span class="toctext">
+             Read/Write to Files
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-11">
+             <a href="#Text_Files">
+              <span class="tocnumber">
+               3.5.1
+              </span>
+              <span class="toctext">
+               Text Files
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-12">
+             <a href="#Binary_Files">
+              <span class="tocnumber">
+               3.5.2
+              </span>
+              <span class="toctext">
+               Binary Files
+              </span>
+             </a>
+             <ul>
+              <li class="toclevel-4 tocsection-13">
+               <a href="#Writing">
+                <span class="tocnumber">
+                 3.5.2.1
+                </span>
+                <span class="toctext">
+                 Writing
+                </span>
+               </a>
+              </li>
+             </ul>
+            </li>
+            <li class="toclevel-3 tocsection-14">
+             <a href="#Read_from_Binary_Files">
+              <span class="tocnumber">
+               3.5.3
+              </span>
+              <span class="toctext">
+               Read from Binary Files
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-15">
+         <a href="#Create_Directory_Recursively">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Create Directory Recursively
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-16">
+         <a href="#Copy_Directory_Tree">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Copy Directory Tree
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-17">
+         <a href="#Documentation">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Documentation
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-18">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <b>
+        Original Author
+       </b>
+       (
+       )
+      </p>
+      <p>
+       <b>
+        Contributing Author
+       </b>
+       (
+     )
+      </p>
+      <p>
+       The Unreal Engine 4 provides a cross-platform standardization for accessing the file system, i.e. creating, renaming, moving, deleting files and folders and writing to or reading from files.
+      </p>
+      <p>
+       This platform-agnostic file system is referred to as the UFS (Unreal File System)!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Required_Knowledge">
+        Required Knowledge
+       </span>
+      </h2>
+      <p>
+       Before we can get started you need to know how to work with FString's. Most file functions require a TCHAR* argument as the file path. This short section covers the very basics.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Using_.2AFString">
+        Using *FString
+       </span>
+      </h3>
+      <p>
+       FString contains a TArray&lt;TCHAR&gt; which internally stores a TCHAR*. This can be retrieved through
+      </p>
+      <pre> FString MyString;
+ TCHAR* MyTCharArray = *MyString;
+</pre>
+      <h3>
+       <span class="mw-headline" id="Using_TEXT.28.29_Macro">
+        Using TEXT() Macro
+       </span>
+      </h3>
+      <p>
+       The TEXT() macro can be used to create a TCHAR*. The result of TEXT() is not meant for manipulation, it may behave unexpectedly. If you need to manipulate a string literal, it is recommended to construct an FString with this literal and manipulate the FString. Then use the above code to retrieve the manipulated data. Example:
+      </p>
+      <pre> FString ManipulateMe = FString(TEXT("String literal"));
+ ManipulateMe.RemoveAt(6); // Remove the blank
+ TCHAR* ManipulatedData = *ManipulateMe;
+</pre>
+      <h2>
+       <span class="mw-headline" id="Example_Code">
+        Example Code
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Verify_or_Create_Directory">
+        Verify or Create Directory
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//If this function cannot find or create the directory, returns false.</span>
+<span class="k">static</span> <span class="n">FORCEINLINE</span> <span class="kt">bool</span> <span class="nf">VerifyOrCreateDirectory</span><span class="p">(</span><span class="k">const</span> <span class="n">FString</span><span class="o">&amp;</span> <span class="n">TestDir</span><span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="c1">// Every function call, unless the function is inline, adds a small</span>
+	<span class="c1">// overhead which we can avoid by creating a local variable like so.</span>
+	<span class="c1">// But beware of making every function inline!</span>
+	<span class="n">IPlatformFile</span><span class="o">&amp;</span> <span class="n">PlatformFile</span> <span class="o">=</span> <span class="n">FPlatformFileManager</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">GetPlatformFile</span><span class="p">();</span>
+	
+	<span class="c1">// Directory Exists?</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">PlatformFile</span><span class="p">.</span><span class="n">DirectoryExists</span><span class="p">(</span><span class="o">*</span><span class="n">TestDir</span><span class="p">))</span> 
+	<span class="p">{</span>
+		<span class="n">PlatformFile</span><span class="p">.</span><span class="n">CreateDirectory</span><span class="p">(</span><span class="o">*</span><span class="n">TestDir</span><span class="p">);</span>
+		
+		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">PlatformFile</span><span class="p">.</span><span class="n">DirectoryExists</span><span class="p">(</span><span class="o">*</span><span class="n">TestDir</span><span class="p">))</span> 
+		<span class="p">{</span>
+			<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+			<span class="c1">//~~~~~~~~~~~~~~</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Get_File_Size">
+        Get File Size
+       </span>
+      </h3>
+      <p>
+       Note: UE4 standardizes the file paths across platforms. Even on Windows systems regular slashes are used instead of backslashes.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FString</span> <span class="n">AbsoluteFilePath</span> <span class="o">=</span> <span class="s">"E:/MyProject/SaveFiles/Today/SaveFile1.SAV"</span><span class="p">;</span>
+<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">FPlatformFileManager</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">GetPlatformFile</span><span class="p">().</span><span class="n">FileExists</span><span class="p">(</span><span class="o">*</span><span class="n">AbsoluteFilePath</span><span class="p">))</span>
+<span class="p">{</span>
+	<span class="n">UE_LOG</span><span class="p">(....,</span> <span class="s">"Could Not Find File"</span><span class="p">);</span>
+	<span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">const</span> <span class="n">int64</span> <span class="n">FileSize</span> <span class="o">=</span> <span class="n">FPlatformFileManager</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">GetPlatformFile</span><span class="p">().</span><span class="n">FileSize</span><span class="p">(</span><span class="o">*</span><span class="n">AbsoluteFilePath</span><span class="p">);</span>
+
+<span class="n">FString</span> <span class="n">Message</span> <span class="o">=</span> <span class="n">FString</span><span class="o">::</span><span class="n">Printf</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"File size is: %d"</span><span class="p">),</span> <span class="n">FileSize</span><span class="p">);</span>
+<span class="n">UE_LOG</span><span class="p">(...,</span> <span class="o">*</span><span class="n">Message</span><span class="p">);</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Moving_.2F_Renaming_File">
+        Moving / Renaming File
+       </span>
+      </h3>
+      <p>
+       <i>
+        Hint: When simply renaming a file, the path to the file remains the same while simply the file name (the last bit after the final slash "/") changes.
+       </i>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FString</span> <span class="n">AbsoluteSourcePath</span> <span class="o">=</span> <span class="s">"E:/MyProject/SaveFiles/Today/SaveFile1.SAV"</span><span class="p">;</span>
+<span class="n">FString</span> <span class="n">AbsoluteDestinationPath</span> <span class="o">=</span> <span class="s">"E:/MyProject/SaveFiles/Yesterday/SaveFile1.SAV"</span><span class="p">;</span>
+<span class="k">if</span> <span class="p">(</span> <span class="o">!</span> <span class="n">FPlatformFileManager</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">GetPlatformFile</span><span class="p">().</span><span class="n">FileExists</span><span class="p">(</span> <span class="o">*</span><span class="n">AbsoluteSourcePath</span><span class="p">))</span>
+<span class="p">{</span>
+	<span class="n">UE_LOG</span><span class="p">(...,</span> <span class="s">"Could Not Find File"</span><span class="p">);</span>
+	<span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">if</span><span class="p">(</span> <span class="o">!</span> <span class="n">FPlatformFileManager</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">GetPlatformFile</span><span class="p">().</span><span class="n">MoveFile</span><span class="p">(</span><span class="n">AbsoluteDestinationPath</span><span class="p">,</span> <span class="n">AbsoluteSourcePath</span><span class="p">))</span>
+<span class="p">{</span>
+	<span class="n">UE_LOG</span><span class="p">(...,</span> <span class="s">"Could not move file"</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Delete_File">
+        Delete File
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FString</span> <span class="n">AbsoluteFilePath</span> <span class="o">=</span> <span class="s">"E:/MyProject/SaveFiles/Today/SaveFile1.SAV"</span><span class="p">;</span>
+<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">FPlatformFileManager</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">GetPlatformFile</span><span class="p">().</span><span class="n">DeleteFile</span><span class="p">(</span><span class="o">*</span><span class="n">AbsoluteFilePath</span><span class="p">))</span>
+<span class="p">{</span>
+	<span class="n">UE_LOG</span><span class="p">(....,</span> <span class="s">"Could Not Find File"</span><span class="p">);</span>
+	<span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Read.2FWrite_to_Files">
+        Read/Write to Files
+       </span>
+      </h3>
+      <p>
+       If you need to simply read and write strings to a file, UE4 has you covered. Should you require a more specialized solution, you'll need to write your own binary file format.
+      </p>
+      <h4>
+       <span class="mw-headline" id="Text_Files">
+        Text Files
+       </span>
+      </h4>
+      <p>
+       Text files can be easily handled using
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/API/Runtime/Core/Misc/FFileHelper/index.html" rel="nofollow">
+        FFileHelper
+       </a>
+       . Following is an example of how to write to a text file. Reading from a text file is analogous.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FString</span> <span class="n">SaveDirectory</span> <span class="o">=</span> <span class="n">FString</span><span class="p">(</span><span class="s">"C:/Path/To/My/Save/Directory"</span><span class="p">);</span>
+<span class="n">FString</span> <span class="n">FileName</span> <span class="o">=</span> <span class="n">FString</span><span class="p">(</span><span class="s">"MyFileName.sav"</span><span class="p">);</span>
+<span class="n">FString</span> <span class="n">TextToSave</span> <span class="o">=</span> <span class="n">FString</span><span class="p">(</span><span class="s">"Lorem ipsum"</span><span class="p">);</span>
+<span class="kt">bool</span> <span class="n">AllowOverwriting</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+
+<span class="n">IPlatformFile</span><span class="o">&amp;</span> <span class="n">PlatformFile</span> <span class="o">=</span> <span class="n">FPlatformFileManager</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">GetPlatformFile</span><span class="p">();</span>
+
+<span class="c1">// CreateDirectoryTree returns true if the destination</span>
+<span class="c1">// directory existed prior to call or has been created</span>
+<span class="c1">// during the call.</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">PlatformFile</span><span class="p">.</span><span class="n">CreateDirectoryTree</span><span class="p">(</span><span class="o">*</span><span class="n">SaveDirectory</span><span class="p">))</span>
+<span class="p">{</span>
+	<span class="c1">// Get absolute file path</span>
+	<span class="n">FString</span> <span class="n">AbsoluteFilePath</span> <span class="o">=</span> <span class="n">SaveDirectory</span> <span class="o">+</span> <span class="s">"/"</span> <span class="o">+</span> <span class="n">FileName</span><span class="p">;</span>
+	
+	<span class="c1">// Allow overwriting or file doesn't already exist</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">AllowOverwriting</span> <span class="o">||</span> <span class="o">!</span><span class="n">PlatformFile</span><span class="o">::</span><span class="n">FileExists</span><span class="p">(</span><span class="o">*</span><span class="n">AbsoluteFilePath</span><span class="p">))</span>
+	<span class="p">{</span>
+		<span class="n">FFileHelper</span><span class="o">::</span><span class="n">SaveStringToFile</span><span class="p">(</span><span class="n">TextToSave</span><span class="p">,</span> <span class="o">*</span><span class="n">AbsoluteFilePath</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h4>
+       <span class="mw-headline" id="Binary_Files">
+        Binary Files
+       </span>
+      </h4>
+      <p>
+       Binary files cannot be read by normal human beings. They have different purposes and usually are not intended for easy modding. One example would be save files.
+      </p>
+      <p>
+       The same data stored in a binary file uses up different space. For example, when storing "38" as a string, you must store its individual digits as characters: "3" and "8". Storing them as characters in ASCII fills the file with the bytes 0x33 0x38. Storing the number as a binary-formatted byte would fill the file only with 0x26, half the size. Storing it as an integer, however, yields for example 0x00 0x00 0x00 0x26 (depending on system endian). Using an int32 thus would be an improvement if you stored a large number, such as 1,234,567 which would use 7 bytes as an ASCII but only 4 as an int32.
+      </p>
+      <p>
+       Usually any string-formatted data set can be stored in binary format more efficiently at the cost of flexibility and human-readability. Example: XML or JSON. Flexibility is lost simply because data usually is not associated with keys.
+      </p>
+      <h5>
+       <span class="mw-headline" id="Writing">
+        Writing
+       </span>
+      </h5>
+      <p>
+       Since the UE4 functions only support uint8* arrays, you'll surely be exploiting pointers.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">IPlatformFile</span><span class="o">&amp;</span> <span class="n">PlatformFile</span> <span class="o">=</span> <span class="n">FPlatformFileManager</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">GetPlatformFile</span><span class="p">();</span>
+
+<span class="n">IFileHandle</span><span class="o">*</span> <span class="n">FileHandle</span> <span class="o">=</span> <span class="n">PlatformFile</span><span class="p">.</span><span class="n">OpenWrite</span><span class="p">(</span><span class="o">*</span><span class="n">FileName</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span><span class="n">FileHandle</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// Create our byte buffer</span>
+	<span class="n">uint8</span><span class="o">*</span> <span class="n">ByteArray</span> <span class="o">=</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="n">uint8</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">FMemory</span><span class="o">::</span><span class="n">Malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="n">int32</span><span class="p">));</span>
+
+	<span class="c1">// If we were to directly write to the byte buffer, data would likely be lost.</span>
+	<span class="c1">// It is better practice to reinterpret the pointer to the byte buffer you want</span>
+	<span class="c1">// to write to to the type of the data you want to write.</span>
+	<span class="n">int32</span><span class="o">*</span> <span class="n">IntPointer</span> <span class="o">=</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="n">int32</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">ByteArray</span><span class="p">);</span>
+
+	<span class="c1">// Write the integer to the byte buffer</span>
+	<span class="o">*</span><span class="n">IntPointer</span> <span class="o">=</span> <span class="n">MyInteger</span><span class="p">;</span>
+	
+	<span class="c1">// Write the bytes to the file</span>
+	<span class="n">FileHandle</span><span class="o">-&gt;</span><span class="n">Write</span><span class="p">(</span><span class="n">ByteArray</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">int32</span><span class="p">));</span>
+
+	<span class="c1">// Close the file again</span>
+	<span class="k">delete</span> <span class="n">FileHandle</span><span class="p">;</span>
+	
+	<span class="c1">// Free the memory allocated to the byte buffer</span>
+	<span class="n">FMemory</span><span class="o">::</span><span class="n">Free</span><span class="p">(</span><span class="n">ByteArray</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       The above example of course could also be done quickly and easily like so:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">IPlatformFile</span><span class="o">&amp;</span> <span class="n">PlatformFile</span> <span class="o">=</span> <span class="n">FPlatformFileManager</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">GetPlatformFile</span><span class="p">();</span>
+
+<span class="n">IFileHandle</span><span class="o">*</span> <span class="n">FileHandle</span> <span class="o">=</span> <span class="n">PlatformFile</span><span class="p">.</span><span class="n">OpenWrite</span><span class="p">(</span><span class="o">*</span><span class="n">FileName</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span><span class="n">FileHandle</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">int32</span><span class="o">*</span> <span class="n">IntPointer</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">MyInteger</span><span class="p">;</span>
+	<span class="n">uint8</span><span class="o">*</span> <span class="n">ByteBuffer</span> <span class="o">=</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="n">uint8</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">IntPointer</span><span class="p">);</span>
+
+	<span class="c1">// Write the bytes to the file</span>
+	<span class="n">FileHandle</span><span class="o">-&gt;</span><span class="n">Write</span><span class="p">(</span><span class="n">ByteBuffer</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">int32</span><span class="p">));</span>
+
+	<span class="c1">// Close the file again</span>
+	<span class="k">delete</span> <span class="n">FileHandle</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       The former simply is a more generic solution which allows adding more data to a larger byte buffer and flush them all at once while the latter writes a single piece of data at a time.
+      </p>
+      <p>
+       If the above sorcery confuses you, my personal recommendation is to experiment more with pointers and get a deeper understanding of what they are and how they work. Maybe follow Rama's guide to
+       <b>
+       </b>
+       .
+      </p>
+      <p>
+       Following is an alternative way of storing a string in a file.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">IPlatformFile</span><span class="o">&amp;</span> <span class="n">PlatformFile</span> <span class="o">=</span> <span class="n">FPlatformFileManager</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">GetPlatformFile</span><span class="p">();</span>
+
+<span class="n">IFileHandle</span><span class="o">*</span> <span class="n">FileHandle</span> <span class="o">=</span> <span class="n">PlatformFile</span><span class="p">.</span><span class="n">OpenWrite</span><span class="p">(</span><span class="o">*</span><span class="n">FileName</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span><span class="n">FileHandle</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">FString</span> <span class="n">Guid</span> <span class="o">=</span> <span class="n">FString</span><span class="p">(</span>
+		<span class="n">TEXT</span><span class="p">(</span><span class="s">"// This file is written to disk</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+		<span class="n">TEXT</span><span class="p">(</span><span class="s">"// GUID = "</span><span class="p">))</span>
+		<span class="o">+</span> <span class="n">FGuid</span><span class="o">::</span><span class="n">NewGuid</span><span class="p">().</span><span class="n">ToString</span><span class="p">();</span>
+
+	<span class="n">FileHandle</span><span class="o">-&gt;</span><span class="n">Write</span><span class="p">((</span><span class="k">const</span> <span class="n">uint8</span><span class="o">*</span><span class="p">)</span><span class="n">TCHAR_TO_ANSI</span><span class="p">(</span><span class="o">*</span><span class="n">Guid</span><span class="p">),</span> <span class="n">Guid</span><span class="p">.</span><span class="n">Len</span><span class="p">());</span>
+
+	<span class="k">delete</span> <span class="n">FileHandle</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h4>
+       <span class="mw-headline" id="Read_from_Binary_Files">
+        Read from Binary Files
+       </span>
+      </h4>
+      <p>
+       Reading from a binary file works similarly:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">IPlatformFile</span><span class="o">&amp;</span> <span class="n">PlatformFile</span> <span class="o">=</span> <span class="n">FPlatformFileManager</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">GetPlatformFile</span><span class="p">();</span>
+
+<span class="n">IFileHandle</span><span class="o">*</span> <span class="n">FileHandle</span> <span class="o">=</span> <span class="n">PlatformFile</span><span class="p">.</span><span class="n">OpenRead</span><span class="p">(</span><span class="o">*</span><span class="n">FileName</span><span class="p">);</span>
+<span class="k">if</span><span class="p">(</span><span class="n">FileHandle</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// Create a pointer to MyInteger</span>
+	<span class="n">int32</span><span class="o">*</span> <span class="n">IntPointer</span> <span class="o">=</span> <span class="o">&amp;</span><span class="n">MyInteger</span><span class="p">;</span>
+	<span class="c1">// Reinterpret the pointer for the Read function</span>
+	<span class="n">uint8</span><span class="o">*</span> <span class="n">ByteBuffer</span> <span class="o">=</span> <span class="k">reinterpret_cast</span><span class="o">&lt;</span><span class="n">uint8</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">IntPointer</span><span class="p">);</span>
+	
+	<span class="c1">// Read the integer from file into our reinterpret pointer</span>
+	<span class="n">FileHandle</span><span class="o">-&gt;</span><span class="n">Read</span><span class="p">(</span><span class="n">ByteBuffer</span><span class="p">,</span> <span class="k">sizeof</span><span class="p">(</span><span class="n">int32</span><span class="p">));</span>
+
+	<span class="c1">// Because ByteBuffer points directly to MyInteger, it's already been updated at this point</span>
+	<span class="n">GEngine</span><span class="o">-&gt;</span><span class="n">AddOnScreenDebugMessage</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mf">10.f</span><span class="p">,</span> <span class="n">FColor</span><span class="o">::</span><span class="n">Yellow</span><span class="p">,</span> <span class="n">FString</span><span class="o">::</span><span class="n">Printf</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"Read integer is %d"</span><span class="p">),</span> <span class="n">MyInteger</span><span class="p">);</span>
+
+	<span class="c1">// Close the file again</span>
+	<span class="k">delete</span> <span class="n">FileHandle</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Create_Directory_Recursively">
+        Create Directory Recursively
+       </span>
+      </h2>
+      <p>
+       <i>
+        IPlatformFile
+       </i>
+       provides a function
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/API/Runtime/Core/GenericPlatform/IPlatformFile/CreateDirectoryTree/index.html" rel="nofollow">
+        CreateDirectoryTree
+       </a>
+       which can be used to create a directory including all its parent directories should they not exist.
+      </p>
+      <p>
+       (
+       ) has written a guide to implementing such functionality yourself
+       <b>
+       </b>
+       .
+      </p>
+      <h2>
+       <span class="mw-headline" id="Copy_Directory_Tree">
+        Copy Directory Tree
+       </span>
+      </h2>
+      <p>
+       Use CopyDirectoryTree if you want to copy an entire folder tree to another location, with the option to overwrite files at that location!
+      </p>
+      <p>
+       This can be very useful for patching your game or updating local data/documentation files that you ship with your game.
+      </p>
+      <p>
+       (
+       ) submitted the pull request for CopyDirectoryTree early on in the release of UE4
+      </p>
+      <p>
+       Github Pull Request (You must be logged into a UE4-Github linked account to view this)
+       <a class="external free" href="https://github.com/EpicGames/UnrealEngine/pull/27" rel="nofollow">
+        https://github.com/EpicGames/UnrealEngine/pull/27
+       </a>
+      </p>
+      <p>
+       Epic Documentation on
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/API/Runtime/Core/GenericPlatform/IPlatformFile/CopyDirectoryTree/index.html" rel="nofollow">
+        CopyDirectoryTree
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Documentation">
+        Documentation
+       </span>
+      </h2>
+      <p>
+       One source of documentation is
+       <i>
+        GenericPlatformFile.h
+       </i>
+       delivered with the UE4 engine.
+      </p>
+      <p>
+       You will also find the online documentation on IPlatformFile.h
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/API/Runtime/Core/GenericPlatform/IPlatformFile/index.html" rel="nofollow">
+        here
+       </a>
+       helpful.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       With the vast assortment of File IO operations shown in this wiki and found in GenericPlatformFile.h and IPlatformFile.h you have at your disposal the power of the UFS, a platform agnostic FileIO system to make just the kind of game you want!
+      </p>
+      <p>
+       &lt;3
+      </p>
+      <p>
+       Rama
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

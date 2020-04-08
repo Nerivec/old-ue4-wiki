@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   How To Modify Blueprint Variable References In C++ Without Copying - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    How To Modify Blueprint Variable References In C++ Without Copying
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Non-Const_Input_Variable_by_Reference.3F">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Non-Const Input Variable by Reference?
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Example_1:_Increment_Integer_by_Reference">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Example 1: Increment Integer by Reference
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Example_2:_Sort_Integer_Array_by_Reference">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Example 2: Sort Integer Array by Reference
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Example_3:_Sort_Float_Array_by_Reference">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Example 3: Sort Float Array by Reference
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Efficiency_And_Stability">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Efficiency And Stability
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <b>
+        Author
+       </b>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       As you know, if you pass an BP array or other variable reference to C++ by reference, you have to make it const or the variable will appear as an output, not an input!
+      </p>
+      <p>
+       ex:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//This parameter will show as an out parameter because it is a non-const reference</span>
+<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintPure</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"VictoryBPLibrary|Transform"</span><span class="p">)</span>
+<span class="n">FRotator</span> <span class="n">TransformVectorToActorSpaceAngle</span><span class="p">(</span><span class="n">AActor</span><span class="o">*</span> <span class="n">Actor</span><span class="p">,</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">ShouldBeInVector</span><span class="p">);</span>
+</pre>
+      </div>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//In this case InVector will indeed show up as an input parameter because it is const</span>
+<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintPure</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"VictoryBPLibrary|Transform"</span><span class="p">)</span>
+<span class="n">FRotator</span> <span class="n">TransformVectorToActorSpaceAngle</span><span class="p">(</span><span class="n">AActor</span><span class="o">*</span> <span class="n">Actor</span><span class="p">,</span> <span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">InVector</span><span class="p">);</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Non-Const_Input_Variable_by_Reference.3F">
+        Non-Const Input Variable by Reference?
+       </span>
+      </h2>
+      <p>
+       Well what if you want to modify the BP array in C++ and send it back to Blueprints, as is ideal since C++ can do calculations faster than BP?
+      </p>
+      <p>
+       Your team gives you a BP array and wants you to sort it, or modify it, and you should be able to do so without creating a copy of the data just to send it back to blueprints!
+      </p>
+      <p>
+       Well UPARAM(ref) is the solution!
+      </p>
+      <p>
+       I have 3 real-life examples for you!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Example_1:_Increment_Integer_by_Reference">
+        Example 1: Increment Integer by Reference
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/** Easily increment an integer! */</span>
+<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">CompactNodeTitle</span> <span class="o">=</span> <span class="s">"++"</span><span class="p">,</span><span class="n">Keywords</span> <span class="o">=</span> <span class="s">"increment integer"</span><span class="p">),</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"VictoryBPLibrary|Math|Integer"</span><span class="p">)</span>
+<span class="k">static</span> <span class="kt">void</span> <span class="n">VictoryIntIncrement</span><span class="p">(</span><span class="n">UPARAM</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span> <span class="n">int32</span><span class="o">&amp;</span> <span class="n">Int</span><span class="p">,</span> <span class="n">int32</span><span class="o">&amp;</span> <span class="n">IntOut</span><span class="p">);</span>
+
+<span class="c1">//~~~</span>
+
+<span class="kt">void</span> <span class="n">UVictoryBPFunctionLibrary</span><span class="o">::</span><span class="n">VictoryIntIncrement</span><span class="p">(</span><span class="n">UPARAM</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span> <span class="n">int32</span><span class="o">&amp;</span> <span class="n">Int</span><span class="p">,</span> <span class="n">int32</span><span class="o">&amp;</span> <span class="n">IntOut</span><span class="p">)</span>
+<span class="p">{</span>  
+	<span class="n">Int</span><span class="o">++</span><span class="p">;</span>
+	<span class="n">IntOut</span> <span class="o">=</span> <span class="n">Int</span><span class="p">;</span> 
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Example_2:_Sort_Integer_Array_by_Reference">
+        Example 2: Sort Integer Array by Reference
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/** Sort an integer array, smallest value will be at index 0 after sorting. Modifies the input array, no new data created. &lt;3 Rama */</span>
+<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">Keywords</span> <span class="o">=</span> <span class="s">"sort integer array"</span><span class="p">),</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"VictoryBPLibrary|Array"</span><span class="p">)</span>
+<span class="k">static</span> <span class="kt">void</span> <span class="n">VictorySortIntArray</span><span class="p">(</span><span class="n">UPARAM</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">int32</span><span class="o">&gt;&amp;</span> <span class="n">IntArray</span><span class="p">,</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">int32</span><span class="o">&gt;&amp;</span> <span class="n">IntArrayRef</span><span class="p">);</span>
+
+<span class="c1">//~~~</span>
+
+<span class="kt">void</span> <span class="n">UVictoryBPFunctionLibrary</span><span class="o">::</span><span class="n">VictorySortIntArray</span><span class="p">(</span><span class="n">UPARAM</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">int32</span><span class="o">&gt;&amp;</span> <span class="n">IntArray</span><span class="p">,</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">int32</span><span class="o">&gt;&amp;</span> <span class="n">IntArrayRef</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">IntArray</span><span class="p">.</span><span class="n">Sort</span><span class="p">();</span>
+	<span class="n">IntArrayRef</span> <span class="o">=</span> <span class="n">IntArray</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Example_3:_Sort_Float_Array_by_Reference">
+        Example 3: Sort Float Array by Reference
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/** Sort a float array, smallest value will be at index 0 after sorting. Modifies the input array, no new data created. */</span>
+<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">Keywords</span> <span class="o">=</span> <span class="s">"sort float array"</span><span class="p">),</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"VictoryBPLibrary|Array"</span><span class="p">)</span>
+<span class="k">static</span> <span class="kt">void</span> <span class="n">VictorySortFloatArray</span><span class="p">(</span><span class="n">UPARAM</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;&amp;</span> <span class="n">FloatArray</span><span class="p">,</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;&amp;</span> <span class="n">FloatArrayRef</span><span class="p">);</span>
+
+<span class="c1">//~~~</span>
+
+<span class="kt">void</span> <span class="n">UVictoryBPFunctionLibrary</span><span class="o">::</span><span class="n">VictorySortFloatArray</span><span class="p">(</span><span class="n">UPARAM</span><span class="p">(</span><span class="n">ref</span><span class="p">)</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;&amp;</span> <span class="n">FloatArray</span><span class="p">,</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;&amp;</span> <span class="n">FloatArrayRef</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">FloatArray</span><span class="p">.</span><span class="n">Sort</span><span class="p">();</span>
+	<span class="n">FloatArrayRef</span> <span class="o">=</span> <span class="n">FloatArray</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Efficiency_And_Stability">
+        Efficiency And Stability
+       </span>
+      </h2>
+      <p>
+       Because the variables are references rather than hard data, these operations are very efficient, because no new data is being created!
+      </p>
+      <p>
+       The array data is never duplicated, only sorted and a reference to the array passed back out to BP!
+      </p>
+      <p>
+       Yay!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       Now you know how you can perform high-speed calculations on BP variables in C++ and then send the results back to BP in the most efficient and stable way possible: by reference!
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       Rama
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

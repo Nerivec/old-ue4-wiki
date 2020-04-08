@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Third Party Socket Server Connection - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Third Party Socket Server Connection
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       We’ve been quietly working on our new game here at OSnap! Games and one of the features our new game will include is a lobby system where all players can chat among one another. The UE4 dedicated server is great for a game server but it’s overkill for something as simple as a chat server so we set out to get UE4 connecting to a third party socket server.
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1">
+         <a href="#Creating_the_Socket">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Creating the Socket
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1">
+         <a href="#Preparing_the_Address">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Preparing the Address
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1">
+         <a href="#Sending_a_Message">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Sending a Message
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1">
+         <a href="#Dependency_in_Build.cs">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Dependency in Build.cs
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Creating_the_Socket">
+        Creating the Socket
+       </span>
+      </h3>
+      <p>
+       The first step in getting UE4 connected to a third party server is initializing a socket.
+      </p>
+      <p>
+      </p>
+      <pre>FSocket* Socket = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)-&gt;CreateSocket(NAME_Stream, TEXT("default"), false);</pre>
+      <p>
+      </p>
+      <p>
+       The parameters are as follows
+      </p>
+      <ol>
+       <li>
+        Type
+       </li>
+       <li>
+        Description
+       </li>
+       <li>
+        ForceUDP
+       </li>
+      </ol>
+      <p>
+       In our case we're connecting using TCP so we've set ForceUDP to false.
+      </p>
+      <p>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Preparing_the_Address">
+        Preparing the Address
+       </span>
+      </h3>
+      <p>
+       The next part is getting the address you wish to connect to ready. Epic provides the tools to get this done quickly.
+      </p>
+      <pre>FIPv4Address ip(127, 0, 0, 1);
+
+TSharedRef&lt;FInternetAddr&gt; addr = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM)-&gt;CreateInternetAddr();
+addr-&gt;SetIp(ip.Value);
+addr-&gt;SetPort(7776);
+</pre>
+      <p>
+      </p>
+      <p>
+       Now that your address is ready to go you simply have to tell UE4 to start the connection.
+      </p>
+      <p>
+      </p>
+      <pre>bool connected = Socket-&gt;Connect(*addr);</pre>
+      <p>
+       If connected is true you've successfully connected to your socket server!
+      </p>
+      <p>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Sending_a_Message">
+        Sending a Message
+       </span>
+      </h3>
+      <p>
+       Alright, so you're connected but how do you send messages to it? A lot of that is up to you. Depending on your server there are different ways to serialize and send a message. The important part though is how does UE4 handle it.
+      </p>
+      <p>
+       First things first, we must prepare the message to be sent.
+      </p>
+      <pre>FString serialized = TEXT("loadPlayer|1");
+TCHAR *serializedChar = serialized.GetCharArray().GetData();
+int32 size = FCString::Strlen(serializedChar);
+int32 sent = 0;
+</pre>
+      <p>
+      </p>
+      <p>
+       What's going on in the above? We're sending a message to a socket server with the type "loadPlayer" and a single parameter of 1. What is happening in UE4 here is we're taking an FString, and turning it into a TCHAR*.
+      </p>
+      <p>
+       Finally, with the message formatted we can send it to our server!
+      </p>
+      <p>
+      </p>
+      <pre>bool successful = Socket-&gt;Send((uint8*)TCHAR_TO_UTF8(serializedChar), size, sent);</pre>
+      <p>
+      </p>
+      <p>
+       Sending data in UE4 requires it to be a uint8* and again, Epic provides the tools to get from TCHAR* to UTF8 which can be sent as a uint8*.
+      </p>
+      <p>
+       As far as reading data back from your socket server the key is in the functions
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/API/Runtime/Sockets/FSocket/HasPendingData/index.html" rel="nofollow">
+        HasPendingData
+       </a>
+       and
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/API/Runtime/Sockets/FSocket/Recv/index.html" rel="nofollow">
+        Recv
+       </a>
+       of the
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/API/Runtime/Sockets/FSocket/index.html" rel="nofollow">
+        FSocket
+       </a>
+       class.
+      </p>
+      <p>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Dependency_in_Build.cs">
+        Dependency in Build.cs
+       </span>
+      </h3>
+      <p>
+       One final thing to take note of. Inside your project's Build.cs file you'll need to add the "Sockets" package as a dependency in PublicDependencyModuleNames.
+      </p>
+      <p>
+      </p>
+      <pre>PublicDependencyModuleNames.AddRange(
+   new string[]
+   {
+      "Core",
+      "CoreUObject",
+      "Engine",
+      "Sockets"
+   }
+);
+</pre>
+      <p>
+       Reposted from
+       <a class="external free" href="http://www.osnapgames.com/2014/05/24/connecting-to-a-third-party-socket-server-in-unreal-engine-4/" rel="nofollow">
+        http://www.osnapgames.com/2014/05/24/connecting-to-a-third-party-socket-server-in-unreal-engine-4/
+       </a>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

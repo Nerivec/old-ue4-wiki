@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   How To Send Game Logs To Custom Files &amp; Log Without Console Window - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    How To Send Game Logs To Custom Files &amp; Log Without Console Window
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Log_to_any_custom_file">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Log to any custom file
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Logging_Silently.2C_No_Console_Window">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Logging Silently, No Console Window
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Losing_Valuable_Log_Data">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Losing Valuable Log Data
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <b>
+        Author:
+       </b>
+       (
+       )
+      </p>
+      <p>
+       In this wiki I explain how you can write to custom logs and also write silently without having the console log open itself when the game starts!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Log_to_any_custom_file">
+        Log to any custom file
+       </span>
+      </h2>
+      <p>
+       To log to any custom file name that will appear in Saved/Logs, simply add this to your commandline when launching the game:
+      </p>
+      <pre> -log LOG=MyGameLog.txt
+</pre>
+      <p>
+       This will still open the console window, but will write to the file of your choosing, overwriting any previous contents.
+      </p>
+      <p>
+       The great part about this is if you routinely test multiplayer, you can easily delineate the logs of different clients in a way that makes sense to you, using different commandlines for each instance.
+      </p>
+      <pre> -log LOG=Client1.txt
+</pre>
+      <pre> -log LOG=Client2.txt
+</pre>
+      <pre> -log LOG="Server.txt"
+</pre>
+      <h2>
+       <span class="mw-headline" id="Logging_Silently.2C_No_Console_Window">
+        Logging Silently, No Console Window
+       </span>
+      </h2>
+      <p>
+       If you want to log but dont want to distract your user with the console log popping up all the time, you can add this switch:
+      </p>
+      <pre> -silent
+</pre>
+      <p>
+       so now you have:
+      </p>
+      <pre> -silent LOG=MyGameLog.txt
+</pre>
+      <p>
+       You dont have to include -log in this case.
+      </p>
+      <p>
+       In fact omitting -log and just using LOG= seems to work the same as -silent as far as I can tell.
+      </p>
+      <p>
+       It is -log that causes the console window to open.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Losing_Valuable_Log_Data">
+        Losing Valuable Log Data
+       </span>
+      </h2>
+      <p>
+       Please note that when you specify the name, it will overwrite previous log files, so if the user generates important log info but then plays again before telling you what happened, the log that occurred during the crash will be lost already.
+      </p>
+      <p>
+       To avoid this you can use -silent without specifying a name
+      </p>
+      <pre> -silent
+</pre>
+      <p>
+       This also appears to be the default behavior if you do not include any logging specifications on the commandline.
+      </p>
+      <p>
+       So the best use of specific log naming is for your own iterative testing where you expect to only want the latest logs :)
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   UMG, Referencing UMG Widgets in Code - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    UMG, Referencing UMG Widgets in Code
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <br/>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1">
+         <a href="#Overview:_.28Tested_in_4.7.5.29">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview: (Tested in 4.7.5)
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1">
+         <a href="#Here_is_the_situation:">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Here is the situation:
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1">
+         <a href="#The_next_part_of_this_post_will_cover:">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           The next part of this post will cover:
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1">
+         <a href="#Prepare_Project:">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Prepare Project:
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2">
+           <a href="#1._Create_New_Map:">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             1. Create New Map:
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2">
+           <a href="#2._Create_C.2B.2B_PlayerController_Class:">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             2. Create C++ PlayerController Class:
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2">
+           <a href="#3._Create_UMG_Widget:">
+            <span class="tocnumber">
+             4.3
+            </span>
+            <span class="toctext">
+             3. Create UMG Widget:
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2">
+           <a href="#4._Create_GameMode_and_PlayerController_Blueprints:">
+            <span class="tocnumber">
+             4.4
+            </span>
+            <span class="toctext">
+             4. Create GameMode and PlayerController Blueprints:
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1">
+         <a href="#Visual_Studio:">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Visual Studio:
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2">
+           <a href="#1._Adding_Modules:">
+            <span class="tocnumber">
+             5.1
+            </span>
+            <span class="toctext">
+             1. Adding Modules:
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2">
+           <a href="#2._PlayerController:">
+            <span class="tocnumber">
+             5.2
+            </span>
+            <span class="toctext">
+             2. PlayerController:
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1">
+         <a href="#Testing">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Testing
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview:_.28Tested_in_4.7.5.29">
+        <strong>
+         Overview: (Tested in 4.7.5)
+        </strong>
+       </span>
+      </h2>
+      <p>
+       <i>
+        Author:
+       </i>
+       (
+     )
+       <br/>
+      </p>
+      <p>
+       This is my first contribution to the Unreal awesome community I hope you find it useful especially for newcomers.
+While I am coding in C++ I always keep in mind that I am not working alone in the project and there is some people is doing stuff with me and I need to use their content in the project.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Here_is_the_situation:">
+        <strong>
+         Here is the situation:
+        </strong>
+       </span>
+      </h2>
+      <p>
+       An artist is working on the UI using UMG and he made some fancy Widget And now it comes the part where I need to create this widget in C++ and have reference for it so I can use it in future.
+      </p>
+      <h2>
+       <span class="mw-headline" id="The_next_part_of_this_post_will_cover:">
+        <strong>
+         The next part of this post will cover:
+        </strong>
+       </span>
+      </h2>
+      <ol>
+       <li>
+        How to Make a UMG widget blueprint in the Editor.
+        <br/>
+       </li>
+       <li>
+        Create and add to viewport using C++.
+        <br/>
+       </li>
+       <li>
+        Have a reference to it in a Variable for future use.
+        <br/>
+       </li>
+       <li>
+        Add the widget to the viewport.
+        <br/>
+       </li>
+      </ol>
+      <h2>
+       <span class="mw-headline" id="Prepare_Project:">
+        <strong>
+         Prepare Project:
+        </strong>
+       </span>
+      </h2>
+      <p>
+       First lets create new blank project based on C++ and call it whatever you like.
+       <br/>
+       Then make this folder hierarchy:
+       <br/>
+      </p>
+      <ol>
+       <li>
+        Content Folder.
+        <br/>
+       </li>
+       <li>
+        Maps Folder -&gt; Create new Blank Map.
+        <br/>
+       </li>
+       <li>
+        Blueprints Folder -&gt; Widgets Folder.
+        <br/>
+       </li>
+      </ol>
+      <h3>
+       <span class="mw-headline" id="1._Create_New_Map:">
+        <strong>
+         1. Create New Map:
+        </strong>
+       </span>
+      </h3>
+      <p>
+       Create new blank map and I called mine "MainMenu" and don't forget to save it.
+       <br/>
+      </p>
+      <p>
+       <br/>
+       <img alt="CreatNewMap.png" class="" height="377" src="../assets/umg-referencing-umg-widgets-in-code/0.png" width="700"/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="2._Create_C.2B.2B_PlayerController_Class:">
+        <strong>
+         2. Create C++ PlayerController Class:
+        </strong>
+       </span>
+      </h3>
+      <p>
+       Go To C++ Classes Folder-&gt;MyProject
+       <br/>
+       And Create new C++ PlayerController Class Call it “MyPlayerController”
+      </p>
+      <p>
+       <br/>
+       <img alt="CreatePC.png" class="" height="376" src="../assets/umg-referencing-umg-widgets-in-code/1.png" width="700"/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="3._Create_UMG_Widget:">
+        <strong>
+         3. Create UMG Widget:
+        </strong>
+       </span>
+      </h3>
+      <p>
+       Now Go to Blueprints Folder -&gt; Widgets Folder.
+And create new Widget Blueprint Call it “MainMenu”.
+      </p>
+      <p>
+       <br/>
+       <img alt="CreateNewWidgetUMG.png" class="" height="378" src="../assets/umg-referencing-umg-widgets-in-code/2.png" width="700"/>
+      </p>
+      <p>
+       <br/>
+       Open the “MainMenu” widget and let's make a button Called “QuitBTN”
+then assign onClicked Event
+      </p>
+      <p>
+       <br/>
+       <img alt="CreateBTN.png" class="" height="376" src="../assets/umg-referencing-umg-widgets-in-code/3.png" width="700"/>
+      </p>
+      <p>
+       <br/>
+       and do the following
+      </p>
+      <p>
+       <img alt="QuitBTN.png" class="" height="265" src="../assets/umg-referencing-umg-widgets-in-code/4.png" width="700"/>
+      </p>
+      <p>
+       <br/>
+       now we have ready widget with a button that exit the game on clicked using Blueprints.
+      </p>
+      <h3>
+       <span class="mw-headline" id="4._Create_GameMode_and_PlayerController_Blueprints:">
+        <strong>
+         4. Create GameMode and PlayerController Blueprints:
+        </strong>
+       </span>
+      </h3>
+      <p>
+       We need to create 2 more Blueprints and we are done from the editor for now.
+       <br/>
+      </p>
+      <ol>
+       <li>
+        Create Game Mode Blueprint “BP_GameMode” Based on ProjectNameGameMode.
+        <br/>
+       </li>
+       <li>
+        Create Player Controller Blueprint “BP_PlayerController” Based on PlayerController Class we created earlier.
+        <br/>
+       </li>
+      </ol>
+      <p>
+       <img alt="PCandGM.png" class="" height="399" src="../assets/umg-referencing-umg-widgets-in-code/5.png" width="400"/>
+      </p>
+      <p>
+       <br/>
+       <img alt="PCandGM2.png" class="" height="314" src="../assets/umg-referencing-umg-widgets-in-code/6.png" width="700"/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Visual_Studio:">
+        <strong>
+         Visual Studio:
+        </strong>
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="1._Adding_Modules:">
+        <strong>
+         1. Adding Modules:
+        </strong>
+       </span>
+      </h3>
+      <p>
+       in order to use UMG in C++ you need to Add the following Modules in
+ProjectNameBuild.CS file
+      </p>
+      <p>
+       <code>
+        "UMG", "Slate", "SlateCore
+       </code>
+      </p>
+      <p>
+       In this line:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//ProjectNameBuild.CS</span>
+
+<span class="n">PublicDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">[]</span> <span class="p">{</span> <span class="s">"Core"</span><span class="p">,</span> <span class="s">"CoreUObject"</span><span class="p">,</span> <span class="s">"Engine"</span><span class="p">,</span> <span class="s">"InputCore"</span><span class="p">,</span> <span class="s">"UMG"</span><span class="p">,</span> <span class="s">"Slate"</span><span class="p">,</span> <span class="s">"SlateCore"</span> <span class="p">});</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="2._PlayerController:">
+        <strong>
+         2. PlayerController:
+        </strong>
+       </span>
+      </h3>
+      <p>
+       Open your MyPlayerController.h
+       <br/>
+       and we will make some variables and overriding the BeginPlay() function.
+       <br/>
+       PS: Better to add our widget reference to a
+       .
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//MyPlayerController.h</span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">MYPROJECT_API</span> <span class="nl">AMyPlayerController</span> <span class="p">:</span> <span class="k">public</span> <span class="n">APlayerController</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+
+<span class="k">public</span><span class="o">:</span>
+	<span class="c1">// Note: that I am using forward declaration Because I am not including the</span>
+	<span class="c1">// widget in the header and to prevent circular dependency.</span>
+	<span class="c1">// You don't need to do that if you include the Widget Class in the .h</span>
+	<span class="c1">// Forward declaration is just putting "class" before the class name so the compiler know it's a</span>
+	<span class="c1">// class but it's not included in the header and don't freak out. Ex. “class UUserWidget”</span>
+
+	<span class="c1">// Reference UMG Asset in the Editor</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Widgets"</span><span class="p">)</span>
+	<span class="n">TSubclassOf</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">UUserWidget</span><span class="o">&gt;</span> <span class="n">wMainMenu</span><span class="p">;</span>
+
+	<span class="c1">// Variable to hold the widget After Creating it.</span>
+	<span class="n">UUserWidget</span><span class="o">*</span> <span class="n">MyMainMenu</span><span class="p">;</span>
+
+	<span class="c1">// Override BeginPlay()</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">BeginPlay</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       open your MyPlayerController.cpp
+      </p>
+      <p>
+       include this file to your cpp
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//MyPlayerController.cpp</span>
+
+
+<span class="c1">// include</span>
+<span class="cp">#include</span> <span class="cpf">"Blueprint/UserWidget.h"</span><span class="cp"></span>
+</pre>
+      </div>
+      <p>
+       BeginPlay() Function
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//MyPlayerController.cpp</span>
+
+
+<span class="kt">void</span> <span class="n">AMyPlayerController</span><span class="o">::</span><span class="n">BeginPlay</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">BeginPlay</span><span class="p">();</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">wMainMenu</span><span class="p">)</span> <span class="c1">// Check if the Asset is assigned in the blueprint.</span>
+	<span class="p">{</span>
+		<span class="c1">// Create the widget and store it.</span>
+		<span class="n">MyMainMenu</span> <span class="o">=</span> <span class="n">CreateWidget</span><span class="o">&lt;</span><span class="n">UUserWidget</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">wMainMenu</span><span class="p">);</span>
+
+		<span class="c1">// now you can use the widget directly since you have a referance for it.</span>
+		<span class="c1">// Extra check to  make sure the pointer holds the widget.</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">MyMainMenu</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="c1">//let add it to the view port</span>
+			<span class="n">MyMainMenu</span><span class="o">-&gt;</span><span class="n">AddToViewport</span><span class="p">();</span>
+		<span class="p">}</span>
+
+		<span class="c1">//Show the Cursor.</span>
+		<span class="n">bShowMouseCursor</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+	<span class="p">}</span>
+
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Testing">
+        <strong>
+         Testing
+        </strong>
+       </span>
+      </h2>
+      <p>
+       Now Open the Editor and Go to world Setting and assign our BP_GameMode As the Current Game Mode for the Level.
+      </p>
+      <p>
+       <br/>
+       <img alt="WorldSettingsChange.png" class="" height="374" src="../assets/umg-referencing-umg-widgets-in-code/7.png" width="700"/>
+      </p>
+      <p>
+       <br/>
+       and use our early created “BP_PlayerController” As the Active Controller.
+      </p>
+      <p>
+       <br/>
+       <img alt="AssignPC.png" class="" height="432" src="../assets/umg-referencing-umg-widgets-in-code/8.png" width="400"/>
+      </p>
+      <p>
+       <br/>
+       Open the “BP_PlayerController” and Assign the widget.
+      </p>
+      <p>
+       <br/>
+       <img alt="AssignWidget.png" class="" height="397" src="../assets/umg-referencing-umg-widgets-in-code/9.png" width="400"/>
+      </p>
+      <p>
+       <br/>
+       Press Play and Hurrray we have our Menu Shown.
+      </p>
+      <p>
+       <br/>
+       <img alt="FinalResult.png" class="" height="477" src="../assets/umg-referencing-umg-widgets-in-code/10.png" width="700"/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        <strong>
+         Conclusion
+        </strong>
+       </span>
+      </h2>
+      <p>
+       Now we are done and you have a working widget that you can control from C++ Code you can add more functionality and control your menu flow from code whenever you need.
+      </p>
+      <p>
+       From here you can extend your UMG Widgets the same way following this awesome tutorial By WCode:
+      </p>
+      <p>
+      </p>
+      <p>
+       Posted By
+     (
+     )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

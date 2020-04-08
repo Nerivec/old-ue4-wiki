@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Simple Spline-based Character Patrolling - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Simple Spline-based Character Patrolling
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="floatleft">
+       <img alt="Spline00.jpg" class="" height="432" src="../assets/simple-spline-based-character-patrolling/0.jpg" width="952"/>
+      </div>
+      <p>
+       <b>
+        <a class="external text" href="https://twitter.com/DrWhoppo/status/802577241754468352" rel="nofollow">
+         Click for an animated example
+        </a>
+       </b>
+      </p>
+      <div class="floatright">
+       <img alt="Spline01.jpeg" class="" height="278" src="../assets/simple-spline-based-character-patrolling/1.jpeg" width="249"/>
+      </div>
+      <p>
+       This tutorial will show you how to create a character who will navigate along a path set by a spline.
+      </p>
+      <p>
+       First, add a
+       <b>
+        Spline component
+       </b>
+       to your character.
+      </p>
+      <p>
+       With your character selected in the world editor, you can edit a spline by clicking on and moving the points. Hold [
+       <b>
+        alt
+       </b>
+       ] while moving a point to create a new one.
+      </p>
+      <p>
+       In your
+       <b>
+        Construction Script
+       </b>
+       , detach the
+       <b>
+        Spline
+       </b>
+       from your character with the
+       <b>
+        DetachFromComponent
+       </b>
+       node. This will keep the spline in place while your character moves around.
+      </p>
+      <p>
+       Select your
+       <b>
+        Spline
+       </b>
+       and from the Details tab, tick the
+       <b>
+        Closed Loop
+       </b>
+       option to join up the start and end points.
+      </p>
+      <table class="wikitable">
+       <tbody>
+        <tr>
+         <th colspan="3">
+          Variables
+         </th>
+        </tr>
+        <tr>
+         <th>
+          Name
+         </th>
+         <th>
+          Type
+         </th>
+         <th>
+          Description
+         </th>
+        </tr>
+        <tr>
+         <td>
+          Distance
+         </td>
+         <td>
+          Float
+         </td>
+         <td>
+          How far along the spline you are
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Target Location
+         </td>
+         <td>
+          Vector
+         </td>
+         <td>
+          The next point that the character will try to reach
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Patrol Speed
+         </td>
+         <td>
+          Float
+         </td>
+         <td>
+          How fast you want the target location to move along the spline (Default: 150)
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Patrol Handle
+         </td>
+         <td>
+          Timer Handle
+         </td>
+         <td>
+          Used to control the timer responsible for triggering the movement.
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <div class="floatleft">
+       <img alt="Spline04.jpg" class="" height="283" src="../assets/simple-spline-based-character-patrolling/2.jpg" width="999"/>
+      </div>
+      <p>
+       <b>
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/BlueprintAPI/AI/Navigation/SimpleMovetoLocation/index.html" rel="nofollow">
+         Simple Move to Location
+        </a>
+       </b>
+       is the most basic way to drive your character.
+      </p>
+      <p>
+       Get the
+       <i>
+        World
+       </i>
+       location of the spline at the current
+       <i>
+        Distance
+       </i>
+       , this will be the point that your character tries to reach next.
+      </p>
+      <p>
+       Create a
+       <i>
+        custom event
+       </i>
+       to store this value in your
+       <i>
+        Target Location
+       </i>
+       variable, and to trigger the character to move.
+      </p>
+      <div class="center">
+       <div class="floatnone">
+        <img alt="Spline05.jpg" class="" height="291" src="../assets/simple-spline-based-character-patrolling/3.jpg" width="631"/>
+       </div>
+      </div>
+      <p>
+       You will need to start a
+       <i>
+        Looping
+       </i>
+       <b>
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/Gameplay/HowTo/UseTimers/Blueprints/" rel="nofollow">
+         Timer
+        </a>
+       </b>
+       to repeatedly call your new event. This can be done with the
+       <b>
+        BeginPlay
+       </b>
+       event if you want the character to begin patrolling immediately, or selectively done only when/if you want the behaviour to start.
+      </p>
+      <p>
+       Storing the
+       <b>
+        Handle
+       </b>
+       as a variable allows us to easily pause/resume the timer when we want to toggle the patrolling (for example if they see the player and should chase them instead)
+      </p>
+      <div class="floatleft">
+       <img alt="Spline06.jpg" class="" height="373" src="../assets/simple-spline-based-character-patrolling/4.jpg" width="999"/>
+      </div>
+      <p>
+       When the
+       <b>
+        Timer
+       </b>
+       ticks,
+       <i>
+        Patrol Speed
+       </i>
+       is added to
+       <i>
+        Distance
+       </i>
+       to move it along the spline over time. If
+       <i>
+        Distance
+       </i>
+       becomes bigger than the length of the spline, they are subtracted from one another to bring
+       <i>
+        Distance
+       </i>
+       back into range.
+      </p>
+      <p>
+       And that should do it.
+      </p>
+      <p>
+       If your character doesn't move, make sure it and potential target points are within a
+       <b>
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/AI/BehaviorTrees/QuickStart/2/" rel="nofollow">
+         Navmesh
+        </a>
+       </b>
+      </p>
+      <p>
+       If your character frequently stops, your
+       <i>
+        Patrol Speed
+       </i>
+       may be too low. Use a
+       <b>
+        Draw Debug Line
+       </b>
+       node to check where your
+       <i>
+        Target Location
+       </i>
+       is at each step. I use a value of ~150, but it will depend how fast your character moves.
+      </p>
+      <p>
+       If you find your spline remains attached to the character, recompile/save the blueprint.
+      </p>
+      <p>
+      </p>
+      <p>
+       Thanks for reading.
+      </p>
+      <p>
+       Original Author:
+       <b>
+       </b>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

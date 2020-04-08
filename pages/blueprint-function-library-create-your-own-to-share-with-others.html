@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Blueprint Function Library, Create Your Own to Share With Others - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Blueprint Function Library, Create Your Own to Share With Others
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Blueprint_Function_Libraries">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Blueprint Function Libraries
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#My_Blueprint_Node_for_Saving_Text_To_Any_File_in_Any_Directory">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           My Blueprint Node for Saving Text To Any File in Any Directory
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Entire_C.2B.2B_Code">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Entire C++ Code
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#.h">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             .h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#.cpp">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             .cpp
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       In this code sample:
+      </p>
+      <p>
+       1. How to create new blueprint nodes that you can access from ANY blueprint in your project without any interfaces
+      </p>
+      <p>
+       2. How to
+       <b>
+        create a set of blueprint functions that you can share with the whole Community
+       </b>
+       and have it be easy for others to integrate your BP library with their project
+      </p>
+      <p>
+       3. My code for a BP function to save any text you want to any file in any directory on your computer. My code creates the directory for you if it does not exist at time of saving :)
+      </p>
+      <p>
+       <img alt="SaveTextToHardDisk.jpg" class="" height="617" src="../assets/blueprint-function-library-create-your-own-to-share-with-others/0.jpg" width="817"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Blueprint_Function_Libraries">
+        Blueprint Function Libraries
+       </span>
+      </h2>
+      <p>
+       Creating your own Blueprint library of static functions that you can call from
+       <b>
+        any blueprint you want
+       </b>
+       in any project you want is amazingly easy!
+      </p>
+      <p>
+       You just put all your static functions into a single class!
+      </p>
+      <p>
+       Below is my entire working code for what you see in the pictures below, of my very own first two functions in my own Blueprint library.
+      </p>
+      <p>
+       The power of what I am showing you is that you can take my code, copy it into your own project, and then access these same functions from any blueprint you want!
+      </p>
+      <p>
+       So in this way we can create a whole additional library of functions for UE4 Blueprint users!
+      </p>
+      <h2>
+       <span class="mw-headline" id="My_Blueprint_Node_for_Saving_Text_To_Any_File_in_Any_Directory">
+        My Blueprint Node for Saving Text To Any File in Any Directory
+       </span>
+      </h2>
+      <p>
+       The function you might actually want to use from my code below is the Blueprint node to save any text you want to any file you want anywhere on your harddrive.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Entire_C.2B.2B_Code">
+        Entire C++ Code
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id=".h">
+        .h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2013 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"VictoryBPFunctionLibrary.generated.h"</span><span class="cp"></span>
+
+<span class="c1">//above name must match the name on your hard disk for this .h file</span>
+
+<span class="c1">//note about UBlueprintFunctionLibrary</span>
+<span class="c1">// This class is a base class for any function libraries exposed to blueprints.</span>
+<span class="c1">// Methods in subclasses are expected to be static</span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">UVictoryBPFunctionLibrary</span> <span class="o">:</span> <span class="k">public</span> <span class="n">UBlueprintFunctionLibrary</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+	
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="s">"VictoryBPLibrary"</span><span class="p">)</span>
+	<span class="k">static</span> <span class="n">FString</span> <span class="n">GetHappyMessage</span><span class="p">();</span>
+	
+	<span class="cm">/** Saves text to filename of your choosing, make sure include whichever file extension you want in the filename, ex: SelfNotes.txt . Make sure to include the entire file path in the save directory, ex: C:\MyGameDir\BPSavedTextFiles */</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="s">"VictoryBPLibrary"</span><span class="p">)</span>
+	<span class="k">static</span> <span class="kt">bool</span> <span class="n">SaveStringTextToFile</span><span class="p">(</span><span class="n">FString</span> <span class="n">SaveDirectory</span><span class="p">,</span> <span class="n">FString</span> <span class="n">FileName</span><span class="p">,</span> <span class="n">FString</span> <span class="n">SaveText</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">AllowOverWriting</span> <span class="o">=</span> <span class="nb">false</span><span class="p">);</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id=".cpp">
+        .cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2013 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#include</span> <span class="cpf">"VictoryGame.h"</span><span class="cp"></span>
+
+<span class="c1">//Change the above to YourGameName.h, </span>
+<span class="c1">//the same line you see in all your .cpp files</span>
+
+<span class="c1">//////////////////////////////////////////////////////////////////////////</span>
+<span class="c1">// UVictoryBPFunctionLibrary</span>
+
+<span class="n">UVictoryBPFunctionLibrary</span><span class="o">::</span><span class="n">UVictoryBPFunctionLibrary</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="p">{</span>
+	
+<span class="p">}</span>
+
+<span class="c1">//Happy Message</span>
+<span class="n">FString</span> <span class="n">UVictoryBPFunctionLibrary</span><span class="o">::</span><span class="n">GetHappyMessage</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">FString</span><span class="p">(</span><span class="s">"Victory! Victory BP Library Works!"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">UVictoryBPFunctionLibrary</span><span class="o">::</span><span class="n">SaveStringTextToFile</span><span class="p">(</span>
+	<span class="n">FString</span> <span class="n">SaveDirectory</span><span class="p">,</span> 
+	<span class="n">FString</span> <span class="n">FileName</span><span class="p">,</span> 
+	<span class="n">FString</span> <span class="n">SaveText</span><span class="p">,</span>
+	<span class="kt">bool</span> <span class="n">AllowOverWriting</span>
+<span class="p">){</span>
+	<span class="c1">//GFileManager?</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">GFileManager</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+	
+	<span class="c1">//Dir Exists?</span>
+	<span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="n">GFileManager</span><span class="o">-&gt;</span><span class="n">DirectoryExists</span><span class="p">(</span> <span class="o">*</span><span class="n">SaveDirectory</span><span class="p">))</span>
+	<span class="p">{</span>
+		<span class="c1">//create directory if it not exist</span>
+		<span class="n">GFileManager</span><span class="o">-&gt;</span><span class="n">MakeDirectory</span><span class="p">(</span> <span class="o">*</span><span class="n">SaveDirectory</span><span class="p">);</span>
+		
+		<span class="c1">//still could not make directory?</span>
+		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">GFileManager</span><span class="o">-&gt;</span><span class="n">DirectoryExists</span><span class="p">(</span> <span class="o">*</span><span class="n">SaveDirectory</span><span class="p">))</span>
+		<span class="p">{</span>
+			<span class="c1">//Could not make the specified directory</span>
+			<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+			<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	
+	<span class="c1">//get complete file path</span>
+	<span class="n">SaveDirectory</span> <span class="o">+=</span> <span class="s">"</span><span class="se">\\</span><span class="s">"</span><span class="p">;</span>
+	<span class="n">SaveDirectory</span> <span class="o">+=</span> <span class="n">FileName</span><span class="p">;</span>
+	
+	<span class="c1">//No over-writing?</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">AllowOverWriting</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//Check if file exists already</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">GFileManager</span><span class="o">-&gt;</span><span class="n">GetFileAgeSeconds</span><span class="p">(</span> <span class="o">*</span> <span class="n">SaveDirectory</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> 
+		<span class="p">{</span>
+			<span class="c1">//no overwriting</span>
+			<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	
+	<span class="k">return</span> <span class="n">FFileHelper</span><span class="o">::</span><span class="n">SaveStringToFile</span><span class="p">(</span><span class="n">SaveText</span><span class="p">,</span> <span class="o">*</span> <span class="n">SaveDirectory</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <p>
+       <b>
+        Enjoy!
+       </b>
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

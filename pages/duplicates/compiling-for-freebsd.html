@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Compiling For FreeBSD - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Compiling For FreeBSD
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Why_cross-compilation">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Why cross-compilation
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Getting_the_source">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Getting the source
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Getting_the_toolchain_and_dependencies">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Getting the toolchain and dependencies
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Using_the_toolchain">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Using the toolchain
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Setup">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             Setup
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Packaging">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             Packaging
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Why_cross-compilation">
+        Why cross-compilation
+       </span>
+      </h2>
+      <p>
+       As required libraries for the editor are not available on FreeBSD, it is not possible to compile or use the editor natively. Cross-compilation for FreeBSD works similarly to cross-compilation for
+       . The cross-compilation toolchain is currently targeted for FreeBSD 11.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Getting_the_source">
+        Getting the source
+       </span>
+      </h2>
+      <p>
+       The FreeBSD fork resides in an external repository at
+       <a class="external free" href="https://github.com/UE4-FreeBSD/UE4-FreeBSD" rel="nofollow">
+        https://github.com/UE4-FreeBSD/UE4-FreeBSD
+       </a>
+       . The FreeBSD code is located in the release_freebsd branch. To get the source use the following command.
+       <br/>
+      </p>
+      <p>
+       <code>
+        git clone -b release_freebsd
+        <a class="external free" href="https://github.com/UE4-FreeBSD/UE4-FreeBSD.git" rel="nofollow">
+         https://github.com/UE4-FreeBSD/UE4-FreeBSD.git
+        </a>
+       </code>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Getting_the_toolchain_and_dependencies">
+        Getting the toolchain and dependencies
+       </span>
+      </h2>
+      <p>
+       The cross-compilation toolchain for Windows and precompiled dependencies for FreeBSD can be downloaded from the latest -freebsd release on the releases page of the FreeBSD repository at
+       <a class="external free" href="https://github.com/UE4-FreeBSD/UE4-FreeBSD/releases" rel="nofollow">
+        https://github.com/UE4-FreeBSD/UE4-FreeBSD/releases
+       </a>
+       . The dependencies must be extracted to the engine source directory.
+      </p>
+      <p>
+       <img alt="Downloading toolchain and dependencies" class="" height="335" src="../assets/compiling-for-freebsd/0.jpg" width="800"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Using_the_toolchain">
+        Using the toolchain
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Setup">
+        Setup
+       </span>
+      </h3>
+      <p>
+       Add an environment variable (Control Panel-&gt;System-&gt;Advanced system settings-&gt;Advanced-&gt;Environment variables)
+named FREEBSD_MULTIARCH_ROOT. The value should be the path to the toolchain directory downloaded from the releases page. Make sure the new environment variable has been registered to the system / application (MSVC) by rebooting the machine or restarting the app before continuing to the build step.
+      </p>
+      <p>
+       <img alt="Setting Windows Environment Variable FREEBSD_MULTIARCH_ROOT" class="" height="453" src="../assets/compiling-for-freebsd/1.jpg" width="800"/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Packaging">
+        Packaging
+       </span>
+      </h3>
+      <p>
+       Packaging for FreeBSD follows the same rules as
+       except with FreeBSD as the target platform.
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Cel Shading Post Process - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Cel Shading Post Process
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <pre></pre>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:902px;">
+        <img alt="" class="thumbimage" height="347" src="../assets/cel-shading-post-process/0.png" width="900"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Final Output
+        </div>
+       </div>
+      </div>
+      <p>
+       Cel shading is an effect where light is broken down into a band or series of bands to create a stylised lighting model. 
+What makes cel shading tricky in UE4 is the limited access to the light vector or light only information. This tutorial will take you through the process of creating a cel shade effect in UE4!
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Advantages">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Advantages
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Disadvantages">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Disadvantages
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Prerequisites">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Prerequisites
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Materials">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Materials
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Post_process_volume">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             Post process volume
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Tutorial">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Tutorial
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Author">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Author
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Arran_Langmead">
+            <span class="tocnumber">
+             5.1
+            </span>
+            <span class="toctext">
+             Arran Langmead
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Advantages">
+        Advantages
+       </span>
+      </h2>
+      <ul>
+       <li>
+        Casts shadows
+       </li>
+       <li>
+        Receives shadows
+       </li>
+       <li>
+        Uses standard UE4 lights
+       </li>
+       <li>
+        Supports normal maps
+       </li>
+      </ul>
+      <table>
+       <tbody>
+        <tr>
+         <td>
+          <div class="thumb tnone">
+           <div class="thumbinner" style="width:302px;">
+            <img alt="" class="thumbimage" height="216" src="../assets/cel-shading-post-process/1.gif" width="300"/>
+            <div class="thumbcaption">
+             Directional Lighting
+            </div>
+           </div>
+          </div>
+         </td>
+         <td>
+          <div class="thumb tnone">
+           <div class="thumbinner" style="width:302px;">
+            <img alt="" class="thumbimage" height="221" src="../assets/cel-shading-post-process/2.gif" width="300"/>
+            <div class="thumbcaption">
+             Point Lighting
+            </div>
+           </div>
+          </div>
+         </td>
+        </tr>
+        <tr>
+         <td>
+          <div class="thumb tnone">
+           <div class="thumbinner" style="width:302px;">
+            <img alt="" class="thumbimage" height="217" src="../assets/cel-shading-post-process/3.gif" width="300"/>
+            <div class="thumbcaption">
+             Duplicate lighting
+            </div>
+           </div>
+          </div>
+         </td>
+         <td>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <h2>
+       <span class="mw-headline" id="Disadvantages">
+        Disadvantages
+       </span>
+      </h2>
+      <ul>
+       <li>
+        Cel shades the entire scene
+       </li>
+       <li>
+        Diffuse and normal only
+       </li>
+       <li>
+        Inefficient
+       </li>
+       <li>
+        Reflections/bloom/Emmisive will break the Post Process
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="Prerequisites">
+        Prerequisites
+       </span>
+      </h2>
+      <p>
+       Any reflections will interfere with the post process. An understanding of UV distortion and Post process materials is recommended.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Materials">
+        Materials
+       </span>
+      </h3>
+      <p>
+       Any materials that go into this scene must have
+      </p>
+      <ul>
+       <li>
+        a roughness value of 1
+       </li>
+       <li>
+        a Metal value of 0
+       </li>
+       <li>
+        a Emmisive value of 0.
+       </li>
+      </ul>
+      <h3>
+       <span class="mw-headline" id="Post_process_volume">
+        Post process volume
+       </span>
+      </h3>
+      <ul>
+       <li>
+        set it to Unbound
+       </li>
+       <li>
+        Under Bloom set intensity to 0
+       </li>
+       <li>
+        Under Auto Exposure, set min and max brightness to 2
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="Tutorial">
+        Tutorial
+       </span>
+      </h2>
+      <p>
+       Create a new material and open it. In the details tab, change the Material Domain to Post Process and under the Post Process Material tab change Blendable Location to Before Translucency.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="" class="thumbimage" height="286" src="../assets/cel-shading-post-process/4.png" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Final Output
+        </div>
+       </div>
+      </div>
+      <p>
+       Add your newly created material to the post process under Blendables. Unreal Engine 4's post process Material doesn't have an accessible lighting channel so we need to hack one together!
+      </p>
+      <p>
+       Right click in the material editor and add two scene texture nodes. Set the first to PostProcessInput0 and the other to Diffuse Colour.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:752px;">
+        <img alt="" class="thumbimage" height="305" src="../assets/cel-shading-post-process/5.png" width="750"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Extract Lighting Map
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="" class="thumbimage" height="329" src="../assets/cel-shading-post-process/6.png" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Change Scene Texture
+        </div>
+       </div>
+      </div>
+      <p>
+       Divide PostProcessInput0 by the DiffuseColour to extract the lighting from the scene. Lighting must be grey-scale for this to be accurate so keep light colour white for best results. Finally mask the output by R.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:805px;">
+        <img alt="" class="thumbimage" height="289" src="../assets/cel-shading-post-process/7.png" width="803"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Change Scene Texture
+        </div>
+       </div>
+      </div>
+      <p>
+       To band the lighting we will run the output through a textures UV's. The gradient of the lighting will act as a mapping coordinate for the texture, where black is the top pixel and white is the bottom pixel.
+      </p>
+      <p>
+       In photoshop create a texture that is 1(px) x 128(px). Paint the number of bands you want and in the colour you want it.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:502px;">
+        <img alt="" class="thumbimage" height="361" src="../assets/cel-shading-post-process/8.png" width="500"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Change Scene Texture
+        </div>
+       </div>
+      </div>
+      <p>
+       Bellow are a few examples with the texture strip used on the left. This technique can be used to create a wide range of effects.
+      </p>
+      <table>
+       <tbody>
+        <tr>
+         <td>
+          <div class="thumb tnone">
+           <div class="thumbinner" style="width:252px;">
+            <img alt="" class="thumbimage" height="127" src="../assets/cel-shading-post-process/9.png" width="250"/>
+            <div class="thumbcaption">
+             <div class="magnify">
+             </div>
+             PP with inverted CLUT
+            </div>
+           </div>
+          </div>
+         </td>
+         <td>
+          <div class="thumb tnone">
+           <div class="thumbinner" style="width:252px;">
+            <img alt="" class="thumbimage" height="127" src="../assets/cel-shading-post-process/10.png" width="250"/>
+            <div class="thumbcaption">
+             <div class="magnify">
+             </div>
+             PP with inverted CLUT
+            </div>
+           </div>
+          </div>
+         </td>
+         <td>
+          <div class="thumb tnone">
+           <div class="thumbinner" style="width:252px;">
+            <img alt="" class="thumbimage" height="127" src="../assets/cel-shading-post-process/11.png" width="250"/>
+            <div class="thumbcaption">
+             <div class="magnify">
+             </div>
+             PP with coloured CLUT
+            </div>
+           </div>
+          </div>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       Import the texture into Unreal and open the settings panel for it. Under texture, untick SRGB, change the tiling method to Clamp and change the filter method to Nearest.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:502px;">
+        <img alt="" class="thumbimage" height="286" src="../assets/cel-shading-post-process/12.png" width="500"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Adjust texture settings
+        </div>
+       </div>
+      </div>
+      <p>
+       Bring the texture into your post process material and input your Mask (R) into its UV's.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:902px;">
+        <img alt="" class="thumbimage" height="424" src="../assets/cel-shading-post-process/13.png" width="900"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         PP with banded lighting
+        </div>
+       </div>
+      </div>
+      <p>
+       Now we have the lighting banding in, all that's left is to reintroduce the diffuse. Mask out the Alpha of the diffuse colour and multiply the banded lighting by the diffuse.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:902px;">
+        <img alt="" class="thumbimage" height="302" src="../assets/cel-shading-post-process/14.png" width="900"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         PP setup plugged into emmisive
+        </div>
+       </div>
+      </div>
+      <p>
+       That's all there is to it, I hope you found this quick guide to cel shading in Unreal Engine 4 useful and look forward to seeing what you do with it.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Author">
+        Author
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Arran_Langmead">
+        Arran Langmead
+       </span>
+      </h3>
+      <p>
+      </p>
+      <p>
+       <a class="external text" href="http://www.strangelynamed.com/#bcd-01" rel="nofollow">
+        Website
+       </a>
+      </p>
+      <p>
+       <a class="external text" href="https://twitter.com/arranlangmead" rel="nofollow">
+        Twitter
+       </a>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

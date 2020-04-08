@@ -1,0 +1,2128 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Projectile Visual Effects - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Projectile Visual Effects
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <br/>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           <b>
+            Overview
+           </b>
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Initial_Setup">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           <b>
+            Initial Setup
+           </b>
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Effect_Reference">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           <b>
+            Effect Reference
+           </b>
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Effect_Breakdown">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           <b>
+            Effect Breakdown
+           </b>
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Hit_Material_and_Particle">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             Hit Material and Particle
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Dust_Material_and_Particle">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             Dust Material and Particle
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Debris_Material_and_Particle">
+            <span class="tocnumber">
+             4.3
+            </span>
+            <span class="toctext">
+             Debris Material and Particle
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Bullet_Trail_Material_and_Particle">
+            <span class="tocnumber">
+             4.4
+            </span>
+            <span class="toctext">
+             Bullet Trail Material and Particle
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#Bullet_Hit_Decal_Material">
+            <span class="tocnumber">
+             4.5
+            </span>
+            <span class="toctext">
+             Bullet Hit Decal Material
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#Bullet_.26_Bullet_Material">
+            <span class="tocnumber">
+             4.6
+            </span>
+            <span class="toctext">
+             Bullet &amp; Bullet Material
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-11">
+         <a href="#Projectile_Blueprint">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           <b>
+            Projectile Blueprint
+           </b>
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-12">
+           <a href="#Components">
+            <span class="tocnumber">
+             5.1
+            </span>
+            <span class="toctext">
+             Components
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-13">
+           <a href="#Event_Graph">
+            <span class="tocnumber">
+             5.2
+            </span>
+            <span class="toctext">
+             Event Graph
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-14">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           <b>
+            Conclusion
+           </b>
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-15">
+           <a href="#KNOWN_ISSUES">
+            <span class="tocnumber">
+             6.1
+            </span>
+            <span class="toctext">
+             KNOWN ISSUES
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        <b>
+         Overview
+        </b>
+       </span>
+      </h2>
+      <p>
+       Projectiles are used in a lot of games, but the work that goes into creating a believable effect often takes several different smaller effects working with the logic of the Projectile Blueprint to yield a realistic result.  The document provides an overview of how to begin to setup these effects.
+      </p>
+      <p>
+       I would highly recommend taking a look at the following Visual Effects Lesson Series before beginning to have an understanding of certain elements of which I will not be going into great detail:
+      </p>
+      <p>
+       <br/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <p>
+       <br/>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Initial_Setup">
+        <b>
+         Initial Setup
+        </b>
+       </span>
+      </h2>
+      <p>
+       We will begin by creating a new First Person Project with NO starter content.
+       <br/>
+      </p>
+      <p>
+       <img alt="Project Setup" class="" height="343" src="../assets/projectile-visual-effects/0.jpg" width="500"/>
+      </p>
+      <p>
+       Next you will want to download, unzip and import the following texture assets to your newly created project and to keep things organized lets put them into the Textures subfolder; and while we are at it, let’s go ahead and create a Materials subfolder and an Effects subfolder. These subfolders will help us stay organized as we move forward.
+       <br/>
+      </p>
+      <p>
+       <img alt="Folder Setup" class="" height="537" src="../assets/projectile-visual-effects/1.jpg" width="300"/>
+       <br/>
+      </p>
+      <p>
+       <a class="external text" href="https://d26ilriwvtzlb.cloudfront.net/c/ce/ProjectileTutorial_Textures.zip" rel="nofollow">
+        ProjectileTutorial_Textures.zip
+       </a>
+       <br/>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Effect_Reference">
+        <b>
+         Effect Reference
+        </b>
+       </span>
+      </h2>
+      <p>
+       It never hurts to look at reference of what we are trying to emulate in the game engine, though we may ultimately take some liberties as to how the effect looks, it still must be believable to an audience who has experience with the real reference (even if only through movies and television).
+       <br/>
+      </p>
+      <p>
+       <img alt="Bullet Reference" class="" height="230" src="../assets/projectile-visual-effects/2.gif" width="303"/>
+       <br/>
+      </p>
+      <p>
+       Now for our purposes in a game, this real life example of a bullet hitting a wall may not be “flashy” enough, but lets still break it down while we talk about what we expect to see as well.
+      </p>
+      <p>
+       In looking and analyzing any effect, it is important to remember that “the underlying substance of every effect is pure energy,” and “...what happens when that energy collides with an object, or an opposing energy force”
+       <a class="external text" href="http://www.amazon.com/Elemental-Magic-Special-Effects-Animation/dp/0240811631/ref=sr_1_1?s=books&amp;ie=UTF8&amp;qid=1419950752&amp;sr=1-1&amp;keywords=elemental+magic" rel="nofollow">
+        (Gilland, Elemental Magic vol.1, 27)
+       </a>
+       .
+      </p>
+      <p>
+       So in our example we see the energy generated by the bullet hitting the wall and immediately radiating outward very quickly and then slowing and moving away from the wall.  In physical terms this is caused by air friction and the wall itself, but in broad strokes it also gives us a path to duplicate.
+       <br/>
+      </p>
+      <p>
+       <img alt="Bullet Energy Reference" class="" height="230" src="../assets/projectile-visual-effects/3.gif" width="303"/>
+       <br/>
+      </p>
+      <p>
+       Now let’s talk about what we expect to see.  One of the most important elements that everyone associates with any sort of bullet or grenade hit effect is some flash associated with that initial hit and is often referred to as the Hit.  In the real world, this rarely happens upon impact.  (Muzzle Flash is a totally different effect and happens at the bullet’s spawning, but more on that later.)  Often we expect something like this with a gun hit:
+      </p>
+      <p>
+       <img alt="Movie Explosion" class="" height="208" src="../assets/projectile-visual-effects/4.gif" width="500"/>
+       <br/>
+      </p>
+      <p>
+       Which we take for granted in movies, but is about as logical as this:
+      </p>
+      <p>
+       <img alt="Goofy Explosion" class="" height="254" src="../assets/projectile-visual-effects/5.gif" width="339"/>
+       <br/>
+      </p>
+      <p>
+       So in addition to the radial energy path we followed, we know can add the expected “explosive” Hit effect.  If we look back at the Bullet Effect we can also see (thanks to repeated hits by different bullets) the aftermath of the explosive action of the Hit.  More often than not this is actual shown in games (and movies in most cases) as an actual large divot in the wall.  The actual aftermath of the bullet hit would depended on numerous factors including what type of bullet was fired from what type of gun from what distance and hitting what type of wall.  For our purposes, we will do a mild divot to function in a broad style.
+      </p>
+      <p>
+       So our effect needs to satisfy the following criteria:
+      </p>
+      <ol>
+       <li>
+        <b>
+         Have a Radial Energy Path from the point of impact which slows and then comes back toward the bullet’s travel path
+        </b>
+       </li>
+       <li>
+        <b>
+         Has an initial Hit effect to give the player some expected Feedback on the projectile’s hit
+        </b>
+       </li>
+       <li>
+        <b>
+         Creates an aftermath which shows the effect of the impact on the world.
+        </b>
+       </li>
+      </ol>
+      <p>
+       Now that we have our goals in place, let’s start off by making that initial Hit.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Effect_Breakdown">
+        <b>
+         Effect Breakdown
+        </b>
+       </span>
+      </h2>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Hit_Material_and_Particle">
+        Hit Material and Particle
+       </span>
+      </h3>
+      <p>
+       <br/>
+      </p>
+      <p>
+       The Hit Material is a simple one using the T_Hit.tga setup.  We want to make sure that our HIT effect always renders on top of everything so to do this we will go into the
+       <b>
+        Material Attributes
+       </b>
+       under
+       <b>
+        Translucency
+       </b>
+       and Check
+       <b>
+        Disable Depth Test
+       </b>
+       to
+       <b>
+        True
+       </b>
+       .
+       <br/>
+      </p>
+      <p>
+       <img alt="Hit Material" class="" height="768" src="../assets/projectile-visual-effects/6.jpg" width="1599"/>
+       <br/>
+      </p>
+      <p>
+       After creating this material we are going to begin working on our effect with the first emitter, so we will need to create a new Particle System, I called mine P_BulletImpact but you may name it as you wish just remember it as we will be coming back to it.
+      </p>
+      <p>
+       With the new effect opened in Cascade you should see this setup:
+       <br/>
+      </p>
+      <p>
+       <img alt="Default Cascade Window" class="" height="540" src="../assets/projectile-visual-effects/7.jpg" width="960"/>
+       <br/>
+      </p>
+      <p>
+       Now we want our particle system to use our new M_FlashHit Material so while Cascade is open select the material in your content browser and assign it to the Material slot in the Required Module.  Also as a matter of housekeeping and for clarity later, let us name this emitter HIT.  You can do this by selecting the Main Module header (the one that currently reads Particle Emitter) and changing the Emitter Name in the Details Panel.
+      </p>
+      <p>
+       Also at this time, let us setup the Initial Color and Scale Color / Life Modules instead of the default Color Over Life Module.  For the many reason why please see the tutorials mentioned earlier.  Your Cascade Window should now appear similar to this one:
+       <br/>
+      </p>
+      <p>
+       <img alt="Hit Cascade Window 01" class="" height="1035" src="../assets/projectile-visual-effects/8.jpg" width="789"/>
+       <br/>
+      </p>
+      <p>
+       From here let’s set the following information:
+      </p>
+      <p>
+       In
+       <b>
+        Required
+       </b>
+       , we want to set the
+       <b>
+        Emitter Loops
+       </b>
+       to just
+       <b>
+        1
+       </b>
+       (We only want to have one Hit event per bullet impact, we don’t want it to loop indefinitely.)
+      </p>
+      <p>
+       In
+       <b>
+        Spawn
+       </b>
+       , we want to use a
+       <b>
+        Burst
+       </b>
+       Emission
+       <b>
+        Count
+       </b>
+       of
+       <b>
+        1
+       </b>
+       as we want this particle to appear and disappear very quickly, not loop and we only want one. So set the
+       <b>
+        Rate Constant
+       </b>
+       to
+       <b>
+        0
+       </b>
+       and a new
+       <b>
+        Burst List
+       </b>
+       element by clicking the plus sign and set the
+       <b>
+        Count
+       </b>
+       to
+       <b>
+        1
+       </b>
+       .
+      </p>
+      <p>
+       In
+       <b>
+        Lifetime
+       </b>
+       , we want to set a
+       <b>
+        Uniform Min
+       </b>
+       of
+       <b>
+        0.075
+       </b>
+       and a
+       <b>
+        Max
+       </b>
+       of
+       <b>
+        0.125
+       </b>
+       .  This is to allow some variation from bullet hit to bullet hit but also keep the total impact of this effect element to that initial brief POW.
+      </p>
+      <p>
+       In
+       <b>
+        Initial Size
+       </b>
+       , we want to again set a
+       <b>
+        Uniform Min
+       </b>
+       of
+       <b>
+        75,75,75
+       </b>
+       and a
+       <b>
+        Max
+       </b>
+       of
+       <b>
+        125,125,125
+       </b>
+       .  This is to give it the same variation mentioned under Lifetime.
+      </p>
+      <p>
+       For
+       <b>
+        Initial Color
+       </b>
+       , I have used for
+       <b>
+        Start Color 20,2,1
+       </b>
+       and for
+       <b>
+        Start Alpha 1
+       </b>
+       .  This produces a nice orange-y color.
+      </p>
+      <p>
+       And for
+       <b>
+        Scale Color / Life
+       </b>
+       , I have set the
+       <b>
+        Color Scale Over Life
+       </b>
+       to a
+       <b>
+        Distribution
+       </b>
+       of
+       <b>
+        Constant Curve
+       </b>
+       with
+       <b>
+        point 0
+       </b>
+       at
+       <b>
+        In Val 0
+       </b>
+       and
+       <b>
+        Out Val
+       </b>
+       of
+       <b>
+        25,15,1
+       </b>
+       and
+       <b>
+        point 1
+       </b>
+       at
+       <b>
+        In Val
+       </b>
+       of
+       <b>
+        1
+       </b>
+       and
+       <b>
+        Out Val
+       </b>
+       of
+       <b>
+        1,1,1
+       </b>
+       .  This creates a great gradient from a very bright yellow-white to our orange color.  In this example I left the
+       <b>
+        Alpha Scale Over Life
+       </b>
+       to a
+       <b>
+        Distribution
+       </b>
+       of
+       <b>
+        Constant Curve
+       </b>
+       with a
+       <b>
+        point 0
+       </b>
+       at
+       <b>
+        In Val
+       </b>
+       of
+       <b>
+        0
+       </b>
+       and
+       <b>
+        Out Val
+       </b>
+       of
+       <b>
+        1
+       </b>
+       and a
+       <b>
+        point 1
+       </b>
+       at
+       <b>
+        In Val
+       </b>
+       of
+       <b>
+        1
+       </b>
+       and
+       <b>
+        Out Val
+       </b>
+       of
+       <b>
+        0
+       </b>
+       .  This allows our HIT to fade out over its short life.
+      </p>
+      <p>
+       Your HIT Emitter in Cascade should now look something like this:
+      </p>
+      <p>
+       <img alt="Hit Cascade Window 02" class="" height="520" src="../assets/projectile-visual-effects/9.jpg" width="423"/>
+       <br/>
+      </p>
+      <p>
+       Now we have a problem.  That little dot is not helping us much.  That is not a grand and great Impact moment that our bullet is calling for.  The first Gut reaction is that I chose to small an initial Size, but we need to take a moment and think about our energy again.  Remember the bullet hits at a very small point and then grows outward from that point pushing radially.  We want to grow this effect in the same fashion and in order to do that we will need a Size By Life module.  The Initial Size and the Size by Life Module work similarly to the Initial Color and Scale Color / Life.
+      </p>
+      <p>
+       So we want to grow from that point of impact so in the
+       <b>
+        Size By Life
+       </b>
+       module
+       <b>
+        point 0 In Val
+       </b>
+       of
+       <b>
+        0
+       </b>
+       and
+       <b>
+        Out Val
+       </b>
+       of
+       <b>
+        0,0,0
+       </b>
+       .  and
+       <b>
+        point 1 In Val
+       </b>
+       of
+       <b>
+        1
+       </b>
+       <b>
+        Out Val
+       </b>
+       of
+       <b>
+        5,5,5
+       </b>
+       .  Essentially allowing the point to grow from a spec to 5 times its original size and because we are dealing with a radial texture it will give us that energy path we are looking for.
+      </p>
+      <p>
+       There is still one last problem which may not be as obvious at first glance because of the small lifetime. but the velocity shouldn’t be there we want to have the Impact only at that Impact location point.  So removing that module, our final effect looks like this:
+      </p>
+      <p>
+       <img alt="Hit Cascade Window 03" class="" height="1038" src="../assets/projectile-visual-effects/10.jpg" width="906"/>
+       <br/>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Dust_Material_and_Particle">
+        Dust Material and Particle
+       </span>
+      </h3>
+      <p>
+       <br/>
+      </p>
+      <p>
+       Next up is what I am going to call smoke but in actuality it is more like the dust generated from the impact of the bullet to wall.  I am presenting a fairly simple smoke/dust and you can exaggerate this material as you wish with UV distortion through Flowmaps or more complex cloud structures through flipbooks, but the general particle setup should be very similar.
+      </p>
+      <p>
+       If you need help understanding the Depth Fade or Near Camera Fade please see the tutorials mentioned earlier.
+      </p>
+      <p>
+       <img alt="Smoke or Dust Material" class="" height="1144" src="../assets/projectile-visual-effects/11.jpg" width="1586"/>
+       <br/>
+      </p>
+      <p>
+       Notice that I’ve added the ParticleMacroUV Node which causes some strange flashing on two of the texture samplers, this is normal and we will explain the MacroUV function when we get to the particle System.
+      </p>
+      <p>
+       Let’s reopen our P_BulletImpact effect and add a new emitter next to our HIT emitter.  Again, as a matter of housekeeping, let’s name our Emitter, Dust and assign our new material M_Smoke material to the emitter.  You should now have something like this:
+       <br/>
+      </p>
+      <p>
+       <img alt="Dust Cascade Window 01" class="" height="897" src="../assets/projectile-visual-effects/12.jpg" width="951"/>
+       <br/>
+      </p>
+      <p>
+       One thing you should notice right off the bat is that the emitter is now back to looping but don’t worry this is default behavior and we will be fixing it as we set the various module properties which should be as follows:
+      </p>
+      <p>
+       In
+       <b>
+        Required
+       </b>
+       , we want to set the
+       <b>
+        Emitter Loops
+       </b>
+       to just
+       <b>
+        1
+       </b>
+       (We only want to have one Dust event per bullet impact, we don’t want it to loop indefinitely.)
+      </p>
+      <p>
+       In
+       <b>
+        Spawn
+       </b>
+       , we want to use a
+       <b>
+        Burst
+       </b>
+       Emission
+       <b>
+        Count
+       </b>
+       of
+       <b>
+        20
+       </b>
+       and a
+       <b>
+        Count Low
+       </b>
+       of
+       <b>
+        10
+       </b>
+       as we want to have a range of cloud density to each individual bullet hit, which keeps your player from realizing its the same bullet hit over and over again by introducing some variation. So set the
+       <b>
+        Rate Constant
+       </b>
+       to
+       <b>
+        0
+       </b>
+       and a new
+       <b>
+        Burst List
+       </b>
+       element by clicking the plus sign and set the
+       <b>
+        Count
+       </b>
+       to
+       <b>
+        20
+       </b>
+       and the
+       <b>
+        Count Low
+       </b>
+       to
+       <b>
+        10
+       </b>
+       .
+      </p>
+      <p>
+       In
+       <b>
+        Lifetime
+       </b>
+       , we want to set a
+       <b>
+        Uniform Min
+       </b>
+       of
+       <b>
+        0.125
+       </b>
+       and a
+       <b>
+        Max
+       </b>
+       of
+       <b>
+        0.25
+       </b>
+       .  This is to allow some variation from bullet hit to bullet hit but also keep the total impact of this effect element to a reasonably brief amount of time, remember performance in shooters is a key consideration.
+      </p>
+      <p>
+       In
+       <b>
+        Initial Size
+       </b>
+       , we want to again set a
+       <b>
+        Uniform Min
+       </b>
+       of
+       <b>
+        5,5,5
+       </b>
+       and a
+       <b>
+        Max
+       </b>
+       of
+       <b>
+        20,20,20
+       </b>
+       .  This is to give it the same variation mentioned under Lifetime.  I also want to take a moment and mention the Locked Axes dropdown.  If you select XYZ in the drop down you can enter a value in just the X coordinate box and it will automatically be considered for all 3 values in the vector.  This is true of any modules that have this option.
+      </p>
+      <p>
+       Let’s go ahead and add in our
+       <b>
+        Size By Life
+       </b>
+       module to give us control of our dust’s size over time.  For housekeeping, I usually click and drag the module so that it sets directly underneath the Initial Size module.  Let’s change the
+       <b>
+        Distribution Method
+       </b>
+       to
+       <b>
+        Constant Curve
+       </b>
+       and add two points.  At
+       <b>
+        point 0
+       </b>
+       , the
+       <b>
+        In Val
+       </b>
+       is
+       <b>
+        0
+       </b>
+       and the
+       <b>
+        Out Val
+       </b>
+       should be
+       <b>
+        1,1,1
+       </b>
+       .  At
+       <b>
+        point 1
+       </b>
+       , the
+       <b>
+        In Val
+       </b>
+       should be
+       <b>
+        1
+       </b>
+       and the
+       <b>
+        Out Val
+       </b>
+       should be
+       <b>
+        10,10,10
+       </b>
+       .
+      </p>
+      <p>
+       We are starting to get something that is looking a little better, but we always must be thinking how is the effect going to be used.  To that end, we know we want this effect to fire in a specific radial fashion upon bullet impact.  Since the HIT itself has no motion merely a quick flash, we did not have to consider it in relation to the impact point, the dust we do.
+      </p>
+      <p>
+       In the engine, if you have ever  dragged an emitter into the level, you will notice that an emitter has a large arrow pointing out of it.  This arrow always faces the Positive X Axis of the Cascade Emitter itself.
+       <br/>
+      </p>
+      <p>
+       <img alt="Dust Cascade Window 02" class="" height="447" src="../assets/projectile-visual-effects/13.jpg" width="579"/>
+       <br/>
+      </p>
+      <p>
+       For this we want to use the velocity to make sure our clouds are moving along that axis so we can control it more easily in blueprints when we add it to our projectile.  So in
+       <b>
+        Initial Velocity
+       </b>
+       , lets set the
+       <b>
+        Distribution
+       </b>
+       to
+       <b>
+        Uniform
+       </b>
+       and set the
+       <b>
+        Max
+       </b>
+       Value to
+       <b>
+        100, 20, 20
+       </b>
+       and the
+       <b>
+        Min
+       </b>
+       Value to
+       <b>
+        50,-20,-20
+       </b>
+       .
+      </p>
+      <p>
+       As mentioned in the earlier section, lets delete the
+       <b>
+        Color Over Life
+       </b>
+       Module and add the
+       <b>
+        Initial Color
+       </b>
+       and
+       <b>
+        Scale Color / Life
+       </b>
+       modules.
+      </p>
+      <p>
+       For
+       <b>
+        Initial Color
+       </b>
+       , I have used for
+       <b>
+        Start Color 1,1,1
+       </b>
+       and for
+       <b>
+        Start Alpha 1
+       </b>
+       .  This leaves the original texture as drawn.
+      </p>
+      <p>
+       And for
+       <b>
+        Scale Color / Life
+       </b>
+       , I have set the
+       <b>
+        Color Scale Over Life
+       </b>
+       to a
+       <b>
+        Distribution
+       </b>
+       of
+       <b>
+        Constant Curve
+       </b>
+       with
+       <b>
+        point 0
+       </b>
+       at
+       <b>
+        In Val 0
+       </b>
+       and
+       <b>
+        Out Val
+       </b>
+       of
+       <b>
+        1,1,1
+       </b>
+       and
+       <b>
+        point 1
+       </b>
+       at
+       <b>
+        In Val
+       </b>
+       of
+       <b>
+        1
+       </b>
+       and
+       <b>
+        Out Val
+       </b>
+       of
+       <b>
+        0.25,0.25,0.25
+       </b>
+       .  This creates a fade to black in the texture math and helps sell the age and decay of the particles over its lifetime.  In this example I left the
+       <b>
+        Alpha Scale Over Life
+       </b>
+       to a
+       <b>
+        Distribution
+       </b>
+       of
+       <b>
+        Constant Curve
+       </b>
+       with a
+       <b>
+        point 0
+       </b>
+       at
+       <b>
+        In Val
+       </b>
+       of
+       <b>
+        0
+       </b>
+       and
+       <b>
+        Out Val
+       </b>
+       of
+       <b>
+        0
+       </b>
+       and a
+       <b>
+        point 1
+       </b>
+       at
+       <b>
+        In Val
+       </b>
+       of
+       <b>
+        0.25
+       </b>
+       and
+       <b>
+        Out Val
+       </b>
+       of
+       <b>
+        0.75
+       </b>
+       and a
+       <b>
+        point 2
+       </b>
+       at
+       <b>
+        In Val
+       </b>
+       of
+       <b>
+        1
+       </b>
+       and
+       <b>
+        Out Val
+       </b>
+       of
+       <b>
+        0
+       </b>
+       .  This allows the dust to quickly fade in and then fade out over most of their life but also keeps some transparency in the clouds (by not going up to a full value of 1).
+      </p>
+      <p>
+       So we should now be at a system that looks like this:
+       <br/>
+      </p>
+      <p>
+       <img alt="Dust Cascade Window 03" class="" height="993" src="../assets/projectile-visual-effects/14.jpg" width="951"/>
+       <br/>
+      </p>
+      <p>
+       Not bad, but if we watch our dust closely it look a little static and remember we have a lot of energy to account for on that bullet hit.  Let’s give each of the particles a litle motion.  To do this, we will add an
+       <b>
+        Initial Rotation
+       </b>
+       and
+       <b>
+        Initial Rotation Rate
+       </b>
+       module.
+      </p>
+      <p>
+       In the
+       <b>
+        Initial Rotation
+       </b>
+       module, make sure your
+       <b>
+        Distribution
+       </b>
+       is set to
+       <b>
+        Uniform
+       </b>
+       and the
+       <b>
+        Min
+       </b>
+       is set to
+       <b>
+        0
+       </b>
+       and the
+       <b>
+        Max
+       </b>
+       is set to
+       <b>
+        1
+       </b>
+       .
+      </p>
+      <p>
+       In the
+       <b>
+        Initial Rotation Rate
+       </b>
+       module, let’s also make sure that our
+       <b>
+        Distribution
+       </b>
+       is set to
+       <b>
+        Uniform
+       </b>
+       and the
+       <b>
+        Min
+       </b>
+       is set to
+       <b>
+        -0.125
+       </b>
+       and the
+       <b>
+        Max
+       </b>
+       is set to
+       <b>
+        0.125
+       </b>
+       .
+      </p>
+      <p>
+       Now we have a little bit more of the energy represented in the effect, but there is one more thing to consider.  The smoke is still pushing outward primarily in one axis only and is not giving us as much of that spherical push out that we saw in the original bullet hit.  You can see this most directly by rotating your camera around and look down the X Axis at your clouds.  There happens to be a module that can help us with this issue, the
+       <b>
+        Sphere
+       </b>
+       module.
+      </p>
+      <p>
+       The
+       <b>
+        Sphere
+       </b>
+       module, located under the Location selection, allows us to not only place the dust in a sphere in space but control the direction in which that spawned sprite will travel by applying a velocity setting.  So, let’s begin by adding the
+       <b>
+        Sphere
+       </b>
+       Module.  It often helps with the location modules to visualize them in Cascade, you can do that by going into the modules’ details panel and setting
+       <b>
+        B 3DDraw Mode
+       </b>
+       to
+       <b>
+        True
+       </b>
+       . (It should be noted that this visualize does not translate to the Level Viewport and is limited to Cascade’s viewport only, so if you forget to turn it off, that’s ok.)
+      </p>
+      <p>
+       With the Bullet hitting the wall we can see that the initial bullet hit is not a point in space but a slightly varying circle, we can achieve this by setting the
+       <b>
+        Start Radius’ Distribution
+       </b>
+       to
+       <b>
+        Uniform
+       </b>
+       and the
+       <b>
+        Min
+       </b>
+       to
+       <b>
+        5
+       </b>
+       and the
+       <b>
+        Max
+       </b>
+       to
+       <b>
+        15
+       </b>
+       .  In the module you will notice a long list of Positive and Negative XYZ values, these control the quadrants of the sphere which will allow the sprites to spawn.  For our purposes we want to limit the spawning on X at all.  Remember we have the initial thrust forward from the bullet which will keep the
+       <b>
+        Positive X
+       </b>
+       from spawning and the wall will keep
+       <b>
+        Negative X
+       </b>
+       from spawning.  So, unc-check those to set their values to
+       <b>
+        false
+       </b>
+       .
+      </p>
+      <p>
+       We also want to check Velocity to true and in the Velocity Scale, we want to set the Distribution to Uniform and the Min to  1 and the Max to 6.  These settings will give us a nice thrust outward from the spawn quadrants and variation which will help us with repetition of the same effect.
+      </p>
+      <p>
+       Finally let’s talk about the MacroUV.  If you remember we set that up in the Material, and as of yet, have not touched it.  MacroUVs allow us to place a texture over all of our sprites as if they were one plane.  This has been used to allow the entire cloud effect to have a normal placed on top of the effect giving a more volumetric effect to the effect instead of each sprite.  For our purposes I want to use the panning MacroUV setup in our material to help sell the rising smoke of our effect. There are two places where you can adjust the MacroUV settings.  The primary one can be accessed from the details panel in Cascade if you click in the empty black space next to our emitters.  If you scroll down you can find a
+       <b>
+        MacroUV
+       </b>
+       section with two sections
+       <b>
+        MacroUVPosition
+       </b>
+       and
+       <b>
+        MacroUVRadius
+       </b>
+       .  For our purposes since we are panning a tileable texture, we want to set the
+       <b>
+        MacroUVRadius
+       </b>
+       to
+       <b>
+        450
+       </b>
+       .  Since we only are using one MacroUV setup in our effect we can use this main input.  If you needed different MacroUV value in the same effect you can go under the Required module to the MacroUV section and check the Override System MacroUV to true and the emitter will use the values here instead.
+      </p>
+      <p>
+       After this final setting, you effect should look similar to this in Cascade:
+       <br/>
+      </p>
+      <p>
+       <img alt="Dust Cascade Window 04" class="" height="930" src="../assets/projectile-visual-effects/15.jpg" width="987"/>
+       <br/>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Debris_Material_and_Particle">
+        Debris Material and Particle
+       </span>
+      </h3>
+      <p>
+       <br/>
+      </p>
+      <p>
+       For our debris, I have added a sample texture I used previously in an exploding barrel effect, hence the texture, but our purposes we are truly only concerned with the alpha channel.
+       <br/>
+      </p>
+      <p>
+       <img alt="Debris Material" class="" height="948" src="../assets/projectile-visual-effects/16.jpg" width="1596"/>
+       <br/>
+      </p>
+      <p>
+       You may notice that my texture is setup to use SubUVs, 4 smaller images making up the 1 texture.  Keep that in mind as we setup the Particle System.  Let’s reopen our P_BulletImpact effect and add a new emitter next to our DUST emitter.  Again, as a matter of housekeeping, let’s name our Emitter, Debris and assign our new material M_Debris material to the emitter.  You should now have something like this:
+       <br/>
+      </p>
+      <p>
+       <img alt="Debris Cascade Window 01" class="" height="921" src="../assets/projectile-visual-effects/17.jpg" width="1128"/>
+       <br/>
+      </p>
+      <p>
+       Let’s begin with some general housekeeping and getting our SubUVs to work as expected.  In
+       <b>
+        Required
+       </b>
+       , you want to adjust
+       <b>
+        Screen Alignment
+       </b>
+       to
+       <b>
+        PSA Velocity
+       </b>
+       , which will allow our pieces to face the direction in which they are shot toward.  Also in
+       <b>
+        Required
+       </b>
+       under
+       <b>
+        Sub UV
+       </b>
+       change the
+       <b>
+        Interpolation Method
+       </b>
+       to
+       <b>
+        Random
+       </b>
+       , as we want the system to randomly pick one of the 4 images each time it produces the particle,
+       <b>
+        Sub Images Horizontal
+       </b>
+       and
+       <b>
+        Sub Images Vertical
+       </b>
+       should both be set to
+       <b>
+        2
+       </b>
+       .
+      </p>
+      <p>
+       You will notice right away that we are down to 1 image but it is not random.  To produce the random effect we will need to add a
+       <b>
+        SubUV &gt;&gt; SubImage Index
+       </b>
+       module.  In the
+       <b>
+        SubImage Index
+       </b>
+       , you will need to set the
+       <b>
+        Distribution
+       </b>
+       to
+       <b>
+        Uniform
+       </b>
+       and set the
+       <b>
+        Min
+       </b>
+       to
+       <b>
+        0
+       </b>
+       and the
+       <b>
+        Max
+       </b>
+       to
+       <b>
+        3
+       </b>
+       .
+      </p>
+      <p>
+       Let’s make this more apart of our impact effect again but returning to the
+       <b>
+        Required
+       </b>
+       module and  setting
+       <b>
+        Emitter Loops
+       </b>
+       to
+       <b>
+        1
+       </b>
+       .  Next, go into
+       <b>
+        Spawn
+       </b>
+       , set the
+       <b>
+        Rate Distribution
+       </b>
+       to a
+       <b>
+        Constant 0
+       </b>
+       .  In Spawn and under
+       <b>
+        Burst
+       </b>
+       add 1 element to the
+       <b>
+        Burst List
+       </b>
+       with a
+       <b>
+        Count
+       </b>
+       of
+       <b>
+        20
+       </b>
+       and a
+       <b>
+        Count Low
+       </b>
+       of
+       <b>
+        10
+       </b>
+       .
+      </p>
+      <p>
+       In
+       <b>
+        Lifetime
+       </b>
+       , let’s set our
+       <b>
+        Distribution
+       </b>
+       to
+       <b>
+        Uniform
+       </b>
+       with a
+       <b>
+        Min
+       </b>
+       of
+       <b>
+        1
+       </b>
+       and a
+       <b>
+        Max
+       </b>
+       of
+       <b>
+        2
+       </b>
+       .  Because we are going to allow Collision for these particles, I have given them a little bit of a longer lifetime compared to our other systems.
+      </p>
+      <p>
+       In
+       <b>
+        Initial Size
+       </b>
+       , make sure our
+       <b>
+        Distribution
+       </b>
+       to
+       <b>
+        Uniform
+       </b>
+       with a
+       <b>
+        Max
+       </b>
+       of
+       <b>
+        10,10,10
+       </b>
+       and a
+       <b>
+        Min
+       </b>
+       of
+       <b>
+        5,5,5
+       </b>
+       .  This size is based on a semi-standard bullet impact size from our reference earlier.
+      </p>
+      <p>
+       Skipping
+       <b>
+        Initial Velocity
+       </b>
+       for a moment, let us do the general housekeeping by Removing the
+       <b>
+        Color Over Life
+       </b>
+       Module and replacing it with the
+       <b>
+        Initial Color
+       </b>
+       and
+       <b>
+        Scale Color / Life
+       </b>
+       modules.  For these modules, I am going to leave the default settings and for that matter you could have left the Color Over Life module, but in your level you may want to adjust the debris Emitter’s Initial Color to match the level’s general color.
+      </p>
+      <p>
+       Going back and thinking of how these particles are supposed to behave, they need to spawn from the same general impact point as our Smoke and since we already have this setup in the Sphere module, let’s
+       <b>
+        SHIFT + Click-Hold and Drag
+       </b>
+       the
+       <b>
+        Sphere
+       </b>
+       module into our Debris emitter.  You should notice the System looks like this now:
+       <br/>
+      </p>
+      <p>
+       <img alt="Debris Cascade Window 02" class="" height="921" src="../assets/projectile-visual-effects/18.jpg" width="1128"/>
+       <br/>
+      </p>
+      <p>
+       That + symbol means that the two emitters are sharing the same computation input data and changing one will change both.  Whenever possible it is always processor friendly to try to share modules.
+      </p>
+      <p>
+       So, our particles are spawning correctly but by no means are moving like they should.  Let’s go back to
+       <b>
+        Initial Velocity
+       </b>
+       and like our smoke adjust the particles along the X-Axis.
+      </p>
+      <p>
+       In
+       <b>
+        Initial Velocity
+       </b>
+       , make sure that the
+       <b>
+        Distribution
+       </b>
+       is set to
+       <b>
+        Uniform
+       </b>
+       and that the
+       <b>
+        Max
+       </b>
+       is
+       <b>
+        500, 300,300
+       </b>
+       and the
+       <b>
+        Min
+       </b>
+       is
+       <b>
+        250,-300,-300
+       </b>
+       .  Immediately you should see a marked improvement on the particle’s behavior.  They are following the energy of the effect and providing a nice spread of that energy, but there is one problem.  They only half follow what the debris would actually do in the real world.  We have successfully mimicked the thrust from the explosion but have not taken into account the gravity in the world acting on these pieces.
+      </p>
+      <p>
+       On Earth the gravity can be said to be the acceleration of an object toward earth at a rate of 9.80 meters per second squared.  In Unreal terms, since the engine uses centimeters as the primary measurement,  you could clarify that gravity is 980 cm/s^2.  In Cascade we have an Acceleration module which will allow us to simulate this force’s effects on our debris.
+      </p>
+      <p>
+       So, add an
+       <b>
+        Acceleration
+       </b>
+       module and make sure that the
+       <b>
+        Distribution
+       </b>
+       is set to
+       <b>
+        Uniform
+       </b>
+       and the
+       <b>
+        Max
+       </b>
+       is set to
+       <b>
+        0,0,-900
+       </b>
+       and the
+       <b>
+        Min
+       </b>
+       is set to
+       <b>
+        0,0,-1200
+       </b>
+       .  We use a variation here to provided some visual interest as well as simulate the fact that air friction and shape of object do play a roll in how items fall to the ground.
+      </p>
+      <p>
+       Our movement looks correct now, but if you watch the particles themselves they seem a bit stuff.  In order to provide a more fluid motion let’s use the rotation settings similar to what we did for the smoke.
+      </p>
+      <p>
+       Add an
+       <b>
+        Initial Rotation
+       </b>
+       and make sure that the
+       <b>
+        Distribution
+       </b>
+       is set to
+       <b>
+        Uniform
+       </b>
+       with a
+       <b>
+        Min
+       </b>
+       of
+       <b>
+        0
+       </b>
+       and a
+       <b>
+        Max
+       </b>
+       of
+       <b>
+        1
+       </b>
+       .  Next add an
+       <b>
+        Initial Rotation Rate
+       </b>
+       module and make sure the
+       <b>
+        Distribution
+       </b>
+       is set to
+       <b>
+        Uniform
+       </b>
+       with a
+       <b>
+        Min
+       </b>
+       of
+       <b>
+        -0.125
+       </b>
+       and a
+       <b>
+        Max
+       </b>
+       of
+       <b>
+        0.125
+       </b>
+       .
+      </p>
+      <p>
+       Finally we want to add a
+       <b>
+        Collision
+       </b>
+       module setting the
+       <b>
+        Damping Factor Distribution
+       </b>
+       to
+       <b>
+        Uniform
+       </b>
+       with a
+       <b>
+        Max
+       </b>
+       of
+       <b>
+        0.2,0.2,0.2
+       </b>
+       and a
+       <b>
+        Min
+       </b>
+       of
+       <b>
+        0.1,0.1,0.1
+       </b>
+       .  Leaving the
+       <b>
+        Damping Factor Rotation
+       </b>
+       to their default settings, set the
+       <b>
+        Max Collisions Distribution
+       </b>
+       to
+       <b>
+        Uniform
+       </b>
+       with a
+       <b>
+        Min
+       </b>
+       of
+       <b>
+        1
+       </b>
+       and a
+       <b>
+        Max
+       </b>
+       of
+       <b>
+        2
+       </b>
+       .  The
+       <b>
+        Collision Completion Option
+       </b>
+       should be
+       <b>
+        Freeze
+       </b>
+       and insure that the
+       <b>
+        Collision Types
+       </b>
+       includes
+       <b>
+        World Static
+       </b>
+       ,
+       <b>
+        World Dynamic
+       </b>
+       and
+       <b>
+        Physics Body
+       </b>
+       .
+      </p>
+      <p>
+       Your Particle System should finally look like this:
+       <br/>
+      </p>
+      <p>
+       <img alt="Debris Cascade Window 03" class="" height="921" src="../assets/projectile-visual-effects/19.jpg" width="1128"/>
+       <br/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Bullet_Trail_Material_and_Particle">
+        Bullet Trail Material and Particle
+       </span>
+      </h3>
+      <p>
+       <br/>
+      </p>
+      <p>
+       To add little visual flair to our effect, I want to go over how to create a ribbon particle system which will attach to our bullet and give the illusion of a bullet trail flying through the air after the bullet.  This is absolutely not necessary to the overall effect, and you can skip this section.
+      </p>
+      <p>
+       For the material I am using a series of panning clouds and breakup textures to generate a generic cloudy breakup with some movement built into it as well as a soft circular gradient to act as opacity.
+       <br/>
+      </p>
+      <p>
+       <img alt="Trail Material" class="" height="948" src="../assets/projectile-visual-effects/20.jpg" width="1602"/>
+       <br/>
+      </p>
+      <p>
+       Because of the speed and nature of this effect, we are going to create a very simple ribbon which can be attached to the Bullet in the Projectile Blueprint.
+      </p>
+      <p>
+       <b>
+        Create
+       </b>
+       a
+       <b>
+        New Particle System
+       </b>
+       and assign the M_SnipeTrail material created above to it and as before let’s name the emitter Trail.  With this particle system we want to first add new
+       <b>
+        TypeData
+       </b>
+       of
+       <b>
+        Ribbon
+       </b>
+       to the system.  In the new
+       <b>
+        Ribbon Data
+       </b>
+       Module, we are going to leave all values at
+       <b>
+        default
+       </b>
+       .
+      </p>
+      <p>
+       In
+       <b>
+        Required
+       </b>
+       toggle the
+       <b>
+        Use Local Space
+       </b>
+       to
+       <b>
+        True
+       </b>
+       which will allow us to control the movement of the effect more easily from a blueprint later.  In
+       <b>
+        Spawn
+       </b>
+       set the
+       <b>
+        Rate Distribution
+       </b>
+       to a
+       <b>
+        Constant 50
+       </b>
+       .  In
+       <b>
+        Lifetime
+       </b>
+       set the
+       <b>
+        Distribution
+       </b>
+       to a
+       <b>
+        Constant 1
+       </b>
+       .
+       <b>
+        InitialSize
+       </b>
+       , we will leave at the
+       <b>
+        default Uniform Distribution
+       </b>
+       with a
+       <b>
+        Min
+       </b>
+       and
+       <b>
+        Max
+       </b>
+       of
+       <b>
+        25,25,25
+       </b>
+       . We will replace the
+       <b>
+        Color Over Life
+       </b>
+       module with a
+       <b>
+        default set Initial Color
+       </b>
+       module.
+      </p>
+      <p>
+       Finally we need to add and set the
+       <b>
+        Trail &gt;&gt; Source
+       </b>
+       module.  We want the
+       <b>
+        Source Method
+       </b>
+       to be
+       <b>
+        PET2SRCM Actor
+       </b>
+       and using the
+       <b>
+        Source Name Bullet
+       </b>
+       .  The
+       <b>
+        Source Strength
+       </b>
+       should be a
+       <b>
+        Constant 100
+       </b>
+       and insure that the
+       <b>
+        Inherit Rotation
+       </b>
+       is toggled
+       <b>
+        True
+       </b>
+       .
+      </p>
+      <p>
+       At this point you may be wondering why the particle system cannot be seen in the Preview Window.  This is because a ribbon module requires movement to be seen.  You can simulate the motion in Cascade by toggling
+       <b>
+        Motion
+       </b>
+       to true under the Viewport’s
+       <b>
+        View
+       </b>
+       dropdown menu.
+      </p>
+      <p>
+       With
+       <b>
+        Motion
+       </b>
+       on, your system should look like this:
+       <br/>
+      </p>
+      <p>
+       <img alt="Trail Cascade" class="" height="927" src="../assets/projectile-visual-effects/21.jpg" width="801"/>
+       <br/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Bullet_Hit_Decal_Material">
+        Bullet Hit Decal Material
+       </span>
+      </h3>
+      <p>
+       <br/>
+      </p>
+      <p>
+       In order to simulate the divot made in the environment caused by the bullet’s impact we are going to use a Decal which we can spawn via the Projectile blueprint at the point of impact, but more on that later.  For this material, I really only want to generate a normal which can be overlayed onto the environment at impact.  This will allow the level’s actual colors to shine through but allow the level’s lighting give me a believable impact effect.  To that end we are going to create a Material M_Decal_BulletMark which has a
+       <b>
+        Deferred Decal Material Domain
+       </b>
+       and a
+       <b>
+        Decal Blend Mode
+       </b>
+       of
+       <b>
+        Normal
+       </b>
+       .
+       <br/>
+      </p>
+      <p>
+       <img alt="Decal Material" class="" height="951" src="../assets/projectile-visual-effects/22.jpg" width="1599"/>
+       <br/>
+      </p>
+      <p>
+       I am using a little trick to generate a “faux” normal using only the existing texture.  All I do is adjust the UVs on the texture very slighting in one direction.  In this example I am using the Alpha Channel as it has the more precise texture breakup.  I append the original to the new which will give me a Red and Green 2 Vector and Append a 1 in the Blue Channel and I have a generated Tangent Space Normal.  It may not make it to a final game but for quick testing it can give you a pretty good idea of how something will look without trying to generate a normal in another program.
+       <br/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Bullet_.26_Bullet_Material">
+        Bullet &amp; Bullet Material
+       </span>
+      </h3>
+      <p>
+       <br/>
+      </p>
+      <p>
+       In the final project, I have included a bullet mesh and a material shown below.  These are not needed but help to sell the effect more than the default yellow ball.
+       <br/>
+      </p>
+      <p>
+       <img alt="Bullet Metal Material" class="" height="951" src="../assets/projectile-visual-effects/23.jpg" width="1599"/>
+       <br/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Projectile_Blueprint">
+        <b>
+         Projectile Blueprint
+        </b>
+       </span>
+      </h2>
+      <p>
+       <br/>
+      </p>
+      <p>
+       I am using the First Person Template’s Projectile Blueprint as our base and I will explain as we go through what we are adding, changing or deleting.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Components">
+        Components
+       </span>
+      </h3>
+      <p>
+       <br/>
+      </p>
+      <p>
+       To start in the Components, we first want to change out the Sphere Mesh with the Bullet mesh which can be done simply by placing the Bullet SM into the Static Mesh Slot.  Please take note that I am not changing the Collision Component so while the bullet is a smaller cyclindrical object the collision component is still based on the yellow ball.  Feel free to adjust as you require, but the difference in this sample is miniscule.  To keep things straight for those who chose not to use the bullet mesh, I have kept the name of the Variable
+       <b>
+        Sphere
+       </b>
+       .
+      </p>
+      <p>
+       In the Projectile Details panel, set the
+       <b>
+        Initial Speed
+       </b>
+       and
+       <b>
+        Max Speed
+       </b>
+       to
+       <b>
+        3000
+       </b>
+       and the
+       <b>
+        Projectile Gravity Scale
+       </b>
+       to
+       <b>
+        0
+       </b>
+       which will ensure a straight flying bullet.  Insure that the Projectile does not Bounce and that
+       <b>
+        Constrain to Plane
+       </b>
+       is toggled
+       <b>
+        True
+       </b>
+       .
+      </p>
+      <p>
+       Next we want to add the Ribbon Particle System under our ROOT Collision Capsule.  For clarity, let’s name this component’s variable to
+       <b>
+        Ribbon
+       </b>
+       .
+       <br/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Event_Graph">
+        Event Graph
+       </span>
+      </h3>
+      <p>
+       <br/>
+      </p>
+      <p>
+       To begin let’s delete everything but the
+       <b>
+        Event Hit
+       </b>
+       node in the Event Graph.  If you would like to work the extra components into the event graph ok, but our initial reference has a bullet with enough energy behind it to hit and destroy itself on that first hit with no bouncing components.
+      </p>
+      <p>
+       Next let’s set up the following node structure:
+       <br/>
+      </p>
+      <p>
+       <img alt="Projectile Event Graph" class="" height="497" src="../assets/projectile-visual-effects/24.jpg" width="1000"/>
+       <br/>
+      </p>
+      <p>
+       We went through a lot of trouble in Cascade to insure that our particles were behaving along the X Axis and if you note the Rotation from XVector node in the Blueprint is the reason why.  We can take the normal from the point of impact and the node will generate a rotation value which will ensure that the X Axis is facing the same direction as the Normal of the impact surface.
+       <br/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        <b>
+         Conclusion
+        </b>
+       </span>
+      </h2>
+      <p>
+       <br/>
+      </p>
+      <p>
+       This project is meant as an introduction to setting up a complete projectile visual effect.  Feel free to experiment and explore different settings and effects in the attached project.
+      </p>
+      <p>
+       [
+       <a class="external text" href="https://mega.co.nz/#!WZ9n1ILb!kU_b3P5Lj92plPYQMAg-LN-pe8ZuVbi2o8d8HeIR1ZY" rel="nofollow">
+        The Final Project can be obtained here.
+       </a>
+       ]
+      </p>
+      <h3>
+       <span class="mw-headline" id="KNOWN_ISSUES">
+        KNOWN ISSUES
+       </span>
+      </h3>
+      <p>
+       As of 4.5.1, there is a known issue with collision's when particles are spawned or attached via a Blueprint.  This does mean that the debris will not collide in the project currently.
+      </p>
+      <p>
+       As of 4.6.0, there is a known issue with Cascade's Color Settings not allowing values greater than 1.0 begin entered which will conflict with settings I have listed above in the documentation.  This has been fixed in 4.7.0 Preview 1 and should be corrected in future engine releases.
+      </p>
+      <p>
+       NOTE:  While the Project is uploaded as a 4.6.1 project, you can create the entire effect starting in version 4.2.1 onward.
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

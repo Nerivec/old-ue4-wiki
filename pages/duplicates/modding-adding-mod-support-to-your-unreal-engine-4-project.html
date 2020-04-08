@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Modding: Adding mod-support to your Unreal Engine 4 project - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Modding: Adding mod-support to your Unreal Engine 4 project
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1">
+         <a href="#Introduction">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Introduction
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1">
+         <a href="#The_Project">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           The Project
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1">
+         <a href="#Creating_the_mod">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Creating the mod
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2">
+           <a href="#Plugin_Descriptor">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Plugin Descriptor
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2">
+           <a href="#Plugin_Content">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             Plugin Content
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1">
+         <a href="#Setup_Launcher.C2.A0Profiles">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Setup Launcher Profiles
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2">
+           <a href="#Full_Game_Profile">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             Full Game Profile
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2">
+           <a href="#MyFirstMod_Profile">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             MyFirstMod Profile
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1">
+         <a href="#Cooking_your_first.C2.A0mod">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Cooking your first mod
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1">
+         <a href="#Loading_a_mod">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Loading a mod
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1">
+         <a href="#Done.21">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Done!
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1">
+         <a href="#References">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           References
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Introduction">
+        Introduction
+       </span>
+      </h2>
+      <p>
+       I will be running you through the process of setting up a mod (or "User Generated Content") for your Unreal Engine 4 game. I've created a sample FPS project with a simple mod included, it's available for download on
+       <a class="external text" href="https://github.com/tomlooman/ModSampleGame" rel="nofollow">
+        GitHub
+       </a>
+       . As a base I used the Blueprint FPS Template. The mod changes the weapon behavior by shooting three balls in an arc instead of one. The
+       <a class="external text" href="https://github.com/tomlooman/ModSampleGame/tree/master/ModSampleGame/Plugins/MyFirstMod" rel="nofollow">
+        Mod source
+       </a>
+       contains a gamemode, map and custom player character.
+      </p>
+      <p>
+       Mods are handled as
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Programming/Plugins/index.html" rel="nofollow">
+        Plugins
+       </a>
+       by the engine, so I recommend reading up on how plugins are handled by the editor before moving on.
+      </p>
+      <p>
+       This guide and the mod sample on Github were built using
+       <strong>
+        UE 4.9 Preview 4
+       </strong>
+       . There are some issues with cooking &amp; packaging in earlier releases.
+      </p>
+      <p>
+       <strong>
+        Warning: This procedure is intended for early adopters only!
+       </strong>
+       The pipeline may change and will receive improvements as it's still work-in-progress.
+      </p>
+      <h2>
+       <span class="mw-headline" id="The_Project">
+        The Project
+       </span>
+      </h2>
+      <p>
+       The full example project is available for download on
+       <a class="external text" href="https://github.com/tomlooman/ModSampleGame" rel="nofollow">
+        GitHub
+       </a>
+       . It's based on the FPS Blueprint Template with a ./Plugins/MyFirstMod folder containing our custom content.
+      </p>
+      <p>
+       <img alt="Mods header narrow.jpg" class="" height="271" src="../assets/modding-adding-mod-support-to-your-unreal-engine-4-project/0.jpg" width="758"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Creating_the_mod">
+        Creating the mod
+       </span>
+      </h2>
+      <p>
+       To create a mod, you must create a Plugin. As mods (or UGC - "User Generated Content") are handled as Plugins by the engine. Below is the folder layout for ModSampleGame. The ./Plugins/MyFirstMod/ contains a /Content/ folder and a
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Programming/Plugins/index.html#plugindescriptorfiles" rel="nofollow">
+        .uplugin descriptor
+       </a>
+       file. The descriptor is loaded by the editor and can be hand-edited using any text editor. The /Saved/ folder is created by the cooking process.
+      </p>
+      <p>
+       <img alt="Mods pluginsfolder.png" class="" height="134" src="../assets/modding-adding-mod-support-to-your-unreal-engine-4-project/1.png" width="620"/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Plugin_Descriptor">
+        Plugin Descriptor
+       </span>
+      </h3>
+      <p>
+       The contents of the descriptor can be edited manually, here is an example of its contents:
+      </p>
+      <pre class="lang:default highlight:0 decode:true">{
+	"FileVersion" : 3,
+	
+	"FriendlyName" : "MyFirstMod",
+	"Version" : 1,
+	"VersionName" : "1.0",
+	"CreatedBy" : "Tom Looman",
+	"CreatedByURL" : "http://www.tomlooman.com",
+	"EngineVersion" : "4.9.0",
+	"Description" : "My First Mod",
+	"Category" : "User Mod",
+	"EnabledByDefault" : true,
+
+	"Modules" :
+	[
+	],
+
+	"CanContainContent" : true
+}</pre>
+      <p>
+       You can use this example and paste it into a new .uplugin file for creating your own mods.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Plugin_Content">
+        Plugin Content
+       </span>
+      </h3>
+      <p>
+       To view and edit UGC or mod content, make sure you enable "Show Plugin Content" in your Content Browser under "View Options" in the bottom right corner. In the sample project from GitHub you should see MyFirstMod as one of the listed Plugins.
+      </p>
+      <p>
+       <img alt="Mods contentbrowsersettings.jpg" class="" height="541" src="../assets/modding-adding-mod-support-to-your-unreal-engine-4-project/2.jpg" width="860"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Setup_Launcher.C2.A0Profiles">
+        Setup Launcher Profiles
+       </span>
+      </h2>
+      <p>
+       <img alt="Mods projectlauncheroverview.png" class="" height="415" src="../assets/modding-adding-mod-support-to-your-unreal-engine-4-project/3.png" width="839"/>
+      </p>
+      <p>
+       To open the launcher (for packaging of the game and mod) go to
+       <strong>
+        Window -&gt; Project Launcher.
+       </strong>
+       At the bottom of the Project Launcher window click the "+" symbol to create your new custom profile. We will need two profiles, one for the base game build, and another for our user mod.
+      </p>
+      <p>
+       <strong>
+        Important note:
+       </strong>
+       As of right now the profiles don't ship with the project files, but are stored in
+       <span style="font-weight: 400;">
+        AppData/Local/UnrealEngine/4.9/Saved/Launcher/. Please use the guide below to setup the profiles.
+       </span>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Full_Game_Profile">
+        Full Game Profile
+       </span>
+      </h3>
+      <p>
+       First we must create a base game build. Mod creators would not need this profile, this is only intended for the developer of the game.
+      </p>
+      <p>
+       The project is set to "ModSampleGame", using the default AnyProject works just fine too. The "Do you wish to build?" is checked and build configuration for this example is set to "Development" for testing purposes. Normally you'd want to set this to Shipping, however we need to have console commands available to try out our mod. Please keep this in mind for your own project profiles.
+      </p>
+      <p>
+       <img alt="Mods fullgamecook 01.png" class="" height="273" src="../assets/modding-adding-mod-support-to-your-unreal-engine-4-project/4.png" width="825"/>
+      </p>
+      <p>
+       First set the cooking dropdown to "By the book" to enable the other options for the Cooking category. For this example we only cook for WindowsNoEditor, using the "en"-culture. We're making a game release so we check "Create a release version of the game for distribution" with the release name of "1.0". Please make sure the other checkboxes match from the image below.
+      </p>
+      <p>
+       <img alt="Mods fullgamecook 02.png" class="" height="1262" src="../assets/modding-adding-mod-support-to-your-unreal-engine-4-project/5.png" width="816"/>
+      </p>
+      <p>
+       We don't need to deploy and/or remotely store our package:
+      </p>
+      <p>
+       <img alt="Mods fullgamecook 03.png" class="" height="285" src="../assets/modding-adding-mod-support-to-your-unreal-engine-4-project/6.png" width="824"/>
+      </p>
+      <p>
+       Now you have setup your full game profile, make sure to add an appropriate name such as "FullGame Release v1.0" with an accurate description. We won't be running the profile just yet as we will first setup our MyFirstMod profile.
+      </p>
+      <h3>
+       <span class="mw-headline" id="MyFirstMod_Profile">
+        MyFirstMod Profile
+       </span>
+      </h3>
+      <p>
+       This profile is only slightly different from the full game profile. With "build dlc" enabled instead of a new game release. Each mod would have a different profile to package its contents.
+      </p>
+      <p>
+       The first part is equal to the FullGame:
+      </p>
+      <p>
+       <img alt="Mods firstmod 01.png" class="" height="236" src="../assets/modding-adding-mod-support-to-your-unreal-engine-4-project/7.png" width="823"/>
+      </p>
+      <p>
+       As you can see, there are some changes to the Cook options below. The "build dlc" is a little confusingly labeled as it's looking for content in the /Plugins/ folder. Make sure you enter the name for the mod to build, this must be the same as the folder name of your /Plugins/
+       <strong>
+        &lt;ModName&gt;
+       </strong>
+       , in the case in our example MyFirstMod. The option "Include engine content" must be disabled. We only want to include whatever is inside our mod folder, if you need engine content you should copy over the content to the Plugins/ModName/ folder instead.
+      </p>
+      <p>
+       <img alt="Mods firstmod 02.png" class="" height="1260" src="../assets/modding-adding-mod-support-to-your-unreal-engine-4-project/8.png" width="818"/>
+      </p>
+      <p>
+       The third section is the same as the full game, we do not copy to any repository and don't deploy to a device.
+      </p>
+      <p>
+       <img alt="Mods firstmod 03.png" class="" height="280" src="../assets/modding-adding-mod-support-to-your-unreal-engine-4-project/9.png" width="821"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Cooking_your_first.C2.A0mod">
+        Cooking your first mod
+       </span>
+      </h2>
+      <p>
+       First cook our FullGame profile, and repeat the process for the MyFirstMod profile by pressing the Launch key for both, pressing "Done" after the run completes, and repeating for the second profile.
+      </p>
+      <p>
+       <img alt="Mods cookprofiles.png" class="" height="415" src="../assets/modding-adding-mod-support-to-your-unreal-engine-4-project/10.png" width="839"/>
+      </p>
+      <p>
+       FullGame cook is located at:
+       <strong>
+        ModSampleGame/Saved/StagedBuilds/
+       </strong>
+       You can move this anywhere on your disk.
+      </p>
+      <p>
+       MyFirstMod is located at:
+       <strong>
+        ModSampleGame/Plugins/MyFirstMod/Saved/StagedBuilds/WindowsNoEditor/ModSampleGame/Content/Paks/
+       </strong>
+      </p>
+      <p>
+       You can rename the .pak file of the mod so we can move it to our full game ModSampleGame/Content/Paks/ folder. For an example see the included packaged project source from GitHub:
+       <strong>
+        PackagedSampleGame/ModSampleGame/Content/Pak
+       </strong>
+       s/
+      </p>
+      <h2>
+       <span class="mw-headline" id="Loading_a_mod">
+        Loading a mod
+       </span>
+      </h2>
+      <p>
+       By default additional .pak files are automatically loaded by the game when placed in the /Content/Paks/ folder of your cooked game. You can use a sub-folders (for example "./Content/Paks/Mods/") to organize your custom content. They will still be loaded automatically. In the example below I manually renamed the generated .pak file from the MyFirstMod profile to "MyFirstMod.pak".
+      </p>
+      <p>
+       <img alt="Mods cookedpakfolder.png" class="" height="113" src="../assets/modding-adding-mod-support-to-your-unreal-engine-4-project/11.png" width="799"/>
+      </p>
+      <p>
+       To test if our mod was loaded successfully, open the console window using Tilde (~) and type
+       <strong>
+        "open modexamplemap"
+       </strong>
+       you should now be respawned into our custom level, with our custom player that fires three projectiles instead of one when firing the weapon using the left-mouse button.
+      </p>
+      <p>
+       <img alt="Mods modexample.gif" class="" height="433" src="../assets/modding-adding-mod-support-to-your-unreal-engine-4-project/12.gif" width="770"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Done.21">
+        Done!
+       </span>
+      </h2>
+      <p>
+       Now you've seen the process of setting up your first mod for an Unreal Engine 4 game! The pipeline is still a work in progress and will be smoothed out in upcoming engine releases. Now you have a basic pipeline to get you started for UGC support in your own project.
+      </p>
+      <p>
+       <strong>
+        Please leave your feedback!
+       </strong>
+       We're in the process of improving the pipeline and adding more features to make modding with Unreal Engine 4 as awesome as it can be, leave your comments.
+      </p>
+      <h2>
+       <span class="mw-headline" id="References">
+        References
+       </span>
+      </h2>
+      <ul>
+       <li>
+        <a class="external text" href="https://github.com/tomlooman/ModSampleGame" rel="nofollow">
+         GitHub Project Source
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/Programming/Plugins/index.html" rel="nofollow">
+         Plugins Documentation
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://forums.unrealengine.com/forumdisplay.php?68-Modding" rel="nofollow">
+         Unreal engine Modding sub-forums
+        </a>
+       </li>
+      </ul>
+      <p>
+       <b>
+        Project &amp; Wiki by
+        <a class="external text" href="http://www.tomlooman.com/" rel="nofollow">
+         Tom Looman
+        </a>
+       </b>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

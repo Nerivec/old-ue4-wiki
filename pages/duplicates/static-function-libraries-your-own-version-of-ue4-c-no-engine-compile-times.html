@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Static Function Libraries, Your Own Version of UE4 C++, No Engine Compile Times - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Static Function Libraries, Your Own Version of UE4 C++, No Engine Compile Times
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#MyStaticLibrary.h">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           MyStaticLibrary.h
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#MyStaticLibrary.cpp">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           MyStaticLibrary.cpp
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Example_Usage">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Example Usage
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Include">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Include
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Why_UObject.3F">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Why UObject?
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#USTRUCT.28.29_Library">
+            <span class="tocnumber">
+             6.1
+            </span>
+            <span class="toctext">
+             USTRUCT() Library
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Related_Tutorials">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Related Tutorials
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Summary">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Summary
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Original Author:
+       </i>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       Building up your own static library of functions enables you to create your own version of UE4 C++ without having to modify the engine code and recompile it constantly.
+      </p>
+      <p>
+       A static library can have FORCEINLINE functions as well as .cpp functions that utilize your entire Game's compiled header structure!
+      </p>
+      <pre> Whenever you have a core function that you want to use in many classes, 
+ you can make it into a Static Library function 
+ so it can be used any time anywhere!
+</pre>
+      <h2>
+       <span class="mw-headline" id="MyStaticLibrary.h">
+        MyStaticLibrary.h
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"MyStaticLibrary.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">()</span> 
+<span class="k">class</span> <span class="nc">UMyStaticLibrary</span> <span class="o">:</span> <span class="k">public</span> <span class="n">UObject</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+	
+	<span class="c1">//FORCEINLNE function</span>
+	<span class="k">static</span> <span class="n">FORCEINLINE</span> <span class="kt">bool</span> <span class="n">IsValid</span><span class="p">(</span><span class="n">AActor</span><span class="o">*</span> <span class="n">TheActor</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">TheActor</span><span class="p">)</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+		<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">TheActor</span><span class="o">-&gt;</span><span class="n">IsValidLowLevel</span><span class="p">())</span> <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+		<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+	<span class="p">}</span>
+	
+	<span class="c1">//cpp function</span>
+	<span class="k">static</span> <span class="n">int32</span> <span class="n">ComplicatedGameDataAnalysis</span><span class="p">();</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="MyStaticLibrary.cpp">
+        MyStaticLibrary.cpp
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2013 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#include</span> <span class="cpf">"VictoryGame.h"</span><span class="cp"></span>
+
+<span class="c1">//////////////////////////////////////////////////////////////////////////</span>
+<span class="c1">// MyStaticLibrary</span>
+
+<span class="n">UMyStaticLibrary</span><span class="o">::</span><span class="n">UMyStaticLibrary</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">ObjectInitializer</span><span class="p">)</span>
+<span class="p">{</span>
+	
+<span class="p">}</span>
+
+<span class="n">int32</span> <span class="n">UMyStaticLibrary</span><span class="o">::</span><span class="n">ComplicatedGameDataAnalysis</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="c1">//Do lots of stuff that requires the entire Game's compiled header source,</span>
+	<span class="c1">//  involving lots of your custom project-specific classes,</span>
+	<span class="c1">//    classes that have not been compiled in the .h of this library </span>
+	<span class="c1">//    since they depend on it.</span>
+        <span class="k">return</span> <span class="mi">9000</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Example_Usage">
+        Example Usage
+       </span>
+      </h2>
+      <p>
+       In any class, in the .h, or the .cpp, anywhere really (if the class depends on your static library
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Anywhere, in .h or .cpp, in any class! </span>
+<span class="k">if</span><span class="p">(</span><span class="n">UMyStaticLibrary</span><span class="o">::</span><span class="n">IsValid</span><span class="p">(</span><span class="n">MyCharacter</span><span class="p">))</span>
+<span class="p">{</span>
+  <span class="c1">//Celebrate</span>
+  <span class="n">ClientMessage</span><span class="p">(</span> <span class="n">FString</span><span class="o">::</span><span class="n">FromInt</span><span class="p">(</span><span class="n">UMyStaticLibrary</span><span class="o">::</span><span class="n">ComplicatedGameDataAnalysis</span><span class="p">())</span> <span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Include">
+        Include
+       </span>
+      </h2>
+      <p>
+       All of the classes that want to use your Static Library must include it
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"MyStaticLibrary.h"</span><span class="cp"></span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Why_UObject.3F">
+        Why UObject?
+       </span>
+      </h2>
+      <p>
+       Because then you can also define USTRUCTS() in your static library, the very best place for them, if many classes want to use them!
+      </p>
+      <h3>
+       <span class="mw-headline" id="USTRUCT.28.29_Library">
+        USTRUCT() Library
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//My 2D Rectangle data type</span>
+<span class="c1">//  because this is defined in your static library that all your classes depend on,</span>
+<span class="c1">//  you can use this USTRUCT() data type in any class, even in  .h FORCEINLINE functions!</span>
+
+<span class="n">USTRUCT</span><span class="p">()</span>
+<span class="k">struct</span> <span class="n">FVRect</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_USTRUCT_BODY</span><span class="p">()</span>
+	
+	<span class="n">UPROPERTY</span><span class="p">()</span>
+	<span class="n">FVector2D</span> <span class="n">Min</span><span class="p">;</span>
+	
+	<span class="n">UPROPERTY</span><span class="p">()</span>
+	<span class="n">FVector2D</span> <span class="n">Max</span><span class="p">;</span>
+	
+	<span class="c1">//overloaded constructor</span>
+	<span class="n">FVRect</span><span class="p">(</span><span class="k">const</span> <span class="n">FVector2D</span><span class="o">&amp;</span> <span class="n">VPoint1</span><span class="p">,</span> <span class="k">const</span> <span class="n">FVector2D</span><span class="o">&amp;</span> <span class="n">VPoint2</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//drag topleft to bottom right</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">VPoint1</span><span class="p">.</span><span class="n">X</span> <span class="o">&lt;</span> <span class="n">VPoint2</span><span class="p">.</span><span class="n">X</span> <span class="o">&amp;&amp;</span>
+			<span class="n">VPoint1</span><span class="p">.</span><span class="n">Y</span> <span class="o">&lt;</span> <span class="n">VPoint2</span><span class="p">.</span><span class="n">Y</span>
+		<span class="p">){</span>
+			<span class="n">Min</span> 	<span class="o">=</span> <span class="n">VPoint1</span><span class="p">;</span>
+			<span class="n">Max</span> 	<span class="o">=</span> <span class="n">VPoint2</span><span class="p">;</span>
+		<span class="p">}</span>
+		
+		<span class="c1">//drag from bottom right to top left</span>
+		<span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">VPoint1</span><span class="p">.</span><span class="n">X</span> <span class="o">&gt;</span> <span class="n">VPoint2</span><span class="p">.</span><span class="n">X</span> <span class="o">&amp;&amp;</span>
+			<span class="n">VPoint1</span><span class="p">.</span><span class="n">Y</span> <span class="o">&gt;</span> <span class="n">VPoint2</span><span class="p">.</span><span class="n">Y</span>
+		<span class="p">){</span>
+			<span class="n">Min</span> 	<span class="o">=</span> <span class="n">VPoint2</span><span class="p">;</span>
+			<span class="n">Max</span> 	<span class="o">=</span> <span class="n">VPoint1</span><span class="p">;</span>
+		<span class="p">}</span>
+		
+		<span class="c1">//drag from bottom left to top right</span>
+		<span class="k">else</span> <span class="k">if</span><span class="p">(</span><span class="n">VPoint1</span><span class="p">.</span><span class="n">X</span> <span class="o">&lt;</span> <span class="n">VPoint2</span><span class="p">.</span><span class="n">X</span> <span class="o">&amp;&amp;</span>
+			<span class="n">VPoint1</span><span class="p">.</span><span class="n">Y</span> <span class="o">&gt;</span> <span class="n">VPoint2</span><span class="p">.</span><span class="n">Y</span>
+		<span class="p">){</span>
+			<span class="n">Min</span> 	<span class="o">=</span> <span class="n">FVector2D</span><span class="p">(</span><span class="n">VPoint1</span><span class="p">.</span><span class="n">X</span><span class="p">,</span> <span class="n">VPoint2</span><span class="p">.</span><span class="n">Y</span><span class="p">);</span>
+			<span class="n">Max</span> 	<span class="o">=</span> <span class="n">FVector2D</span><span class="p">(</span><span class="n">VPoint2</span><span class="p">.</span><span class="n">X</span><span class="p">,</span> <span class="n">VPoint1</span><span class="p">.</span><span class="n">Y</span><span class="p">);</span>
+		<span class="p">}</span>
+		
+		<span class="c1">//etc...</span>
+	<span class="p">}</span>
+	
+	<span class="c1">//base constructor</span>
+	<span class="n">FVRect</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="n">Min</span> <span class="o">=</span> <span class="n">FVector2D</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+		<span class="n">Max</span> <span class="o">=</span> <span class="n">FVector2D</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span><span class="mi">500</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+
+<span class="n">USTRUCT</span><span class="p">()</span>
+<span class="k">struct</span> <span class="n">FQuadVRect</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_USTRUCT_BODY</span><span class="p">()</span>
+	
+	<span class="n">UPROPERTY</span><span class="p">()</span>
+	<span class="n">FVRect</span> <span class="n">Rects</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>
+
+        <span class="c1">//base constructor</span>
+	<span class="n">FQuadVRect</span><span class="p">()</span>
+	<span class="p">{</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+
+<span class="c1">//And many</span>
+<span class="c1">//many</span>
+<span class="c1">//many</span>
+<span class="c1">//many more USTRUCTS() !</span>
+
+<span class="n">UCLASS</span><span class="p">()</span> 
+<span class="k">class</span> <span class="nc">UMyStaticLibrary</span> <span class="o">:</span> <span class="k">public</span> <span class="n">UObject</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+
+<span class="p">};</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Related_Tutorials">
+        Related Tutorials
+       </span>
+      </h2>
+      <p>
+      </p>
+      <p>
+       Great tutorial by
+       !
+      </p>
+      <h2>
+       <span class="mw-headline" id="Summary">
+        Summary
+       </span>
+      </h2>
+      <p>
+       Now you have an easy way to write your own version of UE4 C++ to include essential project-specific function tools,
+      </p>
+      <pre> without having to recompile the entire engine code constantly!
+</pre>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

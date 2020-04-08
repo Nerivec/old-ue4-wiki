@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Basic Level Design BSP (Unreal Tournament) - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Basic Level Design BSP (Unreal Tournament)
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Introduction">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Introduction
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#What_is_BSP.3F">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             What is BSP?
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Why_is_BSP_important.3F">
+            <span class="tocnumber">
+             1.2
+            </span>
+            <span class="toctext">
+             Why is BSP important?
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#What_are_meshes_then.3F">
+            <span class="tocnumber">
+             1.3
+            </span>
+            <span class="toctext">
+             What are meshes then?
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Adding_brushes_to_your_level">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Adding brushes to your level
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Brush_size_and_shape">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Brush size and shape
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Brushs_and_the_grid">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             Brushs and the grid
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Rotating_Brushes">
+            <span class="tocnumber">
+             2.3
+            </span>
+            <span class="toctext">
+             Rotating Brushes
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#Building_Geometry">
+            <span class="tocnumber">
+             2.4
+            </span>
+            <span class="toctext">
+             Building Geometry
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#Additive_and_Subtractive_Brushes">
+            <span class="tocnumber">
+             2.5
+            </span>
+            <span class="toctext">
+             Additive and Subtractive Brushes
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#BSP_Order">
+            <span class="tocnumber">
+             2.6
+            </span>
+            <span class="toctext">
+             BSP Order
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-12">
+         <a href="#Geometry_Mode">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Geometry Mode
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-13">
+           <a href="#Extrude_Tool">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Extrude Tool
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-14">
+           <a href="#Brush_Clip_Tool">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             Brush Clip Tool
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-15">
+           <a href="#Pen_Tool">
+            <span class="tocnumber">
+             3.3
+            </span>
+            <span class="toctext">
+             Pen Tool
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-16">
+         <a href="#Issues_and_Fixes">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Issues and Fixes
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-17">
+           <a href="#BSP_holes">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             BSP holes
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-18">
+           <a href="#Triangulation_and_Planar_faces">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             Triangulation and Planar faces
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-19">
+           <a href="#Getting_caught_on_BSP">
+            <span class="tocnumber">
+             4.3
+            </span>
+            <span class="toctext">
+             Getting caught on BSP
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-20">
+           <a href="#Working_Methods">
+            <span class="tocnumber">
+             4.4
+            </span>
+            <span class="toctext">
+             Working Methods
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-21">
+           <a href="#Go_make_some_BSP">
+            <span class="tocnumber">
+             4.5
+            </span>
+            <span class="toctext">
+             Go make some BSP
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Introduction">
+        Introduction
+       </span>
+      </h1>
+      <p>
+       This tutorial will cover the very basics of level design; how to create walls, floors, ceilings and windows using only BSP.
+      </p>
+      <h3>
+       <span class="mw-headline" id="What_is_BSP.3F">
+        What is BSP?
+       </span>
+      </h3>
+      <p>
+       Binary Space Partitioning, or BSP for short, is a simple and quick way of laying out space in your level; defining what's solid and what's not. Designers place BSP
+       <b>
+        Brushes
+       </b>
+       to create
+       <b>
+        Geometry
+       </b>
+       which is what forms the foundation of a level. You may hear people talking about BSP shells, Brushwork, or Geometry; all these mean the same thing, that being the layout of BSP Brushes used to create the level.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Why_is_BSP_important.3F">
+        Why is BSP important?
+       </span>
+      </h3>
+      <p>
+       BSP is both very fast to work with, and can be edited easily within the editor, it allows designers to quickly prototype and modify levels which is crucial in the early stages of both the level's development, and the game's. It's also very basic and easy to work with once you understand the basic rules and how to avoid pitfalls. Most level designers will start off a level with BSP, test, edit and test again until they are happy with it, or till they run out of time. learning BSP is the first step to creating levels, without it you'll likely end up with a confused mess.
+      </p>
+      <h3>
+       <span class="mw-headline" id="What_are_meshes_then.3F">
+        What are meshes then?
+       </span>
+      </h3>
+      <p>
+       At this point meshes are used to make things pretty, they're a lot more malleable and efficient, but need to be created outside of the editor in a modelling program and take a longer to make and edit. If you're just starting a level, or level designing in general, just stick to BSP, ignore meshes unless you know you need them (I'll expand on this near the end).
+      </p>
+      <h1>
+       <span class="mw-headline" id="Adding_brushes_to_your_level">
+        Adding brushes to your level
+       </span>
+      </h1>
+      <p>
+       BSP brushes can be found under the place mode under BSP From here you can drag any brush shape you'd like into your level. While dragging you will see a red outline of the brush, when you let go the brush will be placed into the level.
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:301px;">
+         <img alt="" class="thumbimage" height="500" src="../assets/basic-level-design-bsp-unreal-tournament/0.jpg" width="299"/>
+         <div class="thumbcaption">
+          BSP Menu
+         </div>
+        </div>
+       </div>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Brush_size_and_shape">
+        Brush size and shape
+       </span>
+      </h3>
+      <p>
+       BSP brushes come in a variety of shapes and sizes, they can be then edited further to create almost any shaped you desire.
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:768px;">
+         <img alt="" class="thumbimage" height="474" src="../assets/basic-level-design-bsp-unreal-tournament/1.jpg" width="766"/>
+         <div class="thumbcaption">
+          Various BSP brush shapes.
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       You can use the details panel to set the size of your brushes and their type as well as more complex options, some of which are hidden under the drop down arrow.
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:289px;">
+         <img alt="" class="thumbimage" height="297" src="../assets/basic-level-design-bsp-unreal-tournament/2.jpg" width="287"/>
+         <div class="thumbcaption">
+          BSP brush setings.
+         </div>
+        </div>
+       </div>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Brushs_and_the_grid">
+        Brushs and the grid
+       </span>
+      </h3>
+      <p>
+       One of the downsides to BSP is that it's quite prone to breaking, and one of the fastest ways to break it is by working off the snap to grid.
+       <i>
+        If you work with grid snapping off, you're gonna have a bad time.
+       </i>
+       Any grid setting over 10 is fine. If you find yourself with brushes floating in space you can save them by pressing the Align Brush Vertices and this will place the brushes back on the grid for you.
+      </p>
+      <p>
+       The only exceptions to this rule are cylinders and spheres. The centre (or origin) of the brush should be on the grid, but the vertices often will not be.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Rotating_Brushes">
+        Rotating Brushes
+       </span>
+      </h3>
+      <p>
+       Long story short, don't rotate brushes at anything other than 90 degree increments. If you, for example, wanted a diamond shape or a diagonal walkway, it is much better to edit a brush to fit that shape than simply rotate it to fit. This simply ensures the vertices are on the grid and that everything matches up nicely. If you need to rotate a complex mesh and want to avoid rebuilding it entirely at 45 degrees you can use the Align Brush Vertices tool; the engine will move vertices to their nearest grid point and won't care about modifying the shape of the brush, so it's not foolproof.
+      </p>
+      <p>
+       There are some times when you need to have a brush rotated at an odd angle, or rotate it in more that 2 axis. This is a really good place to use a simple mesh! there are a few basic ones provided in the editor, like cubes.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Building_Geometry">
+        Building Geometry
+       </span>
+      </h3>
+      <p>
+       In order to turn brushes into something the player can move around in, the engine must first
+       <b>
+        Build Geometry
+       </b>
+       . This is a fairly complex mathematical process in which the engine breaks down the brushes into parts which it can render and display to the player. By default, the UE4 will build your geometry for you as you make changes. However, from time to time it can miss an update or, on larger maps, this behaviour can get irritating. You can turn off this default in the Editor Preferences under Level Editor -&gt; Miscellaneous -&gt; Update BSP Automatically.
+      </p>
+      <p>
+       You may also manually build geometry by selecting Build Geometry under the Build menu, or simply press build (this will build everything and thus may take a long time). Personally, I have made a custom keybind for build geometry to save time.
+      </p>
+      <p>
+       You will want to build whenever you make a change to a BSP brush, including deleting one. If you delete a brush and it doesn't seem to disappear, rebuild. Change a brush's size? rebuild. Something doesn't match up with the wireframe? rebuild.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Additive_and_Subtractive_Brushes">
+        Additive and Subtractive Brushes
+       </span>
+      </h3>
+      <p>
+       BSP brushes are all about creating and carving solid space to create a level. All levels start empty, filled with "air" or "void," so in order to create a level we must add solid areas for the players to move around. These areas can then be carved into, further editing the space. To facilitate this BSP brushes come in two types:
+      </p>
+      <ul>
+       <li>
+        Additive brushes - Add solid space to the level. If you wanted to make a wall you'd need to
+        <i>
+         add
+        </i>
+        solid space your level.
+       </li>
+       <li>
+        Subtractive brushes - Subtracts solid space from the level. If you wanted to make a window in said wall, you'd want to
+        <i>
+         subtract
+        </i>
+        space to create a hole.
+       </li>
+      </ul>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:836px;">
+         <img alt="" class="thumbimage" height="422" src="../assets/basic-level-design-bsp-unreal-tournament/3.jpg" width="834"/>
+         <div class="thumbcaption">
+          Additive brush (blue) with Subtractive brush (pink) carving out a block.
+         </div>
+        </div>
+       </div>
+      </div>
+      <h3>
+       <span class="mw-headline" id="BSP_Order">
+        BSP Order
+       </span>
+      </h3>
+      <p>
+       When the engine builds geometry it processes each brush in a particular order, designers can manipulate this order to get the desired effect. For instance, building a frame inside a window might require the designers to place Additive Brushes inside a Subtractive Brush.  The order in which these instructions are processed defines how the end result will appear. You can change the order of brushes from the details panel, hidden under the drop down arrow. There are however only two options. To First and To Last.
+      </p>
+      <p>
+       I like to think of this as a stack of instructions written on paper, when you want something done first you put it on top, when you want it done last you put it on the bottom. You can move groups of instructions to the top or bottom but they stay in the same order as a group.
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:893px;">
+         <img alt="" class="thumbimage" height="275" src="../assets/basic-level-design-bsp-unreal-tournament/4.jpg" width="891"/>
+         <div class="thumbcaption">
+          Same Brushes, different order. Moving the subtractive brush to last causes the frame to be hidden.
+         </div>
+        </div>
+       </div>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Geometry_Mode">
+        Geometry Mode
+       </span>
+      </h1>
+      <p>
+       Geometry mode allows you to modify brushes into interesting and useful shapes. You can select Geometry mode from the Modes tab.  It's at the end and looks like a cube with the end chopped off. It can look a little intimidating but it's actually really simple.
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:299px;">
+         <img alt="" class="thumbimage" height="499" src="../assets/basic-level-design-bsp-unreal-tournament/5.jpg" width="297"/>
+         <div class="thumbcaption">
+          Geometry Mode Menu.
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       The most important feature of geometry mode is the ability to select individual parts of a brush and move them around, similar to how you might do so in a modelling program like 3DSmax, Maya, or Blender. You can select vertices, edges, and faces independently. Then you can use the standard transform tools to move them around and create the desired shape. The majority of the time, I work in geometry mode and stretch and pull brushes to fit the size I need rather than using the details panel to set them to a particular size.
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:658px;">
+         <img alt="" class="thumbimage" height="216" src="../assets/basic-level-design-bsp-unreal-tournament/6.jpg" width="656"/>
+         <div class="thumbcaption">
+          Cube brush edited in geometry mode
+         </div>
+        </div>
+       </div>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Extrude_Tool">
+        Extrude Tool
+       </span>
+      </h3>
+      <p>
+       Sometimes you need to create more complex shapes than simply moving faces and vertices around will allow. The extrude tool allows you to take a face and pull it out from the brush, creating new edges and faces as you go. This can be useful when adding more detail, or when you want to avoid making multiple brushes when you don't need to. In order to activate the extrude tool select a face, then select extrude from the geometry mode toolbar. You may see a message warning you that extrude only works in local space.  This isn't anything to worry about.
+      </p>
+      <p>
+       There are two ways to extrude.  The first is to use the transform widget to move the face, the second is to enter a length value in the geometry mode toolbar. You can also define a segment number, if you use this make sure your segments remain on the grid.
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:584px;">
+         <img alt="" class="thumbimage" height="265" src="../assets/basic-level-design-bsp-unreal-tournament/7.jpg" width="582"/>
+         <div class="thumbcaption">
+          Making an L shaped brush from a cube.
+         </div>
+        </div>
+       </div>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Brush_Clip_Tool">
+        Brush Clip Tool
+       </span>
+      </h3>
+      <p>
+       Almost the inverse of the Extrude tool, the Brush Clip Tool allows you remove part of your brush and fill in the gap left behind. This can be useful when you want to get odd angles, or would otherwise not be able to create the desired shape easily.
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:602px;">
+         <img alt="" class="thumbimage" height="208" src="../assets/basic-level-design-bsp-unreal-tournament/8.jpg" width="600"/>
+         <div class="thumbcaption">
+          Brush Clip in action.
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       The brush clip tool is a little trickier to use and only works in the orthographic views (Top, Side, Front). First select the brush you wish to clip and the brush clip from the geometry mode toolbar. This should give you a small square that follows your cursor around the grid. By pressing space you can start and end a line to cut along. Once you're happy with your cut line, you can press "apply" to cut it.
+      </p>
+      <p>
+       You will also see a line running perpendicular to the cut line, this defines what part will be deleted. You can flip this by selecting Flip Normal. The split option doesn't delete any part, but creates a new brush from the part removed.
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:650px;">
+         <img alt="" class="thumbimage" height="213" src="../assets/basic-level-design-bsp-unreal-tournament/9.jpg" width="648"/>
+         <div class="thumbcaption">
+          Clipping, and slitting a cube.
+         </div>
+        </div>
+       </div>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Pen_Tool">
+        Pen Tool
+       </span>
+      </h3>
+      <p>
+       The pen tool allows you to draw a shape from vertices, and then extrude it into a complete brush. Drawing a new brush functions in a similar way to the clip tool; it only works in the orthographic views, using space to place vertices. Each vertex placed links directly to the one you just placed. After placing your third vertex you will see a dotted line appear between the first vertex, and the last placed vertex. This shows you the edge that would be drawn if you were to finish drawing the shape there in order to create a valid brush. You can complete a shape at any time by pressing "enter" or by placing a vertex over the first one. "Escape" will incrementally remove vertices in the order they were placed, which is very useful if you make a mistake. The only option you need to know about is
+       <b>
+        Extrude Depth
+       </b>
+       , which sets the depth to which the engine will automatically extrude the brush too. Like the extrude tool, make sure your extrude depth will keep you on the grid.
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:578px;">
+         <img alt="" class="thumbimage" height="225" src="../assets/basic-level-design-bsp-unreal-tournament/10.jpg" width="576"/>
+         <div class="thumbcaption">
+          Clipping a Brush.
+         </div>
+        </div>
+       </div>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Issues_and_Fixes">
+        Issues and Fixes
+       </span>
+      </h1>
+      <h3>
+       <span class="mw-headline" id="BSP_holes">
+        BSP holes
+       </span>
+      </h3>
+      <p>
+       While BSP is quite robust, you can run into a few issues.  The most problematic being BSP Holes. Holes appear when the engine gets confused with brushes and doesn't know what to do, so it does nothing.
+      </p>
+      <p>
+       Editing or clipping brushes can sometimes cause faces to get collapsed together or deleted entirely. This is probably the main cause of holes, and it's fairly easy to fix by using the create tool. To do this, select every vertex around the hole in a clockwise motion, then select "create." This will make a new face across the selected vertices. Selecting the vertices counter-clockwise will create a face that points inwards, selecting in a random order will create a very messed up face, which may cause the engine crash so be careful.
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:450px;">
+         <img alt="" class="thumbimage" height="235" src="../assets/basic-level-design-bsp-unreal-tournament/11.jpg" width="448"/>
+         <div class="thumbcaption">
+          A cube with a face missing, causing a BSP hole.
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       In some cases a face will be pointing the wrong way.  You can test this by moving the camera inside the brush with it selected.  If you see a shaded face where you wouldn't expect it, select it and press "flip" to reorientate the face. Brushes with a single face can also cause major holes.
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:944px;">
+         <img alt="" class="thumbimage" height="217" src="../assets/basic-level-design-bsp-unreal-tournament/12.jpg" width="942"/>
+         <div class="thumbcaption">
+          A single faced brush causes a massive hole.
+         </div>
+        </div>
+       </div>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Triangulation_and_Planar_faces">
+        Triangulation and Planar faces
+       </span>
+      </h3>
+      <p>
+       Brushes must have planar (flat) faces. This means that the engine must be able to draw a flat surface between all the vertices of any face. In some cases you may move a vertex of a face and cause it to become non planar; this will cause the engine to automatically create a new edge, and thus a new face, in order to keep everything planar. This can cause a few issues.
+      </p>
+      <p>
+       Firstly, there are multiple ways to split a 4 or more sided face, and the engine won't necessarily do what you expect. You can, however, use the
+       <b>
+        Turn
+       </b>
+       tool to change between the options quickly. You can also delete the faces and use the create tool to form new faces as you see fit.
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:555px;">
+         <img alt="" class="thumbimage" height="186" src="../assets/basic-level-design-bsp-unreal-tournament/13.jpg" width="553"/>
+         <div class="thumbcaption">
+          Two different ways to triangulate after the same edit.
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       Secondly, when these triangular faces intersect with other brushes they can cause holes, or just flat crazy behaviour in general. One fix is to use the
+       <b>
+        Triangulate tool
+       </b>
+       , followed by the
+       <b>
+        Optimize
+       </b>
+       tool. This forces the engine to turn all of the brush's faces into triangles, then it will attempt to simplify the brush.
+      </p>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:1251px;">
+         <img alt="" class="thumbimage" height="272" src="../assets/basic-level-design-bsp-unreal-tournament/14.jpg" width="1249"/>
+         <div class="thumbcaption">
+          Same brush set-up, one intersecting one not. On the left the triangulate - optimize trick was used to resolve the issue.
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       However, there is an issue with this trick. The optimize tool can render more complex brushes uneditable by removing supporting vertices and edges. Most of the time you'll want to try your best to keep faces planar.  A good tip for this is to use the clip tool or, with square faces, always move edges rather than vertices.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Getting_caught_on_BSP">
+        Getting caught on BSP
+       </span>
+      </h3>
+      <p>
+       BSP collision isn't perfect. Sometimes, players will get caught on a floor or wall and be unable to move without any obvious reason. This often happens at brush
+       <b>
+        seams
+       </b>
+       , areas where two or more brushes meet. If this happens, you can try a few things to fix it:
+      </p>
+      <ul>
+       <li>
+        Simplify the brushes in the area to remove unnecessary seams.
+       </li>
+       <li>
+        Change the order of brushes. I try to make it so that effected brushes are processed as early as possible, and avoid layering addition and subtraction too much.
+       </li>
+       <li>
+        Use the
+        <b>
+         triangulate &amp; optimize
+        </b>
+        trick as mentioned above.
+       </li>
+      </ul>
+      <p>
+       If these fail to resolve the issue, it may be necessary to make some minor changes to the design, or entirely rebuild the area using a different brush approach.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Working_Methods">
+        Working Methods
+       </span>
+      </h3>
+      <p>
+       There's no wrong way to work with BSP as long as you're not creating holes or snagging players.  However, there are a few basic things to watch out for. Firstly, always try to use as few brushes as possible, but also try to keep brushes fairly simple. This is a balancing act. It would be theoretically possible to create an entire level from one BSP brush, but it wouldn't be advisable, as the geometry can become overly complex.  Editing the brushes may become difficult as vertices may develop unexpected attachments to other parts of the brush. However, the more brushes you add, the longer it will take to build geometry, as there will be more pages of instructions.
+      </p>
+      <p>
+       For example, there are two ways to build a room from BSP. The first is to create a large additive cube with a smaller subtractive brush inside; this gives you a room with only 2 brushes. The other way is to use additive brushes to form each wall, followed by the floor and ceiling; this method would use 6 brushes rather than 2. In cases where you know you want a room of that size and shape it would be more efficient, and less risky to use the 2 brush method.
+      </p>
+      <p>
+       Personally, I like to work with additive brushes. I find it gives me more fine control over the level and makes editing easier, it fits the way I design; you may be different. Don't be afraid of trying things. BSP is quite resilient when you stick to the grid no matter what method you use.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Go_make_some_BSP">
+        Go make some BSP
+       </span>
+      </h3>
+      <p>
+       I have not covered everything here, but this should see you though the majority of maps you're likely to create early on. If you have any questions, or need help, you can reply to this thread, send me a forum PM, or find me in the #UnrealTournament irc channel.
+      </p>
+      <p>
+       For more on BSP see the
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Actors/Brushes/index.html" rel="nofollow">
+        Official Unreal Engine Documentation!
+       </a>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

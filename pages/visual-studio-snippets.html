@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Visual Studio Snippets - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Visual Studio Snippets
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#How_to_add_snippet_.3F">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           How to add snippet ?
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#How_to_use_snippets_.3F">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           How to use snippets ?
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Snippets">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Snippets
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <p>
+       Visual Studio Snippets could be very useful, that’s why I’ve created a
+       <a class="external text" href="https://github.com/mpolaczyk/ue4snippets" rel="nofollow">
+        public repository
+       </a>
+       with a few examples. Snippets are generated with
+       <a class="external text" href="http://www.stack.nl/~dimitri/doxygen/manual/docblocks.html#cppblock" rel="nofollow">
+        doxygen
+       </a>
+       style comments.
+      </p>
+      <h2>
+       <span class="mw-headline" id="How_to_add_snippet_.3F">
+        How to add snippet ?
+       </span>
+      </h2>
+      <p>
+       First of all you have to clone
+       <a class="external text" href="https://github.com/mpolaczyk/ue4snippets" rel="nofollow">
+        GitHub repository
+       </a>
+       . Then you have two choices:
+      </p>
+      <ol>
+       <li>
+        Method one. Paste
+        <i>
+         .snippet
+        </i>
+        files into:
+        <i>
+         "C:\Users\$user$\Documents\Visual Studio 2013\Code Snippets\Visual C++\My Code Snippets"
+        </i>
+        . Then restart VS.
+       </li>
+       <li>
+        Method two. Open Visual Studio, navigate to TOOLS -&gt; Code Snippets Manager… -&gt; Import…  (This allows an Add folder option for easier management)
+       </li>
+      </ol>
+      <p>
+       <b>
+        [4.6 Branch and above]
+       </b>
+       Epic seems to have started initial integration with Branch 4.6 and above. Look on GitHub under "\Engine\extras\VisualStudioSnippets" and follow the Readme file.
+      </p>
+      <h2>
+       <span class="mw-headline" id="How_to_use_snippets_.3F">
+        How to use snippets ?
+       </span>
+      </h2>
+      <p>
+       Import them and just start typing ue4…
+      </p>
+      <div class="floatnone">
+       <img alt="Ue4-snippet.png" class="" height="162" src="../assets/visual-studio-snippets/0.png" width="312"/>
+      </div>
+      <p>
+       After selecting snippet from the list, hit TAB.
+      </p>
+      <div class="floatnone">
+       <img alt="Ue4-snippet-pasted.png" class="" height="280" src="../assets/visual-studio-snippets/1.png" width="306"/>
+      </div>
+      <p>
+       To navigate between highlited fields you can use TAB and SHIFT + TAB. After you enter all names, hit ENTER.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Snippets">
+        Snippets
+       </span>
+      </h2>
+      <ul>
+       <li>
+        <b>
+         ue4classa
+        </b>
+        – Blueprintable class that derives from an AActor. Parameters are: comment, class name and base class name.
+       </li>
+      </ul>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/**</span>
+<span class="cm"> * Comment </span>
+<span class="cm"> */</span>
+<span class="n">UCLASS</span><span class="p">(</span><span class="n">BlueprintType</span><span class="p">,</span> <span class="n">Blueprintable</span><span class="p">)</span>
+<span class="n">class</span> <span class="nl">AFoo</span> <span class="p">:</span> <span class="n">public</span> <span class="n">AFooBase</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+ 
+<span class="nl">public</span><span class="p">:</span>
+ 
+<span class="nl">protected</span><span class="p">:</span>
+ 
+<span class="nl">private</span><span class="p">:</span>
+ 
+<span class="p">};</span>
+</pre>
+      </div>
+      <ul>
+       <li>
+        <b>
+         ue4classu
+        </b>
+        – Blueprintable class that derives from an UObject. Parameters are: comment, class name, base class name.
+       </li>
+      </ul>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/**</span>
+<span class="cm"> * Comment </span>
+<span class="cm"> */</span>
+<span class="n">UCLASS</span><span class="p">(</span><span class="n">BlueprintType</span><span class="p">,</span> <span class="n">Blueprintable</span><span class="p">)</span>
+<span class="n">class</span> <span class="nl">UFoo</span> <span class="p">:</span> <span class="n">public</span> <span class="n">UFooBase</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+ 
+<span class="nl">public</span><span class="p">:</span>
+ 
+<span class="nl">protected</span><span class="p">:</span>
+ 
+<span class="nl">private</span><span class="p">:</span>
+ 
+<span class="p">};</span>
+</pre>
+      </div>
+      <ul>
+       <li>
+        <b>
+         ue4enum
+        </b>
+        – Simple enum. Parameters are: comment, enum name, first member name and it’s comment.
+       </li>
+      </ul>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/**</span>
+<span class="cm"> * Comment</span>
+<span class="cm"> */</span>
+<span class="n">UENUM</span><span class="p">()</span>
+<span class="k">enum</span> <span class="n">EMyEnum</span>
+<span class="p">{</span>
+	<span class="n">Name</span><span class="p">,</span> <span class="cm">/**&gt; Comment */</span>
+ 
+<span class="p">};</span>
+</pre>
+      </div>
+      <ul>
+       <li>
+        <b>
+         ue4enumdisplay
+        </b>
+        – Enum that can be used with blueprints. Parameters are: comment, enum name, first member name, it’s display name and comment.
+       </li>
+      </ul>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/**</span>
+<span class="cm"> * Comment</span>
+<span class="cm"> */</span>
+<span class="n">UENUM</span><span class="p">()</span>
+<span class="n">namespace</span> <span class="n">EMyEnum</span>
+<span class="p">{</span>
+	<span class="k">enum</span> <span class="n">Type</span>
+	<span class="p">{</span>
+		<span class="n">Name</span> <span class="n">UMETA</span><span class="p">(</span><span class="n">DisplayName</span> <span class="o">=</span> <span class="s">"DisplayName"</span><span class="p">),</span> <span class="cm">/**&gt; Comment */</span>
+ 
+	<span class="p">};</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <ul>
+       <li>
+        <b>
+         ue4event
+        </b>
+        – This function can be used as an event in blueprint. Parameters are: comment (parameters and return value), UI category, virtual and const modifiers, return type, function name and arguments.
+       </li>
+      </ul>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/**</span>
+<span class="cm"> * Comment</span>
+<span class="cm"> * @param Comment</span>
+<span class="cm"> * @return Comment</span>
+<span class="cm"> */</span>
+<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintImplementableEvent</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"MyProject"</span><span class="p">)</span>
+<span class="n">virtual</span> <span class="kt">void</span> <span class="n">OnFunctionName</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+</pre>
+      </div>
+      <ul>
+       <li>
+        <b>
+         ue4func
+        </b>
+        – This function is available for blueprint logic. Parameters are: comment (parameters and return value), UI category, virtual and const modifiers, function name and arguments.
+       </li>
+      </ul>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/**</span>
+<span class="cm"> * Comment</span>
+<span class="cm"> * @param Comment</span>
+<span class="cm"> * @return Comment</span>
+<span class="cm"> */</span>
+<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"MyProject"</span><span class="p">)</span>
+<span class="n">virtual</span> <span class="kt">void</span> <span class="n">FunctionName</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+</pre>
+      </div>
+      <ul>
+       <li>
+        <b>
+         ue4interface
+        </b>
+        – Simple ue4 interface. Parmameters are: comment and name.
+       </li>
+      </ul>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/**</span>
+<span class="cm"> * Comment</span>
+<span class="cm"> */</span>
+<span class="n">UINTERFACE</span><span class="p">()</span>
+<span class="n">class</span> <span class="nl">UFoo</span> <span class="p">:</span> <span class="n">public</span> <span class="n">UInterface</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UINTERFACE_BODY</span><span class="p">()</span>
+<span class="p">};</span>
+ 
+<span class="n">class</span> <span class="n">IFoo</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_IINTERFACE_BODY</span><span class="p">()</span>
+ 
+<span class="p">};</span>
+</pre>
+      </div>
+      <ul>
+       <li>
+        <b>
+         ue4log
+        </b>
+        – Simplest log line. Parameters are category, verbosity and message.
+       </li>
+      </ul>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UE_LOG</span><span class="p">(</span><span class="n">MyProject</span><span class="p">,</span> <span class="n">Error</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Log message"</span><span class="p">));</span>
+</pre>
+      </div>
+      <ul>
+       <li>
+        <b>
+         ue4logdeclare
+        </b>
+        – Declaration of log category. Place this in main header of your project to allow logging. Parameters are: category, default verbosity and compile time verbosity.
+       </li>
+      </ul>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">DECLARE_LOG_CATEGORY_EXTERN</span><span class="p">(</span><span class="n">MyProject</span><span class="p">,</span> <span class="n">Log</span><span class="p">,</span> <span class="n">All</span><span class="p">);</span>
+</pre>
+      </div>
+      <ul>
+       <li>
+        <b>
+         ue4logdefine
+        </b>
+        – Definition of log category. Place this in main code file. Parameter is category name.
+       </li>
+      </ul>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">DEFINE_LOG_CATEGORY</span><span class="p">(</span><span class="n">MyProject</span><span class="p">);</span>
+</pre>
+      </div>
+      <ul>
+       <li>
+        <b>
+         ue4logfloat
+        </b>
+        – Log line that can be used to print float value. Parameters are: category, verbosity and variable name.
+       </li>
+      </ul>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UE_LOG</span><span class="p">(</span><span class="n">MyProject</span><span class="p">,</span> <span class="n">Error</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"The value of 'variable' is: %f"</span><span class="p">),</span> <span class="n">variable</span><span class="p">);</span>
+</pre>
+      </div>
+      <ul>
+       <li>
+        <b>
+         ue4logint
+        </b>
+        – This log line can be used to log an integer value. Parameters are: category, verbosity and variable name.
+       </li>
+      </ul>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UE_LOG</span><span class="p">(</span><span class="n">MyProject</span><span class="p">,</span> <span class="n">Error</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"The value of 'variable' is: %i"</span><span class="p">),</span> <span class="n">variable</span><span class="p">);</span>
+</pre>
+      </div>
+      <ul>
+       <li>
+        <b>
+         ue4loguobj
+        </b>
+        – This log line is designed to log from inside of the objects. By default, square brackets contains a name of an object that writes the log. Parameters are: category, verbosity, message and name of a pointer to the object.
+       </li>
+      </ul>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UE_LOG</span><span class="p">(</span><span class="n">MyProject</span><span class="p">,</span> <span class="n">Error</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"[%s] Log message"</span><span class="p">),</span> <span class="o">*</span><span class="p">(</span><span class="n">this</span><span class="o">-&gt;</span><span class="n">GetName</span><span class="p">()));</span>
+</pre>
+      </div>
+      <ul>
+       <li>
+        <b>
+         ue4prop
+        </b>
+        – This read/write property is available everywhere (blueprint, instance and archetype details). Parameters are: comment, category, type and name.
+       </li>
+      </ul>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/**</span>
+<span class="cm"> * Comment</span>
+<span class="cm"> */</span>
+<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"MyProject"</span><span class="p">)</span>
+<span class="n">Type</span> <span class="n">Name</span><span class="p">;</span>
+</pre>
+      </div>
+      <ul>
+       <li>
+        <b>
+         ue4struct
+        </b>
+        – Simple structure. Parameters are: comment and name.
+       </li>
+      </ul>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/**</span>
+<span class="cm"> * Comment</span>
+<span class="cm"> */</span>
+<span class="n">USTRUCT</span><span class="p">()</span>
+<span class="k">struct</span> <span class="n">FFoo</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_USTRUCT_BODY</span><span class="p">()</span>
+ 
+<span class="p">};</span>
+</pre>
+      </div>
+      <ul>
+       <li>
+        <b>
+         ue4mark
+        </b>
+        – This comment can be used to mark changes made to engine classes. Parameters are: Company symbol, task/ticket number, name and surname of a developer and short description of modification.
+       </li>
+      </ul>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/* BEGIN ACME (ACME-938) */</span>
+<span class="c1">// Name Surname - Comment</span>
+ 
+<span class="n">virtual</span> <span class="kt">void</span> <span class="nf">Tick</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaTime</span><span class="p">);</span>
+ 
+<span class="cm">/* END ACME */</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       <br/>
+       Author:
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

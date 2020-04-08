@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   SubUV Particle (Tutorial) - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    SubUV Particle (Tutorial)
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Sub_UV">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Sub UV
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Overview">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Creating_a_new_Particle_System">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Creating a new Particle System
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Import_a_Texture">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Import a Texture
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Create_a_ParticleSubUV_Material">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Create a ParticleSubUV Material
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Create_the_Particle_SubUV_Emitter">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Create the Particle SubUV Emitter
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Setting_up_the_SubUV_parameters">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Setting up the SubUV parameters
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Setting_the_SubImage_Selection">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Setting the SubImage Selection
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Sub_UV">
+        Sub UV
+       </span>
+      </h2>
+      <p>
+       Using a ParticleSubUV module in a material gives you the ability to blend or switch between multiple 'frames' in a single image on a particle using the SubUV settings in a particle emitter. Once the material is created, applying it to the emitter and setting the emitter's InterpolationMode (in the base emitter properties) as well as the number of subimages both horizontal and vertical allows us to use a SubImage Index module to determine the blend between these sub-images. Adding the SubImage Index to the curve editor and changing its distribution to ConstantCurve gives us control over the subimage being used over time. As the value starts at 0, the last image will always be the number of images - 1, thus the example curve going from 0 to 3.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       The Unreal Engine's Particle System provides an emitter TypeDataModule that allows for the selection of sub-images from a source texture to be displayed on its particles. It works by allowing you to select the sub-image to display for a particular particle as a function of the lifetime of the particle.
+      </p>
+      <p>
+       This document assumes you are familiar with the Content Browser, and with creating packages and objects within those packages.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Creating_a_new_Particle_System">
+        Creating a new Particle System
+       </span>
+      </h2>
+      <p>
+       Start the editor and open the Content Browser. Either choose a folder where you can experiment, or create a new one for the purpose. Right-click and select "New ParticleSystem". Name the system
+       <i>
+        Particle_SubUV
+       </i>
+       .
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="NewParticleSystem.Jpeg" class="thumbimage" height="265" src="../assets/subuv-particle-tutorial/0.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Import_a_Texture">
+        Import a Texture
+       </span>
+      </h2>
+      <p>
+       In this example, we will be using a simple 'subdivided texture' called
+       <i>
+        SubUV_Texture.png
+       </i>
+       .
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="" class="thumbimage" height="300" src="../assets/subuv-particle-tutorial/1.png" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Expand this image and save it
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       The texture consists of a simple quartered color square scheme, with the alpha channel embedding the numbers 1, 2, 3, and 4 in each sub-square from left-to-right and top-to-bottom. This image allows for simple verification that the sub-image system is working.
+      </p>
+      <p>
+       After importing the texture, MyEmitters in the browser should look similar to the shot below:
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="NewTexture.Jpeg" class="thumbimage" height="265" src="../assets/subuv-particle-tutorial/2.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Create_a_ParticleSubUV_Material">
+        Create a ParticleSubUV Material
+       </span>
+      </h2>
+      <p>
+       The next step is to create a material that will be applied to the sprites generated by the particle emitter. Right-click in the MyEmitters browser window and select "New Material". Name the material "MAT_SubUV" and open it in the Material Editor.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="MAT SubUV.Jpeg" class="thumbimage" height="188" src="../assets/subuv-particle-tutorial/3.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       In the Material Editor, select the main material node. In the properties window, look under the
+       <i>
+        Material
+       </i>
+       settings. Set the
+       <b>
+        Lighting Mode
+       </b>
+       property to
+       <i>
+        MLM_Unlit
+       </i>
+       .
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:293px;">
+        <img alt="MaterialProperties.Jpeg" class="thumbimage" height="193" src="../assets/subuv-particle-tutorial/4.Jpeg" width="291"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       In the case of Sub-UV emitters, a special material expression,
+       <i>
+        ParticleSubUV
+       </i>
+       , must be used. First select the
+       <i>
+        SubUV_Texture
+       </i>
+       texture in the Content Browser, then right-click in the material editor window and pick it from the list as shown below:
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="AddSubUVMaterialNode.jpg" class="thumbimage" height="206" src="../assets/subuv-particle-tutorial/5.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       The following material expression widget will appear in the editor:
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:219px;">
+        <img alt="SubUVnode.jpg" class="thumbimage" height="227" src="../assets/subuv-particle-tutorial/6.jpg" width="217"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       As an artistic choice, we're going to push the color values of the texture to give a "glow" effect. Bring in a
+       <i>
+        Multiply
+       </i>
+       node by holding the "M" key and clicking the mouse.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="UVMultiplyNotConnected.jpg" class="thumbimage" height="236" src="../assets/subuv-particle-tutorial/7.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       The next step is to `hook-up' the SubUV expression to the material. In this simple case, we run the RGB output to the Multiply, and connect the Multiply to the Emissive input. You can boost the color via the Multiply as desired. In this example we use 15, as shown below:
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="UVMultiplyConnected.jpg" class="thumbimage" height="139" src="../assets/subuv-particle-tutorial/8.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Create_the_Particle_SubUV_Emitter">
+        Create the Particle SubUV Emitter
+       </span>
+      </h2>
+      <p>
+       To open the Particle Editor, Cascade, right-click on the ParticleSystem and choose
+       <i>
+        Edit
+       </i>
+       from the menu as shown below:
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="ContentBrowser Edit.Jpeg" class="thumbimage" height="142" src="../assets/subuv-particle-tutorial/9.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       Alternatively, you may simply double-click on the particle system in the Content Browser.
+      </p>
+      <p>
+       In the Content Browser, select the
+       <i>
+        MAT_SubUV
+       </i>
+       material.  Now in Cascade, click the module named "Required" that is located in the particle emitter module stack, and in its Properties window, click the arrow next to the Material Property. Clicking the arrow that is next to a Property will assign whatever asset you selected in the Content Browser to that Property so long as the selected asset type is valid for that particular property.
+      </p>
+      <p>
+       At this point, you should see the following view in Cascade, showing material applied to the new particle system in the preview window:
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="SubUV MaterialApplied.Jpeg" class="thumbimage" height="407" src="../assets/subuv-particle-tutorial/10.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       Located in the 'Required' class are the SubUV-related settings: the InterpolationMethod, and the Horizontal and Vertical sub-image counts for the texture.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="SubUV settings.Jpeg" class="thumbimage" height="92" src="../assets/subuv-particle-tutorial/11.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Setting_up_the_SubUV_parameters">
+        Setting up the SubUV parameters
+       </span>
+      </h2>
+      <p>
+       Enter the following information for the given fields:
+      </p>
+      <table class="wikitable">
+       <caption>
+        Module Properties
+       </caption>
+       <tbody>
+        <tr>
+         <th scope="col">
+          Property
+         </th>
+         <th scope="col">
+          Value
+         </th>
+        </tr>
+        <tr>
+         <td>
+          SubImages_Horizontal
+         </td>
+         <td>
+          2
+         </td>
+        </tr>
+        <tr>
+         <td>
+          SubImages_Verticle
+         </td>
+         <td>
+          2
+         </td>
+        </tr>
+        <tr>
+         <td>
+          InterpolationMethod
+         </td>
+         <td>
+          PSSUV_Linear_blend
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       This informs the emitter that the sub-images are laid out in a 2x2 grid, and that the interpolation should be in a linear fashion, blending between sub-images.
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="Emitter Running.Jpeg" class="thumbimage" height="256" src="../assets/subuv-particle-tutorial/12.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       As you can see, the emitter is selecting the `first' sub-image for the supplied texture, as the default sub-image index will be a constant 0.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Setting_the_SubImage_Selection">
+        Setting the SubImage Selection
+       </span>
+      </h2>
+      <p>
+       Add a SubImage index module to the Emitter by right-clicking and selecting it from the list. The properties for this module will now be displayed in the lower-left panel of Cascade. There is only one piece of information contained in the SubImageIndex module, and that is a scalar distribution named "SubImageIndex".
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="Add SubUVModule.Jpeg" class="thumbimage" height="619" src="../assets/subuv-particle-tutorial/13.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+      <p>
+       The SubImage Index module comes in with a Constant Curve distribution by default. Click on the small green 'graph button' on the SubImage Index module of the emitter to add the curve to the curve editor.
+      </p>
+      <p>
+       Edit the Points of the curve distribution as follows:
+      </p>
+      <table class="wikitable">
+       <caption>
+        Module Properties
+       </caption>
+       <tbody>
+        <tr>
+         <th scope="col">
+          Point Number
+         </th>
+         <th scope="col">
+          InVal
+         </th>
+         <th scope="col">
+          OutVal
+         </th>
+        </tr>
+        <tr>
+         <td>
+          Point 0
+         </td>
+         <td>
+          0.00
+         </td>
+         <td>
+          0.00
+         </td>
+        </tr>
+        <tr>
+         <td>
+          Point 1
+         </td>
+         <td>
+          0.75
+         </td>
+         <td>
+          3.01
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <p>
+       This will generate an emitter that smoothly transitions between all of the existing sub-images, giving each one approximately 25% of the lifetime of the particle. Below is a screenshot:
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="SubUV Complete.Jpeg" class="thumbimage" height="231" src="../assets/subuv-particle-tutorial/14.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+        </div>
+       </div>
+      </div>
+      <p>
+       <br clear="all"/>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

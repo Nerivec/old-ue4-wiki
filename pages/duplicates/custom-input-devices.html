@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Custom Input Devices - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Custom Input Devices
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Example_Code">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Example Code
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#uPlugin_Ddefinition">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             uPlugin Ddefinition
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Module_Build_File">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             Module Build File
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#IPlugin_Header_File">
+            <span class="tocnumber">
+             2.3
+            </span>
+            <span class="toctext">
+             IPlugin Header File
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#PCH_File">
+            <span class="tocnumber">
+             2.4
+            </span>
+            <span class="toctext">
+             PCH File
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Plugin_Header_File">
+            <span class="tocnumber">
+             2.5
+            </span>
+            <span class="toctext">
+             Plugin Header File
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Plugin_Cpp_File">
+            <span class="tocnumber">
+             2.6
+            </span>
+            <span class="toctext">
+             Plugin Cpp File
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#Input_Device_Header_File">
+            <span class="tocnumber">
+             2.7
+            </span>
+            <span class="toctext">
+             Input Device Header File
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#Input_Device_Cpp_File">
+            <span class="tocnumber">
+             2.8
+            </span>
+            <span class="toctext">
+             Input Device Cpp File
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#Input_State_Header_File">
+            <span class="tocnumber">
+             2.9
+            </span>
+            <span class="toctext">
+             Input State Header File
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-12">
+           <a href="#Input_Actor_Cpp_File">
+            <span class="tocnumber">
+             2.10
+            </span>
+            <span class="toctext">
+             Input Actor Cpp File
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-13">
+           <a href="#Input_Actor_Header_File">
+            <span class="tocnumber">
+             2.11
+            </span>
+            <span class="toctext">
+             Input Actor Header File
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       This page will detail how to create custom Input Device plugins in order to add support for additional controller/input types. It will also show example code for adding additional Key/Gamepad Input Names. The code will show how to fire events from the existing Input Names via a MessageHandler and how to fire events from any Key/Gamepad Input directly.
+      </p>
+      <p>
+       The following is based on a private plugin (Integrating Nintendo Wii Controllers/Sensors into UE4), and an Oculus plugin shipped with the engine (Engine/Plugins/Runtime/OculusInput).
+      </p>
+      <p>
+       The actor is a useful way of referencing the InputDevice to run arbitrary methods.
+For some reason if the two actor classes are deleted this all fails to compile (Possibly related to *.generated.h files). If someone figures out why I would love to know (mspe044).
+      </p>
+      <h2>
+       <span class="mw-headline" id="Example_Code">
+        Example Code
+       </span>
+      </h2>
+      <p>
+       The code will show how to create a plugin for an input device named PseudoController which will simulate controller#1 pressing and holding the bottom face button (jump) and moving the right analog stick wildly. It will also create a new custom Gamepad Input called "Pseudo Player Weight" and fire events for this input with a value of 75.0 (kg).
+      </p>
+      <p>
+       In your own code you will most likely link your plugin with a static/dynamic library which communicates with you Input Device. When the engine calls FPseudoControllerInputDevice::SendControllerEvents() you can then pass on any events/polled controller states using the MessageHandler in a generic way.
+      </p>
+      <h3>
+       <span class="mw-headline" id="uPlugin_Ddefinition">
+        uPlugin Ddefinition
+       </span>
+      </h3>
+      <p>
+       <b>
+        /Plugins/PseudoController/PseudoController.uplugin
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="p">{</span>
+    <span class="s">"FileVersion"</span> <span class="p">:</span> <span class="m">0</span><span class="p">,</span>
+	
+	<span class="s">"FriendlyName"</span> <span class="p">:</span> <span class="s">"Pseudo Controller Plugin"</span><span class="p">,</span>
+	<span class="s">"Version"</span> <span class="p">:</span> <span class="m">0</span><span class="p">,</span>
+	<span class="s">"VersionName"</span> <span class="p">:</span> <span class="s">"0.2"</span><span class="p">,</span>
+	<span class="s">"CreatedBy"</span> <span class="p">:</span> <span class="s">""</span><span class="p">,</span>
+	<span class="s">"EngineVersion"</span> <span class="p">:</span> <span class="m">1579795</span><span class="p">,</span>
+	<span class="s">"Description"</span> <span class="p">:</span> <span class="s">"I wish I was a real input! :'("</span><span class="p">,</span>
+	<span class="s">"Category"</span> <span class="p">:</span> <span class="s">"Tutorial"</span><span class="p">,</span>
+	
+	<span class="s">"Modules"</span> <span class="p">:</span>
+<span class="na">	[</span>
+<span class="na">		{</span>
+<span class="na">			"Name" : "PseudoController",</span>
+<span class="na">			"Type" : "Runtime",</span>
+<span class="na">			"LoadingPhase" : "PreDefault",</span>
+<span class="na">			"WhitelistPlatforms" : [ "Win64", "Win32" ]</span>
+		<span class="p">}</span>
+	<span class="p">]</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Module_Build_File">
+        Module Build File
+       </span>
+      </h3>
+      <p>
+       This is where you link to any library supporting your Input Device. There is a sample method 'LoadYourThirdPartyLibraries()' to help you do this however the call to it is currently commented out.
+      </p>
+      <p>
+       This method will will link to a static library in
+       <b>
+        .../Plugins/PseudoController/Source/PseudoController/ThirdParty/LibraryDirName/...
+       </b>
+       with include files in the sub directory
+       <b>
+        .../include/
+       </b>
+       and library code in subdirectoires seprated by compile arcitecture I.E.
+       <b>
+        .../Win64/VS2013/MyLibrary.lib
+       </b>
+      </p>
+      <p>
+       <b>
+        /Plugins/PseudoController/Source/PseudoController/PseudoController.Build.cs
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">namespace</span> <span class="nn">UnrealBuildTool.Rules</span>
+<span class="p">{</span>
+    <span class="k">using</span> <span class="nn">System.IO</span><span class="p">;</span> <span class="c1">// ToDo: Replace with standard mechenism</span>
+
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">PseudoController</span> <span class="p">:</span> <span class="n">ModuleRules</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="nf">PseudoController</span><span class="p">(</span><span class="n">TargetInfo</span> <span class="n">Target</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">PCHUsage</span> <span class="p">=</span> <span class="n">PCHUsageMode</span><span class="p">.</span><span class="n">NoSharedPCHs</span><span class="p">;</span>
+
+            <span class="c1">// ... add public include paths required here ...</span>
+            <span class="n">PublicIncludePaths</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span> <span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span>
+                <span class="s">"PseudoController/Public"</span><span class="p">,</span>
+                <span class="s">"PseudoController/Classes"</span><span class="p">,</span>
+            <span class="p">});</span>
+
+            <span class="c1">// ... add other private include paths required here ...</span>
+            <span class="n">PrivateIncludePaths</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span> <span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span>
+                <span class="s">"PseudoController/Private"</span><span class="p">,</span>
+            <span class="p">});</span>
+
+            <span class="c1">// ... add other public dependencies that you statically link with here ...</span>
+            <span class="n">PublicDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span> <span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span> 
+                <span class="s">"Core"</span><span class="p">,</span> 
+                <span class="s">"CoreUObject"</span><span class="p">,</span>      <span class="c1">// Provides Actors and Structs</span>
+                <span class="s">"Engine"</span><span class="p">,</span>           <span class="c1">// Used by Actor</span>
+                <span class="s">"Slate"</span><span class="p">,</span>            <span class="c1">// Used by InputDevice to fire bespoke FKey events</span>
+                <span class="s">"InputCore"</span><span class="p">,</span>        <span class="c1">// Provides LOCTEXT and other Input features</span>
+                <span class="s">"InputDevice"</span><span class="p">,</span>      <span class="c1">// Provides IInputInterface</span>
+            <span class="p">});</span>
+
+            <span class="c1">// ... add private dependencies that you statically link with here ...</span>
+            <span class="n">PrivateDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span> <span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span>
+            <span class="p">});</span>
+
+            <span class="c1">// ... add any modules that your module loads dynamically here ...</span>
+            <span class="n">DynamicallyLoadedModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span> <span class="k">new</span> <span class="kt">string</span><span class="p">[]</span> <span class="p">{</span> 
+            <span class="p">});</span>
+
+            <span class="c1">// !!!!!!!!!! UNCOMMENT THIS IF YOU WANT TO CALL A LIBRARY !!!!!!!!!!</span>
+            <span class="c1">//LoadYourThirdPartyLibraries(Target);</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="kt">bool</span> <span class="nf">LoadYourThirdPartyLibraries</span><span class="p">(</span><span class="n">TargetInfo</span> <span class="n">Target</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="kt">bool</span> <span class="n">isLibrarySupported</span> <span class="p">=</span> <span class="k">false</span><span class="p">;</span>
+
+            <span class="c1">// This will give oyu a relitive path to the module ../PseudoController/</span>
+            <span class="kt">string</span> <span class="n">ModulePath</span> <span class="p">=</span> <span class="n">Path</span><span class="p">.</span><span class="n">GetDirectoryName</span><span class="p">(</span><span class="n">RulesCompiler</span><span class="p">.</span><span class="n">GetModuleFilename</span><span class="p">(</span><span class="k">this</span><span class="p">.</span><span class="n">GetType</span><span class="p">().</span><span class="n">Name</span><span class="p">));</span>
+            <span class="c1">// This will give you a relative path to ../PseudoController/ThirdParty/"LibraryDirName"/</span>
+            <span class="kt">string</span> <span class="n">MyLibraryPath</span> <span class="p">=</span> <span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">ModulePath</span><span class="p">,</span> <span class="s">"ThirdParty"</span><span class="p">,</span> <span class="s">"LibraryDirName"</span><span class="p">);</span>
+
+            <span class="c1">// Use this to keep Win32/Win64/e.t.c. library files in seprate subdirectories</span>
+            <span class="kt">string</span> <span class="n">ArchitecturePath</span> <span class="p">=</span> <span class="s">""</span><span class="p">;</span>
+
+            <span class="c1">// When you are building for Win64</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">Target</span><span class="p">.</span><span class="n">Platform</span> <span class="p">==</span> <span class="n">UnrealTargetPlatform</span><span class="p">.</span><span class="n">Win64</span> <span class="p">&amp;&amp;</span>
+                <span class="n">WindowsPlatform</span><span class="p">.</span><span class="n">Compiler</span> <span class="p">==</span> <span class="n">WindowsCompiler</span><span class="p">.</span><span class="n">VisualStudio2013</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="c1">// We will look for the library in ../PseudoController/ThirdParty/MyLibrary/Win64/VS20##/</span>
+                <span class="n">ArchitecturePath</span> <span class="p">=</span> <span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="s">"Win64"</span><span class="p">,</span> <span class="s">"VS"</span> <span class="p">+</span> <span class="n">WindowsPlatform</span><span class="p">.</span><span class="n">GetVisualStudioCompilerVersionName</span><span class="p">());</span>
+
+                <span class="n">isLibrarySupported</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="c1">// When you are building for Win32</span>
+            <span class="k">else</span> <span class="nf">if</span> <span class="p">(</span><span class="n">Target</span><span class="p">.</span><span class="n">Platform</span> <span class="p">==</span> <span class="n">UnrealTargetPlatform</span><span class="p">.</span><span class="n">Win32</span> <span class="p">&amp;&amp;</span>
+                <span class="n">WindowsPlatform</span><span class="p">.</span><span class="n">Compiler</span> <span class="p">==</span> <span class="n">WindowsCompiler</span><span class="p">.</span><span class="n">VisualStudio2013</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="c1">// We will look for the library in ../PseudoController/ThirdParty/MyLibrary/Win32/VS20##/</span>
+                <span class="n">ArchitecturePath</span> <span class="p">=</span> <span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="s">"Win32"</span><span class="p">,</span> <span class="s">"VS"</span> <span class="p">+</span> <span class="n">WindowsPlatform</span><span class="p">.</span><span class="n">GetVisualStudioCompilerVersionName</span><span class="p">());</span>
+
+                <span class="n">isLibrarySupported</span> <span class="p">=</span> <span class="k">true</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="c1">// Add mac/linux/mobile support in much the same way</span>
+
+            <span class="c1">// If the current build architecture was supported by the above if statements</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">isLibrarySupported</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="c1">// Add the architecture spacific path to the library files</span>
+                <span class="n">PublicAdditionalLibraries</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">MyLibraryPath</span><span class="p">,</span> <span class="s">"lib"</span><span class="p">,</span> <span class="n">ArchitecturePath</span><span class="p">,</span> <span class="s">"MyLibrary.lib"</span><span class="p">));</span>
+                <span class="c1">// Add a more generic path to the include header files</span>
+                <span class="n">PublicIncludePaths</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">Path</span><span class="p">.</span><span class="n">Combine</span><span class="p">(</span><span class="n">MyLibraryPath</span><span class="p">,</span> <span class="s">"include"</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="c1">// Defination lets us know whether we successfully found our library!</span>
+            <span class="n">Definitions</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="n">Format</span><span class="p">(</span><span class="s">"WITH_MY_LIBRARY_PATH_USE={0}"</span><span class="p">,</span> <span class="n">isLibrarySupported</span> <span class="p">?</span> <span class="m">1</span> <span class="p">:</span> <span class="m">0</span><span class="p">));</span>
+
+            <span class="k">return</span> <span class="n">isLibrarySupported</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="IPlugin_Header_File">
+        IPlugin Header File
+       </span>
+      </h3>
+      <p>
+       <b>
+        /Plugins/PseudoController/Source/PseudoController/Public/IPseudoControllerPlugin.h
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"ModuleManager.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"IInputDeviceModule.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"InputCoreTypes.h"</span><span class="cp"></span>
+
+<span class="cm">/**</span>
+<span class="cm"> * The public interface to this module.  In most cases, this interface is only public to sibling modules </span>
+<span class="cm"> * within this plugin.</span>
+<span class="cm"> */</span>
+<span class="k">class</span> <span class="nc">IPseudoControllerPlugin</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IInputDeviceModule</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="cm">/**</span>
+<span class="cm">	 * Singleton-like access to this module's interface.  This is just for convenience!</span>
+<span class="cm">	 * Beware of calling this during the shutdown phase, though.  Your module might have been unloaded already.</span>
+<span class="cm">	 *</span>
+<span class="cm">	 * @return Returns singleton instance, loading the module on demand if needed</span>
+<span class="cm">	 */</span>
+	<span class="k">static</span> <span class="kr">inline</span> <span class="n">IPseudoControllerPlugin</span><span class="o">&amp;</span> <span class="n">Get</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="n">FModuleManager</span><span class="o">::</span><span class="n">LoadModuleChecked</span><span class="o">&lt;</span> <span class="n">IPseudoControllerPlugin</span> <span class="o">&gt;</span><span class="p">(</span><span class="s">"PseudoController"</span><span class="p">);</span>
+	<span class="p">}</span>
+
+	<span class="cm">/**</span>
+<span class="cm">	 * Checks to see if this module is loaded and ready.  It is only valid to call Get() if IsAvailable() returns true.</span>
+<span class="cm">	 *</span>
+<span class="cm">	 * @return True if the module is loaded and ready to use</span>
+<span class="cm">	 */</span>
+	<span class="k">static</span> <span class="kr">inline</span> <span class="kt">bool</span> <span class="n">IsAvailable</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">return</span> <span class="n">FModuleManager</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">IsModuleLoaded</span><span class="p">(</span> <span class="s">"PseudoController"</span> <span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="PCH_File">
+        PCH File
+       </span>
+      </h3>
+      <p>
+       <b>
+        /Plugins/PseudoController/Source/PseudoController/Private/PseudoControllerPrivatePCH
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// You should place include statements to your module's private header files here.  You only need to</span>
+<span class="c1">// add includes for headers that are used in most of your module's source files though.</span>
+
+<span class="cp">#include</span> <span class="cpf">"Core.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"CoreUObject.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"IPseudoControllerPlugin.h"</span><span class="cp"></span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Plugin_Header_File">
+        Plugin Header File
+       </span>
+      </h3>
+      <p>
+       <b>
+        /Plugins/PseudoController/Source/PseudoController/Private/PseudoControllerPlugin.h
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+<span class="cp">#include</span> <span class="cpf">"PseudoControllerPrivatePCH.h"</span><span class="cp"></span>
+
+<span class="k">class</span> <span class="nc">FPseudoControllerPlugin</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IPseudoControllerPlugin</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="cm">/** IPseudoControllerInterface implementation */</span>
+	<span class="k">virtual</span> <span class="n">TSharedPtr</span><span class="o">&lt;</span> <span class="k">class</span> <span class="nc">IInputDevice</span> <span class="o">&gt;</span> <span class="n">CreateInputDevice</span><span class="p">(</span><span class="k">const</span> <span class="n">TSharedRef</span><span class="o">&lt;</span> <span class="n">FGenericApplicationMessageHandler</span> <span class="o">&gt;&amp;</span> <span class="n">InMessageHandler</span><span class="p">);</span>
+
+	<span class="c1">//virtual void StartupModule() OVERRIDE; // This is not required as IInputDeviceModule handels it!</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">ShutdownModule</span><span class="p">()</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+
+	<span class="n">TSharedPtr</span><span class="o">&lt;</span> <span class="k">class</span> <span class="nc">FPseudoControllerInputDevice</span> <span class="o">&gt;</span> <span class="n">PseudoInputDevice</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Plugin_Cpp_File">
+        Plugin Cpp File
+       </span>
+      </h3>
+      <p>
+       <b>
+        /Plugins/PseudoController/Source/PseudoController/Private/PseudoControllerPlugin.cpp
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"PseudoControllerPrivatePCH.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"Internationalization.h" // LOCTEXT</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"InputCoreTypes.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"PseudoControllerPlugin.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"Engine.h" // Are these both necessary?</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"EngineUserInterfaceClasses.h" // Are these both necessary?</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"IPseudoControllerPlugin.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"PseudoController.generated.inl"</span><span class="cp"></span>
+
+<span class="n">IMPLEMENT_MODULE</span><span class="p">(</span><span class="n">FPseudoControllerPlugin</span><span class="p">,</span> <span class="n">PseudoController</span><span class="p">)</span>
+<span class="n">DEFINE_LOG_CATEGORY_STATIC</span><span class="p">(</span><span class="n">PseudoControllerPlugin</span><span class="p">,</span> <span class="n">Log</span><span class="p">,</span> <span class="n">All</span><span class="p">);</span>
+
+<span class="cp">#define LOCTEXT_NAMESPACE "InputKeys"</span>
+
+
+<span class="c1">// This function is called by *Application.cpp after startup to instantiate the modules InputDevice</span>
+<span class="n">TSharedPtr</span><span class="o">&lt;</span> <span class="k">class</span> <span class="nc">IInputDevice</span> <span class="o">&gt;</span> <span class="n">FPseudoControllerPlugin</span><span class="o">::</span><span class="n">CreateInputDevice</span><span class="p">(</span><span class="k">const</span> <span class="n">TSharedRef</span><span class="o">&lt;</span> <span class="n">FGenericApplicationMessageHandler</span> <span class="o">&gt;&amp;</span> <span class="n">InMessageHandler</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">UE_LOG</span><span class="p">(</span><span class="n">PseudoControllerPlugin</span><span class="p">,</span> <span class="n">Log</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Create Input Device"</span><span class="p">));</span>
+
+	<span class="n">FPseudoControllerPlugin</span><span class="o">::</span><span class="n">PseudoInput</span> <span class="o">=</span> <span class="n">MakeShareable</span><span class="p">(</span><span class="k">new</span> <span class="n">FPseudoControllerInputDevice</span><span class="p">(</span><span class="n">InMessageHandler</span><span class="p">));</span>
+
+	<span class="k">return</span> <span class="n">PseudoInput</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="cp">#undef LOCTEXT_NAMESPACE</span>
+
+<span class="c1">// This function may be called during shutdown to clean up the module.</span>
+<span class="kt">void</span> <span class="n">FPseudoControllerPlugin</span><span class="o">::</span><span class="n">ShutdownModule</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">FPseudoControllerPlugin</span><span class="o">::</span><span class="n">PseudoInput</span><span class="o">-&gt;~</span><span class="n">FPseudoControllerInputDevice</span><span class="p">();</span>
+
+	<span class="n">UE_LOG</span><span class="p">(</span><span class="n">PseudoControllerPlugin</span><span class="p">,</span> <span class="n">Log</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Shutdown Module"</span><span class="p">));</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Input_Device_Header_File">
+        Input Device Header File
+       </span>
+      </h3>
+      <p>
+       <b>
+        /Plugins/PseudoController/Source/PseudoController/Private/PseudoControllerInputDevice.h
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"PseudoControllersInputState.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"IInputDevice.h"</span><span class="cp"></span>
+
+<span class="cp">#define MAX_NUM_PSEUDO_INPUT_CONTROLLERS	4 </span><span class="c1">// We dont realy have any input controllers, this is a sham! :P</span>
+<span class="cp">#define NUM_PSEUDO_INPUT_BUTTONS			6 </span><span class="c1">// I've only used the one button but w/evs</span>
+
+<span class="cm">/**</span>
+<span class="cm">* Type definition for shared pointers to instances of FMessageEndpoint.</span>
+<span class="cm">*/</span>
+<span class="c1">// ToDo: Is this necessary?</span>
+<span class="k">typedef</span> <span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">FPseudoControllerInputDevice</span><span class="o">&gt;</span> <span class="n">FPseudoControllerInputDevicePtr</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm">* Type definition for shared references to instances of FMessageEndpoint.</span>
+<span class="cm">*/</span>
+<span class="c1">// ToDo: Is this necessary?</span>
+<span class="k">typedef</span> <span class="n">TSharedRef</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">FPseudoControllerInputDevice</span><span class="o">&gt;</span> <span class="n">FPseudoControllerInputDeviceRef</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm">* Interface class for WiiInput devices (wii devices)</span>
+<span class="cm">*/</span>
+<span class="k">class</span> <span class="nc">FPseudoControllerInputDevice</span> <span class="o">:</span> <span class="k">public</span> <span class="n">IInputDevice</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">FPseudoControllerInputDevice</span><span class="p">(</span><span class="k">const</span> <span class="n">TSharedRef</span><span class="o">&lt;</span> <span class="n">FGenericApplicationMessageHandler</span> <span class="o">&gt;&amp;</span> <span class="n">MessageHandler</span><span class="p">);</span>
+
+	<span class="cm">/** Tick the interface (e.g. check for new controllers) */</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">Tick</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaTime</span><span class="p">)</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+
+	<span class="cm">/** Poll for controller state and send events if needed */</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">SendControllerEvents</span><span class="p">()</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+
+	<span class="cm">/** Set which MessageHandler will get the events from SendControllerEvents. */</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">SetMessageHandler</span><span class="p">(</span><span class="k">const</span> <span class="n">TSharedRef</span><span class="o">&lt;</span> <span class="n">FGenericApplicationMessageHandler</span> <span class="o">&gt;&amp;</span> <span class="n">InMessageHandler</span><span class="p">)</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+
+	<span class="cm">/** Exec handler to allow console commands to be passed through for debugging */</span>
+	<span class="k">virtual</span> <span class="kt">bool</span> <span class="nf">Exec</span><span class="p">(</span><span class="n">UWorld</span><span class="o">*</span> <span class="n">InWorld</span><span class="p">,</span> <span class="k">const</span> <span class="n">TCHAR</span><span class="o">*</span> <span class="n">Cmd</span><span class="p">,</span> <span class="n">FOutputDevice</span><span class="o">&amp;</span> <span class="n">Ar</span><span class="p">)</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+
+	<span class="c1">// IForceFeedbackSystem pass through functions</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">SetChannelValue</span><span class="p">(</span><span class="n">int32</span> <span class="n">ControllerId</span><span class="p">,</span> <span class="n">FForceFeedbackChannelType</span> <span class="n">ChannelType</span><span class="p">,</span> <span class="kt">float</span> <span class="n">Value</span><span class="p">)</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">SetChannelValues</span><span class="p">(</span><span class="n">int32</span> <span class="n">ControllerId</span><span class="p">,</span> <span class="k">const</span> <span class="n">FForceFeedbackValues</span> <span class="o">&amp;</span><span class="n">values</span><span class="p">)</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+
+	<span class="k">virtual</span> <span class="o">~</span><span class="n">FPseudoControllerInputDevice</span><span class="p">();</span>
+<span class="k">private</span><span class="o">:</span>
+	<span class="c1">// ToDo: Is this necessary?</span>
+	<span class="kt">bool</span> <span class="n">Active</span><span class="p">;</span>
+
+	<span class="cm">/** Delay before sending a repeat message after a button was first pressed */</span>
+	<span class="kt">float</span> <span class="n">InitialButtonRepeatDelay</span><span class="p">;</span> <span class="c1">// How long a button is held for before you send a 2nd event</span>
+
+	<span class="cm">/** Delay before sending a repeat message after a button has been pressed for a while */</span>
+	<span class="kt">float</span> <span class="n">ButtonRepeatDelay</span><span class="p">;</span> <span class="c1">// How long a button is held for before you send a 3rd/4th/e.t.c event</span>
+
+	<span class="n">EControllerButtons</span><span class="o">::</span><span class="n">Type</span> <span class="n">PseudoInputButtonMapping</span><span class="p">[</span><span class="n">NUM_PSEUDO_INPUT_BUTTONS</span><span class="p">];</span>
+
+	<span class="cm">/** Last frame's button states, so we only send events on edges */</span>
+	<span class="kt">bool</span> <span class="n">PreviousButtonStates</span><span class="p">[</span><span class="n">NUM_PSEUDO_INPUT_BUTTONS</span><span class="p">];</span>
+	
+	<span class="cm">/** Next time a repeat event should be generated for each button */</span>
+	<span class="kt">double</span> <span class="n">NextRepeatTime</span><span class="p">[</span><span class="n">NUM_PSEUDO_INPUT_BUTTONS</span><span class="p">];</span>
+
+	<span class="n">TSharedRef</span><span class="o">&lt;</span> <span class="n">FGenericApplicationMessageHandler</span> <span class="o">&gt;</span> <span class="n">MessageHandler</span><span class="p">;</span>
+	<span class="n">FPseudoControllerSensorState</span> <span class="n">PseudoControllerStates</span><span class="p">[</span><span class="n">MAX_NUM_PSEUDO_INPUT_CONTROLLERS</span><span class="p">];</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Input_Device_Cpp_File">
+        Input Device Cpp File
+       </span>
+      </h3>
+      <p>
+       <b>
+        /Plugins/PseudoController/Source/PseudoController/Private/PseudoControllerInputDevice.cpp
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"PseudoControllerPrivatePCH.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"GenericPlatformMath.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"PseudoControllerInputDevice.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"SlateBasics.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"WindowsApplication.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"WindowsWindow.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"WindowsCursor.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"GenericApplicationMessageHandler.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"IInputDeviceModule.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"IInputDevice.h"</span><span class="cp"></span>
+
+<span class="n">DEFINE_LOG_CATEGORY_STATIC</span><span class="p">(</span><span class="n">LogPseudoControllerDevice</span><span class="p">,</span> <span class="n">Log</span><span class="p">,</span> <span class="n">All</span><span class="p">);</span>
+
+<span class="k">const</span> <span class="n">FKey</span> <span class="n">FPseudoControllerKey</span><span class="o">::</span><span class="n">Pseudo_WeighingSensor1</span><span class="p">(</span><span class="s">"Pseudo_WeighingSensor1"</span><span class="p">);</span>
+
+<span class="k">const</span> <span class="n">FPseudoControllerKeyNames</span><span class="o">::</span><span class="n">Type</span> <span class="n">FPseudoControllerKeyNames</span><span class="o">::</span><span class="n">Pseudo_WeighingSensor1</span><span class="p">(</span><span class="s">"Pseudo_WeighingSensor1"</span><span class="p">);</span>
+
+<span class="n">FPseudoControllerInputDevice</span><span class="o">::</span><span class="n">FPseudoControllerInputDevice</span><span class="p">(</span><span class="k">const</span> <span class="n">TSharedRef</span><span class="o">&lt;</span> <span class="n">FGenericApplicationMessageHandler</span> <span class="o">&gt;&amp;</span> <span class="n">InMessageHandler</span><span class="p">)</span> <span class="o">:</span> <span class="n">Active</span><span class="p">(</span><span class="nb">true</span><span class="p">),</span> <span class="n">MessageHandler</span><span class="p">(</span><span class="n">InMessageHandler</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogPseudoControllerDevice</span><span class="p">,</span> <span class="n">Log</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Starting PseudoControllerInputDevice"</span><span class="p">));</span>
+
+	<span class="c1">// Initialize button repeat delays</span>
+	<span class="n">InitialButtonRepeatDelay</span> <span class="o">=</span> <span class="mf">0.2f</span><span class="p">;</span>
+	<span class="n">ButtonRepeatDelay</span> <span class="o">=</span> <span class="mf">0.1f</span><span class="p">;</span>
+
+	<span class="c1">// Register the FKeys (Gamepad key for controllers, Mouse for mice, FloatAxis for non binary values e.t.c.)</span>
+	<span class="n">EKeys</span><span class="o">::</span><span class="n">AddKey</span><span class="p">(</span><span class="n">FKeyDetails</span><span class="p">(</span><span class="n">FPseudoControllerKey</span><span class="o">::</span><span class="n">Pseudo_WeighingSensor1</span><span class="p">,</span> <span class="n">LOCTEXT</span><span class="p">(</span><span class="s">"Pseudo_WeighingSensor1"</span><span class="p">,</span> <span class="s">"Pseudo Weighing Sensor #1"</span><span class="p">),</span> <span class="n">FKeyDetails</span><span class="o">::</span><span class="n">GamepadKey</span> <span class="o">|</span> <span class="n">FKeyDetails</span><span class="o">::</span><span class="n">FloatAxis</span><span class="p">));</span>
+
+	<span class="c1">// Setting all buttons on my pseudo controllers to 'not pressed' </span>
+	<span class="c1">// (You should check the inital state of your controllers)</span>
+	<span class="n">PreviousButtonStates</span><span class="p">[</span><span class="n">NUM_PSEUDO_INPUT_BUTTONS</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span> <span class="mi">0</span> <span class="p">};</span>
+	<span class="c1">//NextRepeatTime[NUM_PSEUDO_INPUT_BUTTONS] = { 0.0 };</span>
+
+	<span class="c1">// Initialize mapping of controller button mask to unreal button mask</span>
+	<span class="c1">// - mapping 0-3 to the 'FaceButtons'</span>
+	<span class="c1">// --- 'X','Square','Circle','Triangle' for playstation</span>
+	<span class="c1">// --- 'A','X','B','Y' on xbox</span>
+	<span class="n">PseudoInputButtonMapping</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">EControllerButtons</span><span class="o">::</span><span class="n">FaceButtonTop</span><span class="p">;</span>		<span class="c1">// PSEUDO_BUTTON_ZERO</span>
+	<span class="n">PseudoInputButtonMapping</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">EControllerButtons</span><span class="o">::</span><span class="n">FaceButtonBottom</span><span class="p">;</span>	<span class="c1">// PSEUDO_BUTTON_ONE</span>
+	<span class="n">PseudoInputButtonMapping</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">EControllerButtons</span><span class="o">::</span><span class="n">FaceButtonLeft</span><span class="p">;</span>	<span class="c1">// PSEUDO_BUTTON_TWO</span>
+	<span class="n">PseudoInputButtonMapping</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">EControllerButtons</span><span class="o">::</span><span class="n">FaceButtonRight</span><span class="p">;</span>	<span class="c1">// PSEUDO_BUTTON_THREE</span>
+	<span class="c1">// - mapping 4-5 to the left joystick (traditionally used for movement controls)</span>
+	<span class="n">PseudoInputButtonMapping</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">EControllerButtons</span><span class="o">::</span><span class="n">LeftAnalogX</span><span class="p">;</span>		<span class="c1">// PSEUDO_BUTTON_FOUR</span>
+	<span class="n">PseudoInputButtonMapping</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">EControllerButtons</span><span class="o">::</span><span class="n">LeftAnalogY</span><span class="p">;</span>		<span class="c1">// PSEUDO_BUTTON_FIVE</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">FPseudoControllerInputDevice</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaTime</span><span class="p">)</span> <span class="p">{</span>
+	<span class="c1">// This will spam the log heavily, comment it out for real plugins :)</span>
+	<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogPseudoControllerDevice</span><span class="p">,</span> <span class="n">Log</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Tick %f"</span><span class="p">),</span> <span class="n">DeltaTime</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">FPseudoControllerInputDevice</span><span class="o">::</span><span class="n">SendControllerEvents</span><span class="p">()</span> <span class="p">{</span>
+	<span class="c1">// Here is where we check the state of our input device proberbly by calling a method in your third party libary...</span>
+	<span class="c1">//  - I dont have a real device (xbox controller, wiimote, e.t.c.) in this tutorial :'( so we will just pretend!!!</span>
+
+	<span class="c1">// I could make libary to read from a fancy set of 'matrix' cerebellum jacks and iterate over each of those 'controllers'.. but ill save that for the next tutorial</span>
+	<span class="kt">int</span> <span class="n">controllerIndex</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1">// Apparantly I was lazy so there is only one controller firing events today!</span>
+
+	<span class="k">const</span> <span class="kt">double</span> <span class="n">CurrentTime</span> <span class="o">=</span> <span class="n">FPlatformTime</span><span class="o">::</span><span class="n">Seconds</span><span class="p">();</span> 
+	<span class="k">const</span> <span class="kt">float</span> <span class="n">CurrentTimeFloat</span> <span class="o">=</span> <span class="n">FPlatformTime</span><span class="o">::</span><span class="n">ToSeconds</span><span class="p">(</span><span class="n">FPlatformTime</span><span class="o">::</span><span class="n">Cycles</span><span class="p">());</span> <span class="c1">// Works with FMath functions</span>
+
+	<span class="c1">// This weard statement simulates user holding down the button 1/3 of the time</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">FMath</span><span class="o">::</span><span class="n">Fmod</span><span class="p">(</span><span class="n">CurrentTimeFloat</span><span class="p">,</span> <span class="mf">1.5f</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">.5f</span><span class="p">)</span> <span class="p">{</span>
+		<span class="c1">// If the button was pressed this tick</span>
+		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">PreviousButtonStates</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="p">{</span>
+			<span class="c1">// Fire button pressed event</span>
+			<span class="n">MessageHandler</span><span class="o">-&gt;</span><span class="n">OnControllerButtonPressed</span><span class="p">(</span><span class="n">PseudoInputButtonMapping</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">controllerIndex</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
+
+			<span class="c1">// this button was pressed - set the button's NextRepeatTime to the InitialButtonRepeatDelay</span>
+			<span class="n">NextRepeatTime</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">CurrentTime</span> <span class="o">+</span> <span class="n">InitialButtonRepeatDelay</span><span class="p">;</span>
+			<span class="n">PreviousButtonStates</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+		<span class="c1">// If the buttons has been held long enough to fire a nth event</span>
+		<span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">NextRepeatTime</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">CurrentTime</span><span class="p">)</span> <span class="p">{</span>
+			<span class="c1">// Fire button held event</span>
+			<span class="n">MessageHandler</span><span class="o">-&gt;</span><span class="n">OnControllerButtonPressed</span><span class="p">(</span><span class="n">PseudoInputButtonMapping</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">controllerIndex</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+
+			<span class="c1">// set the button's NextRepeatTime to the ButtonRepeatDelay</span>
+			<span class="n">NextRepeatTime</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">CurrentTime</span> <span class="o">+</span> <span class="n">ButtonRepeatDelay</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="c1">// If the button was released this tick</span>
+	<span class="p">}</span>
+	<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">PreviousButtonStates</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="p">{</span>
+		<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogPseudoControllerDevice</span><span class="p">,</span> <span class="n">Log</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Release"</span><span class="p">));</span>
+		<span class="c1">// Fire button released event</span>
+		<span class="n">MessageHandler</span><span class="o">-&gt;</span><span class="n">OnControllerButtonReleased</span><span class="p">(</span><span class="n">PseudoInputButtonMapping</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">controllerIndex</span><span class="p">,</span> <span class="nb">false</span><span class="p">);</span>
+		<span class="n">PreviousButtonStates</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="c1">// This simulates the user moving the stick left and right repeatedly</span>
+	<span class="kt">float</span> <span class="n">xMove</span> <span class="o">=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Sin</span><span class="p">(</span><span class="n">CurrentTimeFloat</span> <span class="o">*</span> <span class="mf">.223f</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">PI</span><span class="p">);</span>
+	<span class="c1">// Fire analog input event</span>
+	<span class="n">MessageHandler</span><span class="o">-&gt;</span><span class="n">OnControllerAnalog</span><span class="p">(</span><span class="n">PseudoInputButtonMapping</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">controllerIndex</span><span class="p">,</span> <span class="n">xMove</span><span class="p">);</span>
+
+	<span class="c1">// This simulates the user moving the stick up and down repeatedly</span>
+	<span class="kt">float</span> <span class="n">yMove</span> <span class="o">=</span> <span class="n">FMath</span><span class="o">::</span><span class="n">Cos</span><span class="p">(</span><span class="n">CurrentTimeFloat</span> <span class="o">*</span> <span class="mf">.278f</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">PI</span><span class="p">);</span>
+	<span class="c1">// Fire analog input event</span>
+	<span class="n">MessageHandler</span><span class="o">-&gt;</span><span class="n">OnControllerAnalog</span><span class="p">(</span><span class="n">PseudoInputButtonMapping</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">controllerIndex</span><span class="p">,</span> <span class="n">yMove</span><span class="p">);</span>
+
+	<span class="c1">// This will spam the log heavily, comment it out for real plugins :)</span>
+	<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogPseudoControllerDevice</span><span class="p">,</span> <span class="n">Log</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Sending Controller Events jump%d, x%f, y%f"</span><span class="p">),</span> <span class="n">PreviousButtonStates</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">xMove</span><span class="p">,</span> <span class="n">yMove</span><span class="p">);</span>
+
+	<span class="c1">// This is how you fire your fancypantz new controller events... the ones you added because you couldn't find an existing EControllerButton that matched your needs!</span>
+
+	<span class="c1">// We 'read' the value 75 from the weight sensor</span>
+	<span class="k">const</span> <span class="kt">unsigned</span> <span class="kt">short</span> <span class="kt">int</span> <span class="n">sensorValue</span> <span class="o">=</span> <span class="mi">75</span><span class="p">;</span>
+
+	<span class="n">FPseudoControllerSensorState</span> <span class="n">Sensor1</span> <span class="o">=</span> <span class="n">PseudoControllerStates</span><span class="p">[</span><span class="n">controllerIndex</span><span class="p">].</span><span class="n">WeightAxes</span><span class="p">[(</span><span class="n">int32</span><span class="p">)</span><span class="n">EPseudoControllerAxes</span><span class="o">::</span><span class="n">WeightSensor1</span><span class="p">];</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">sensorValue</span> <span class="o">!=</span> <span class="n">Sensor1</span><span class="p">.</span><span class="n">State</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">Sensor1</span><span class="p">.</span><span class="n">State</span> <span class="o">=</span> <span class="n">sensorValue</span><span class="p">;</span>
+
+		<span class="n">FSlateApplication</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">OnControllerAnalog</span><span class="p">(</span><span class="n">Sensor1</span><span class="p">.</span><span class="n">Axis</span><span class="p">,</span> <span class="n">controllerIndex</span><span class="p">,</span> <span class="n">Sensor1</span><span class="p">.</span><span class="n">GetValue</span><span class="p">());</span> <span class="c1">// This will spam the calculated weight to my fancy new output type!</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">FPseudoControllerInputDevice</span><span class="o">::</span><span class="n">SetMessageHandler</span><span class="p">(</span><span class="k">const</span> <span class="n">TSharedRef</span><span class="o">&lt;</span> <span class="n">FGenericApplicationMessageHandler</span> <span class="o">&gt;&amp;</span> <span class="n">InMessageHandler</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogPseudoControllerDevice</span><span class="p">,</span> <span class="n">Log</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Set Message Handler"</span><span class="p">));</span>
+	<span class="n">MessageHandler</span> <span class="o">=</span> <span class="n">InMessageHandler</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">FPseudoControllerInputDevice</span><span class="o">::</span><span class="n">Exec</span><span class="p">(</span><span class="n">UWorld</span><span class="o">*</span> <span class="n">InWorld</span><span class="p">,</span> <span class="k">const</span> <span class="n">TCHAR</span><span class="o">*</span> <span class="n">Cmd</span><span class="p">,</span> <span class="n">FOutputDevice</span><span class="o">&amp;</span> <span class="n">Ar</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogPseudoControllerDevice</span><span class="p">,</span> <span class="n">Log</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Execute Console Command: %s"</span><span class="p">),</span> <span class="n">Cmd</span><span class="p">);</span>
+
+	<span class="c1">// Put your fancy custom console command code here... </span>
+	<span class="c1">// ToDo: use this to let you fire pseudo controller events</span>
+
+	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">// IForceFeedbackSystem pass through functions</span>
+<span class="c1">//  - I *believe* this is a handel for the game to communicate back to your third party libary (i.e. game tells joystick to increase force feedback/vibrate/turn on/off a light)</span>
+<span class="kt">void</span> <span class="n">FPseudoControllerInputDevice</span><span class="o">::</span><span class="n">SetChannelValue</span><span class="p">(</span><span class="n">int32</span> <span class="n">ControllerId</span><span class="p">,</span> <span class="n">FForceFeedbackChannelType</span> <span class="n">ChannelType</span><span class="p">,</span> <span class="kt">float</span> <span class="n">Value</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogPseudoControllerDevice</span><span class="p">,</span> <span class="n">Log</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Set Force Feedback %f"</span><span class="p">),</span> <span class="n">Value</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">FPseudoControllerInputDevice</span><span class="o">::</span><span class="n">SetChannelValues</span><span class="p">(</span><span class="n">int32</span> <span class="n">ControllerId</span><span class="p">,</span> <span class="k">const</span> <span class="n">FForceFeedbackValues</span> <span class="o">&amp;</span><span class="n">values</span><span class="p">)</span> <span class="p">{</span>
+	<span class="c1">// This will spam the log heavily, comment it out for real plugins :)</span>
+	<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogPseudoControllerDevice</span><span class="p">,</span> <span class="n">Log</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Set Force Feedback Values"</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="c1">// This is where you nicely clean up your plugin when its told to shut down!</span>
+<span class="c1">//  - USE THIS PLEASE!!! no one likes memory leaks &gt;_&lt;</span>
+<span class="n">FPseudoControllerInputDevice</span><span class="o">::~</span><span class="n">FPseudoControllerInputDevice</span><span class="p">()</span> <span class="p">{</span>
+	<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogPseudoControllerDevice</span><span class="p">,</span> <span class="n">Log</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Closing PseudoControllerInputDevice"</span><span class="p">));</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Input_State_Header_File">
+        Input State Header File
+       </span>
+      </h3>
+      <p>
+       This is where you define custom struts to rember FKeys / FNames / Values for custom input types (Pseudo_WeighingSensor1)
+       <b>
+        /Plugins/PseudoController/Source/PseudoController/Private/PseudoControllerInputState.h
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"InputCoreTypes.h"</span><span class="cp"></span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Digital weight sensors on the Wii Balance Board</span>
+<span class="cm"> */</span>
+
+
+<span class="k">enum</span> <span class="k">class</span> <span class="nc">EPseudoControllerAxes</span>
+<span class="p">{</span>
+	<span class="n">WeightSensor1</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+
+	<span class="cm">/** Total number of weight axes */</span>
+	<span class="n">TotalAxisCount</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="p">};</span>
+
+<span class="k">struct</span> <span class="n">FPseudoControllerKey</span>
+<span class="p">{</span>
+	<span class="k">static</span> <span class="k">const</span> <span class="n">FKey</span> <span class="n">Pseudo_WeighingSensor1</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span> <span class="n">FPseudoControllerKeyNames</span>
+<span class="p">{</span>
+	<span class="k">typedef</span> <span class="n">FName</span> <span class="n">Type</span><span class="p">;</span>
+
+	<span class="k">static</span> <span class="k">const</span> <span class="n">FName</span> <span class="n">Pseudo_WeighingSensor1</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Capacitive Axis State</span>
+<span class="cm"> */</span>
+<span class="k">struct</span> <span class="n">FPseudoControllerSensorState</span>
+<span class="p">{</span>
+	<span class="cm">/** The axis that this sensor state maps to */</span>
+	<span class="n">FName</span> <span class="n">Axis</span><span class="p">;</span>
+
+	<span class="cm">/** The zero value (no additional weight) */</span>
+	<span class="kt">unsigned</span> <span class="kt">short</span> <span class="kt">int</span> <span class="n">Zero</span><span class="p">;</span>
+
+	<span class="cm">/** What is the current sensor reading, from 0.f to 1.f */</span>
+	<span class="kt">float</span> <span class="n">Scale</span><span class="p">;</span>
+
+	<span class="cm">/** What is the current sensor reading, from 0.f to 1.f */</span>
+	<span class="kt">unsigned</span> <span class="kt">short</span> <span class="kt">int</span> <span class="n">State</span><span class="p">;</span>
+
+	<span class="n">FPseudoControllerSensorState</span><span class="p">()</span>
+		<span class="o">:</span> <span class="n">Axis</span><span class="p">(</span><span class="n">NAME_None</span><span class="p">)</span>
+		<span class="p">,</span> <span class="n">Zero</span><span class="p">(</span><span class="mi">900</span><span class="p">)</span>
+		<span class="p">,</span> <span class="n">Scale</span><span class="p">(</span><span class="mf">100.f</span><span class="p">)</span>
+		<span class="p">,</span> <span class="n">State</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+	<span class="p">{</span>
+	<span class="p">}</span>
+
+	<span class="kt">float</span> <span class="n">GetValue</span><span class="p">()</span> <span class="p">{</span>
+		<span class="k">if</span><span class="p">(</span><span class="n">State</span> <span class="o">&lt;</span> <span class="n">Zero</span><span class="p">)</span> <span class="p">{</span>
+			<span class="k">return</span> <span class="mf">0.f</span><span class="p">;</span>
+		<span class="p">}</span>
+
+		<span class="k">return</span> <span class="p">(</span><span class="kt">float</span><span class="p">)(</span><span class="n">State</span> <span class="o">-</span> <span class="n">Zero</span><span class="p">)</span> <span class="o">*</span> <span class="n">Scale</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Input state for an pseudo controller</span>
+<span class="cm"> */</span>
+<span class="k">struct</span> <span class="n">FPseudoControllerState</span>
+<span class="p">{</span>
+	<span class="cm">/** Weight axes */</span>
+	<span class="n">FPseudoControllerSensorState</span> <span class="n">WeightAxes</span><span class="p">[(</span><span class="n">int32</span><span class="p">)</span><span class="n">EWiiBalanceAxes</span><span class="o">::</span><span class="n">TotalAxisCount</span><span class="p">];</span>
+
+	<span class="cm">/** Default constructor */</span>
+	<span class="n">FPseudoControllerState</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="n">WeightAxes</span><span class="p">[(</span><span class="n">int32</span><span class="p">)</span><span class="n">EPseudoControllerAxes</span><span class="o">::</span><span class="n">WeightSensor1</span><span class="p">].</span><span class="n">Axis</span> <span class="o">=</span> <span class="n">FPseudoControllerKeyNames</span><span class="o">::</span><span class="n">Pseudo_WeighingSensor1</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Input_Actor_Cpp_File">
+        Input Actor Cpp File
+       </span>
+      </h3>
+      <p>
+       <b>
+        /Plugins/PseudoController/Source/PseudoController/Classes/PseudoActor.cpp
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2014 Epic Games, Inc. All Rights Reserved.</span>
+<span class="cp">#include</span> <span class="cpf">"PseudoControllerPrivatePCH.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"Engine.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"PseudoActorObject.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"PseudoControllerPlugin.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"PseudoControllerInputDevice.h"</span><span class="cp"></span>
+
+<span class="n">DEFINE_LOG_CATEGORY_STATIC</span><span class="p">(</span><span class="n">LogPseudoActor</span><span class="p">,</span> <span class="n">Log</span><span class="p">,</span> <span class="n">All</span><span class="p">);</span>
+
+<span class="c1">// Copyright 1998-2014 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="n">APseudoActorObject</span><span class="o">::</span><span class="n">APseudoActorObject</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span> <span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span> <span class="p">{</span>
+	<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogPseudoActor</span><span class="p">,</span> <span class="n">Log</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Construct"</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">APseudoActorObject</span><span class="o">::</span><span class="n">FunkyMethod</span><span class="p">()</span> <span class="p">{</span>
+	<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogPseudoActor</span><span class="p">,</span> <span class="n">Log</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"FunkyMethod()"</span><span class="p">));</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Input_Actor_Header_File">
+        Input Actor Header File
+       </span>
+      </h3>
+      <p>
+       <b>
+        /Plugins/PseudoController/Source/PseudoController/Classes/PseudoActor.h
+       </b>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+<span class="cp">#include</span> <span class="cpf">"GameFramework/Actor.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"PseudoActorObject.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">(</span><span class="n">MinimalAPI</span><span class="p">,</span> <span class="n">hidecategories</span> <span class="o">=</span> <span class="p">(</span><span class="n">Input</span><span class="p">))</span>
+<span class="k">class</span> <span class="nc">APseudoActorObject</span> <span class="o">:</span> <span class="k">public</span> <span class="n">AActor</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Development"</span><span class="p">)</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="n">FunkyMethod</span><span class="p">();</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       (
+     )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

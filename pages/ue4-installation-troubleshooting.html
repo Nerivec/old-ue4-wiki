@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   UE4 Installation Troubleshooting - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    UE4 Installation Troubleshooting
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       This page provides solutions and troubleshooting steps for common issues experienced during the installation and first load of the UE4 Editor.  If none of the below information is able to help you, then please submit your issue to the UE4
+       <a class="external text" href="https://answers.unrealengine.com/" rel="nofollow">
+        Answerhub
+       </a>
+       under the 'Installation &amp; Setup' section.
+      </p>
+      <p>
+       This page is a work-in-progress and will be added to over time.
+      </p>
+      <p>
+       If the Epic Games Launcher fails to install the Unreal Engine 4 and it provides the following error messages, please see the potential resolutions:
+      </p>
+      <h2>
+       <span class="mw-headline" id="The_necessary_prerequisites_have_failed_to_install._Error_Code_23.">
+        The necessary prerequisites have failed to install. Error Code 23.
+       </span>
+      </h2>
+      <ul>
+       <li>
+        For UE 4.10 and above, Visual Studio 2015 redistributable components are required for the editor to run. UE4 includes Microsoft's standalone installer which attempts to install these, but this can fail if your Windows Update is disabled or if your version of Windows is not updated to the latest patch. To resolve this issue, please run
+        <a class="external text" href="http://windows.microsoft.com/en-us/windows/windows-update" rel="nofollow">
+         Windows Update
+        </a>
+        .
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="The_necessary_prerequisites_have_failed_to_install._Error_Code_E-1223">
+        The necessary prerequisites have failed to install. Error Code E-1223
+       </span>
+      </h2>
+      <ul>
+       <li>
+        Required Visual Studio 2015 redistributable pre-reqs are installed at the end of the download. The administrator access request popup window can time out if no action is taken. If you ignore/not see this in the task bar or possibly behind the launcher, the installation will fail.
+       </li>
+      </ul>
+      <ul>
+       <li>
+        Restart the installation process (which will be faster as it is a verify of what was already downloaded) and look for the admin prompt at the end of the process.
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="The_necessary_prerequisites_have_failed_to_install._Error_Code_E-1223_.2F_R-1638_.2F_R-5_.2F_R-23_.2F_R-1603">
+        The necessary prerequisites have failed to install. Error Code E-1223 / R-1638 / R-5 / R-23 / R-1603
+       </span>
+      </h2>
+      <ul>
+       <li>
+        These errors are typically due to a conflict with the existing Visual Studio 2015 redistributable components on your system. To try to resolve this, navigate to the Windows Uninstall Program in the Control Panel and uninstall the Microsoft Visual C++ 2015 Redistributables. Afterwards, run the UE4 installer from the Epic Games Launcher to reinstall the redistributables.
+       </li>
+      </ul>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Bind keyboard and mouse input events dynamically - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Bind keyboard and mouse input events dynamically
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       Hi ,
+      </p>
+      <p>
+       In this tutorial I am going to show you how to bind your input axis and action events in runtime, as in most of today's game , we have the option of customizing keyboard input. So , here I am assuming that you have one datatable imported which contains the following columns :
+      </p>
+      <p>
+       1&gt;Action
+2&gt;DefaultInput
+3&gt;Input
+      </p>
+      <p>
+       Action is the column which contains the event name , DefaultInput contains the default value the event is bound to(this column is useful only when you hit the RESET button in your key customization menu) , and Input column contains the current input value , which is the value user has saved most recently. You can modify this Input column in your widget class on key pressed event , however , that is a story for another day.
+      </p>
+      <p>
+       Lets move on to our playercharacter class. Include these three namespaces.
+      </p>
+      <ol>
+       <li>
+        include "Runtime/Engine/Classes/GameFramework/PlayerInput.h"
+       </li>
+       <li>
+        include "Runtime/Engine/Classes/GameFramework/InputSettings.h"
+       </li>
+       <li>
+        include "Runtime/CoreUObject/Public/UObject/UObjectGlobals.h"
+       </li>
+      </ol>
+      <p>
+       Now in your constructor  , initialize your datatable , whcih you have to define in the header file
+      </p>
+      <pre>static ConstructorHelpers::FObjectFinder&lt;UDataTable&gt; KeyBoardBindingTable_BP(TEXT("DataTable'/Game/DataTables/KeyboardConfig.KeyboardConfig'"));
+</pre>
+      <p>
+       KeyBoardBindingTable = KeyBoardBindingTable_BP.Object;
+      </p>
+      <p>
+       Now , in your SetupPlayerInputComponent method inside your playercharacter, add the following lines
+      </p>
+      <pre> 
+	check(InputComponent);
+	const UInputSettings* InputSettings = GetDefault&lt;UInputSettings&gt;();
+	int rowindex = 1;
+	while (true)
+	{
+		FKeyBoardBindingTable* LookUpRow = KeyBoardBindingTable-&gt;FindRow&lt;FKeyBoardBindingTable&gt;(FName(*FString::FromInt(rowindex)), TEXT("Look Up"));
+		if (LookUpRow)
+		{
+			if (LookUpRow-&gt;Action == "Move Forward")
+			{
+				const FInputAxisKeyMapping axismapping(FName("Move Forward"), FKey(FName(*LookUpRow-&gt;Input)), 1);
+				((UInputSettings*)InputSettings)-&gt;AddAxisMapping(axismapping);
+			}
+			else if (LookUpRow-&gt;Action == "Move Backward")
+			{
+				const FInputAxisKeyMapping axismapping(FName("Move Forward"), FKey(FName(*LookUpRow-&gt;Input)), -1);
+				((UInputSettings*)InputSettings)-&gt;AddAxisMapping(axismapping);
+
+			}
+			else if (LookUpRow-&gt;Action == "Move Left")
+			{
+				const FInputAxisKeyMapping axismapping(FName("Move Right"), FKey(FName(*LookUpRow-&gt;Input)), -1);
+				((UInputSettings*)InputSettings)-&gt;AddAxisMapping(axismapping);
+			}
+			else if (LookUpRow-&gt;Action == "Move Right")
+			{
+				const FInputAxisKeyMapping axismapping(FName("Move Right"), FKey(FName(*LookUpRow-&gt;Input)), 1);
+				((UInputSettings*)InputSettings)-&gt;AddAxisMapping(axismapping);
+			}
+
+			else
+			{
+				const FInputActionKeyMapping actionmapping(FName(*LookUpRow-&gt;Action), FKey(FName(*LookUpRow-&gt;Input)), false, false, false, false);
+				((UInputSettings*)InputSettings)-&gt;AddActionMapping(actionmapping);
+			}
+			rowindex++;
+
+		}
+		else
+		{
+			break;
+		}
+	}
+
+	const FInputAxisKeyMapping turnaxismapping(FName("Turn"), FKey(FName("MouseX")), 1);
+	((UInputSettings*)InputSettings)-&gt;AddAxisMapping(turnaxismapping);
+
+	const FInputAxisKeyMapping lookupaxismapping(FName("LookUp"), FKey(FName("MouseY")), 1);
+	((UInputSettings*)InputSettings)-&gt;AddAxisMapping(lookupaxismapping);
+
+	((UInputSettings*)InputSettings)-&gt;SaveKeyMappings();
+
+	InputComponent-&gt;BindAction("Jump", IE_Pressed, this, &amp;ACharacter::Jump);
+
+	InputComponent-&gt;BindAxis("Move Forward", this, &amp;AForgottenLegionCharacter::MoveForward);
+	InputComponent-&gt;BindAxis("Move Right", this, &amp;AForgottenLegionCharacter::MoveRight);
+	InputComponent-&gt;BindAxis("Turn", this, &amp;APawn::AddControllerYawInput);
+	InputComponent-&gt;BindAxis("LookUp", this, &amp;APawn::AddControllerPitchInput);
+</pre>
+      <p>
+       That's it. Now every time , you are going to hit "Play" in your editor , the input column will be read from your datatable and saved in your config file , which you can verify by going to Project Settings-&gt;Input section.
+      </p>
+      <p>
+       Enjoy.
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   UMG, Custom Widget Components And Render Code, Usable In UMG Designer - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    UMG, Custom Widget Components And Render Code, Usable In UMG Designer
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Video_of_Custom_UMG_Component.2C_Editable_within_Designer">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Video of Custom UMG Component, Editable within Designer
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Custom_UMG_Component_Property:_Thickness">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Custom UMG Component Property: Thickness
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Build_CS">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Build CS
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#C.2B.2B_Code_for_You">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           C++ Code for You
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#JoySoftEdgeImage.h">
+            <span class="tocnumber">
+             5.1
+            </span>
+            <span class="toctext">
+             JoySoftEdgeImage.h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#JoySoftEdgeImage.cpp">
+            <span class="tocnumber">
+             5.2
+            </span>
+            <span class="toctext">
+             JoySoftEdgeImage.cpp
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#.h">
+            <span class="tocnumber">
+             5.3
+            </span>
+            <span class="toctext">
+             .h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#.cpp">
+            <span class="tocnumber">
+             5.4
+            </span>
+            <span class="toctext">
+             .cpp
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-10">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <img alt="RamaUMGCustomComponents.jpg" class="" height="599" src="../assets/umg-custom-widget-components-and-render-code-usable-in-umg-designer/0.jpg" width="900"/>
+      </p>
+      <p>
+       <i>
+        Original Author:
+       </i>
+       (
+       )
+      </p>
+      <p>
+       In this wiki I provide you with the full code that I used to create a custom Designer-positionable and editable UMG component!
+      </p>
+      <p>
+       This is a UMG widget/component with completely custom render code that works with UMG's render transform system!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Video_of_Custom_UMG_Component.2C_Editable_within_Designer">
+        Video of Custom UMG Component, Editable within Designer
+       </span>
+      </h2>
+      <p>
+       &lt;youtube&gt;
+       <a class="external free" href="https://www.youtube.com/watch?v=1prIYTfng9g" rel="nofollow">
+        https://www.youtube.com/watch?v=1prIYTfng9g
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Custom_UMG_Component_Property:_Thickness">
+        Custom UMG Component Property: Thickness
+       </span>
+      </h2>
+      <p>
+       In my code I am not only sharing with you how to do custom render code, I am also showing you how to make your own custom properties that will update in the UMG Designer!
+      </p>
+      <p>
+       As you see in the video, my custom property Thickness, which directly affects the rendering, does update instantly every time I enter new values within the UMG Designer!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Build_CS">
+        Build CS
+       </span>
+      </h2>
+      <p>
+       Make sure you have this in your project's build cs to ensure my code below will compile!
+      </p>
+      <pre> PublicDependencyModuleNames.AddRange(new string[] { 
+ 	"Core", "CoreUObject", "Engine", "InputCore",
+ 	"UMG", "Slate", "SlateCore",
+ });
+</pre>
+      <h2>
+       <span class="mw-headline" id="C.2B.2B_Code_for_You">
+        C++ Code for You
+       </span>
+      </h2>
+      <p>
+       You are welcome to use my C++ code as a template for your own custom UMG components, just please credit me as the original author/contributor of the code that you use! Mentioning me as "Rama" is sufficient.
+      </p>
+      <p>
+       Note that there are two new classes!
+      </p>
+      <p>
+       There is the Slate C++ Core widget, which has the custom render code and the custom property, thickness, for use with the render code.
+      </p>
+      <p>
+       This Slate widget extends SImage to minimize introduction of duplicate/unnecessary code while also allowing me to inherit any new features that Epic adds to the SImage in the future!
+      </p>
+      <p>
+       Then there is also a UMG Component which wraps my custom Slate widget!
+      </p>
+      <p>
+       The core additional code to this UMG component class is my code to enable the Thickness property to trigger dynamic updates of the visual appearance of the custom component while in the Designer! These dynamic updates are accomplished using SynchronizeProperties().
+      </p>
+      <h3>
+       <span class="mw-headline" id="JoySoftEdgeImage.h">
+        JoySoftEdgeImage.h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/*</span>
+<span class="cm">	JoySoftEdgeImage by Rama</span>
+<span class="cm">*/</span>
+<span class="cp">#pragma once</span>
+
+<span class="c1">//~~~~~~~~~~~~ UMG ~~~~~~~~~~~~~~~~</span>
+<span class="cp">#include</span> <span class="cpf">"Runtime/UMG/Public/UMG.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Runtime/UMG/Public/UMGStyle.h"</span><span class="cp"></span>
+<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+
+<span class="c1">//Custom Slate Element</span>
+<span class="cp">#include</span> <span class="cpf">"SSoftEdgeImage.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"JoySoftEdgeImage.generated.h"</span><span class="cp"></span>
+ 
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">UJoySoftEdgeImage</span> <span class="o">:</span> <span class="k">public</span> <span class="n">UWidget</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+
+<span class="c1">//Custom Slate Element </span>
+<span class="k">protected</span><span class="o">:</span>
+	<span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="n">SSoftEdgeImage</span><span class="o">&gt;</span> <span class="n">MyImage</span><span class="p">;</span>
+	
+<span class="c1">//~~~~~~~~~~</span>
+<span class="c1">//Thickness</span>
+<span class="c1">// 	Rama's custom UMG Widget property!</span>
+<span class="c1">//~~~~~~~~~~</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="cm">/** Thickness */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="s">"Joy Soft Edge Image"</span><span class="p">)</span>
+	<span class="kt">float</span> <span class="n">Thickness</span><span class="p">;</span>
+	
+        <span class="c1">//Delegate verison if you want it!</span>
+	<span class="c1">//		-Rama</span>
+	<span class="c1">//PROPERTY_BINDING_IMPLEMENTATION(float, Thickness);</span>
+	
+	<span class="cm">/** Update thickness of Soft Edge Image! Yay! */</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="s">"Joy Soft Edge Image"</span><span class="p">)</span>
+	<span class="kt">void</span> <span class="n">SetThickness</span><span class="p">(</span><span class="kt">float</span> <span class="n">InThickness</span><span class="p">);</span>
+ 
+<span class="c1">//~~~ Rest is copied from UMG Image.h ~~~</span>
+<span class="k">public</span><span class="o">:</span>
+
+	<span class="cm">/** Image to draw */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditDefaultsOnly</span><span class="p">,</span> <span class="n">BlueprintReadOnly</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">Appearance</span><span class="p">)</span>
+	<span class="n">FSlateBrush</span> <span class="n">Brush</span><span class="p">;</span>
+
+	<span class="cm">/** A bindable delegate for the Image. */</span>
+	<span class="n">UPROPERTY</span><span class="p">()</span>
+	<span class="n">FGetSlateBrush</span> <span class="n">BrushDelegate</span><span class="p">;</span>
+
+	<span class="cm">/** Color and opacity */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditDefaultsOnly</span><span class="p">,</span> <span class="n">BlueprintReadOnly</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">Appearance</span><span class="p">)</span>
+	<span class="n">FLinearColor</span> <span class="n">ColorAndOpacity</span><span class="p">;</span>
+	
+	<span class="cm">/** A bindable delegate for the ColorAndOpacity. */</span>
+	<span class="n">UPROPERTY</span><span class="p">()</span>
+	<span class="n">FGetLinearColor</span> <span class="n">ColorAndOpacityDelegate</span><span class="p">;</span>
+	
+<span class="k">public</span><span class="o">:</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditDefaultsOnly</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">Events</span><span class="p">)</span>
+	<span class="n">FOnPointerEvent</span> <span class="n">OnMouseButtonDownEvent</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+
+	<span class="cm">/**  */</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="s">"Appearance"</span><span class="p">)</span>
+	<span class="kt">void</span> <span class="n">SetColorAndOpacity</span><span class="p">(</span><span class="n">FLinearColor</span> <span class="n">InColorAndOpacity</span><span class="p">);</span>
+
+	<span class="cm">/**  */</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="s">"Appearance"</span><span class="p">)</span>
+	<span class="kt">void</span> <span class="n">SetOpacity</span><span class="p">(</span><span class="kt">float</span> <span class="n">InOpacity</span><span class="p">);</span>
+
+	<span class="cm">/**  */</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="s">"Appearance"</span><span class="p">)</span>
+	<span class="kt">void</span> <span class="n">SetBrushFromAsset</span><span class="p">(</span><span class="n">USlateBrushAsset</span><span class="o">*</span> <span class="n">Asset</span><span class="p">);</span>
+
+	<span class="cm">/**  */</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="s">"Appearance"</span><span class="p">)</span>
+	<span class="kt">void</span> <span class="n">SetBrushFromTexture</span><span class="p">(</span><span class="n">UTexture2D</span><span class="o">*</span> <span class="n">Texture</span><span class="p">);</span>
+
+	<span class="cm">/**  */</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="s">"Appearance"</span><span class="p">)</span>
+	<span class="kt">void</span> <span class="n">SetBrushFromMaterial</span><span class="p">(</span><span class="n">UMaterialInterface</span><span class="o">*</span> <span class="n">Material</span><span class="p">);</span>
+
+	<span class="cm">/**  */</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="s">"Appearance"</span><span class="p">)</span>
+	<span class="n">UMaterialInstanceDynamic</span><span class="o">*</span> <span class="n">GetDynamicMaterial</span><span class="p">();</span>
+
+	<span class="c1">// UWidget interface</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">SynchronizeProperties</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+	<span class="c1">// End of UWidget interface</span>
+
+	<span class="c1">// UVisual interface</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">ReleaseSlateResources</span><span class="p">(</span><span class="kt">bool</span> <span class="n">bReleaseChildren</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+	<span class="c1">// End of UVisual interface</span>
+
+<span class="cp">#if WITH_EDITOR</span>
+	<span class="c1">// UWidget interface</span>
+	<span class="k">virtual</span> <span class="k">const</span> <span class="n">FSlateBrush</span><span class="o">*</span> <span class="nf">GetEditorIcon</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="k">const</span> <span class="n">FText</span> <span class="nf">GetPaletteCategory</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+	<span class="c1">// End UWidget interface</span>
+<span class="cp">#endif</span>
+
+<span class="k">protected</span><span class="o">:</span>
+	<span class="c1">// UWidget interface</span>
+	<span class="k">virtual</span> <span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">SWidget</span><span class="o">&gt;</span> <span class="n">RebuildWidget</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+	<span class="c1">// End of UWidget interface</span>
+
+	<span class="cm">/** Translates the bound brush data and assigns it to the cached brush used by this widget. */</span>
+	<span class="k">const</span> <span class="n">FSlateBrush</span><span class="o">*</span> <span class="nf">ConvertImage</span><span class="p">(</span><span class="n">TAttribute</span><span class="o">&lt;</span><span class="n">FSlateBrush</span><span class="o">&gt;</span> <span class="n">InImageAsset</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+	<span class="n">FReply</span> <span class="nf">HandleMouseButtonDown</span><span class="p">(</span><span class="k">const</span> <span class="n">FGeometry</span><span class="o">&amp;</span> <span class="n">Geometry</span><span class="p">,</span> <span class="k">const</span> <span class="n">FPointerEvent</span><span class="o">&amp;</span> <span class="n">MouseEvent</span><span class="p">);</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="JoySoftEdgeImage.cpp">
+        JoySoftEdgeImage.cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/*</span>
+<span class="cm">	UJoySoftEdgeImage by Rama</span>
+<span class="cm">*/</span>
+ 
+<span class="c1">//Project Name</span>
+<span class="cp">#include</span> <span class="cpf">"Abatron.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"JoySoftEdgeImage.h"</span><span class="cp"></span>
+
+<span class="c1">//LOCTEXT</span>
+<span class="cp">#define LOCTEXT_NAMESPACE "UMG"</span>
+ 
+<span class="c1">/////////////////////////////////////////////////////</span>
+<span class="c1">// UJoySoftEdgeImage</span>
+
+
+
+<span class="n">UJoySoftEdgeImage</span><span class="o">::</span><span class="n">UJoySoftEdgeImage</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">ObjectInitializer</span><span class="p">)</span>
+	<span class="p">,</span> <span class="n">ColorAndOpacity</span><span class="p">(</span><span class="n">FLinearColor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.0333</span><span class="p">))</span>
+	<span class="p">,</span> <span class="n">Thickness</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
+<span class="p">{</span>  
+	<span class="c1">//Default Values Set Here, see above</span>
+<span class="p">}</span>
+
+<span class="c1">//Rebuild using custom Slate Widget </span>
+<span class="c1">//		-Rama</span>
+<span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">SWidget</span><span class="o">&gt;</span> <span class="n">UJoySoftEdgeImage</span><span class="o">::</span><span class="n">RebuildWidget</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">MyImage</span> <span class="o">=</span> <span class="n">SNew</span><span class="p">(</span><span class="n">SSoftEdgeImage</span><span class="p">);</span>
+	<span class="k">return</span> <span class="n">MyImage</span><span class="p">.</span><span class="n">ToSharedRef</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">//Set Thickness</span>
+<span class="kt">void</span> <span class="n">UJoySoftEdgeImage</span><span class="o">::</span><span class="n">SetThickness</span><span class="p">(</span><span class="kt">float</span> <span class="n">InThickness</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Thickness</span> <span class="o">=</span> <span class="n">InThickness</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">(</span> <span class="n">MyImage</span><span class="p">.</span><span class="n">IsValid</span><span class="p">()</span> <span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">MyImage</span><span class="o">-&gt;</span><span class="n">SetThickness</span><span class="p">(</span><span class="n">InThickness</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="c1">//This is where the SSoftEdgeImage slate widget gets updated </span>
+<span class="c1">//		when the UPROPERTY() is changed in the Editor</span>
+<span class="c1">//		-Rama</span>
+<span class="c1">//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span>
+<span class="kt">void</span> <span class="n">UJoySoftEdgeImage</span><span class="o">::</span><span class="n">SynchronizeProperties</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">SynchronizeProperties</span><span class="p">();</span>
+
+        <span class="c1">//Thickness Delegate Version</span>
+	<span class="c1">//TAttribute&lt;float&gt; ThickBind = PROPERTY_BINDING(float, Thickness);</span>
+	<span class="c1">//MyImage-&gt;SetThickness(ThickBind.Get());   </span>
+	
+	<span class="c1">//Thickness non-delegate version</span>
+	<span class="n">MyImage</span><span class="o">-&gt;</span><span class="n">SetThickness</span><span class="p">(</span><span class="n">Thickness</span><span class="p">);</span>
+	
+	<span class="c1">//Color and Opacity</span>
+	<span class="n">TAttribute</span><span class="o">&lt;</span><span class="n">FSlateColor</span><span class="o">&gt;</span> <span class="n">ColorAndOpacityBinding</span> <span class="o">=</span> <span class="n">OPTIONAL_BINDING</span><span class="p">(</span><span class="n">FSlateColor</span><span class="p">,</span> <span class="n">ColorAndOpacity</span><span class="p">);</span>
+	<span class="n">MyImage</span><span class="o">-&gt;</span><span class="n">SetColorAndOpacity</span><span class="p">(</span><span class="n">ColorAndOpacityBinding</span><span class="p">);</span>
+	
+	<span class="c1">//Image</span>
+	<span class="n">TAttribute</span><span class="o">&lt;</span><span class="k">const</span> <span class="n">FSlateBrush</span><span class="o">*&gt;</span> <span class="n">ImageBinding</span> <span class="o">=</span> <span class="n">OPTIONAL_BINDING_CONVERT</span><span class="p">(</span><span class="n">FSlateBrush</span><span class="p">,</span> <span class="n">Brush</span><span class="p">,</span> <span class="k">const</span> <span class="n">FSlateBrush</span><span class="o">*</span><span class="p">,</span> <span class="n">ConvertImage</span><span class="p">);</span>
+	<span class="n">MyImage</span><span class="o">-&gt;</span><span class="n">SetImage</span><span class="p">(</span><span class="n">ImageBinding</span><span class="p">);</span>
+	
+	<span class="c1">//Mouse</span>
+	<span class="n">MyImage</span><span class="o">-&gt;</span><span class="n">SetOnMouseButtonDown</span><span class="p">(</span><span class="n">BIND_UOBJECT_DELEGATE</span><span class="p">(</span><span class="n">FPointerEventHandler</span><span class="p">,</span> <span class="n">HandleMouseButtonDown</span><span class="p">));</span>
+<span class="p">}</span>
+ 
+
+<span class="c1">//~~~ Rest is copied from UMG Image.h ~~~</span>
+
+<span class="kt">void</span> <span class="n">UJoySoftEdgeImage</span><span class="o">::</span><span class="n">ReleaseSlateResources</span><span class="p">(</span><span class="kt">bool</span> <span class="n">bReleaseChildren</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">ReleaseSlateResources</span><span class="p">(</span><span class="n">bReleaseChildren</span><span class="p">);</span>
+
+	<span class="n">MyImage</span><span class="p">.</span><span class="n">Reset</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">UJoySoftEdgeImage</span><span class="o">::</span><span class="n">SetColorAndOpacity</span><span class="p">(</span><span class="n">FLinearColor</span> <span class="n">InColorAndOpacity</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">ColorAndOpacity</span> <span class="o">=</span> <span class="n">InColorAndOpacity</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">(</span> <span class="n">MyImage</span><span class="p">.</span><span class="n">IsValid</span><span class="p">()</span> <span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">MyImage</span><span class="o">-&gt;</span><span class="n">SetColorAndOpacity</span><span class="p">(</span><span class="n">ColorAndOpacity</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">UJoySoftEdgeImage</span><span class="o">::</span><span class="n">SetOpacity</span><span class="p">(</span><span class="kt">float</span> <span class="n">InOpacity</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">ColorAndOpacity</span><span class="p">.</span><span class="n">A</span> <span class="o">=</span> <span class="n">InOpacity</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">(</span> <span class="n">MyImage</span><span class="p">.</span><span class="n">IsValid</span><span class="p">()</span> <span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">MyImage</span><span class="o">-&gt;</span><span class="n">SetColorAndOpacity</span><span class="p">(</span><span class="n">ColorAndOpacity</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">const</span> <span class="n">FSlateBrush</span><span class="o">*</span> <span class="n">UJoySoftEdgeImage</span><span class="o">::</span><span class="n">ConvertImage</span><span class="p">(</span><span class="n">TAttribute</span><span class="o">&lt;</span><span class="n">FSlateBrush</span><span class="o">&gt;</span> <span class="n">InImageAsset</span><span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="n">UJoySoftEdgeImage</span><span class="o">*</span> <span class="n">MutableThis</span> <span class="o">=</span> <span class="k">const_cast</span><span class="o">&lt;</span><span class="n">UJoySoftEdgeImage</span><span class="o">*&gt;</span><span class="p">(</span> <span class="k">this</span> <span class="p">);</span>
+	<span class="n">MutableThis</span><span class="o">-&gt;</span><span class="n">Brush</span> <span class="o">=</span> <span class="n">InImageAsset</span><span class="p">.</span><span class="n">Get</span><span class="p">();</span>
+
+	<span class="k">return</span> <span class="o">&amp;</span><span class="n">Brush</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">UJoySoftEdgeImage</span><span class="o">::</span><span class="n">SetBrushFromAsset</span><span class="p">(</span><span class="n">USlateBrushAsset</span><span class="o">*</span> <span class="n">Asset</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Brush</span> <span class="o">=</span> <span class="n">Asset</span> <span class="o">?</span> <span class="n">Asset</span><span class="o">-&gt;</span><span class="nl">Brush</span> <span class="p">:</span> <span class="n">FSlateBrush</span><span class="p">();</span>
+
+	<span class="k">if</span> <span class="p">(</span> <span class="n">MyImage</span><span class="p">.</span><span class="n">IsValid</span><span class="p">()</span> <span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">MyImage</span><span class="o">-&gt;</span><span class="n">SetImage</span><span class="p">(</span><span class="o">&amp;</span><span class="n">Brush</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">UJoySoftEdgeImage</span><span class="o">::</span><span class="n">SetBrushFromTexture</span><span class="p">(</span><span class="n">UTexture2D</span><span class="o">*</span> <span class="n">Texture</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Brush</span><span class="p">.</span><span class="n">SetResourceObject</span><span class="p">(</span><span class="n">Texture</span><span class="p">);</span>
+
+	<span class="k">if</span> <span class="p">(</span> <span class="n">MyImage</span><span class="p">.</span><span class="n">IsValid</span><span class="p">()</span> <span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">MyImage</span><span class="o">-&gt;</span><span class="n">SetImage</span><span class="p">(</span><span class="o">&amp;</span><span class="n">Brush</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">UJoySoftEdgeImage</span><span class="o">::</span><span class="n">SetBrushFromMaterial</span><span class="p">(</span><span class="n">UMaterialInterface</span><span class="o">*</span> <span class="n">Material</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Brush</span><span class="p">.</span><span class="n">SetResourceObject</span><span class="p">(</span><span class="n">Material</span><span class="p">);</span>
+
+	<span class="c1">//TODO UMG Check if the material can be used with the UI</span>
+
+	<span class="k">if</span> <span class="p">(</span> <span class="n">MyImage</span><span class="p">.</span><span class="n">IsValid</span><span class="p">()</span> <span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">MyImage</span><span class="o">-&gt;</span><span class="n">SetImage</span><span class="p">(</span><span class="o">&amp;</span><span class="n">Brush</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">UMaterialInstanceDynamic</span><span class="o">*</span> <span class="n">UJoySoftEdgeImage</span><span class="o">::</span><span class="n">GetDynamicMaterial</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">UMaterialInterface</span><span class="o">*</span> <span class="n">Material</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+
+	<span class="n">UObject</span><span class="o">*</span> <span class="n">Resource</span> <span class="o">=</span> <span class="n">Brush</span><span class="p">.</span><span class="n">GetResourceObject</span><span class="p">();</span>
+	<span class="n">Material</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">UMaterialInterface</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Resource</span><span class="p">);</span>
+
+	<span class="k">if</span> <span class="p">(</span> <span class="n">Material</span> <span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">UMaterialInstanceDynamic</span><span class="o">*</span> <span class="n">DynamicMaterial</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">UMaterialInstanceDynamic</span><span class="o">&gt;</span><span class="p">(</span><span class="n">Material</span><span class="p">);</span>
+
+		<span class="k">if</span> <span class="p">(</span> <span class="o">!</span><span class="n">DynamicMaterial</span> <span class="p">)</span>
+		<span class="p">{</span>
+			<span class="n">DynamicMaterial</span> <span class="o">=</span> <span class="n">UMaterialInstanceDynamic</span><span class="o">::</span><span class="n">Create</span><span class="p">(</span><span class="n">Material</span><span class="p">,</span> <span class="k">this</span><span class="p">);</span>
+			<span class="n">Brush</span><span class="p">.</span><span class="n">SetResourceObject</span><span class="p">(</span><span class="n">DynamicMaterial</span><span class="p">);</span>
+
+			<span class="k">if</span> <span class="p">(</span> <span class="n">MyImage</span><span class="p">.</span><span class="n">IsValid</span><span class="p">()</span> <span class="p">)</span>
+			<span class="p">{</span>
+				<span class="n">MyImage</span><span class="o">-&gt;</span><span class="n">SetImage</span><span class="p">(</span><span class="o">&amp;</span><span class="n">Brush</span><span class="p">);</span>
+			<span class="p">}</span>
+		<span class="p">}</span>
+		
+		<span class="k">return</span> <span class="n">DynamicMaterial</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="c1">//TODO UMG can we do something for textures?  General purpose dynamic material for them?</span>
+
+	<span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">FReply</span> <span class="n">UJoySoftEdgeImage</span><span class="o">::</span><span class="n">HandleMouseButtonDown</span><span class="p">(</span><span class="k">const</span> <span class="n">FGeometry</span><span class="o">&amp;</span> <span class="n">Geometry</span><span class="p">,</span> <span class="k">const</span> <span class="n">FPointerEvent</span><span class="o">&amp;</span> <span class="n">MouseEvent</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span> <span class="n">OnMouseButtonDownEvent</span><span class="p">.</span><span class="n">IsBound</span><span class="p">()</span> <span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="n">OnMouseButtonDownEvent</span><span class="p">.</span><span class="n">Execute</span><span class="p">(</span><span class="n">Geometry</span><span class="p">,</span> <span class="n">MouseEvent</span><span class="p">).</span><span class="n">NativeReply</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="n">FReply</span><span class="o">::</span><span class="n">Unhandled</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="cp">#if WITH_EDITOR</span>
+
+<span class="k">const</span> <span class="n">FSlateBrush</span><span class="o">*</span> <span class="n">UJoySoftEdgeImage</span><span class="o">::</span><span class="n">GetEditorIcon</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">FUMGStyle</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">GetBrush</span><span class="p">(</span><span class="s">"Widget.Image"</span><span class="p">);</span>
+<span class="p">}</span>
+ 
+<span class="k">const</span> <span class="n">FText</span> <span class="n">UJoySoftEdgeImage</span><span class="o">::</span><span class="n">GetPaletteCategory</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">LOCTEXT</span><span class="p">(</span><span class="s">"Common"</span><span class="p">,</span> <span class="s">"Common"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="cp">#endif</span>
+
+
+<span class="c1">/////////////////////////////////////////////////////</span>
+
+<span class="cp">#undef LOCTEXT_NAMESPACE</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id=".h">
+        .h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/*</span>
+<span class="cm">	By Rama</span>
+<span class="cm">*/</span>
+
+<span class="cp">#pragma once</span>
+
+<span class="c1">//Slate Core</span>
+<span class="cp">#include</span> <span class="cpf">"SlateCore.h"</span><span class="cp"></span>
+
+<span class="k">class</span> <span class="nc">SSoftEdgeImage</span>
+	<span class="o">:</span> <span class="k">public</span> <span class="n">SImage</span>
+<span class="p">{</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="n">SLATE_BEGIN_ARGS</span><span class="p">(</span> <span class="n">SSoftEdgeImage</span> <span class="p">)</span>
+		<span class="o">:</span> <span class="n">_Image</span><span class="p">(</span> <span class="n">FCoreStyle</span><span class="o">::</span><span class="n">Get</span><span class="p">().</span><span class="n">GetDefaultBrush</span><span class="p">()</span> <span class="p">)</span>
+		<span class="p">,</span> <span class="n">_ColorAndOpacity</span><span class="p">(</span> <span class="n">FLinearColor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mf">0.02333</span><span class="p">)</span> <span class="p">)</span>
+		<span class="p">,</span> <span class="n">_Thickness</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
+		<span class="p">,</span> <span class="n">_OnMouseButtonDown</span><span class="p">()</span>
+		<span class="p">{}</span>
+
+		<span class="cm">/** Image resource */</span>
+		<span class="n">SLATE_ATTRIBUTE</span><span class="p">(</span> <span class="k">const</span> <span class="n">FSlateBrush</span><span class="o">*</span><span class="p">,</span> <span class="n">Image</span> <span class="p">)</span>
+
+		<span class="cm">/** Color and opacity */</span>
+		<span class="n">SLATE_ATTRIBUTE</span><span class="p">(</span> <span class="n">FSlateColor</span><span class="p">,</span> <span class="n">ColorAndOpacity</span> <span class="p">)</span>
+
+		<span class="cm">/** Thickness */</span>
+		<span class="n">SLATE_ATTRIBUTE</span><span class="p">(</span> <span class="kt">float</span><span class="p">,</span> <span class="n">Thickness</span> <span class="p">)</span>
+		
+		<span class="cm">/** Invoked when the mouse is pressed in the widget. */</span>
+		<span class="n">SLATE_EVENT</span><span class="p">(</span> <span class="n">FPointerEventHandler</span><span class="p">,</span> <span class="n">OnMouseButtonDown</span> <span class="p">)</span>
+
+	<span class="n">SLATE_END_ARGS</span><span class="p">()</span>
+
+	<span class="cm">/**</span>
+<span class="cm">	 * Construct this widget</span>
+<span class="cm">	 *</span>
+<span class="cm">	 * @param	InArgs	The declaration data for this widget</span>
+<span class="cm">	 */</span>
+	<span class="kt">void</span> <span class="n">Construct</span><span class="p">(</span> <span class="k">const</span> <span class="n">FArguments</span><span class="o">&amp;</span> <span class="n">InArgs</span> <span class="p">);</span>
+
+<span class="c1">//~~~~~~~~</span>
+<span class="c1">//Thickness</span>
+<span class="c1">//~~~~~~~~</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="kt">void</span> <span class="n">SetThickness</span><span class="p">(</span> <span class="kt">float</span> <span class="n">InThickness</span> <span class="p">);</span>
+	
+	<span class="cm">/** How many times the image is repeated to give a softness to the edge */</span>
+	<span class="kt">float</span> <span class="n">Thickness</span><span class="p">;</span>
+	
+<span class="k">public</span><span class="o">:</span>
+
+	<span class="c1">// SWidget overrides</span>
+
+	<span class="k">virtual</span> <span class="n">int32</span> <span class="n">OnPaint</span><span class="p">(</span> <span class="k">const</span> <span class="n">FPaintArgs</span><span class="o">&amp;</span> <span class="n">Args</span><span class="p">,</span> <span class="k">const</span> <span class="n">FGeometry</span><span class="o">&amp;</span> <span class="n">AllottedGeometry</span><span class="p">,</span> <span class="k">const</span> <span class="n">FSlateRect</span><span class="o">&amp;</span> <span class="n">MyClippingRect</span><span class="p">,</span> <span class="n">FSlateWindowElementList</span><span class="o">&amp;</span> <span class="n">OutDrawElements</span><span class="p">,</span> <span class="n">int32</span> <span class="n">LayerId</span><span class="p">,</span> <span class="k">const</span> <span class="n">FWidgetStyle</span><span class="o">&amp;</span> <span class="n">InWidgetStyle</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bParentEnabled</span> <span class="p">)</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id=".cpp">
+        .cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/*</span>
+<span class="cm">	By Rama</span>
+<span class="cm">*/</span>
+
+<span class="cp">#include</span> <span class="cpf">"Abatron.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"SSoftEdgeImage.h"</span><span class="cp"></span>
+
+<span class="n">DECLARE_CYCLE_STAT</span><span class="p">(</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"OnPaint SSoftEdgeImage"</span><span class="p">),</span> <span class="n">STAT_SlateOnPaint_SSoftEdgeImage</span><span class="p">,</span> <span class="n">STATGROUP_Slate</span> <span class="p">);</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * Construct this widget</span>
+<span class="cm"> *</span>
+<span class="cm"> * @param	InArgs	The declaration data for this widget</span>
+<span class="cm"> */</span>
+<span class="kt">void</span> <span class="n">SSoftEdgeImage</span><span class="o">::</span><span class="n">Construct</span><span class="p">(</span> <span class="k">const</span> <span class="n">FArguments</span><span class="o">&amp;</span> <span class="n">InArgs</span> <span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Image</span> 				<span class="o">=</span> <span class="n">InArgs</span><span class="p">.</span><span class="n">_Image</span><span class="p">;</span>
+	<span class="n">ColorAndOpacity</span> 		<span class="o">=</span> <span class="n">InArgs</span><span class="p">.</span><span class="n">_ColorAndOpacity</span><span class="p">;</span>
+	<span class="n">Thickness</span> 			<span class="o">=</span> <span class="n">InArgs</span><span class="p">.</span><span class="n">_Thickness</span><span class="p">.</span><span class="n">Get</span><span class="p">();</span>
+	<span class="n">OnMouseButtonDownHandler</span> 	<span class="o">=</span> <span class="n">InArgs</span><span class="p">.</span><span class="n">_OnMouseButtonDown</span><span class="p">;</span>
+<span class="p">}</span>
+ 
+<span class="kt">void</span> <span class="n">SSoftEdgeImage</span><span class="o">::</span><span class="n">SetThickness</span><span class="p">(</span> <span class="kt">float</span> <span class="n">InThickness</span> <span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Thickness</span> <span class="o">=</span> <span class="n">InThickness</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">int32</span> <span class="n">SSoftEdgeImage</span><span class="o">::</span><span class="n">OnPaint</span><span class="p">(</span> <span class="k">const</span> <span class="n">FPaintArgs</span><span class="o">&amp;</span> <span class="n">Args</span><span class="p">,</span> <span class="k">const</span> <span class="n">FGeometry</span><span class="o">&amp;</span> <span class="n">AllottedGeometry</span><span class="p">,</span> <span class="k">const</span> <span class="n">FSlateRect</span><span class="o">&amp;</span> <span class="n">MyClippingRect</span><span class="p">,</span> <span class="n">FSlateWindowElementList</span><span class="o">&amp;</span> <span class="n">OutDrawElements</span><span class="p">,</span> <span class="n">int32</span> <span class="n">LayerId</span><span class="p">,</span> <span class="k">const</span> <span class="n">FWidgetStyle</span><span class="o">&amp;</span> <span class="n">InWidgetStyle</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bParentEnabled</span> <span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+<span class="cp">#if SLATE_HD_STATS</span>
+	<span class="n">SCOPE_CYCLE_COUNTER</span><span class="p">(</span> <span class="n">STAT_SlateOnPaint_SSoftEdgeImage</span> <span class="p">);</span>
+<span class="cp">#endif</span>
+	<span class="k">const</span> <span class="n">FSlateBrush</span><span class="o">*</span> <span class="n">ImageBrush</span> <span class="o">=</span> <span class="n">Image</span><span class="p">.</span><span class="n">Get</span><span class="p">();</span>
+
+	<span class="k">if</span> <span class="p">((</span><span class="n">ImageBrush</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">ImageBrush</span><span class="o">-&gt;</span><span class="n">DrawAs</span> <span class="o">!=</span> <span class="n">ESlateBrushDrawType</span><span class="o">::</span><span class="n">NoDrawType</span><span class="p">))</span>
+	<span class="p">{</span>
+		<span class="k">const</span> <span class="kt">bool</span> <span class="n">bIsEnabled</span> <span class="o">=</span> <span class="n">ShouldBeEnabled</span><span class="p">(</span><span class="n">bParentEnabled</span><span class="p">);</span>
+		<span class="k">const</span> <span class="n">uint32</span> <span class="n">DrawEffects</span> <span class="o">=</span> <span class="n">bIsEnabled</span> <span class="o">?</span> <span class="n">ESlateDrawEffect</span><span class="o">::</span><span class="nl">None</span> <span class="p">:</span> <span class="n">ESlateDrawEffect</span><span class="o">::</span><span class="n">DisabledEffect</span><span class="p">;</span>
+
+		<span class="k">const</span> <span class="n">FColor</span> <span class="nf">FinalColorAndOpacity</span><span class="p">(</span> <span class="n">InWidgetStyle</span><span class="p">.</span><span class="n">GetColorAndOpacityTint</span><span class="p">()</span> <span class="o">*</span> <span class="n">ColorAndOpacity</span><span class="p">.</span><span class="n">Get</span><span class="p">().</span><span class="n">GetColor</span><span class="p">(</span><span class="n">InWidgetStyle</span><span class="p">)</span> <span class="o">*</span> <span class="n">ImageBrush</span><span class="o">-&gt;</span><span class="n">GetTint</span><span class="p">(</span> <span class="n">InWidgetStyle</span> <span class="p">)</span> <span class="p">);</span>
+
+		<span class="c1">//For Thickness</span>
+		<span class="k">for</span> <span class="p">(</span><span class="n">int32</span> <span class="n">v</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">v</span> <span class="o">&lt;</span> <span class="n">Thickness</span><span class="p">;</span> <span class="n">v</span><span class="o">++</span> <span class="p">)</span> 
+		<span class="p">{</span>   		
+			<span class="c1">//Size</span>
+			<span class="n">FVector2D</span> <span class="n">AdjustedSize</span> <span class="o">=</span> 
+				<span class="n">FVector2D</span><span class="p">(</span>
+					<span class="n">AllottedGeometry</span><span class="p">.</span><span class="n">GetLocalSize</span><span class="p">().</span><span class="n">X</span> <span class="o">-</span> <span class="n">v</span><span class="o">*</span><span class="mi">2</span><span class="p">,</span>
+					<span class="n">AllottedGeometry</span><span class="p">.</span><span class="n">GetLocalSize</span><span class="p">().</span><span class="n">Y</span> <span class="o">-</span> <span class="n">v</span><span class="o">*</span><span class="mi">2</span>
+				<span class="p">);</span>
+				  
+			<span class="c1">//There's a warning about using this constructor in Geometry.h</span>
+			<span class="c1">//		But it looks like the code was fixed in Geometry.cpp to use layout transform properly. Plus all render transforms work great in Editor.</span>
+			<span class="c1">//			So keeping this for now :)</span>
+			<span class="n">FPaintGeometry</span> <span class="n">PaintGeom</span> <span class="o">=</span> 
+				<span class="n">AllottedGeometry</span><span class="p">.</span><span class="n">ToPaintGeometry</span><span class="p">(</span>
+					<span class="n">FVector2D</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">v</span><span class="p">),</span>		<span class="c1">//Local Translation</span>
+					<span class="n">AdjustedSize</span><span class="p">,</span>		<span class="c1">//Local Size</span>
+					<span class="mi">1</span>			<span class="c1">//Local Scale</span>
+				<span class="p">);</span>
+			
+			<span class="n">FSlateDrawElement</span><span class="o">::</span><span class="n">MakeBox</span><span class="p">(</span>
+				<span class="n">OutDrawElements</span><span class="p">,</span> 	<span class="c1">//Out</span>
+				<span class="n">LayerId</span><span class="p">,</span> 
+				<span class="n">PaintGeom</span><span class="p">,</span> 		<span class="c1">//Paint Geom</span>
+				<span class="n">ImageBrush</span><span class="p">,</span> 		<span class="c1">//Brush</span>
+				<span class="n">MyClippingRect</span><span class="p">,</span> 		<span class="c1">//Clip</span>
+				<span class="n">DrawEffects</span><span class="p">,</span> 
+				<span class="n">FinalColorAndOpacity</span> 	<span class="c1">//Color and Opacity</span>
+			<span class="p">);</span>
+
+		<span class="p">}</span> <span class="c1">//For loop</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="n">LayerId</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       In this wiki I have now given you the entire code that I used to create the custom UMG widget with custom render code that you saw in my video!
+      </p>
+      <p>
+       Have fun making your own UMG Widgets for use with the UMG Designer!
+      </p>
+      <p>
+       ♥
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Landscape - Sizes and Height Guide - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Landscape - Sizes and Height Guide
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <br/>
+       This is an integration to basic documentation for Unreal Landscape tool. 
+After reading this document, you'll be able to obtain the exact size and vertex/meter resolution you need for your landscape,
+       <br/>
+       edit it and get the height you need for your mountains and hills.
+       <br/>
+      </p>
+      <p>
+       Let's get started!
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Landscape_basics">
+        Landscape basics
+       </span>
+      </h2>
+      <p>
+       A landscape is a subdivided plane with a density of 1 vertex per meter.
+       <br/>
+       At Z Scale = 100 it has an height range limit of -256m:256.
+       <br/>
+       If you understand these basic rules, you can get any size at any resolution with height extensions needed.
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Changing_your_size_and_height_extensions">
+        Changing your size and height extensions
+       </span>
+      </h2>
+      <p>
+       If you need a 2km wide landscape, but you think that a resolution of 1 vertex/ 2 meters is more than enough,
+       <br/>
+       and you want your mountains/hills to be 512 m tall, you can go like this:
+      </p>
+      <ol>
+       <li>
+        create a new landscape with 1009x1009	resolution (as usual, refer to
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Landscape/TechnicalGuide/index.html#recommendedlandscapesizes" rel="nofollow">
+         Landscape recommended size
+        </a>
+        )
+       </li>
+       <li>
+        set X scale to 200.
+       </li>
+       <li>
+        now your landscape will be not centered anymore: if you want it to be in center of the scene, you must adjust x and y location. you doubled the size of the landscape, so now it has an extent of 1009*2 = 2018 m = 201800 cm(UE units) divide it by two (201800/2 = 100900) and insert them in x and y position of your Landscape actor with a MINUS sign.
+       </li>
+       <li>
+        basic height extent is 256 at Z scale = 100, so to have it extended to 512, you must multiply Z scale by 2. So set Z scale = 200.
+       </li>
+       <li>
+        edit your landscape freely
+       </li>
+      </ol>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

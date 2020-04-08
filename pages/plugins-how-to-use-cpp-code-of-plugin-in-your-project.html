@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Plugins, How To Use CPP Code Of Plugin In Your Project - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Plugins, How To Use CPP Code Of Plugin In Your Project
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Step_1:_Plugin_must_export_the_proper_classes">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Step 1: Plugin must export the proper classes
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Step_2:_Build.cs">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Step 2: Build.cs
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Step_3:_.23include_like_you_do_with_UE4_engine_classes">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Step 3: #include like you do with UE4 engine classes
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       Author:
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       When you have a UE4 code plugin whose code you want to utilize in your main UE4 project, here are the steps you need to take to be able to directly refer to and subclass C++ Code from the plugin!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Step_1:_Plugin_must_export_the_proper_classes">
+        Step 1: Plugin must export the proper classes
+       </span>
+      </h2>
+      <p>
+       The first step is required of the plugin writer, you must properly export the classes you want other people to be able to use, here is example from my RamaSaveSystem Plugin:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"RamaSaveComponent.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"RamaSaveEngine.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"RamaSaveLibrary.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">RAMASAVESYSTEM_API</span> <span class="nl">URamaSaveLibrary</span> <span class="p">:</span> <span class="k">public</span> <span class="n">UBlueprintFunctionLibrary</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+<span class="k">public</span><span class="o">:</span>
+	
+	<span class="k">static</span> <span class="n">ARamaSaveEngine</span><span class="o">*</span> <span class="n">GetOrCreateRamaEngine</span><span class="p">(</span><span class="n">UWorld</span><span class="o">*</span> <span class="n">World</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       The part I am trying to emphasize is this:
+      </p>
+      <pre> class RAMASAVESYSTEM_API URamaSaveLibrary
+</pre>
+      <p>
+       By using the macro RAMASAVESYSTEM_API, UE4 generates all the code for properly exporting this class as a class that other projects can "see into", call functions from, and even inherit from as a subclass! (do a search for "__declspec(dllexport)" for more info).
+      </p>
+      <p>
+       UE4 generates the macro automatically, so for your plugin it would be YOURPLUGIN_API and you dont have to declare that anywhere. (Correction: A Plugin is a collection of Modules.  The Auto-Generated export is for YOURMODULE_API.  Which is declared within your plugin.)
+      </p>
+      <p>
+       Because plugins are .dlls, you can export functionality from that dll for others to call into via the macro that UE4 generates for you automatically.
+      </p>
+      <p>
+       In the same way you can inherit from AActor in a precompiled UE4 engine version (without compiling a custom engine), so you can enable people to inherit from your plugin classes by properly exporting them as shown above.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Step_2:_Build.cs">
+        Step 2: Build.cs
+       </span>
+      </h2>
+      <p>
+       The user of the plugin's code has to include the plugin in their build cs, so your build cs will end up looking something like this:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">PublicDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span> <span class="n">string</span><span class="p">[]</span> <span class="p">{</span> 
+	<span class="s">"Core"</span><span class="p">,</span> 
+	<span class="s">"CoreUObject"</span><span class="p">,</span> 
+	<span class="s">"Engine"</span><span class="p">,</span> 
+	<span class="s">"InputCore"</span><span class="p">,</span>
+	
+	<span class="s">"UMG"</span><span class="p">,</span> <span class="s">"Slate"</span><span class="p">,</span> <span class="s">"SlateCore"</span><span class="p">,</span> 
+	 
+	<span class="s">"AIModule"</span><span class="p">,</span>
+	
+	<span class="s">"PhysX"</span><span class="p">,</span> <span class="s">"APEX"</span><span class="p">,</span>
+
+	<span class="c1">//Rama Plugins  </span>
+	<span class="s">"RamaSaveSystem"</span>   <span class="c1">//&lt;~~~~~~</span>
+<span class="p">});</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Step_3:_.23include_like_you_do_with_UE4_engine_classes">
+        Step 3: #include like you do with UE4 engine classes
+       </span>
+      </h2>
+      <p>
+       Now that you've added the plugin to your build cs, you can #include whichever properly exported class files you want!
+      </p>
+      <pre> #include "RamaSaveLibrary.h"
+</pre>
+      <p>
+       Now you can inherit from these included plugin classes, or extend them to create your own custom subclasses of base plugin classes without having to modify the source code at all, which is very handy for when the plugin author updates their source code!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       With these 3 basic steps you can easily add code plugins to your UE4 project and modify or extend their functionality, or simply access them in C++ as opposed to only having access in blueprints!
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Transitioning from Unity to UE4 - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Transitioning from Unity to UE4
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="tip">
+       <div class="normaltitle">
+        Unity Developers New to Unreal Engine 4
+       </div>
+       <p>
+        Check out the official
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/GettingStarted/FromUnity/index.html" rel="nofollow">
+         Unreal Engine 4 for Unity Developers
+        </a>
+        guide in the documentation!
+       </p>
+      </div>
+      <p>
+       This is a collection of comments and write-ups from people who have used Unity prior to switching to Unreal Engine 4. This is their feedback and tips. Feel free to add your write-ups!
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#User:joessu.27s_Write-Up">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           User:joessu's Write-Up
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Feedback:">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Feedback:
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#User:KitatusStudios.27s_Write-Up">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           User:KitatusStudios's Write-Up
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Pros:">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Pros:
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Cons:">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             Cons:
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Quaternion_Conversions">
+            <span class="tocnumber">
+             2.3
+            </span>
+            <span class="toctext">
+             Quaternion Conversions
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="User:joessu.27s_Write-Up">
+        's Write-Up
+       </span>
+      </h2>
+      <h5>
+       <span class="mw-headline" id="Feedback:">
+        Feedback:
+       </span>
+      </h5>
+      <p>
+       <b>
+        Good First:
+       </b>
+      </p>
+      <ul>
+       <li>
+        Wow with the community support, lots of good help all around.
+       </li>
+       <li>
+        With no knowledge of the UE4 animation system, i was able to retarget aim offset animations from one character to another!!
+       </li>
+      </ul>
+      <p>
+       That is a major accomplishment on your guys' part.
+      </p>
+      <ul>
+       <li>
+        Being a CS grad whose undergrad was all C++, the API's so far aren't that scary, even though i've been doing C# and java recently.
+       </li>
+       <li>
+        Blueprint scripting is intuitive.
+       </li>
+      </ul>
+      <p>
+       <b>
+        Needs Improvement:
+       </b>
+      </p>
+      <ul>
+       <li>
+        The biggest roadblock for me was corrupted blueprint files, it took 4~ hours of my time to backtrack. I posted in the bug report my info.
+        <a class="external free" href="https://answers.unrealengine.com/que...g-project.html" rel="nofollow">
+         https://answers.unrealengine.com/que...g-project.html
+        </a>
+       </li>
+       <li>
+        Some of the docs are outdated i think, the notes on Animation Blend Spaces seemed out of sync a tiny bit (but enough for me, being new, to be confused).
+       </li>
+       <li>
+        No doubt, you are going to get A LOT of unity developers wanting to migrate and move from unity to unreal. Perhaps providing a migration FAQ/Doc would be of great help to a lot of people. I'm sure too you could get the community to help formulate it, maybe on the wiki or something?
+       </li>
+      </ul>
+      <p>
+       So there you have it! Aside from the corrupted blueprint files and me running out of RAM every once and a while(i had my project AND the content project open at the same time for reference), it was smooth sailing all weekend.
+      </p>
+      <h2>
+       <span class="mw-headline" id="User:KitatusStudios.27s_Write-Up">
+        's Write-Up
+       </span>
+      </h2>
+      <p>
+       Kitatus Studios were working on Distro Horizons for Unity. Distro Horizons is a 3D N64-Style Platformer. Hearing of Unreal Engine 4's features and pricing, I decided to jump ship. But I didn't want to throw away what I worked on for the Unity project; So we have decided to continuing using Unity for the mobile edition of Distro Horizons. The UE4 version of Super Distro is the "Desktop" version and thus my write-up will be based on using Unity and Unreal Engine 4 hand-in-hand.
+      </p>
+      <h5>
+       <span class="mw-headline" id="Pros:">
+        Pros:
+       </span>
+      </h5>
+      <ul>
+       <li>
+        Meshes can collide with each other without strobing weird textures which happens in Unity.
+       </li>
+       <li>
+        Pricing structure is very user-friendly
+       </li>
+       <li>
+        You can import most of your meshes created in Unity. To do this, I used the .OBJ Exporter (Which can be found here:
+        <a class="external text" href="http://wiki.unity3d.com/index.php?title=ObjExporter" rel="nofollow">
+         Click here for the link
+        </a>
+        . Once installed, simply converting to .FBX provides the meshes you once had in Unity straight into Unreal Engine 4 in a heartbeat.
+       </li>
+       <li>
+        The animation system is much simpler to use compared to Mecanim, using the
+        I was able to get a fully animated character in minutes (Again, using the models and animations I had from Unity.
+       </li>
+       <li>
+        The Example Content already provided in Unreal Engine is of extremely high-quality and provides perfect assets to use.
+       </li>
+      </ul>
+      <h5>
+       <span class="mw-headline" id="Cons:">
+        Cons:
+       </span>
+      </h5>
+      <ul>
+       <li>
+        The Marketplace in Unreal Engine 4 isn't available just yet to the public to upload and sell their assets. This is one of the only downsides to what I've seen.
+       </li>
+       <li>
+        There's not a lot of documentation at the moment, but that's constantly changing.
+       </li>
+       <li>
+        Unreal Engine has crashed a few times for me. This is because the engine is constantly being worked on however, and so this con will disappear over time.
+       </li>
+      </ul>
+      <h5>
+       <span class="mw-headline" id="Quaternion_Conversions">
+        Quaternion Conversions
+       </span>
+      </h5>
+      <p>
+       In some cases you may want to convert special hardware input from Unity input transforms to Unreal.
+Both Unity and Unreal Engine use a left handed coordinate system. (In some places the Unreal docs say otherwise, but, no, both ARE left handed.)
+In Unity Forward is Z, Right is X, and Up is Y.
+In Unreal Forward is X, Right is Y, and Up is Z.
+      </p>
+      <p>
+       Transform code for Quat and Rotators is like this for converting NatNet Unity Quaternions to Unreal...
+      </p>
+      <pre>FRotator UNatNetFacade::LatestRotation(int32 Id)
+{
+	if (!ReadFrame())
+	{
+		return FRotator::ZeroRotator;
+	}
+	for (int i = 0; i &lt; CurrentMotiveFrame.RigidBodyCount; i++)
+	{
+		if ((int32)CurrentMotiveFrame.RigidBodies[i].Id == Id)
+		{
+			FQuat q;
+			q.X = CurrentMotiveFrame.RigidBodies[i].qx;
+			q.Y = CurrentMotiveFrame.RigidBodies[i].qy;
+			q.Z = CurrentMotiveFrame.RigidBodies[i].qz;
+			q.W = CurrentMotiveFrame.RigidBodies[i].qw;
+
+			// Convert to from Unity to Unreal rotations.
+			FVector axis;
+			float angle;
+			q.ToAxisAndAngle(axis, angle);
+			axis = FVector(axis.Z, -axis.X, axis.Y);
+
+			FQuat q2 = FQuat(FVector::UpVector, FMath::DegreesToRadians(90.0f)) * FQuat(axis, -angle);
+
+			return FRotator(q2);
+		}
+	}
+	return FRotator::ZeroRotator;
+} 
+</pre>
+      <p>
+       <br/>
+       Another rotation difference is that in Unity Z is forward, and in Unreal X is forward.  This means models like guns often need to be rotated.
+In Unreal Tournament the projectile meshes face along X but the gun meshes face along Y.
+      </p>
+      <p>
+       (Authors:
+     )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

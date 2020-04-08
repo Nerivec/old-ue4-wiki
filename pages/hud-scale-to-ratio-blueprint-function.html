@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   HUD Scale to Ratio Blueprint Function - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    HUD Scale to Ratio Blueprint Function
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <b>
+        HUD Scale to Ratio Blueprint Function.
+       </b>
+      </p>
+      <p>
+       Create a function that automatically outputs a scale and position for any canvas object no matter the screen resolution.
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Create_a_function_inside_of_your_HUD_Blueprint_EventGraph">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Create a function inside of your HUD Blueprint EventGraph
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Editing_Function">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Editing Function
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Whats_Happening.3F">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Whats Happening?
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Blueprint Author:
+       </i>
+       (
+     )
+      </p>
+      <p>
+       Hello,
+      </p>
+      <p>
+       In this tutorial I will show you how to set up a function that will scale and reposition any canvas object to the screen resolution.
+      </p>
+      <p>
+       <b>
+        Features include:
+       </b>
+      </p>
+      <ul>
+       <li>
+        Offset for X Position
+       </li>
+       <li>
+        Offset for Y Position
+       </li>
+       <li>
+        Desired Scale
+       </li>
+      </ul>
+      <p>
+       <b>
+        Have a HUD ready that is already blueprinted
+       </b>
+      </p>
+      <p>
+       If you do not have a HUD created, or do not know how to make one; please refer to this
+       .
+      </p>
+      <h2>
+       <span class="mw-headline" id="Create_a_function_inside_of_your_HUD_Blueprint_EventGraph">
+        Create a function inside of your HUD Blueprint EventGraph
+       </span>
+      </h2>
+      <p>
+       On the top left of your Blueprint graph click on the
+       <b>
+        Add Function
+       </b>
+       button and name it
+       <b>
+        ScaleToRatio
+       </b>
+      </p>
+      <p>
+       Add 3 float inputs for the function and name them:
+      </p>
+      <ul>
+       <li>
+        OffSetX
+       </li>
+       <li>
+        OffSetY
+       </li>
+       <li>
+        Scale
+       </li>
+      </ul>
+      <p>
+       Then add 3 Outputs and name them:
+      </p>
+      <ul>
+       <li>
+        PositionX
+       </li>
+       <li>
+        PositionY
+       </li>
+       <li>
+        OutScale
+       </li>
+      </ul>
+      <p>
+       The resulting function should look like this
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="" class="thumbimage" height="174" src="../assets/hud-scale-to-ratio-blueprint-function/0.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         function
+        </div>
+       </div>
+      </div>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <br/>
+      <p>
+       <br/>
+       <br/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Editing_Function">
+        Editing Function
+       </span>
+      </h2>
+      <p>
+       Double click on the function to open it. You should have a
+       <b>
+        ScaleToRatio
+       </b>
+       and
+       <b>
+        Return
+       </b>
+       node connected to each other.
+       <br/>
+      </p>
+      <p>
+       <br/>
+       <b>
+        Create Variables
+       </b>
+       <br/>
+      </p>
+      <p>
+       On the top left create two floats and name them:
+      </p>
+      <ul>
+       <li>
+        RatioX
+       </li>
+       <li>
+        RatioY
+       </li>
+      </ul>
+      <p>
+       Then create a struct vector2D called:
+      </p>
+      <ul>
+       <li>
+        ScreenDimensions
+        <br/>
+       </li>
+      </ul>
+      <p>
+       <br/>
+       <b>
+        Now set up the net work like in the image below
+       </b>
+       <br/>
+       <br/>
+       <br/>
+      </p>
+      <div class="thumb tleft">
+       <div class="thumbinner" style="width:302px;">
+        <img alt="" class="thumbimage" height="146" src="../assets/hud-scale-to-ratio-blueprint-function/1.jpg" width="300"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         completed
+        </div>
+       </div>
+      </div>
+      <br/>
+      <p>
+       <br/>
+       <br/>
+       <br/>
+       <br/>
+       <br/>
+       <br/>
+       <br/>
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Whats_Happening.3F">
+        Whats Happening?
+       </span>
+      </h2>
+      <ul>
+       <li>
+        Getting the viewport size and converting it into a vector2D (
+        <b>
+         ScreenDimensions
+        </b>
+        ) helps us get the width and height of the viewport or monitor.
+       </li>
+      </ul>
+      <ul>
+       <li>
+        We then break the vector2D and divide the current height and width of the viewport by a static resolution. By default I used 1280x720 as it gives the best results, it is also common.
+       </li>
+      </ul>
+      <ul>
+       <li>
+        We then use the resulted ratio to multiply against the X and Y position of the desired Offsets. The same is done with scale.
+       </li>
+      </ul>
+      <ul>
+       <li>
+        This multiplication will adjust the position so it always appears in the correct location and size no matter the size of the viewport.
+       </li>
+      </ul>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

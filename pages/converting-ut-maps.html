@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Converting UT Maps - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Converting UT Maps
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div style="background:#4C4C4E;padding:1px;">
+       <p>
+        <br/>
+       </p>
+       <div class="center">
+        <div class="floatnone">
+         <img alt="UTLogoFinal Drop.png" class="" height="174" src="../assets/converting-ut-maps/0.png" width="534"/>
+        </div>
+       </div>
+       <p>
+        <br/>
+       </p>
+       <div class="toc" id="toc">
+        <div class="toctitle">
+         <h2>
+          Contents
+         </h2>
+        </div>
+        <ul>
+         <li class="toclevel-1">
+          <a href="#Porting_Previous_UT_Maps_Into_Unreal_Tournament_in_UE4">
+           <span class="tocnumber">
+            1
+           </span>
+           <span class="toctext">
+            Porting Previous UT Maps Into Unreal Tournament in UE4
+           </span>
+          </a>
+         </li>
+         <li class="toclevel-1 tocsection-2">
+          <a href="#Quick_and_Dirty_Instructions">
+           <span class="tocnumber">
+            2
+           </span>
+           <span class="toctext">
+            Quick and Dirty Instructions
+           </span>
+          </a>
+         </li>
+         <li class="toclevel-1 tocsection-3">
+          <a href="#In-Depth_Explanation_and_Important_Details">
+           <span class="tocnumber">
+            3
+           </span>
+           <span class="toctext">
+            In-Depth Explanation and Important Details
+           </span>
+          </a>
+          <ul>
+           <li class="toclevel-2 tocsection-4">
+            <a href="#BSP_Geometry">
+             <span class="tocnumber">
+              3.1
+             </span>
+             <span class="toctext">
+              BSP Geometry
+             </span>
+            </a>
+           </li>
+           <li class="toclevel-2 tocsection-5">
+            <a href="#Static_Mesh_Geometry">
+             <span class="tocnumber">
+              3.2
+             </span>
+             <span class="toctext">
+              Static Mesh Geometry
+             </span>
+            </a>
+           </li>
+           <li class="toclevel-2 tocsection-6">
+            <a href="#Miscellaneous_Actors">
+             <span class="tocnumber">
+              3.3
+             </span>
+             <span class="toctext">
+              Miscellaneous Actors
+             </span>
+            </a>
+           </li>
+           <li class="toclevel-2 tocsection-7">
+            <a href="#Grid_and_Scale">
+             <span class="tocnumber">
+              3.4
+             </span>
+             <span class="toctext">
+              Grid and Scale
+             </span>
+            </a>
+           </li>
+          </ul>
+         </li>
+        </ul>
+       </div>
+       <h2 id="mp-tfa-h2" style="margin:1px; background:#EAEAEA; font-size:100%; font-weight:bold; border:0px solid #194719; text-align:left; color:#FFFFFF; padding:0.1em 0.2em;">
+        <span class="mw-headline" id="Porting_Previous_UT_Maps_Into_Unreal_Tournament_in_UE4">
+         <h1>
+          Porting Previous UT Maps Into Unreal Tournament in UE4
+         </h1>
+        </span>
+       </h2>
+      </div>
+      <p>
+       We have had several people request that their favorite map from a previous Unreal Tournament game be ported into the new game.  We obviously won’t be able to accommodate every request, but we did want to ensure that the process was clear enough that you could port a map yourself, should you chose to do so.  I’ve ported several maps for UT games in the past, and have done a handful of maps for the new Unreal Tournament as well, and here are some important disclaimers:
+      </p>
+      <p>
+       <br/>
+      </p>
+      <ul>
+       <li>
+        First and foremost, no conversion will ever be as good as building a map from scratch.  It’s worth pointing out that every single time I’ve ever ported a map, I have never actually used it for more than a guide; every single “remake” I’ve done has actually been reconstructed brush by brush.  This is the only way to ensure consistency with the new game and avoid some common errors that creep up in the automated porting process.
+       </li>
+      </ul>
+      <ul>
+       <li>
+        Next, it’s important to understand that different parts of a map port differently, and there are big discrepancies between various games due to the (in)compatibility of the various builds and engine versions.  This means that some things can’t always be ported, or port with mixed results.  So have patience, as it can sometimes be a laborious and frustrating process; this is yet another reason that it’s often best to just rebuild from scratch – the effort is often about the same.
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Quick_and_Dirty_Instructions">
+        Quick and Dirty Instructions
+       </span>
+      </h2>
+      <ol>
+       <li>
+        Open the map you’d like to port in its original editor.
+       </li>
+       <li>
+        Delete everything except the BSP brushes.
+       </li>
+       <li>
+        Delete all nonsolid and 2D sheet BSP brushes.
+       </li>
+       <li>
+        Select all BSP brushes, right click, and select the option to permanently transform them.
+       </li>
+       <li>
+        Rebuild.
+       </li>
+       <li>
+        From the File menu (top left), export the map to T3D.
+       </li>
+       <li>
+        Run the T3D through a conversion program.  (A reliable converter created by the community can be found
+        <a class="external text" href="http://ut.raxxy.com/maps/" rel="nofollow">
+         here
+        </a>
+        .)  Note: sometimes this works... and sometimes it doesn't.  Good luck!
+       </li>
+       <li>
+        Import the converted T3D into the Unreal Tournament UE4 editor.
+       </li>
+      </ol>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="In-Depth_Explanation_and_Important_Details">
+        In-Depth Explanation and Important Details
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="BSP_Geometry">
+        BSP Geometry
+       </span>
+      </h3>
+      <p>
+       The real structural “bones” of a traditional Unreal Tournament map are the BSP brushes.  BSP brushes show up as the blue, yellow, and green geometric wireframe shapes in the editor.  In the original Unreal Tournament, these primitives were used to build all the geometry within a map.  Techniques have changed with the march of technology, and much of a map’s geometry in newer titles is now built with Static Meshes (assets imported from outside 3D programs), but the underlying world is still often constructed with BSP; even within Unreal Engine 4, BSP is still the most powerful tool a Level Designer has to prototype map designs.  But be warned: BSP’s great power and versatility is often offset by its somewhat quirky nature.
+      </p>
+      <ul>
+       <li>
+        When shifting BSP between versions of the Unreal Engine, it is important to note that the original Unreal Tournament and UT2004 were both based on a subtractive world, while UT3 and the new Unreal Tournament both use an additive world:
+       </li>
+      </ul>
+      <dl>
+       <dd>
+        <ul>
+         <li>
+          When you’re looking at a completely blank space in a subtractive world, it’s easiest to imagine that blank space as a hunk of solid rock – you need to carve shapes out of the rock by subtracting holes from the inside of it.  In order to create a room, you need to start by subtracting a cube.  This one subtraction will create a floor, four walls, and a ceiling – it’s a hole that a player can stand inside of.
+         </li>
+        </ul>
+       </dd>
+      </dl>
+      <dl>
+       <dd>
+        <ul>
+         <li>
+          In an additive world, by comparison, the blank space is a complete void, and you need to add geometry to fill it. You’ll need to add a cube to create a floor, and others to create walls or ceilings.  Instead of a hole, you create geometry that players stand on top of.
+         </li>
+        </ul>
+       </dd>
+      </dl>
+      <dl>
+       <dd>
+        <ul>
+         <li>
+          This difference is vitally important because if you’re porting a map from UT99 to the new UT, that means that you’re attempting to subtract a UT99 level from the void of New UT nothingness, and if you subtract nothing from nothing, you’ll get nothing – it won’t display properly.  To work around this, you’ll need to add a giant cube to the world first, one that is big enough to encompass the entirety of the old map’s geometry, and then subtract the new map from it.
+         </li>
+        </ul>
+       </dd>
+      </dl>
+      <ul>
+       <li>
+        The order in which brushes are created is another important consideration: during a conversion, you need to make sure that the additive brush is added before you import the T3D, otherwise you’ll be adding the brush on top the existing level and filling holes rather than creating a space for holes to be carved out from.  You can always re-order your brush after the fact (ordering is in the Details Panel in UE4), but I thought it was worth pointing it out since it can throw you for a loop if you’re not familiar with the process.
+       </li>
+      </ul>
+      <ul>
+       <li>
+        Subtractive worlds were also separated into individual “zones” for visibility culling and improved performance.  Without going into too much detail here, this meant that there were a large number of BSP zone portals – two dimensional, non-solid brushes – scattered throughout the maps.  Zone portals are not needed in Unreal Engine 3 or Unreal Engine 4.  These types of brushes were also used for water, fire, or other effects and they are generally not used in additive versions of the Unreal Engine.  To complicate things further, they sometimes become corrupt and can interfere with a map port.  In short, select all your green, non-solid BSP brushes and delete them before porting (regardless of engine version), and you will save yourself a good amount of headache and trouble.
+       </li>
+      </ul>
+      <ul>
+       <li>
+        BSP brushes start out in the shape of a basic primitive (a cube, a cone, a sphere) and are then manipulated by adjusting individual vertices, sides, or faces; intersecting or clipping can be used to create more complicated shapes.  Brushes will retain their original information, however, and can sometimes revert to those forms during a map port.  In order to avoid this, and to lock your brushes in place, it is sometimes necessary to right click on them and select the option to permanently transform them.  Sometimes, a BSP brush can become corrupted during the original build process, and even a transform cannot fix this.  So, be prepared for times with brushes appear in odd locations, or do not appear at all.  There is no known workaround for fixing a corrupted brush, those areas simply need to be rebuilt in the new editor.
+       </li>
+      </ul>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Static_Mesh_Geometry">
+        Static Mesh Geometry
+       </span>
+      </h3>
+      <p>
+       Static Meshes were introduced in Unreal Engine 2, and used as the primary way to create geometry in Unreal Tournament 2003 / 2004, and Unreal Tournament 3.  If you follow the instructions above, note that none of the static meshes will port along with the BSP.  This one fact alone can make it nearly impossible to port maps from those games into the new Unreal Tournament in any sort of playable state.
+      </p>
+      <ul>
+       <li>
+        It might be possible to import those static mesh assets if you could re-import all the source art using all the exact same names and exact same structure, but since Unreal Engine 4 uses an asset-based structure instead of a package-based organizational structure, I do not know if this would even be possible.
+       </li>
+       <li>
+        You could, of course, re-import all the assets and manually place them, but at that level of detail you'd be  much better served to just rebuild the map from scratch anyway.
+       </li>
+      </ul>
+      <h3>
+       <span class="mw-headline" id="Miscellaneous_Actors">
+        Miscellaneous Actors
+       </span>
+      </h3>
+      <p>
+       There are a number of other actors involved in map creation that you cannot expect to port, or that are likely to be corrupt due to differences in the way that separate versions of the Unreal Engine operate.  player start actors, lights, ambient sound actors, fluid surfaces, and game specific actors (CTF Flags, DOM Points, etc.) are best just deleted before export and manually placed using the new Unreal Engine 4 versions of those actors (where available).
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Grid_and_Scale">
+        Grid and Scale
+       </span>
+      </h3>
+      <p>
+       Unreal Engine 4 uses a base-10 grid system by default.  This means that you'll see grid lines that following the metric system (at 1, 5, 10, 50, 100... ).  All previous versions of the engine use a base-2 grid system (so you'll see grid lines at 1, 2, 4, 8, 16, 32, 64...).  This means that any map imported into Unreal Engine 4 will no longer be arranged on the grid, and this could create some small issues with actor placement and organization.
+      </p>
+      <ul>
+       <li>
+        You can change your grid settings to base-2 in the editor properties window, and if you're not going to rebuild from scratch, I would advise that you do this.
+       </li>
+       <li>
+        Note that these settings are global, not map based, so if you're also working on new content that was build on the base-10 system, you'll need to convert the editor settings back and forth on a per-map basis.
+       </li>
+      </ul>
+      <p>
+       It is also worth noting that every version of Unreal Tournament has been built to a different scale.  Maps ported from the original Unreal Tournament into Unreal Engine 4, for example, will need to be scaled to approximately twice their original size.
+      </p>
+      <ul>
+       <li>
+        Again, note that this is approximate, and differences in player speed, gravity, and general physics may cause the map to play differently.  This is yet another reason that it is better to rebuild maps from scratch when porting, as they can be built to take advantage of the new game's settings.
+       </li>
+      </ul>
+      <ul>
+       <li>
+        Scaling can be done on a per-brush basis, but I would recommend that they all be scaled together in order to ensure proper alignment and placement.
+       </li>
+      </ul>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Reflecting Projectile C++ - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Reflecting Projectile C++
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Background">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Background
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Assumptions">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Assumptions
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#The_Goal">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           The Goal
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Setting_Up_the_Project">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Setting Up the Project
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Remove_Existing_Projectile_Code">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Remove Existing Projectile Code
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Before_-_WPPost2Projectile.h">
+            <span class="tocnumber">
+             5.1
+            </span>
+            <span class="toctext">
+             Before - WPPost2Projectile.h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Before_-_WPPost2Projectile.cpp">
+            <span class="tocnumber">
+             5.2
+            </span>
+            <span class="toctext">
+             Before - WPPost2Projectile.cpp
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#After_-_WPPost2Projectile.h">
+            <span class="tocnumber">
+             5.3
+            </span>
+            <span class="toctext">
+             After - WPPost2Projectile.h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#After_-_WPPost2Projectile.cpp">
+            <span class="tocnumber">
+             5.4
+            </span>
+            <span class="toctext">
+             After - WPPost2Projectile.cpp
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-10">
+         <a href="#Setting_Up_the_Collision_Profiles">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Setting Up the Collision Profiles
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#Understanding_Collisions">
+            <span class="tocnumber">
+             6.1
+            </span>
+            <span class="toctext">
+             Understanding Collisions
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-12">
+         <a href="#Adding_Our_Projectile_Code">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Adding Our Projectile Code
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-13">
+           <a href="#Changes_to_WPPost2Projectile.h">
+            <span class="tocnumber">
+             7.1
+            </span>
+            <span class="toctext">
+             Changes to WPPost2Projectile.h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-14">
+           <a href="#Changes_to_WPPost2Projectile.cpp">
+            <span class="tocnumber">
+             7.2
+            </span>
+            <span class="toctext">
+             Changes to WPPost2Projectile.cpp
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-15">
+         <a href="#Breaking_Down_the_Changes">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Breaking Down the Changes
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-16">
+           <a href="#Constructor">
+            <span class="tocnumber">
+             8.1
+            </span>
+            <span class="toctext">
+             Constructor
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-17">
+           <a href="#OnConstruction">
+            <span class="tocnumber">
+             8.2
+            </span>
+            <span class="toctext">
+             OnConstruction
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-18">
+           <a href="#OnOverlap">
+            <span class="tocnumber">
+             8.3
+            </span>
+            <span class="toctext">
+             OnOverlap
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-19">
+           <a href="#ReceiveHit">
+            <span class="tocnumber">
+             8.4
+            </span>
+            <span class="toctext">
+             ReceiveHit
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-20">
+           <a href="#Tick">
+            <span class="tocnumber">
+             8.5
+            </span>
+            <span class="toctext">
+             Tick
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-21">
+         <a href="#Videos">
+          <span class="tocnumber">
+           9
+          </span>
+          <span class="toctext">
+           Videos
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-22">
+         <a href="#Conclusion_.2F_Final_Notes">
+          <span class="tocnumber">
+           10
+          </span>
+          <span class="toctext">
+           Conclusion / Final Notes
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Background">
+        Background
+       </span>
+      </h2>
+      <p>
+       At the
+       <a class="external text" href="http://forums.unrealengine.com/showthread.php?14834-Tutorial-Reflecting-Projectile-%28C-%29" rel="nofollow">
+        suggestion
+       </a>
+       of Adam Davis, I have reproduced my website's reflecting projectile
+       <a class="external text" href="http://theokrin.com/?p=126" rel="nofollow">
+        tutorial
+       </a>
+       here.  This tutorial will cover setting up the project and detailing in depth what changes I made to produce the end result.  So read on to see how to make a reflecting projectile in Unreal Engine 4.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Assumptions">
+        Assumptions
+       </span>
+      </h2>
+      <p>
+       First off, this tutorial is aimed at beginners, but you should be familiar with navigating the Editor and compiling Visual Studio projects.  Also, this project was created using version 4.2.1 of UE4, and it was compiled using Visual Studio 2013.
+      </p>
+      <h2>
+       <span class="mw-headline" id="The_Goal">
+        The Goal
+       </span>
+      </h2>
+      <p>
+       I'll start by showing off a quick video that demonstrates the end goal of this tutorial.  The green lines are the initial path the projectile took, and when it is reflected the line changes to red.
+      </p>
+      <p>
+       &lt;youtube&gt;
+       <a class="external free" href="http://www.youtube.com/embed/qQxCxW98e_g" rel="nofollow">
+        http://www.youtube.com/embed/qQxCxW98e_g
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Setting_Up_the_Project">
+        Setting Up the Project
+       </span>
+      </h2>
+      <p>
+       First we want to launch the Editor via the Unreal Engine Launcher and create a new project.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:452px;">
+        <img alt="" class="thumbimage" height="339" src="../assets/reflecting-projectile-c/0.png" width="450"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Launch UE4 4.2.1
+        </div>
+       </div>
+      </div>
+      <p>
+       Once the Editor's Project Browser is open.  Click the New Project tab at the top.  Choose Code First Person from the list as the project to create.  For reference, I named mine WPPost2.  Thus in screenshots/code samples my projectile class will be WPPost2Projectile.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:452px;">
+        <img alt="" class="thumbimage" height="355" src="../assets/reflecting-projectile-c/1.png" width="450"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Create project
+        </div>
+       </div>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Remove_Existing_Projectile_Code">
+        Remove Existing Projectile Code
+       </span>
+      </h2>
+      <p>
+       After you click Create Project, Visual Studio should open the project's solution automatically.  By default the project will come with a projectile class called &lt;ProjectName&gt;Projectile.h and &lt;ProjectName&gt;Projectile.cpp, and these files are found in the &lt;ProjectName&gt; folder under the Source folder in the project hierarchy.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:355px;">
+        <img alt="" class="thumbimage" height="556" src="../assets/reflecting-projectile-c/2.png" width="353"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Project hiearchy in Visual Studio
+        </div>
+       </div>
+      </div>
+      <p>
+       This class comes predefined with a UProjectileMovementComponent as a member component.  We want to remove this component and its associated code.  Because we will be adding our own logic in later.  I've highlighted the lines we'll be removing from the header and source files.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Before_-_WPPost2Projectile.h">
+        Before - WPPost2Projectile.h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="lineno"> 1 </span><span class="c1">// Copyright 1998-2014 Epic Games, Inc. All Rights Reserved.</span>
+<span class="lineno"> 2 </span><span class="cp">#pragma once</span>
+<span class="lineno"> 3 </span>
+<span class="lineno"> 4 </span><span class="cp">#include</span> <span class="cpf">"WPPost2Projectile.generated.h"</span><span class="cp"></span>
+<span class="lineno"> 5 </span>
+<span class="lineno"> 6 </span><span class="n">UCLASS</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">Game</span><span class="p">)</span>
+<span class="lineno"> 7 </span><span class="k">class</span> <span class="nc">AWPPost2Projectile</span> <span class="o">:</span> <span class="k">public</span> <span class="n">AActor</span>
+<span class="lineno"> 8 </span><span class="p">{</span>
+<span class="lineno"> 9 </span>    <span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+<span class="lineno">10 </span>
+<span class="lineno">11 </span>    <span class="cm">/** Sphere collision component */</span>
+<span class="lineno">12 </span>    <span class="n">UPROPERTY</span><span class="p">(</span><span class="n">VisibleDefaultsOnly</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">Projectile</span><span class="p">)</span>
+<span class="lineno">13 </span>    <span class="n">TSubobjectPtr</span><span class="o">&lt;</span><span class="n">USphereComponent</span><span class="o">&gt;</span> <span class="n">CollisionComp</span><span class="p">;</span>
+<span class="lineno">14 </span>
+<span class="lineno">15 </span><span class="hll">    <span class="cm">/** Projectile movement component */</span>
+</span><span class="lineno">16 </span><span class="hll">    <span class="n">UPROPERTY</span><span class="p">(</span><span class="n">VisibleAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadOnly</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">Movement</span><span class="p">)</span>
+</span><span class="lineno">17 </span><span class="hll">    <span class="n">TSubobjectPtr</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">UProjectileMovementComponent</span><span class="o">&gt;</span> <span class="n">ProjectileMovement</span><span class="p">;</span>
+</span><span class="lineno">18 </span>
+<span class="lineno">19 </span><span class="hll">    <span class="cm">/** called when projectile hits something */</span>
+</span><span class="lineno">20 </span><span class="hll">    <span class="n">UFUNCTION</span><span class="p">()</span>
+</span><span class="lineno">21 </span><span class="hll">    <span class="kt">void</span> <span class="n">OnHit</span><span class="p">(</span><span class="n">AActor</span><span class="o">*</span> <span class="n">OtherActor</span><span class="p">,</span> <span class="n">UPrimitiveComponent</span><span class="o">*</span> <span class="n">OtherComp</span><span class="p">,</span> <span class="n">FVector</span> <span class="n">NormalImpulse</span><span class="p">,</span> <span class="k">const</span> <span class="n">FHitResult</span><span class="o">&amp;</span> <span class="n">Hit</span><span class="p">);</span>
+</span><span class="lineno">22 </span><span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Before_-_WPPost2Projectile.cpp">
+        Before - WPPost2Projectile.cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="lineno"> 1 </span><span class="c1">// Copyright 1998-2014 Epic Games, Inc. All Rights Reserved.</span>
+<span class="lineno"> 2 </span>
+<span class="lineno"> 3 </span><span class="cp">#include</span> <span class="cpf">"WPPost2.h"</span><span class="cp"></span>
+<span class="lineno"> 4 </span><span class="cp">#include</span> <span class="cpf">"WPPost2Projectile.h"</span><span class="cp"></span>
+<span class="lineno"> 5 </span>
+<span class="lineno"> 6 </span>
+<span class="lineno"> 7 </span><span class="n">AWPPost2Projectile</span><span class="o">::</span><span class="n">AWPPost2Projectile</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span> 
+<span class="lineno"> 8 </span>	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="lineno"> 9 </span><span class="p">{</span>
+<span class="lineno">10 </span>    <span class="c1">// Use a sphere as a simple collision representation</span>
+<span class="lineno">11 </span>    <span class="n">CollisionComp</span> <span class="o">=</span> <span class="n">PCIP</span><span class="p">.</span><span class="n">CreateDefaultSubobject</span><span class="o">&lt;</span><span class="n">USphereComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"SphereComp"</span><span class="p">));</span>
+<span class="lineno">12 </span>    <span class="n">CollisionComp</span><span class="o">-&gt;</span><span class="n">InitSphereRadius</span><span class="p">(</span><span class="mf">5.0f</span><span class="p">);</span>
+<span class="lineno">13 </span><span class="hll">    <span class="n">CollisionComp</span><span class="o">-&gt;</span><span class="n">BodyInstance</span><span class="p">.</span><span class="n">SetCollisionProfileName</span><span class="p">(</span><span class="s">"Projectile"</span><span class="p">);</span>			<span class="c1">// Collision profiles are defined in DefaultEngine.ini</span>
+</span><span class="lineno">14 </span><span class="hll">    <span class="n">CollisionComp</span><span class="o">-&gt;</span><span class="n">OnComponentHit</span><span class="p">.</span><span class="n">AddDynamic</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">AWPPost2Projectile</span><span class="o">::</span><span class="n">OnHit</span><span class="p">);</span>		<span class="c1">// set up a notification for when this component overlaps something</span>
+</span><span class="lineno">15 </span>    <span class="n">RootComponent</span> <span class="o">=</span> <span class="n">CollisionComp</span><span class="p">;</span>
+<span class="lineno">16 </span>
+<span class="lineno">17 </span><span class="hll">    <span class="c1">// Use a ProjectileMovementComponent to govern this projectile's movement</span>
+</span><span class="lineno">18 </span><span class="hll">    <span class="n">ProjectileMovement</span> <span class="o">=</span> <span class="n">PCIP</span><span class="p">.</span><span class="n">CreateDefaultSubobject</span><span class="o">&lt;</span><span class="n">UProjectileMovementComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"ProjectileComp"</span><span class="p">));</span>
+</span><span class="lineno">19 </span><span class="hll">    <span class="n">ProjectileMovement</span><span class="o">-&gt;</span><span class="n">UpdatedComponent</span> <span class="o">=</span> <span class="n">CollisionComp</span><span class="p">;</span>
+</span><span class="lineno">20 </span><span class="hll">    <span class="n">ProjectileMovement</span><span class="o">-&gt;</span><span class="n">InitialSpeed</span> <span class="o">=</span> <span class="mf">3000.f</span><span class="p">;</span>
+</span><span class="lineno">21 </span><span class="hll">    <span class="n">ProjectileMovement</span><span class="o">-&gt;</span><span class="n">MaxSpeed</span> <span class="o">=</span> <span class="mf">3000.f</span><span class="p">;</span>
+</span><span class="lineno">22 </span><span class="hll">    <span class="n">ProjectileMovement</span><span class="o">-&gt;</span><span class="n">bRotationFollowsVelocity</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+</span><span class="lineno">23 </span><span class="hll">    <span class="n">ProjectileMovement</span><span class="o">-&gt;</span><span class="n">bShouldBounce</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+</span><span class="lineno">24 </span>
+<span class="lineno">25 </span>    <span class="c1">// Die after 3 seconds by default</span>
+<span class="lineno">26 </span>    <span class="n">InitialLifeSpan</span> <span class="o">=</span> <span class="mf">3.0f</span><span class="p">;</span>
+<span class="lineno">27 </span><span class="p">}</span>
+<span class="lineno">28 </span>
+<span class="lineno">29 </span><span class="hll"><span class="kt">void</span> <span class="n">AWPPost2Projectile</span><span class="o">::</span><span class="n">OnHit</span><span class="p">(</span><span class="n">AActor</span><span class="o">*</span> <span class="n">OtherActor</span><span class="p">,</span> <span class="n">UPrimitiveComponent</span><span class="o">*</span> <span class="n">OtherComp</span><span class="p">,</span> <span class="n">FVector</span> <span class="n">NormalImpulse</span><span class="p">,</span> <span class="k">const</span> <span class="n">FHitResult</span><span class="o">&amp;</span> <span class="n">Hit</span><span class="p">)</span>
+</span><span class="lineno">30 </span><span class="hll"><span class="p">{</span>
+</span><span class="lineno">31 </span><span class="hll">    <span class="c1">// Only add impulse and destroy projectile if we hit a physics</span>
+</span><span class="lineno">32 </span><span class="hll">    <span class="k">if</span> <span class="p">((</span><span class="n">OtherActor</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">OtherActor</span> <span class="o">!=</span> <span class="k">this</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">OtherComp</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="n">OtherComp</span><span class="o">-&gt;</span><span class="n">IsSimulatingPhysics</span><span class="p">())</span>
+</span><span class="lineno">33 </span><span class="hll">    <span class="p">{</span>
+</span><span class="lineno">34 </span><span class="hll">        <span class="n">OtherComp</span><span class="o">-&gt;</span><span class="n">AddImpulseAtLocation</span><span class="p">(</span><span class="n">GetVelocity</span><span class="p">()</span> <span class="o">*</span> <span class="mf">100.0f</span><span class="p">,</span> <span class="n">GetActorLocation</span><span class="p">());</span>
+</span><span class="lineno">35 </span><span class="hll">        
+</span><span class="lineno">36 </span><span class="hll">        <span class="n">Destroy</span><span class="p">();</span>
+</span><span class="lineno">37 </span><span class="hll">    <span class="p">}</span>
+</span><span class="lineno">38 </span><span class="hll"><span class="p">}</span>
+</span></pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="After_-_WPPost2Projectile.h">
+        After - WPPost2Projectile.h
+       </span>
+      </h3>
+      <p>
+       After you've removed the code, the header and source files should look like this:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="lineno"> 1 </span><span class="c1">// Copyright 1998-2014 Epic Games, Inc. All Rights Reserved.</span>
+<span class="lineno"> 2 </span><span class="cp">#pragma once</span>
+<span class="lineno"> 3 </span>
+<span class="lineno"> 4 </span><span class="cp">#include</span> <span class="cpf">"WPPost2Projectile.generated.h"</span><span class="cp"></span>
+<span class="lineno"> 5 </span>
+<span class="lineno"> 6 </span><span class="n">UCLASS</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">Game</span><span class="p">)</span>
+<span class="lineno"> 7 </span><span class="k">class</span> <span class="nc">AWPPost2Projectile</span> <span class="o">:</span> <span class="k">public</span> <span class="n">AActor</span>
+<span class="lineno"> 8 </span><span class="p">{</span>
+<span class="lineno"> 9 </span>    <span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+<span class="lineno">10 </span>
+<span class="lineno">11 </span>    <span class="cm">/** Sphere collision component */</span>
+<span class="lineno">12 </span>    <span class="n">UPROPERTY</span><span class="p">(</span><span class="n">VisibleDefaultsOnly</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">Projectile</span><span class="p">)</span>
+<span class="lineno">13 </span>    <span class="n">TSubobjectPtr</span><span class="o">&lt;</span><span class="n">USphereComponent</span><span class="o">&gt;</span> <span class="n">CollisionComp</span><span class="p">;</span>
+<span class="lineno">14 </span><span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="After_-_WPPost2Projectile.cpp">
+        After - WPPost2Projectile.cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="lineno"> 1 </span><span class="c1">// Copyright 1998-2014 Epic Games, Inc. All Rights Reserved.</span>
+<span class="lineno"> 2 </span>
+<span class="lineno"> 3 </span><span class="cp">#include</span> <span class="cpf">"WPPost2.h"</span><span class="cp"></span>
+<span class="lineno"> 4 </span><span class="cp">#include</span> <span class="cpf">"WPPost2Projectile.h"</span><span class="cp"></span>
+<span class="lineno"> 5 </span>
+<span class="lineno"> 6 </span>
+<span class="lineno"> 7 </span><span class="n">AWPPost2Projectile</span><span class="o">::</span><span class="n">AWPPost2Projectile</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span> 
+<span class="lineno"> 8 </span>	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="lineno"> 9 </span><span class="p">{</span>
+<span class="lineno">10 </span>    <span class="c1">// Use a sphere as a simple collision representation</span>
+<span class="lineno">11 </span>    <span class="n">CollisionComp</span> <span class="o">=</span> <span class="n">PCIP</span><span class="p">.</span><span class="n">CreateDefaultSubobject</span><span class="o">&lt;</span><span class="n">USphereComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"SphereComp"</span><span class="p">));</span>
+<span class="lineno">12 </span>    <span class="n">CollisionComp</span><span class="o">-&gt;</span><span class="n">InitSphereRadius</span><span class="p">(</span><span class="mf">5.0f</span><span class="p">);</span>
+<span class="lineno">13 </span>    <span class="n">RootComponent</span> <span class="o">=</span> <span class="n">CollisionComp</span><span class="p">;</span>
+<span class="lineno">14 </span>
+<span class="lineno">15 </span>    <span class="c1">// Die after 3 seconds by default</span>
+<span class="lineno">16 </span>    <span class="n">InitialLifeSpan</span> <span class="o">=</span> <span class="mf">3.0f</span><span class="p">;</span>
+<span class="lineno">17 </span><span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Now we want to compile and run the project.  Once the editor is open, we want to find the Projectile Class Blueprint and
+       <b>
+        recompile
+       </b>
+       it because we removed a component in the code.  Otherwise you
+       <i>
+        will
+       </i>
+       see runtime errors when you try to play the level because the blueprint still has the UProjectileMovementComponent.  For recompiling, you need to open the blueprint, click compile, and click save.  You will notice the component disappear when you compile it.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:702px;">
+        <img alt="" class="thumbimage" height="422" src="../assets/reflecting-projectile-c/3.png" width="700"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Open Projectile class blueprint
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:702px;">
+        <img alt="" class="thumbimage" height="425" src="../assets/reflecting-projectile-c/4.png" width="700"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Projectile blueprint before compile
+        </div>
+       </div>
+      </div>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:702px;">
+        <img alt="" class="thumbimage" height="425" src="../assets/reflecting-projectile-c/5.png" width="700"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Projectile blueprint after compile
+        </div>
+       </div>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Setting_Up_the_Collision_Profiles">
+        Setting Up the Collision Profiles
+       </span>
+      </h2>
+      <p>
+       While we have the editor open lets go ahead and cover how to setup the Collision Profile for our projectile.  The profile is responsible for defining what events will trigger based on what objects our projectile interacts with in the world.  This can be found on the Defaults tab of the blueprint under the Collision section.  Click the arrow next to Collision Presets to expand the view. You can look at the different presets, but I decided to go with a Custom profile because I didn't see a preset that would produce the events I wanted.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:702px;">
+        <img alt="" class="thumbimage" height="425" src="../assets/reflecting-projectile-c/6.png" width="700"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Projectile blueprint's Defaults tab showing Collision section
+        </div>
+       </div>
+      </div>
+      <p>
+       First, we want to make sure the checkboxes Simulation Generates Hit Events and Generate Overlap Event are ticked.  Second, we need to choose Collision Enabled from the Collision Enabled dropdown.  Finally, we setup the responses by ticking the corresponding checkboxes.  Since the white boxes in the level are of type PhysicsBody, we want that collision to generate an Overlap event.  Otherwise we want the collision to generate a Block or Hit event.   Be sure to compile and save the blueprint after making the changes.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:702px;">
+        <img alt="" class="thumbimage" height="425" src="../assets/reflecting-projectile-c/7.png" width="700"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Projectile blueprint's collision profile
+        </div>
+       </div>
+      </div>
+      <p>
+       We told the projectile to generate an Overlap event when colliding with a PhysicsBody.  Now we need to do the same for the physics objects in the level.  Thus we will want to tick the Generate Overlap Events checkbox for each physics object.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:702px;">
+        <img alt="" class="thumbimage" height="422" src="../assets/reflecting-projectile-c/8.png" width="700"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Set physics object to Generate Overlap Events
+        </div>
+       </div>
+      </div>
+      <p>
+       You can do this quickly by holding Ctrl when you click each physics object in the level.  Then ticking the checkbox after you've selected all them.  This is similar to how you can Ctrl+Click files in Windows to select multiple specific files.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:702px;">
+        <img alt="" class="thumbimage" height="421" src="../assets/reflecting-projectile-c/9.png" width="700"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Set multiple objects to Generate Overlap Events
+        </div>
+       </div>
+      </div>
+      <p>
+       Alternatively, you could use the Scene Outliner's search box and search for EditorCube.  (Note: When you click an object in the level it will select the object in the Scene Outliner.  That's how I knew to search for EditorCube.)  Then click one of the cubes from the list and press Ctrl+A.  This will highlight all of them in the level.
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:702px;">
+        <img alt="" class="thumbimage" height="422" src="../assets/reflecting-projectile-c/10.png" width="700"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         Set multiple objects to Generate Overlap Events
+        </div>
+       </div>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Understanding_Collisions">
+        Understanding Collisions
+       </span>
+      </h3>
+      <p>
+       Figuring out how to get the proper events to trigger took some research.  So here are a couple reference links I found when researching collisions and events for this project.  They were extremely helpful in understanding how collisions work and what events will fire under what circumstances.
+      </p>
+      <p>
+       <a class="external text" href="http://docs.unrealengine.com/latest/INT/Engine/Physics/Collision/index.html" rel="nofollow">
+        Unreal Engine | Collision Responses
+       </a>
+      </p>
+      <p>
+       <a class="external text" href="http://docs.unrealengine.com/latest/INT/Engine/Blueprints/UserGuide/Events/index.html" rel="nofollow">
+        Unreal Engine | Events
+       </a>
+      </p>
+      <p>
+       I found them by searching the
+       <a class="external text" href="http://docs.unrealengine.com/latest/INT/index.html" rel="nofollow">
+        documentation
+       </a>
+       .  Also, it's a good idea to see what others have posted up on the Answers exchange and forums (
+       <a class="external text" href="http://forums.unrealengine.com/showthread.php?1318-Hit-Event-not-triggering" rel="nofollow">
+        Link 1
+       </a>
+       ,
+       <a class="external text" href="http://forums.unrealengine.com/showthread.php?932-Event-Hit" rel="nofollow">
+        Link 2
+       </a>
+       ).  Big thanks to the Epic developers and their insightful responses.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Adding_Our_Projectile_Code">
+        Adding Our Projectile Code
+       </span>
+      </h2>
+      <p>
+       Be sure to save your level and close the editor.  Now, we want to make the projectile work!  First we need to modify the header file to add some member variables, overload some inherited Actor functions, and create the callback function for Overlap events.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Changes_to_WPPost2Projectile.h">
+        Changes to WPPost2Projectile.h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="lineno"> 1 </span><span class="c1">// Copyright 1998-2014 Epic Games, Inc. All Rights Reserved.</span>
+<span class="lineno"> 2 </span><span class="cp">#pragma once</span>
+<span class="lineno"> 3 </span>
+<span class="lineno"> 4 </span><span class="cp">#include</span> <span class="cpf">"WPPost2Projectile.generated.h"</span><span class="cp"></span>
+<span class="lineno"> 5 </span>
+<span class="lineno"> 6 </span><span class="n">UCLASS</span><span class="p">(</span><span class="n">config</span> <span class="o">=</span> <span class="n">Game</span><span class="p">)</span>
+<span class="lineno"> 7 </span><span class="k">class</span> <span class="nc">AWPPost2Projectile</span> <span class="o">:</span> <span class="k">public</span> <span class="n">AActor</span>
+<span class="lineno"> 8 </span><span class="p">{</span>
+<span class="lineno"> 9 </span>    <span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+<span class="lineno">10 </span>
+<span class="lineno">11 </span>    <span class="cm">/** Sphere collision component */</span>
+<span class="lineno">12 </span>    <span class="n">UPROPERTY</span><span class="p">(</span><span class="n">VisibleDefaultsOnly</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Projectile</span><span class="p">)</span>
+<span class="lineno">13 </span>    <span class="n">TSubobjectPtr</span><span class="o">&lt;</span><span class="n">USphereComponent</span><span class="o">&gt;</span> <span class="n">CollisionComponent</span><span class="p">;</span>
+<span class="lineno">14 </span>
+<span class="lineno">15 </span><span class="hll">    <span class="cm">/** Projectile's velocity vector */</span>
+</span><span class="lineno">16 </span><span class="hll">    <span class="n">FVector</span> <span class="n">MyVelocity</span><span class="p">;</span>
+</span><span class="lineno">17 </span>
+<span class="lineno">18 </span><span class="hll">    <span class="cm">/** Flag to indicate projectile has been reflected */</span>
+</span><span class="lineno">19 </span><span class="hll">    <span class="kt">bool</span> <span class="n">bReflected</span><span class="p">;</span>
+</span><span class="lineno">20 </span>
+<span class="lineno">21 </span><span class="hll">    <span class="cm">/** called when projectile overlaps with something */</span>
+</span><span class="lineno">22 </span><span class="hll">    <span class="n">UFUNCTION</span><span class="p">()</span>
+</span><span class="lineno">23 </span><span class="hll">    <span class="kt">void</span> <span class="n">OnOverlap</span><span class="p">(</span><span class="n">AActor</span><span class="o">*</span> <span class="n">OtherActor</span><span class="p">,</span> <span class="n">UPrimitiveComponent</span><span class="o">*</span> <span class="n">OtherComp</span><span class="p">,</span> <span class="n">int32</span> <span class="n">OtherBodyIndex</span><span class="p">);</span>
+</span><span class="lineno">24 </span>
+<span class="lineno">25 </span><span class="k">public</span><span class="o">:</span>
+<span class="lineno">26 </span><span class="hll">    <span class="cm">/** How fast the projectile moves */</span>
+</span><span class="lineno">27 </span><span class="hll">    <span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Projectile</span><span class="p">)</span>
+</span><span class="lineno">28 </span><span class="hll">    <span class="kt">float</span> <span class="n">fSpeed</span><span class="p">;</span>
+</span><span class="lineno">29 </span>
+<span class="lineno">30 </span><span class="hll">    <span class="cm">/** How much a bounce affects the speed of the projectile */</span>
+</span><span class="lineno">31 </span><span class="hll">    <span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Projectile</span><span class="p">)</span>
+</span><span class="lineno">32 </span><span class="hll">    <span class="kt">float</span> <span class="n">fBounceSpeedLoss</span><span class="p">;</span>
+</span><span class="lineno">33 </span>
+<span class="lineno">34 </span><span class="hll">    <span class="c1">// Begin AActor overrides</span>
+</span><span class="lineno">35 </span><span class="hll">    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">OnConstruction</span><span class="p">(</span><span class="k">const</span> <span class="n">FTransform</span><span class="o">&amp;</span> <span class="n">Transform</span><span class="p">)</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+</span><span class="lineno">36 </span><span class="hll">    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">ReceiveHit</span><span class="p">(</span><span class="k">class</span> <span class="nc">UPrimitiveComponent</span><span class="o">*</span> <span class="n">MyComp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">AActor</span><span class="o">*</span> <span class="n">Other</span><span class="p">,</span> <span class="k">class</span> <span class="nc">UPrimitiveComponent</span><span class="o">*</span> <span class="n">OtherComp</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bSelfMoved</span><span class="p">,</span> <span class="n">FVector</span> <span class="n">HitLocation</span><span class="p">,</span> <span class="n">FVector</span> <span class="n">HitNormal</span><span class="p">,</span> <span class="n">FVector</span> <span class="n">NormalImpulse</span><span class="p">,</span> <span class="k">const</span> <span class="n">FHitResult</span><span class="o">&amp;</span> <span class="n">Hit</span><span class="p">)</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+</span><span class="lineno">37 </span><span class="hll">    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">Tick</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaSeconds</span><span class="p">)</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+</span><span class="lineno">38 </span><span class="hll">    <span class="c1">// End AActor overrides</span>
+</span><span class="lineno">39 </span><span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Changes_to_WPPost2Projectile.cpp">
+        Changes to WPPost2Projectile.cpp
+       </span>
+      </h3>
+      <p>
+       Now we want to implement these functions and set the variables in the correct places.  The following code belongs in the CPP file.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="lineno"> 1 </span><span class="c1">// Copyright 1998-2014 Epic Games, Inc. All Rights Reserved.</span>
+<span class="lineno"> 2 </span>
+<span class="lineno"> 3 </span><span class="cp">#include</span> <span class="cpf">"WPPost2.h"</span><span class="cp"></span>
+<span class="lineno"> 4 </span><span class="cp">#include</span> <span class="cpf">"WPPost2Projectile.h"</span><span class="cp"></span>
+<span class="lineno"> 5 </span>
+<span class="lineno"> 6 </span>
+<span class="lineno"> 7 </span><span class="n">AWPPost2Projectile</span><span class="o">::</span><span class="n">AWPPost2Projectile</span><span class="p">(</span><span class="k">const</span> <span class="k">class</span> <span class="nc">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span>
+<span class="lineno"> 8 </span><span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="lineno"> 9 </span><span class="p">{</span>
+<span class="lineno">10 </span><span class="hll">    <span class="n">PrimaryActorTick</span><span class="p">.</span><span class="n">bCanEverTick</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+</span><span class="lineno">11 </span><span class="hll">    <span class="n">fSpeed</span> <span class="o">=</span> <span class="mf">3000.f</span><span class="p">;</span>
+</span><span class="lineno">12 </span><span class="hll">    <span class="n">fBounceSpeedLoss</span> <span class="o">=</span> <span class="mf">0.7f</span><span class="p">;</span>
+</span><span class="lineno">13 </span>
+<span class="lineno">14 </span>    <span class="c1">// Use a sphere as a simple collision representation</span>
+<span class="lineno">15 </span>    <span class="n">CollisionComponent</span> <span class="o">=</span> <span class="n">PCIP</span><span class="p">.</span><span class="n">CreateDefaultSubobject</span><span class="o">&lt;</span><span class="n">USphereComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"SphereComp"</span><span class="p">));</span>
+<span class="lineno">16 </span>    <span class="n">CollisionComponent</span><span class="o">-&gt;</span><span class="n">InitSphereRadius</span><span class="p">(</span><span class="mf">5.0f</span><span class="p">);</span>
+<span class="lineno">17 </span><span class="hll">    <span class="n">CollisionComponent</span><span class="o">-&gt;</span><span class="n">OnComponentBeginOverlap</span><span class="p">.</span><span class="n">AddDynamic</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">AWPPost2Projectile</span><span class="o">::</span><span class="n">OnOverlap</span><span class="p">);</span>   <span class="c1">// set up a notification for when this component overlaps something</span>
+</span><span class="lineno">18 </span><span class="hll">    <span class="n">CollisionComponent</span><span class="o">-&gt;</span><span class="n">OnComponentEndOverlap</span><span class="p">.</span><span class="n">AddDynamic</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">AWPPost2Projectile</span><span class="o">::</span><span class="n">OnOverlap</span><span class="p">);</span>     <span class="c1">// set up a notification for when this component overlaps something</span>
+</span><span class="lineno">19 </span>    <span class="n">RootComponent</span> <span class="o">=</span> <span class="n">CollisionComponent</span><span class="p">;</span>
+<span class="lineno">20 </span>
+<span class="lineno">21 </span>    <span class="c1">// Die after 3 seconds by default</span>
+<span class="lineno">22 </span>    <span class="n">InitialLifeSpan</span> <span class="o">=</span> <span class="mf">3.0f</span><span class="p">;</span>
+<span class="lineno">23 </span><span class="p">}</span>
+<span class="lineno">24 </span>
+<span class="lineno">25 </span><span class="hll"><span class="kt">void</span> <span class="n">AWPPost2Projectile</span><span class="o">::</span><span class="n">OnConstruction</span><span class="p">(</span><span class="k">const</span> <span class="n">FTransform</span><span class="o">&amp;</span> <span class="n">Transform</span><span class="p">)</span>
+</span><span class="lineno">26 </span><span class="hll"><span class="p">{</span>
+</span><span class="lineno">27 </span><span class="hll">    <span class="n">Super</span><span class="o">::</span><span class="n">OnConstruction</span><span class="p">(</span><span class="n">Transform</span><span class="p">);</span>
+</span><span class="lineno">28 </span><span class="hll">
+</span><span class="lineno">29 </span><span class="hll">    <span class="n">MyVelocity</span> <span class="o">=</span> <span class="n">GetActorForwardVector</span><span class="p">()</span> <span class="o">*</span> <span class="n">fSpeed</span><span class="p">;</span>
+</span><span class="lineno">30 </span><span class="hll"><span class="p">}</span>
+</span><span class="lineno">31 </span><span class="hll">
+</span><span class="lineno">32 </span><span class="hll"><span class="kt">void</span> <span class="n">AWPPost2Projectile</span><span class="o">::</span><span class="n">OnOverlap</span><span class="p">(</span><span class="n">AActor</span><span class="o">*</span> <span class="n">OtherActor</span><span class="p">,</span> <span class="n">UPrimitiveComponent</span><span class="o">*</span> <span class="n">OtherComp</span><span class="p">,</span> <span class="n">int32</span> <span class="n">OtherBodyIndex</span><span class="p">)</span>
+</span><span class="lineno">33 </span><span class="hll"><span class="p">{</span>
+</span><span class="lineno">34 </span><span class="hll">    <span class="k">if</span> <span class="p">((</span><span class="n">OtherActor</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">OtherActor</span> <span class="o">!=</span> <span class="k">this</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">OtherComp</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">))</span>
+</span><span class="lineno">35 </span><span class="hll">    <span class="p">{</span>
+</span><span class="lineno">36 </span><span class="hll">        <span class="c1">// Only add impulse and destroy projectile if we hit a physics object</span>
+</span><span class="lineno">37 </span><span class="hll">        <span class="k">if</span> <span class="p">(</span><span class="n">OtherComp</span><span class="o">-&gt;</span><span class="n">IsSimulatingPhysics</span><span class="p">())</span>
+</span><span class="lineno">38 </span><span class="hll">        <span class="p">{</span>
+</span><span class="lineno">39 </span><span class="hll">            <span class="n">OtherComp</span><span class="o">-&gt;</span><span class="n">AddImpulseAtLocation</span><span class="p">(</span><span class="n">MyVelocity</span> <span class="o">*</span> <span class="mf">100.f</span><span class="p">,</span> <span class="n">GetActorLocation</span><span class="p">());</span>
+</span><span class="lineno">40 </span><span class="hll">
+</span><span class="lineno">41 </span><span class="hll">            <span class="n">Destroy</span><span class="p">();</span>
+</span><span class="lineno">42 </span><span class="hll">        <span class="p">}</span>
+</span><span class="lineno">43 </span><span class="hll">    <span class="p">}</span>
+</span><span class="lineno">44 </span><span class="hll"><span class="p">}</span>
+</span><span class="lineno">45 </span><span class="hll">
+</span><span class="lineno">46 </span><span class="hll"><span class="kt">void</span> <span class="n">AWPPost2Projectile</span><span class="o">::</span><span class="n">ReceiveHit</span><span class="p">(</span><span class="k">class</span> <span class="nc">UPrimitiveComponent</span><span class="o">*</span> <span class="n">MyComp</span><span class="p">,</span> <span class="k">class</span> <span class="nc">AActor</span><span class="o">*</span> <span class="n">Other</span><span class="p">,</span> <span class="k">class</span> <span class="nc">UPrimitiveComponent</span><span class="o">*</span> <span class="n">OtherComp</span><span class="p">,</span>
+</span><span class="lineno">47 </span><span class="hll">    <span class="kt">bool</span> <span class="n">bSelfMoved</span><span class="p">,</span> <span class="n">FVector</span> <span class="n">HitLocation</span><span class="p">,</span> <span class="n">FVector</span> <span class="n">HitNormal</span><span class="p">,</span> <span class="n">FVector</span> <span class="n">NormalImpulse</span><span class="p">,</span> <span class="k">const</span> <span class="n">FHitResult</span><span class="o">&amp;</span> <span class="n">Hit</span><span class="p">)</span>
+</span><span class="lineno">48 </span><span class="hll"><span class="p">{</span>
+</span><span class="lineno">49 </span><span class="hll">    <span class="n">Super</span><span class="o">::</span><span class="n">ReceiveHit</span><span class="p">(</span><span class="n">MyComp</span><span class="p">,</span> <span class="n">Other</span><span class="p">,</span> <span class="n">OtherComp</span><span class="p">,</span> <span class="n">bSelfMoved</span><span class="p">,</span> <span class="n">HitLocation</span><span class="p">,</span> <span class="n">HitNormal</span><span class="p">,</span> <span class="n">NormalImpulse</span><span class="p">,</span> <span class="n">Hit</span><span class="p">);</span>
+</span><span class="lineno">50 </span><span class="hll">
+</span><span class="lineno">51 </span><span class="hll">    <span class="c1">// Reflect the projectile because we hit a non-physics object</span>
+</span><span class="lineno">52 </span><span class="hll">    <span class="n">FVector</span> <span class="n">ReflectedVelocity</span> <span class="o">=</span> <span class="n">fBounceSpeedLoss</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">FVector</span><span class="o">::</span><span class="n">DotProduct</span><span class="p">(</span><span class="n">MyVelocity</span><span class="p">,</span> <span class="n">HitNormal</span><span class="p">)</span> <span class="o">*</span> <span class="n">HitNormal</span> <span class="o">+</span> <span class="n">MyVelocity</span><span class="p">);</span>
+</span><span class="lineno">53 </span><span class="hll">    <span class="n">MyVelocity</span> <span class="o">=</span> <span class="n">ReflectedVelocity</span><span class="p">;</span>
+</span><span class="lineno">54 </span><span class="hll">    <span class="n">ReflectedVelocity</span><span class="p">.</span><span class="n">Normalize</span><span class="p">();</span>
+</span><span class="lineno">55 </span><span class="hll">    <span class="n">SetActorRotation</span><span class="p">(</span><span class="n">ReflectedVelocity</span><span class="p">.</span><span class="n">Rotation</span><span class="p">());</span>
+</span><span class="lineno">56 </span><span class="hll">
+</span><span class="lineno">57 </span><span class="hll">    <span class="n">bReflected</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+</span><span class="lineno">58 </span><span class="hll"><span class="p">}</span>
+</span><span class="lineno">59 </span><span class="hll">
+</span><span class="lineno">60 </span><span class="hll"><span class="kt">void</span> <span class="n">AWPPost2Projectile</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaSeconds</span><span class="p">)</span>
+</span><span class="lineno">61 </span><span class="hll"><span class="p">{</span>
+</span><span class="lineno">62 </span><span class="hll">    <span class="n">Super</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span><span class="n">DeltaSeconds</span><span class="p">);</span>
+</span><span class="lineno">63 </span><span class="hll">
+</span><span class="lineno">64 </span><span class="hll">    <span class="n">FColor</span> <span class="n">LineColor</span> <span class="o">=</span> <span class="n">bReflected</span> <span class="o">?</span> <span class="n">FColor</span><span class="o">::</span><span class="nl">Red</span> <span class="p">:</span> <span class="n">FColor</span><span class="o">::</span><span class="n">Green</span><span class="p">;</span>
+</span><span class="lineno">65 </span><span class="hll">    <span class="n">DrawDebugLine</span><span class="p">(</span><span class="n">GetWorld</span><span class="p">(),</span> <span class="n">GetActorLocation</span><span class="p">(),</span> <span class="n">GetActorLocation</span><span class="p">()</span> <span class="o">+</span> <span class="n">MyVelocity</span> <span class="o">*</span> <span class="n">DeltaSeconds</span><span class="p">,</span> <span class="n">LineColor</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="mf">2.f</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.f</span><span class="p">);</span>
+</span><span class="lineno">66 </span><span class="hll">
+</span><span class="lineno">67 </span><span class="hll">    <span class="n">SetActorLocation</span><span class="p">(</span><span class="n">GetActorLocation</span><span class="p">()</span> <span class="o">+</span> <span class="n">MyVelocity</span> <span class="o">*</span> <span class="n">DeltaSeconds</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+</span><span class="lineno">68 </span><span class="hll"><span class="p">}</span>
+</span></pre>
+      </div>
+      <p>
+       Now I'm going to breakdown each part and explain what each variable is for, what each function is doing, why we're setting certain variables in certain functions, when each function is called, etc.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Breaking_Down_the_Changes">
+        Breaking Down the Changes
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Constructor">
+        Constructor
+       </span>
+      </h3>
+      <p>
+       First lets inspect the code added to the projectile's constructor.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="lineno">1 </span><span class="c1">// Constructor changes</span>
+<span class="lineno">2 </span><span class="n">PrimaryActorTick</span><span class="p">.</span><span class="n">bCanEverTick</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+<span class="lineno">3 </span><span class="n">fSpeed</span> <span class="o">=</span> <span class="mf">3000.f</span><span class="p">;</span>
+<span class="lineno">4 </span><span class="n">fBounceSpeedLoss</span> <span class="o">=</span> <span class="mf">0.7f</span><span class="p">;</span>
+<span class="lineno">5 </span>
+<span class="lineno">6 </span><span class="n">CollisionComponent</span><span class="o">-&gt;</span><span class="n">OnComponentBeginOverlap</span><span class="p">.</span><span class="n">AddDynamic</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">AWPPost2Projectile</span><span class="o">::</span><span class="n">OnOverlap</span><span class="p">);</span>   <span class="c1">// set up a notification for when this component overlaps something</span>
+<span class="lineno">7 </span><span class="n">CollisionComponent</span><span class="o">-&gt;</span><span class="n">OnComponentEndOverlap</span><span class="p">.</span><span class="n">AddDynamic</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">AWPPost2Projectile</span><span class="o">::</span><span class="n">OnOverlap</span><span class="p">);</span>     <span class="c1">// set up a notification for when this component overlaps something</span>
+</pre>
+      </div>
+      <p>
+       We have to set the actor's tick flag to true otherwise our Tick function will not be called.  This is accomplished by line 2 above.  Line 3 and 4 are just setting default values for the speed and speed loss variables.  Lines 6 and 7 are setting our OnOverlap function to be the function that the CollisionComponent will call when overlap events occur for that component.  These events will occur when our projectile's movement overlaps one of the physics object in the level just the way we set it up in the Collision Profiles section.
+      </p>
+      <h3>
+       <span class="mw-headline" id="OnConstruction">
+        OnConstruction
+       </span>
+      </h3>
+      <p>
+       In this function we want to set the velocity of our projectile.  This is accomplished by retrieving the projectile's forward vector and scaling it by our speed variable.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// OnConstruction setting velocity</span>
+<span class="n">MyVelocity</span> <span class="o">=</span> <span class="n">GetActorForwardVector</span><span class="p">()</span> <span class="o">*</span> <span class="n">fSpeed</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       I originally tried setting the velocity in the constructor, but that resulted in the projectile always firing in the X axis direction regardless of where you were aiming.  Then I tried setting it in the Tick function, but that would overwrite our change to the velocity on reflection.  So after some research I found this function could be overrided from AActor, and it was giving me the correct forward vector whenever a projectile was fired.   A quick note, if you're overriding a function from a class you're extending be sure to call the super class's function first.  That's why I'm calling Super::OnConstruction first.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Call the super class's function first</span>
+<span class="n">Super</span><span class="o">::</span><span class="n">OnConstruction</span><span class="p">(</span><span class="n">Transform</span><span class="p">);</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="OnOverlap">
+        OnOverlap
+       </span>
+      </h3>
+      <p>
+       The OnOverlap function is what gets called thanks to our collision profile set to provide an Overlap response for PhysicsBody and because we ticked the Generate Overlap Events checkbox on both our projectile and the physics objects. So to push the objects around we need to apply our velocity to the objects.  First it's good programming practice to check pointers before de-referencing them.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Checking pointers</span>
+<span class="k">if</span> <span class="p">((</span><span class="n">OtherActor</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">OtherActor</span> <span class="o">!=</span> <span class="k">this</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">OtherComp</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">))</span>
+</pre>
+      </div>
+      <p>
+       Then we know if we hit one of the physics object by checking if it's simulating physics as no other objects in the level are.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Only add impulse and destroy projectile if we hit a physics object</span>
+<span class="k">if</span> <span class="p">(</span><span class="n">OtherComp</span><span class="o">-&gt;</span><span class="n">IsSimulatingPhysics</span><span class="p">())</span>
+</pre>
+      </div>
+      <p>
+       Note, since the boxes are simulating physics we are able to push them by using  the AddImpulseAtLocation function.  We do this by passing the projectile's velocity with a little extra umph, and we use the location of the projectile at the moment of collision (which is the current location when this function is called).  Then we destroy the projectile.  Otherwise, it will continue moving and generating overlap events and pushing the boxes.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">OtherComp</span><span class="o">-&gt;</span><span class="n">AddImpulseAtLocation</span><span class="p">(</span><span class="n">MyVelocity</span> <span class="o">*</span> <span class="mf">100.f</span><span class="p">,</span> <span class="n">GetActorLocation</span><span class="p">());</span>
+
+<span class="n">Destroy</span><span class="p">();</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="ReceiveHit">
+        ReceiveHit
+       </span>
+      </h3>
+      <p>
+       The ReceiveHit function is called whenever the projectile has a blocking collision otherwise known as a Hit event.  As always you should call the super class's function first.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">Super</span><span class="o">::</span><span class="n">ReceiveHit</span><span class="p">(</span><span class="n">MyComp</span><span class="p">,</span> <span class="n">Other</span><span class="p">,</span> <span class="n">OtherComp</span><span class="p">,</span> <span class="n">bSelfMoved</span><span class="p">,</span> <span class="n">HitLocation</span><span class="p">,</span> <span class="n">HitNormal</span><span class="p">,</span> <span class="n">NormalImpulse</span><span class="p">,</span> <span class="n">Hit</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       Then using a little
+       <a class="external text" href="http://www.3dkingdoms.com/weekly/weekly.php?a=2" rel="nofollow">
+        vector math
+       </a>
+       we can reflect the vector at the point of collision.  Note, FVector overloads the pipe ( | ) and caret ( ^ ) operators.  Here I've used the verbose DotProduct function call, but in the engine's source you will find the pipe ( | ) and caret ( ^ ) symbols being used for DotProduct and CrossProduct respectively.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Reflect the projectile because we hit a non-physics object</span>
+<span class="n">FVector</span> <span class="n">ReflectedVelocity</span> <span class="o">=</span> <span class="n">fBounceSpeedLoss</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">FVector</span><span class="o">::</span><span class="n">DotProduct</span><span class="p">(</span><span class="n">MyVelocity</span><span class="p">,</span> <span class="n">HitNormal</span><span class="p">)</span> <span class="o">*</span> <span class="n">HitNormal</span> <span class="o">+</span> <span class="n">MyVelocity</span><span class="p">);</span>
+<span class="n">MyVelocity</span> <span class="o">=</span> <span class="n">ReflectedVelocity</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       Now we need to update the projectile's rotation because the reflected velocity is in a different direction.  Also, we need to normalize the vector first because we want a unit vector for the rotation.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">ReflectedVelocity</span><span class="p">.</span><span class="n">Normalize</span><span class="p">();</span>
+<span class="n">SetActorRotation</span><span class="p">(</span><span class="n">ReflectedVelocity</span><span class="p">.</span><span class="n">Rotation</span><span class="p">());</span>
+</pre>
+      </div>
+      <p>
+       Finally, we update the boolean that tells us when a reflection has occurred.  I use this in the Tick function to change the line color.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">bReflected</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Tick">
+        Tick
+       </span>
+      </h3>
+      <p>
+       Last but not least, the Tick function is responsible for moving the projectile forward and drawing a line showing us the path the projectile took.  Nothing new here, we need to call the super class's function first.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">Super</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span><span class="n">DeltaSeconds</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       DeltaSeconds is the amount of time that has passed between Tick calls.  Using this in our calculations is what allows for smooth movement of the projectile.  Now lets figure out what color to use and draw the projectile's path.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FColor</span> <span class="n">LineColor</span> <span class="o">=</span> <span class="n">bReflected</span> <span class="o">?</span> <span class="n">FColor</span><span class="o">::</span><span class="nl">Red</span> <span class="p">:</span> <span class="n">FColor</span><span class="o">::</span><span class="n">Green</span><span class="p">;</span>
+<span class="n">DrawDebugLine</span><span class="p">(</span><span class="n">GetWorld</span><span class="p">(),</span> <span class="n">GetActorLocation</span><span class="p">(),</span> <span class="n">GetActorLocation</span><span class="p">()</span> <span class="o">+</span> <span class="n">MyVelocity</span> <span class="o">*</span> <span class="n">DeltaSeconds</span><span class="p">,</span> <span class="n">LineColor</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="mf">2.f</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1.f</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       Here I make use of the
+       <a class="external text" href="http://www.cprogramming.com/reference/operators/ternary-operator.html" rel="nofollow">
+        ternary operator
+       </a>
+       which is just a shorthand version of an
+       <b>
+        IF
+       </b>
+       statement.  Then we draw a debug line using DrawDebugLine and use the same calculation as we would to move our projectile.  Finally, we move the projectile by setting its new location to the sum of its current location and the velocity vector times DeltaSeconds.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">SetActorLocation</span><span class="p">(</span><span class="n">GetActorLocation</span><span class="p">()</span> <span class="o">+</span> <span class="n">MyVelocity</span> <span class="o">*</span> <span class="n">DeltaSeconds</span><span class="p">,</span> <span class="nb">true</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       The second parameter is a flag that indicates whether this is a sweep movement or not.  We want to pass true because sweeping movements generate blocking events aka hit events.  Otherwise we are just teleporting the projectile around.  Thanks to Epic's JamesG for pointing this out in a response to Shammah's
+       <a class="external text" href="http://forums.unrealengine.com/showthread.php?8075-Extended-blocking-volume-and-overlapping-volume-hitresults" rel="nofollow">
+        forum post
+       </a>
+       .
+      </p>
+      <h2>
+       <span class="mw-headline" id="Videos">
+        Videos
+       </span>
+      </h2>
+      <p>
+       Compile and run the project to see the reflecting projectile in action.  Here's a couple more videos of the finished product.  These showcase the speed loss due to reflection, and the projectile reflecting off other projectiles.
+      </p>
+      <p>
+       &lt;youtube&gt;
+       <a class="external free" href="http://www.youtube.com/embed/4jOaRBAh1jY" rel="nofollow">
+        http://www.youtube.com/embed/4jOaRBAh1jY
+       </a>
+      </p>
+      <p>
+       &lt;youtube&gt;
+       <a class="external free" href="http://www.youtube.com/embed/a3R1ahFD3ww" rel="nofollow">
+        http://www.youtube.com/embed/a3R1ahFD3ww
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion_.2F_Final_Notes">
+        Conclusion / Final Notes
+       </span>
+      </h2>
+      <p>
+       Thanks for reading my tutorial.  I hope my few days of research condensed into a post is helpful for anyone else starting out with UE4.
+      </p>
+      <p>
+       A parting protip for anyone doing lots of C++ development especially in UE4, check out the trial for
+       <a class="external text" href="http://www.wholetomato.com/" rel="nofollow">
+        Visual Assist
+       </a>
+       (only works with non express versions of Visual Studio).  If you like it, you'll probably buy a license when the trial expires just like I did.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <p>
+       Tutorial by
+       <a class="external text" href="http://wiki.unrealengine.com/User:Theokrin" rel="nofollow">
+        Theokrin
+       </a>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

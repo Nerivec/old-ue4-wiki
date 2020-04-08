@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Streamed Levels, Test If Actor Is In Level Bounds - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Streamed Levels, Test If Actor Is In Level Bounds
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Calculate_Level_Bounds">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Calculate Level Bounds
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#IsInside">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           IsInside
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Getting_the_Streaming_Level_Name">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Getting the Streaming Level Name
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Summary">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Summary
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <b>
+        Author:
+       </b>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       Here's how you can determine if an actor is within the bounds of a
+       <b>
+        streamed in level
+       </b>
+       !
+      </p>
+      <p>
+       <br/>
+       //in playercontroller class
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Get the Currently Streamed Levels</span>
+<span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">ULevelStreaming</span><span class="o">*&gt;&amp;</span> <span class="n">StreamedLevels</span> <span class="o">=</span> <span class="n">GetWorld</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">StreamingLevels</span><span class="p">;</span>
+
+<span class="k">for</span><span class="p">(</span><span class="k">const</span> <span class="n">ULevelStreaming</span><span class="o">*</span> <span class="nl">EachLevelStreaming</span> <span class="p">:</span> <span class="n">StreamedLevels</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">EachLevelStreaming</span><span class="p">)</span> 
+	<span class="p">{</span>
+		<span class="k">continue</span><span class="p">;</span>
+	<span class="p">}</span>
+	
+	<span class="n">ULevel</span><span class="o">*</span> <span class="n">EachLevel</span> <span class="o">=</span>  <span class="n">EachLevelStreaming</span><span class="o">-&gt;</span><span class="n">GetLoadedLevel</span><span class="p">();</span>
+	
+	<span class="c1">//Is This Level Valid and Visible?</span>
+	<span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">EachLevel</span> <span class="o">||</span> <span class="o">!</span><span class="n">EachLevel</span><span class="o">-&gt;</span><span class="n">bIsVisible</span><span class="p">)</span> 
+	<span class="p">{</span>
+		<span class="k">continue</span><span class="p">;</span>
+	<span class="p">}</span>
+		 
+	<span class="c1">//Print Name of current Level Streaming to know which level the unit is in!</span>
+	<span class="n">ClientMessage</span><span class="p">(</span> <span class="n">EachLevelStreaming</span><span class="o">-&gt;</span><span class="n">GetWorldAssetPackageName</span><span class="p">()</span> <span class="p">);</span>
+	  
+	<span class="c1">//Is the Player Location Within this Level's Bounds</span>
+	<span class="k">if</span><span class="p">(</span><span class="n">ALevelBounds</span><span class="o">::</span><span class="n">CalculateLevelBounds</span><span class="p">(</span><span class="n">EachLevel</span><span class="p">).</span><span class="n">IsInside</span><span class="p">(</span><span class="n">GetPawn</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetActorLocation</span><span class="p">()))</span>
+	<span class="p">{</span>
+		<span class="n">ClientMessage</span><span class="p">(</span><span class="s">"Yes Player Is Within This Level"</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Calculate_Level_Bounds">
+        Calculate Level Bounds
+       </span>
+      </h2>
+      <p>
+       The most notable function here is:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">FBox</span> <span class="n">ALevelBounds</span><span class="o">::</span><span class="n">CalculateLevelBounds</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="IsInside">
+        IsInside
+       </span>
+      </h2>
+      <p>
+       CalculateLevelBounds returns an FBox,
+      </p>
+      <p>
+       IsInside is an FBox function that takes in an FVector and sees if the FVector is within that box's bounds
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">ALevelBounds</span><span class="o">::</span><span class="n">CalculateLevelBounds</span><span class="p">(</span><span class="n">EachLevel</span><span class="p">).</span><span class="n">IsInside</span><span class="p">(</span><span class="n">GetPawn</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetActorLocation</span><span class="p">())</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Getting_the_Streaming_Level_Name">
+        Getting the Streaming Level Name
+       </span>
+      </h2>
+      <p>
+       Please note as of 4.8 the way to obtain the name of the streaming level is:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">EachLevelStreaming</span><span class="o">-&gt;</span><span class="n">GetWorldAssetPackageName</span><span class="p">()</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Summary">
+        Summary
+       </span>
+      </h2>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

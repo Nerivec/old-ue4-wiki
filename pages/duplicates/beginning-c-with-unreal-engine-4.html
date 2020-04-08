@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Beginning C++ with Unreal Engine 4 - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Beginning C++ with Unreal Engine 4
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       This series will teach you the language that is C++. We will be utilizing Unreal Engine 4's API and we will try to stay away from the STL (standard template library) as much as we can. You can watch these tutorials with some to no programming knowledge, you can use the series to familiarize yourself with the UE4 API, and use it to refresh yourself. BUT! Be warned to those who are watching this series with some programming or some C++ knowledge you may find these a little bit slow moving as they are more directed towards people with zero C++ knowledge and little to no programming knowledge. That doesn't mean there isn't good information within!
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Video_Playlist">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Video Playlist
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Playlist">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Playlist
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Video_1_-_Entry_Point">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Video 1 - Entry Point
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Entry_Point">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Entry Point
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Video_2_-_Directives">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Video 2 - Directives
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Directives">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Directives
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Video_3_-_Basic_Classes_and_Object_Orientation">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Video 3 - Basic Classes and Object Orientation
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Basic_Classes_and_Object_Orientation">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             Basic Classes and Object Orientation
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Video_4_-_Naming_Conventions_and_Common_Data_Type">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Video 4 - Naming Conventions and Common Data Type
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#Naming_Conventions_and_Common_Data_Type">
+            <span class="tocnumber">
+             5.1
+            </span>
+            <span class="toctext">
+             Naming Conventions and Common Data Type
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-11">
+         <a href="#Video_5_-_Basic_Methods_and_Functions">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Video 5 - Basic Methods and Functions
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-12">
+           <a href="#Basic_Methods_and_Functions">
+            <span class="tocnumber">
+             6.1
+            </span>
+            <span class="toctext">
+             Basic Methods and Functions
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-13">
+         <a href="#Video_6_-_Parameters_and_Proper_Method.2FFunction_Comments">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Video 6 - Parameters and Proper Method/Function Comments
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-14">
+           <a href="#Parameters_and_Proper_Method.2FFunction_Comments">
+            <span class="tocnumber">
+             7.1
+            </span>
+            <span class="toctext">
+             Parameters and Proper Method/Function Comments
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-15">
+         <a href="#Video_7_-_Output_Log">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Video 7 - Output Log
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-16">
+           <a href="#Output_Log">
+            <span class="tocnumber">
+             8.1
+            </span>
+            <span class="toctext">
+             Output Log
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-17">
+         <a href="#Video_8_-_Pointers">
+          <span class="tocnumber">
+           9
+          </span>
+          <span class="toctext">
+           Video 8 - Pointers
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-18">
+           <a href="#Pointers">
+            <span class="tocnumber">
+             9.1
+            </span>
+            <span class="toctext">
+             Pointers
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-19">
+         <a href="#Video_9_-_Structures.2C_Multiple_Returns.2C_and_Passing_By_Reference">
+          <span class="tocnumber">
+           10
+          </span>
+          <span class="toctext">
+           Video 9 - Structures, Multiple Returns, and Passing By Reference
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-20">
+           <a href="#Structures.2C_Multiple_Returns.2C_and_Passing_By_Reference">
+            <span class="tocnumber">
+             10.1
+            </span>
+            <span class="toctext">
+             Structures, Multiple Returns, and Passing By Reference
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-21">
+         <a href="#Video_10_-_Recursive_Functions">
+          <span class="tocnumber">
+           11
+          </span>
+          <span class="toctext">
+           Video 10 - Recursive Functions
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-22">
+           <a href="#Recursive_Functions">
+            <span class="tocnumber">
+             11.1
+            </span>
+            <span class="toctext">
+             Recursive Functions
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Video_Playlist">
+        Video Playlist
+       </span>
+      </h1>
+      <h2>
+       <span class="mw-headline" id="Playlist">
+        <a class="external text" href="https://www.youtube.com/playlist?list=PL6DtIuaTM4jujP__Sx9UocjJGVzO8emsA" rel="nofollow">
+         Playlist
+        </a>
+       </span>
+      </h2>
+      <div class="center">
+       <div class="thumb tnone">
+        <div class="thumbinner" style="width:514px;">
+         <img alt="Title Icon.png" class="thumbimage" height="512" src="../assets/beginning-c-with-unreal-engine-4/0.png" width="512"/>
+         <div class="thumbcaption">
+          <div class="magnify">
+          </div>
+         </div>
+        </div>
+       </div>
+      </div>
+      <h1>
+       <span class="mw-headline" id="Video_1_-_Entry_Point">
+        Video 1 - Entry Point
+       </span>
+      </h1>
+      <h2>
+       <span class="mw-headline" id="Entry_Point">
+        <a class="external text" href="https://www.youtube.com/watch?v=PZiUtNaz9l0&amp;list=PL6DtIuaTM4jujP__Sx9UocjJGVzO8emsA&amp;index=1" rel="nofollow">
+         Entry Point
+        </a>
+       </span>
+      </h2>
+      <p>
+       In this video you will learn where the entry point to c++ in ue4 is and how to get started programming.
+&lt;youtube&gt;(
+       <a class="external free" href="https://www.youtube.com/watch?v=PZiUtNaz9l0&amp;list=PL6DtIuaTM4jujP__Sx9UocjJGVzO8emsA&amp;index=1" rel="nofollow">
+        https://www.youtube.com/watch?v=PZiUtNaz9l0&amp;list=PL6DtIuaTM4jujP__Sx9UocjJGVzO8emsA&amp;index=1
+       </a>
+       )
+      </p>
+      <h1>
+       <span class="mw-headline" id="Video_2_-_Directives">
+        Video 2 - Directives
+       </span>
+      </h1>
+      <h2>
+       <span class="mw-headline" id="Directives">
+        <a class="external text" href="https://www.youtube.com/watch?v=FgEBNYz6aSE&amp;list=PL6DtIuaTM4jujP__Sx9UocjJGVzO8emsA&amp;index=2" rel="nofollow">
+         Directives
+        </a>
+       </span>
+      </h2>
+      <p>
+       In this video you will learn what directives are and how to use them.
+&lt;youtube&gt;(
+       <a class="external free" href="https://www.youtube.com/watch?v=FgEBNYz6aSE&amp;list=PL6DtIuaTM4jujP__Sx9UocjJGVzO8emsA&amp;index=2" rel="nofollow">
+        https://www.youtube.com/watch?v=FgEBNYz6aSE&amp;list=PL6DtIuaTM4jujP__Sx9UocjJGVzO8emsA&amp;index=2
+       </a>
+       )
+      </p>
+      <h1>
+       <span class="mw-headline" id="Video_3_-_Basic_Classes_and_Object_Orientation">
+        Video 3 - Basic Classes and Object Orientation
+       </span>
+      </h1>
+      <h2>
+       <span class="mw-headline" id="Basic_Classes_and_Object_Orientation">
+        <a class="external text" href="https://www.youtube.com/watch?v=ndN4zQCnO1k&amp;list=PL6DtIuaTM4jujP__Sx9UocjJGVzO8emsA&amp;index=3" rel="nofollow">
+         Basic Classes and Object Orientation
+        </a>
+       </span>
+      </h2>
+      <p>
+       In this video you will learn about basic classes and what object orientation is and how to write simple classes.
+&lt;youtube&gt;(
+       <a class="external free" href="https://www.youtube.com/watch?v=ndN4zQCnO1k&amp;list=PL6DtIuaTM4jujP__Sx9UocjJGVzO8emsA&amp;index=3" rel="nofollow">
+        https://www.youtube.com/watch?v=ndN4zQCnO1k&amp;list=PL6DtIuaTM4jujP__Sx9UocjJGVzO8emsA&amp;index=3
+       </a>
+       )
+      </p>
+      <h1>
+       <span class="mw-headline" id="Video_4_-_Naming_Conventions_and_Common_Data_Type">
+        Video 4 - Naming Conventions and Common Data Type
+       </span>
+      </h1>
+      <h2>
+       <span class="mw-headline" id="Naming_Conventions_and_Common_Data_Type">
+        <a class="external text" href="https://www.youtube.com/watch?v=c3GFOw5bPJU&amp;list=PL6DtIuaTM4jujP__Sx9UocjJGVzO8emsA&amp;index=4" rel="nofollow">
+         Naming Conventions and Common Data Type
+        </a>
+       </span>
+      </h2>
+      <p>
+       In this video you will learn what naming convections ue4 uses and what the common data types to use with ue4 are.
+&lt;youtube&gt;(
+       <a class="external free" href="https://www.youtube.com/watch?v=c3GFOw5bPJU&amp;list=PL6DtIuaTM4jujP__Sx9UocjJGVzO8emsA&amp;index=4" rel="nofollow">
+        https://www.youtube.com/watch?v=c3GFOw5bPJU&amp;list=PL6DtIuaTM4jujP__Sx9UocjJGVzO8emsA&amp;index=4
+       </a>
+       )
+      </p>
+      <h1>
+       <span class="mw-headline" id="Video_5_-_Basic_Methods_and_Functions">
+        Video 5 - Basic Methods and Functions
+       </span>
+      </h1>
+      <h2>
+       <span class="mw-headline" id="Basic_Methods_and_Functions">
+        <a class="external text" href="https://www.youtube.com/watch?v=icn4K9DH_NA&amp;index=5&amp;list=PL6DtIuaTM4jujP__Sx9UocjJGVzO8emsA" rel="nofollow">
+         Basic Methods and Functions
+        </a>
+       </span>
+      </h2>
+      <p>
+       In this video you will learn what methods are and what functions are and how to write them both.
+&lt;youtube&gt;(
+       <a class="external free" href="https://www.youtube.com/watch?v=icn4K9DH_NA&amp;index=5&amp;list=PL6DtIuaTM4jujP__Sx9UocjJGVzO8emsA" rel="nofollow">
+        https://www.youtube.com/watch?v=icn4K9DH_NA&amp;index=5&amp;list=PL6DtIuaTM4jujP__Sx9UocjJGVzO8emsA
+       </a>
+       )
+      </p>
+      <h1>
+       <span class="mw-headline" id="Video_6_-_Parameters_and_Proper_Method.2FFunction_Comments">
+        Video 6 - Parameters and Proper Method/Function Comments
+       </span>
+      </h1>
+      <h2>
+       <span class="mw-headline" id="Parameters_and_Proper_Method.2FFunction_Comments">
+        <a class="external text" href="https://www.youtube.com/watch?v=tQTuaGmgxIQ&amp;index=6&amp;list=PL6DtIuaTM4jujP__Sx9UocjJGVzO8emsA" rel="nofollow">
+         Parameters and Proper Method/Function Comments
+        </a>
+       </span>
+      </h2>
+      <p>
+       In this video you will learn what a parameter is and how to write proper method and function comments.
+&lt;youtube&gt;(
+       <a class="external free" href="https://www.youtube.com/watch?v=tQTuaGmgxIQ&amp;index=6&amp;list=PL6DtIuaTM4jujP__Sx9UocjJGVzO8emsA" rel="nofollow">
+        https://www.youtube.com/watch?v=tQTuaGmgxIQ&amp;index=6&amp;list=PL6DtIuaTM4jujP__Sx9UocjJGVzO8emsA
+       </a>
+       )
+      </p>
+      <h1>
+       <span class="mw-headline" id="Video_7_-_Output_Log">
+        Video 7 - Output Log
+       </span>
+      </h1>
+      <h2>
+       <span class="mw-headline" id="Output_Log">
+        <a class="external text" href="https://www.youtube.com/watch?v=t-7JYG9rvWM&amp;list=PL6DtIuaTM4jujP__Sx9UocjJGVzO8emsA&amp;index=7" rel="nofollow">
+         Output Log
+        </a>
+       </span>
+      </h2>
+      <p>
+       In this video you will learn how to log out messages to the output window within the ue4 editor.
+&lt;youtube&gt;(
+       <a class="external free" href="https://www.youtube.com/watch?v=t-7JYG9rvWM&amp;list=PL6DtIuaTM4jujP__Sx9UocjJGVzO8emsA&amp;index=7" rel="nofollow">
+        https://www.youtube.com/watch?v=t-7JYG9rvWM&amp;list=PL6DtIuaTM4jujP__Sx9UocjJGVzO8emsA&amp;index=7
+       </a>
+       )
+      </p>
+      <h1>
+       <span class="mw-headline" id="Video_8_-_Pointers">
+        Video 8 - Pointers
+       </span>
+      </h1>
+      <h2>
+       <span class="mw-headline" id="Pointers">
+        <a class="external text" href="https://www.youtube.com/watch?v=mWV2eePb4xE&amp;list=PL6DtIuaTM4jujP__Sx9UocjJGVzO8emsA&amp;index=8" rel="nofollow">
+         Pointers
+        </a>
+       </span>
+      </h2>
+      <p>
+       In this video you will learn what pointers are and how to use them.
+&lt;youtube&gt;(
+       <a class="external free" href="https://www.youtube.com/watch?v=mWV2eePb4xE&amp;list=PL6DtIuaTM4jujP__Sx9UocjJGVzO8emsA&amp;index=8" rel="nofollow">
+        https://www.youtube.com/watch?v=mWV2eePb4xE&amp;list=PL6DtIuaTM4jujP__Sx9UocjJGVzO8emsA&amp;index=8
+       </a>
+       )
+      </p>
+      <h1>
+       <span class="mw-headline" id="Video_9_-_Structures.2C_Multiple_Returns.2C_and_Passing_By_Reference">
+        Video 9 - Structures, Multiple Returns, and Passing By Reference
+       </span>
+      </h1>
+      <h2>
+       <span class="mw-headline" id="Structures.2C_Multiple_Returns.2C_and_Passing_By_Reference">
+        <a class="external text" href="https://www.youtube.com/watch?v=oC1osoB32yo&amp;index=9&amp;list=PL6DtIuaTM4jujP__Sx9UocjJGVzO8emsA" rel="nofollow">
+         Structures, Multiple Returns, and Passing By Reference
+        </a>
+       </span>
+      </h2>
+      <p>
+       In this video you will learn what structures are and how you can use them to return multiple values from a function or method, also you will learn what passing by reference is and how to use it.
+      </p>
+      <p>
+       &lt;youtube&gt;(
+       <a class="external free" href="https://www.youtube.com/watch?v=oC1osoB32yo&amp;index=9&amp;list=PL6DtIuaTM4jujP__Sx9UocjJGVzO8emsA" rel="nofollow">
+        https://www.youtube.com/watch?v=oC1osoB32yo&amp;index=9&amp;list=PL6DtIuaTM4jujP__Sx9UocjJGVzO8emsA
+       </a>
+       )
+      </p>
+      <h1>
+       <span class="mw-headline" id="Video_10_-_Recursive_Functions">
+        Video 10 - Recursive Functions
+       </span>
+      </h1>
+      <h2>
+       <span class="mw-headline" id="Recursive_Functions">
+        <a class="external text" href="https://www.youtube.com/watch?v=f_2QdWOpLF4&amp;list=PL6DtIuaTM4jujP__Sx9UocjJGVzO8emsA&amp;index=10" rel="nofollow">
+         Recursive Functions
+        </a>
+       </span>
+      </h2>
+      <p>
+       In this video you will learn what recursive functions are and how you can use it to call a function within itself. We used factorials as an example.
+      </p>
+      <p>
+       &lt;youtube&gt;(
+       <a class="external free" href="https://www.youtube.com/watch?v=f_2QdWOpLF4&amp;list=PL6DtIuaTM4jujP__Sx9UocjJGVzO8emsA&amp;index=10" rel="nofollow">
+        https://www.youtube.com/watch?v=f_2QdWOpLF4&amp;list=PL6DtIuaTM4jujP__Sx9UocjJGVzO8emsA&amp;index=10
+       </a>
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

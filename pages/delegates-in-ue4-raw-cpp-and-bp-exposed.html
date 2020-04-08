@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Delegates In UE4, Raw Cpp and BP Exposed - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Delegates In UE4, Raw Cpp and BP Exposed
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Steps">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Steps
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Signature">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Signature
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Calling_the_Delegate">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             Calling the Delegate
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-5">
+             <a href="#.h">
+              <span class="tocnumber">
+               2.2.1
+              </span>
+              <span class="toctext">
+               .h
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-6">
+             <a href="#.cpp">
+              <span class="tocnumber">
+               2.2.2
+              </span>
+              <span class="toctext">
+               .cpp
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Responding_to_the_Delegate">
+            <span class="tocnumber">
+             2.3
+            </span>
+            <span class="toctext">
+             Responding to the Delegate
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#UFUNCTION.28.29_.21">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           UFUNCTION()   !
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Binding_To_The_Delegate">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Binding To The Delegate
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#Dynamic_Delegates">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             Dynamic Delegates
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#Multicast_Delegates">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             Multicast Delegates
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-12">
+           <a href="#Non_Multicast">
+            <span class="tocnumber">
+             4.3
+            </span>
+            <span class="toctext">
+             Non Multicast
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-13">
+         <a href="#Raw_C.2B.2B_Class_Instances">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Raw C++ Class Instances
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-14">
+         <a href="#Slate_Class_Instances">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Slate Class Instances
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-15">
+         <a href="#Binding_is_Per-Instance">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Binding is Per-Instance
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-16">
+         <a href="#BP-Friendly_Delegates">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           BP-Friendly Delegates
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-17">
+         <a href="#Level_Blueprint_Friendly_Delegates">
+          <span class="tocnumber">
+           9
+          </span>
+          <span class="toctext">
+           Level Blueprint Friendly Delegates
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-18">
+         <a href="#Video_Example">
+          <span class="tocnumber">
+           10
+          </span>
+          <span class="toctext">
+           Video Example
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-19">
+         <a href="#Further_Reading">
+          <span class="tocnumber">
+           11
+          </span>
+          <span class="toctext">
+           Further Reading
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-20">
+         <a href="#DYNAMIC_MULTICAST_And_Other_Types">
+          <span class="tocnumber">
+           12
+          </span>
+          <span class="toctext">
+           DYNAMIC_MULTICAST And Other Types
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-21">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           13
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       Original Author:
+       (
+       )
+      </p>
+      <p>
+       In this wiki I share with you the core code that you need to implement for a variety of delegates in UE4!
+      </p>
+      <p>
+       A delegate is basically an event that you can define and call and respond to.
+      </p>
+      <p>
+       Every time the event is fired off, anyone who is listening for this event will receive it and be able to take appropriate action.
+      </p>
+      <p>
+       In the case of
+       <b>
+        multicast
+       </b>
+       delegates, any number of entities within your code base can respond to the same event and receive the inputs and use them.
+      </p>
+      <p>
+       In the case of
+       <b>
+        dynamic
+       </b>
+       delegates, the delegate can be saved/loaded within a Blueprint graph (they're called Events/Event Dispatcher in BP).
+      </p>
+      <p>
+       For my example I will be using exclusively DYNAMIC_MULTICAST which is the type that is most useful in Blueprints :)
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Steps">
+        Steps
+       </span>
+      </h2>
+      <h4>
+       <span class="mw-headline" id="Signature">
+        Signature
+       </span>
+      </h4>
+      <p>
+       You create the signature of the delegate, which declares what inputs any receiving functions should specify.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//RamaMeleeWeapon class .h</span>
+
+<span class="n">DECLARE_DYNAMIC_MULTICAST_DELEGATE_SixParams</span><span class="p">(</span> <span class="n">FRamaMeleeHitSignature</span><span class="p">,</span> <span class="k">class</span> <span class="nc">AActor</span><span class="o">*</span><span class="p">,</span> <span class="n">HitActor</span><span class="p">,</span> <span class="k">class</span> <span class="nc">UPrimitiveComponent</span><span class="o">*</span><span class="p">,</span> <span class="n">HitComponent</span><span class="p">,</span> <span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">ImpactPoint</span><span class="p">,</span> <span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">ImpactNormal</span><span class="p">,</span> <span class="n">FName</span><span class="p">,</span> <span class="n">HitBoneName</span><span class="p">,</span> <span class="k">const</span> <span class="k">struct</span> <span class="n">FHitResult</span><span class="o">&amp;</span><span class="p">,</span> <span class="n">HitResult</span> <span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       Notice the macro declares that I will be adding 6 parameters, there are similar macros for other quantities of parameters :)
+      </p>
+      <pre> DECLARE_DYNAMIC_MULTICAST_DELEGATE_SixParams
+</pre>
+      <h4>
+       <span class="mw-headline" id="Calling_the_Delegate">
+        Calling the Delegate
+       </span>
+      </h4>
+      <p>
+       You call the delegate within the class structure where it was defined, making sure to only execute it if it is currently bound, meaning at least 1 entity is listening for this delegate / event.
+      </p>
+      <h5>
+       <span class="mw-headline" id=".h">
+        .h
+       </span>
+      </h5>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//.h</span>
+<span class="c1">//RamaMeleeWeapon class .h</span>
+
+<span class="c1">//This should be in the class which calls the delegate, and where the signature was defined</span>
+<span class="c1">//This is an instance of the signature that was defined above!</span>
+<span class="n">FRamaMeleeHitSignature</span> <span class="n">RamaMeleeWeapon_OnHit</span><span class="p">;</span>
+</pre>
+      </div>
+      <h5>
+       <span class="mw-headline" id=".cpp">
+        .cpp
+       </span>
+      </h5>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//.cpp</span>
+<span class="c1">//Only the code that is supposed to initiate the event calls Broadcast()</span>
+<span class="k">if</span><span class="p">(</span><span class="n">RamaMeleeWeapon_OnHit</span><span class="p">.</span><span class="n">IsBound</span><span class="p">())</span> <span class="c1">//&lt;~~~~</span>
+<span class="p">{</span>
+	<span class="n">RamaMeleeWeapon_OnHit</span><span class="p">.</span><span class="n">Broadcast</span><span class="p">(</span><span class="n">Hit</span><span class="p">.</span><span class="n">GetActor</span><span class="p">(),</span> <span class="n">Hit</span><span class="p">.</span><span class="n">GetComponent</span><span class="p">(),</span> <span class="n">Hit</span><span class="p">.</span><span class="n">ImpactPoint</span><span class="p">,</span> <span class="n">Hit</span><span class="p">.</span><span class="n">ImpactNormal</span><span class="p">,</span> <span class="n">Hit</span><span class="p">.</span><span class="n">BoneName</span><span class="p">,</span> <span class="n">Hit</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Comment from
+     :
+As the official
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Programming/UnrealArchitecture/Delegates/Multicast/index.html" rel="nofollow">
+        Multicast docs
+       </a>
+       say:
+      </p>
+      <p>
+       <i>
+        (...)It is always safe to call Broadcast() on a multi-cast delegate, even if nothing is bound. The only time you need to be careful is if you are using a delegate to initialize output variables, which is generally very bad to do.(...)
+       </i>
+      </p>
+      <p>
+       So calling InBound() is not necessary. Only in Single-cast delegates.
+      </p>
+      <h4>
+       <span class="mw-headline" id="Responding_to_the_Delegate">
+        Responding to the Delegate
+       </span>
+      </h4>
+      <p>
+       Anywhere you want, you can declare functions which receive the parameters by type and name specified in the delegate signature.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Any class can add a function that uses the delegate signature and responds to the Broadcast() event </span>
+<span class="n">UFUNCTION</span><span class="p">()</span>
+<span class="kt">void</span> <span class="n">RespondToMeleeDamageTaken</span><span class="p">(</span><span class="n">AActor</span><span class="o">*</span> <span class="n">HitActor</span><span class="p">,</span> <span class="n">UPrimitiveComponent</span><span class="o">*</span> <span class="n">HitComponent</span><span class="p">,</span> <span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">ImpactPoint</span><span class="p">,</span> <span class="k">const</span> <span class="n">FVector</span><span class="o">&amp;</span> <span class="n">ImpactNormal</span><span class="p">,</span> <span class="n">FName</span> <span class="n">HitBoneName</span><span class="p">,</span> <span class="k">const</span> <span class="n">FHitResult</span><span class="o">&amp;</span> <span class="n">HitResult</span><span class="p">)</span>
+</pre>
+      </div>
+      <p>
+       See below to learn how to bind the delegate instance to this function or any number of functions that are present in class instances anywhere in your code base!
+      </p>
+      <h2>
+       <span class="mw-headline" id="UFUNCTION.28.29_.21">
+        UFUNCTION()   !
+       </span>
+      </h2>
+      <p>
+       Please note that functions that are responding to delegate broadcasts should be UFUNCTION()!
+      </p>
+      <p>
+       If your delegate Broadcast stalls the game for a bit and then doesnt work, it's because you did not make one of your receiving functions a UFUNCTION()
+      </p>
+      <p>
+       &lt;3 Rama
+      </p>
+      <h2>
+       <span class="mw-headline" id="Binding_To_The_Delegate">
+        Binding To The Delegate
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Dynamic_Delegates">
+        Dynamic Delegates
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">RamaMeleeWeaponComp</span><span class="o">-&gt;</span><span class="n">RamaMeleeWeapon_OnHit</span><span class="p">.</span><span class="n">AddDynamic</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">USomeClass</span><span class="o">::</span><span class="n">RespondToMeleeDamageTaken</span><span class="p">);</span> <span class="c1">//see above in wiki</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Multicast_Delegates">
+        Multicast Delegates
+       </span>
+      </h3>
+      <p>
+       Binding to non-dynamic requires this syntax:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">RamaMeleeWeaponComp</span><span class="o">-&gt;</span><span class="n">RamaMeleeWeapon_OnHit</span><span class="p">.</span><span class="n">AddUObject</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">USomeClass</span><span class="o">::</span><span class="n">RespondToMeleeDamageTaken</span><span class="p">);</span> <span class="c1">//see above in wiki</span>
+</pre>
+      </div>
+      <p>
+       <a class="external free" href="https://docs.unrealengine.com/en-us/Programming/UnrealArchitecture/Delegates/Multicast" rel="nofollow">
+        https://docs.unrealengine.com/en-us/Programming/UnrealArchitecture/Delegates/Multicast
+       </a>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Non_Multicast">
+        Non Multicast
+       </span>
+      </h3>
+      <p>
+       Binding a UObject to a non-dynamic, non-multicast delegate requires you to use the following syntax.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//in some class cpp file</span>
+
+<span class="n">RamaMeleeWeaponComp</span><span class="o">-&gt;</span><span class="n">RamaMeleeWeapon_OnHit</span><span class="p">.</span><span class="n">BindUObject</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">USomeClass</span><span class="o">::</span><span class="n">RespondToMeleeDamageTaken</span><span class="p">);</span> <span class="c1">//see above in wiki</span>
+</pre>
+      </div>
+      <p>
+       You need to access the delegate where it is stored, in my case this is the RamaMeleeWeaponComponent
+      </p>
+      <p>
+       The idea is you are telling the delegate instance that it is getting a new binding, to this SomeClass insance, which is why you include the
+       <i>
+        this
+       </i>
+       pointer.
+      </p>
+      <p>
+       So this code appears where you want to add the binding to the event/delegate, but it must refer to the one signature instance present in the original class instance.
+      </p>
+      <p>
+       So basically this delegate binding is
+       <b>
+        an agreement between two instances
+       </b>
+       , where one instance is of the class that declares and implements the delegate, and the other instance is any ole' class that has declared the function signature to match the delegate signature.
+      </p>
+      <p>
+       There's nothing abstract here, everything is instances, so you must bind your object instance to the delegate signature instance that is part of the instance of the class that is going to fire off the broadcasting.
+      </p>
+      <p>
+       This is why I have a pointer to RamaMeleeWeaponComp-&gt;RamaMeleeWeapon_OnHit, and I am
+       <b>
+        also
+       </b>
+       including the
+       <i>
+        this
+       </i>
+       pointer so that the signature knows about the calling object instance.
+      </p>
+      <p>
+       The reason it is a
+       <i>
+        this
+       </i>
+       pointer is because the code above is run in the object that wants to bind to the delegate, so
+       <i>
+        this
+       </i>
+       is a self-referencing pointer to the UObject we are binding to the delegate.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Raw_C.2B.2B_Class_Instances">
+        Raw C++ Class Instances
+       </span>
+      </h2>
+      <p>
+       Raw delegates are used with non UObject classes, like plugin modules.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">RamaMeleeWeaponComp</span><span class="o">-&gt;</span><span class="n">RamaMeleeWeapon_OnHit</span><span class="p">.</span><span class="n">BindRaw</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">FSomeRawCPPClass</span><span class="o">::</span><span class="n">RespondToMeleeDamageTaken</span><span class="p">);</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Slate_Class_Instances">
+        Slate Class Instances
+       </span>
+      </h2>
+      <p>
+       Slate delegates use this syntax:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">RamaMeleeWeaponComp</span><span class="o">-&gt;</span><span class="n">RamaMeleeWeapon_OnHit</span><span class="p">.</span><span class="n">CreateSP</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">SSomeSlateClass</span><span class="o">::</span><span class="n">RespondToMeleeDamageTaken</span><span class="p">);</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Binding_is_Per-Instance">
+        Binding is Per-Instance
+       </span>
+      </h2>
+      <p>
+       Please note that when you bind to the delegate this is a per-instance process! That is why you need to include the
+       <i>
+        this
+       </i>
+       pointer, because whichever instance you are calling the code in, it is that particular instance whose function will get called when the delegate is broadcasted.
+      </p>
+      <p>
+       This means you can choose to have only certain instances of a uobject respond to a delegate, or choose to bind or unbind at any time!
+      </p>
+      <h2>
+       <span class="mw-headline" id="BP-Friendly_Delegates">
+        BP-Friendly Delegates
+       </span>
+      </h2>
+      <p>
+       A BP friendly delegate requires this additional .h code to expose the delegate to Blueprints.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//RamaMeleeWeapon.h</span>
+
+<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintAssignable</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="s">"Rama Melee Weapon"</span><span class="p">)</span>
+<span class="n">FRamaMeleeHitSignature</span> <span class="n">RamaMeleeWeapon_OnHit</span><span class="p">;</span>
+</pre>
+      </div>
+      <p>
+       BP-friendly Delegates should be DYNAMIC_MULTICAST so they can be serialized (saved/loaded) with the BP graph.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Level_Blueprint_Friendly_Delegates">
+        Level Blueprint Friendly Delegates
+       </span>
+      </h2>
+      <p>
+       When you've made BP-friendly delegates on objects that you can place in the level, you can simply right click on the object instance in your level -&gt; Add Event and see your new delegate! So nice!
+      </p>
+      <p>
+       This is an additional benefit of using DYNAMIC_MULTICAST delegates! Multi-cast implies binding multiple of various object instances to the delegate and then firing off the event to everyone from a single .Broadcast, which can include your Level Blueprint as a recipient/listener!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Video_Example">
+        Video Example
+       </span>
+      </h2>
+      <p>
+       Here is a video on how a C++ delegate created in an actor component in C++ looks and is called in Blueprints!
+      </p>
+      <p>
+       The code in this wiki and this video are from my
+       <a class="external text" href="http://ue4code.com/melee_weapon_system_plugin_per_bone_collision_accuracy" rel="nofollow">
+        Melee Weapon Plugin
+       </a>
+      </p>
+      <p>
+       &lt;youtube&gt;
+       <a class="external free" href="http://www.youtube.com/watch?v=aufEB4TCf30&amp;t=5m24s" rel="nofollow">
+        http://www.youtube.com/watch?v=aufEB4TCf30&amp;t=5m24s
+       </a>
+      </p>
+      <p>
+       <a class="external text" href="http://www.youtube.com/watch?v=aufEB4TCf30&amp;t=5m24s" rel="nofollow">
+        Skip to 5:24
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Further_Reading">
+        Further Reading
+       </span>
+      </h2>
+      <p>
+       Epic Documentation:
+       <a class="external free" href="https://docs.unrealengine.com/latest/INT/Programming/UnrealArchitecture/Delegates/" rel="nofollow">
+        https://docs.unrealengine.com/latest/INT/Programming/UnrealArchitecture/Delegates/
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="DYNAMIC_MULTICAST_And_Other_Types">
+        DYNAMIC_MULTICAST And Other Types
+       </span>
+      </h2>
+      <p>
+       There are other delegate types besides DYNAMIC_MULTICAST that are not quite as versatile when it comes to Blueprints.
+      </p>
+      <p>
+       Check out the source code of Delegate.h
+      </p>
+      <pre> Runtime/Core/Public/Delegates/Delegate.h
+</pre>
+      <p>
+       For a detailed explanation!
+      </p>
+      <p>
+       Sample from this file:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="o">**</span>
+ <span class="o">*</span>  <span class="n">C</span><span class="o">++</span> <span class="n">DELEGATES</span>
+ <span class="o">*</span>  <span class="o">-----------------------------------------------------------------------------------------------</span>
+ <span class="o">*</span>
+ <span class="o">*</span>	<span class="n">This</span> <span class="n">system</span> <span class="n">allows</span> <span class="n">you</span> <span class="n">to</span> <span class="n">call</span> <span class="n">member</span> <span class="n">functions</span> <span class="n">on</span> <span class="n">C</span><span class="o">++</span> <span class="n">objects</span> <span class="n">in</span> <span class="n">a</span> <span class="n">generic</span><span class="p">,</span> <span class="n">yet</span> <span class="n">type</span><span class="o">-</span><span class="n">safe</span> <span class="n">way</span><span class="p">.</span>
+ <span class="o">*</span>  <span class="n">Using</span> <span class="n">delegates</span><span class="p">,</span> <span class="n">you</span> <span class="n">can</span> <span class="n">dynamically</span> <span class="n">bind</span> <span class="n">to</span> <span class="n">a</span> <span class="n">member</span> <span class="n">function</span> <span class="n">of</span> <span class="n">an</span> <span class="n">arbitrary</span> <span class="n">object</span><span class="p">,</span>
+ <span class="o">*</span>	<span class="n">then</span> <span class="n">call</span> <span class="n">functions</span> <span class="n">on</span> <span class="n">the</span> <span class="n">object</span><span class="p">,</span> <span class="n">even</span> <span class="k">if</span> <span class="n">the</span> <span class="n">caller</span> <span class="n">doesn</span><span class="err">'</span><span class="n">t</span> <span class="n">know</span> <span class="n">the</span> <span class="n">object</span><span class="err">'</span><span class="n">s</span> <span class="n">type</span><span class="p">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span>	<span class="n">The</span> <span class="n">system</span> <span class="n">predefines</span> <span class="n">various</span> <span class="n">combinations</span> <span class="n">of</span> <span class="n">generic</span> <span class="n">function</span> <span class="n">signatures</span> <span class="n">with</span> <span class="n">which</span> <span class="n">you</span> <span class="n">can</span>
+ <span class="o">*</span>	<span class="n">declare</span> <span class="n">a</span> <span class="n">delegate</span> <span class="n">type</span> <span class="n">from</span><span class="p">,</span> <span class="n">filling</span> <span class="n">in</span> <span class="n">the</span> <span class="n">type</span> <span class="n">names</span> <span class="k">for</span> <span class="k">return</span> <span class="n">value</span> <span class="n">and</span> <span class="n">parameters</span> <span class="n">with</span>
+ <span class="o">*</span>	<span class="n">whichever</span> <span class="n">types</span> <span class="n">you</span> <span class="n">need</span><span class="p">.</span>
+ <span class="o">*</span>
+ <span class="o">*</span>	<span class="n">Both</span> <span class="n">single</span><span class="o">-</span><span class="n">cast</span> <span class="n">and</span> <span class="n">multi</span><span class="o">-</span><span class="n">cast</span> <span class="n">delegates</span> <span class="n">are</span> <span class="n">supported</span><span class="p">,</span> <span class="n">as</span> <span class="n">well</span> <span class="n">as</span> <span class="s">"dynamic"</span> <span class="n">delegates</span> <span class="n">which</span>
+ <span class="o">*</span>	<span class="n">can</span> <span class="n">be</span> <span class="n">safely</span> <span class="n">serialized</span> <span class="n">to</span> <span class="n">disk</span><span class="p">.</span>  <span class="n">Additionally</span><span class="p">,</span> <span class="n">delegates</span> <span class="n">may</span> <span class="n">define</span> <span class="s">"payload"</span> <span class="n">data</span> <span class="n">which</span>
+ <span class="o">*</span>	<span class="n">will</span> <span class="n">stored</span> <span class="n">and</span> <span class="n">passed</span> <span class="n">directly</span> <span class="n">to</span> <span class="n">bound</span> <span class="n">functions</span><span class="p">.</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       Enjoy using delegates in UE4 so that any part of your code base can respond to an event triggered by one section of your code!
+      </p>
+      <p>
+       Also enjoy exposing delegates via C++ for the rest of your team to use in Blueprints!
+      </p>
+      <p>
+       Enjoooy!
+      </p>
+      <p>
+       ♥
+      </p>
+      <p>
+       Rama
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

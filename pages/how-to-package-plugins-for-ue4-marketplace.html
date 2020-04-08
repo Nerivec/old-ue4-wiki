@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   How To Package Plugins For UE4 Marketplace - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    How To Package Plugins For UE4 Marketplace
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#.Uplugin_White_List">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           .Uplugin White List
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Avoiding_Android_Error_Outs">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Avoiding Android Error Outs
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#The_Batch_File">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           The Batch File
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Extremely_Important_Major_Look_At_This_First_Please">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Extremely Important Major Look At This First Please
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#How_to_Not_Nuke_Your_Entire_Project">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           How to Not Nuke Your Entire Project
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Safe_Use_Case">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Safe Use Case
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#What_is_.25CD.25_.3F">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           What is %CD% ?
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#How_to_see_the_output.3F_The_screen_disappears.3F">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           How to see the output? The screen disappears?
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-10">
+         <a href="#Conclusion">
+          <span class="tocnumber">
+           9
+          </span>
+          <span class="toctext">
+           Conclusion
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <b>
+        Author:
+       </b>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       Here is the process you can use to package your plugin using Epic's Clang compiling process that will automatically generate all the binaries for you!
+      </p>
+      <p>
+       This is the same process I used in tandem with UE4 Marketplace engineers to get my Rama Melee Plugin and Rama Save System Plugin on the Marketplace.
+      </p>
+      <p>
+       Again, the output of this automation process is every packaged binary for every platform you have whitelisted (see below). It is an extremely handy tool!
+      </p>
+      <p>
+       Please note you should be sure to specify your whitelist to avoid having the automation tool trying to compile for platforms you dont/can't support, especially true if you dont have the Android runtime installed on your computer.
+      </p>
+      <p>
+       The CLang compiler is more rigorous than Visual Studio and so if this process works for you, you are set!
+      </p>
+      <h2>
+       <span class="mw-headline" id=".Uplugin_White_List">
+        .Uplugin White List
+       </span>
+      </h2>
+      <p>
+       Here is my Victory Plugin .uplugin descriptor file:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="p">{</span>
+	<span class="s">"FileVersion"</span> <span class="o">:</span> <span class="mi">3</span><span class="p">,</span>
+	<span class="s">"Version"</span> <span class="o">:</span> <span class="mi">1</span><span class="p">,</span>
+	<span class="s">"VersionName"</span> <span class="o">:</span> <span class="s">"1.0"</span><span class="p">,</span>
+	<span class="s">"FriendlyName"</span> <span class="o">:</span> <span class="s">"Victory Plugin"</span><span class="p">,</span>
+	<span class="s">"Description"</span> <span class="o">:</span> <span class="s">"120+ Custom Blueprint Nodes For You! &lt;3 Rama"</span><span class="p">,</span>
+	<span class="s">"Category"</span> <span class="o">:</span> <span class="s">"Rama"</span><span class="p">,</span>
+	<span class="s">"CreatedBy"</span> <span class="o">:</span> <span class="s">"Rama"</span><span class="p">,</span>
+	<span class="s">"CreatedByURL"</span> <span class="o">:</span> <span class="s">"http://www.ue4code.com"</span><span class="p">,</span>
+	<span class="s">"DocsURL"</span> <span class="o">:</span> <span class="s">"http://www.ue4code.com"</span><span class="p">,</span>
+	<span class="s">"MarketplaceURL"</span> <span class="o">:</span> <span class="s">"http://www.ue4code.com"</span><span class="p">,</span>
+	<span class="s">"SupportURL"</span> <span class="o">:</span> <span class="s">"http://www.ue4code.com"</span><span class="p">,</span>
+	<span class="s">"EnabledByDefault"</span> <span class="o">:</span> <span class="nb">true</span><span class="p">,</span>
+	<span class="s">"CanContainContent"</span> <span class="o">:</span> <span class="nb">false</span><span class="p">,</span>
+	<span class="s">"IsBetaVersion"</span> <span class="o">:</span> <span class="nb">false</span><span class="p">,</span>
+	<span class="s">"Installed"</span> <span class="o">:</span> <span class="nb">true</span><span class="p">,</span>
+	<span class="s">"RequiresBuildPlatform"</span> <span class="o">:</span> <span class="nb">false</span><span class="p">,</span>
+	<span class="s">"Modules"</span> <span class="o">:</span>
+	<span class="p">[</span>
+		<span class="p">{</span>
+			<span class="s">"Name"</span> <span class="o">:</span> <span class="s">"VictoryBPLibrary"</span><span class="p">,</span>
+			<span class="s">"Type"</span> <span class="o">:</span> <span class="s">"Runtime"</span><span class="p">,</span>
+			<span class="s">"LoadingPhase"</span> <span class="o">:</span> <span class="s">"PreDefault"</span><span class="p">,</span>
+			<span class="s">"WhitelistPlatforms"</span> <span class="o">:</span>
+			<span class="p">[</span>
+				<span class="s">"Win64"</span><span class="p">,</span>
+				<span class="s">"Win32"</span><span class="p">,</span>
+				<span class="s">"HTML5"</span>
+			<span class="p">]</span>
+		<span class="p">}</span>
+	<span class="p">]</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Avoiding_Android_Error_Outs">
+        Avoiding Android Error Outs
+       </span>
+      </h3>
+      <p>
+       The above is how you avoid getting Android errors when you are not trying to support android.
+      </p>
+      <p>
+       You could also specify Mac, Linux, or IOS or PS4 or XboxOne if you support those platforms
+      </p>
+      <h2>
+       <span class="mw-headline" id="The_Batch_File">
+        The Batch File
+       </span>
+      </h2>
+      <p>
+       JoyCompilePlugin.bat
+      </p>
+      <pre>"C:\Program Files (x86)\Epic Games\4.12\Engine\Build\BatchFiles\RunUAT.bat" BuildPlugin Plugin="C:\Users\Rama\Documents\Unreal Projects\Sun\Plugins\VictoryPlugin\VictoryBPLibrary.uplugin" Package="%CD%\PluginPackaged" -Rocket
+</pre>
+      <p>
+       Or in more recent engine versions:
+      </p>
+      <pre> "C:\Program Files\Epic Games\UE_4.16\Engine\Build\BatchFiles\RunUAT.bat" BuildPlugin -Plugin="D:\RamaPlugins\RamaSaveSystem\Plugins\RamaSaveSystem\RamaSaveSystem.uplugin" -Package="%CD%\PluginStaging_ALL\UE4_416" -Rocket
+</pre>
+      <p>
+       You can create a text file and rename it to .bat, if windows doesnt complain about extension change and it stays as text make sure you have enabled showing of file extensions in windows. (google "windows show file extensions")
+      </p>
+      <h2>
+       <span class="mw-headline" id="Extremely_Important_Major_Look_At_This_First_Please">
+        Extremely Important Major Look At This First Please
+       </span>
+      </h2>
+      <p>
+       Recommended Work Flow
+      </p>
+      <p>
+       <b>
+        First time I used this tool it nuked my entire project
+       </b>
+       because I specified output directory to be same place where my .uproject was located!
+      </p>
+      <p>
+       I recommend you do the following
+      </p>
+      <p>
+       1. Put my batch file above in its own subdirectory of your project, or somewhere completely different
+      </p>
+      <p>
+       2. Even then, specify a subdirectory of this new directory, just to avoid your .bat file getting nuked.
+      </p>
+      <p>
+       3. Subdirectory can be specified as %CD%/subdir for ease of use.
+      </p>
+      <h2>
+       <span class="mw-headline" id="How_to_Not_Nuke_Your_Entire_Project">
+        How to Not Nuke Your Entire Project
+       </span>
+      </h2>
+      <p>
+       !!! Warning !!!
+      </p>
+      <p>
+       I hope I have made it clear, do NOT run this .bat file in the same directory as your .uproject, your entire project will get nuked with no recycle bin hope of recovery! ( I know from experience  )
+      </p>
+      <p>
+       So to be safe, simply dont ever run this .bat file anywhere near your actual project!
+      </p>
+      <p>
+       ♥
+      </p>
+      <p>
+       Rama
+      </p>
+      <h2>
+       <span class="mw-headline" id="Safe_Use_Case">
+        Safe Use Case
+       </span>
+      </h2>
+      <p>
+       Put my .bat file shown above in here:
+      </p>
+      <pre> C:/NiceIsolatedUnusedDirectoryThatCanGetNuked
+</pre>
+      <p>
+       and then specify output directory:
+      </p>
+      <pre> C:/NiceIsolatedUnusedDirectoryThatCanGetNuked/output
+</pre>
+      <p>
+       Now when you run the .bat file you will get to keep the bat file, and your project!
+      </p>
+      <p>
+       PS: I have to say all this loudly since this is a public document and can be read/translated in many languages.
+      </p>
+      <h2>
+       <span class="mw-headline" id="What_is_.25CD.25_.3F">
+        What is %CD% ?
+       </span>
+      </h2>
+      <p>
+       This will be translated as the current directory that you launched the .bat file from.
+      </p>
+      <p>
+       So if you store my batchfile here:
+      </p>
+      <pre> C:/MyStagingDir/JoyCompilePlugin.bat
+</pre>
+      <p>
+       then
+      </p>
+      <pre> %CD%/output
+</pre>
+      <p>
+       will be:
+      </p>
+      <pre> C:/MyStagingDir/output
+</pre>
+      <h2>
+       <span class="mw-headline" id="How_to_see_the_output.3F_The_screen_disappears.3F">
+        How to see the output? The screen disappears?
+       </span>
+      </h2>
+      <p>
+       Dont run the .bat file from within windows explorer, instead
+      </p>
+      <p>
+       1. right click on the folder where you put the .bat file
+      </p>
+      <p>
+       2. hold down left shift
+      </p>
+      <p>
+       3. right click with shift held down
+      </p>
+      <p>
+       4. now you will see an additional option
+       <b>
+        "Open Command Prompt here"
+       </b>
+      </p>
+      <p>
+       5. now run the bat file, type Joy and then press tab and it will auto complete
+      </p>
+      <p>
+       Now if you get any errors, the errors will stay visible to you!
+      </p>
+      <p>
+       Victory!
+      </p>
+      <p>
+       Now you can compile your plugin using the UE4 Marketplace C++ coding standard too!
+      </p>
+      <h2>
+       <span class="mw-headline" id="Conclusion">
+        Conclusion
+       </span>
+      </h2>
+      <p>
+       Now you can practice the UE4 Marketplace workflow before submitting your first plugin, and also update your UE4 marketplace plugins more easily!
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       ♥
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

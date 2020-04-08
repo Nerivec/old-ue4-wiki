@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Animation Nodes, Code for How to Create Your Own - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Animation Nodes, Code for How to Create Your Own
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Complete_Custom_Animation_Code_Example">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Complete Custom Animation Code Example
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Class_to_Extend_AnimNode_Base">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Class to Extend AnimNode_Base
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#.h">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             .h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#.cpp">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             .cpp
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Key_Concepts_of_Animation_Nodes">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Key Concepts of Animation Nodes
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Animation_Update">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Animation Update
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Animation_Evaluate">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Animation Evaluate
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#AnimGraph_Node">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           AnimGraph Node
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#.h_2">
+            <span class="tocnumber">
+             7.1
+            </span>
+            <span class="toctext">
+             .h
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#.cpp_2">
+            <span class="tocnumber">
+             7.2
+            </span>
+            <span class="toctext">
+             .cpp
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-12">
+         <a href="#Summary">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Summary
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-13">
+         <a href="#UE4_Source_References">
+          <span class="tocnumber">
+           9
+          </span>
+          <span class="toctext">
+           UE4 Source References
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <b>
+        Author:
+       </b>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       In this tutorial I explain the very basics of making your own custom animation node.
+      </p>
+      <p>
+       My main goal is to help you establish the basic structure to then pursue your individual animation node goals on your own :)
+      </p>
+      <p>
+       This is not a tutorial for creating skeletal controllers, but rather animation blends of one kind or another :)
+      </p>
+      <h2>
+       <span class="mw-headline" id="Complete_Custom_Animation_Code_Example">
+        Complete Custom Animation Code Example
+       </span>
+      </h2>
+      <p>
+       I have my entire source code for a custom animation node, Editor Graph Node included, here!
+      </p>
+      <p>
+       <b>
+       </b>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Class_to_Extend_AnimNode_Base">
+        Class to Extend AnimNode_Base
+       </span>
+      </h2>
+      <p>
+       Here is the basic setup you need, .h and .cpp, for the node itself
+      </p>
+      <p>
+       This node is a struct that is wrapped in the editor animgraph node that is what you are used to seeing :)
+      </p>
+      <h3>
+       <span class="mw-headline" id=".h">
+        .h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2013 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#pragma once</span>
+<span class="cp">#include</span> <span class="cpf">"AnimNode_NameOfYourNode.generated.h"</span><span class="cp"></span>
+
+<span class="n">USTRUCT</span><span class="p">()</span>
+<span class="k">struct</span> <span class="nl">FAnimNode_NameOfYourNode</span> <span class="p">:</span> <span class="k">public</span> <span class="n">FAnimNode_Base</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_USTRUCT_BODY</span><span class="p">()</span>
+
+	<span class="c1">//FPoseLink - this can be any combination </span>
+        <span class="c1">//of other nodes, not just animation sequences</span>
+	<span class="c1">//	so you could have an blend space leading into </span>
+        <span class="c1">//a layer blend per bone to just use the arm</span>
+	<span class="c1">//	and then pass that into the PoseLink</span>
+	
+	<span class="cm">/** Base Pose - This Can Be Entire Anim Graph Up To This Point, or Any Combination of Other Nodes*/</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">Links</span><span class="p">)</span>
+	<span class="n">FPoseLink</span> <span class="n">BasePose</span><span class="p">;</span>
+	
+	<span class="cm">/** Other Pose! - This Can Be Entire Anim Graph Up To This Point, or Any Combination of Other Nodes */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">Links</span><span class="p">)</span>
+	<span class="n">FPoseLink</span> <span class="n">OtherPose</span><span class="p">;</span>
+	
+	<span class="cm">/** Sample Property That Will Show Up as a Pin */</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">Links</span><span class="p">,</span> <span class="n">meta</span><span class="o">=</span><span class="p">(</span><span class="n">PinShownByDefault</span><span class="p">))</span>
+	<span class="kt">float</span> <span class="n">SampleFloat</span><span class="p">;</span>
+	
+<span class="c1">// FAnimNode_Base interface</span>
+<span class="k">public</span><span class="o">:</span>
+	
+	<span class="c1">// FAnimNode_Base interface</span>
+ <span class="k">virtual</span> <span class="kt">void</span> <span class="n">Initialize</span><span class="p">(</span><span class="k">const</span> <span class="n">FAnimationInitializeContext</span><span class="o">&amp;</span> <span class="n">Context</span><span class="p">)</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+ <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">CacheBones</span><span class="p">(</span><span class="k">const</span> <span class="n">FAnimationCacheBonesContext</span> <span class="o">&amp;</span> <span class="n">Context</span><span class="p">)</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+ <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">Update</span><span class="p">(</span><span class="k">const</span> <span class="n">FAnimationUpdateContext</span> <span class="o">&amp;</span> <span class="n">Context</span><span class="p">)</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+ <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">Evaluate</span><span class="p">(</span><span class="n">FPoseContext</span><span class="o">&amp;</span> <span class="n">Output</span><span class="p">)</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+	<span class="c1">// End of FAnimNode_Base interface</span>
+
+<span class="c1">// Constructor </span>
+<span class="k">public</span><span class="o">:</span>
+	
+	<span class="n">FAnimNode_NameOfYourNode</span><span class="p">();</span>
+	
+<span class="k">protected</span><span class="o">:</span>
+	<span class="kt">bool</span> <span class="n">WorldIsGame</span><span class="p">;</span>
+        <span class="n">AActor</span><span class="o">*</span> <span class="n">OwningActor</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id=".cpp">
+        .cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2013 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#include</span> <span class="cpf">"YourGame.h"</span><span class="cp"></span>
+
+<span class="c1">//#include "AnimationRuntime.h"</span>
+
+<span class="n">FAnimNode_NameOfYourNode</span><span class="o">::</span><span class="n">FAnimNode_NameOfYourNode</span><span class="p">()</span>
+	<span class="o">:</span> <span class="n">FAnimNode_Base</span><span class="p">()</span>
+	<span class="p">,</span> <span class="n">SampleFloat</span><span class="p">(</span><span class="mf">128.333</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">WorldIsGame</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">FAnimNode_NameOfYourNode</span><span class="o">::</span><span class="n">Initialize</span><span class="p">(</span><span class="k">const</span> <span class="n">FAnimationInitializeContext</span> <span class="o">&amp;</span> <span class="n">Context</span><span class="p">)</span> 
+<span class="p">{</span>
+	<span class="c1">//Init the Inputs</span>
+	<span class="n">BasePose</span><span class="p">.</span><span class="n">Initialize</span><span class="p">(</span><span class="n">Context</span><span class="p">);</span>
+	<span class="n">OtherPose</span><span class="p">.</span><span class="n">Initialize</span><span class="p">(</span><span class="n">Context</span><span class="p">);</span>
+	
+	<span class="c1">//Get the Actor Owner</span>
+	<span class="n">OwningActor</span> <span class="o">=</span> <span class="n">Context</span><span class="p">.</span><span class="n">AnimInstance</span><span class="o">-&gt;</span> <span class="n">GetSkelMeshComponent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetOwner</span><span class="p">();</span> 
+	
+	<span class="c1">//Editor or Game?</span>
+	<span class="n">UWorld</span> <span class="o">*</span> <span class="n">TheWorld</span> <span class="o">=</span> <span class="n">Context</span><span class="p">.</span><span class="n">AnimInstance</span><span class="o">-&gt;</span><span class="n">GetWorld</span><span class="p">();</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">TheWorld</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+	<span class="c1">//~</span>
+	
+	<span class="n">WorldIsGame</span> <span class="o">=</span> <span class="p">(</span><span class="n">TheWorld</span><span class="o">-&gt;</span><span class="n">WorldType</span> <span class="o">==</span> <span class="n">EWorldType</span><span class="o">::</span><span class="n">Game</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">FAnimNode_NameOfYourNode</span><span class="o">::</span><span class="n">CacheBones</span><span class="p">(</span><span class="k">const</span> <span class="n">FAnimationCacheBonesContext</span> <span class="o">&amp;</span> <span class="n">Context</span><span class="p">)</span> 
+<span class="p">{</span>
+	<span class="n">BasePose</span><span class="p">.</span><span class="n">CacheBones</span><span class="p">(</span><span class="n">Context</span><span class="p">);</span>
+	<span class="n">OtherPose</span><span class="p">.</span><span class="n">CacheBones</span><span class="p">(</span><span class="n">Context</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">FAnimNode_NameOfYourNode</span><span class="o">::</span><span class="n">Update</span><span class="p">(</span><span class="k">const</span> <span class="n">FAnimationUpdateContext</span> <span class="o">&amp;</span> <span class="n">Context</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="c1">//***************************************</span>
+	<span class="c1">// Evaluate Graph, see AnimNode_Base, AnimNodeBase.h</span>
+	<span class="n">EvaluateGraphExposedInputs</span><span class="p">.</span><span class="n">Execute</span><span class="p">(</span><span class="n">Context</span><span class="p">);</span>
+	<span class="c1">//***************************************</span>
+
+	<span class="c1">//EDITOR</span>
+	<span class="c1">//Editor mode? just use the base pose</span>
+	<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">WorldIsGame</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">//if your node depends on </span>
+                <span class="c1">//actual actor instance, can't do anything in editor</span>
+	<span class="p">}</span>
+	
+	<span class="c1">//GAME</span>
+	<span class="c1">//Actually in Game so the Owner Instance Should Exist</span>
+	<span class="k">else</span>
+	<span class="p">{</span>
+		<span class="c1">//Try Again if not found</span>
+		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">OwningActor</span><span class="p">)</span> <span class="n">OwningActor</span> <span class="o">=</span> 
+                    <span class="n">Context</span><span class="p">.</span><span class="n">AnimInstance</span><span class="o">-&gt;</span><span class="n">GetSkelMeshComponent</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetOwner</span><span class="p">();</span> 
+		
+		<span class="c1">//Not found</span>
+		<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">OwningActor</span><span class="p">)</span> 
+		<span class="p">{</span>
+			<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogAnimation</span><span class="p">,</span> <span class="n">Warning</span><span class="p">,</span>
+           <span class="n">TEXT</span><span class="p">(</span><span class="s">"FAnimNode_NameOfYourNode::Update() Owning Actor was not found"</span><span class="p">));</span>
+			<span class="k">return</span><span class="p">;</span>
+			<span class="c1">//~</span>
+		<span class="p">}</span>
+	
+		<span class="c1">//Do Stuff Based On Actor Owner</span>
+	<span class="p">}</span>
+	<span class="c1">//~~</span>
+	
+	<span class="c1">// Do Updates </span>
+
+	<span class="c1">//Try To Update As Few of the Inputs As You Can</span>
+	
+	<span class="c1">//************************************************</span>
+	<span class="c1">// FPoseLinkBase::Update Active Pose - this is what makes </span>
+        <span class="c1">//the glowing line thing happen and animations loop</span>
+	<span class="c1">//***********************************************</span>
+	<span class="n">BasePose</span><span class="p">.</span><span class="n">Update</span><span class="p">(</span><span class="n">Context</span><span class="p">);</span>
+	
+	
+	
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">FAnimNode_NameOfYourNode</span><span class="o">::</span><span class="n">Evaluate</span><span class="p">(</span><span class="n">FPoseContext</span> <span class="o">&amp;</span> <span class="n">Output</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// Return Base Pose, Un Modified </span>
+	<span class="n">BasePose</span><span class="p">.</span><span class="n">Evaluate</span><span class="p">(</span><span class="n">Output</span><span class="p">);</span>
+	
+	<span class="c1">//Evaluate is returning the Output to this function,</span>
+	<span class="c1">//which is returning the Output to the rest of the Anim Graph</span>
+	
+	<span class="c1">//In this case, we are passing the Output out variable into the BasePose</span>
+	
+	<span class="c1">//Basically saying, give us back the unmodified Base Pose</span>
+	
+	<span class="c1">//i.e, the bulk of your anim tree.</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Key_Concepts_of_Animation_Nodes">
+        Key Concepts of Animation Nodes
+       </span>
+      </h2>
+      <p>
+       There is an initialize, an update, and an evaluate
+      </p>
+      <p>
+       Initialize = make sure to initialize the inputs!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">BasePose</span><span class="p">.</span><span class="n">Initialize</span><span class="p">(</span><span class="n">Context</span><span class="p">);</span>
+<span class="n">OtherPose</span><span class="p">.</span><span class="n">Initialize</span><span class="p">(</span><span class="n">Context</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Animation_Update">
+        Animation Update
+       </span>
+      </h2>
+      <p>
+       Make sure to actually "tick" the inputs of your choice!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">BasePose</span><span class="p">.</span><span class="n">Update</span><span class="p">(</span><span class="n">Context</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       Try to update as few of the inputs as you can, based on the logic of your anim node.
+      </p>
+      <p>
+       For example if you were blending between A and B and you were fully blended to B, you would not need to update A at all
+      </p>
+      <p>
+       But if you were at 0.5 in between you'd have to update both.
+      </p>
+      <p>
+       If you don't update any poses then the graph lines will not glow.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Animation_Evaluate">
+        Animation Evaluate
+       </span>
+      </h2>
+      <p>
+       Pass out the results of all your calculations and updates as the output to the rest of the Anim Graph
+      </p>
+      <p>
+       The Output variable is the entire output of all your anim nodes activities
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">BasePose</span><span class="p">.</span><span class="n">Evaluate</span><span class="p">(</span><span class="n">Output</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       You can do much more complicated things than just evaluate the base or the other poses
+      </p>
+      <p>
+       The key data of Output is Output.Pose, which is an FA2Pose data, which is animation data that could be calculated any number of ways.
+      </p>
+      <p>
+       As long as you update Output.Pose you can do all sorts of things
+      </p>
+      <dl>
+       <dd>
+        )
+       </dd>
+      </dl>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="AnimGraph_Node">
+        AnimGraph Node
+       </span>
+      </h2>
+      <p>
+       Here is the basic .h and .cpp you need for making the in-editor anim graph visual representation of your node
+      </p>
+      <h3>
+       <span class="mw-headline" id=".h_2">
+        .h
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2013 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"AnimGraphDefinitions.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"Kismet2/BlueprintEditorUtils.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"AnimGraphNode_NameOfYourNode.generated.h"</span><span class="cp"></span>
+
+<span class="c1">//Whole point of this is to be wrapper for node struct</span>
+<span class="c1">//	so it depends on it, and that node must compile first</span>
+<span class="c1">//	for type to be recognized</span>
+
+<span class="n">UCLASS</span><span class="p">(</span><span class="n">MinimalAPI</span><span class="p">,</span> <span class="n">dependson</span><span class="o">=</span><span class="n">FAnimNode_NameOfYourNode</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">UAnimGraphNode_NameOfYourNode</span> <span class="o">:</span> <span class="k">public</span> <span class="n">UAnimGraphNode_Base</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">,</span> <span class="n">Category</span><span class="o">=</span><span class="n">Settings</span><span class="p">)</span>
+	<span class="n">FAnimNode_NameOfYourNode</span> <span class="n">Node</span><span class="p">;</span>
+
+<span class="k">public</span><span class="o">:</span>
+	<span class="c1">// UEdGraphNode interface</span>
+	<span class="k">virtual</span> <span class="n">FString</span> <span class="n">GetNodeTitle</span><span class="p">(</span><span class="n">ENodeTitleType</span><span class="o">::</span><span class="n">Type</span> <span class="n">TitleType</span><span class="p">)</span> <span class="k">const</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="n">FLinearColor</span> <span class="nf">GetNodeTitleColor</span><span class="p">()</span> <span class="k">const</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+	<span class="k">virtual</span> <span class="n">FString</span> <span class="nf">GetNodeCategory</span><span class="p">()</span> <span class="k">const</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+	<span class="c1">// End of UEdGraphNode interface</span>
+
+<span class="k">protected</span><span class="o">:</span>
+	<span class="k">virtual</span> <span class="n">FString</span> <span class="n">GetControllerDescription</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+	
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id=".cpp_2">
+        .cpp
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2013 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#include</span> <span class="cpf">"YourGame.h"</span><span class="cp"></span>
+
+<span class="c1">/////////////////////////////////////////////////////</span>
+<span class="c1">// UAnimGraphNode_NameOfYourNode</span>
+
+<span class="n">UAnimGraphNode_NameOfYourNode</span><span class="o">::</span><span class="n">UAnimGraphNode_NameOfYourNode</span><span class="p">(</span><span class="k">const</span> <span class="n">FPostConstructInitializeProperties</span><span class="o">&amp;</span> <span class="n">PCIP</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">PCIP</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="p">}</span>
+
+<span class="c1">//Title Color!</span>
+<span class="n">FLinearColor</span> <span class="n">UAnimGraphNode_NameOfYourNode</span><span class="o">::</span><span class="n">GetNodeTitleColor</span><span class="p">()</span> <span class="k">const</span> 
+<span class="p">{</span> 
+	<span class="k">return</span> <span class="n">FLinearColor</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">1</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">//Node Category</span>
+<span class="n">FString</span> <span class="n">UAnimGraphNode_NameOfYourNode</span><span class="o">::</span><span class="n">GetNodeCategory</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">FString</span><span class="p">(</span><span class="s">"Anim Node Category"</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="n">FString</span> <span class="n">UAnimGraphNode_NameOfYourNode</span><span class="o">::</span><span class="n">GetControllerDescription</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">" Your Anim node Title "</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">FString</span> <span class="n">UAnimGraphNode_NameOfYourNode</span><span class="o">::</span><span class="n">GetNodeTitle</span><span class="p">(</span><span class="n">ENodeTitleType</span><span class="o">::</span><span class="n">Type</span> <span class="n">TitleType</span><span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="n">FString</span> <span class="n">Result</span> <span class="o">=</span> <span class="o">*</span><span class="n">GetControllerDescription</span><span class="p">();</span>
+	<span class="n">Result</span> <span class="o">+=</span> <span class="p">(</span><span class="n">TitleType</span> <span class="o">==</span> <span class="n">ENodeTitleType</span><span class="o">::</span><span class="n">ListView</span><span class="p">)</span> <span class="o">?</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">""</span><span class="p">)</span> <span class="o">:</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+	<span class="k">return</span> <span class="n">Result</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Summary">
+        Summary
+       </span>
+      </h2>
+      <p>
+       With these basics and reviewing the different animation data types you are well on your way to making your own animatoion node!
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="UE4_Source_References">
+        UE4 Source References
+       </span>
+      </h2>
+      <p>
+       See these .h files for lots of important info
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">AnimNodeBase</span><span class="p">.</span><span class="n">h</span>
+<span class="n">AnimationAssets</span><span class="p">.</span><span class="n">h</span>
+<span class="n">AnimInstance</span><span class="p">.</span><span class="n">h</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

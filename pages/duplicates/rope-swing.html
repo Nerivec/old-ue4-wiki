@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Rope Swing - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Rope Swing
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Tutorials">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Tutorials
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#MyCharacter.cpp">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           MyCharacter.cpp
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Rope.h">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Rope.h
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Rope.cpp">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Rope.cpp
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       This page provides a way to implement a simple rope swing
+      </p>
+      <h2>
+       <span class="mw-headline" id="Tutorials">
+        Tutorials
+       </span>
+      </h2>
+      <p>
+       Simple demo with my tutorial:
+      </p>
+      <p>
+       &lt;youtube&gt;
+       <a class="external free" href="https://youtu.be/AIQX3CvOXo8" rel="nofollow">
+        https://youtu.be/AIQX3CvOXo8
+       </a>
+      </p>
+      <p>
+       In your character code, you only need to add a variable ifOnRope to see if the character is attached to rope; also, you need to modify your jump functin so that if you are on the rope, you jump and will set ifOnRope to false and leave the Rope:
+      </p>
+      <h2>
+       <span class="mw-headline" id="MyCharacter.cpp">
+        MyCharacter.cpp
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>    
+<span class="kt">void</span> <span class="n">AMyCharacter</span><span class="o">::</span><span class="n">SetupPlayerInputComponent</span><span class="p">(</span><span class="k">class</span> <span class="nc">UInputComponent</span><span class="o">*</span> <span class="n">InputComponent</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">SetupPlayerInputComponent</span><span class="p">(</span><span class="n">InputComponent</span><span class="p">);</span>
+	<span class="n">InputComponent</span><span class="o">-&gt;</span><span class="n">BindAxis</span><span class="p">(</span><span class="s">"Forward"</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span>
+		<span class="o">&amp;</span><span class="n">AMyCharacter</span><span class="o">::</span><span class="n">MoveForward</span><span class="p">);</span>
+	<span class="n">InputComponent</span><span class="o">-&gt;</span><span class="n">BindAxis</span><span class="p">(</span><span class="s">"Strafe"</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">AMyCharacter</span><span class="o">::</span><span class="n">MoveRight</span><span class="p">);</span>
+	<span class="n">InputComponent</span><span class="o">-&gt;</span><span class="n">BindAction</span><span class="p">(</span><span class="s">"Jump"</span><span class="p">,</span> <span class="n">IE_Pressed</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">AMyCharacter</span><span class="o">::</span><span class="n">OnStartJump</span><span class="p">);</span>
+	<span class="n">InputComponent</span><span class="o">-&gt;</span><span class="n">BindAction</span><span class="p">(</span><span class="s">"Jump"</span><span class="p">,</span> <span class="n">IE_Released</span><span class="p">,</span> <span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">AMyCharacter</span><span class="o">::</span><span class="n">OnStopJump</span><span class="p">);</span>
+	<span class="n">ifOnRope</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">AMyCharacter</span><span class="o">::</span><span class="n">OnStartJump</span><span class="p">()</span>
+<span class="p">{</span>
+	
+	<span class="n">bPressedJump</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">ifOnRope</span><span class="p">)</span>
+		<span class="n">ifOnRope</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="kt">void</span> <span class="n">AMyCharacter</span><span class="o">::</span><span class="n">OnStopJump</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">bPressedJump</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Then we need to add some variable to the rope actor:
+float rotateDegree; // The "Max" swing degree
+float TotalTime;	//Time span since character attach to rope, this may be improved by using TimeSpan structure
+FVector actorFirstLocation; // The location when character proxs rope
+FVector Pivot;				//rope's pivot
+We use the following pendulum equation to calculate swing:
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:235px;">
+        <img alt="" class="thumbimage" height="86" src="../assets/rope-swing/0.gif" width="233"/>
+        <div class="thumbcaption">
+         pendulum equation
+        </div>
+       </div>
+      </div>
+      <p>
+       For simplicity, when character touches the rope, we set the maximum theta from 0 to 40 degree and let "G/L" be a value making your pendulum's speed appropriate. In my computer, I make it to be 1/30 and I get a pendulum with a moderate speed. 
+When character is attached to rope, we set the totalTime to zero, in every tick, we add deltaTime to TotalTime, more efficient way may involve the usage of TimeSpan structure.
+Now after adding this function, your pendulum can swing after your character touches the rope, full code will be introduced later, so don't be intimidated if you are kind of confused now.
+SetActorRotation(FRotator(rotateDegree*sin(rotateDegree*sin(TotalTime)/30), 0.0f, 0.0f));
+Now, your pendulum swings. What we need to do is to let the character swing at the same tempo, too;
+What we know is the rotation degree of the rope at each frame:FRotator(rotateDegree*sin(rotateDegree*sin(TotalTime)/30)
+We also know the pivot location(a,b,c), as illustrated by the following picture:
+      </p>
+      <div class="thumb tnone">
+       <div class="thumbinner" style="width:1154px;">
+        <img alt="" class="thumbimage" height="648" src="../assets/rope-swing/1.png" width="1152"/>
+        <div class="thumbcaption">
+         pendulum equation
+        </div>
+       </div>
+      </div>
+      <p>
+       In two dimensional, if pivot is (a,b). Then character's position on rope is:
+(a+x*sin(θ), b-x*cos(θ)), where x is the distance from character to pivot
+In my application, only z-axis, the height, and x-axis, the range of the swing change. So
+it is 
+Pivot + (x*sin(θ),0,-x*cos(θ))
+Now we can see the whole picture:
+      </p>
+      <h2>
+       <span class="mw-headline" id="Rope.h">
+        Rope.h
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>    
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">MYPROJECT5_API</span> <span class="nl">AMyActor</span> <span class="p">:</span> <span class="k">public</span> <span class="n">AActor</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+	
+<span class="k">public</span><span class="o">:</span>	
+	<span class="c1">// Sets default values for this actor's properties</span>
+	<span class="n">AMyActor</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">);</span>
+	<span class="kt">float</span> <span class="n">rotateDegree</span><span class="p">;</span> <span class="c1">// The Max swing degree</span>
+	<span class="kt">float</span> <span class="n">TotalTime</span><span class="p">;</span>	<span class="c1">//Time span since character attach to rope, this may be improved by using TimeSpan structure</span>
+	<span class="n">FVector</span> <span class="n">actorFirstLocation</span><span class="p">;</span> <span class="c1">// The location when character proxs rope</span>
+	<span class="n">FVector</span> <span class="n">Pivot</span><span class="p">;</span>				<span class="c1">//rope's pivot</span>
+	<span class="n">AMyCharacter</span><span class="o">*</span> <span class="n">actorAttached</span><span class="p">;</span><span class="c1">//Our character</span>
+	<span class="c1">// Called when the game starts or when spawned</span>
+
+
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">BeginPlay</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">VisibleDefaultsOnly</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">MeleeWeapon</span><span class="p">)</span>
+		<span class="n">UBoxComponent</span><span class="o">*</span> <span class="n">ProxBox</span><span class="p">;</span>
+	<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">VisibleDefaultsOnly</span><span class="p">,</span> <span class="n">BlueprintReadWrite</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">MeleeWeapon</span><span class="p">)</span>
+		<span class="n">UStaticMeshComponent</span><span class="o">*</span> <span class="n">Mesh</span><span class="p">;</span>
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintNativeEvent</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">Collision</span><span class="p">)</span>
+		<span class="kt">void</span> <span class="n">Prox</span><span class="p">(</span><span class="n">AActor</span><span class="o">*</span> <span class="n">OtherActor</span><span class="p">,</span> <span class="n">UPrimitiveComponent</span><span class="o">*</span> <span class="n">OtherComp</span><span class="p">,</span> <span class="n">int32</span> <span class="n">OtherBodyIndex</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bFromSweep</span><span class="p">,</span> <span class="k">const</span> <span class="n">FHitResult</span> <span class="o">&amp;</span><span class="n">SweepResult</span><span class="p">);</span>
+	<span class="kt">void</span> <span class="nf">Prox_Implementation</span><span class="p">(</span><span class="n">AActor</span><span class="o">*</span> <span class="n">OtherActor</span><span class="p">,</span> <span class="n">UPrimitiveComponent</span><span class="o">*</span> <span class="n">OtherComp</span><span class="p">,</span> <span class="n">int32</span> <span class="n">OtherBodyIndex</span><span class="p">,</span> <span class="kt">bool</span> <span class="n">bFromSweep</span><span class="p">,</span>
+		<span class="k">const</span> <span class="n">FHitResult</span> <span class="o">&amp;</span> <span class="n">SweepResult</span><span class="p">);</span>
+	<span class="c1">// Called every frame</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">Tick</span><span class="p">(</span><span class="kt">float</span> <span class="n">DeltaSeconds</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       Prox function detect when it overlaps with other actors.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Rope.cpp">
+        Rope.cpp
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span>   
+<span class="n">AMyActor</span><span class="o">::</span><span class="n">AMyActor</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">)</span>
+<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">ObjectInitializer</span><span class="p">)</span>
+<span class="p">{</span>
+ 	<span class="c1">// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.</span>
+	<span class="n">PrimaryActorTick</span><span class="p">.</span><span class="n">bCanEverTick</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span>
+	<span class="n">rotateDegree</span> <span class="o">=</span> <span class="mf">0.0f</span><span class="p">;</span>
+	<span class="n">TotalTime</span> <span class="o">=</span> <span class="mf">0.0f</span><span class="p">;</span>
+	<span class="n">Mesh</span> <span class="o">=</span> <span class="n">ObjectInitializer</span><span class="p">.</span><span class="n">CreateDefaultSubobject</span><span class="o">&lt;</span><span class="n">UStaticMeshComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">,</span>
+		<span class="n">TEXT</span><span class="p">(</span><span class="s">"Mesh"</span><span class="p">));</span>
+	<span class="n">RootComponent</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">;</span>
+	<span class="n">ProxBox</span> <span class="o">=</span> <span class="n">ObjectInitializer</span><span class="p">.</span><span class="n">CreateDefaultSubobject</span><span class="o">&lt;</span><span class="n">UBoxComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">,</span>
+		<span class="n">TEXT</span><span class="p">(</span><span class="s">"ProxBox"</span><span class="p">));</span>
+	<span class="n">ProxBox</span><span class="o">-&gt;</span><span class="n">OnComponentBeginOverlap</span><span class="p">.</span><span class="n">AddDynamic</span><span class="p">(</span><span class="k">this</span><span class="p">,</span>
+		<span class="o">&amp;</span><span class="n">AMyActor</span><span class="o">::</span><span class="n">Prox</span><span class="p">);</span>
+	<span class="n">ProxBox</span><span class="o">-&gt;</span><span class="n">AttachTo</span><span class="p">(</span><span class="n">RootComponent</span><span class="p">);</span>
+	<span class="n">actorAttached</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+	<span class="n">actorFirstLocation</span> <span class="o">=</span> <span class="n">FVector</span><span class="p">(</span><span class="mf">0.0f</span><span class="p">,</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="mf">0.0f</span><span class="p">);</span>
+	<span class="n">Pivot</span> <span class="o">=</span> <span class="n">FVector</span><span class="p">(</span><span class="o">-</span><span class="mf">110.0f</span><span class="p">,</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="mf">260.0f</span><span class="p">);</span> <span class="c1">// my pivot, I know the location, yours should be different</span>
+
+<span class="p">}</span> 
+<span class="kt">void</span> <span class="n">AMyActor</span><span class="o">::</span><span class="n">Prox_Implementation</span><span class="p">(</span><span class="n">AActor</span><span class="o">*</span> <span class="n">OtherActor</span><span class="p">,</span>
+	<span class="n">UPrimitiveComponent</span><span class="o">*</span> <span class="n">OtherComp</span><span class="p">,</span> <span class="n">int32</span> <span class="n">OtherBodyIndex</span><span class="p">,</span> <span class="kt">bool</span>
+	<span class="n">bFromSweep</span><span class="p">,</span> <span class="k">const</span> <span class="n">FHitResult</span> <span class="o">&amp;</span> <span class="n">SweepResult</span><span class="p">)</span>
+<span class="p">{</span>
+
+
+	<span class="n">actorAttached</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">AMyCharacter</span><span class="o">&gt;</span><span class="p">(</span><span class="n">OtherActor</span><span class="p">);</span> <span class="c1">// set actorAttached to our character if it detects rope overlaps with our character</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">actorAttached</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="n">actorAttached</span><span class="o">-&gt;</span><span class="n">ifOnRope</span> <span class="o">==</span> <span class="nb">false</span><span class="p">))</span>
+	<span class="p">{</span>
+		<span class="n">TotalTime</span> <span class="o">=</span> <span class="mf">0.0f</span><span class="p">;</span>         <span class="c1">//initilize total time</span>
+		<span class="n">actorAttached</span><span class="o">-&gt;</span><span class="n">ifOnRope</span> <span class="o">=</span> <span class="nb">true</span><span class="p">;</span> 
+		<span class="n">rotateDegree</span> <span class="o">=</span> <span class="mi">40</span><span class="p">;</span>         <span class="c1">//set the max swing degree to 40</span>
+		<span class="n">actorFirstLocation</span> <span class="o">=</span> <span class="n">actorAttached</span><span class="o">-&gt;</span><span class="n">GetActorLocation</span><span class="p">();</span> <span class="c1">//record the location of overlap</span>
+	<span class="p">}</span>
+	
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">AMyActor</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span> <span class="kt">float</span> <span class="n">DeltaTime</span> <span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span> <span class="n">DeltaTime</span> <span class="p">);</span>
+	<span class="n">TotalTime</span> <span class="o">+=</span> <span class="n">DeltaTime</span><span class="p">;</span>
+	<span class="kt">float</span> <span class="n">DistanceToPivot</span> <span class="o">=</span> <span class="p">(</span><span class="n">actorFirstLocation</span> <span class="o">-</span> <span class="n">Pivot</span><span class="p">).</span><span class="n">Size</span><span class="p">();</span> <span class="c1">// Calculate the distance from character to pivot, it is a constant when character swings the rope</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">actorAttached</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+	<span class="p">{</span>
+
+		<span class="k">if</span> <span class="p">(</span><span class="n">actorAttached</span><span class="o">-&gt;</span><span class="n">ifOnRope</span><span class="p">){</span>
+		        <span class="c1">//let the rope swing</span>
+			<span class="n">SetActorRotation</span><span class="p">(</span><span class="n">FRotator</span><span class="p">(</span><span class="n">rotateDegree</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">rotateDegree</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">TotalTime</span><span class="p">)</span><span class="o">/</span><span class="mi">30</span><span class="p">),</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="mf">0.0f</span><span class="p">));</span>
+
+                        <span class="c1">//character swing</span>
+			<span class="n">actorAttached</span><span class="o">-&gt;</span><span class="n">SetActorLocation</span><span class="p">(</span><span class="n">Pivot</span> <span class="o">+</span> <span class="n">FVector</span><span class="p">(</span><span class="n">DistanceToPivot</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">rotateDegree</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">TotalTime</span><span class="p">)</span><span class="o">/</span><span class="mi">30</span><span class="p">),</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="o">-</span><span class="n">cos</span><span class="p">(</span><span class="n">rotateDegree</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">TotalTime</span><span class="p">)</span><span class="o">/</span><span class="mi">30</span><span class="p">)</span><span class="o">*</span><span class="n">DistanceToPivot</span><span class="p">)</span>
+				<span class="p">);</span>
+
+		<span class="p">}</span>
+		<span class="k">else</span>
+		<span class="p">{</span>
+                         <span class="c1">// If character leaves the rope, we must let it stop</span>
+			<span class="k">if</span> <span class="p">(</span><span class="n">rotateDegree</span><span class="o">&gt;=</span><span class="mi">0</span><span class="p">)</span>
+			<span class="n">rotateDegree</span> <span class="o">-=</span> <span class="mi">2</span><span class="p">;</span>
+			<span class="n">SetActorRotation</span><span class="p">(</span><span class="n">FRotator</span><span class="p">(</span><span class="n">rotateDegree</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">rotateDegree</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">TotalTime</span><span class="p">)</span> <span class="o">/</span> <span class="mi">30</span><span class="p">),</span> <span class="mf">0.0f</span><span class="p">,</span> <span class="mf">0.0f</span><span class="p">));</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+<span class="p">}</span>
+<span class="o">==</span> <span class="n">Conclusion</span> <span class="o">==</span>
+<span class="n">This</span> <span class="n">is</span> <span class="n">a</span> <span class="n">simple</span> <span class="n">implement</span> <span class="n">of</span> <span class="n">rope</span> <span class="n">swing</span><span class="p">.</span> <span class="n">Hope</span> <span class="n">it</span> <span class="n">is</span> <span class="n">helpful</span><span class="p">.</span>
+</pre>
+      </div>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

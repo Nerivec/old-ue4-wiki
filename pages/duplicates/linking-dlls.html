@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Linking Dlls - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Linking Dlls
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <b>
+        Creating and linking DLLs.
+       </b>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Creating_a_C.2B.2B_DLL">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Creating a C++ DLL
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Visual_Studio_Community_2015">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Visual Studio Community 2015
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Unreal_Engine_Project">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Unreal Engine Project
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-5">
+         <a href="#Creating_the_Blueprint">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Creating the Blueprint
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Project_Source_Code">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Project Source Code
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Final_Words">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Final Words
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       This tutorial explains how to link / bind your own
+       <a class="external text" href="https://en.wikipedia.org/wiki/Dynamic-link_library" rel="nofollow">
+        DLL
+       </a>
+       to Unreal Engine 4 and how to use your DLL's methods for visual scripting in a
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Programming/BlueprintFunctionLibraries/" rel="nofollow">
+        Blueprint Function Library
+       </a>
+       .
+      </p>
+      <p>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Creating_a_C.2B.2B_DLL">
+        Creating a C++ DLL
+       </span>
+      </h2>
+      <p>
+       This article originally centered on binding the DLL but here is also a brief explanation on how to build DLLs in different
+       <a class="external text" href="https://en.wikipedia.org/wiki/Integrated_development_environment" rel="nofollow">
+        IDEs
+       </a>
+       .
+      </p>
+      <h3>
+       <span class="mw-headline" id="Visual_Studio_Community_2015">
+        Visual Studio Community 2015
+       </span>
+      </h3>
+      <ul>
+       <li>
+        Create a new project:
+        <i>
+         <span style="color:green">
+          menu bar -&gt; File -&gt; New -&gt; Project...
+         </span>
+        </i>
+        <div class="thumb tright">
+         <div class="thumbinner" style="width:102px;">
+          <img alt="" class="thumbimage" height="70" src="../assets/linking-dlls/0.jpg" width="100"/>
+          <div class="thumbcaption">
+           <div class="magnify">
+           </div>
+           New Project
+          </div>
+         </div>
+        </div>
+        <ol>
+         <li>
+          In the
+          <i>
+           New Project
+          </i>
+          window on the left select
+          <i>
+           <span style="color:green">
+            Installed -&gt; Templates -&gt; Visual C++ -&gt; Win32
+           </span>
+          </i>
+          .
+         </li>
+         <li>
+          Select
+          <i>
+           Win32 Project
+          </i>
+          in the middle.
+         </li>
+         <li>
+          <i>
+           Name:
+          </i>
+          the project
+          <span style="color:darkcyan">
+           CreateAndLinkDLLTut
+          </span>
+          and the
+          <i>
+           Solution name:
+          </i>
+          <span style="color:darkcyan">
+           CreateAndLinkDLLTutSol
+          </span>
+          .
+         </li>
+         <li>
+          Click
+          <i>
+           OK
+          </i>
+          .
+          <div class="thumb tright">
+           <div class="thumbinner" style="width:102px;">
+            <img alt="" class="thumbimage" height="78" src="../assets/linking-dlls/1.jpg" width="100"/>
+            <div class="thumbcaption">
+             <div class="magnify">
+             </div>
+             Application Settings
+            </div>
+           </div>
+          </div>
+         </li>
+        </ol>
+       </li>
+       <li>
+        In the next window
+        <i>
+         Win32 Application Wizard - CreateAndLinkDLLTut
+        </i>
+        click
+        <i>
+         Next
+        </i>
+        .
+        <ol>
+         <li>
+          In the
+          <b>
+           Application Settings
+          </b>
+          select
+          <ul>
+           <li>
+            <i>
+             <span style="color:green">
+              Application type: -&gt; DLL
+             </span>
+            </i>
+           </li>
+           <li>
+            <i>
+             <span style="color:green">
+              Additional options: -&gt; Empty project
+             </span>
+            </i>
+            <div class="thumb tright">
+             <div class="thumbinner" style="width:102px;">
+              <img alt="" class="thumbimage" height="82" src="../assets/linking-dlls/2.jpg" width="100"/>
+              <div class="thumbcaption">
+               <div class="magnify">
+               </div>
+               Solution Explorer
+              </div>
+             </div>
+            </div>
+           </li>
+          </ul>
+         </li>
+         <li>
+          Click
+          <i>
+           Finish
+          </i>
+          .
+         </li>
+        </ol>
+       </li>
+       <li>
+        On the left side of Visual Studio in the
+        <i>
+         Solution Explorer
+        </i>
+        make sure that
+        <span style="color:darkcyan">
+         CreateAndLinkDLLTut
+        </span>
+        is selected.
+        <div class="thumb tright">
+         <div class="thumbinner" style="width:102px;">
+          <img alt="" class="thumbimage" height="78" src="../assets/linking-dlls/3.jpg" width="100"/>
+          <div class="thumbcaption">
+           <div class="magnify">
+           </div>
+           Wizard
+          </div>
+         </div>
+        </div>
+        <ol>
+         <li>
+          Click
+          <i>
+           <span style="color:green">
+            main menu -&gt; Project -&gt; Add Class...
+           </span>
+          </i>
+         </li>
+         <li>
+          In the Add Class window select
+          <i>
+           <span style="color:green">
+            Installed -&gt; Visual C++ -&gt; C++ -&gt;
+           </span>
+          </i>
+          on the left side and
+          <b>
+           C++ Class
+          </b>
+          in the middle then click
+          <b>
+           Add
+          </b>
+          .
+         </li>
+         <li>
+          In the
+          <i>
+           Generic C++ Class Wizard
+          </i>
+          window fill in
+          <span style="color:darkcyan">
+           CreateAndLinkDLLfile
+          </span>
+          into the
+          <i>
+           Class name:
+          </i>
+          input field. Click
+          <i>
+           Finish
+          </i>
+          .
+         </li>
+        </ol>
+       </li>
+       <li>
+        On the left side in the
+        <i>
+         Solution Explorer
+        </i>
+        select the file
+        <span style="color:darkcyan">
+         CreateAndLinkDLLfile.h
+        </span>
+        and copy &amp; paste the following code. Replace all automatically generated code.
+       </li>
+      </ul>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once  </span>
+
+<span class="cp">#define DLL_EXPORT __declspec(dllexport)	</span><span class="c1">//shortens __declspec(dllexport) to DLL_EXPORT</span>
+
+<span class="cp">#ifdef __cplusplus		</span><span class="c1">//if C++ is used convert it to C to prevent C++'s name mangling of method names</span>
+<span class="k">extern</span> <span class="s">"C"</span>
+<span class="p">{</span>
+<span class="cp">#endif</span>
+
+	<span class="kt">bool</span> <span class="n">DLL_EXPORT</span> <span class="n">getInvertedBool</span><span class="p">(</span><span class="kt">bool</span> <span class="n">boolState</span><span class="p">);</span>
+	<span class="kt">int</span> <span class="n">DLL_EXPORT</span> <span class="nf">getIntPlusPlus</span><span class="p">(</span><span class="kt">int</span> <span class="n">lastInt</span><span class="p">);</span>
+	<span class="kt">float</span> <span class="n">DLL_EXPORT</span> <span class="nf">getCircleArea</span><span class="p">(</span><span class="kt">float</span> <span class="n">radius</span><span class="p">);</span>
+	<span class="kt">char</span> <span class="n">DLL_EXPORT</span> <span class="o">*</span><span class="nf">getCharArray</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span> <span class="n">parameterText</span><span class="p">);</span>
+	<span class="kt">float</span> <span class="n">DLL_EXPORT</span> <span class="o">*</span><span class="nf">getVector4</span><span class="p">(</span> <span class="kt">float</span> <span class="n">x</span><span class="p">,</span> <span class="kt">float</span> <span class="n">y</span><span class="p">,</span> <span class="kt">float</span> <span class="n">z</span><span class="p">,</span> <span class="kt">float</span> <span class="n">w</span><span class="p">);</span>
+
+<span class="cp">#ifdef __cplusplus</span>
+<span class="p">}</span>
+<span class="cp">#endif</span>
+</pre>
+      </div>
+      <ul>
+       <li>
+        Then select the file
+        <span style="color:darkcyan">
+         CreateAndLinkDLLfile.cpp
+        </span>
+        and copy &amp; paste the following code. Replace all automatically generated code.
+       </li>
+      </ul>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"string.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"CreateAndLinkDLLFile.h"</span><span class="cp"></span>
+
+
+<span class="c1">//Exported method that invertes a given boolean.</span>
+<span class="kt">bool</span> <span class="nf">getInvertedBool</span><span class="p">(</span><span class="kt">bool</span> <span class="n">boolState</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="kt">bool</span><span class="p">(</span><span class="o">!</span><span class="n">boolState</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">//Exported method that iterates a given int value.</span>
+<span class="kt">int</span> <span class="nf">getIntPlusPlus</span><span class="p">(</span><span class="kt">int</span> <span class="n">lastInt</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="kt">int</span><span class="p">(</span><span class="o">++</span><span class="n">lastInt</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">//Exported method that calculates the are of a circle by a given radius.</span>
+<span class="kt">float</span> <span class="nf">getCircleArea</span><span class="p">(</span><span class="kt">float</span> <span class="n">radius</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="kt">float</span><span class="p">(</span><span class="mf">3.1416f</span> <span class="o">*</span> <span class="p">(</span><span class="n">radius</span> <span class="o">*</span> <span class="n">radius</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="c1">//Exported method that adds a parameter text to an additional text and returns them combined.</span>
+<span class="kt">char</span> <span class="o">*</span><span class="nf">getCharArray</span><span class="p">(</span><span class="kt">char</span><span class="o">*</span> <span class="n">parameterText</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">char</span><span class="o">*</span> <span class="n">additionalText</span> <span class="o">=</span> <span class="s">" world!"</span><span class="p">;</span>
+	
+	<span class="k">if</span> <span class="p">(</span><span class="n">strlen</span><span class="p">(</span><span class="n">parameterText</span><span class="p">)</span> <span class="o">+</span> <span class="n">strlen</span><span class="p">(</span><span class="n">additionalText</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&gt;</span> <span class="mi">256</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="s">"Error: Maximum size of the char array is 256 chars."</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="kt">char</span> <span class="n">combinedText</span><span class="p">[</span><span class="mi">256</span><span class="p">]</span> <span class="o">=</span> <span class="s">""</span><span class="p">;</span>
+	
+	<span class="n">strcpy_s</span><span class="p">(</span> <span class="n">combinedText</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="n">parameterText</span><span class="p">);</span>
+	<span class="n">strcat_s</span><span class="p">(</span> <span class="n">combinedText</span><span class="p">,</span> <span class="mi">256</span><span class="p">,</span> <span class="n">additionalText</span><span class="p">);</span>
+	
+	<span class="k">return</span> <span class="p">(</span> <span class="kt">char</span><span class="o">*</span> <span class="p">)</span><span class="n">combinedText</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">//Exported method that adds a vector4 to a given vector4 and returns the sum.</span>
+<span class="kt">float</span> <span class="o">*</span><span class="nf">getVector4</span><span class="p">(</span> <span class="kt">float</span> <span class="n">x</span><span class="p">,</span> <span class="kt">float</span> <span class="n">y</span><span class="p">,</span> <span class="kt">float</span> <span class="n">z</span><span class="p">,</span> <span class="kt">float</span> <span class="n">w</span> <span class="p">)</span>
+<span class="p">{</span>
+	<span class="kt">float</span><span class="o">*</span> <span class="n">modifiedVector4</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">float</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>
+	
+	<span class="n">modifiedVector4</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="mf">1.0F</span><span class="p">;</span>
+	<span class="n">modifiedVector4</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span> <span class="o">+</span> <span class="mf">2.0F</span><span class="p">;</span>
+	<span class="n">modifiedVector4</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">z</span> <span class="o">+</span> <span class="mf">3.0F</span><span class="p">;</span>
+	<span class="n">modifiedVector4</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">w</span> <span class="o">+</span> <span class="mf">4.0F</span><span class="p">;</span>
+
+	<span class="k">return</span> <span class="p">(</span> <span class="kt">float</span><span class="o">*</span> <span class="p">)</span><span class="n">modifiedVector4</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+      </p>
+      <p>
+      </p>
+      <ul>
+       <li>
+        Save with
+        <i>
+         <span style="color:green">
+          menu bar -&gt; File -&gt; Save All
+         </span>
+        </i>
+        .
+       </li>
+       <li>
+        Set the proper build options for your 64-bit DLL: In the menu bar select
+        <b>
+         Release
+        </b>
+        as
+        <i>
+         Solution Configuration
+        </i>
+        and
+        <b>
+         x64
+        </b>
+        as
+        <i>
+         Solution Platform
+        </i>
+        . ( If you use a 32-bit Windows system please select
+        <b>
+         x86
+        </b>
+        instead of x64. )
+        <div class="thumb tright">
+         <div class="thumbinner" style="width:102px;">
+          <img alt="" class="thumbimage" height="22" src="../assets/linking-dlls/4.jpg" width="100"/>
+          <div class="thumbcaption">
+           <div class="magnify">
+           </div>
+           Configuration
+          </div>
+         </div>
+        </div>
+       </li>
+       <li>
+        Build the DLL with
+        <i>
+         <span style="color:green">
+          menu bar -&gt; Build -&gt; Build CreateAndLinkDLLTut
+         </span>
+        </i>
+        . The Output at the bottom should show a message like
+        <i>
+         ========== Build: 1 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
+        </i>
+        .
+       </li>
+       <li>
+        The 64-bit DLL was created in the folder
+        <span style="color:darkcyan">
+         .../CreateAndLinkDLLTutSol/x64/Release/
+        </span>
+        and is called
+        <span style="color:darkcyan">
+         CreateAndLinkDLLTut.dll
+        </span>
+        . ( The 32-bit DLL was created in the folder
+        <span style="color:darkcyan">
+         .../CreateAndLinkDLLTutSol/Release/
+        </span>
+        and is called
+        <span style="color:darkcyan">
+         CreateAndLinkDLLTut.dll
+        </span>
+        .
+        <a class="external text" href="https://answers.unrealengine.com/questions/30927/does-it-make-a-difference-if-you-load-a-custom-win.html" rel="nofollow">
+         You won't be able to bind the DLL if the platforms are different.
+        </a>
+        )
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="Unreal_Engine_Project">
+        Unreal Engine Project
+       </span>
+      </h2>
+      <div class="thumb tright">
+       <div class="thumbinner" style="width:52px;">
+        <img alt="" class="thumbimage" height="35" src="../assets/linking-dlls/5.jpg" width="50"/>
+        <div class="thumbcaption">
+         <div class="magnify">
+         </div>
+         New Project
+        </div>
+       </div>
+      </div>
+      <ul>
+       <li>
+        On
+        <b>
+         Unreal Engine
+        </b>
+        , create a new project:
+        <i>
+         <span style="color:green">
+          New Project -&gt; C++ -&gt; Basic Code
+         </span>
+        </i>
+        .
+       </li>
+       <li>
+        Name the project
+        <span style="color:darkcyan">
+         CreateAndLinkDLLProj
+        </span>
+        and create it.
+       </li>
+       <li>
+        Open
+        <b>
+         Windows Explorer
+        </b>
+        .
+        <ol>
+         <li>
+          Go to the main folder of your created UE4 project.
+         </li>
+         <li>
+          Add a folder called
+          <a class="external text" href="https://docs.unrealengine.com/latest/INT/Programming/Plugins/index.html#pluginfolders" rel="nofollow">
+           Plugins
+          </a>
+          .
+          <div class="thumb tright">
+           <div class="thumbinner" style="width:37px;">
+            <img alt="" class="thumbimage" height="80" src="../assets/linking-dlls/6.jpg" width="35"/>
+            <div class="thumbcaption">
+             <div class="magnify">
+             </div>
+             New Class
+            </div>
+           </div>
+          </div>
+         </li>
+         <li>
+          In the
+          <i>
+           Plugins
+          </i>
+          folder create an other folder called
+          <span style="color:darkcyan">
+           MyTutorialDLLs
+          </span>
+          .
+         </li>
+         <li>
+          Copy and paste the DLL
+          <span style="color:darkcyan">
+           CreateAndLinkDLLTut.dll
+          </span>
+          you have created earlier into the folder
+          <span style="color:darkcyan">
+           MyTutorialDLLs
+          </span>
+          .
+         </li>
+        </ol>
+       </li>
+       <li>
+        Add a new C++ class to your project in
+        <b>
+         Unreal Editor
+        </b>
+        .
+       </li>
+       <li>
+        Choose the
+        <i>
+         Blueprint Function Library
+        </i>
+        as the base class.
+        <div class="thumb tright">
+         <div class="thumbinner" style="width:52px;">
+          <img alt="" class="thumbimage" height="30" src="../assets/linking-dlls/7.jpg" width="50"/>
+          <div class="thumbcaption">
+           <div class="magnify">
+           </div>
+           BFL
+          </div>
+         </div>
+        </div>
+       </li>
+       <li>
+        Name your blueprint function library
+        <span style="color:darkcyan">
+         CreateAndLinkDLLTutBFL
+        </span>
+        .
+        <div class="thumb tright">
+         <div class="thumbinner" style="width:52px;">
+          <img alt="" class="thumbimage" height="30" src="../assets/linking-dlls/8.jpg" width="50"/>
+          <div class="thumbcaption">
+           <div class="magnify">
+           </div>
+           Name BFL
+          </div>
+         </div>
+        </div>
+       </li>
+       <li>
+        If
+        <b>
+         Visual Studio
+        </b>
+        does not open it automatically, open it by double clicking
+        <span style="color:darkcyan">
+         CreateAndLinkDLLTutBFL
+        </span>
+        in the UE4 content browser.
+       </li>
+       <li>
+        Open the
+        <span style="color:darkcyan">
+         CreateAndLinkDLLTutBFL.h
+        </span>
+        and
+        <span style="color:darkcyan">
+         CreateAndLinkDLLTutBFL.cpp
+        </span>
+        files.
+        <div class="thumb tright">
+         <div class="thumbinner" style="width:52px;">
+          <img alt="" class="thumbimage" height="70" src="../assets/linking-dlls/9.jpg" width="50"/>
+          <div class="thumbcaption">
+           <div class="magnify">
+           </div>
+           Open BFL
+          </div>
+         </div>
+        </div>
+       </li>
+       <li>
+        Select the file
+        <span style="color:darkcyan">
+         CreateAndLinkDLLTutBFL.h
+        </span>
+        and copy &amp; paste the following code:
+       </li>
+      </ul>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"Kismet/BlueprintFunctionLibrary.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"CreateAndLinkDLLTutBFL.generated.h"</span><span class="cp"></span>
+
+
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">CREATEANDLINKDLLPROJ_API</span> <span class="nl">UCreateAndLinkDLLTutBFL</span> <span class="p">:</span> <span class="k">public</span> <span class="n">UBlueprintFunctionLibrary</span>
+<span class="p">{</span>
+	<span class="n">GENERATED_BODY</span><span class="p">()</span>
+	
+<span class="k">public</span><span class="o">:</span>
+
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"My DLL Library"</span><span class="p">)</span>
+	<span class="k">static</span> <span class="kt">bool</span> <span class="n">importDLL</span><span class="p">(</span> <span class="n">FString</span> <span class="n">folder</span><span class="p">,</span> <span class="n">FString</span> <span class="n">name</span><span class="p">);</span>
+
+
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"My DLL Library"</span><span class="p">)</span>
+	<span class="k">static</span> <span class="kt">bool</span> <span class="n">importMethodGetInvertedBool</span><span class="p">(</span> <span class="p">);</span>
+
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"My DLL Library"</span><span class="p">)</span>
+	<span class="k">static</span> <span class="kt">bool</span> <span class="n">importMethodGetIntPlusPlus</span><span class="p">(</span> <span class="p">);</span>
+
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"My DLL Library"</span><span class="p">)</span>
+	<span class="k">static</span> <span class="kt">bool</span> <span class="n">importMethodGetCircleArea</span><span class="p">(</span> <span class="p">);</span>
+
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"My DLL Library"</span><span class="p">)</span>
+	<span class="k">static</span> <span class="kt">bool</span> <span class="n">importMethodGetCharArray</span><span class="p">(</span> <span class="p">);</span>
+
+	<span class="n">UFUNCTION</span><span class="p">(</span> <span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"My DLL Library"</span> <span class="p">)</span>
+	<span class="k">static</span> <span class="kt">bool</span> <span class="n">importMethodGetVector4</span><span class="p">(</span> <span class="p">);</span>
+	
+
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"My DLL Library"</span><span class="p">)</span>
+	<span class="k">static</span> <span class="kt">bool</span> <span class="n">getInvertedBoolFromDll</span><span class="p">(</span><span class="kt">bool</span> <span class="n">boolState</span><span class="p">);</span>
+
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"My DLL Library"</span><span class="p">)</span>
+	<span class="k">static</span> <span class="kt">int</span> <span class="n">getIntPlusPlusFromDll</span><span class="p">(</span><span class="kt">int</span> <span class="n">lastInt</span><span class="p">);</span>
+
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"My DLL Library"</span><span class="p">)</span>
+	<span class="k">static</span> <span class="kt">float</span> <span class="n">getCircleAreaFromDll</span><span class="p">(</span><span class="kt">float</span> <span class="n">radius</span><span class="p">);</span>
+
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"My DLL Library"</span><span class="p">)</span>
+	<span class="k">static</span> <span class="n">FString</span> <span class="n">getCharArrayFromDll</span><span class="p">(</span><span class="n">FString</span> <span class="n">parameterText</span><span class="p">);</span>
+
+	<span class="n">UFUNCTION</span><span class="p">(</span> <span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"My DLL Library"</span> <span class="p">)</span>
+	<span class="k">static</span> <span class="n">FVector4</span> <span class="n">getVector4FromDll</span><span class="p">(</span> <span class="n">FVector4</span> <span class="n">vector4</span> <span class="p">);</span>
+	
+
+	<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"My DLL Library"</span><span class="p">)</span>
+	<span class="k">static</span> <span class="kt">void</span> <span class="n">freeDLL</span><span class="p">();</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <ul>
+       <li>
+        Select the file
+        <span style="color:darkcyan">
+         CreateAndLinkDLLTutBFL.cpp
+        </span>
+        and copy &amp; paste the following code:
+       </li>
+      </ul>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"CreateAndLinkDLLProj.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"CreateAndLinkDLLTutBFL.h"</span><span class="cp"></span>
+
+<span class="k">typedef</span> <span class="nf">bool</span><span class="p">(</span><span class="o">*</span><span class="n">_getInvertedBool</span><span class="p">)(</span><span class="kt">bool</span> <span class="n">boolState</span><span class="p">);</span> <span class="c1">// Declare a method to store the DLL method getInvertedBool.</span>
+<span class="k">typedef</span> <span class="nf">int</span><span class="p">(</span><span class="o">*</span><span class="n">_getIntPlusPlus</span><span class="p">)(</span><span class="kt">int</span> <span class="n">lastInt</span><span class="p">);</span> <span class="c1">// Declare a method to store the DLL method getIntPlusPlus.</span>
+<span class="k">typedef</span> <span class="nf">float</span><span class="p">(</span><span class="o">*</span><span class="n">_getCircleArea</span><span class="p">)(</span><span class="kt">float</span> <span class="n">radius</span><span class="p">);</span> <span class="c1">// Declare a method to store the DLL method getCircleArea.</span>
+<span class="k">typedef</span> <span class="kt">char</span><span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="n">_getCharArray</span><span class="p">)(</span><span class="kt">char</span><span class="o">*</span> <span class="n">parameterText</span><span class="p">);</span> <span class="c1">// Declare a method to store the DLL method getCharArray.</span>
+<span class="k">typedef</span> <span class="kt">float</span><span class="o">*</span><span class="p">(</span><span class="o">*</span><span class="n">_getVector4</span><span class="p">)(</span><span class="kt">float</span> <span class="n">x</span><span class="p">,</span> <span class="kt">float</span> <span class="n">y</span><span class="p">,</span> <span class="kt">float</span> <span class="n">z</span><span class="p">,</span> <span class="kt">float</span> <span class="n">w</span><span class="p">);</span> <span class="c1">// Declare a method to store the DLL method getVector4.</span>
+
+<span class="n">_getInvertedBool</span> <span class="n">m_getInvertedBoolFromDll</span><span class="p">;</span>
+<span class="n">_getIntPlusPlus</span> <span class="n">m_getIntPlusPlusFromDll</span><span class="p">;</span>
+<span class="n">_getCircleArea</span> <span class="n">m_getCircleAreaFromDll</span><span class="p">;</span>
+<span class="n">_getCharArray</span> <span class="n">m_getCharArrayFromDll</span><span class="p">;</span>
+<span class="n">_getVector4</span> <span class="n">m_getVector4FromDll</span><span class="p">;</span>
+
+<span class="kt">void</span> <span class="o">*</span><span class="n">v_dllHandle</span><span class="p">;</span>
+
+
+<span class="cp">#pragma region Load DLL</span>
+
+<span class="c1">// Method to import a DLL.</span>
+<span class="kt">bool</span> <span class="n">UCreateAndLinkDLLTutBFL</span><span class="o">::</span><span class="n">importDLL</span><span class="p">(</span><span class="n">FString</span> <span class="n">folder</span><span class="p">,</span> <span class="n">FString</span> <span class="n">name</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">FString</span> <span class="n">filePath</span> <span class="o">=</span> <span class="o">*</span><span class="n">FPaths</span><span class="o">::</span><span class="n">GamePluginsDir</span><span class="p">()</span> <span class="o">+</span> <span class="n">folder</span> <span class="o">+</span> <span class="s">"/"</span> <span class="o">+</span> <span class="n">name</span><span class="p">;</span>
+	
+	<span class="k">if</span> <span class="p">(</span><span class="n">FPaths</span><span class="o">::</span><span class="n">FileExists</span><span class="p">(</span><span class="n">filePath</span><span class="p">))</span>
+	<span class="p">{</span>
+		<span class="n">v_dllHandle</span> <span class="o">=</span> <span class="n">FPlatformProcess</span><span class="o">::</span><span class="n">GetDllHandle</span><span class="p">(</span><span class="o">*</span><span class="n">filePath</span><span class="p">);</span> <span class="c1">// Retrieve the DLL.</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">v_dllHandle</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>	<span class="c1">// Return an error.</span>
+<span class="p">}</span>
+<span class="cp">#pragma endregion Load DLL</span>
+
+<span class="cp">#pragma region Import Methods</span>
+
+<span class="c1">// Imports the method getInvertedBool from the DLL.</span>
+<span class="kt">bool</span> <span class="n">UCreateAndLinkDLLTutBFL</span><span class="o">::</span><span class="n">importMethodGetInvertedBool</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">v_dllHandle</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">m_getInvertedBoolFromDll</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+		<span class="n">FString</span> <span class="n">procName</span> <span class="o">=</span> <span class="s">"getInvertedBool"</span><span class="p">;</span>	<span class="c1">// Needs to be the exact name of the DLL method.</span>
+		<span class="n">m_getInvertedBoolFromDll</span> <span class="o">=</span> <span class="p">(</span><span class="n">_getInvertedBool</span><span class="p">)</span><span class="n">FPlatformProcess</span><span class="o">::</span><span class="n">GetDllExport</span><span class="p">(</span><span class="n">v_dllHandle</span><span class="p">,</span> <span class="o">*</span><span class="n">procName</span><span class="p">);</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">m_getInvertedBoolFromDll</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>	<span class="c1">// Return an error.</span>
+<span class="p">}</span>
+
+<span class="c1">// Imports the method getIntPlusPlus from the DLL.</span>
+<span class="kt">bool</span> <span class="n">UCreateAndLinkDLLTutBFL</span><span class="o">::</span><span class="n">importMethodGetIntPlusPlus</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">v_dllHandle</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">m_getIntPlusPlusFromDll</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+		<span class="n">FString</span> <span class="n">procName</span> <span class="o">=</span> <span class="s">"getIntPlusPlus"</span><span class="p">;</span>	<span class="c1">// Needs to be the exact name of the DLL method.</span>
+		<span class="n">m_getIntPlusPlusFromDll</span> <span class="o">=</span> <span class="p">(</span><span class="n">_getIntPlusPlus</span><span class="p">)</span><span class="n">FPlatformProcess</span><span class="o">::</span><span class="n">GetDllExport</span><span class="p">(</span><span class="n">v_dllHandle</span><span class="p">,</span> <span class="o">*</span><span class="n">procName</span><span class="p">);</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">m_getIntPlusPlusFromDll</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>	<span class="c1">// Return an error.</span>
+<span class="p">}</span>
+
+<span class="c1">// Imports the method getCircleArea from the DLL.</span>
+<span class="kt">bool</span> <span class="n">UCreateAndLinkDLLTutBFL</span><span class="o">::</span><span class="n">importMethodGetCircleArea</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">v_dllHandle</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">m_getCircleAreaFromDll</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+		<span class="n">FString</span> <span class="n">procName</span> <span class="o">=</span> <span class="s">"getCircleArea"</span><span class="p">;</span>	<span class="c1">// Needs to be the exact name of the DLL method.</span>
+		<span class="n">m_getCircleAreaFromDll</span> <span class="o">=</span> <span class="p">(</span><span class="n">_getCircleArea</span><span class="p">)</span><span class="n">FPlatformProcess</span><span class="o">::</span><span class="n">GetDllExport</span><span class="p">(</span><span class="n">v_dllHandle</span><span class="p">,</span> <span class="o">*</span><span class="n">procName</span><span class="p">);</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">m_getCircleAreaFromDll</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>	<span class="c1">// Return an error.</span>
+<span class="p">}</span>
+
+<span class="c1">// Imports the method getCharArray from the DLL.</span>
+<span class="kt">bool</span> <span class="n">UCreateAndLinkDLLTutBFL</span><span class="o">::</span><span class="n">importMethodGetCharArray</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">v_dllHandle</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">m_getCharArrayFromDll</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+		<span class="n">FString</span> <span class="n">procName</span> <span class="o">=</span> <span class="s">"getCharArray"</span><span class="p">;</span>	<span class="c1">// Needs to be the exact name of the DLL method.</span>
+		<span class="n">m_getCharArrayFromDll</span> <span class="o">=</span> <span class="p">(</span><span class="n">_getCharArray</span><span class="p">)</span><span class="n">FPlatformProcess</span><span class="o">::</span><span class="n">GetDllExport</span><span class="p">(</span><span class="n">v_dllHandle</span><span class="p">,</span> <span class="o">*</span><span class="n">procName</span><span class="p">);</span>
+		<span class="k">if</span> <span class="p">(</span><span class="n">m_getCharArrayFromDll</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+		<span class="p">{</span>
+			<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>	<span class="c1">// Return an error.</span>
+<span class="p">}</span>
+
+<span class="c1">// Imports the method getVector4 from the DLL.</span>
+<span class="kt">bool</span> <span class="n">UCreateAndLinkDLLTutBFL</span><span class="o">::</span><span class="n">importMethodGetVector4</span><span class="p">(</span> <span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span> <span class="n">v_dllHandle</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">m_getVector4FromDll</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+		<span class="n">FString</span> <span class="n">procName</span> <span class="o">=</span> <span class="s">"getVector4"</span><span class="p">;</span>	<span class="c1">// Needs to be the exact name of the DLL method.</span>
+		<span class="n">m_getVector4FromDll</span> <span class="o">=</span> <span class="p">(</span> <span class="n">_getVector4</span> <span class="p">)</span> <span class="n">FPlatformProcess</span><span class="o">::</span><span class="n">GetDllExport</span><span class="p">(</span> <span class="n">v_dllHandle</span><span class="p">,</span> <span class="o">*</span><span class="n">procName</span> <span class="p">);</span>
+		<span class="k">if</span><span class="p">(</span> <span class="n">m_getVector4FromDll</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="p">)</span>
+		<span class="p">{</span>
+			<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="nb">false</span><span class="p">;</span>	<span class="c1">// Return an error.</span>
+<span class="p">}</span>
+
+<span class="cp">#pragma endregion Import Methods</span>
+
+<span class="cp">#pragma region Method Calls</span>
+
+<span class="c1">// Calls the method getInvertedBoolFromDll that was imported from the DLL.</span>
+<span class="kt">bool</span> <span class="n">UCreateAndLinkDLLTutBFL</span><span class="o">::</span><span class="n">getInvertedBoolFromDll</span><span class="p">(</span><span class="kt">bool</span> <span class="n">boolState</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">m_getInvertedBoolFromDll</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="kt">bool</span> <span class="n">out</span> <span class="o">=</span> <span class="kt">bool</span><span class="p">(</span><span class="n">m_getInvertedBoolFromDll</span><span class="p">(</span><span class="n">boolState</span><span class="p">));</span> <span class="c1">// Call the DLL method with arguments corresponding to the exact signature and return type of the method.</span>
+		<span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="n">boolState</span><span class="p">;</span>	<span class="c1">// Return an error.</span>
+<span class="p">}</span>
+
+<span class="c1">// Calls the method m_getIntPlusPlusFromDll that was imported from the DLL.</span>
+<span class="kt">int</span> <span class="n">UCreateAndLinkDLLTutBFL</span><span class="o">::</span><span class="n">getIntPlusPlusFromDll</span><span class="p">(</span><span class="kt">int</span> <span class="n">lastInt</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">m_getIntPlusPlusFromDll</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="kt">int</span> <span class="n">out</span> <span class="o">=</span> <span class="kt">int</span><span class="p">(</span><span class="n">m_getIntPlusPlusFromDll</span><span class="p">(</span><span class="n">lastInt</span><span class="p">));</span> <span class="c1">// Call the DLL method with arguments corresponding to the exact signature and return type of the method.</span>
+		<span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="o">-</span><span class="mi">32202</span><span class="p">;</span>	<span class="c1">// Return an error.</span>
+<span class="p">}</span>
+
+<span class="c1">// Calls the method m_getCircleAreaFromDll that was imported from the DLL.</span>
+<span class="kt">float</span> <span class="n">UCreateAndLinkDLLTutBFL</span><span class="o">::</span><span class="n">getCircleAreaFromDll</span><span class="p">(</span><span class="kt">float</span> <span class="n">radius</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">m_getCircleAreaFromDll</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="kt">float</span> <span class="n">out</span> <span class="o">=</span> <span class="kt">float</span><span class="p">(</span><span class="n">m_getCircleAreaFromDll</span><span class="p">(</span><span class="n">radius</span><span class="p">));</span> <span class="c1">// Call the DLL method with arguments corresponding to the exact signature and return type of the method.</span>
+		<span class="k">return</span> <span class="n">out</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="o">-</span><span class="mf">32202.0F</span><span class="p">;</span>	<span class="c1">// Return an error.</span>
+<span class="p">}</span>
+
+<span class="c1">// Calls the method m_getCharArrayFromDLL that was imported from the DLL.</span>
+<span class="n">FString</span> <span class="n">UCreateAndLinkDLLTutBFL</span><span class="o">::</span><span class="n">getCharArrayFromDll</span><span class="p">(</span><span class="n">FString</span> <span class="n">parameterText</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">m_getCharArrayFromDll</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="kt">char</span><span class="o">*</span> <span class="n">parameterChar</span> <span class="o">=</span> <span class="n">TCHAR_TO_ANSI</span><span class="p">(</span><span class="o">*</span><span class="n">parameterText</span><span class="p">);</span>
+
+		<span class="kt">char</span><span class="o">*</span> <span class="n">returnChar</span> <span class="o">=</span> <span class="n">m_getCharArrayFromDll</span><span class="p">(</span><span class="n">parameterChar</span><span class="p">);</span>
+
+		<span class="k">return</span> <span class="p">(</span><span class="n">ANSI_TO_TCHAR</span><span class="p">(</span><span class="n">returnChar</span><span class="p">));</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="s">"Error: Method getCharArray was probabey not imported yet!"</span><span class="p">;</span>	<span class="c1">// Return an error.</span>
+<span class="p">}</span>
+
+<span class="c1">// Calls the method m_getVector4FromDll that was imported from the DLL.</span>
+<span class="n">FVector4</span> <span class="n">UCreateAndLinkDLLTutBFL</span><span class="o">::</span><span class="n">getVector4FromDll</span><span class="p">(</span> <span class="n">FVector4</span> <span class="n">vector4</span> <span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span> <span class="n">m_getVector4FromDll</span> <span class="o">!=</span> <span class="nb">NULL</span> <span class="p">)</span>
+	<span class="p">{</span>
+		<span class="kt">float</span><span class="o">*</span> <span class="n">vector4Array</span> <span class="o">=</span> <span class="n">m_getVector4FromDll</span><span class="p">(</span> <span class="n">vector4</span><span class="p">.</span><span class="n">X</span><span class="p">,</span> <span class="n">vector4</span><span class="p">.</span><span class="n">Y</span><span class="p">,</span> <span class="n">vector4</span><span class="p">.</span><span class="n">Z</span><span class="p">,</span> <span class="n">vector4</span><span class="p">.</span><span class="n">W</span> <span class="p">);</span>
+
+		<span class="k">return</span> <span class="nf">FVector4</span><span class="p">(</span> <span class="n">vector4Array</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">vector4Array</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vector4Array</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">vector4Array</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="n">FVector4</span><span class="p">(</span> <span class="o">-</span><span class="mf">32202.0F</span><span class="p">,</span> <span class="o">-</span><span class="mf">32202.0F</span><span class="p">,</span> <span class="o">-</span><span class="mf">32202.0F</span><span class="p">,</span> <span class="o">-</span><span class="mf">32202.0F</span> <span class="p">);</span>	<span class="c1">// Return an error.</span>
+<span class="p">}</span>
+<span class="cp">#pragma endregion Method Calls</span>
+
+
+<span class="cp">#pragma region Unload DLL</span>
+
+<span class="c1">// If you love something  set it free.</span>
+<span class="kt">void</span> <span class="n">UCreateAndLinkDLLTutBFL</span><span class="o">::</span><span class="n">freeDLL</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">v_dllHandle</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">m_getInvertedBoolFromDll</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+		<span class="n">m_getIntPlusPlusFromDll</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+		<span class="n">m_getCircleAreaFromDll</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+		<span class="n">m_getCharArrayFromDll</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+		<span class="n">m_getVector4FromDll</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+
+		<span class="n">FPlatformProcess</span><span class="o">::</span><span class="n">FreeDllHandle</span><span class="p">(</span><span class="n">v_dllHandle</span><span class="p">);</span>
+		<span class="n">v_dllHandle</span> <span class="o">=</span> <span class="nb">NULL</span><span class="p">;</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+<span class="cp">#pragma endregion Unload DLL</span>
+</pre>
+      </div>
+      <ul>
+       <li>
+        Save with
+        <i>
+         <span style="color:green">
+          menu bar -&gt; File -&gt; Save All
+         </span>
+        </i>
+        .
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="Creating_the_Blueprint">
+        Creating the Blueprint
+       </span>
+      </h2>
+      <ul>
+       <li>
+        First hit the
+        <b>
+         Compile
+        </b>
+        button
+        <img alt="PD CompileButton.PNG" class="" height="69" src="../assets/linking-dlls/10.PNG" width="66"/>
+        of the
+        <b>
+         Unreal Editor
+        </b>
+        to compile the code you've added and saved in Visual Studio before.
+       </li>
+       <li>
+        In
+        <b>
+         Unreal Editor
+        </b>
+        add a new
+        <i>
+         Blueprint Class
+        </i>
+        called
+        <span style="color:darkcyan">
+         BP_DllTest
+        </span>
+        and open it. (
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/Engine/Blueprints/UserGuide/Types/ClassBlueprint/Creation/index.html" rel="nofollow">
+         How to create a blueprint class
+        </a>
+        )
+       </li>
+       <li>
+        Select the
+        <b>
+         Event Graph
+        </b>
+        and add the following nodes construct ( Click it and click it again to download it! ). Important note: If you don't see the functions in the dropdown, try compiling from Visual Studio and then reopening UE4. If this doesn't work, close UE4, remove Binaries folder and Intermediate folder (but avoid deleting Intermediate/Project Files). You will be prompted to rebuild the project.
+       </li>
+      </ul>
+      <p>
+       <img alt="UE4DLLProjectBSS.png" class="" height="1400" src="../assets/linking-dlls/11.png" width="3400"/>
+      </p>
+      <ul>
+       <li>
+        Then compile and save the blueprint and drag &amp; drop it into the level.
+       </li>
+       <li>
+        The result should look like this:
+       </li>
+      </ul>
+      <p>
+       <img alt="UE4DLLProjResult2.jpg" class="" height="274" src="../assets/linking-dlls/12.jpg" width="357"/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Project_Source_Code">
+        Project Source Code
+       </span>
+      </h2>
+      <p>
+       You can download the final
+       <a class="external text" href="https://github.com/XenoEgger/CreateAndLinkDLLTutSol" rel="nofollow">
+        Visual Studio Solution of the DLL
+       </a>
+       and the
+       <a class="external text" href="https://github.com/XenoEgger/CreateAndLinkDLLProj" rel="nofollow">
+        Unreal Engine 4 project
+       </a>
+       from GitHub.
+( You may need to rebuild the DLL and copy it to your UE4
+       <i>
+        Plugins
+       </i>
+       folder. )
+      </p>
+      <h2>
+       <span class="mw-headline" id="Final_Words">
+        Final Words
+       </span>
+      </h2>
+      <ul>
+       <li>
+        You can use any DLL from C code or C++ or other languages.
+       </li>
+       <li>
+        You can use unmanaged or managed (CLR, .Net Framework) code from a project in your solution or external.
+       </li>
+       <li>
+        Most issues arise from differences in the signature of the DLL function and the type definition in the Unreal Project.
+       </li>
+       <li>
+        Automatic packaging of third party DLL is not yet supported, you will need to package the DLL, the DLL folder and the plugin folder as well, which is not created in a package by default at this time.
+       </li>
+       <li>
+        Be mindful of load times of DLL, it may slow down your project.
+       </li>
+       <li>
+        Be mindful of processing time of your DLL, your project loses execution control inside the DLL, until it returns, it may be expensive to perform some operations.
+       </li>
+       <li>
+        To go further with this tutorial:
+        <ul>
+         <li>
+          C++ with proper class, namespace and name mangling.
+         </li>
+         <li>
+          DLL with multithreading and callback example.
+         </li>
+        </ul>
+       </li>
+      </ul>
+      <p>
+       <br/>
+       <i>
+        Original Author:
+       </i>
+       (
+     )
+       <br/>
+       <i>
+        Updated / Improved:
+       </i>
+       (
+     ),
+     ,
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

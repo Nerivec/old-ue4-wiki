@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Blueprint Node: Sort Array of Actors By Field - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Blueprint Node: Sort Array of Actors By Field
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#The_Setup">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           The Setup
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#The_Header_File_.28.h.29">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           The Header File (.h)
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Ordering">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Ordering
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#The_Method_Declaration">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             The Method Declaration
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#The_Intercept">
+            <span class="tocnumber">
+             3.3
+            </span>
+            <span class="toctext">
+             The Intercept
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Custom_Thunk">
+            <span class="tocnumber">
+             3.4
+            </span>
+            <span class="toctext">
+             Custom Thunk
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Source">
+            <span class="tocnumber">
+             3.5
+            </span>
+            <span class="toctext">
+             Source
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#The_Sorting_Predicate">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           The Sorting Predicate
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-10">
+         <a href="#The_Source_File_.28.cpp.29">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           The Source File (.cpp)
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-11">
+         <a href="#Notes.2FConcerns.2FTODO.2FPitfalls">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Notes/Concerns/TODO/Pitfalls
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Author
+       </i>
+       (
+     )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       This snippet is to show you how to make a utility function for blueprint arrays that allows you to sort the array by a given field, in ascending or descending order.
+      </p>
+      <h2>
+       <span class="mw-headline" id="The_Setup">
+        The Setup
+       </span>
+      </h2>
+      <p>
+       Make yourselves a new Blueprint Function Library in C++.
+      </p>
+      <h2>
+       <span class="mw-headline" id="The_Header_File_.28.h.29">
+        The Header File (.h)
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Ordering">
+        Ordering
+       </span>
+      </h3>
+      <p>
+       We'll need to know in which order to sort the array: Ascending or Descending.  I made an enumeration for this purpose and stuck it in the header file, before the "UXXXBlueprintFunctionLibrary" declaration:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UENUM</span><span class="p">(</span><span class="n">BlueprintType</span><span class="p">)</span>
+<span class="k">enum</span> <span class="k">class</span> <span class="nc">ESortDirection</span><span class="o">:</span> <span class="n">uint8</span>
+<span class="p">{</span>
+    <span class="n">ASCENDING</span> <span class="n">UMETA</span><span class="p">(</span><span class="n">DisplayName</span> <span class="o">=</span> <span class="s">"Ascending"</span><span class="p">),</span>
+    <span class="n">DESCENDING</span> <span class="n">UMETA</span><span class="p">(</span><span class="n">DisplayName</span> <span class="o">=</span> <span class="s">"Descending"</span><span class="p">)</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="The_Method_Declaration">
+        The Method Declaration
+       </span>
+      </h3>
+      <p>
+       Let's go ahead and declare our method(s) in the header. We're going to follow the naming conventions of the other TArray utilities and name our methods: "Array_Sort" and "GenericArray_Sort".
+      </p>
+      <p>
+       We'll need four arguments:
+       <br/>
+       -A pointer to the array that we'll be sorting
+       <br/>
+       -A pointer to the array property (I'm not sure why, I was just following convention here).
+       <br/>
+       -A string that will represent the field that we'll be sorting the array by.
+       <br/>
+       -The sort direction.
+       <br/>
+      </p>
+      <p>
+       So, here's what that looks like in code:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">CustomThunk</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">DisplayName</span> <span class="o">=</span> <span class="s">"Sort Array"</span><span class="p">,</span> <span class="n">CompactNodeTitle</span> <span class="o">=</span> <span class="s">"SORTARRAY"</span><span class="p">,</span> <span class="n">ArrayParm</span> <span class="o">=</span> <span class="s">"TargetArray|ArrayProperty"</span><span class="p">),</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Utilities|Array"</span><span class="p">)</span>
+<span class="k">static</span> <span class="kt">void</span> <span class="n">Array_Sort</span><span class="p">(</span><span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">int32</span><span class="o">&gt;&amp;</span> <span class="n">TargetArray</span><span class="p">,</span> <span class="k">const</span> <span class="n">UArrayProperty</span><span class="o">*</span> <span class="n">ArrayProperty</span><span class="p">,</span> <span class="k">const</span> <span class="n">FString</span> <span class="o">&amp;</span><span class="n">FieldName</span><span class="p">,</span> <span class="n">ESortDirection</span> <span class="n">SortDirection</span><span class="p">);</span>
+<span class="k">static</span> <span class="kt">void</span> <span class="nf">GenericArray_Sort</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="n">TargetArray</span><span class="p">,</span> <span class="k">const</span> <span class="n">UArrayProperty</span><span class="o">*</span> <span class="n">ArrayProp</span><span class="p">,</span> <span class="k">const</span> <span class="n">FString</span> <span class="o">&amp;</span><span class="n">FieldName</span><span class="p">,</span> <span class="n">ESortDirection</span> <span class="n">SortDirection</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       The first method, "Array_Sort", is a dummy method.  It should never be called.  It's there solely to prevent compilation errors.  "GenericArray_Sort" is where our sorting will actually be happening.  The reason for this is that Unreal Engine 4's templated function support is limited (at the moment).  More info
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?5324-Templated-Blueprint-functions" rel="nofollow">
+        here
+       </a>
+       .
+      </p>
+      <h3>
+       <span class="mw-headline" id="The_Intercept">
+        The Intercept
+       </span>
+      </h3>
+      <p>
+       This next snippet is a bit of call stack magic.  I believe this intercepts any call to our dummy method, "Array_Sort", and redirects it to "GenericArray_Sort".
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">DECLARE_FUNCTION</span><span class="p">(</span><span class="n">execArray_Sort</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Stack</span><span class="p">.</span><span class="n">StepCompiledIn</span><span class="o">&lt;</span><span class="n">UArrayProperty</span><span class="o">&gt;</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+    <span class="kt">void</span><span class="o">*</span> <span class="n">ArrayAddr</span> <span class="o">=</span> <span class="n">Stack</span><span class="p">.</span><span class="n">MostRecentPropertyAddress</span><span class="p">;</span>
+
+    <span class="n">P_GET_OBJECT</span><span class="p">(</span><span class="n">UArrayProperty</span><span class="p">,</span> <span class="n">ArrayProperty</span><span class="p">);</span>
+    <span class="n">PARAM_PASSED_BY_REF</span><span class="p">(</span><span class="n">FieldName</span><span class="p">,</span> <span class="n">UStrProperty</span><span class="p">,</span> <span class="n">FString</span><span class="p">);</span>
+    <span class="n">PARAM_PASSED_BY_VAL</span><span class="p">(</span><span class="n">SortDirection</span><span class="p">,</span> <span class="n">UByteProperty</span><span class="p">,</span> <span class="n">ESortDirection</span><span class="p">);</span>
+    <span class="n">P_FINISH</span><span class="p">;</span>
+
+    <span class="n">GenericArray_Sort</span><span class="p">(</span><span class="n">ArrayAddr</span><span class="p">,</span> <span class="n">ArrayProperty</span><span class="p">,</span> <span class="n">FieldName</span><span class="p">,</span> <span class="n">SortDirection</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Custom_Thunk">
+        Custom Thunk
+       </span>
+      </h3>
+      <p>
+       Next up is our Custom Thunk, which is also part of the pseudo-templating stuff.  To be honest, I'm not 100% sure what it does/is used for, EXACTLY.  Again, just following convention.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">struct</span> <span class="n">FXXXCustomThunkTemplates</span>
+<span class="p">{</span>
+    <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="n">Array_Sort</span><span class="p">(</span><span class="n">TArray</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">TargetArray</span><span class="p">,</span> <span class="k">const</span> <span class="n">UArrayProperty</span><span class="o">*</span> <span class="n">ArrayProperty</span><span class="p">,</span> <span class="k">const</span> <span class="n">FString</span> <span class="o">&amp;</span><span class="n">FieldName</span><span class="p">,</span> <span class="n">ESortDirection</span> <span class="n">SortDirection</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">UXXXBlueprintFunctionLibrary</span><span class="o">::</span><span class="n">GenericArray_Sort</span><span class="p">(</span><span class="o">&amp;</span><span class="n">TargetArray</span><span class="p">,</span> <span class="n">ArrayProperty</span><span class="p">,</span> <span class="n">FieldName</span><span class="p">,</span> <span class="n">SortDirection</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Source">
+        Source
+       </span>
+      </h3>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+
+<span class="cp">#include</span> <span class="cpf">"Kismet/BlueprintFunctionLibrary.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"XXXBlueprintFunctionLibrary.generated.h"</span><span class="cp"></span>
+
+<span class="cm">/**</span>
+<span class="cm"> * </span>
+<span class="cm"> */</span>
+<span class="n">UCLASS</span><span class="p">()</span>
+<span class="k">class</span> <span class="nc">XXX_API</span> <span class="nl">UXXXBlueprintFunctionLibrary</span> <span class="p">:</span> <span class="k">public</span> <span class="n">UBlueprintFunctionLibrary</span>
+<span class="p">{</span>
+    <span class="n">GENERATED_BODY</span><span class="p">()</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">CustomThunk</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">DisplayName</span> <span class="o">=</span> <span class="s">"Sort Array"</span><span class="p">,</span> <span class="n">CompactNodeTitle</span> <span class="o">=</span> <span class="s">"SORTARRAY"</span><span class="p">,</span> <span class="n">ArrayParm</span>      <span class="o">=</span> <span class="s">"TargetArray|ArrayProperty"</span><span class="p">),</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Utilities|Array"</span><span class="p">)</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="n">Array_Sort</span><span class="p">(</span><span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">int32</span><span class="o">&gt;&amp;</span> <span class="n">TargetArray</span><span class="p">,</span> <span class="k">const</span> <span class="n">UArrayProperty</span><span class="o">*</span> <span class="n">ArrayProperty</span><span class="p">,</span> <span class="k">const</span> <span class="n">FString</span> <span class="o">&amp;</span><span class="n">FieldName</span><span class="p">,</span> <span class="n">ESortDirection</span> <span class="n">SortDirection</span><span class="p">);</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="nf">GenericArray_Sort</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="n">TargetArray</span><span class="p">,</span> <span class="k">const</span> <span class="n">UArrayProperty</span><span class="o">*</span> <span class="n">ArrayProp</span><span class="p">,</span> <span class="k">const</span> <span class="n">FString</span> <span class="o">&amp;</span><span class="n">FieldName</span><span class="p">,</span> <span class="n">ESortDirection</span> <span class="n">SortDirection</span><span class="p">);</span>
+
+    <span class="n">DECLARE_FUNCTION</span><span class="p">(</span><span class="n">execArray_Sort</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">Stack</span><span class="p">.</span><span class="n">StepCompiledIn</span><span class="o">&lt;</span><span class="n">UArrayProperty</span><span class="o">&gt;</span><span class="p">(</span><span class="nb">NULL</span><span class="p">);</span>
+        <span class="kt">void</span><span class="o">*</span> <span class="n">ArrayAddr</span> <span class="o">=</span> <span class="n">Stack</span><span class="p">.</span><span class="n">MostRecentPropertyAddress</span><span class="p">;</span>
+
+        <span class="n">P_GET_OBJECT</span><span class="p">(</span><span class="n">UArrayProperty</span><span class="p">,</span> <span class="n">ArrayProperty</span><span class="p">);</span>
+        <span class="n">PARAM_PASSED_BY_REF</span><span class="p">(</span><span class="n">FieldName</span><span class="p">,</span> <span class="n">UStrProperty</span><span class="p">,</span> <span class="n">FString</span><span class="p">);</span>
+        <span class="n">PARAM_PASSED_BY_VAL</span><span class="p">(</span><span class="n">SortDirection</span><span class="p">,</span> <span class="n">UByteProperty</span><span class="p">,</span> <span class="n">ESortDirection</span><span class="p">);</span>
+        <span class="n">P_FINISH</span><span class="p">;</span>
+
+        <span class="n">GenericArray_Sort</span><span class="p">(</span><span class="n">ArrayAddr</span><span class="p">,</span> <span class="n">ArrayProperty</span><span class="p">,</span> <span class="n">FieldName</span><span class="p">,</span> <span class="n">SortDirection</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+
+<span class="k">struct</span> <span class="n">FXXXCustomThunkTemplates</span>
+<span class="p">{</span>
+    <span class="k">template</span><span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">&gt;</span>
+    <span class="k">static</span> <span class="kt">void</span> <span class="n">Array_Sort</span><span class="p">(</span><span class="n">TArray</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;&amp;</span> <span class="n">TargetArray</span><span class="p">,</span> <span class="k">const</span> <span class="n">UArrayProperty</span><span class="o">*</span> <span class="n">ArrayProperty</span><span class="p">,</span> <span class="k">const</span> <span class="n">FString</span> <span class="o">&amp;</span><span class="n">FieldName</span><span class="p">,</span> <span class="n">ESortDirection</span> <span class="n">SortDirection</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">UXXXBlueprintFunctionLibrary</span><span class="o">::</span><span class="n">GenericArray_Sort</span><span class="p">(</span><span class="o">&amp;</span><span class="n">TargetArray</span><span class="p">,</span> <span class="n">ArrayProperty</span><span class="p">,</span> <span class="n">FieldName</span><span class="p">,</span> <span class="n">SortDirection</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="The_Sorting_Predicate">
+        The Sorting Predicate
+       </span>
+      </h2>
+      <p>
+       Next up is our sorting predicate.  This will be passed to the "Sort" method of our array of Actors.  I put this in the header with all of the other stuff;  You can put it wherever you want.
+      </p>
+      <p>
+       This does some UProperty type checking, casting, and comparisons.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">struct</span> <span class="n">FArraySortByFieldPredicate</span>
+<span class="p">{</span>
+    <span class="n">FArraySortByFieldPredicate</span><span class="p">(</span><span class="k">const</span> <span class="n">FString</span> <span class="o">&amp;</span><span class="n">InFieldName</span><span class="p">,</span> <span class="n">ESortDirection</span> <span class="n">InSortDirection</span><span class="p">)</span> 
+		<span class="o">:</span> <span class="n">FieldName</span><span class="p">(</span><span class="n">InFieldName</span><span class="p">),</span> <span class="n">SortDirection</span><span class="p">(</span><span class="n">InSortDirection</span><span class="p">)</span>
+    <span class="p">{</span>
+    <span class="p">}</span>
+
+    <span class="kt">bool</span> <span class="k">operator</span> <span class="p">()(</span><span class="k">const</span> <span class="n">AActor</span><span class="o">&amp;</span> <span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="n">AActor</span><span class="o">&amp;</span> <span class="n">B</span><span class="p">)</span> <span class="k">const</span>
+    <span class="p">{</span>
+	<span class="n">UClass</span> <span class="o">*</span><span class="n">ourClass</span> <span class="o">=</span> <span class="n">A</span><span class="p">.</span><span class="n">GetClass</span><span class="p">();</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">ourClass</span> <span class="o">!=</span> <span class="n">B</span><span class="p">.</span><span class="n">GetClass</span><span class="p">())</span>
+	    <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+
+	<span class="n">UProperty</span> <span class="o">*</span><span class="n">targetProperty</span> <span class="o">=</span> <span class="n">FindField</span><span class="o">&lt;</span><span class="n">UProperty</span><span class="o">&gt;</span><span class="p">(</span><span class="n">ourClass</span><span class="p">,</span> <span class="o">*</span><span class="n">FieldName</span><span class="p">);</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">targetProperty</span> <span class="o">==</span> <span class="k">nullptr</span><span class="p">)</span>
+	    <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+
+	<span class="k">const</span> <span class="kt">void</span> <span class="o">*</span><span class="n">Aa</span> <span class="o">=</span> <span class="p">(</span><span class="n">SortDirection</span> <span class="o">==</span> <span class="n">ESortDirection</span><span class="o">::</span><span class="n">ASCENDING</span><span class="p">)</span> <span class="o">?</span> <span class="o">&amp;</span><span class="nl">A</span> <span class="p">:</span> <span class="o">&amp;</span><span class="n">B</span><span class="p">;</span>
+	<span class="k">const</span> <span class="kt">void</span> <span class="o">*</span><span class="n">Bb</span> <span class="o">=</span> <span class="p">(</span><span class="n">SortDirection</span> <span class="o">==</span> <span class="n">ESortDirection</span><span class="o">::</span><span class="n">ASCENDING</span><span class="p">)</span> <span class="o">?</span> <span class="o">&amp;</span><span class="nl">B</span> <span class="p">:</span> <span class="o">&amp;</span><span class="n">A</span><span class="p">;</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">targetProperty</span><span class="o">-&gt;</span><span class="n">IsA</span><span class="o">&lt;</span><span class="n">UByteProperty</span><span class="o">&gt;</span><span class="p">())</span>
+	<span class="p">{</span>
+	    <span class="k">return</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">UByteProperty</span><span class="o">&gt;</span><span class="p">(</span><span class="n">targetProperty</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetPropertyValue_InContainer</span><span class="p">(</span><span class="n">Aa</span><span class="p">)</span> <span class="o">&lt;</span>
+		   <span class="n">Cast</span><span class="o">&lt;</span><span class="n">UByteProperty</span><span class="o">&gt;</span><span class="p">(</span><span class="n">targetProperty</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetPropertyValue_InContainer</span><span class="p">(</span><span class="n">Bb</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">targetProperty</span><span class="o">-&gt;</span><span class="n">IsA</span><span class="o">&lt;</span><span class="n">UIntProperty</span><span class="o">&gt;</span><span class="p">())</span>
+	<span class="p">{</span>
+	    <span class="k">return</span>
+	        <span class="n">Cast</span><span class="o">&lt;</span><span class="n">UIntProperty</span><span class="o">&gt;</span><span class="p">(</span><span class="n">targetProperty</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetPropertyValue_InContainer</span><span class="p">(</span><span class="n">Aa</span><span class="p">)</span> <span class="o">&lt;</span>
+		<span class="n">Cast</span><span class="o">&lt;</span><span class="n">UIntProperty</span><span class="o">&gt;</span><span class="p">(</span><span class="n">targetProperty</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetPropertyValue_InContainer</span><span class="p">(</span><span class="n">Bb</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">targetProperty</span><span class="o">-&gt;</span><span class="n">IsA</span><span class="o">&lt;</span><span class="n">UUInt32Property</span><span class="o">&gt;</span><span class="p">())</span>
+	<span class="p">{</span>
+	    <span class="k">return</span>
+		<span class="n">Cast</span><span class="o">&lt;</span><span class="n">UUInt32Property</span><span class="o">&gt;</span><span class="p">(</span><span class="n">targetProperty</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetPropertyValue_InContainer</span><span class="p">(</span><span class="n">Aa</span><span class="p">)</span> <span class="o">&lt;</span>
+		<span class="n">Cast</span><span class="o">&lt;</span><span class="n">UUInt32Property</span><span class="o">&gt;</span><span class="p">(</span><span class="n">targetProperty</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetPropertyValue_InContainer</span><span class="p">(</span><span class="n">Bb</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">targetProperty</span><span class="o">-&gt;</span><span class="n">IsA</span><span class="o">&lt;</span><span class="n">UFloatProperty</span><span class="o">&gt;</span><span class="p">())</span>
+	<span class="p">{</span>
+	    <span class="k">return</span>
+		<span class="n">Cast</span><span class="o">&lt;</span><span class="n">UFloatProperty</span><span class="o">&gt;</span><span class="p">(</span><span class="n">targetProperty</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetPropertyValue_InContainer</span><span class="p">(</span><span class="n">Aa</span><span class="p">)</span> <span class="o">&lt;</span>
+		<span class="n">Cast</span><span class="o">&lt;</span><span class="n">UFloatProperty</span><span class="o">&gt;</span><span class="p">(</span><span class="n">targetProperty</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetPropertyValue_InContainer</span><span class="p">(</span><span class="n">Bb</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">targetProperty</span><span class="o">-&gt;</span><span class="n">IsA</span><span class="o">&lt;</span><span class="n">UDoubleProperty</span><span class="o">&gt;</span><span class="p">())</span>
+	<span class="p">{</span>
+	    <span class="k">return</span>
+		<span class="n">Cast</span><span class="o">&lt;</span><span class="n">UDoubleProperty</span><span class="o">&gt;</span><span class="p">(</span><span class="n">targetProperty</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetPropertyValue_InContainer</span><span class="p">(</span><span class="n">Aa</span><span class="p">)</span> <span class="o">&lt;</span>
+		<span class="n">Cast</span><span class="o">&lt;</span><span class="n">UDoubleProperty</span><span class="o">&gt;</span><span class="p">(</span><span class="n">targetProperty</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetPropertyValue_InContainer</span><span class="p">(</span><span class="n">Bb</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">targetProperty</span><span class="o">-&gt;</span><span class="n">IsA</span><span class="o">&lt;</span><span class="n">UStrProperty</span><span class="o">&gt;</span><span class="p">())</span>
+	<span class="p">{</span>
+	    <span class="k">return</span>
+		<span class="n">Cast</span><span class="o">&lt;</span><span class="n">UStrProperty</span><span class="o">&gt;</span><span class="p">(</span><span class="n">targetProperty</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetPropertyValue_InContainer</span><span class="p">(</span><span class="n">Aa</span><span class="p">)</span> <span class="o">&lt;</span>
+		<span class="n">Cast</span><span class="o">&lt;</span><span class="n">UStrProperty</span><span class="o">&gt;</span><span class="p">(</span><span class="n">targetProperty</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetPropertyValue_InContainer</span><span class="p">(</span><span class="n">Bb</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">targetProperty</span><span class="o">-&gt;</span><span class="n">IsA</span><span class="o">&lt;</span><span class="n">UNameProperty</span><span class="o">&gt;</span><span class="p">())</span>
+	<span class="p">{</span>
+	    <span class="k">return</span>
+		<span class="n">Cast</span><span class="o">&lt;</span><span class="n">UNameProperty</span><span class="o">&gt;</span><span class="p">(</span><span class="n">targetProperty</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetPropertyValue_InContainer</span><span class="p">(</span><span class="n">Aa</span><span class="p">)</span> <span class="o">&lt;</span>
+		<span class="n">Cast</span><span class="o">&lt;</span><span class="n">UNameProperty</span><span class="o">&gt;</span><span class="p">(</span><span class="n">targetProperty</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetPropertyValue_InContainer</span><span class="p">(</span><span class="n">Bb</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">else</span> <span class="k">if</span> <span class="p">(</span><span class="n">targetProperty</span><span class="o">-&gt;</span><span class="n">IsA</span><span class="o">&lt;</span><span class="n">UTextProperty</span><span class="o">&gt;</span><span class="p">())</span>
+	<span class="p">{</span>
+	    <span class="k">return</span>
+		<span class="n">Cast</span><span class="o">&lt;</span><span class="n">UTextProperty</span><span class="o">&gt;</span><span class="p">(</span><span class="n">targetProperty</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetPropertyValue_InContainer</span><span class="p">(</span><span class="n">Aa</span><span class="p">).</span><span class="n">ToString</span><span class="p">()</span> <span class="o">&lt;</span>
+		<span class="n">Cast</span><span class="o">&lt;</span><span class="n">UTextProperty</span><span class="o">&gt;</span><span class="p">(</span><span class="n">targetProperty</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">GetPropertyValue_InContainer</span><span class="p">(</span><span class="n">Bb</span><span class="p">).</span><span class="n">ToString</span><span class="p">();</span>
+	<span class="p">}</span>
+	<span class="c1">// fall back, just let diff type win:</span>
+	<span class="k">else</span>
+	    <span class="k">return</span> <span class="nb">false</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="n">FString</span> <span class="n">FieldName</span><span class="p">;</span>
+    <span class="n">ESortDirection</span> <span class="n">SortDirection</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="The_Source_File_.28.cpp.29">
+        The Source File (.cpp)
+       </span>
+      </h2>
+      <p>
+       The Source File is fairly straightforward.  It contains the body of our dummy method, "Array_Sort" and the body of "GenericArray_Sort".
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#include</span> <span class="cpf">"YourGame.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"XXXBlueprintFunctionLibrary.h"</span><span class="cp"></span>
+
+<span class="kt">void</span> <span class="n">UXXXBlueprintFunctionLibrary</span><span class="o">::</span><span class="n">Array_Sort</span><span class="p">(</span><span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span><span class="n">int32</span><span class="o">&gt;&amp;</span> <span class="n">TargetArray</span><span class="p">,</span> <span class="k">const</span> <span class="n">UArrayProperty</span><span class="o">*</span> <span class="n">ArrayProp</span><span class="p">,</span> <span class="k">const</span> <span class="n">FString</span> <span class="o">&amp;</span><span class="n">FieldName</span><span class="p">,</span> <span class="n">ESortDirection</span> <span class="n">SortDirection</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="c1">// We should never hit these!  They're stubs to avoid NoExport on the class.  Call the Generic* equivalent instead</span>
+    <span class="n">check</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">UXXXBlueprintFunctionLibrary</span><span class="o">::</span><span class="n">GenericArray_Sort</span><span class="p">(</span><span class="kt">void</span><span class="o">*</span> <span class="n">TargetArray</span><span class="p">,</span> <span class="k">const</span> <span class="n">UArrayProperty</span><span class="o">*</span> <span class="n">ArrayProp</span><span class="p">,</span> <span class="k">const</span> <span class="n">FString</span> <span class="o">&amp;</span><span class="n">FieldName</span><span class="p">,</span> <span class="n">ESortDirection</span> <span class="n">SortDirection</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">TargetArray</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">TArray</span><span class="o">&lt;</span><span class="n">AActor</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="n">actorArray</span> <span class="o">=</span> <span class="p">(</span><span class="n">TArray</span><span class="o">&lt;</span><span class="n">AActor</span> <span class="o">*&gt;</span> <span class="o">*</span><span class="p">)</span><span class="n">TargetArray</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">actorArray</span> <span class="o">!=</span> <span class="k">nullptr</span><span class="p">)</span>
+	<span class="p">{</span>
+	    <span class="n">actorArray</span><span class="o">-&gt;</span><span class="n">Sort</span><span class="p">(</span><span class="n">FArraySortByFieldPredicate</span><span class="p">(</span><span class="n">FieldName</span><span class="p">,</span> <span class="n">SortDirection</span><span class="p">));</span>
+	<span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Notes.2FConcerns.2FTODO.2FPitfalls">
+        Notes/Concerns/TODO/Pitfalls
+       </span>
+      </h2>
+      <p>
+       -This is not a truly templated sort method.  I believe that you can send an array of objects that do not derive from AActor.  In this case, the sort method will fail silently.  With that being said:
+      </p>
+      <p>
+       -This could probably use better logging.  Or any, really.
+      </p>
+      <p>
+       -If the class of the objects that you pass in does NOT contain the field in question, you may get weird results.
+      </p>
+      <p>
+       -The blueprint node does NOT contain field names.  You'll have to infer which field is which (it isn't hard, considering that there are two of them, and one is an enumeration).
+      </p>
+      <p>
+       -The FArraySortByFieldPredicate structure is limited to basic types.
+      </p>
+      <p>
+       -I don't think sorting strings actually works right now.  Perhaps calling "Compare()" would be better than the "&lt;" operator.
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

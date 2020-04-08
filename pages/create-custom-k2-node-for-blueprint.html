@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Create Custom K2 Node For Blueprint - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Create Custom K2 Node For Blueprint
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <h2>
+       <span class="mw-headline" id="Contents:">
+        Contents:
+       </span>
+      </h2>
+      <p>
+       I will show you how to create real Blueprint Node using C++. Normally all you need is expose function from C++, back to blueprints, but creating custom node have big benefits. One the biggest is dynamic allocation of pins!
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Preparations">
+        Preparations
+       </span>
+      </h2>
+      <p>
+       You will need to make some preprations before you can make custom node. First you need to add custom Editor Module your plugin, game or engine module. As it requires quite a bit of editor specific modules dependencies.
+For now assume you are working on plugin. open .uplugin file and add this code:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="s">"Modules"</span> <span class="o">:</span>
+<span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s">"Name"</span><span class="o">:</span> <span class="s">"GameInventorySystem"</span><span class="p">,</span>
+        <span class="s">"Type"</span><span class="o">:</span> <span class="s">"Runtime"</span><span class="p">,</span>
+        <span class="s">"LoadingPhase"</span> <span class="o">:</span> <span class="s">"PreDefault"</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s">"Name"</span> <span class="o">:</span> <span class="s">"GameInventorySystemEditor"</span><span class="p">,</span>
+        <span class="s">"Type"</span> <span class="o">:</span> <span class="s">"Editor"</span>
+    <span class="p">}</span>
+<span class="p">],</span>
+</pre>
+      </div>
+      <p>
+       The first module is your runtime module. Second one is editor module, which will have dependencies on runtime module. Name your modules however you want, although it's good practice to postfix editor modules with Editor.
+      </p>
+      <p>
+       Also please note I will be using code from my own plugin.
+      </p>
+      <p>
+       Now in runtime module we need to add, BlueprintFunctionLibrary, and in it at least one function.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">class</span> <span class="nc">GAMEINVENTORYSYSTEM_API</span> <span class="nl">UGISBlueprintFunctionLibrary</span> <span class="p">:</span> <span class="k">public</span> <span class="n">UBlueprintFunctionLibrary</span>
+<span class="p">{</span>
+    <span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+<span class="k">public</span><span class="o">:</span>
+    <span class="n">UFUNCTION</span><span class="p">(</span><span class="n">BlueprintCallable</span><span class="p">,</span> <span class="n">meta</span> <span class="o">=</span> <span class="p">(</span><span class="n">WorldContext</span> <span class="o">=</span> <span class="s">"WorldContextObject"</span><span class="p">,</span> <span class="n">FriendlyName</span> <span class="o">=</span> <span class="s">"Create Item Data"</span><span class="p">,</span> <span class="n">BlueprintInternalUseOnly</span> <span class="o">=</span> <span class="s">"true"</span><span class="p">),</span> <span class="n">Category</span> <span class="o">=</span> <span class="s">"Game Inventory System"</span><span class="p">)</span>
+    <span class="k">static</span> <span class="k">class</span> <span class="nc">UGISItemData</span><span class="o">*</span> <span class="n">Create</span><span class="p">(</span><span class="n">UObject</span><span class="o">*</span> <span class="n">WorldContextObject</span><span class="p">,</span> <span class="n">TSubclassOf</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">UGISItemData</span><span class="o">&gt;</span> <span class="n">ItemType</span><span class="p">,</span> <span class="n">APlayerController</span><span class="o">*</span> <span class="n">OwningPlayer</span><span class="p">);</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       Important part about UFUNCTION is BlueprintInternalUseOnly, which hides node from blueprint. That is fully intentional, we don't want this node to show in BP.
+Also don't forget to add implementation. Which will return pointer to created item. You can do it just by using ConstructObject&lt;&gt; or you can create template function like this:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="k">template</span><span class="o">&lt;</span> <span class="k">class</span> <span class="nc">T</span> <span class="o">&gt;</span>
+<span class="n">T</span><span class="o">*</span> <span class="n">CreateDataItem</span><span class="p">(</span><span class="n">APlayerController</span><span class="o">*</span> <span class="n">OwningPlayer</span><span class="p">,</span> <span class="n">UClass</span><span class="o">*</span> <span class="n">UserWidgetClass</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="n">UserWidgetClass</span><span class="o">-&gt;</span><span class="n">IsChildOf</span><span class="p">(</span><span class="n">UGISItemData</span><span class="o">::</span><span class="n">StaticClass</span><span class="p">()))</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">nullptr</span><span class="p">;</span>
+    <span class="p">}</span>
+
+<span class="c1">// Assign the outer to the game instance if it exists, otherwise use the player controller's world</span>
+    <span class="n">UWorld</span><span class="o">*</span> <span class="n">World</span> <span class="o">=</span> <span class="n">OwningPlayer</span><span class="o">-&gt;</span><span class="n">GetWorld</span><span class="p">();</span>
+    <span class="n">StaticCast</span><span class="o">&lt;</span><span class="n">UObject</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">World</span><span class="p">);</span>
+    <span class="n">UGISItemData</span><span class="o">*</span> <span class="n">NewWidget</span> <span class="o">=</span> <span class="n">ConstructObject</span><span class="o">&lt;</span><span class="n">UGISItemData</span><span class="o">&gt;</span><span class="p">(</span><span class="n">UserWidgetClass</span><span class="p">,</span> <span class="n">OwningPlayer</span><span class="p">);</span>
+    <span class="k">return</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="p">(</span><span class="n">NewWidget</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       You can also add additional post construction initialization steps in this function, to accomodate for your specific needs.
+      </p>
+      <p>
+       <br/>
+       Now move to editor module and open YourModuleName.Build.cs
+      </p>
+      <p>
+       Add this:
+      </p>
+      <p>
+       <code>
+       </code>
+      </p>
+      <code>
+       <pre>   PublicIncludePaths.AddRange(
+       new string[] {
+           "YourRunTimeModule",
+           "YourRunTimeModule/Public"
+          // ... add public include paths required here ...
+       }
+   );
+   PrivateIncludePaths.AddRange(
+       new string[] {
+           "YourRunTimeModuleEditor/Private",
+           // ... add other private include paths required here ...
+       }
+   );
+   PublicDependencyModuleNames.AddRange(
+       new string[]
+       {
+           "Core",
+           "YourRunTimeModule"
+           // ... add other public dependencies that you statically link with here ...
+       }
+   );
+   PrivateDependencyModuleNames.AddRange(
+       new string[]
+       {
+           // ... add private dependencies that you statically link with here ...
+           "Core",
+           "CoreUObject",
+           "InputCore",
+           "Slate",
+           "Engine",
+           "AssetTools",
+           "UnrealEd", // for FAssetEditorManager
+           "KismetWidgets",
+           "KismetCompiler",
+           "BlueprintGraph",
+           "GraphEditor",
+           "Kismet",  // for FWorkflowCentricApplication
+           "PropertyEditor",
+           "EditorStyle",
+           "Slate",
+           "SlateCore",
+           "MovieSceneCore",
+           "Sequencer",
+           "DetailCustomizations",
+           "Settings",
+           "RenderCore",
+       }
+   );
+</pre>
+      </code>
+      <p>
+       <code>
+       </code>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Implementing_Node:">
+        Implementing Node:
+       </span>
+      </h2>
+      <p>
+       Now add new class, to your editor module. Name it something Like BPNode_MyNode (mine is named BPNode_CreateItemData). Epic convention is K2, but it was from before Blueprint name has been invented (;.
+      </p>
+      <p>
+       Header:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cp">#pragma once</span>
+<span class="cp">#include</span> <span class="cpf">"K2Node.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"K2Node_ConstructObjectFromClass.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"BPNode_CreateItemData.generated.h"</span><span class="cp"></span>
+
+<span class="n">UCLASS</span><span class="p">(</span><span class="n">BlueprintType</span><span class="p">,</span> <span class="n">Blueprintable</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">GAMEINVENTORYSYSTEMEDITOR_API</span> <span class="nl">UBPNode_CreateItemData</span> <span class="p">:</span> <span class="k">public</span> <span class="n">UK2Node_ConstructObjectFromClass</span>
+<span class="p">{</span>
+    <span class="n">GENERATED_UCLASS_BODY</span><span class="p">()</span>
+
+    <span class="c1">// Begin UEdGraphNode interface.</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="n">AllocateDefaultPins</span><span class="p">()</span> <span class="k">override</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="n">FLinearColor</span> <span class="nf">GetNodeTitleColor</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+    <span class="c1">//this is where node will be expanded with additional pins!</span>
+    <span class="k">virtual</span> <span class="kt">void</span> <span class="nf">ExpandNode</span><span class="p">(</span><span class="k">class</span> <span class="nc">FKismetCompilerContext</span><span class="o">&amp;</span> <span class="n">CompilerContext</span><span class="p">,</span> <span class="n">UEdGraph</span><span class="o">*</span> <span class="n">SourceGraph</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+    <span class="c1">// End UEdGraphNode interface.</span>
+
+    <span class="c1">// Begin UK2Node interface</span>
+    <span class="kt">void</span> <span class="nf">GetMenuEntries</span><span class="p">(</span><span class="n">FGraphContextMenuBuilder</span><span class="o">&amp;</span> <span class="n">ContextMenuBuilder</span><span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+    <span class="k">virtual</span> <span class="n">FText</span> <span class="nf">GetMenuCategory</span><span class="p">()</span> <span class="k">const</span> <span class="k">override</span><span class="p">;</span>
+    <span class="c1">// End UK2Node interface.</span>
+
+    <span class="cm">/** Get the owning player pin */</span>
+    <span class="n">UEdGraphPin</span><span class="o">*</span> <span class="nf">GetOwningPlayerPin</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+<span class="k">protected</span><span class="o">:</span>
+    <span class="cm">/** Gets the default node title when no class is selected */</span>
+    <span class="k">virtual</span> <span class="n">FText</span> <span class="n">GetBaseNodeTitle</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="cm">/** Gets the node title when a class has been selected. */</span>
+    <span class="k">virtual</span> <span class="n">FText</span> <span class="nf">GetNodeTitleFormat</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="cm">/** Gets base class to use for the 'class' pin.  UObject by default. */</span>
+    <span class="k">virtual</span> <span class="n">UClass</span><span class="o">*</span> <span class="nf">GetClassPinBaseClass</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+    <span class="o">**</span>  <span class="err">*/</span>
+    <span class="k">virtual</span> <span class="kt">bool</span> <span class="n">IsSpawnVarPin</span><span class="p">(</span><span class="n">UEdGraphPin</span><span class="o">*</span> <span class="n">Pin</span><span class="p">)</span> <span class="k">override</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <p>
+       Implementation:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// Copyright 1998-2014 Epic Games, Inc. All Rights Reserved.</span>
+
+<span class="cp">#include</span> <span class="cpf">"GameInventorySystemEditor.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"GISBlueprintFunctionLibrary.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"GISItemData.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"KismetCompiler.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"BlueprintNodeSpawner.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"EditorCategoryUtils.h"</span><span class="cp"></span>
+<span class="cp">#include</span> <span class="cpf">"K2ActionMenuBuilder.h"</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">"BPNode_CreateItemData.h"</span><span class="cp"></span>
+
+<span class="cp">#define LOCTEXT_NAMESPACE "GameInventorySystem"</span>
+
+<span class="c1">//Helper which will store one of the function inputs we excpect BP callable function will have.</span>
+<span class="k">struct</span> <span class="n">FBPNode_CreateItemDataHelper</span>
+<span class="p">{</span>
+	<span class="k">static</span> <span class="n">FString</span> <span class="n">OwningPlayerPinName</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="n">FString</span> <span class="n">FBPNode_CreateItemDataHelper</span><span class="o">::</span><span class="n">OwningPlayerPinName</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"OwningPlayer"</span><span class="p">));</span>
+
+<span class="n">UBPNode_CreateItemData</span><span class="o">::</span><span class="n">UBPNode_CreateItemData</span><span class="p">(</span><span class="k">const</span> <span class="n">FObjectInitializer</span><span class="o">&amp;</span> <span class="n">ObjectInitializer</span><span class="p">)</span>
+	<span class="o">:</span> <span class="n">Super</span><span class="p">(</span><span class="n">ObjectInitializer</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">NodeTooltip</span> <span class="o">=</span> <span class="n">LOCTEXT</span><span class="p">(</span><span class="s">"NodeTooltip"</span><span class="p">,</span> <span class="s">"Creates a new Item Data"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">//Adds default pins to node. These Pins (inputs ?) are always displayed.</span>
+<span class="kt">void</span> <span class="n">UBPNode_CreateItemData</span><span class="o">::</span><span class="n">AllocateDefaultPins</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">AllocateDefaultPins</span><span class="p">();</span>
+
+	<span class="k">const</span> <span class="n">UEdGraphSchema_K2</span><span class="o">*</span> <span class="n">K2Schema</span> <span class="o">=</span> <span class="n">GetDefault</span><span class="o">&lt;</span><span class="n">UEdGraphSchema_K2</span><span class="o">&gt;</span><span class="p">();</span>
+
+	<span class="c1">// OwningPlayer pin</span>
+	<span class="n">UEdGraphPin</span><span class="o">*</span> <span class="n">OwningPlayerPin</span> <span class="o">=</span> <span class="n">CreatePin</span><span class="p">(</span><span class="n">EGPD_Input</span><span class="p">,</span> <span class="n">K2Schema</span><span class="o">-&gt;</span><span class="n">PC_Object</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">""</span><span class="p">),</span> <span class="n">APlayerController</span><span class="o">::</span><span class="n">StaticClass</span><span class="p">(),</span> <span class="nb">false</span><span class="p">,</span> <span class="nb">false</span><span class="p">,</span> <span class="n">FBPNode_CreateItemDataHelper</span><span class="o">::</span><span class="n">OwningPlayerPinName</span><span class="p">);</span>
+	<span class="n">SetPinToolTip</span><span class="p">(</span><span class="o">*</span><span class="n">OwningPlayerPin</span><span class="p">,</span> <span class="n">LOCTEXT</span><span class="p">(</span><span class="s">"OwningPlayerPinDescription"</span><span class="p">,</span> <span class="s">"The player that 'owns' the this item."</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="n">FLinearColor</span> <span class="n">UBPNode_CreateItemData</span><span class="o">::</span><span class="n">GetNodeTitleColor</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">Super</span><span class="o">::</span><span class="n">GetNodeTitleColor</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">FText</span> <span class="n">UBPNode_CreateItemData</span><span class="o">::</span><span class="n">GetBaseNodeTitle</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">LOCTEXT</span><span class="p">(</span><span class="s">"CreateItemData_BaseTitle"</span><span class="p">,</span> <span class="s">"Create Item Data"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">FText</span> <span class="n">UBPNode_CreateItemData</span><span class="o">::</span><span class="n">GetNodeTitleFormat</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">LOCTEXT</span><span class="p">(</span><span class="s">"CreateItemData"</span><span class="p">,</span> <span class="s">"Create {ClassName} Item Data"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">//which class can be used with this node to create objects. All childs of class can be used.</span>
+<span class="n">UClass</span><span class="o">*</span> <span class="n">UBPNode_CreateItemData</span><span class="o">::</span><span class="n">GetClassPinBaseClass</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">UGISItemData</span><span class="o">::</span><span class="n">StaticClass</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="c1">//Set context menu category in which our node will be present.</span>
+<span class="n">FText</span> <span class="n">UBPNode_CreateItemData</span><span class="o">::</span><span class="n">GetMenuCategory</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">FText</span><span class="o">::</span><span class="n">FromString</span><span class="p">(</span><span class="s">"Game Inventory System"</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">UBPNode_CreateItemData</span><span class="o">::</span><span class="n">GetMenuEntries</span><span class="p">(</span><span class="n">FGraphContextMenuBuilder</span><span class="o">&amp;</span> <span class="n">ContextMenuBuilder</span><span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="n">UBPNode_CreateItemData</span><span class="o">*</span> <span class="n">TemplateNode</span> <span class="o">=</span> <span class="n">NewObject</span><span class="o">&lt;</span><span class="n">UBPNode_CreateItemData</span><span class="o">&gt;</span><span class="p">(</span><span class="n">GetTransientPackage</span><span class="p">(),</span> <span class="n">GetClass</span><span class="p">());</span>
+
+	<span class="k">const</span> <span class="n">FString</span> <span class="n">Category</span> <span class="o">=</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"UGame Inventory System"</span><span class="p">);</span>
+	<span class="k">const</span> <span class="n">FText</span>   <span class="n">MenuDesc</span> <span class="o">=</span> <span class="n">LOCTEXT</span><span class="p">(</span><span class="s">"CreateItemDataMenuOption"</span><span class="p">,</span> <span class="s">"Create Item Data..."</span><span class="p">);</span>
+	<span class="k">const</span> <span class="n">FString</span> <span class="n">Tooltip</span> <span class="o">=</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Create a new Item Data container"</span><span class="p">);</span>
+
+	<span class="n">TSharedPtr</span><span class="o">&lt;</span><span class="n">FEdGraphSchemaAction_K2NewNode</span><span class="o">&gt;</span> <span class="n">NodeAction</span> <span class="o">=</span> <span class="n">FK2ActionMenuBuilder</span><span class="o">::</span><span class="n">AddNewNodeAction</span><span class="p">(</span><span class="n">ContextMenuBuilder</span><span class="p">,</span> <span class="n">Category</span><span class="p">,</span> <span class="n">MenuDesc</span><span class="p">,</span> <span class="n">Tooltip</span><span class="p">);</span>
+	<span class="n">NodeAction</span><span class="o">-&gt;</span><span class="n">NodeTemplate</span> <span class="o">=</span> <span class="n">TemplateNode</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="c1">//gets out predefined pin</span>
+<span class="n">UEdGraphPin</span><span class="o">*</span> <span class="n">UBPNode_CreateItemData</span><span class="o">::</span><span class="n">GetOwningPlayerPin</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="n">UEdGraphPin</span><span class="o">*</span> <span class="n">Pin</span> <span class="o">=</span> <span class="n">FindPin</span><span class="p">(</span><span class="n">FBPNode_CreateItemDataHelper</span><span class="o">::</span><span class="n">OwningPlayerPinName</span><span class="p">);</span>
+	<span class="n">check</span><span class="p">(</span><span class="n">Pin</span> <span class="o">==</span> <span class="nb">NULL</span> <span class="o">||</span> <span class="n">Pin</span><span class="o">-&gt;</span><span class="n">Direction</span> <span class="o">==</span> <span class="n">EGPD_Input</span><span class="p">);</span>
+	<span class="k">return</span> <span class="n">Pin</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">UBPNode_CreateItemData</span><span class="o">::</span><span class="n">IsSpawnVarPin</span><span class="p">(</span><span class="n">UEdGraphPin</span><span class="o">*</span> <span class="n">Pin</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">return</span><span class="p">(</span><span class="n">Super</span><span class="o">::</span><span class="n">IsSpawnVarPin</span><span class="p">(</span><span class="n">Pin</span><span class="p">)</span> <span class="o">&amp;&amp;</span>
+		<span class="n">Pin</span><span class="o">-&gt;</span><span class="n">PinName</span> <span class="o">!=</span> <span class="n">FBPNode_CreateItemDataHelper</span><span class="o">::</span><span class="n">OwningPlayerPinName</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">//and this is where magic really happens. This will expand node for our custom object, with properties</span>
+<span class="c1">//which are set as EditAwnywhere and meta=(ExposeOnSpawn), or equivalent in blueprint.</span>
+<span class="kt">void</span> <span class="n">UBPNode_CreateItemData</span><span class="o">::</span><span class="n">ExpandNode</span><span class="p">(</span><span class="k">class</span> <span class="nc">FKismetCompilerContext</span><span class="o">&amp;</span> <span class="n">CompilerContext</span><span class="p">,</span> <span class="n">UEdGraph</span><span class="o">*</span> <span class="n">SourceGraph</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">ExpandNode</span><span class="p">(</span><span class="n">CompilerContext</span><span class="p">,</span> <span class="n">SourceGraph</span><span class="p">);</span>
+
+	<span class="c1">//look for static function in BlueprintFunctionLibrary</span>
+	<span class="c1">//In this class and of this name</span>
+	<span class="k">static</span> <span class="n">FName</span> <span class="n">Create_FunctionName</span> <span class="o">=</span> <span class="n">GET_FUNCTION_NAME_CHECKED</span><span class="p">(</span><span class="n">UGISBlueprintFunctionLibrary</span><span class="p">,</span> <span class="n">Create</span><span class="p">);</span>
+	<span class="c1">//with these inputs (as a Side note, these should be probabaly FName not FString)</span>
+	<span class="k">static</span> <span class="n">FString</span> <span class="n">WorldContextObject_ParamName</span> <span class="o">=</span> <span class="n">FString</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"WorldContextObject"</span><span class="p">));</span>
+	<span class="k">static</span> <span class="n">FString</span> <span class="n">WidgetType_ParamName</span> <span class="o">=</span> <span class="n">FString</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"ItemType"</span><span class="p">));</span>
+	<span class="k">static</span> <span class="n">FString</span> <span class="n">OwningPlayer_ParamName</span> <span class="o">=</span> <span class="n">FString</span><span class="p">(</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"OwningPlayer"</span><span class="p">));</span>
+
+	<span class="c1">//get pointer to self;</span>
+	<span class="n">UBPNode_CreateItemData</span><span class="o">*</span> <span class="n">CreateItemDataNode</span> <span class="o">=</span> <span class="k">this</span><span class="p">;</span>
+	
+	<span class="c1">//get pointers to default pins.</span>
+	<span class="c1">//Exec pins are those big arrows, connected with thick white lines.</span>
+	<span class="n">UEdGraphPin</span><span class="o">*</span> <span class="n">SpawnNodeExec</span> <span class="o">=</span> <span class="n">CreateItemDataNode</span><span class="o">-&gt;</span><span class="n">GetExecPin</span><span class="p">();</span>
+	<span class="c1">//gets world context pin from our static function</span>
+	<span class="n">UEdGraphPin</span><span class="o">*</span> <span class="n">SpawnWorldContextPin</span> <span class="o">=</span> <span class="n">CreateItemDataNode</span><span class="o">-&gt;</span><span class="n">GetWorldContextPin</span><span class="p">();</span>
+	<span class="c1">//the same as above</span>
+	<span class="n">UEdGraphPin</span><span class="o">*</span> <span class="n">SpawnOwningPlayerPin</span> <span class="o">=</span> <span class="n">CreateItemDataNode</span><span class="o">-&gt;</span><span class="n">GetOwningPlayerPin</span><span class="p">();</span>
+	<span class="c1">//get class pin which is used to determine which class to spawn.</span>
+	<span class="n">UEdGraphPin</span><span class="o">*</span> <span class="n">SpawnClassPin</span> <span class="o">=</span> <span class="n">CreateItemDataNode</span><span class="o">-&gt;</span><span class="n">GetClassPin</span><span class="p">();</span>
+	<span class="c1">//then pin is the same as exec pin, just on the other side (the out arrow).</span>
+	<span class="n">UEdGraphPin</span><span class="o">*</span> <span class="n">SpawnNodeThen</span> <span class="o">=</span> <span class="n">CreateItemDataNode</span><span class="o">-&gt;</span><span class="n">GetThenPin</span><span class="p">();</span>
+	<span class="c1">//result pin, which will output our spawned object.</span>
+	<span class="n">UEdGraphPin</span><span class="o">*</span> <span class="n">SpawnNodeResult</span> <span class="o">=</span> <span class="n">CreateItemDataNode</span><span class="o">-&gt;</span><span class="n">GetResultPin</span><span class="p">();</span>
+
+	<span class="n">UClass</span><span class="o">*</span> <span class="n">SpawnClass</span> <span class="o">=</span> <span class="p">(</span><span class="n">SpawnClassPin</span> <span class="o">!=</span> <span class="nb">NULL</span><span class="p">)</span> <span class="o">?</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">UClass</span><span class="o">&gt;</span><span class="p">(</span><span class="n">SpawnClassPin</span><span class="o">-&gt;</span><span class="n">DefaultObject</span><span class="p">)</span> <span class="o">:</span> <span class="nb">NULL</span><span class="p">;</span>
+	<span class="k">if</span> <span class="p">((</span><span class="mi">0</span> <span class="o">==</span> <span class="n">SpawnClassPin</span><span class="o">-&gt;</span><span class="n">LinkedTo</span><span class="p">.</span><span class="n">Num</span><span class="p">())</span> <span class="o">&amp;&amp;</span> <span class="p">(</span><span class="nb">NULL</span> <span class="o">==</span> <span class="n">SpawnClass</span><span class="p">))</span>
+	<span class="p">{</span>
+		<span class="n">CompilerContext</span><span class="p">.</span><span class="n">MessageLog</span><span class="p">.</span><span class="n">Error</span><span class="p">(</span><span class="o">*</span><span class="n">LOCTEXT</span><span class="p">(</span><span class="s">"CreateItemDAtaNodeMissingClass_Error"</span><span class="p">,</span> <span class="s">"Spawn node @@ must have a class specified."</span><span class="p">).</span><span class="n">ToString</span><span class="p">(),</span> <span class="n">CreateItemDataNode</span><span class="p">);</span>
+		<span class="c1">// we break exec links so this is the only error we get, don't want the CreateItemData node being considered and giving 'unexpected node' type warnings</span>
+		<span class="n">CreateItemDataNode</span><span class="o">-&gt;</span><span class="n">BreakAllNodeLinks</span><span class="p">();</span>
+		<span class="k">return</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="c1">//////////////////////////////////////////////////////////////////////////</span>
+	<span class="c1">// create 'UWidgetBlueprintLibrary::Create' call node</span>
+	<span class="n">UK2Node_CallFunction</span><span class="o">*</span> <span class="n">CallCreateNode</span> <span class="o">=</span> <span class="n">CompilerContext</span><span class="p">.</span><span class="n">SpawnIntermediateNode</span><span class="o">&lt;</span><span class="n">UK2Node_CallFunction</span><span class="o">&gt;</span><span class="p">(</span><span class="n">CreateItemDataNode</span><span class="p">,</span> <span class="n">SourceGraph</span><span class="p">);</span>
+	<span class="n">CallCreateNode</span><span class="o">-&gt;</span><span class="n">FunctionReference</span><span class="p">.</span><span class="n">SetExternalMember</span><span class="p">(</span><span class="n">Create_FunctionName</span><span class="p">,</span> <span class="n">UBPNode_CreateItemData</span><span class="o">::</span><span class="n">StaticClass</span><span class="p">());</span>
+	<span class="n">CallCreateNode</span><span class="o">-&gt;</span><span class="n">AllocateDefaultPins</span><span class="p">();</span>
+
+	<span class="c1">//allocate nodes for created widget.</span>
+	<span class="n">UEdGraphPin</span><span class="o">*</span> <span class="n">CallCreateExec</span> <span class="o">=</span> <span class="n">CallCreateNode</span><span class="o">-&gt;</span><span class="n">GetExecPin</span><span class="p">();</span>
+	<span class="n">UEdGraphPin</span><span class="o">*</span> <span class="n">CallCreateWorldContextPin</span> <span class="o">=</span> <span class="n">CallCreateNode</span><span class="o">-&gt;</span><span class="n">FindPinChecked</span><span class="p">(</span><span class="n">WorldContextObject_ParamName</span><span class="p">);</span>
+	<span class="n">UEdGraphPin</span><span class="o">*</span> <span class="n">CallCreateWidgetTypePin</span> <span class="o">=</span> <span class="n">CallCreateNode</span><span class="o">-&gt;</span><span class="n">FindPinChecked</span><span class="p">(</span><span class="n">WidgetType_ParamName</span><span class="p">);</span>
+	<span class="n">UEdGraphPin</span><span class="o">*</span> <span class="n">CallCreateOwningPlayerPin</span> <span class="o">=</span> <span class="n">CallCreateNode</span><span class="o">-&gt;</span><span class="n">FindPinChecked</span><span class="p">(</span><span class="n">OwningPlayer_ParamName</span><span class="p">);</span>
+	<span class="n">UEdGraphPin</span><span class="o">*</span> <span class="n">CallCreateResult</span> <span class="o">=</span> <span class="n">CallCreateNode</span><span class="o">-&gt;</span><span class="n">GetReturnValuePin</span><span class="p">();</span>
+
+	<span class="c1">// Move 'exec' connection from create widget node to 'UWidgetBlueprintLibrary::Create'</span>
+	<span class="n">CompilerContext</span><span class="p">.</span><span class="n">MovePinLinksToIntermediate</span><span class="p">(</span><span class="o">*</span><span class="n">SpawnNodeExec</span><span class="p">,</span> <span class="o">*</span><span class="n">CallCreateExec</span><span class="p">);</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">SpawnClassPin</span><span class="o">-&gt;</span><span class="n">LinkedTo</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="c1">// Copy the 'blueprint' connection from the spawn node to 'UWidgetBlueprintLibrary::Create'</span>
+		<span class="n">CompilerContext</span><span class="p">.</span><span class="n">MovePinLinksToIntermediate</span><span class="p">(</span><span class="o">*</span><span class="n">SpawnClassPin</span><span class="p">,</span> <span class="o">*</span><span class="n">CallCreateWidgetTypePin</span><span class="p">);</span>
+	<span class="p">}</span>
+	<span class="k">else</span>
+	<span class="p">{</span>
+		<span class="c1">// Copy blueprint literal onto 'UWidgetBlueprintLibrary::Create' call </span>
+		<span class="n">CallCreateWidgetTypePin</span><span class="o">-&gt;</span><span class="n">DefaultObject</span> <span class="o">=</span> <span class="n">SpawnClass</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="c1">// Copy the world context connection from the spawn node to 'UWidgetBlueprintLibrary::Create' if necessary</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">SpawnWorldContextPin</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">CompilerContext</span><span class="p">.</span><span class="n">MovePinLinksToIntermediate</span><span class="p">(</span><span class="o">*</span><span class="n">SpawnWorldContextPin</span><span class="p">,</span> <span class="o">*</span><span class="n">CallCreateWorldContextPin</span><span class="p">);</span>
+	<span class="p">}</span>
+
+	<span class="c1">// Copy the 'Owning Player' connection from the spawn node to 'UWidgetBlueprintLibrary::Create'</span>
+	<span class="n">CompilerContext</span><span class="p">.</span><span class="n">MovePinLinksToIntermediate</span><span class="p">(</span><span class="o">*</span><span class="n">SpawnOwningPlayerPin</span><span class="p">,</span> <span class="o">*</span><span class="n">CallCreateOwningPlayerPin</span><span class="p">);</span>
+
+	<span class="c1">// Move result connection from spawn node to 'UWidgetBlueprintLibrary::Create'</span>
+	<span class="n">CallCreateResult</span><span class="o">-&gt;</span><span class="n">PinType</span> <span class="o">=</span> <span class="n">SpawnNodeResult</span><span class="o">-&gt;</span><span class="n">PinType</span><span class="p">;</span> <span class="c1">// Copy type so it uses the right actor subclass</span>
+	<span class="n">CompilerContext</span><span class="p">.</span><span class="n">MovePinLinksToIntermediate</span><span class="p">(</span><span class="o">*</span><span class="n">SpawnNodeResult</span><span class="p">,</span> <span class="o">*</span><span class="n">CallCreateResult</span><span class="p">);</span>
+
+	<span class="c1">//////////////////////////////////////////////////////////////////////////</span>
+	<span class="c1">// create 'set var' nodes</span>
+
+	<span class="c1">// Get 'result' pin from 'begin spawn', this is the actual actor we want to set properties on</span>
+	<span class="n">UEdGraphPin</span><span class="o">*</span> <span class="n">LastThen</span> <span class="o">=</span> <span class="n">FKismetCompilerUtilities</span><span class="o">::</span><span class="n">GenerateAssignmentNodes</span><span class="p">(</span><span class="n">CompilerContext</span><span class="p">,</span> <span class="n">SourceGraph</span><span class="p">,</span> <span class="n">CallCreateNode</span><span class="p">,</span> <span class="n">CreateItemDataNode</span><span class="p">,</span> <span class="n">CallCreateResult</span><span class="p">,</span> <span class="n">GetClassToSpawn</span><span class="p">());</span>
+
+	<span class="c1">// Move 'then' connection from create widget node to the last 'then'</span>
+	<span class="n">CompilerContext</span><span class="p">.</span><span class="n">MovePinLinksToIntermediate</span><span class="p">(</span><span class="o">*</span><span class="n">SpawnNodeThen</span><span class="p">,</span> <span class="o">*</span><span class="n">LastThen</span><span class="p">);</span>
+
+	<span class="c1">// Break any links to the expanded node</span>
+	<span class="n">CreateItemDataNode</span><span class="o">-&gt;</span><span class="n">BreakAllNodeLinks</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="cp">#undef LOCTEXT_NAMESPACE</span>
+</pre>
+      </div>
+      <p>
+       Hopefully comments should explain what this code does. The short version is, it create node with dynamically allocated pins, which construct custom objects.
+      </p>
+      <p>
+       <br/>
+       (
+     )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

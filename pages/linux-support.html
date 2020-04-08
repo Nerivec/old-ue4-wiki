@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Linux Support - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Linux Support
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <table id="mp-left" style="width:100%; horizontal-align:middle; vertical-align:top; background:#e9eff4;">
+       <tbody>
+        <tr>
+         <td class="MainPageBG">
+         </td>
+         <td style="width:15%;horizontal-align:middle;text-align:center;font-size:16px;font-weight:bold">
+          <div style="margin:0px auto;padding:0px;width:160px;">
+           <div class="center">
+            <div class="floatnone">
+            </div>
+           </div>
+           <div style="background:#fff;padding:6px;box-shadow:0px 10px 10px -10px rgba(0,0,0,0.75);">
+           </div>
+          </div>
+         </td>
+         <td style="width:15%;horizontal-align:middle;text-align:center;font-size:16px;font-weight:bold">
+          <div style="margin:0px auto;padding:0px;width:160px;">
+           <div class="center">
+            <div class="floatnone">
+            </div>
+           </div>
+           <div style="background:#fff;padding:6px;box-shadow:0px 10px 10px -10px rgba(0,0,0,0.75);">
+           </div>
+          </div>
+         </td>
+         <td style="width:15%;horizontal-align:middle;text-align:center;font-size:16px;font-weight:bold">
+          <div style="margin:0px auto;padding:0px;width:160px;">
+           <div class="center">
+            <div class="floatnone">
+            </div>
+           </div>
+           <div style="background:#fff;padding:6px;box-shadow:0px 10px 10px -10px rgba(0,0,0,0.75);">
+           </div>
+          </div>
+         </td>
+         <td style="width:15%;horizontal-align:middle;text-align:center;font-size:16px;font-weight:bold">
+          <div style="margin:0px auto;padding:0px;width:160px;">
+           <div class="center">
+            <div class="floatnone">
+            </div>
+           </div>
+           <div style="background:#fff;padding:6px;box-shadow:0px 10px 10px -10px rgba(0,0,0,0.75);">
+           </div>
+          </div>
+         </td>
+         <td>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <table id="mp-left" style="width:100%; horizontal-align:middle; vertical-align:top; background:#e9eff4;">
+       <tbody>
+        <tr>
+         <td class="MainPageBG">
+         </td>
+         <td style="width:15%;horizontal-align:middle;text-align:center;font-size:16px;font-weight:bold">
+          <div style="margin:0px auto;padding:0px;width:160px;">
+           <div class="center">
+            <div class="floatnone">
+            </div>
+           </div>
+           <div style="background:#fff;padding:6px;box-shadow:0px 10px 10px -10px rgba(0,0,0,0.75);">
+           </div>
+          </div>
+         </td>
+         <td style="width:15%;horizontal-align:middle;text-align:center;font-size:16px;font-weight:bold">
+          <div style="margin:0px auto;padding:0px;width:160px;">
+           <div class="center">
+            <div class="floatnone">
+            </div>
+           </div>
+           <div style="background:#fff;padding:6px;box-shadow:0px 10px 10px -10px rgba(0,0,0,0.75);">
+           </div>
+          </div>
+         </td>
+         <td style="width:15%;horizontal-align:middle;text-align:center;font-size:16px;font-weight:bold">
+          <div style="margin:0px auto;padding:0px;width:160px;">
+           <div class="center">
+            <div class="floatnone">
+            </div>
+           </div>
+           <div style="background:#fff;padding:6px;box-shadow:0px 10px 10px -10px rgba(0,0,0,0.75);">
+           </div>
+          </div>
+         </td>
+         <td style="width:15%;horizontal-align:middle;text-align:center;font-size:16px;font-weight:bold">
+          <div style="margin:0px auto;padding:0px;width:160px;">
+           <div class="center">
+            <div class="floatnone">
+            </div>
+           </div>
+           <div style="background:#fff;padding:6px;box-shadow:0px 10px 10px -10px rgba(0,0,0,0.75);">
+           </div>
+          </div>
+         </td>
+         <td>
+         </td>
+        </tr>
+       </tbody>
+      </table>
+      <h2>
+       <span class="mw-headline" id="Big_picture_view">
+        Big picture view
+       </span>
+      </h2>
+      <p>
+       There are two major directions in UE4 Linux development - the first being helping people, who might not have had prior experience with Linux, to easily support it as an application platform (SteamOS, embedded systems), while the second - giving Linux folks at large ability to use and develop with Unreal Engine on this platform natively.
+      </p>
+      <p>
+       For the first group, we want to provide smooth, "console-like" experience, where they just need to install a
+       in order to compile and package Linux games without having to switch from Mac or Windows.
+      </p>
+      <p>
+       The second group - where you probably belong - is expected to have more knowledge and be prepared to delve into nitty-gritty details, if needed.
+      </p>
+      <p>
+       Depending on which group you are from, you may be interested in either
+       or
+       . Be advised that cross-compilation is a more traveled road, since it is used in production, while native compilation is for more advanced users - you want to be present on community
+       <a href="#Community_IRC_channel">
+        IRC channel
+       </a>
+       (#ue4linux on
+       <a class="external text" href="http://webchat.freenode.net/" rel="nofollow">
+        Freenode
+       </a>
+       ), especially if you compile on an uncommon Linux distro.
+      </p>
+      <p>
+       Note that while cross-development from Windows to Linux is supported (which is especially crucial for non-Intel Linux architectures), the opposite direction (cross-developing for Windows on Linux) is not presently possible.
+      </p>
+      <p>
+       Of course, we welcome any help you might be able to offer to further improve Unreal on Linux.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Epic_Games_Launcher">
+        Epic Games Launcher
+       </span>
+      </h2>
+      <p>
+       Currently, there is no possibility to access the launcher on Linux systems. It is not known when and if the launcher will be provided for the platform.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Supported_architectures">
+        Supported architectures
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Linux_x86-64">
+        Linux x86-64
+       </span>
+      </h3>
+      <p>
+       This is the primary architecture we are supporting.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Linux_AArch64.2FAArch32">
+        Linux AArch64/AArch32
+       </span>
+      </h3>
+      <p>
+       Supported primarily for servers; albeit packaging a game is also possible (but requires desktop OpenGL which is only available on NVidia Jetson).
+      </p>
+      <h2>
+       <span class="mw-headline" id="Distros">
+        Distros
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Binary_compatibility">
+        Binary compatibility
+       </span>
+      </h3>
+      <p>
+       On Intel architectures, the cross-compiled binary should run on any distro with glibc 2.12 (CentOS 6.x) for Unreal 4.13 and earlier or with glibc 2.17 (Cent OS 7.x) for Unreal 4.14 and above. For binaries that are built natively, binary compatibility is not guaranteed and generally you should expect to be able to run them only on a system exactly like yours.
+      </p>
+      <p>
+       For compatibility on non-Intel architectures see cross-toolchain README files for glibc versions.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Suitability_for_native_development">
+        Suitability for native development
+       </span>
+      </h3>
+      <p>
+       The recommended distro for developing Unreal on Linux is Ubuntu. The LTS version that is the closest to the release of a particular Unreal version works best (i.e. 14.04 for UE4 4.11 and lower, 16.04 for UE 4.12 and above).
+      </p>
+      <p>
+       Users of other systems, especially Gentoo and Arch Linux are expected to be knowledgeable about system components and be able to find discrepancies between Ubuntu and their system that can prevent Unreal build process or the engine itself from running.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Community_IRC_channel">
+        Community IRC channel
+       </span>
+      </h2>
+      <p>
+       Although this is not an official support outlet, people from
+       <a class="external free" href="irc://irc.freenode.net/UE4Linux" rel="nofollow">
+        irc://irc.freenode.net/UE4Linux
+       </a>
+       might be able to offer some help. You can find archived IRC discussions at
+       <a class="external free" href="http://teemperor.de/ue4-logs/ue4linux/" rel="nofollow">
+        http://teemperor.de/ue4-logs/ue4linux/
+       </a>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

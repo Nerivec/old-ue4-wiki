@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Survival Sample Game: Section 5 - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Survival Sample Game: Section 5
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       C++ Sample project covering common gameplay concepts packed in a small coop survival game.
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Introduction">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Introduction
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#Links">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Links
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Networking_in_Unreal_Engine_4">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Networking in Unreal Engine 4
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Practical_Networking_Examples">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Practical Networking Examples
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Making_the_player_sprint">
+            <span class="tocnumber">
+             3.1
+            </span>
+            <span class="toctext">
+             Making the player sprint
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#Simulating_a_bomb_explosion">
+            <span class="tocnumber">
+             3.2
+            </span>
+            <span class="toctext">
+             Simulating a bomb explosion
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#Respawning_item_pickups">
+            <span class="tocnumber">
+             3.3
+            </span>
+            <span class="toctext">
+             Respawning item pickups
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Changing_the_HUD_State">
+            <span class="tocnumber">
+             3.4
+            </span>
+            <span class="toctext">
+             Changing the HUD State
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-9">
+         <a href="#Closing">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Closing
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#Links_2">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             Links
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#Notes">
+            <span class="tocnumber">
+             4.2
+            </span>
+            <span class="toctext">
+             Notes
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Introduction">
+        Introduction
+       </span>
+      </h2>
+      <p>
+       In section 5 of the ongoing survival game series we dive into gameplay networking (Replication). If you are not yet familiar with this ongoing project be sure to check out the
+       for information on the series!
+      </p>
+      <p>
+       Please consider this documentation a reference guide to get additional information on topics covered in the source itself. If you have any questions then feel free to leave your questions &amp; feedback on the
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?71057-Announcing-Section-5-of-Survival-Game-Networking-your-game" rel="nofollow">
+        section-specific forum thread!
+       </a>
+      </p>
+      <p>
+       <img alt="Containercity 06.jpg" class="" height="931" src="../assets/survival-sample-game-section-5/0.jpg" width="1589"/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Links">
+        Links
+       </span>
+      </h3>
+      <ul>
+       <li>
+        <a class="external text" href="https://forums.unrealengine.com/showthread.php?63678-Ongoing-C-Gameplay-Example-Series-Making-a-Survival-Game" rel="nofollow">
+         Forum Thread
+        </a>
+       </li>
+       <li>
+       </li>
+       <li>
+        <a class="external text" href="./survival-sample-game-section-4.html" rel="nofollow">
+         Previous Section (Gameloop, (Re)spawning, Time of Day)
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://github.com/tomlooman/EpicSurvivalGameSeries" rel="nofollow">
+         Source at GitHub
+        </a>
+       </li>
+      </ul>
+      <h2>
+       <span class="mw-headline" id="Networking_in_Unreal_Engine_4">
+        Networking in Unreal Engine 4
+       </span>
+      </h2>
+      <p>
+       Networking in UE4 is based around the
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Gameplay/Networking/Server/index.html" rel="nofollow">
+        client-server model
+       </a>
+       . This means that there is one server that is authoritative over the game state. All connected clients are kept in close proximity to this state.
+      </p>
+      <p>
+       Networking in Unreal Engine 4 is referred to as Replication. Therefor a "replicated variable" is one that is kept in sync between client and server where the server maintains and controls the value and the client receives updates to this value to maintain a synchronized state.
+      </p>
+      <p>
+       The UE4 Docs already have a great deal on
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Gameplay/Networking/" rel="nofollow">
+        Networking &amp; Multiplayer
+       </a>
+       , this page will focus on more practical examples instead covering most commonly used patterns to network a game.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Practical_Networking_Examples">
+        Practical Networking Examples
+       </span>
+      </h2>
+      <p>
+       The best way to learn a difficult topic like replication is through practical examples. The entire sample game is networked and uses a variety of common practices used in many multiplayer games. We'll take one example for each of the common patterns (Server-function, Client-function, NetMulticast and Repnotifies) So let's get started with server functions!
+      </p>
+      <h3>
+       <span class="mw-headline" id="Making_the_player_sprint">
+        Making the player sprint
+       </span>
+      </h3>
+      <p>
+       <i>
+        Keywords:
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/Gameplay/HowTo/Networking/ReplicateFunction/index.html" rel="nofollow">
+         Server-function (RPC)
+        </a>
+        , Reliable/Unreliable, WithValidation, Replication conditions
+       </i>
+      </p>
+      <p>
+       <img alt="Survival section5 sprinting.jpg" class="" height="507" src="../assets/survival-sample-game-section-5/1.jpg" width="1472"/>
+      </p>
+      <p>
+       To let the player sprint, we need to update the movement speed on the server, since the server is authoritative of the player's position. The issue we need to solve here is that whenever we press the sprint-key (in our case "LeftShift") on the client's machine we need to push this input event to the server to let it know we want to start sprinting.
+      </p>
+      <p>
+       In the following code sample we have a function that we mapped to the input key ("LeftShift") input functions are always executed on the client. The input function OnStartSprinting() calls SetSprinting(), which at this time is still executed on the client side. This function performs a Role check to see if we are a client or server and makes the request to the server in case we are calling this on the client.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/* Client-side function mapped to input key */</span>
+<span class="kt">void</span> <span class="n">ASCharacter</span><span class="o">::</span><span class="n">OnStartSprinting</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="n">SetSprinting</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="cm">/* Function that can be called on either server or client. Makes a remote procedure call if called from the client. */</span>
+<span class="kt">void</span> <span class="n">ASCharacter</span><span class="o">::</span><span class="n">SetSprinting</span><span class="p">(</span><span class="kt">bool</span> <span class="n">NewSprinting</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="cm">/* We want to update this variable regardless if a client or server makes the call (therefor it's not placed within a Role == ROLE_Authority check. </span>
+<span class="cm">           You generally only want to update (replicated) variables on the server and not client. </span>
+<span class="cm">           bWantsToRun is a special case in our SCharacter class since we added a "Replication Condition" which is set up to skip replication of this variable for the owner, all other clients still receive changes to this variable as normal. </span>
+<span class="cm">        */</span>
+	<span class="n">bWantsToRun</span> <span class="o">=</span> <span class="n">NewSprinting</span><span class="p">;</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">Role</span> <span class="o">&lt;</span> <span class="n">ROLE_Authority</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">ServerSetSprinting</span><span class="p">(</span><span class="n">NewSprinting</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Any "Server" function must be marked with "WithValidation" in the header (in our case inside SCharacter.h) for security reasons. You generally want to include some conservative validation checks. If this check fails the client disconnects from the server. In this case we simply return true without any additional checks.
+      </p>
+      <p>
+       As of 4.8 you are required to declare the _Implementation and _Validate functions in the header as well (Make sure you class is updated to GENERATED_BODY() instead of the deprecated GENERATED_UCLASS_BODY() at the top of your header or the compiler will warn about duplicate declarations as pre-4.8 code automatically generated these two functions in the header)
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/* Server side call to update actual sprint state */</span>
+<span class="n">UFUNCTION</span><span class="p">(</span><span class="n">Server</span><span class="p">,</span> <span class="n">Reliable</span><span class="p">,</span> <span class="n">WithValidation</span><span class="p">)</span>
+<span class="kt">void</span> <span class="n">ServerSetSprinting</span><span class="p">(</span><span class="kt">bool</span> <span class="n">NewSprinting</span><span class="p">);</span>
+
+<span class="kt">void</span> <span class="nf">ServerSetSprinting_Implementation</span><span class="p">(</span><span class="kt">bool</span> <span class="n">NewSprinting</span><span class="p">);</span>
+
+<span class="kt">bool</span> <span class="nf">ServerSetSprinting_Validate</span><span class="p">(</span><span class="kt">bool</span> <span class="n">NewSprinting</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       It's recommended to keep the _Implementation functions as simple as possible and simply make a call back to the caller which is SetSprinting().
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">ASCharacter</span><span class="o">::</span><span class="n">ServerSetSprinting_Implementation</span><span class="p">(</span><span class="kt">bool</span> <span class="n">NewSprinting</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">SetSprinting</span><span class="p">(</span><span class="n">NewSprinting</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">bool</span> <span class="n">ASCharacter</span><span class="o">::</span><span class="n">ServerSetSprinting_Validate</span><span class="p">(</span><span class="kt">bool</span> <span class="n">NewSprinting</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       You may have noticed the "Reliable" keyword. This specifies that we require a guarantee this function to be received at the other end. In real networking situations you will get to deal with packet loss. Information may get lost in transit, if this would happen and this function is set to the alternative "Unreliable" we might end up playing the sprinting animation on the client, but the server has never received the request and is still handling the player as if it is simply walking. For one off calls that update the state to new absolute values, using Reliable is recommended, it does add more strain to the networking however, there is definitely a good reason for using Unreliable whenever you can.
+      </p>
+      <p>
+       An example of what unreliable would be appropriate for is an update to a vector position, if a packet were lost it wouldn't matter so much if we are continuously sending new positions anyway. Using unreliable in those types of situations is highly recommended as there is no reason to re-send packets on failure, or to wait for a packet to arrive before allowing the next packet to be executed as with "Reliable".
+      </p>
+      <p>
+       Moving back to the first example the variable bWantsToRun is updated both locally on the client and on the server through SetSprinting(...) and ServerSetSprinting which calls SetSprinting as well. This is because we applied a special Replication Condition to this variable to skip the owner of the variable when replicating. This means all other clients still receive updates to this variable, except the owning client, which has already updated the variable locally to begin with.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/* Function that can be called on either server or client. Makes a remote procedure call if called from the client. */</span>
+<span class="kt">void</span> <span class="n">ASCharacter</span><span class="o">::</span><span class="n">SetSprinting</span><span class="p">(</span><span class="kt">bool</span> <span class="n">NewSprinting</span><span class="p">)</span>
+<span class="p">{</span>
+        <span class="cm">/* We want to update this variable regardless if a client or server makes the call (therefor it's not placed within a Role == ROLE_Authority check. </span>
+<span class="cm">           You generally only want to update (replicated) variables on the server and not client. </span>
+<span class="cm">           bWantsToRun is a special case in our SCharacter class since we added a "Replication Condition" which is set up to skip replication of this variable for the owner, all other clients still receive changes to this variable as normal. </span>
+<span class="cm">        */</span>
+	<span class="n">bWantsToRun</span> <span class="o">=</span> <span class="n">NewSprinting</span><span class="p">;</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">Role</span> <span class="o">&lt;</span> <span class="n">ROLE_Authority</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">ServerSetSprinting</span><span class="p">(</span><span class="n">NewSprinting</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">ASCharacter</span><span class="o">::</span><span class="n">GetLifetimeReplicatedProps</span><span class="p">(</span><span class="n">TArray</span><span class="o">&lt;</span><span class="n">FLifetimeProperty</span><span class="o">&gt;&amp;</span> <span class="n">OutLifetimeProps</span><span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">GetLifetimeReplicatedProps</span><span class="p">(</span><span class="n">OutLifetimeProps</span><span class="p">);</span>
+
+	<span class="c1">// Value is already updated locally, skip in replication step</span>
+	<span class="n">DOREPLIFETIME_CONDITION</span><span class="p">(</span><span class="n">ASCharacter</span><span class="p">,</span> <span class="n">bWantsToRun</span><span class="p">,</span> <span class="n">COND_SkipOwner</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       A reason for taking this approach to locally updating variables before sending the request is to keep your game responsive when dealing with latency in multiplayer. If your player has to wait for his keypress to change something in-game by routing it through a server it introduces a very noticeable input lag. Players are extremely perceptive to this lag! By immediately updating the variable locally the code to start the sprinting animation can begin immediately and the game will feel more responsive as a result.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Simulating_a_bomb_explosion">
+        Simulating a bomb explosion
+       </span>
+      </h3>
+      <p>
+       <i>
+        Keywords:
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/Gameplay/HowTo/Networking/ReplicateFunction/index.html" rel="nofollow">
+         NetMulticast
+        </a>
+       </i>
+      </p>
+      <p>
+       <img alt="Survival section5 explosion.jpg" class="" height="708" src="../assets/survival-sample-game-section-5/2.jpg" width="2064"/>
+      </p>
+      <p>
+       Our bomb actor deals damage to nearby Pawns and shows an explosion particle effect when detonated. The application of damage is done on the server-side only, the particle effect however should spawn on all clients. A great way of handling this is by using NetMulticast which sends a RPC request to all connected clients.
+      </p>
+      <p>
+       The definition of a NetMulticast functions looks like this:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UFUNCTION</span><span class="p">(</span><span class="n">Reliable</span><span class="p">,</span> <span class="n">NetMulticast</span><span class="p">)</span>
+<span class="kt">void</span> <span class="n">SimulateExplosion</span><span class="p">();</span>
+
+<span class="kt">void</span> <span class="nf">SimulateExplosion_Implementation</span><span class="p">();</span>
+</pre>
+      </div>
+      <p>
+       As with Server and Client functions, only the _Implementation function exists in the Cpp file, calling these functions is still done through the original function name (eg. SimulateExplosion()) instead of the _Implementation variant.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/* This function runs on the server, and applies the gameplay effects like damage</span>
+<span class="cm">   It also triggers SimulateExplosion() that runs on all clients because of NetMulticast specifier */</span>
+<span class="kt">void</span> <span class="n">ASBombActor</span><span class="o">::</span><span class="n">OnExplode</span><span class="p">()</span>
+<span class="p">{</span>
+        <span class="c1">// ...</span>
+
+	<span class="c1">// Runs on all clients (NetMulticast)</span>
+	<span class="n">SimulateExplosion</span><span class="p">();</span>
+
+        <span class="cm">/* Applies damage */</span>
+        <span class="c1">// ...</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">ASBombActor</span><span class="o">::</span><span class="n">SimulateExplosion_Implementation</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="cm">/* This should generally only be used for cosmetic effects or updating collision states etc., all gameplay must run on the server. */</span>
+
+	<span class="k">if</span> <span class="p">(</span><span class="n">ExplosionSound</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">AudioComp</span><span class="o">-&gt;</span><span class="n">SetSound</span><span class="p">(</span><span class="n">ExplosionSound</span><span class="p">);</span>
+		<span class="n">AudioComp</span><span class="o">-&gt;</span><span class="n">Play</span><span class="p">();</span>
+	<span class="p">}</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">ExplosionFX</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">ExplosionPCS</span><span class="o">-&gt;</span><span class="n">SetTemplate</span><span class="p">(</span><span class="n">ExplosionFX</span><span class="p">);</span>
+		<span class="n">ExplosionPCS</span><span class="o">-&gt;</span><span class="n">ActivateSystem</span><span class="p">();</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Now every client will see and hear an explosion effect when the bomb is detonated by a player.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Respawning_item_pickups">
+        Respawning item pickups
+       </span>
+      </h3>
+      <p>
+       <i>
+        Keywords:
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/Gameplay/HowTo/Networking/ReplicateVariable/index.html" rel="nofollow">
+         Repnotify
+        </a>
+       </i>
+      </p>
+      <p>
+       <img alt="Survival section5 cupcakes.jpg" class="" height="685" src="../assets/survival-sample-game-section-5/3.jpg" width="1823"/>
+      </p>
+      <p>
+       Items that can be picked up in the game still persist and re-appear after a while. When picked up, the object remains in place, but will de-activate any visible effect and mesh until it re-appears through a timer. Whenever this state variable changes, we want all clients to respond by either showing or hiding the mesh of the Actor. For this we can use Repnotify, which is a specifier on a variable that binds a function to be called on any change to that variable.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UPROPERTY</span><span class="p">(</span><span class="n">Transient</span><span class="p">,</span> <span class="n">ReplicatedUsing</span> <span class="o">=</span> <span class="n">OnRep_IsActive</span><span class="p">)</span>
+<span class="kt">bool</span> <span class="n">bIsActive</span><span class="p">;</span>
+	
+<span class="n">UFUNCTION</span><span class="p">()</span>
+<span class="kt">void</span> <span class="n">OnRep_IsActive</span><span class="p">();</span>
+</pre>
+      </div>
+      <p>
+       In the implementation of the repnotify function we check the updated value and respond accordingly.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/* Only runs on clients, NOT called on server when a variable changes */</span>
+<span class="kt">void</span> <span class="n">ASPickupActor</span><span class="o">::</span><span class="n">OnRep_IsActive</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">bIsActive</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">OnRespawned</span><span class="p">();</span>
+	<span class="p">}</span>
+	<span class="k">else</span>
+	<span class="p">{</span>
+		<span class="n">OnPickedUp</span><span class="p">();</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="n">ASPickupActor</span><span class="o">::</span><span class="n">GetLifetimeReplicatedProps</span><span class="p">(</span><span class="n">TArray</span><span class="o">&lt;</span><span class="n">FLifetimeProperty</span><span class="o">&gt;</span> <span class="o">&amp;</span> <span class="n">OutLifetimeProps</span><span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="n">Super</span><span class="o">::</span><span class="n">GetLifetimeReplicatedProps</span><span class="p">(</span><span class="n">OutLifetimeProps</span><span class="p">);</span>
+
+	<span class="n">DOREPLIFETIME</span><span class="p">(</span><span class="n">ASPickupActor</span><span class="p">,</span> <span class="n">bIsActive</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       It's important to keep in mind that any change to a repnotify variable only triggers the function on clients and not the server. So whenever this variable changes, we need to manually call the function if we are the server:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/* This function is called on the server, so we must manually call OnPickedUp when updating bIsActive */</span>
+<span class="kt">void</span> <span class="n">ASPickupActor</span><span class="o">::</span><span class="n">OnUsed</span><span class="p">(</span><span class="n">APawn</span><span class="o">*</span> <span class="n">InstigatorPawn</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// ...</span>
+        
+        <span class="cm">/* notifies all clients, except the server */</span>
+	<span class="n">bIsActive</span> <span class="o">=</span> <span class="nb">false</span><span class="p">;</span>
+
+        <span class="cm">/* Manually call the function since we are the server and didn't receive the repnotify call */</span>
+	<span class="n">OnPickedUp</span><span class="p">();</span>
+
+        <span class="c1">// ...</span>
+
+	<span class="n">Super</span><span class="o">::</span><span class="n">OnUsed</span><span class="p">(</span><span class="n">InstigatorPawn</span><span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Using repnotifies is great for responding to changes in the state of an Actor as we've done in pickup item example above.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Changing_the_HUD_State">
+        Changing the HUD State
+       </span>
+      </h3>
+      <p>
+       <i>
+        Keywords:
+        <a class="external text" href="https://docs.unrealengine.com/latest/INT/Gameplay/HowTo/Networking/ReplicateFunction/index.html" rel="nofollow">
+         Client-function (RPC)
+        </a>
+       </i>
+      </p>
+      <p>
+       <img alt="Survival section5 spectating.jpg" class="" height="409" src="../assets/survival-sample-game-section-5/4.jpg" width="1280"/>
+      </p>
+      <p>
+       Depending on the state of the game mode (or player) we show a different HUD. When the player is dead and waiting to respawn we have a spectator HUD, if the game ended we show a Game Over HUD with the total score. These states are updated and evaluated on the server, however the HUD only exists on the Client-side. One way of handling changes to the HUD from a server is to use Client functions. These functions are only executed on the owning client of an object, in this case whomever owns the HUD. Let's dive into an example of a client function.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">UFUNCTION</span><span class="p">(</span><span class="n">reliable</span><span class="p">,</span> <span class="n">client</span><span class="p">)</span>
+<span class="kt">void</span> <span class="n">ClientHUDStateChanged</span><span class="p">(</span><span class="n">EHUDState</span> <span class="n">NewState</span><span class="p">);</span>
+
+<span class="kt">void</span> <span class="nf">ClientHUDStateChanged_Implementation</span><span class="p">(</span><span class="n">EHUDState</span> <span class="n">NewState</span><span class="p">);</span>
+</pre>
+      </div>
+      <p>
+       Its signature is identical to NetMulticast, using an _Implementation function and without _Validate as used for Server-functions. To keep track of the type of function we are dealing with, it's best to use the "Client"-prefix as is done in the engine code.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/* This function is called on the server-side, and requests the client to change the HUD state */</span>
+<span class="kt">void</span> <span class="n">ASPlayerController</span><span class="o">::</span><span class="n">StartSpectating</span><span class="p">()</span>
+<span class="p">{</span>
+	<span class="cm">/* Perform server-side initializing of spectator code */</span>
+        <span class="c1">// ...</span>
+
+	<span class="cm">/* Update the HUD to show the spectator screen */</span>
+	<span class="n">ClientHUDStateChanged</span><span class="p">(</span><span class="n">EHUDState</span><span class="o">::</span><span class="n">Spectating</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="cm">/* Only called on the owning client */</span>
+<span class="kt">void</span> <span class="n">ASPlayerController</span><span class="o">::</span><span class="n">ClientHUDStateChanged_Implementation</span><span class="p">(</span><span class="n">EHUDState</span> <span class="n">NewState</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="n">ASHUD</span><span class="o">*</span> <span class="n">MyHUD</span> <span class="o">=</span> <span class="n">Cast</span><span class="o">&lt;</span><span class="n">ASHUD</span><span class="o">&gt;</span><span class="p">(</span><span class="n">GetHUD</span><span class="p">());</span>
+	<span class="k">if</span> <span class="p">(</span><span class="n">MyHUD</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">MyHUD</span><span class="o">-&gt;</span><span class="n">OnStateChanged</span><span class="p">(</span><span class="n">NewState</span><span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       This pattern is very useful for performing client side logic that the client did not request itself in the first place like it would with keyboard input events.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Closing">
+        Closing
+       </span>
+      </h2>
+      <p>
+       By now we've covered 4 common replication concepts using a few practical examples from the project. I definitely recommend studying the documentation pages on
+       <a class="external text" href="https://docs.unrealengine.com/latest/INT/Gameplay/Networking/" rel="nofollow">
+        Networking and Multiplayer
+       </a>
+       , they will help you in understanding the flow of data when dealing with networking in games.
+      </p>
+      <p>
+       If you have feedback or questions on this section, feel free to reach out through the
+       <a class="external text" href="https://forums.unrealengine.com/showthread.php?71057-Announcing-Section-5-of-Survival-Game-Networking-your-game" rel="nofollow">
+        forums
+       </a>
+       .
+      </p>
+      <h3>
+       <span class="mw-headline" id="Links_2">
+        Links
+       </span>
+      </h3>
+      <p>
+       <b>
+        -
+        -
+       </b>
+      </p>
+      <ul>
+       <li>
+        <a class="external text" href="https://forums.unrealengine.com/showthread.php?63678-Ongoing-C-Gameplay-Example-Series-Making-a-Survival-Game" rel="nofollow">
+         Forum Thread
+        </a>
+       </li>
+       <li>
+        <a class="external text" href="https://github.com/tomlooman/EpicSurvivalGameSeries" rel="nofollow">
+         Source at GitHub
+        </a>
+       </li>
+      </ul>
+      <h3>
+       <span class="mw-headline" id="Notes">
+        Notes
+       </span>
+      </h3>
+      <p>
+       If you're adding networking to your own game, you must specify the UnrealNetwork header in your ProjectName.h (in our case SurvivalGame.h)
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// This is NOT included by default in an empty project! It's required for replication and setting of the GetLifetimeReplicatedProps</span>
+<span class="cp">#include</span> <span class="cpf">"Net/UnrealNetwork.h"</span><span class="cp"></span>
+</pre>
+      </div>
+      <p>
+       <br/>
+       <b>
+        Project &amp; Wiki by
+        <a class="external text" href="http://www.tomlooman.com/" rel="nofollow">
+         Tom Looman
+        </a>
+       </b>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Event handling - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Event handling
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       The goal for this wiki is to be a goto page for learning a general method for writing event handlers to interface with a target delegate, to give a top-down view of this part of the engine and pass on a grasp of the idioms required to handle events via C++. Why is understanding delegates important? Events are handled by delegates. The delegate system is a key vertebrae in the backbone of Unreal Engine's messaging system, the idioms and axioms surrounding the defining of delegates will be essential learning for anyone doing non-trivial work with the engine on its higher levels.
+      </p>
+      <p>
+       Delegates are very cleverly defined and complex, making heavy use of templates and typedefs, but thanks to encapsulation and that same clever design, the interfaces are all that need to be understood. The first argument,
+       <code>
+        FActorBeginOverlapSignature
+       </code>
+       , associates a type with this delegates signature. Delegate signatures are stored in the header files of their respective classes and super-classes. Children can and do inherit their status with delegates from their parents. While this wiki only deals with
+       <code>
+        OnActorBeginOverlap
+       </code>
+       take note that you can look in the headers of base classes and find information about the delegates signatures available to them. Adding our event handler to the OnActorBeginOverlap delegate's list of callbacks will be the end-goal of this howto.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Actor.h</span>
+<span class="p">...</span>
+<span class="c1">// Delegate signatures</span>
+<span class="p">...</span>
+<span class="n">DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam</span><span class="p">(</span> <span class="n">FActorBeginOverlapSignature</span><span class="p">,</span> <span class="k">class</span> <span class="nc">AActor</span><span class="o">*</span><span class="p">,</span> <span class="n">OtherActor</span> <span class="p">);</span>
+<span class="p">...</span>
+</pre>
+      </div>
+      <p>
+       The delegate will expect an event handler (regular function) with the EXACT same signature. If the signature has no type/name arguments then the function you define must also have no arguments. That isn't to say that you copy-past the signature from the macro above; the signatures must be the same
+       <b>
+        conceptually, not literally
+       </b>
+       . The delegate signature's first parameter is a type associated with the signature for use in other parts of the system. The rest of the parameters rotate between the type and name of the parameters in the delegates interface in order from left to right. If there are no parameters after the signature's type, then the interface has no parameters. In this example, there is only one parameter, it's type is
+       <code>
+        AActor*
+       </code>
+       and it's name is
+       <code>
+        OtherActor
+       </code>
+       .
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Bleakwise.h</span>
+<span class="p">...</span>
+<span class="n">UFUNCTION</span><span class="p">()</span>
+<span class="kt">void</span> <span class="n">OnOverlap</span><span class="p">(</span><span class="n">AActor</span><span class="o">*</span> <span class="n">OtherActor</span><span class="p">)</span>
+</pre>
+      </div>
+      <p>
+       <br/>
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Bleakwise.cpp</span>
+<span class="p">...</span>
+<span class="kt">void</span> <span class="n">ABleakwise</span><span class="o">::</span><span class="n">OnOverlap</span><span class="p">(</span><span class="n">AActor</span><span class="o">*</span> <span class="n">OtherActor</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="p">...</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <p>
+       Now that our function has been declared and defined, we can add it to the delegates list of callbacks. This is done by calling the delegate's
+       <code>
+        AddDynamic
+       </code>
+       method. The fist argument is the object that will be associated with the event. In this example that is
+       <code>
+        ABleakwise
+       </code>
+       , so the first argument is a reference to itself,
+       <code>
+        this
+       </code>
+       . The second argument is a reference to the function that will be called in the event of this event. And there you have it. Whenever ABleakwise and another actor overlap eachother, the system will call the OnActorBeginOverlap delegate which will call
+       <code>
+        ABleakwise::OnOverlap(AActor* OtherActor)
+       </code>
+       passing in a pointer to the other
+       <code>
+        AActor
+       </code>
+       overlapping it (OtherActor). There's not much more to it.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Bleakwise.cpp</span>
+<span class="p">...</span>
+<span class="n">OnActorBeginOverlap</span><span class="p">.</span><span class="n">AddDynamic</span><span class="p">(</span><span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ABleakwise</span><span class="o">::</span><span class="n">OnOverlap</span><span class="p">);</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Delegates_in_Actor">
+        Delegates in Actor
+       </span>
+      </h2>
+      <p>
+       As noted above, you can locate the signatures of a particular delegate from the header file of its respective source file (e.g., Actor.h has the delegates used by
+       <code>
+        Actor
+       </code>
+       ). However, it's useful to have these collected in one location since they're not easily retrieved from the documentation at this time. You must of course give your method names actual names.
+      </p>
+      <p>
+       Damage-related event signatures:
+      </p>
+      <ul>
+       <li>
+        <b>
+         FTakeAnyDamageSignature:
+        </b>
+        <code>
+         void (float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
+        </code>
+       </li>
+       <li>
+        <b>
+         FTakePointDamageSignature:
+        </b>
+        <code>
+         void (float Damage, class AController* InstigatedBy, FVector HitLocation, class UPrimitiveComponent* FHitComponent, FName BoneName, FVector ShotFromDirection, const class UDamageType* DamageType, AActor* DamageCauser )
+        </code>
+       </li>
+      </ul>
+      <p>
+       Collision/Overlap-related event signatures:
+      </p>
+      <ul>
+       <li>
+        <b>
+         FActorBeginOverlapSignature:
+        </b>
+        <code>
+         void ( AActor* OtherActor )
+        </code>
+       </li>
+       <li>
+        <b>
+         FActorEndOverlapSignature:
+        </b>
+        <code>
+         void ( AActor* OtherActor )
+        </code>
+       </li>
+       <li>
+        <b>
+         FActorHitSignature:
+        </b>
+        <code>
+         void ( AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult&amp; Hit )
+        </code>
+       </li>
+      </ul>
+      <p>
+       Mouse-related event signatures (none of these have formal parameters):
+      </p>
+      <ul>
+       <li>
+        <b>
+         FActorBeginCursorOverSignature:
+        </b>
+        <code>
+         void ( )
+        </code>
+       </li>
+       <li>
+        <b>
+         FActorEndCursorOverSignature:
+        </b>
+        <code>
+         void ( )
+        </code>
+       </li>
+       <li>
+        <b>
+         FActorOnClickedSignature:
+        </b>
+        <code>
+         void ( )
+        </code>
+       </li>
+       <li>
+        <b>
+         FActorOnReleasedSignature:
+        </b>
+        <code>
+         void ( )
+        </code>
+       </li>
+      </ul>
+      <p>
+       <br/>
+       Touch-related event signatures:
+      </p>
+      <ul>
+       <li>
+        <b>
+         FActorOnInputTouchBeginSignature:
+        </b>
+        <code>
+         void ( ETouchIndex::Type FingerIndex )
+        </code>
+       </li>
+       <li>
+        <b>
+         FActorOnInputTouchEndSignature:
+        </b>
+        <code>
+         void ( ETouchIndex::Type FingerIndex )
+        </code>
+       </li>
+       <li>
+        <b>
+         FActorBeginTouchOverSignature:
+        </b>
+        <code>
+         void ( ETouchIndex::Type FingerIndex )
+        </code>
+       </li>
+       <li>
+        <b>
+         FActorEndTouchOverSignature:
+        </b>
+        <code>
+         void ( ETouchIndex::Type FingerIndex )
+        </code>
+       </li>
+      </ul>
+      <p>
+       Miscellaneous event signatures:
+      </p>
+      <ul>
+       <li>
+        <b>
+         FActorDestroyedSignature:
+        </b>
+        <code>
+         void ( )
+        </code>
+       </li>
+       <li>
+        <b>
+         FActorEndPlaySignature:
+        </b>
+        <code>
+         void ( EEndPlayReason::Type EndPlayReason )
+        </code>
+       </li>
+       <li>
+        <b>
+         FMakeNoiseDelegate:
+        </b>
+        <code>
+         void ( AActor*, float, class APawn*, const FVector&amp; )
+        </code>
+       </li>
+      </ul>
+      <p>
+       Documentation,
+       <a class="external autonumber" href="https://docs.unrealengine.com/latest/INT/Search/index.html?x=0&amp;y=0&amp;q=delegate" rel="nofollow">
+        [1]
+       </a>
+       ,
+       <b>
+        Delegates
+       </b>
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

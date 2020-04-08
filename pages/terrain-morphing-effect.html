@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Terrain Morphing Effect - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Terrain Morphing Effect
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       <br/>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           <b>
+            Overview
+           </b>
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Effect_Breakdown">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           <b>
+            Effect Breakdown
+           </b>
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#Post_Process_Whiteout">
+            <span class="tocnumber">
+             2.1
+            </span>
+            <span class="toctext">
+             Post Process Whiteout
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#Adjusting_the_Lighting_from_Interior_to_Exterior">
+            <span class="tocnumber">
+             2.2
+            </span>
+            <span class="toctext">
+             Adjusting the Lighting from Interior to Exterior
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Magic_Particle_Effect">
+            <span class="tocnumber">
+             2.3
+            </span>
+            <span class="toctext">
+             Magic Particle Effect
+            </span>
+           </a>
+           <ul>
+            <li class="toclevel-3 tocsection-6">
+             <a href="#Expanding_Bubble">
+              <span class="tocnumber">
+               2.3.1
+              </span>
+              <span class="toctext">
+               Expanding Bubble
+              </span>
+             </a>
+            </li>
+            <li class="toclevel-3 tocsection-7">
+             <a href="#Magic_Dust">
+              <span class="tocnumber">
+               2.3.2
+              </span>
+              <span class="toctext">
+               Magic Dust
+              </span>
+             </a>
+            </li>
+           </ul>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#Floor_Material_Change">
+            <span class="tocnumber">
+             2.4
+            </span>
+            <span class="toctext">
+             Floor Material Change
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#Grass_Growing_.28Blueprint_Effect.29">
+            <span class="tocnumber">
+             2.5
+            </span>
+            <span class="toctext">
+             Grass Growing (Blueprint Effect)
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#Bush_and_Tree_Growing_Particle_Effect">
+            <span class="tocnumber">
+             2.6
+            </span>
+            <span class="toctext">
+             Bush and Tree Growing Particle Effect
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#The_Final_Blueprints">
+            <span class="tocnumber">
+             2.7
+            </span>
+            <span class="toctext">
+             The Final Blueprints
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-12">
+         <a href="#Full_Project">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           <b>
+            Full Project
+           </b>
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        <b>
+         Overview
+        </b>
+       </span>
+      </h2>
+      <p>
+       Many times what is perceived as a singular effect can actually be a very well crafted series of effects tied closely together in time made to simulate a singular event.  As an example, here is an effect made to simulate a piece of an interior changing to an outdoor forest setting.  I am presenting a brief run down of each component of teh effect, but suggest you download the full project and follow through each section to see the full effect settings.
+      </p>
+      <p>
+       <a class="external text" href="https://vimeo.com/114140173" rel="nofollow">
+        Terrain Morph Effect, Final Render (Movie)
+       </a>
+      </p>
+      <p>
+       The effect as a whole is actually made up of several particle effects and a blueprint effect all timed to a specific set of events to create the final effect.  To breakdown the effect according to the where in the timed sequence each start:
+      </p>
+      <dl>
+       <dd>
+        <dl>
+         <dd>
+          <dl>
+           <dd>
+            <ul>
+             <li>
+              <b>
+               Post Process White Out
+              </b>
+             </li>
+             <li>
+              <b>
+               Adjust Lighting from Interior to Exterior
+              </b>
+             </li>
+             <li>
+              <b>
+               Magic Particle Effect
+              </b>
+             </li>
+             <li>
+              <b>
+               Floor Material Change
+              </b>
+             </li>
+             <li>
+              <b>
+               Grass Growing (Blueprint Effect)
+              </b>
+             </li>
+             <li>
+              <b>
+               Bush and Tree Growing Particle Effect
+              </b>
+             </li>
+            </ul>
+           </dd>
+          </dl>
+         </dd>
+        </dl>
+       </dd>
+      </dl>
+      <h2>
+       <span class="mw-headline" id="Effect_Breakdown">
+        <b>
+         Effect Breakdown
+        </b>
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="Post_Process_Whiteout">
+        Post Process Whiteout
+       </span>
+      </h3>
+      <p>
+       This effect is created using a simple Post Process Material which LERPs between the Scene and a Complete White Color using a Material Parameter Collection(MPC) Scalar Value as the alpha.  In all of these effects I use an MPC to help keep the blueprints easier to update and change.  This Material was added to the unbound post process volume in the level as a Blendable.
+       <br/>
+       <br/>
+       <img alt="Post Process Material" class="" height="452" src="../assets/terrain-morphing-effect/0.jpg" width="794"/>
+       <br/>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Adjusting_the_Lighting_from_Interior_to_Exterior">
+        Adjusting the Lighting from Interior to Exterior
+       </span>
+      </h3>
+      <p>
+       This is done simply by adjusting the intensity of the point lights and directional light up and down in the level blueprint.  In this same step I also un-hide the Sky Sphere and Atmospheric Fog (which start off hidden) to complete the outdoor look.  The exact light levels were determined in editor first then transferred into the level blueprint nodes.
+       <br/>
+       <img alt="LevelBlueprint" class="" height="198" src="../assets/terrain-morphing-effect/1.jpg" width="609"/>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Magic_Particle_Effect">
+        Magic Particle Effect
+       </span>
+      </h3>
+      <p>
+       This particle effect is made from 3 emitters, the expanded bubble, the Magic Dust growing and the stable Magic Dust stable.
+      </p>
+      <h4>
+       <span class="mw-headline" id="Expanding_Bubble">
+        Expanding Bubble
+       </span>
+      </h4>
+      <p>
+       The Expanding Bubble is a mesh type emitter where the “bubble pop” effect is controlled by a Dynamic Parameter which connects the material and the emitter and allows the emitter to control the material on the mesh over the particles lifetime.
+       <br/>
+       <img alt="Cascade Window, Dynamic Parameter" class="" height="444" src="../assets/terrain-morphing-effect/2.jpg" width="959"/>
+       <br/>
+       <br/>
+      </p>
+      <p>
+       <img alt="Material Windows, Dynamic Parameter" class="" height="591" src="../assets/terrain-morphing-effect/3.jpg" width="678"/>
+       <br/>
+      </p>
+      <h4>
+       <span class="mw-headline" id="Magic_Dust">
+        Magic Dust
+       </span>
+      </h4>
+      <p>
+       The Magic Dust Growth and Stable are actually the same effect the growth simply changing the offset value over the particles life from 0 to its final value and thus growing.  The important thing to see is that the stable emitter is actually delayed according to the lifetime of the growth ring and actually slightly before.  This way it looks like the ring grows and stops and becomes stable.
+       <br/>
+       <img alt="Cascade Window, Emitter Delay" class="" height="446" src="../assets/terrain-morphing-effect/4.jpg" width="954"/>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Floor_Material_Change">
+        Floor Material Change
+       </span>
+      </h3>
+      <p>
+       This is the real trick of the real trick of the entire effect.  The actual mesh that represents the floor (both the Tiled floor and the Grass) never changes only the material adjusts.  In this particular effect I am using a flat surface, but this can be done on any static mesh in a similar fashion.  You just need to watch how your unwrap is laid out in the UV space.
+       <br/>
+       <img alt="Floor Material, complete" class="" height="806" src="../assets/terrain-morphing-effect/5.jpg" width="1310"/>
+       <br/>
+       The material itself is controlled by a change in a single scalar value housed in the Material Parameter Collection via the IF node comparisons driving a series of LERP alphas.
+      </p>
+      <h3>
+       <span class="mw-headline" id="Grass_Growing_.28Blueprint_Effect.29">
+        Grass Growing (Blueprint Effect)
+       </span>
+      </h3>
+      <p>
+       This is actually an effect that comes from the Blueprint Office Content Example with only one small section added.  This is the blueprint which spawns a series of flowers and grasses around the tree in Blueprint Office, which I have re-purposed to only spawn my grass.  The Construction script is identical but in the Event Graph I store the values of the grass in an array and reset all the Z Scale Values to 0 and when it’s time for them to actually spawn I simply reset the Z value of all the array element using a LERP in the Blueprints.  This LERP-ing simulates the growth of the grass.
+       <br/>
+       <img alt="Actor Blueprint, initial spawn with Z=0 set" class="" height="219" src="../assets/terrain-morphing-effect/6.jpg" width="657"/>
+       <br/>
+       <br/>
+      </p>
+      <p>
+       <img alt="Actor Blueprint, growth of Z value" class="" height="171" src="../assets/terrain-morphing-effect/7.jpg" width="616"/>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="Bush_and_Tree_Growing_Particle_Effect">
+        Bush and Tree Growing Particle Effect
+       </span>
+      </h3>
+      <p>
+       These two effects do fire off in the order of Bush then Tree, but besides the scale difference and mesh used the effects themselves are identical.  The Sphere(Seeded) module has been shared between the two emitters with a Random seed information shared to insure that the bushes always spawn in the same spot so the bushes and trees grow in the same spots that the finished trees exist.  You can also see that the Int. Mesh Rot (Seed) always the same for rotation.  This way the trees and bushes will be slightly different each time but will still give the growing effect we are after.
+       <br/>
+       <img alt="Cascade Window of Bush Emitter, Sphere(Seed)" class="" height="442" src="../assets/terrain-morphing-effect/8.jpg" width="958"/>
+       <br/>
+       <br/>
+      </p>
+      <p>
+       <img alt="Cascade Window of Tree Emitter, Int Mesh Rot(Seed)" class="" height="447" src="../assets/terrain-morphing-effect/9.jpg" width="962"/>
+       <br/>
+      </p>
+      <p>
+       For the Tree Effect I also added a Leaves and branches effect the shoots off as they complete their growth, making it look like leaves and branches are being thrown up in the air during the growth.  It is an addition and not necessary for the overall effect but a nice extra touch which helps sell the motion of the trees.
+       <br/>
+       <img alt="Cascade Window of Tree Emitter, Location Box for Added Effect" class="" height="442" src="../assets/terrain-morphing-effect/10.jpg" width="958"/>
+       <br/>
+      </p>
+      <h3>
+       <span class="mw-headline" id="The_Final_Blueprints">
+        The Final Blueprints
+       </span>
+      </h3>
+      <p>
+       Here is the Event Graph of the Actor Blueprint for the Entire effect, please note that floor mesh, the grass construction script, and all effects exist in this singular blueprint.  With the exception of the grass random placement in the construction graph all effects are run in the Event Graph.
+       <br/>
+       <img alt="Actor Blueprint, complete" class="" height="1026" src="../assets/terrain-morphing-effect/11.jpg" width="959"/>
+       <br/>
+      </p>
+      <p>
+       The Level Blueprint uses the button and key pressed to drive the custom events in the actor blueprint above as well as adjust the lighting as mentioned previously.
+       <br/>
+       <img alt="Level Blueprint, complete" class="" height="456" src="../assets/terrain-morphing-effect/12.jpg" width="958"/>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Full_Project">
+        <b>
+         Full Project
+        </b>
+       </span>
+      </h2>
+      <p>
+       Here is a link to the full project for dissection:
+      </p>
+      <p>
+       <a class="external text" href="https://mega.co.nz/#!Cdk1SQra!0LDd2Bi5JuLgB762aoiaxRsb_TGcEwKAqA8-s5QpgP0" rel="nofollow">
+        TerrainMorphEffect.zip
+       </a>
+       <br/>
+       <a class="external text" href="https://mega.co.nz/#!fMMFnSab!t_qPF0PlyswUPSLDm8lwY0iyGsPXgd_hSJZtw5RVjpM" rel="nofollow">
+        TerrainMorphEffect_4_7.zip
+       </a>
+      </p>
+      <p>
+       The final build for this project is built using the
+       <b>
+        4.6.0
+       </b>
+       .  Unzip files into a new folder and double click the TerrainMorphEffect.uproject file.
+      </p>
+      <ul>
+       <li>
+        Now Updated with a 4.7 project - 6/4/2015
+       </li>
+      </ul>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

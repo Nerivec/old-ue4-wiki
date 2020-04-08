@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Building Linux cross-toolchain - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Building Linux cross-toolchain
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <h1>
+       <span class="mw-headline" id="Big_picture_view">
+        Big picture view
+       </span>
+      </h1>
+      <ol>
+       <li>
+        Download the pre-built toolchain to get shell scripts and ct-ng configs
+       </li>
+       <li>
+        Build gcc-based cross-toolchain on a Linux machine.
+       </li>
+       <li>
+        Copy it to Windows machine and build/download clang.
+       </li>
+      </ol>
+      <h2>
+       <span class="mw-headline" id="Building_gcc-based_cross-toolchain">
+        Building gcc-based cross-toolchain
+       </span>
+      </h2>
+      <p>
+       You need to download the pre-built toolchain first, since it contains the necesary scripts (see toolchain/Build/script/ directory). You may also want to follow the steps in its Build/script/README.md rather than here, since they may match the scripts you have better.
+      </p>
+      <p>
+       Copy BuildCrossToolchain.sh together with linux-host.config and win64-host.config to a Linux machine running reasonably recent distro. Make sure that the following pre-requisites are installed (using Debian package names here):
+      </p>
+      <pre>mercurial autoconf gperf bison flex libtool libtool-bin ncurses-dev texinfo gawk
+</pre>
+      <p>
+       and of course make/gcc.
+      </p>
+      <p>
+       Run the script, which will clone current crosstool-ng and will use it to perform so called "Canadian cross", i.e. will build Linux-hosted toolchain which targets mingw64 first, and then will build Windows-hosted toolchain that targets Linux. Note that the choice of kernel and binutils is pretty conservative and you are free to experiment (using "ct-ng menuconfig") if you need more recent ones. Not every combination is buildable though.
+      </p>
+      <p>
+       If the script finishes without error, the new toolchain will be copied to subfolder called CrossToolchain of the current folder. Copy it to your Windows machine, e.g. to C:\CrossToolchain. Note that libz.a from this folder will be copied to lib64 folder of the toolchain.
+      </p>
+      <h2>
+       <span class="mw-headline" id="Building_clang">
+        Building clang
+       </span>
+      </h2>
+      <p>
+       You can grab a pre-built clang from
+       <a class="external text" href="http://llvm.org/releases/download.html" rel="nofollow">
+        here
+       </a>
+       , but we haven't actually tried that, building ourselves for various reasons. Detailed instructions how to build clang are given here:
+       <a class="external free" href="http://clang.llvm.org/get_started.html" rel="nofollow">
+        http://clang.llvm.org/get_started.html
+       </a>
+       To recap, you will need: cmake, python and a supported compiler (recent Visual Studio is Ok).
+      </p>
+      <p>
+       Grab stable releases of llvm and clang from here:
+       <a class="external free" href="http://llvm.org/releases/download.html#3.3" rel="nofollow">
+        http://llvm.org/releases/download.html#3.3
+       </a>
+       and unpack it to your local folder (unpack llvm first, then unpack clang into llvm/tools subdirectory).Use cmake to generate project files and then build Release (or MinSizeRel) x64 configuration of "install" (or INSTALL, if you are using Visual Studio) target. Copy
+      </p>
+      <pre>bin/clang++.exe
+lib/clang/3.3/include 
+</pre>
+      <p>
+       into the toolchain (so their relative path from toolchain root stays the same). At this point you should be done and your toolchain should be usable for
+       .
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

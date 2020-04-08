@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Troubleshooting Launcher Problems RU - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Troubleshooting Launcher Problems RU
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#.D0.A3.D1.81.D1.82.D1.80.D0.B0.D0.BD.D0.B5.D0.BD.D0.B8.D0.B5_.D0.BF.D1.80.D0.BE.D0.B1.D0.BB.D0.B5.D0.BC_.D0.BB.D0.B0.D0.BD.D1.87.D0.B5.D1.80.D0.B0_Epic_Games">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Устранение проблем ланчера Epic Games
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-2">
+           <a href="#.D0.A0.D0.B5.D0.BA.D0.BE.D0.BC.D0.B5.D0.BD.D0.B4.D1.83.D0.B5.D0.BC.D1.8B.D0.B5_.D1.81.D0.B8.D1.81.D1.82.D0.B5.D0.BC.D0.BD.D1.8B.D0.B5_.D1.82.D1.80.D0.B5.D0.B1.D0.BE.D0.B2.D0.B0.D0.BD.D0.B8.D1.8F">
+            <span class="tocnumber">
+             1.1
+            </span>
+            <span class="toctext">
+             Рекомендуемые системные требования
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-3">
+           <a href="#.D0.AF_.D0.BD.D0.B5_.D0.BC.D0.BE.D0.B3.D1.83_.D0.B2.D0.BE.D0.B9.D1.82.D0.B8_.D0.B2_.D0.BB.D0.B0.D0.BD.D1.87.D0.B5.D1.80_.D0.B8.D1.81.D0.BF.D0.BE.D0.BB.D1.8C.D0.B7.D1.83.D1.8F_.D1.81.D0.B2.D0.BE.D1.8E_.D1.83.D1.87.D1.91.D1.82.D0.BD.D1.83.D1.8E_.D0.B7.D0.B0.D0.BF.D0.B8.D1.81.D1.8C_Epic_Games">
+            <span class="tocnumber">
+             1.2
+            </span>
+            <span class="toctext">
+             Я не могу войти в ланчер используя свою учётную запись Epic Games
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-4">
+           <a href="#.D0.AF_.D0.BD.D0.B5_.D0.BC.D0.BE.D0.B3.D1.83_.D1.83.D1.81.D1.82.D0.B0.D0.BD.D0.BE.D0.B2.D0.B8.D1.82.D1.8C_.D0.BB.D0.B0.D0.BD.D1.87.D0.B5.D1.80_.D0.B4.D0.BB.D1.8F_Windows">
+            <span class="tocnumber">
+             1.3
+            </span>
+            <span class="toctext">
+             Я не могу установить ланчер для Windows
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#.D0.9F.D1.80.D0.B8_.D0.BF.D0.BE.D0.BF.D1.8B.D1.82.D0.BA.D0.B5_.D0.B7.D0.B0.D0.BF.D1.83.D1.81.D0.BA.D0.B0_.D0.BB.D0.B0.D0.BD.D1.87.D0.B5.D1.80_.D0.B7.D0.B0.D0.B2.D0.B8.D1.81.D0.B0.D0.B5.D1.82_.D0.BD.D0.B0_.D0.BE.D0.BA.D0.BD.D0.B5_.D1.81_.D0.BD.D0.B0.D0.B4.D0.BF.D0.B8.D1.81.D1.8C.D1.8E_.22Please_Wait.22.">
+            <span class="tocnumber">
+             1.4
+            </span>
+            <span class="toctext">
+             При попытке запуска ланчер зависает на окне с надписью "Please Wait".
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-6">
+           <a href="#.D0.9B.D0.B0.D0.BD.D1.87.D0.B5.D1.80_.D0.BD.D0.B5_.D0.B7.D0.B0.D0.BF.D1.83.D1.81.D0.BA.D0.B0.D0.B5.D1.82.D1.81.D1.8F_.D0.B8.D0.BB.D0.B8_.D0.BF.D0.B0.D0.B4.D0.B0.D0.B5.D1.82_.D0.BF.D1.80.D0.B8_.D0.B7.D0.B0.D0.BF.D1.83.D1.81.D0.BA.D0.B5">
+            <span class="tocnumber">
+             1.5
+            </span>
+            <span class="toctext">
+             Ланчер не запускается или падает при запуске
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-7">
+           <a href="#.D0.9B.D0.B0.D0.BD.D1.87.D0.B5.D1.80_.D0.BD.D0.B5_.D0.BC.D0.BE.D0.B6.D0.B5.D1.82_.D0.B7.D0.B0.D0.B3.D1.80.D1.83.D0.B7.D0.B8.D1.82.D1.8C_.D0.BA.D0.BE.D0.BD.D1.82.D0.B5.D0.BD.D1.82">
+            <span class="tocnumber">
+             1.6
+            </span>
+            <span class="toctext">
+             Ланчер не может загрузить контент
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-8">
+           <a href="#.D0.95.D1.81.D0.BB.D0.B8_.D0.BD.D0.B8.D1.87.D0.B5.D0.B3.D0.BE_.D0.BD.D0.B5_.D0.BF.D0.BE.D0.BC.D0.BE.D0.B3.D0.BB.D0.BE_.E2.80.93_.D1.81.D0.B1.D0.BE.D1.80_.D0.BD.D0.B5.D0.BE.D0.B1.D1.85.D0.BE.D0.B4.D0.B8.D0.BC.D1.8B.D1.85_.D0.B4.D0.B0.D0.BD.D0.BD.D1.8B.D1.85">
+            <span class="tocnumber">
+             1.7
+            </span>
+            <span class="toctext">
+             Если ничего не помогло – сбор необходимых данных
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#.D0.A1.D0.BE.D0.B2.D0.B5.D1.82.D1.8B">
+            <span class="tocnumber">
+             1.8
+            </span>
+            <span class="toctext">
+             Советы
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id=".D0.A3.D1.81.D1.82.D1.80.D0.B0.D0.BD.D0.B5.D0.BD.D0.B8.D0.B5_.D0.BF.D1.80.D0.BE.D0.B1.D0.BB.D0.B5.D0.BC_.D0.BB.D0.B0.D0.BD.D1.87.D0.B5.D1.80.D0.B0_Epic_Games">
+        Устранение проблем ланчера Epic Games
+       </span>
+      </h2>
+      <p>
+       Ланчер Unreal Engine является единым приложением для загрузки и запуска бинарных версий Unreal Engine 4 (вместо компиляции исходного кода движка с GitHub), загрузки дополнительного контента, просмотра новостей и записей в блоге.
+      </p>
+      <p>
+       Если у вас возникли проблемы с ланчером, ознакомьтесь с этим руководством – в нём может быть решение имеющейся у вас проблемы. Если вы не нашли подходящего решения, перейдите на страницу
+       <a class="external free" href="http://help.epicgames.com/" rel="nofollow">
+        http://help.epicgames.com/
+       </a>
+       и нажмите кнопку «Email Us», расположенную в разделе «Contact Us». Заполняя форму обратной связи постарайтесь указать как можно больше информации о вашей проблеме.
+      </p>
+      <h3>
+       <span class="mw-headline" id=".D0.A0.D0.B5.D0.BA.D0.BE.D0.BC.D0.B5.D0.BD.D0.B4.D1.83.D0.B5.D0.BC.D1.8B.D0.B5_.D1.81.D0.B8.D1.81.D1.82.D0.B5.D0.BC.D0.BD.D1.8B.D0.B5_.D1.82.D1.80.D0.B5.D0.B1.D0.BE.D0.B2.D0.B0.D0.BD.D0.B8.D1.8F">
+        Рекомендуемые системные требования
+       </span>
+      </h3>
+      <p>
+       ОС: 64-битная версия Windows 7, 8, 8.1, 10; на Mac – OS X 10.9.2 или более поздняя
+      </p>
+      <p>
+       Свободное место на жёстком диске: Для установки ланчера рекомендуется ~1ГБ свободного места. Для установки проектов, редакторов игр и контента из Магазина потребуется больше свободного места.
+      </p>
+      <p>
+       Видеокарта: Любая видеокарта, совместимая с DirectX 11 или DirectX 12
+      </p>
+      <p>
+       Процессор: Четырёхъядерный процессор Intel или AMD
+      </p>
+      <h3>
+       <span class="mw-headline" id=".D0.AF_.D0.BD.D0.B5_.D0.BC.D0.BE.D0.B3.D1.83_.D0.B2.D0.BE.D0.B9.D1.82.D0.B8_.D0.B2_.D0.BB.D0.B0.D0.BD.D1.87.D0.B5.D1.80_.D0.B8.D1.81.D0.BF.D0.BE.D0.BB.D1.8C.D0.B7.D1.83.D1.8F_.D1.81.D0.B2.D0.BE.D1.8E_.D1.83.D1.87.D1.91.D1.82.D0.BD.D1.83.D1.8E_.D0.B7.D0.B0.D0.BF.D0.B8.D1.81.D1.8C_Epic_Games">
+        Я не могу войти в ланчер используя свою учётную запись Epic Games
+       </span>
+      </h3>
+      <p>
+       Возможно что ваша учётная запись используется на нескольких компьютерах одновременно. Одновременный вход возможен не более чем на 5 компьютерах. Количество доступных входов может быть снижено до 1, если вы войдёте в учётную запись после большого количества попыток.
+      </p>
+      <p>
+       Обратите внимание, что среди этих 5 одновременных входов также учитывается вход на форум Unreal Engine.
+      </p>
+      <h3>
+       <span class="mw-headline" id=".D0.AF_.D0.BD.D0.B5_.D0.BC.D0.BE.D0.B3.D1.83_.D1.83.D1.81.D1.82.D0.B0.D0.BD.D0.BE.D0.B2.D0.B8.D1.82.D1.8C_.D0.BB.D0.B0.D0.BD.D1.87.D0.B5.D1.80_.D0.B4.D0.BB.D1.8F_Windows">
+        Я не могу установить ланчер для Windows
+       </span>
+      </h3>
+      <p>
+       Если вы не можете скачать и запустить инсталлятор, попробуйте сделать следующее:
+      </p>
+      <ul>
+       <li>
+        убедитесь, что установщик запущен с привилегиями администратора;
+       </li>
+       <li>
+        убедитесь, что у вас есть права на чтение/запись в выбранную папку;
+       </li>
+       <li>
+        убедитесь, что у вас установлены все сервис-паки, обновления ОС и самые последние версии драйверов.
+       </li>
+      </ul>
+      <p>
+       Если ничто из перечисленного не помогло, то вам понадобится получить логи инсталлятора. Для этого:
+      </p>
+      <ul>
+       <li>
+        скопируйте msi-файл в корень диска C;
+       </li>
+       <li>
+        нажмите сочетание Win+R и в появишемся окне введите следующую команду:
+       </li>
+       <li>
+        msiexec /i C:\EpicGamesLauncherInstaller.msi /L*V C:\EpicGamesInstallerLog.txt (Если имя msi-файла отличается от «EpicGamesLauncherInstaller.msi», исправьте его в этой строке, чтобы имена совпадали)
+       </li>
+      </ul>
+      <p>
+       Когда вы получите логи, создайте пост на AnswerHub и прикрепите логи к вашему посту.
+      </p>
+      <h3>
+       <span class="mw-headline" id=".D0.9F.D1.80.D0.B8_.D0.BF.D0.BE.D0.BF.D1.8B.D1.82.D0.BA.D0.B5_.D0.B7.D0.B0.D0.BF.D1.83.D1.81.D0.BA.D0.B0_.D0.BB.D0.B0.D0.BD.D1.87.D0.B5.D1.80_.D0.B7.D0.B0.D0.B2.D0.B8.D1.81.D0.B0.D0.B5.D1.82_.D0.BD.D0.B0_.D0.BE.D0.BA.D0.BD.D0.B5_.D1.81_.D0.BD.D0.B0.D0.B4.D0.BF.D0.B8.D1.81.D1.8C.D1.8E_.22Please_Wait.22.">
+        При попытке запуска ланчер зависает на окне с надписью "Please Wait".
+       </span>
+      </h3>
+      <p>
+       Если эта проблема возникает при попытке входа в вашу учётную запись, выполните следующие шаги:
+      </p>
+      <ul>
+       <li>
+        убедитесь, что вы не используете прокси-сервер (это можно сделать с помощью
+        <a class="external text" href="http://amibehindaproxy.com/" rel="nofollow">
+         этого
+        </a>
+        сайта) и что у вас не заблокирован адрес epicgames.com. Если вы используете прокси-сервер, добавьте разрешение для адреса epicgames.com и его поддоменов (или попросите ваш IT-отдел сделать это). Если ваш IT-отдел предпочитает разрешать конкретные поддомены, то вы найдёте полный перечень в конце этого раздела.
+       </li>
+       <li>
+        убедитесь, что у вас открыты все необходимые порты
+        <b>
+         80
+        </b>
+        (http),
+        <b>
+         443
+        </b>
+        (https), и
+        <b>
+         5222
+        </b>
+        ;
+       </li>
+       <li>
+        попробуйте другой DNS-сервер (например на
+        <a class="external text" href="https://www.opendns.com/" rel="nofollow">
+         OpenDNS
+        </a>
+        или
+        <a class="external text" href="https://developers.google.com/speed/public-dns" rel="nofollow">
+         GoogleDNS
+        </a>
+        );
+       </li>
+       <li>
+        добавьте в командную строку параметр «-http=wininet» (только для Windows):
+       </li>
+      </ul>
+      <dl>
+       <dd>
+        <ul>
+         <li>
+          щёлкните правой кнопкой мыши на ярлыке ланчера и выберите пункт «Свойства»;
+         </li>
+         <li>
+          в конце поля «Объект» добавьте « -http=wininet» без кавычек и убедитесь, что перед дефисом есть пробел. Оно должно выглядеть вот так (см. поле «Target»):
+         </li>
+        </ul>
+       </dd>
+      </dl>
+      <p>
+       <img alt="Wininet.JPG" class="" height="534" src="../assets/troubleshooting-launcher-problems-ru/0.JPG" width="377"/>
+      </p>
+      <dl>
+       <dd>
+        <ul>
+         <li>
+          примените изменения и перезапустите ланчер.
+         </li>
+        </ul>
+       </dd>
+      </dl>
+      <div class="toccolours mw-collapsible mw-collapsed" style="width:800px">
+       Список поддоменов
+       <div class="mw-collapsible-content">
+        <p>
+         unrealengine.com
+         <br/>
+         unrealtournament.com
+         <br/>
+         fortnite.com
+         <br/>
+         <br/>
+         account-public-service-prod03.ol.epicgames.com
+         <br/>
+         catalog-public-service-prod06.ol.epicgames.com
+         <br/>
+         eulatracking-public-service-prod06.ol.epicgames.com
+         <br/>
+         entitlement-public-service-prod08.ol.epicgames.com
+         <br/>
+         orderprocessor-public-service-ecomprod01.ol.epicgames.com
+         <br/>
+         friends-public-service-prod06.ol.epicgames.com
+         <br/>
+         persona-public-service-prod06.ol.epicgames.com
+         <br/>
+         lightswitch-public-service-prod06.ol.epicgames.com
+         <br/>
+         ut-public-service-prod10.ol.epicgames.com
+         <br/>
+         launcher-public-service-prod06.ol.epicgames.com
+         <br/>
+         xmpp-service-prod.ol.epicgames.com
+         <br/>
+         <a class="external free" href="https://download.epicgames.com/" rel="nofollow">
+          https://download.epicgames.com
+         </a>
+         <br/>
+         <a class="external free" href="https://cdn1.epicgames.com/" rel="nofollow">
+          https://cdn1.epicgames.com
+         </a>
+         <br/>
+         <a class="external free" href="http://et2.epicgames.com/" rel="nofollow">
+          http://et2.epicgames.com
+         </a>
+         <br/>
+         <a class="external free" href="https://launcher-website-prod07.ol.epicgames.com/" rel="nofollow">
+          https://launcher-website-prod07.ol.epicgames.com
+         </a>
+         <br/>
+        </p>
+       </div>
+      </div>
+      <h3>
+       <span class="mw-headline" id=".D0.9B.D0.B0.D0.BD.D1.87.D0.B5.D1.80_.D0.BD.D0.B5_.D0.B7.D0.B0.D0.BF.D1.83.D1.81.D0.BA.D0.B0.D0.B5.D1.82.D1.81.D1.8F_.D0.B8.D0.BB.D0.B8_.D0.BF.D0.B0.D0.B4.D0.B0.D0.B5.D1.82_.D0.BF.D1.80.D0.B8_.D0.B7.D0.B0.D0.BF.D1.83.D1.81.D0.BA.D0.B5">
+        Ланчер не запускается или падает при запуске
+       </span>
+      </h3>
+      <p>
+       Если при запуске ланчера ничего не происходит попробуйте следующее:
+      </p>
+      <ul>
+       <li>
+        убедитесь, что ланчер не был запущен раньше;
+       </li>
+       <li>
+        проверьте Диспетчер задач на случай  если ланчер не закрылся после предыдущей сессии;
+       </li>
+       <li>
+        убедитесь, что у вас установлена самая последняя версия драйвера для видеокарты;
+       </li>
+       <li>
+        если вы используете совместимую с DirectX 11 интегрированную видеокарту или видеокарту ноутбука попробуйте использовать параметр командной строки «-OpenGL»:
+       </li>
+      </ul>
+      <dl>
+       <dd>
+        <ul>
+         <li>
+          щёлкните правой кнопкой мыши на ярлыке ланчера и выберите пункт «Свойства»;
+         </li>
+         <li>
+          в конце поля «Объект» добавьте « -OpenGL» без кавычек и убедитесь, что перед дефисом есть пробел. Оно должно выглядеть вот так (см. поле «Target»):
+         </li>
+        </ul>
+       </dd>
+      </dl>
+      <p>
+       <img alt="OpenGL.JPG" class="" height="498" src="../assets/troubleshooting-launcher-problems-ru/1.JPG" width="363"/>
+      </p>
+      <dl>
+       <dd>
+        <ul>
+         <li>
+          примените изменения и перезапустите ланчер.
+         </li>
+        </ul>
+       </dd>
+      </dl>
+      <h3>
+       <span class="mw-headline" id=".D0.9B.D0.B0.D0.BD.D1.87.D0.B5.D1.80_.D0.BD.D0.B5_.D0.BC.D0.BE.D0.B6.D0.B5.D1.82_.D0.B7.D0.B0.D0.B3.D1.80.D1.83.D0.B7.D0.B8.D1.82.D1.8C_.D0.BA.D0.BE.D0.BD.D1.82.D0.B5.D0.BD.D1.82">
+        Ланчер не может загрузить контент
+       </span>
+      </h3>
+      <p>
+       Если у вас не загружается или не отображается контент, попробуйте следующее:
+      </p>
+      <ul>
+       <li>
+        закройте и перезапустите ланчер и/или ваш компьютер, но прежде чем это делать, подождите несколько минут (это помогает чаще всего!);
+       </li>
+       <li>
+        убедитесь, что вы не используете прокси-сервер (это можно сделать с помощью
+        <a class="external text" href="http://amibehindaproxy.com/" rel="nofollow">
+         этого
+        </a>
+        сайта) и что у вас не заблокирован адрес epicgames.com. Если вы используете прокси-сервер, добавьте разрешение для адреса epicgames.com и его поддоменов (или попросите ваш IT-отдел сделать это);
+       </li>
+       <li>
+        если вы используете брандмауэр, убедитесь, что в нём добавлены исключения для адреса epicgames.com и его поддоменов (или попросите ваш IT-отдел сделать это);
+       </li>
+       <li>
+        попробуйте сменить DNS-сервер (например на
+        <a class="external text" href="https://www.opendns.com/" rel="nofollow">
+         OpenDNS
+        </a>
+        или
+        <a class="external text" href="https://developers.google.com/speed/public-dns" rel="nofollow">
+         GoogleDNS
+        </a>
+        );
+       </li>
+       <li>
+        если контент из магазина завис на этапе синхронизации, пожалуйста сообщите нам на форуме Магазина.
+       </li>
+      </ul>
+      <h3>
+       <span class="mw-headline" id=".D0.95.D1.81.D0.BB.D0.B8_.D0.BD.D0.B8.D1.87.D0.B5.D0.B3.D0.BE_.D0.BD.D0.B5_.D0.BF.D0.BE.D0.BC.D0.BE.D0.B3.D0.BB.D0.BE_.E2.80.93_.D1.81.D0.B1.D0.BE.D1.80_.D0.BD.D0.B5.D0.BE.D0.B1.D1.85.D0.BE.D0.B4.D0.B8.D0.BC.D1.8B.D1.85_.D0.B4.D0.B0.D0.BD.D0.BD.D1.8B.D1.85">
+        Если ничего не помогло – сбор необходимых данных
+       </span>
+      </h3>
+      <p>
+       Если ничего из вышеперечисленного не помогло вашу решить имеющуюсмя проблему или она здесь не описана, пожалуйста попробуйте посмотреть не сообщил кто-нибудь о подобной проблеме на
+       <a class="external text" href="https://answers.unrealengine.com/" rel="nofollow">
+        AnswerHub
+       </a>
+       . Если нет, то создайте новый пост, но не забудьте прикрепить к нему файл DxDiag и журнала отладки ланчера!
+      </p>
+      <dl>
+       <dd>
+        <b>
+         Создание файла DxDiag:
+        </b>
+       </dd>
+       <dd>
+        <i>
+         На Windows:
+        </i>
+        <ul>
+         <li>
+          Нажмите на клавиатуре сочетание Win+R.
+         </li>
+         <li>
+          В открывшемся окне введите «dxdiag» и нажмите OK.
+         </li>
+         <li>
+          Появится окно программы диагностики DirectX c индикатором выполнения в нижнем левом углу.
+         </li>
+         <li>
+          Когда индикатор исчезнет, нажмите кнопку «Сохранить все сведения...».
+         </li>
+         <li>
+          Сохраните текстовый файл на рабочий стол или куда-нибудь ещё, где вы его легко найдёте.
+         </li>
+        </ul>
+       </dd>
+       <dd>
+        <i>
+         На Mac:
+        </i>
+        <ul>
+         <li>
+          Щёлкните на меню Apple.
+         </li>
+         <li>
+          Выберите пункт “Об этом Mac”.
+         </li>
+         <li>
+          Скопируйте информацию включая название ОС и её версию.
+         </li>
+        </ul>
+       </dd>
+      </dl>
+      <p>
+       После этого прикрепите DxDiag или укажите информацию о системе вашего Mac в посте на AnswerHub!
+      </p>
+      <dl>
+       <dd>
+        <b>
+         Журнал отладки ланчера:
+        </b>
+       </dd>
+       <dd>
+        <i>
+         В самом ланчере:
+        </i>
+        <ul>
+         <li>
+          В верхнем правом углу ланчера щёлкните на значке шестерёнки.
+         </li>
+         <li>
+          В открывшемся меню выберите «Включить ведение журнала отладки», затем «Включить сейчас». Если проблема возникает при запуске или входе, выберите «Включить ведение журнала отладки», затем «Перезапустить».
+         </li>
+         <li>
+          Воспроизведите проблему при включённом ведении журнала отладки.
+         </li>
+         <li>
+          После успешного воспроизведения проблемы снова откройте меню настроек ланчера (значок шестерёнки) и выберите пункт «Показать журналы приложения запуска»
+         </li>
+         <li>
+          Заархивируйте все логи в этой папке в zip-файл и прикрепите его к вашему посту к AnswerHub.
+         </li>
+         <li>
+          В ланчере снова откройте меню настроек и выберите пункт «Отключить ведение журнала отладки» или закройте ланчер.
+         </li>
+        </ul>
+       </dd>
+      </dl>
+      <dl>
+       <dd>
+        Если вы не можете включить сборку отладочных данных в самом ланчере или вы не можете включить ведение журнала отладки, вы можете попробовать сделать это с помощью параметра командной строки:
+       </dd>
+       <dd>
+        <i>
+         Вне ланчера:
+        </i>
+       </dd>
+      </dl>
+      <p>
+       Щёлкните правой кнопкой мыши на ярлыке ланчера и выберите пункт «Свойства».
+      </p>
+      <dl>
+       <dd>
+        <ul>
+         <li>
+          В конце поля «Объект» добавьте « -debuglogging» без кавычек и убедитесь, что перед дефисом есть пробел. Оно должно выглядеть вот так (см. поле «Target»):
+         </li>
+        </ul>
+       </dd>
+      </dl>
+      <p>
+       <img alt="DebugLoggingCommand.JPG" class="" height="497" src="../assets/troubleshooting-launcher-problems-ru/2.JPG" width="362"/>
+      </p>
+      <dl>
+       <dd>
+        <ul>
+         <li>
+          После того как вы получили журнал отладки удалите параметр из поля «Объект» в свойствах ярлыка.
+         </li>
+        </ul>
+       </dd>
+      </dl>
+      <dl>
+       <dd>
+        <i>
+         Где найти файлы журналов отладки:
+        </i>
+       </dd>
+       <dd>
+        Необходимые файлы находятся в следующей папке:
+       </dd>
+       <dd>
+        На Windows: "C:\Users\"Username"\AppData\Local\EpicGamesLauncher\Saved\Logs"
+       </dd>
+       <dd>
+        на Mac OS: "~/Library/Logs/Unreal Engine/EpicGamesLauncher/"
+       </dd>
+       <dd>
+        Заархивируйте всё содержимое папки и прикрепите его к вашему посту на AnswerHub.
+       </dd>
+      </dl>
+      <h3>
+       <span class="mw-headline" id=".D0.A1.D0.BE.D0.B2.D0.B5.D1.82.D1.8B">
+        Советы
+       </span>
+      </h3>
+      <p>
+       <b>
+        Как создать символьную ссылку
+       </b>
+      </p>
+      <p>
+       <b>
+        Windows:
+       </b>
+      </p>
+      <p>
+       Если у вас не хватает места на нужном диске, то файловая система NTFS в Windows поддерживает символьные ссылки. Для переадресации папок вы можете воспользоваться командой "mklink /D [ссылка] [папка для переадресации]".
+      </p>
+      <p>
+       Две самые частые причины проблем с нехваткой места - 30+ ГБ контента примеров и наличие двух копий движка при переходе с версии на версию (например 4.7 занимает 16+ ГБ без учёта папки DerivedDataCache).
+      </p>
+      <p>
+       В командной строке запущенной с администраторскими привилегиями вводите следующие команды. 
+[ В Windows 8.1, щёлкните правой кнопкой мыши в нижнем левом углу экрана и выберите «Командная строка (администратор)» ]
+      </p>
+      <ul>
+       <li>
+        cd "\Program Files\Epic Games\Launcher"
+       </li>
+       <li>
+        explorer . (пробел и точка после команды необходимы — это откроет Проводник в текущей папке)
+       </li>
+       <li>
+        Перенесите с помощью проводника папки PatchStaging и VaultCache в новое место, перед этим убедитесь что ланчер не запущен. (Для дальнейших пунктов будем считать что папки были скопированы в корень диска E: )
+       </li>
+       <li>
+        mklink /d VaultCache E:\VaultCache
+       </li>
+       <li>
+        mklink /d PatchStaging E:\PatchStaging
+       </li>
+      </ul>
+      <p>
+       Вы должны увидеть примерно такую картину:
+      </p>
+      <pre>Directory of C:\Program Files\Epic Games\Launcher    
+02.02.2015  19:24    &lt;DIR&gt;          Backup
+11.12.2014  01:19    &lt;DIR&gt;          Engine
+12.12.2015  19:28    &lt;SYMLINKD&gt;     PatchStaging [E:\PatchStaging]
+07.07.2015  02:31    &lt;SYMLINKD&gt;     VaultCache [E:\VaultCache]
+</pre>
+      <p>
+       Обратите внимание на D в конце «SYMLINKD».
+      </p>
+      <p>
+       Команду «mklink» так же можно использовать для переноса отдельных папок движка или папки Unreal Projects, или например папки Android SDK.
+      </p>
+      <p>
+       Кстати, системная папка «Документы» тоже нестандартная – в её свойствах есть вкладка «Расположение», с помощью которой можно перенести папку на диск, где есть больше места. При этом некоторые системные папки Windows трогать не стоит.
+      </p>
+      <p>
+       <b>
+        MAC:
+       </b>
+      </p>
+      <p>
+       На Mac папку установки можно перенести на внешний диск используя символическую ссылку (SymLink). Для этого необходимо перенести папку /Users/Shared/UnrealEngine на внешний диск, а затем создать символическую ссылку на новую папку в старой. Для этого вам необходимо выполнить следующие шаги:
+      </p>
+      <ul>
+       <li>
+        Сделайте резервную копию папки UnrealEngine, которая находится в папке /Users/Shared
+       </li>
+       <li>
+        Перенесите папку UnrealEngine на диск, на который вы будете устанавливать движок. Это можно сделать введя в терминале следующую команду (без кавычек): «Sudo mv /Users/Shared/UnrealEngine /Destination/Location/» (Примечание: путь к переносимой папке и путь к месту куда она переносится разделены пробелом)
+       </li>
+       <li>
+        Введите пароль администратора, когда система его запросит
+       </li>
+       <li>
+        Создайте символическую ссылку в старой папке UnrealEngine, чтобы она указывала на новое местоположение папки: "ln -s /Destination/Location/ /Users/Shared/UnrealEngine"
+       </li>
+      </ul>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   Slate, Tree View Widget, Ex: In-Editor File Structure Explorer - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    Slate, Tree View Widget, Ex: In-Editor File Structure Explorer
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Overview">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Overview
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Video">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Video
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#The_Core_Data">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           The Core Data
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Slate_.h">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Slate .h
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-5">
+           <a href="#Constructor_and_DDEdEngine">
+            <span class="tocnumber">
+             4.1
+            </span>
+            <span class="toctext">
+             Constructor and DDEdEngine
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-6">
+         <a href="#Instancing_the_Slate_Widget">
+          <span class="tocnumber">
+           5
+          </span>
+          <span class="toctext">
+           Instancing the Slate Widget
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-7">
+         <a href="#Slate_.cpp">
+          <span class="tocnumber">
+           6
+          </span>
+          <span class="toctext">
+           Slate .cpp
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-8">
+         <a href="#Important_Functions">
+          <span class="tocnumber">
+           7
+          </span>
+          <span class="toctext">
+           Important Functions
+          </span>
+         </a>
+         <ul>
+          <li class="toclevel-2 tocsection-9">
+           <a href="#On_Generate_Row">
+            <span class="tocnumber">
+             7.1
+            </span>
+            <span class="toctext">
+             On Generate Row
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-10">
+           <a href="#On_Get_Children">
+            <span class="tocnumber">
+             7.2
+            </span>
+            <span class="toctext">
+             On Get Children
+            </span>
+           </a>
+          </li>
+          <li class="toclevel-2 tocsection-11">
+           <a href="#User_Input">
+            <span class="tocnumber">
+             7.3
+            </span>
+            <span class="toctext">
+             User Input
+            </span>
+           </a>
+          </li>
+         </ul>
+        </li>
+        <li class="toclevel-1 tocsection-12">
+         <a href="#Core_Function">
+          <span class="tocnumber">
+           8
+          </span>
+          <span class="toctext">
+           Core Function
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-13">
+         <a href="#Core_Data">
+          <span class="tocnumber">
+           9
+          </span>
+          <span class="toctext">
+           Core Data
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-14">
+         <a href="#Summary">
+          <span class="tocnumber">
+           10
+          </span>
+          <span class="toctext">
+           Summary
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Overview">
+        Overview
+       </span>
+      </h2>
+      <p>
+       <i>
+        Author:
+       </i>
+       (
+       )
+      </p>
+      <p>
+       Dear Community,
+      </p>
+      <p>
+       Here's a tutorial to help you get started with Slate tree views!
+      </p>
+      <p>
+       This is the widget that has those arrows you can click to expand/contract subcategories!
+      </p>
+      <p>
+       In this example, I was making a hard drive file structure viewer, and I saved off a version that would be a great starting point :)
+      </p>
+      <h2>
+       <span class="mw-headline" id="Video">
+        Video
+       </span>
+      </h2>
+      <p>
+       This video shows the entire finished code that this code I am giving you here was the foundation for!
+      </p>
+      <p>
+       I wanted to keep this example simple, and also, not too implementation-specific.
+      </p>
+      <p>
+       You can use this coding as a starting point for your project-specific tree-view needs!
+      </p>
+      <p>
+       &lt;youtube&gt;
+       <a class="external free" href="https://www.youtube.com/watch?v=x40jXCy8dvk" rel="nofollow">
+        https://www.youtube.com/watch?v=x40jXCy8dvk
+       </a>
+      </p>
+      <h2>
+       <span class="mw-headline" id="The_Core_Data">
+        The Core Data
+       </span>
+      </h2>
+      <p>
+       Trees are branching structures composed of a fundamental node data structure.
+      </p>
+      <p>
+       Here is that data structure for this example:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//Tree view data structure by Rama</span>
+
+<span class="cp">#pragma once</span>
+
+
+<span class="k">typedef</span> <span class="n">TSharedPtr</span><span class="o">&lt;</span> <span class="k">class</span> <span class="nc">FDDFileTreeItem</span> <span class="o">&gt;</span> <span class="n">FDDFileTreeItemPtr</span><span class="p">;</span>
+
+
+<span class="cm">/**</span>
+<span class="cm"> * The Data for a single node in the Directory Tree</span>
+<span class="cm"> */</span>
+<span class="k">class</span> <span class="nc">FDDFileTreeItem</span>
+<span class="p">{</span>
+
+<span class="k">public</span><span class="o">:</span>
+
+	<span class="cm">/** @return Returns the parent or NULL if this is a root */</span>
+	<span class="k">const</span> <span class="n">FDDFileTreeItemPtr</span> <span class="n">GetParentCategory</span><span class="p">()</span> <span class="k">const</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="n">ParentDir</span><span class="p">.</span><span class="n">Pin</span><span class="p">();</span>
+	<span class="p">}</span>
+
+	<span class="cm">/** @return the path on hard disk, read-only */</span>
+	<span class="k">const</span> <span class="n">FString</span><span class="o">&amp;</span> <span class="n">GetDirectoryPath</span><span class="p">()</span> <span class="k">const</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="n">DirectoryPath</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="cm">/** @return name to display in file tree view! read-only */</span>
+	<span class="k">const</span> <span class="n">FString</span><span class="o">&amp;</span> <span class="n">GetDisplayName</span><span class="p">()</span> <span class="k">const</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="n">DisplayName</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="cm">/** @return Returns all subdirectories, read-only */</span>
+	<span class="k">const</span> <span class="n">TArray</span><span class="o">&lt;</span> <span class="n">FDDFileTreeItemPtr</span> <span class="o">&gt;&amp;</span> <span class="n">GetSubDirectories</span><span class="p">()</span> <span class="k">const</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="n">SubDirectories</span><span class="p">;</span>
+	<span class="p">}</span>
+
+        <span class="cm">/** @return Returns all subdirectories, read or write */</span>
+	<span class="n">TArray</span><span class="o">&lt;</span> <span class="n">FDDFileTreeItemPtr</span> <span class="o">&gt;&amp;</span> <span class="n">AccessSubDirectories</span><span class="p">()</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="n">SubDirectories</span><span class="p">;</span>
+	<span class="p">}</span>
+
+	<span class="cm">/** Add a subdirectory to this node in the tree! */</span>
+	<span class="kt">void</span> <span class="n">AddSubDirectory</span><span class="p">(</span><span class="k">const</span> <span class="n">FDDFileTreeItemPtr</span> <span class="n">NewSubDir</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">SubDirectories</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">NewSubDir</span><span class="p">);</span>
+	<span class="p">}</span>
+	
+<span class="k">public</span><span class="o">:</span>
+
+	<span class="cm">/** Constructor for FDDFileTreeItem */</span>
+	<span class="n">FDDFileTreeItem</span><span class="p">(</span><span class="k">const</span> <span class="n">FDDFileTreeItemPtr</span> <span class="n">IN_ParentDir</span><span class="p">,</span> <span class="k">const</span> <span class="n">FString</span><span class="o">&amp;</span> <span class="n">IN_DirectoryPath</span><span class="p">,</span> <span class="k">const</span> <span class="n">FString</span><span class="o">&amp;</span> <span class="n">IN_DisplayName</span><span class="p">)</span>
+		<span class="o">:</span> <span class="n">ParentDir</span><span class="p">(</span> 	 <span class="n">IN_ParentDir</span><span class="p">)</span>
+		<span class="p">,</span> <span class="n">DirectoryPath</span><span class="p">(</span> <span class="n">IN_DirectoryPath</span><span class="p">)</span>
+		<span class="p">,</span> <span class="n">DisplayName</span><span class="p">(</span>	 <span class="n">IN_DisplayName</span><span class="p">)</span>
+	<span class="p">{</span>
+	<span class="p">}</span>
+
+
+<span class="k">private</span><span class="o">:</span>
+
+	<span class="cm">/** Parent item or NULL if this is a root  */</span>
+	<span class="n">TWeakPtr</span><span class="o">&lt;</span> <span class="n">FDDFileTreeItem</span> <span class="o">&gt;</span> <span class="n">ParentDir</span><span class="p">;</span>
+
+	<span class="cm">/** Full path of this directory in the tree */</span>
+	<span class="n">FString</span> <span class="n">DirectoryPath</span><span class="p">;</span>
+
+	<span class="cm">/** Display name of the category */</span>
+	<span class="n">FString</span> <span class="n">DisplayName</span><span class="p">;</span>
+	
+	<span class="cm">/** Child categories */</span>
+	<span class="n">TArray</span><span class="o">&lt;</span> <span class="n">FDDFileTreeItemPtr</span> <span class="o">&gt;</span> <span class="n">SubDirectories</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Slate_.h">
+        Slate .h
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// File Tree Viewer by Rama</span>
+
+<span class="cp">#pragma once</span>
+
+<span class="c1">//DD File Tree Item</span>
+<span class="cp">#include</span> <span class="cpf">"DDFileTreeItem.h"</span><span class="cp"></span>
+
+<span class="c1">//~~~ Forward Declarations ~~~</span>
+<span class="k">class</span> <span class="nc">UDDEdEngine</span><span class="p">;</span>
+
+
+<span class="k">typedef</span> <span class="n">STreeView</span><span class="o">&lt;</span> <span class="n">FDDFileTreeItemPtr</span> <span class="o">&gt;</span> <span class="n">SDDFileTreeView</span><span class="p">;</span>
+
+<span class="cm">/**</span>
+<span class="cm"> * File Tree View</span>
+<span class="cm"> */</span>
+<span class="k">class</span> <span class="nc">SDDFileTree</span> <span class="o">:</span> <span class="k">public</span> <span class="n">SCompoundWidget</span>
+<span class="p">{</span>
+
+<span class="k">public</span><span class="o">:</span>
+
+	<span class="n">SLATE_BEGIN_ARGS</span><span class="p">(</span> <span class="n">SDDFileTree</span> <span class="p">)</span>
+	<span class="p">{}</span>
+
+	<span class="n">SLATE_END_ARGS</span><span class="p">()</span>
+
+
+<span class="c1">//~~~~~~~~</span>
+<span class="c1">//		DDEdEngine</span>
+<span class="c1">//~~~~~~~~</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="c1">//owns this</span>
+	<span class="n">TWeakObjectPtr</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">UDDEdEngine</span><span class="o">&gt;</span> <span class="n">DDEdEngine</span><span class="p">;</span>
+	
+
+	<span class="cm">/** Refresh the Tree */</span>
+	<span class="c1">//bool DoRefresh;</span>
+	
+	
+<span class="c1">//~~~</span>
+<span class="k">public</span><span class="o">:</span>
+	<span class="cm">/** Widget constructor */</span>
+	<span class="kt">void</span> <span class="n">Construct</span><span class="p">(</span> <span class="k">const</span> <span class="n">FArguments</span><span class="o">&amp;</span> <span class="n">Args</span><span class="p">,</span> <span class="n">TWeakObjectPtr</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">UDDEdEngine</span><span class="o">&gt;</span> <span class="n">IN_DDEdEngine</span> <span class="p">);</span>
+
+	<span class="cm">/** Destructor */</span>
+	<span class="o">~</span><span class="n">SDDFileTree</span><span class="p">();</span>
+
+	<span class="cm">/** @return Returns the currently selected category item */</span>
+	<span class="n">FDDFileTreeItemPtr</span> <span class="nf">GetSelectedDirectory</span><span class="p">()</span> <span class="k">const</span><span class="p">;</span>
+
+	<span class="cm">/** Selects the specified category */</span>
+	<span class="kt">void</span> <span class="nf">SelectDirectory</span><span class="p">(</span> <span class="k">const</span> <span class="n">FDDFileTreeItemPtr</span><span class="o">&amp;</span> <span class="n">CategoryToSelect</span> <span class="p">);</span>
+
+	<span class="cm">/** @return Returns true if the specified item is currently expanded in the tree */</span>
+	<span class="kt">bool</span> <span class="nf">IsItemExpanded</span><span class="p">(</span> <span class="k">const</span> <span class="n">FDDFileTreeItemPtr</span> <span class="n">Item</span> <span class="p">)</span> <span class="k">const</span><span class="p">;</span>
+
+<span class="k">private</span><span class="o">:</span>
+	
+	<span class="cm">/** Called to generate a widget for the specified tree item */</span>
+	<span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">ITableRow</span><span class="o">&gt;</span> <span class="n">DDFileTree_OnGenerateRow</span><span class="p">(</span> <span class="n">FDDFileTreeItemPtr</span> <span class="n">Item</span><span class="p">,</span> <span class="k">const</span> <span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">STableViewBase</span><span class="o">&gt;&amp;</span> <span class="n">OwnerTable</span> <span class="p">);</span>
+
+	<span class="cm">/** Given a tree item, fills an array of child items */</span>
+	<span class="kt">void</span> <span class="nf">DDFileTree_OnGetChildren</span><span class="p">(</span> <span class="n">FDDFileTreeItemPtr</span> <span class="n">Item</span><span class="p">,</span> <span class="n">TArray</span><span class="o">&lt;</span> <span class="n">FDDFileTreeItemPtr</span> <span class="o">&gt;&amp;</span> <span class="n">OutChildren</span> <span class="p">);</span>
+
+	<span class="cm">/** Called when the user clicks on an  item, or when selection changes by some other means */</span>
+	<span class="kt">void</span> <span class="nf">DDFileTree_OnSelectionChanged</span><span class="p">(</span> <span class="n">FDDFileTreeItemPtr</span> <span class="n">Item</span><span class="p">,</span> <span class="n">ESelectInfo</span><span class="o">::</span><span class="n">Type</span> <span class="n">SelectInfo</span> <span class="p">);</span>
+
+	<span class="cm">/** Rebuilds the category tree from scratch */</span>
+	<span class="kt">void</span> <span class="nf">RebuildFileTree</span><span class="p">();</span>
+
+	<span class="cm">/** SWidget overrides */</span>
+	<span class="k">virtual</span> <span class="kt">void</span> <span class="nf">Tick</span><span class="p">(</span> <span class="k">const</span> <span class="n">FGeometry</span><span class="o">&amp;</span> <span class="n">AllottedGeometry</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">InCurrentTime</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span> <span class="n">InDeltaTime</span> <span class="p">)</span> <span class="n">OVERRIDE</span><span class="p">;</span>
+
+
+<span class="k">private</span><span class="o">:</span>
+
+
+	<span class="cm">/** The tree view widget*/</span>
+	<span class="n">TSharedPtr</span><span class="o">&lt;</span> <span class="n">SDDFileTreeView</span> <span class="o">&gt;</span> <span class="n">DDFileTreeView</span><span class="p">;</span>
+
+	<span class="cm">/** The Core Data for the Tree Viewer! */</span>
+	<span class="n">TArray</span><span class="o">&lt;</span> <span class="n">FDDFileTreeItemPtr</span> <span class="o">&gt;</span> <span class="n">Directories</span><span class="p">;</span>
+<span class="p">};</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="Constructor_and_DDEdEngine">
+        Constructor and DDEdEngine
+       </span>
+      </h3>
+      <p>
+       In my case I am calling this widget from within a custom version of the engine via a custom class that extends UnrealEdEngine.
+      </p>
+      <p>
+       I am passing in pointer to the UnrealEdEngine when the widget is first constructed.
+      </p>
+      <p>
+       You could use your HUD class instead!
+      </p>
+      <p>
+       I dont rely on any EdEngine functionality for this code sample, replace EdEngine with your own chosen parenting class.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="cm">/** Widget constructor */</span>
+<span class="kt">void</span> <span class="nf">Construct</span><span class="p">(</span> <span class="k">const</span> <span class="n">FArguments</span><span class="o">&amp;</span> <span class="n">Args</span><span class="p">,</span> <span class="n">TWeakObjectPtr</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">UDDEdEngine</span><span class="o">&gt;</span> <span class="n">IN_DDEdEngine</span> <span class="p">);</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Instancing_the_Slate_Widget">
+        Instancing the Slate Widget
+       </span>
+      </h2>
+      <p>
+       Here's an example of creating the widget:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">//in the .h of parent class: </span>
+
+<span class="c1">//TSharedPtr&lt;class SDDFileTree&gt; DDFileTree;</span>
+	
+<span class="c1">//in your parent class in which you want to create the widget</span>
+<span class="k">if</span><span class="p">(</span> <span class="o">!</span><span class="n">DDFileTree</span><span class="p">.</span><span class="n">IsValid</span><span class="p">()</span> <span class="p">)</span>
+<span class="p">{</span>	
+	<span class="n">SAssignNew</span><span class="p">(</span>	<span class="n">DDFileTree</span><span class="p">,</span>	<span class="n">SDDFileTree</span><span class="p">,</span>	<span class="n">Cast</span><span class="o">&lt;</span><span class="n">UDDEdEngine</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="p">)</span>	<span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Slate_.cpp">
+        Slate .cpp
+       </span>
+      </h2>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="c1">// File Tree Viewer by Rama</span>
+
+<span class="cp">#include</span> <span class="cpf">"VictoryGame.h"</span><span class="cp"></span>
+
+<span class="c1">//This header</span>
+<span class="cp">#include</span> <span class="cpf">"SDDFileTree.h"</span><span class="cp"></span>
+
+<span class="c1">//The Data</span>
+<span class="cp">#include</span> <span class="cpf">"DDFileTreeItem.h"</span><span class="cp"></span>
+
+<span class="kt">void</span> <span class="n">SDDFileTree</span><span class="o">::</span><span class="n">Construct</span><span class="p">(</span><span class="k">const</span> <span class="n">FArguments</span><span class="o">&amp;</span> <span class="n">Args</span><span class="p">,</span><span class="n">TWeakObjectPtr</span><span class="o">&lt;</span><span class="k">class</span> <span class="nc">UDDEdEngine</span><span class="o">&gt;</span> <span class="n">IN_DDEdEngine</span><span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">//Set DDEdEngine</span>
+	<span class="n">DDEdEngine</span> <span class="o">=</span> <span class="n">IN_DDEdEngine</span><span class="p">;</span>
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~</span>
+
+	<span class="c1">//Build Core Data</span>
+	<span class="n">RebuildFileTree</span><span class="p">();</span>
+	
+	<span class="c1">//Build the tree view of the above core data</span>
+	<span class="n">DDFileTreeView</span> <span class="o">=</span>
+		<span class="n">SNew</span><span class="p">(</span> <span class="n">SDDFileTreeView</span> <span class="p">)</span>
+
+		<span class="c1">// For now we only support selecting a single folder in the tree</span>
+		<span class="p">.</span><span class="n">SelectionMode</span><span class="p">(</span> <span class="n">ESelectionMode</span><span class="o">::</span><span class="n">Single</span> <span class="p">)</span>
+		<span class="p">.</span><span class="n">ClearSelectionOnClick</span><span class="p">(</span> <span class="nb">false</span> <span class="p">)</span>		<span class="c1">// Don't allow user to select nothing.</span>
+
+		<span class="p">.</span><span class="n">TreeItemsSource</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">Directories</span> <span class="p">)</span>
+		<span class="p">.</span><span class="n">OnGenerateRow</span><span class="p">(</span> <span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">SDDFileTree</span><span class="o">::</span><span class="n">DDFileTree_OnGenerateRow</span> <span class="p">)</span> 
+		<span class="p">.</span><span class="n">OnGetChildren</span><span class="p">(</span> <span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">SDDFileTree</span><span class="o">::</span><span class="n">DDFileTree_OnGetChildren</span> <span class="p">)</span>
+
+		<span class="p">.</span><span class="n">OnSelectionChanged</span><span class="p">(</span> <span class="k">this</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">SDDFileTree</span><span class="o">::</span><span class="n">DDFileTree_OnSelectionChanged</span> <span class="p">)</span>
+		<span class="p">;</span>
+
+	<span class="cm">/*</span>
+<span class="cm">	// Expand the root  by default</span>
+<span class="cm">	for( auto RootDirIt( Directories.CreateConstIterator() ); RootDirIt; ++RootDirIt )</span>
+<span class="cm">	{</span>
+<span class="cm">		const auto&amp; Dir = *RootDirIt;</span>
+<span class="cm">		DDFileTreeView-&gt;SetItemExpansion( Dir, true );</span>
+<span class="cm">	}</span>
+
+<span class="cm">	// Select the first item by default</span>
+<span class="cm">	if( Directories.Num() &gt; 0 )</span>
+<span class="cm">	{</span>
+<span class="cm">		DDFileTreeView-&gt;SetSelection( Directories[ 0 ] );</span>
+<span class="cm">	}</span>
+<span class="cm">	*/</span>
+	
+	<span class="n">ChildSlot</span><span class="p">.</span><span class="n">Widget</span> <span class="o">=</span> <span class="n">DDFileTreeView</span><span class="p">.</span><span class="n">ToSharedRef</span><span class="p">();</span>
+<span class="p">}</span>
+
+
+<span class="n">SDDFileTree</span><span class="o">::~</span><span class="n">SDDFileTree</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="p">}</span>
+
+
+
+<span class="kt">void</span> <span class="n">SDDFileTree</span><span class="o">::</span><span class="n">RebuildFileTree</span><span class="p">()</span>
+<span class="p">{</span>
+	
+	<span class="n">Directories</span><span class="p">.</span><span class="n">Empty</span><span class="p">();</span>
+
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~</span>
+	<span class="c1">//Root Level</span>
+	<span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">FDDFileTreeItem</span><span class="o">&gt;</span> <span class="n">RootDir</span> <span class="o">=</span> <span class="n">MakeShareable</span><span class="p">(</span><span class="k">new</span> <span class="n">FDDFileTreeItem</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"RootDir"</span><span class="p">),</span> <span class="n">FString</span><span class="p">(</span><span class="s">"RootDir"</span><span class="p">)));</span>
+	<span class="n">Directories</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span> <span class="n">RootDir</span> <span class="p">);</span>
+	
+	<span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">FDDFileTreeItem</span><span class="o">&gt;</span> <span class="n">RootDir2</span> <span class="o">=</span> <span class="n">MakeShareable</span><span class="p">(</span><span class="k">new</span> <span class="n">FDDFileTreeItem</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"RootDir2"</span><span class="p">),</span> <span class="n">FString</span><span class="p">(</span><span class="s">"RootDir2"</span><span class="p">)));</span>
+	<span class="n">Directories</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span> <span class="n">RootDir2</span> <span class="p">);</span>
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~</span>
+
+	<span class="c1">//Root Category</span>
+	<span class="n">FDDFileTreeItemPtr</span> <span class="n">ParentCategory</span> <span class="o">=</span> <span class="n">RootDir</span><span class="p">;</span>
+		
+
+	<span class="c1">//Add</span>
+	<span class="n">FDDFileTreeItemPtr</span> <span class="n">EachSubDir</span> <span class="o">=</span> <span class="n">MakeShareable</span><span class="p">(</span><span class="k">new</span> <span class="n">FDDFileTreeItem</span><span class="p">(</span><span class="n">ParentCategory</span><span class="p">,</span>  <span class="s">"Joy"</span><span class="p">,</span> <span class="s">"Joy"</span><span class="p">));</span>
+	<span class="n">RootDir</span><span class="o">-&gt;</span><span class="n">AddSubDirectory</span><span class="p">(</span><span class="n">EachSubDir</span><span class="p">);</span>
+	
+	<span class="c1">//Add</span>
+	<span class="n">EachSubDir</span> <span class="o">=</span> <span class="n">MakeShareable</span><span class="p">(</span><span class="k">new</span> <span class="n">FDDFileTreeItem</span><span class="p">(</span><span class="n">ParentCategory</span><span class="p">,</span> <span class="s">"Song"</span><span class="p">,</span> <span class="s">"Song"</span><span class="p">));</span>
+	<span class="n">RootDir</span><span class="o">-&gt;</span><span class="n">AddSubDirectory</span><span class="p">(</span><span class="n">EachSubDir</span><span class="p">);</span>
+	
+		<span class="c1">//Add</span>
+		<span class="n">FDDFileTreeItemPtr</span> <span class="n">SongDir</span> <span class="o">=</span> <span class="n">MakeShareable</span><span class="p">(</span><span class="k">new</span> <span class="n">FDDFileTreeItem</span><span class="p">(</span><span class="n">ParentCategory</span><span class="p">,</span>  <span class="s">"Dance"</span><span class="p">,</span> <span class="s">"Dance"</span><span class="p">));</span>
+		<span class="n">EachSubDir</span><span class="o">-&gt;</span><span class="n">AddSubDirectory</span><span class="p">(</span><span class="n">SongDir</span><span class="p">);</span>
+	
+		<span class="c1">//Add</span>
+		<span class="n">SongDir</span> <span class="o">=</span> <span class="n">MakeShareable</span><span class="p">(</span><span class="k">new</span> <span class="n">FDDFileTreeItem</span><span class="p">(</span><span class="n">ParentCategory</span><span class="p">,</span> <span class="s">"Rainbows"</span><span class="p">,</span> <span class="s">"Rainbows"</span><span class="p">));</span>
+		<span class="n">EachSubDir</span><span class="o">-&gt;</span><span class="n">AddSubDirectory</span><span class="p">(</span><span class="n">SongDir</span><span class="p">);</span>
+	
+	<span class="c1">//Add</span>
+	<span class="n">EachSubDir</span> <span class="o">=</span> <span class="n">MakeShareable</span><span class="p">(</span><span class="k">new</span> <span class="n">FDDFileTreeItem</span><span class="p">(</span><span class="n">ParentCategory</span><span class="p">,</span> <span class="s">"Butterflies"</span><span class="p">,</span> <span class="s">"Butterflies"</span><span class="p">));</span>
+	<span class="n">RootDir</span><span class="o">-&gt;</span><span class="n">AddSubDirectory</span><span class="p">(</span><span class="n">EachSubDir</span><span class="p">);</span>
+	
+	
+	<span class="c1">//Refresh</span>
+	<span class="k">if</span><span class="p">(</span> <span class="n">DDFileTreeView</span><span class="p">.</span><span class="n">IsValid</span><span class="p">()</span> <span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">DDFileTreeView</span><span class="o">-&gt;</span><span class="n">RequestTreeRefresh</span><span class="p">();</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">ITableRow</span><span class="o">&gt;</span> <span class="n">SDDFileTree</span><span class="o">::</span><span class="n">DDFileTree_OnGenerateRow</span><span class="p">(</span> <span class="n">FDDFileTreeItemPtr</span> <span class="n">Item</span><span class="p">,</span> <span class="k">const</span> <span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">STableViewBase</span><span class="o">&gt;&amp;</span> <span class="n">OwnerTable</span> <span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">Item</span><span class="p">.</span><span class="n">IsValid</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="n">SNew</span><span class="p">(</span> <span class="n">STableRow</span><span class="o">&lt;</span> <span class="n">FDDFileTreeItemPtr</span> <span class="o">&gt;</span><span class="p">,</span> <span class="n">OwnerTable</span> <span class="p">)</span>
+		<span class="p">[</span>
+			<span class="n">SNew</span><span class="p">(</span><span class="n">STextBlock</span><span class="p">)</span>
+			<span class="p">.</span><span class="n">Text</span><span class="p">(</span> <span class="n">FString</span><span class="p">(</span><span class="s">"THIS WAS NULL SOMEHOW"</span><span class="p">)</span> <span class="p">)</span>
+		<span class="p">];</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="n">SNew</span><span class="p">(</span> <span class="n">STableRow</span><span class="o">&lt;</span> <span class="n">FDDFileTreeItemPtr</span> <span class="o">&gt;</span><span class="p">,</span> <span class="n">OwnerTable</span> <span class="p">)</span>
+	<span class="p">[</span>
+		<span class="n">SNew</span><span class="p">(</span><span class="n">STextBlock</span><span class="p">)</span>
+		<span class="p">.</span><span class="n">Text</span><span class="p">(</span> <span class="n">Item</span><span class="o">-&gt;</span><span class="n">GetDisplayName</span><span class="p">()</span> <span class="p">)</span>
+		<span class="p">.</span><span class="n">Font</span><span class="p">(</span><span class="n">FSlateFontInfo</span><span class="p">(</span><span class="n">FPaths</span><span class="o">::</span><span class="n">EngineContentDir</span><span class="p">()</span> <span class="o">/</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Slate/Fonts/Roboto-Bold.ttf"</span><span class="p">),</span> <span class="mi">12</span><span class="p">))</span>
+		<span class="p">.</span><span class="n">ColorAndOpacity</span><span class="p">(</span><span class="n">FLinearColor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+		<span class="p">.</span><span class="n">ShadowColorAndOpacity</span><span class="p">(</span><span class="n">FLinearColor</span><span class="o">::</span><span class="n">Black</span><span class="p">)</span>
+		<span class="p">.</span><span class="n">ShadowOffset</span><span class="p">(</span><span class="n">FIntPoint</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+	<span class="p">];</span>
+<span class="p">}</span>
+
+
+<span class="kt">void</span> <span class="n">SDDFileTree</span><span class="o">::</span><span class="n">DDFileTree_OnGetChildren</span><span class="p">(</span> <span class="n">FDDFileTreeItemPtr</span> <span class="n">Item</span><span class="p">,</span> <span class="n">TArray</span><span class="o">&lt;</span> <span class="n">FDDFileTreeItemPtr</span> <span class="o">&gt;&amp;</span> <span class="n">OutChildren</span> <span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">SubCategories</span> <span class="o">=</span> <span class="n">Item</span><span class="o">-&gt;</span><span class="n">GetSubDirectories</span><span class="p">();</span>
+	<span class="n">OutChildren</span><span class="p">.</span><span class="n">Append</span><span class="p">(</span> <span class="n">SubCategories</span> <span class="p">);</span>
+<span class="p">}</span>
+
+
+<span class="c1">//Key function for interaction with user!</span>
+<span class="kt">void</span> <span class="n">SDDFileTree</span><span class="o">::</span><span class="n">DDFileTree_OnSelectionChanged</span><span class="p">(</span> <span class="n">FDDFileTreeItemPtr</span> <span class="n">Item</span><span class="p">,</span> <span class="n">ESelectInfo</span><span class="o">::</span><span class="n">Type</span> <span class="n">SelectInfo</span> <span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">//Selection Changed! Tell DDEdEngine!</span>
+        <span class="n">UE_LOG</span><span class="p">(</span><span class="n">YourLog</span><span class="p">,</span><span class="n">Warning</span><span class="p">,</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"Item Selected: %s"</span><span class="p">),</span> <span class="o">*</span><span class="n">Item</span><span class="o">-&gt;</span><span class="n">GetDisplayName</span><span class="p">());</span>
+<span class="p">}</span>
+
+
+<span class="n">FDDFileTreeItemPtr</span> <span class="n">SDDFileTree</span><span class="o">::</span><span class="n">GetSelectedDirectory</span><span class="p">()</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span> <span class="n">DDFileTreeView</span><span class="p">.</span><span class="n">IsValid</span><span class="p">()</span> <span class="p">)</span>
+	<span class="p">{</span>
+		<span class="k">auto</span> <span class="n">SelectedItems</span> <span class="o">=</span> <span class="n">DDFileTreeView</span><span class="o">-&gt;</span><span class="n">GetSelectedItems</span><span class="p">();</span>
+		<span class="k">if</span><span class="p">(</span> <span class="n">SelectedItems</span><span class="p">.</span><span class="n">Num</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="p">)</span>
+		<span class="p">{</span>
+			<span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">SelectedCategoryItem</span> <span class="o">=</span> <span class="n">SelectedItems</span><span class="p">[</span> <span class="mi">0</span> <span class="p">];</span>
+			<span class="k">return</span> <span class="n">SelectedCategoryItem</span><span class="p">;</span>
+		<span class="p">}</span>
+	<span class="p">}</span>
+
+	<span class="k">return</span> <span class="nb">NULL</span><span class="p">;</span>
+<span class="p">}</span>
+
+
+<span class="kt">void</span> <span class="n">SDDFileTree</span><span class="o">::</span><span class="n">SelectDirectory</span><span class="p">(</span> <span class="k">const</span> <span class="n">FDDFileTreeItemPtr</span><span class="o">&amp;</span> <span class="n">CategoryToSelect</span> <span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span> <span class="n">ensure</span><span class="p">(</span> <span class="n">DDFileTreeView</span><span class="p">.</span><span class="n">IsValid</span><span class="p">()</span> <span class="p">)</span> <span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">DDFileTreeView</span><span class="o">-&gt;</span><span class="n">SetSelection</span><span class="p">(</span> <span class="n">CategoryToSelect</span> <span class="p">);</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//is the tree item expanded to show children?</span>
+<span class="kt">bool</span> <span class="n">SDDFileTree</span><span class="o">::</span><span class="n">IsItemExpanded</span><span class="p">(</span> <span class="k">const</span> <span class="n">FDDFileTreeItemPtr</span> <span class="n">Item</span> <span class="p">)</span> <span class="k">const</span>
+<span class="p">{</span>
+	<span class="k">return</span> <span class="n">DDFileTreeView</span><span class="o">-&gt;</span><span class="n">IsItemExpanded</span><span class="p">(</span> <span class="n">Item</span> <span class="p">);</span>
+<span class="p">}</span>
+
+
+
+<span class="kt">void</span> <span class="n">SDDFileTree</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span> <span class="k">const</span> <span class="n">FGeometry</span><span class="o">&amp;</span> <span class="n">AllottedGeometry</span><span class="p">,</span> <span class="k">const</span> <span class="kt">double</span> <span class="n">InCurrentTime</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span> <span class="n">InDeltaTime</span> <span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">// Call parent implementation</span>
+	<span class="n">SCompoundWidget</span><span class="o">::</span><span class="n">Tick</span><span class="p">(</span> <span class="n">AllottedGeometry</span><span class="p">,</span> <span class="n">InCurrentTime</span><span class="p">,</span> <span class="n">InDeltaTime</span> <span class="p">);</span>
+	
+	<span class="c1">//can do things here every tick</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Important_Functions">
+        Important Functions
+       </span>
+      </h2>
+      <h3>
+       <span class="mw-headline" id="On_Generate_Row">
+        On Generate Row
+       </span>
+      </h3>
+      <p>
+       This is the function that decides how each item in the tree gets displayed visually!
+      </p>
+      <p>
+       You could make it so each item in the tree is its own very fancy Slate widget, I just used TextBlock.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">ITableRow</span><span class="o">&gt;</span> <span class="n">SDDFileTree</span><span class="o">::</span><span class="n">DDFileTree_OnGenerateRow</span><span class="p">(</span> <span class="n">FDDFileTreeItemPtr</span> <span class="n">Item</span><span class="p">,</span> <span class="k">const</span> <span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">STableViewBase</span><span class="o">&gt;&amp;</span> <span class="n">OwnerTable</span> <span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">Item</span><span class="p">.</span><span class="n">IsValid</span><span class="p">())</span>
+	<span class="p">{</span>
+		<span class="k">return</span> <span class="n">SNew</span><span class="p">(</span> <span class="n">STableRow</span><span class="o">&lt;</span> <span class="n">FDDFileTreeItemPtr</span> <span class="o">&gt;</span><span class="p">,</span> <span class="n">OwnerTable</span> <span class="p">)</span>
+		<span class="p">[</span>
+			<span class="n">SNew</span><span class="p">(</span><span class="n">STextBlock</span><span class="p">)</span>
+			<span class="p">.</span><span class="n">Text</span><span class="p">(</span> <span class="n">FString</span><span class="p">(</span><span class="s">"THIS WAS NULL SOMEHOW"</span><span class="p">)</span> <span class="p">)</span>
+		<span class="p">];</span>
+	<span class="p">}</span>
+	<span class="k">return</span> <span class="n">SNew</span><span class="p">(</span> <span class="n">STableRow</span><span class="o">&lt;</span> <span class="n">FDDFileTreeItemPtr</span> <span class="o">&gt;</span><span class="p">,</span> <span class="n">OwnerTable</span> <span class="p">)</span>
+	<span class="p">[</span>
+		<span class="n">SNew</span><span class="p">(</span><span class="n">STextBlock</span><span class="p">)</span>
+		<span class="p">.</span><span class="n">Text</span><span class="p">(</span> <span class="n">Item</span><span class="o">-&gt;</span><span class="n">GetDisplayName</span><span class="p">()</span> <span class="p">)</span>
+		<span class="p">.</span><span class="n">Font</span><span class="p">(</span><span class="n">FSlateFontInfo</span><span class="p">(</span><span class="n">FPaths</span><span class="o">::</span><span class="n">EngineContentDir</span><span class="p">()</span> <span class="o">/</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"Slate/Fonts/Roboto-Bold.ttf"</span><span class="p">),</span> <span class="mi">12</span><span class="p">))</span>
+		<span class="p">.</span><span class="n">ColorAndOpacity</span><span class="p">(</span><span class="n">FLinearColor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+		<span class="p">.</span><span class="n">ShadowColorAndOpacity</span><span class="p">(</span><span class="n">FLinearColor</span><span class="o">::</span><span class="n">Black</span><span class="p">)</span>
+		<span class="p">.</span><span class="n">ShadowOffset</span><span class="p">(</span><span class="n">FIntPoint</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+	<span class="p">];</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="On_Get_Children">
+        On Get Children
+       </span>
+      </h3>
+      <p>
+       Get children is specific to the Tree View Slate widget, and determines what appears when a tree view item is expanded using the arrow, assuming it has any children.
+      </p>
+      <p>
+       This function tells Tree view whether the node has any children!
+      </p>
+      <p>
+       Note that GetSubDirectories() is my own custom function for my data type, but because OnGetChildren uses it, the Tree View knows when one of my custom data structure nodes has any children, and so the arrow should appear and the children should appear when the arrow is expanded.
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">SDDFileTree</span><span class="o">::</span><span class="n">DDFileTree_OnGetChildren</span><span class="p">(</span> <span class="n">FDDFileTreeItemPtr</span> <span class="n">Item</span><span class="p">,</span> <span class="n">TArray</span><span class="o">&lt;</span> <span class="n">FDDFileTreeItemPtr</span> <span class="o">&gt;&amp;</span> <span class="n">OutChildren</span> <span class="p">)</span>
+<span class="p">{</span>
+	<span class="k">const</span> <span class="k">auto</span><span class="o">&amp;</span> <span class="n">SubCategories</span> <span class="o">=</span> <span class="n">Item</span><span class="o">-&gt;</span><span class="n">GetSubDirectories</span><span class="p">();</span>
+	<span class="n">OutChildren</span><span class="p">.</span><span class="n">Append</span><span class="p">(</span> <span class="n">SubCategories</span> <span class="p">);</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h3>
+       <span class="mw-headline" id="User_Input">
+        User Input
+       </span>
+      </h3>
+      <p>
+       When the user clicks on an item in the tree view, this function below is run!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">SDDFileTree</span><span class="o">::</span><span class="n">DDFileTree_OnSelectionChanged</span><span class="p">(</span> <span class="n">FDDFileTreeItemPtr</span> <span class="n">Item</span><span class="p">,</span> <span class="n">ESelectInfo</span><span class="o">::</span><span class="n">Type</span> <span class="n">SelectInfo</span> <span class="p">)</span>
+<span class="p">{</span>
+	<span class="c1">//Selection Changed! Tell DDEdEngine!</span>
+	<span class="n">UE_LOG</span><span class="p">(</span><span class="n">YourLog</span><span class="p">,</span><span class="n">Warning</span><span class="p">,</span><span class="n">TEXT</span><span class="p">(</span><span class="s">"Item clicked! %s"</span><span class="p">),</span> <span class="o">*</span><span class="n">Item</span><span class="o">-&gt;</span><span class="n">GetDisplayName</span><span class="p">());</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Core_Function">
+        Core Function
+       </span>
+      </h2>
+      <p>
+       The core function where the tree is made is below!
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="kt">void</span> <span class="n">SDDFileTree</span><span class="o">::</span><span class="n">RebuildFileTree</span><span class="p">()</span>
+<span class="p">{</span>
+	
+	<span class="n">Directories</span><span class="p">.</span><span class="n">Empty</span><span class="p">();</span>
+
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~</span>
+	<span class="c1">//Root Level</span>
+	<span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">FDDFileTreeItem</span><span class="o">&gt;</span> <span class="n">RootDir</span> <span class="o">=</span> <span class="n">MakeShareable</span><span class="p">(</span><span class="k">new</span> <span class="n">FDDFileTreeItem</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"RootDir"</span><span class="p">),</span> <span class="n">FString</span><span class="p">(</span><span class="s">"RootDir"</span><span class="p">)));</span>
+	<span class="n">Directories</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span> <span class="n">RootDir</span> <span class="p">);</span>
+	
+	<span class="n">TSharedRef</span><span class="o">&lt;</span><span class="n">FDDFileTreeItem</span><span class="o">&gt;</span> <span class="n">RootDir2</span> <span class="o">=</span> <span class="n">MakeShareable</span><span class="p">(</span><span class="k">new</span> <span class="n">FDDFileTreeItem</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span> <span class="n">TEXT</span><span class="p">(</span><span class="s">"RootDir2"</span><span class="p">),</span> <span class="n">FString</span><span class="p">(</span><span class="s">"RootDir2"</span><span class="p">)));</span>
+	<span class="n">Directories</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span> <span class="n">RootDir2</span> <span class="p">);</span>
+	<span class="c1">//~~~~~~~~~~~~~~~~~~~</span>
+
+	<span class="c1">//Root Category</span>
+	<span class="n">FDDFileTreeItemPtr</span> <span class="n">ParentCategory</span> <span class="o">=</span> <span class="n">RootDir</span><span class="p">;</span>
+		
+
+	<span class="c1">//Add</span>
+	<span class="n">FDDFileTreeItemPtr</span> <span class="n">EachSubDir</span> <span class="o">=</span> <span class="n">MakeShareable</span><span class="p">(</span><span class="k">new</span> <span class="n">FDDFileTreeItem</span><span class="p">(</span><span class="n">ParentCategory</span><span class="p">,</span>  <span class="s">"Joy"</span><span class="p">,</span> <span class="s">"Joy"</span><span class="p">));</span>
+	<span class="n">RootDir</span><span class="o">-&gt;</span><span class="n">AddSubDirectory</span><span class="p">(</span><span class="n">EachSubDir</span><span class="p">);</span>
+	
+	<span class="c1">//Add</span>
+	<span class="n">EachSubDir</span> <span class="o">=</span> <span class="n">MakeShareable</span><span class="p">(</span><span class="k">new</span> <span class="n">FDDFileTreeItem</span><span class="p">(</span><span class="n">ParentCategory</span><span class="p">,</span> <span class="s">"Song"</span><span class="p">,</span> <span class="s">"Song"</span><span class="p">));</span>
+	<span class="n">RootDir</span><span class="o">-&gt;</span><span class="n">AddSubDirectory</span><span class="p">(</span><span class="n">EachSubDir</span><span class="p">);</span>
+	
+		<span class="c1">//Add</span>
+		<span class="n">FDDFileTreeItemPtr</span> <span class="n">SongDir</span> <span class="o">=</span> <span class="n">MakeShareable</span><span class="p">(</span><span class="k">new</span> <span class="n">FDDFileTreeItem</span><span class="p">(</span><span class="n">ParentCategory</span><span class="p">,</span>  <span class="s">"Dance"</span><span class="p">,</span> <span class="s">"Dance"</span><span class="p">));</span>
+		<span class="n">EachSubDir</span><span class="o">-&gt;</span><span class="n">AddSubDirectory</span><span class="p">(</span><span class="n">SongDir</span><span class="p">);</span>
+	
+		<span class="c1">//Add</span>
+		<span class="n">SongDir</span> <span class="o">=</span> <span class="n">MakeShareable</span><span class="p">(</span><span class="k">new</span> <span class="n">FDDFileTreeItem</span><span class="p">(</span><span class="n">ParentCategory</span><span class="p">,</span> <span class="s">"Rainbows"</span><span class="p">,</span> <span class="s">"Rainbows"</span><span class="p">));</span>
+		<span class="n">EachSubDir</span><span class="o">-&gt;</span><span class="n">AddSubDirectory</span><span class="p">(</span><span class="n">SongDir</span><span class="p">);</span>
+	
+	<span class="c1">//Add</span>
+	<span class="n">EachSubDir</span> <span class="o">=</span> <span class="n">MakeShareable</span><span class="p">(</span><span class="k">new</span> <span class="n">FDDFileTreeItem</span><span class="p">(</span><span class="n">ParentCategory</span><span class="p">,</span> <span class="s">"Butterflies"</span><span class="p">,</span> <span class="s">"Butterflies"</span><span class="p">));</span>
+	<span class="n">RootDir</span><span class="o">-&gt;</span><span class="n">AddSubDirectory</span><span class="p">(</span><span class="n">EachSubDir</span><span class="p">);</span>
+	
+	
+	<span class="c1">//Refresh</span>
+	<span class="k">if</span><span class="p">(</span> <span class="n">DDFileTreeView</span><span class="p">.</span><span class="n">IsValid</span><span class="p">()</span> <span class="p">)</span>
+	<span class="p">{</span>
+		<span class="n">DDFileTreeView</span><span class="o">-&gt;</span><span class="n">RequestTreeRefresh</span><span class="p">();</span>
+	<span class="p">}</span>
+<span class="p">}</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Core_Data">
+        Core Data
+       </span>
+      </h2>
+      <p>
+       The core data is set to be used in the constructor, here:
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="p">.</span><span class="n">TreeItemsSource</span><span class="p">(</span> <span class="o">&amp;</span><span class="n">Directories</span> <span class="p">)</span>
+</pre>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Summary">
+        Summary
+       </span>
+      </h2>
+      <p>
+       Now you know the basics of using a tree view!
+      </p>
+      <p>
+       You need
+      </p>
+      <p>
+       1. your own custom data structure that is a node in the tree
+      </p>
+      <p>
+       2. tree view .h
+      </p>
+      <p>
+       3. tree view .cpp
+      </p>
+      <p>
+       and that's all!
+      </p>
+      <p>
+       Enjoy!
+      </p>
+      <p>
+       (
+       )
+      </p>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>

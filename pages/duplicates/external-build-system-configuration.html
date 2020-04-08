@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <link href="https://www.epicgames.com/tos"/>
+  <title>
+   External Build System Configuration - Old UE4 Wiki
+  </title>
+  <link href="../styles.css" rel="stylesheet"/>
+ </head>
+ <body>
+  <nav id="top-nav">
+   <a href="../index.html" title="Home">
+    Home
+   </a>
+  </nav>
+  <div class="mw-body" id="content" role="main">
+   <a id="top">
+   </a>
+   <div class="mw-indicators mw-body-content">
+   </div>
+   <h1 class="firstHeading" id="firstHeading" lang="en">
+    External Build System Configuration
+   </h1>
+   <div class="mw-body-content" id="bodyContent">
+    <div class="noprint" id="siteSub">
+     From Epic Wiki
+    </div>
+    <div class="mw-content-ltr" dir="ltr" id="mw-content-text" lang="en">
+     <div class="mw-parser-output">
+      <p>
+       If you don't want to use Visual Studio IDE to compile your projects (f.e. you prefer Sublime text editor), you can build your game without it.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <div class="toc" id="toc">
+       <div class="toctitle">
+        <h2>
+         Contents
+        </h2>
+       </div>
+       <ul>
+        <li class="toclevel-1 tocsection-1">
+         <a href="#Grabbing_the_MSBuild">
+          <span class="tocnumber">
+           1
+          </span>
+          <span class="toctext">
+           Grabbing the MSBuild
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-2">
+         <a href="#Building_the_game">
+          <span class="tocnumber">
+           2
+          </span>
+          <span class="toctext">
+           Building the game
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-3">
+         <a href="#Comments">
+          <span class="tocnumber">
+           3
+          </span>
+          <span class="toctext">
+           Comments
+          </span>
+         </a>
+        </li>
+        <li class="toclevel-1 tocsection-4">
+         <a href="#Links">
+          <span class="tocnumber">
+           4
+          </span>
+          <span class="toctext">
+           Links
+          </span>
+         </a>
+        </li>
+       </ul>
+      </div>
+      <h2>
+       <span class="mw-headline" id="Grabbing_the_MSBuild">
+        Grabbing the MSBuild
+       </span>
+      </h2>
+      <p>
+       First, you need to get the
+       <a class="external text" href="http://msdn.microsoft.com/en-us/library/0k6kkbsd.aspx" rel="nofollow">
+        MSBuild
+       </a>
+       . This tool is part of .NET Framework, also as part of MSVS installation. Path can be different according to your OS version, f.e.
+       <i>
+        C:\Program Files (x86)\MSBuild\12.0\Bin
+       </i>
+      </p>
+      <p>
+       I recommend to add its path to the PATH system variable to make your life easier.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Building_the_game">
+        Building the game
+       </span>
+      </h2>
+      <p>
+       This command will build the Shooter Game example (you need to generate .sln files first):
+      </p>
+      <div class="mw-highlight mw-content-ltr" dir="ltr">
+       <pre><span></span><span class="n">msbuild</span> <span class="s">"&lt;MY_DOCUMENTS&gt;\Unreal Projects\ShooterGame\ShooterGame.sln"</span> <span class="o">/</span><span class="nl">p</span><span class="p">:</span><span class="n">configuration</span><span class="o">=</span><span class="n">Development</span> <span class="o">/</span><span class="nl">p</span><span class="p">:</span><span class="n">platform</span><span class="o">=</span><span class="n">Windows</span>
+</pre>
+      </div>
+      <p>
+       Use
+       <b>
+        /t:rebuild
+       </b>
+       to completely rebuild the game solution.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Comments">
+        Comments
+       </span>
+      </h2>
+      <p>
+       You can use this tool with whatever IDE or text editor you want.
+      </p>
+      <p>
+       <br/>
+      </p>
+      <h2>
+       <span class="mw-headline" id="Links">
+        Links
+       </span>
+      </h2>
+      <ul>
+       <li>
+        <a class="external text" href="http://msdn.microsoft.com/en-us/library/0k6kkbsd.aspx" rel="nofollow">
+         MSBuild Reference
+        </a>
+       </li>
+      </ul>
+     </div>
+    </div>
+    <div class="visualClear">
+    </div>
+   </div>
+  </div>
+ </body>
+</html>
